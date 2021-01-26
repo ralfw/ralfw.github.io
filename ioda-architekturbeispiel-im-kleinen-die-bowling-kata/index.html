@@ -1,0 +1,127 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>IODA Architekturbeispiel im Kleinen - Die Bowling Kata - One Man Think Tank</title><meta name="description" content="Auf der OOP 2016 habe ich einen Vortrag zur IODA Architektur gehalten. Darin taucht ein Stück Code als Gegenbeispiel auf, also nicht-IODA Code – und Teilnehmer haben gefragt, wie ich denn meine, dass es nach dem IODA-Ansatz gemacht werden könnte. Auf der OOP war dafür&hellip;"><meta name="generator" content="Publii Open-Source CMS for Static Site"><link rel="canonical" href="https://ralfw.github.io/homepage-ralfw-de/ioda-architekturbeispiel-im-kleinen-die-bowling-kata/"><link rel="alternate" type="application/atom+xml" href="https://ralfw.github.io/homepage-ralfw-de/feed.xml"><link rel="alternate" type="application/json" href="https://ralfw.github.io/homepage-ralfw-de/feed.json"><meta property="og:title" content="IODA Architekturbeispiel im Kleinen - Die Bowling Kata"><meta property="og:image" content="https://ralfw.github.io/homepage-ralfw-de/media/posts/42/Bildschirmfoto-2016-02-05-um-17.08.08.png"><meta property="og:site_name" content="One Man Think Tank"><meta property="og:description" content="Auf der OOP 2016 habe ich einen Vortrag zur IODA Architektur gehalten. Darin taucht ein Stück Code als Gegenbeispiel auf, also nicht-IODA Code – und Teilnehmer haben gefragt, wie ich denn meine, dass es nach dem IODA-Ansatz gemacht werden könnte. Auf der OOP war dafür&hellip;"><meta property="og:url" content="https://ralfw.github.io/homepage-ralfw-de/ioda-architekturbeispiel-im-kleinen-die-bowling-kata/"><meta property="og:type" content="article"><link rel="shortcut icon" href="https://ralfw.github.io/homepage-ralfw-de/media/website/favicon.png" type="image/x-icon"><style>:root{--body-font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";--heading-font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";--logo-font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";--menu-font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"}</style><link rel="stylesheet" href="https://ralfw.github.io/homepage-ralfw-de/assets/css/style.css?v=a9215503b210be030bd9981142f6814f"><script type="application/ld+json">{"@context":"http://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://ralfw.github.io/homepage-ralfw-de/ioda-architekturbeispiel-im-kleinen-die-bowling-kata/"},"headline":"IODA Architekturbeispiel im Kleinen - Die Bowling Kata","datePublished":"2016-02-04T16:09","dateModified":"2021-01-25T16:26","image":{"@type":"ImageObject","url":"https://ralfw.github.io/homepage-ralfw-de/media/posts/42/Bildschirmfoto-2016-02-05-um-17.08.08.png","height":858,"width":1600},"description":"Auf der OOP 2016 habe ich einen Vortrag zur IODA Architektur gehalten. Darin taucht ein Stück Code als Gegenbeispiel auf, also nicht-IODA Code – und Teilnehmer haben gefragt, wie ich denn meine, dass es nach dem IODA-Ansatz gemacht werden könnte. Auf der OOP war dafür&hellip;","author":{"@type":"Person","name":"Ralf Westphal"},"publisher":{"@type":"Organization","name":"Ralf Westphal","logo":{"@type":"ImageObject","url":"https://ralfw.github.io/homepage-ralfw-de/media/website/logo.png","height":860,"width":4068}}}</script></head><body><div class="site-container"><header class="top" id="js-header"><a class="logo" href="https://ralfw.github.io/homepage-ralfw-de/"><img src="https://ralfw.github.io/homepage-ralfw-de/media/website/logo.png" alt="One Man Think Tank"></a><nav class="navbar js-navbar"><button class="navbar__toggle js-toggle" aria-label="Menu" aria-haspopup="true" aria-expanded="false"><span class="navbar__toggle-box"><span class="navbar__toggle-inner">Menu</span></span></button><ul class="navbar__menu"><li><a href="https://ralfw.github.io/homepage-ralfw-de/tags/page/" target="_self">Pages</a></li><li><a href="https://ralfw.github.io/homepage-ralfw-de/focus/" target="_self">Focus</a></li><li><a href="https://ralfw.github.io/homepage-ralfw-de/approach/" target="_self">Approach</a></li></ul></nav></header><main><article class="post"><div class="hero"><figure class="hero__image hero__image--overlay"><img src="https://ralfw.github.io/homepage-ralfw-de/media/posts/42/Bildschirmfoto-2016-02-05-um-17.08.08.png" srcset="https://ralfw.github.io/homepage-ralfw-de/media/posts/42/responsive/Bildschirmfoto-2016-02-05-um-17.08.08-xs.png 300w, https://ralfw.github.io/homepage-ralfw-de/media/posts/42/responsive/Bildschirmfoto-2016-02-05-um-17.08.08-sm.png 480w, https://ralfw.github.io/homepage-ralfw-de/media/posts/42/responsive/Bildschirmfoto-2016-02-05-um-17.08.08-md.png 768w, https://ralfw.github.io/homepage-ralfw-de/media/posts/42/responsive/Bildschirmfoto-2016-02-05-um-17.08.08-lg.png 1024w, https://ralfw.github.io/homepage-ralfw-de/media/posts/42/responsive/Bildschirmfoto-2016-02-05-um-17.08.08-xl.png 1360w, https://ralfw.github.io/homepage-ralfw-de/media/posts/42/responsive/Bildschirmfoto-2016-02-05-um-17.08.08-2xl.png 1600w" sizes="(max-width: 1600px) 100vw, 1600px" loading="eager" height="858" width="1600" alt=""></figure><header class="hero__content"><div class="wrapper"><div class="post__meta"><time datetime="2016-02-04T16:09">04.02.2016</time></div><h1>IODA Architekturbeispiel im Kleinen - Die Bowling Kata</h1><div class="post__meta post__meta--author"><a href="https://ralfw.github.io/homepage-ralfw-de/authors/ralf-westphal/" class="feed__author invert">Ralf Westphal</a></div></div></header></div><div class="wrapper post__entry"><p>Auf der OOP 2016 habe ich einen Vortrag zur <a href="http://blog.ralfw.de/2015/04/die-ioda-architektur.html" target="_blank">IODA Architektur</a> gehalten. Darin taucht ein Stück Code als Gegenbeispiel auf, also nicht-IODA Code – und Teilnehmer haben gefragt, wie ich denn meine, dass es nach dem IODA-Ansatz gemacht werden könnte.</p><p>Auf der OOP war dafür leider keine Zeit. Doch gleich auf dem Rückweg habe ich mich im Zug daran gemacht, die Bowling Kata einmal aus der Sicht von IODA zu lösen. Das ist zugegeben ein grenzwertiges Beispiel, weil es nur um einen kleinen Algorithmus geht. Architektur wird darin nicht jeder am Werk sehen. Dennoch lassen sich die Prinzipien hinter IODA natürlich auch darauf anwenden. IODA steht ja für eine fraktale Sichtweise auf Software: im Kleinen ist sie strukturiert wie im Großen.</p><h2>Vorher - Die Bowling Game Kata</h2><p>Der Ausgangscode stammt von Robert C. Martin <a href="http://butunclebob.com/files/downloads/Bowling%20Game%20Kata.ppt" target="_blank">aus seiner Beschreibung der Lösung (PPT)</a> der Bowling Game Kata im Vorgehen nach TDD. Ich habe ihn einfach nur nach C# übersetzt:</p><pre class="lang:c# decode:true">public class Game {
+	private int[] rolls = new int[21];
+	private int currentRoll = 0;
+
+	public void roll(int pins) {
+		rolls[currentRoll++] = pins;
+	}
+
+	public int score() {
+		int score = 0;
+		int frameIndex = 0;
+		for (int frame = 0; frame &lt; 10; frame++) {
+			if (isStrike(frameIndex)) {
+				score += 10 + strikeBonus(frameIndex);
+				frameIndex++;
+			} else if (isSpare(frameIndex)) {
+				score += 10 + spareBonus(frameIndex);
+				frameIndex += 2;
+			} else {
+				score += sumOfBallsInFrame(frameIndex);
+				frameIndex += 2;
+			}
+		}
+		return score;
+	}
+
+	private bool isStrike(int frameIndex) {
+		return rolls[frameIndex] == 10;
+	}
+
+	private int sumOfBallsInFrame(int frameIndex) {
+		return rolls[frameIndex] + rolls[frameIndex+1];
+	}
+
+	private int spareBonus(int frameIndex) {
+		return rolls[frameIndex+2];
+	}
+
+	private int strikeBonus(int frameIndex) {
+		return rolls[frameIndex+1] + rolls[frameIndex+2];
+	}
+
+	private bool isSpare(int frameIndex) {
+		return rolls[frameIndex]+rolls[frameIndex+1] == 10;
+	}
+}</pre><p>Meine Kritik daran: Die Funktion <em>score()</em> hat nicht nur eine einzige Verantwortlichkeit. Ihr Name klingt fokussiert, doch in Wirklichkeit hat sie zumindest zwei <em>formale</em> Verantwortlichkeiten. Sie stellt Verhalten durch Logik her <strong>und</strong> sie integriert Verhalten anderer Funktionen.</p><p>Außerdem vermischt sie, wie sich herausstellen wird, in ihrer Logik wiederum zwei inhaltliche Teilverantwortlichkeiten bzw. Aspekte des Scoring.</p><p>Das wiederum ist für mich ein Zeichen für <a href="https://ralfw.de/2015/10/who-do-you-want-to-kiss-about-simplicity-in-coding/">eine bestimmte Form von KISS</a>: Ich sehe darin den Willen zur Einfachheit (simplicity) für den Schreiber; der will schnell einen Test auf grün bekommen. Dabei bleibt der Leser jedoch schnell auf der Strecke.</p><h2>Nachher</h2><p>Robert C. Martins "Erzählung" seines Weges zum finalen Code beginnt mit "A quick design session". Darin entwirft er ein Klassenmodell - von dem am Ende jedoch außer der geforderten Klasse <em>BowlingGame</em> nichts im Code enthalten ist. Merkwürdig. Denn er erklärt nicht, warum es nicht manifestiert. Deshalb würde ich diese Phase der Entwicklung auch nicht "design session" nennen, sondern lediglich "analysis session". Das Klassenmodell hilft ihm (und den Lesern), das Problem besser zu verstehen. Kein schlechter Ansatz, nur sollte er eben, wie ich finde, einen passenden Namen bekommen, damit die Überraschung am Ende nicht so groß ist. Auch hier gilt das <em>Principle of Least Astonishment</em> ;-)</p><p>Und dann macht sich Robert C. Martin auf den Weg... Test für Test schreitet er voran. Schrittweise entsteht dabei Logik in <em>BowlingGame</em>, die jeweils ein bisschen mehr des gewünschten Verhaltens liefert.</p><p>Das führt zum Ziel. Allerdings ist unklar, ob das so einfach geht, wie es dargestellt ist, oder ob das Vorgehen schon durch häufige Präsentation und Kenntnis des Zielzustands stromlinienförmig abgerundet ist.</p><p>In jedem Fall kann ich nicht erkennen, dass Robert C. Martin zu Beginn der Codierung eine Vorstellung von einem Lösungsansatz hat. Er hat in der "analysis session" Verständnis erarbeitet. Aber Verständnis ist keine Lösung. Verständnis ist kein Plan und kein Entwurf. Es ist eben keine "design session" gewesen.</p><p>Für mich gibt es deshalb eine Lücke in der Entwicklung. Eine Lücke, die TDD nicht schließt, nicht schließen kann. Sie kann nur im Kopf geschlossen werden. Und das zeigt sich im resultierenden Code.</p><p>Wie könnte es anders laufen? Wie könnte hier IODA helfen?</p><p>Hier ist mein Vorschlag:</p><h3>1. Inhaltliche Verantwortlichkeiten trennen</h3><p>Ich würde nicht versuchen, die Logik direkt in <em>score()</em> zu implementieren. Insbesondere bei unbekanntem Umfang der Logik würde ich das Gesamtproblem in Teilprobleme zerlegen und Ergebnisse in einem kleinen Prozess herstellen lassen:</p><pre class="lang:c# decode:true">public int score() {
+	var frames = Detect_frames (rolls);
+	var scores = Score_frames (frames, rolls);
+	return scores.Sum ();
+}
+
+class Frame {
+	public enum KindsOfFrame {
+		Regular,
+		Spare,
+		Strike
+	}
+
+	public KindsOfFrame Kind;
+	public int RollIndex;
+}</pre><p><em>score()</em> hat nun eine einzige Verantwortlichkeit: Integration. In der Funktion werden nur andere Funktionen "zusammengesteckt", um im Sinne einer Gesamtlösung miteinander zu arbeiten.</p><p>So werden auch zentrale Begriffe der Analyse erhalten:</p><ul><li>In der Aufgabenstellung ist von <em>frames</em> die Rede, d.h. der Zusammenfassung von Würfen. Deren Erkennung ist nun klar herausgestellt, z.B. bei einem Strike enthält ein Frame nur einen Wurf, ansonsten zwei. Die Wichtigkeit der Frames als Gliederungsrahmen für Würfe findet zudem Ausdruck in einer eigenen Klasse für sie.</li><li>Die Aufgabenstellung dreht sich um <em>scoring</em>, d.h. die Bewertung einzelner Frames. Das ist unabhängig von den Pins im Frame, z.B. bei einem Strike werden die nächsten beiden Würfe unabhängig von ihren Frames hinzugerechnet. Deshalb bekommt <em>Score_frames</em><em>()</em> auch sowohl <em>frames</em> wie <em>rolls</em> hineingereicht.</li></ul><p>Indem <em>score()</em> keine Logik enthält, ist die Funktion besser zu verstehen. Sie lesen einfach von oben nach unten, was passiert. Außerdem muss die Gesamtfunktionalität der Funktion nicht mit vielen kleinen Tests ermittelt werden. Um die Korrektheit der Gesamtlösung festzustellen, ist lediglich ein Integrationstest zu schreiben. Dessen Aufgabe ist es festzustellen, dass die Integration korrekt ist, d.h. die einzelnen Funktionen in passender Weise "zusammengesteckt" sind. Da es sich bei <em>score()</em> auch noch um die Funktion an der Wurzel der Lösung handelt, ist so ein Integrationstest außerdem ein Akzeptanztest.</p><h3>2. Ebenen der Abstraktion</h3><p>Auf der obersten Ebene ist für mich damit der Lösungsansatz gut zu verstehen. Sie bietet einen Überblick über alles. Das Abstraktionsniveau ist einheitlich und hoch.</p><p>Jetzt die nächste Abstraktionsebene:</p><pre class="lang:c# decode:true">IEnumerable&lt;Frame&gt; Detect_frames(int[] rolls) {
+	const int MAX_FRAMES = 10;
+
+	var fc = new FrameClassifier (rolls);
+	return Enumerable.Range (1, MAX_FRAMES)
+		         .Select (fc.Classify);
+}
+
+IEnumerable&lt;int&gt; Score_frames(IEnumerable&lt;Frame&gt; frames, int[] rolls) {
+	return frames.Select (f =&gt; Score_frame(f, rolls));
+}</pre><p>Auch hier wieder zwei Integrationsfunktionen; noch keine Logik weit und breit.</p><p><em>Detect_frames()</em> macht hier ganz deutlich, dass ein Spiel aus einer fixen Frame-Anzahl besteht, deren jeder einzelne bestimmt werden muss. Konkret geschieht das durch die Klasse <em>FrameClassifier</em>. Aber warum so umständlich? Auch das ist Ausdruck einer Eigenheit der Domäne. Die Frames sind nicht gleich groß. Deshalb muss während ihrer Bestimmung Zustand gehalten werden. Das tut Robert C. Martins Code natürlich auch. Nur ist dort diese Verantwortlichkeit zu einem Logik-Geflecht mit anderen verwoben.</p><p>Durch die Trennung von Frame-Bestimmung und Punktzählung ist nun auch klar, dass die Anzahl der Frames nur für erstere wichtig ist. Deshalb auch die lokale Konstante <em>MAX_FRAMES</em>.</p><p><em>Score_frames()</em> zeigt ein Integrationsmuster. Hier von n auf 1 umgesetzt. Dieselbe Funktion soll einfach nur mehrfach ausgeführt werden, um ein Gesamtergebnis - eine Liste von Frame-Punktzahlen - zu ermitteln. Statt <em>Score_frame()</em> also wiederholt hinzuschreiben, wird die Funktion mittels Linq auf alle Frames angewandt.</p><p>Wenn man es genau nimmt, geschieht da da etwas in einer Schleife. Ist nicht also Logik im Spiel? Ich behaupte, nein. Denn <em>frames</em><em>.Select()</em> ist nur eine generische Form für etwas, das auch speziell hätte gebaut werden können, z.B.</p><pre class="lang:c# decode:true">return Create_stream_from_frame_list(frames,
+           f =&gt; Score_frame(f, roll));</pre><p>Wo ist jetzt die Logik? Versteckt in <em>Create_stream_from_frame_list()</em>. Aber lohnt sich das? Nein. Für mich ist <em>Score_frames()</em> eine Integration im Sinne von IODA.</p><p>Operationen kommen erst auf der nächsten Ebene ins Spiel:</p><pre class="lang:c# decode:true">class FrameClassifier {
+	int[] rolls;
+	int rollIndex = 0;
+
+	public FrameClassifier(int[] rolls) {
+		this.rolls = rolls;
+	}
+
+	public Frame Classify(int frameNumber) {
+		const int MAX_FRAME_PINS = 10;
+
+		dynamic frame = new Frame{ Kind = Frame.KindsOfFrame.Regular, 
+                                           RollIndex = rollIndex};
+
+		if (rolls [rollIndex] == MAX_FRAME_PINS) {
+			frame.Kind = Frame.KindsOfFrame.Strike;
+			rollIndex += 1;
+		}  else {
+			if (rolls [rollIndex] + rolls [rollIndex + 1] == MAX_FRAME_PINS)
+				frame.Kind = Frame.KindsOfFrame.Spare;
+			rollIndex += 2;				
+		}  
+		return frame;
+	}
+}
+
+
+int Score_frame(Frame frame, int[] rolls) {
+	switch ((Frame.KindsOfFrame)frame.Kind) {
+	case Frame.KindsOfFrame.Strike:
+	case Frame.KindsOfFrame.Spare:
+		return rolls [frame.RollIndex] + 
+                       rolls [frame.RollIndex + 1] + 
+                       rolls [frame.RollIndex + 2];
+	default:
+		return rolls [frame.RollIndex] + 
+                       rolls [frame.RollIndex + 1];
+	}
+}</pre><p><em>Classify()</em> macht deutlich, dass normale und Spare-Frames gleich groß sind. Beide setzen den <em>rollIndex</em> um zwei weiter für den nächsten Frame. Und zur Bestimmung der Frame-Größe wird immer die maximal werfbare Pinzahl herangezogen (<em>MAX_FRAME_PINS</em>).</p><p>Der <em>rollIndex</em>, d.h. der Index des Wurfs, mit dem ein Frame beginnt, ist der im Objekt geschützte Zustand. Wenn die Frame-Bestimmung nicht so einfach ist, sollte das nicht unter den Tisch gekehrt werden. Deshalb eine eigene kleine Klasse dafür, auch wenn die nur eine Methode enthält. Sollte sich an der Methode zur Framebestimmung etwas ändern, ist nur dort einzugreifen. Das scheint mir sehr im Sinne des <em>Single Responsibility Principle</em> vor.</p><p>Bei Robert C. Martin findet die Berechnung des Gesamtergebnisses verwoben mit der Bestimmung der Frame-Arten statt. Hier ist das jedoch herausgelöst. Die Frame-Art ist bestimmt. <em>Score_frame()</em> konzentriert sich damit nur auf die Bestimmung der Punktzahl für einen Frame je nach Art. Deutlich sichtbar nun: Für Strike und Spare werden dieselben Würfe herangezogen.</p><p>Das ist natürlich wie <em>Classify()</em> pure Logik. Damit ist die Unterste Ebene der IODA Architektur erreicht.</p><figure class="alignnone wp-image-630"><img loading="lazy" src="https://ralfw.github.io/homepage-ralfw-de/media/posts/42/Bildschirmfoto-2016-02-05-um-17.08.08-1024x549.png" sizes="(max-width: 48em) 100vw, 768px" srcset="https://ralfw.github.io/homepage-ralfw-de/media/posts/42/responsive/Bildschirmfoto-2016-02-05-um-17.08.08-1024x549-xs.png 300w, https://ralfw.github.io/homepage-ralfw-de/media/posts/42/responsive/Bildschirmfoto-2016-02-05-um-17.08.08-1024x549-sm.png 480w, https://ralfw.github.io/homepage-ralfw-de/media/posts/42/responsive/Bildschirmfoto-2016-02-05-um-17.08.08-1024x549-md.png 768w, https://ralfw.github.io/homepage-ralfw-de/media/posts/42/responsive/Bildschirmfoto-2016-02-05-um-17.08.08-1024x549-lg.png 1024w, https://ralfw.github.io/homepage-ralfw-de/media/posts/42/responsive/Bildschirmfoto-2016-02-05-um-17.08.08-1024x549-xl.png 1360w, https://ralfw.github.io/homepage-ralfw-de/media/posts/42/responsive/Bildschirmfoto-2016-02-05-um-17.08.08-1024x549-2xl.png 1600w" alt="IODA Architektur" width="730" height="391"></figure><p>Den Code im Überblick finden Sie <a href="https://gist.github.com/ralfw/991b1bf473e178fed6f9" target="_blank">hier</a> in einem Gist.</p><h2>Diskussion</h2><p>Hat es etwas gebracht, den Code in eine IODA Architektur zu überführen? Ist er nun besser lesbar, besser wandelbar?</p><p>Beide Frage würde ich ganz klar mit Ja beantworten.</p><p>Die Lesbarkeit steigt aus drei Gründen:</p><ul><li>Die Methoden ohne Logik (Integrationen) zeigen auf einen Blick, "was abgeht", wie der Lösungsansatz also aussieht. Sie können sie von oben nach unten einfach lesen. Sie erzählen quasi eine kleine Geschichte.</li><li>Die Methoden mit Logik sind allesamt sehr überschaubar.</li><li>Auch mehrzeilige Logik ist nun sehr fokussiert (single responsibility).</li></ul><p>Die Wandelbarkeit steigt aus zwei Gründen:</p><ul><li>Methoden mit und ohne Logik haben fokussiertere Verantwortlichkeiten. Bedeutung ist feingranularer zugewiesen.</li><li>Methoden mit Logik sind nicht mehr funktional abhängig und können deshalb leichter getestet werden.</li></ul><p>Aber der Code ist nun umfangreicher, mögen Sie einwänden. Ist das aber in diesem Ausmaß wirklich schlimm? Etwas bessere Lesbarkeit braucht eben manchmal etwas mehr Text.</p><p>Aber das ist doch jetzt alles völlig overengineert, mögen Sie dagegen halten. Da stimme ich sogar bis zu einem gewissen Grad zu. Aber es ging ja darum, an einem überschaubaren Beispiel fühlbar zu machen, was IODA bedeutet.</p></div><footer class="wrapper post__footer"><p class="post__last-updated">This article was updated on 25.01.2021</p><ul class="post__tag"><li><a href="https://ralfw.github.io/homepage-ralfw-de/tags/ioda-architecture/">IODA Architecture</a></li></ul><div class="post__share"></div></footer></article><nav class="post__nav"><div class="post__nav-inner"><div class="post__nav-prev"><svg width="1.041em" height="0.416em" aria-hidden="true"><use xlink:href="https://ralfw.github.io/homepage-ralfw-de/assets/svg/svg-map.svg#arrow-prev"/></svg> <a href="https://ralfw.github.io/homepage-ralfw-de/planvoll-in-den-graben/" class="invert post__nav-link" rel="prev"><span>Previous</span> Planvoll in den Graben</a></div><div class="post__nav-next"><a href="https://ralfw.github.io/homepage-ralfw-de/raus-aus-dem-geschwindigkeitsrausch/" class="invert post__nav-link" rel="next"><span>Next</span> Raus aus dem Geschwindigkeitsrausch </a><svg width="1.041em" height="0.416em" aria-hidden="true"><use xlink:href="https://ralfw.github.io/homepage-ralfw-de/assets/svg/svg-map.svg#arrow-next"/></svg></div></div></nav></main><footer class="footer"><div class="footer__copyright"><p>One Man Think Tank EOOD - Sofia, Bulgaria - Imprint - Data Privacy Policy</p></div><button class="footer__bttop js-footer__bttop" aria-label="Back to top"><svg><title>Back to top</title><use xlink:href="https://ralfw.github.io/homepage-ralfw-de/assets/svg/svg-map.svg#toparrow"/></svg></button></footer></div><script>window.publiiThemeMenuConfig = {    
+        mobileMenuMode: 'sidebar',
+        animationSpeed: 300,
+        submenuWidth: 'auto',
+        doubleClickTime: 500,
+        mobileMenuExpandableSubmenus: true, 
+        relatedContainerForOverlayMenuSelector: '.top',
+   };</script><script defer="defer" src="https://ralfw.github.io/homepage-ralfw-de/assets/js/scripts.min.js?v=f4c4d35432d0e17d212f2fae4e0f8247"></script><script>var images = document.querySelectorAll('img[loading]');
+
+        for (var i = 0; i < images.length; i++) {
+            if (images[i].complete) {
+                images[i].classList.add('is-loaded');
+            } else {
+                images[i].addEventListener('load', function () {
+                    this.classList.add('is-loaded');
+                }, false);
+            }
+        }</script></body></html>
