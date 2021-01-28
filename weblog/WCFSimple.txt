@@ -1,0 +1,106 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+using System.ServiceModel;
+
+
+namespace WCFSimple.Contract
+{
+    [ServiceContract]
+    public interface IService
+    {
+        [OperationContract]
+        string Ping(string name);
+    }
+}
+
+
+namespace WCFSimple.Server
+{
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall)]
+    class ServiceImplementation : WCFSimple.Contract.IService
+    {
+        #region IService Members
+
+        public string Ping(string name)
+        {
+            Console.WriteLine("SERVER - Processing Ping('{0}')", name);
+            return "Hello, " + name;
+        }
+
+        #endregion
+    }
+
+
+    public class Program
+    {
+        private static System.Threading.AutoResetEvent stopFlag = new System.Threading.AutoResetEvent(false);
+
+        public static void Main()
+        {
+            ServiceHost svh = new ServiceHost(typeof(ServiceImplementation));
+            svh.AddServiceEndpoint(
+                typeof(WCFSimple.Contract.IService),
+                new NetTcpBinding(),
+                "net.tcp://localhost:8000");
+            svh.Open();
+
+            Console.WriteLine("SERVER - Running...");
+            stopFlag.WaitOne();
+
+            Console.WriteLine("SERVER - Shutting down...");
+            svh.Close();
+
+            Console.WriteLine("SERVER - Shut down!");
+        }
+
+        public static void Stop()
+        {
+            stopFlag.Set();
+        }
+    }
+}
+
+
+namespace WCFSimple
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("WCF Simple Demo");
+
+            // start server
+            System.Threading.Thread thServer = new System.Threading.Thread(WCFSimple.Server.Program.Main);
+            thServer.IsBackground = true;
+            thServer.Start();
+            System.Threading.Thread.Sleep(1000);  // wait for server to start up
+
+            // run client
+            ChannelFactory<WCFSimple.Contract.IService> scf;
+            scf = new ChannelFactory<WCFSimple.Contract.IService>(
+                        new NetTcpBinding(),
+                        "net.tcp://localhost:8000");
+
+            WCFSimple.Contract.IService s;
+            s = scf.CreateChannel();
+
+            while (true)
+            {
+                Console.Write("CLIENT - Name: ");
+                string name = Console.ReadLine();
+                if (name == "") break;
+
+                string response = s.Ping(name);
+                Console.WriteLine("CLIENT - Response from service: " + response);
+            }
+
+            (s as ICommunicationObject).Close();
+
+            // shutdown server
+            WCFSimple.Server.Program.Stop();
+            thServer.Join();
+        }
+    }
+}
