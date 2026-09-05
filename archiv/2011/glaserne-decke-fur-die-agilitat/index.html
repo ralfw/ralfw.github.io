@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gläserne Decke für die Agilität – Abhängigkeiten — ralfw.de Archiv</title>
+<meta name="description" content="Agile Softwareentwicklung weist den richtigen Weg zu besserer Software. Die Softwareentwicklung muss alles tun, um so dicht wie möglich an den diffusen und wechselnden Bedürfnissen">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/glaserne-decke-fur-die-agilitat/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Gläserne Decke für die Agilität – Abhängigkeiten — ralfw.de Archiv">
+<meta property="og:description" content="Agile Softwareentwicklung weist den richtigen Weg zu besserer Software. Die Softwareentwicklung muss alles tun, um so dicht wie möglich an den diffusen und wechselnden Bedürfnissen">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/glaserne-decke-fur-die-agilitat/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Gläserne Decke für die Agilität – Abhängigkeiten</h1>
+    <div class="doc-meta"><span>31. März 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/03/glaserne-decke-fur-die-agilitat.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/glaserne-decke-fur-die-agilitat/</code></span></div>
+    <div class="art"><p><a rel="noopener" href="http://agilemanifesto.org/">Agile Softwareentwicklung</a> weist den richtigen Weg zu besserer Software. Die Softwareentwicklung muss alles tun, um so dicht wie möglich an den diffusen und wechselnden Bedürfnissen der Kunden zu sein. Also mehr Dialog als fixierte Kontrakte. Mehr den Menschen im Blick als starre Tools. Mehr Offenheit für Veränderungen als Plantreue.</p>
+<p>Dazu muss natürlich das Vorgehen einer Entwicklergruppe passen. Scrum oder XP machen angesehene Vorschläge dazu.</p>
+<p>Trotzdem kommt es mir so vor, dass die versprochenen Vorteile sich nicht so schnell manifestieren, wie erhofft. Liegt das immer wieder daran, dass Scrum oder XP nicht gut genug implementiert werden? Ja, sicher kommt das immer wieder vor. Das scheint mir jedoch keine vollständige Erklärung. Ich glaue, selbst wenn ein Team Scrum perfekt einführte, würde es deshalb allein noch nicht wirklich agil werden.</p>
+<p>Der Weg zu besserer Software scheint klar. Man muss nur die Vorgehensmodellleiter hochsteigen. Doch dann stößt man – ob man es merkt oder nicht – an gläserne Decken. Die Verbesserungen geraten vorzeitig ins Stocken – der Grund ist allerdings nicht recht auszumachen. Alle Vorgehensmodell-Rituale werden doch eingehalten… Was läuft denn noch falsch?</p>
+<p>Ich glaube, eine solche gläserne Decke besteht in einem fundamentalen Widerspruch zwischen zwei Gedankenmodellen von Software.</p>
+<h3>Das heutige technische Gedankenmodell</h3>
+<p>Die Softwareentwicklung hat in weiten Teilen ein technisches Gedankenmodell. Im Kern dieses Modells stehen abhängige Funktionseinheiten. Verständlich ist das durchaus, wenn man die Softwareentwicklung als Enkel des Maschinenbaus und Kind der Elektrotechnik sieht. Denn Maschinen und Geräte jeder Art funktionieren nur, wenn ihre Teile komplett sind. Das heißt, die müssen in geeigneter Weise bottom-up hergestellt und integriert werden.</p>
+<p>Ein Computer ist ohne Netzteil, Bildschirm, Hauptplatine, Prozessor, Speicher, Tastatur nichts. Man kann keinen aus einem halben Netzteil, einem Viertel Prozessor, einem Drittel Speicher usw. zusammensetzen. Alles steht in einer Abhängigkeitsbeziehung, die zumindest eine Integrationsreihenfolge diktiert. Und alles, was da integriert wird, das muss vollständig sein.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/b894cfd91899258a.png" /></p>
+<p>Ohne Display kein vollständiges Gehäuse, ohne Prozessor keine vollständie Hauptplatine usw. Was weiter oben steht, also höher integriert ist, das ist abhängig von dem, was weiter unten steht.</p>
+<p>Hört sich das plausibel an? Dann finde ich plausibel, dass das reflexartig genannte Pattern für die Struktur von Software genauso aussieht:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a1ad0a4bbe8b8678.png" /></p>
+<p>Wenn man Entwickler nach der einer Soll-Architektur fragt, dann kommt in 9 von 10 Fällen “Schichtenarchitektur” als Antwort. Wenn man in Projekten nach der Architektur fragt, dann kommt auch in 9 von 10 Fällen der Begriff “Schichtenarchitektur” – wenn auch meist mit Einschränkungen wie “Wir haben es nicht geschafft, eine saubere Schichtenarchitektur hinzukriegen. Aber das war unser Ziel.” Gefolgt von einem Augenaufschlag, der eigentlich nur eine Reaktion verträgt: Kopfstreicheln. Denn ist eine Strukturierung nach Schichtenmodell - das gern differenzierter als obigens aussehen darf - nicht das Ziel schlechthin, für eine Softwarearchitektur?</p>
+<p>Nein, das sehe ich nicht so. Das pauschale Schichtenmodell hat eher mehr kaputt gemacht als Gutes bewirkt. Sein größter Schaden mag dabei gar nicht mal technischer Natur sein, sondern mentaler. Das Schichtenmodell hat offenes, flexibles Denken in Richtung besserer Architekturen gelähmt. Bei vielen Entwicklern.</p>
+<p>Aber das ist hier gar nicht mein Punkt. Heute geht es mir um das fundamentale Denken in Abhängigkeiten und deshalb in Schichten. Die “Abhängigkeitsdenke” ist überall. Hier die Diagrammtypen, die der <a rel="noopener" href="http://en.wikipedia.org/wiki/Unified_Modeling_Language">Beitrag zur UML bei Wikipedia</a> zuerst nennt:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/612c5e456c97e659.png" /></p>
+<p>Insgesamt werden 12 Diagrammtypen beschrieben, wovon mindestens 7 (58%) Abhängigkeitsdiagramme sind. (Und eigentlich würde ich sogar noch das Sequenzdiagramm mit in diese Gruppe rechnen. Dann wären es 66%.) [1]</p>
+<p>Solch technische Sicht ist für sich genommen natürlich kein Problem. Maschinenbau und Elektrotechnik leben damit ja wunderbar – und können eigentlich auch nicht anders. Auch Softwareentwicklung kann man natürlich ausgerichtet an diesem Gedankenmodell betreiben. Das tun ja auch Millionen von Entwicklern täglich.</p>
+<p>So weit, so gut also erstmal.</p>
+<h3>Das agile Gedankenmodell</h3>
+<p>Agilität interessiert sich erstmal nicht für Technik. Technik ist nur ein Mittel, um für den Kunden eine Lösung herzustellen. Aus Sich der Agilität zählt also nicht, wie Software intern strukturiert ist. Sie hat deshalb ein ganz anderes Gedankenmodell von ihr.</p>
+<p>Für die Agilisten besteht Software nicht aus Schichten von abhängigen Funktionseinheiten. Stattdessen denken sie in Scheiben, in Durchstichen, in Längsschnitten durch Software.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/3ca40e1169947560.png" /></p>
+<p>Agile Softwareentwicklung orientiert sich konsequent am Nutzen für den Anwender. Der mag klein sein, eine dünne Scheibe vom großen Ganzen, aber nur er zählt.</p>
+<p>Solche Nutzenscheiben (Features) können zwar auch abhängig von einander sein insofern, dass z.B. Monatsberichte bei einer Faktura-Anwendung keinen rechten Sinn machen, wenn nicht zumindest Rechnungen vorhanden sind. Doch das ist keine technische Abhängigkeit, sondern nur eine inhaltliche. Das Monatsberichte-Feature könnte mithin technisch hergestellt werden und sogar zum Einsatz kommen, selbst wenn es noch keine Rechnungserfassung gibt, sondern die Rechnungsdaten aus einem Altsystem importiert werden. Abhängigkeiten zwischen Features sind vergleichsweise lose.</p>
+<h3>Widerstreit</h3>
+<p>Das scheint mir nun ein fundamentales, wenn auch subtiles Problem: der Widerstreit der Gedankenmodelle, von denen eines die Software in Schichten gegliedert sieht und das andere sie in Scheiben gegliedert denkt.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/efa4fc383a336778.png" /></p>
+<p>Diese um 90° gegeneinander gedrehten Vorstellungen von Software müssen von der Programmierung immer wieder überein gebracht werden. Das Vorgehensmodell “denkt” in Scheiben, die Programmierung “denkt” in Schichten.</p>
+<p>Klar, irgendwie geht diese Transformation. Jeden Tag bekommen Entwicklergruppen das hin. Aber ist das einfach? Ist das so einfach, wie es sein sollte oder könnte?</p>
+<p>Nein, ich glaube, dieser Widerstreit zehrt an der Kraft der Softwareentwicklung. Er führt zu Konflikten zwischen Entwicklern und zwischen Entwicklern und Kunde. Auf die eine oder andere Weise.</p>
+<p>Wenn Denkmodelle ganz anders sind, dann braucht es immer wieder Übersetzungsaufwand. Das zeigen Jahrtausende Menschheitsgeschichte. Und jedes Softwareprojekt weiß das aus eigener Anschauung. Denn das Denkmodell des Kunden in Bezug auf seine Fachdomäne trifft ja dort ständig auf das Denkmodell der Entwickler in ihrer technischen Domäne. Bis Entwickler wirklich verstehen, was Kunden wollen, kann viel Zeit vergehen und können viele Tränen fließen.</p>
+<p>Warum sollte das anders sein, wenn zwei so unterschiedliche Gedankenmodell in Bezug auf die Herstellung von Software aufeinander treffen? Ist da Verständnis, Harmonie, Einfachheit zu erwarten? Kaum.</p>
+<h3>Ziel: Kohärenz</h3>
+<p>Ich glaube, dass Softwareentwicklung mit Agilität solange an eine gläserne Decke stößt, bis sie aufhört, in Schichten und Abhängigkeiten zu denken. Erst wenn ihr primäres Gedankenmodell, d.h. ihre technische Sicht der entspricht, die ein agiler Prozess hat, in dem sie Code produziert, kann sie das nächste Level erreichen. [2]</p>
+<p>Kohärenz zwischen agilem und technischem Gedankenmodell ist unabdingbar für eine flüssige Umsetzung von Anforderungen in Code.</p>
+<p>Die Frage ist nun, wie kann ein technisches Gedankenmodell aussehen, das Software nicht mehr aus Schichten und Abhängigkeitsbeziehungen aufgebaut sieht, sondern sie ganz natürlich als bestehend aus Scheiben denkt?</p>
+<h4>Anmerkungen</h4>
+<p>[1] In der UML mögen “nur” 58% der Diagramme Abhängigkeitsdiagramme sein. Deren Anteil am Entwicklerleben ist aber sicherlich deutlich höher. Ich schätze, dass 80-90% aller Diagramme, die gezeichnet werden von Entwicklern, Abhängigkeitsdiagramme der einen oder anderen Form sind (egal, ob sie strikt der UML folgen oder nicht).</p>
+<p>[2] Anders herum hat es übrigens nicht funktioniert. Jahrzehntelang hatte die Softwareentwicklung versucht, die Kunden mit rein technischer Vorgehensweise zu befriedigen. Das Ergebnis kennen wir alle. Software “von unten nach oben” zu bauen, macht niemanden glücklich. Erst das Framework, erst die Infrastruktur, dann die Logik, dann das GUI… Nein, so geht es nicht.</p>
+<p>Agile Softwareentwicklung ist das Resultat dieses Irrweges. Sie hat der technischen Sicht eine Kundensicht entgegengestellt, die um 90° gedreht ist. Dadurch ist ein Spannungsfeld entstanden – dem sich früher oder später die Softwareentwicklung eigentlich nur ergeben kann, um effektiver und effizienter zu werden. Mit einem technischen Denkmodell, das immer nur dagegen hält, wird schlicht zuviel Kraft verschwendet.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c3837bcb767ce4cf.gif" /></p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2011-03-31):</p>
+<p>Hallo Ralf,</p>
+<p>wie so oft, wenn zwei konkurrierende Welten (technische Sicht und Agile Sicht) aufeinander stoßen, ist die Lösung der Probleme doch darin zu suchen, das beste beider Welten zu vereinen, oder?</p>
+<p>Dies lässt sich doch sehr einfach bewerkstelligen, wenn als Regel gilt:
+"Das Schichtenmodell ist immer nur innerhalb einer Scheibe anzuwenden."</p>
+<p>Natürlich können mehrere Scheiben das Schichtenmodell seperat für sich berücksichtigen, wobei dann aber eine Schicht A in Scheibe X  nichts mehr mit der Schicht A in Scheibe Y zu tun hat.
+Die Schichten A in Scheibe X und Y mögen dabei vielleicht denselben Zweck (z.B. GUI) verfolgen, weshalb Programmierer dazu neigen, sie in dieselbe Assembly/denselben Projektordner zu packen, aber genau diese Struktur ist es doch, die selbigen auch verwirrt, da beim Fokus auf eine bestimmte Scheibe 'plötzlich' in deren Schicht A Code enthalten ist, der nix mit ihr zu tun hat.</p>
+<p>Komponentenorientierte Programmierung (mit loser Kopplung) kann doch nur funktionieren, wenn jede Komponente sein Zeugs selber besitzt und nicht mit anderen teilen muss - insbesondere in Hinsicht auf die Schichten.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-03-31):</p>
+<p>@Anonym: Ja, so ähnlich sehe ich das auch :-) Schichtendenken ist nicht ganz wertlos - aber überbewertet. Es hat seinen Platz, der gefunden werden muss.</p>
+<p>Naja, für mich habe ich den schon gefunden ;-) Aber ich möchte den Leser ja anstoßen, selbst darüber nachzudenken.</p>
+<p>Bei der nächsten gläsernen Decke werde ich davon aber doch etwas verraten.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

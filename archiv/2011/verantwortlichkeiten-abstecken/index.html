@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verantwortlichkeiten abstecken — ralfw.de Archiv</title>
+<meta name="description" content="Zwei der wichtigsten Clean Code Developer (CCD) Prinzipien sind Single Responsibility Principle (SRP) und Separation of Concerns (SoC), die beide Spezialfälle des noch grundlegende">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/verantwortlichkeiten-abstecken/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Verantwortlichkeiten abstecken — ralfw.de Archiv">
+<meta property="og:description" content="Zwei der wichtigsten Clean Code Developer (CCD) Prinzipien sind Single Responsibility Principle (SRP) und Separation of Concerns (SoC), die beide Spezialfälle des noch grundlegende">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/verantwortlichkeiten-abstecken/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Verantwortlichkeiten abstecken</h1>
+    <div class="doc-meta"><span>13. Jan. 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/01/verantwortlichkeiten-abstecken.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/verantwortlichkeiten-abstecken/</code></span></div>
+    <div class="art"><p>Zwei der wichtigsten <a rel="noopener" href="http://www.clean-code-developer.de">Clean Code Developer</a> (CCD) Prinzipien sind <em>Single Responsibility Principle</em> (SRP) und <em>Separation of Concerns</em> (SoC), die beide Spezialfälle des noch grundlegenderen <em>Don´t Repeat Yourself</em> (DRY) sind.</p>
+<p>So wichtig diese Prinzipien aber auch sind, ich glaube, wir nehmen sie noch nicht wichtig genug. Oder anders: Wir durchdringen sie noch nicht genug. Wir schauen bei der Responsibility und den Concerns noch nicht genau genug hin.</p>
+<p>Das möchte ich hier nachholen. Ich will noch genauer hinschauen. Wo versuchen wir heute noch nicht genügend zu trennen? Was denken wir als zusammengehörig, das eigentlich verschieden ist?</p>
+<h3>Concerns/Belange</h3>
+<p>Genau hinschauen beginnt oft mit einer Präzisierung von Begriffen. Welche Begriffe schweben denn im Raum der obigen Prinzipien. Da ist zuerst Concern/Belang. Was ist ein Concern?</p>
+<p>Die Literatur unterscheidet Core Concerns und Cross-cutting Concerns, also Kernfunktionalität und Querschnittfunktionalität. Hilft das? Hm… Mir fehlt da ein Begriff, der der Domäne.</p>
+<p>Concerns sind für mich Funktionalitätsdomänen. Wobei ich Domäne mal mit “fundamentaler Zweck” übersetze. Davon kann es viele geben in einer Software. Die wesentliche Domäne ist natürlich die Geschäftsdomäne des Auftraggebers. Aus ihr heraus entsteht der Wunsch nach einer Software. Für jemanden, der ein Tic Tac Toe Spiel bestellt, ist Tic Tac Toe die Geschäftsdomäne. Für jemanden, der einen online Shop für den Schuhverkauf bestellt, ist es der Schuhverkauf.</p>
+<p>Neben der Geschäftsdomäne gibt es dann weitere Domänen. Ob die nun querschnittlich oder längschnittlich sind, find ich nicht so wichtig. Entscheidender ist zu erkennen, dass sie eben für andere Zwecke stehen. Funktionalität zum Füllen eines Warenkorbs in einem online Shop dient einem anderen Zweck als Funktionalität zur Absicherung des Zugriffs auf den Warenkorb oder Funktionalität für eine verzugsfreie Anzeige von Produktempfehlungen.</p>
+<p>Vielleicht könnte man formulieren: Der Domain-Concern wird durch ein Hauptwort oder ein Verb beschrieben – und weitere Concerns können dem als Adjektive/Adverben beigeordnet sein, z.B.</p>
+<ul>
+<li><em>sicherer</em> Warenkorb  <em>verschlüsselt</em>bestellen  <em>übersichtliche</em> Lagerbestandsentwicklung  <em>belastbare</em> Produktabfrage  <em>persistente</em> Bestellung</li>
+</ul>
+<p>Das gilt dann natürlich für jeden Concern. Eben standen Substantive/Verben immer für den Domain-Concern. Das muss aber nicht so sein. Auch andere Concerns lassen sich mit Beiordnungen qualifizieren:</p>
+<ul>
+<li><em>schnelle</em> Verschlüsselung  <em>beobachtbar</em> cachen  <em>belastbare</em> Persistenz</li>
+</ul>
+<p>Insofern geht es eigentlich immer um einen Fokus-Concern (Substantiv/Verb) und qualifizierende Concerns (Adjektive/Adverbien). Vielleicht wäre es deshalb am besten, den Business-Concern eher mit Money-Concern zu betiteln? Denn das Geld, das der Kunde für ihn zahlt, ist das einzige, was ihn von anderen Concerns wirklich abhebt, würde ich sagen. Aus technischer Sicht sehe ich keinen wirklichen Unterschied zu anderen Concerns. Denn wer an Funktionalität im angeblichen Cross-cutting-Concern “Sicherheit” sitzt, der merkt nichts davon, dass der Cross-cutting ist. Er ist für ihn während der Zeit am wichtigsten.</p>
+<p>Der Money-Concern steht natürlich am Anfang. Wegen ihm wird eine Software in Auftrag gegeben. Deshalb kann man ihn als Wurzel eines Concern-Baums betrachten:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/0ba035e94feab33c.png" /></p>
+<p>Doch einmal in den Baum eingestiegen, gibt es für keinen Concern einen Vorrang mehr. Ein Baum ist selbstähnlich. Er sieht strukturell überall gleich aus; der qualifizierende Concern für einen anderen ist gleichzeitig Fokus-Concern weiterer.</p>
+<h3>Aspects/Aspekte</h3>
+<p>Cross-cutting Concerns werden auch Aspekt genannt. Das finde ich wenig hilfreich oder gar behindernd. Denn damit ist ein Begriff verbraucht, der anderweitig nützlich sein könnte. Ich würde mit Aspekt nämlich gern innerhalb von Concerns Unterscheidungen treffen.</p>
+<p>Concerns “färben” Funktionalität im Sinne von Zwecken ein. Die können funktionalen oder nicht-funktionalen Anforderungen entsprechen.</p>
+<p>Innerhalb von Concern-Funktionalität finden wir dann aber auch noch Unterschiedliches, dem Code dienen kann. Das würde ich gern mit Aspekt bezeichnen.</p>
+<p>Zwei offensichtliche Aspekte scheinen Daten und Verhalten repräsentiert durch Felder und Methoden von Klassen in OO-Sprachen. Mir scheint jedoch, dass es lohnt, noch näher hinzuschauen. Dann meine ich diese Aspekte zu erkennen:</p>
+<ul>
+<li>Code, der die Struktur von Daten definiert bzw. erhält; er dient der strukturellen, <strong>syntaktischen Konsistenz</strong>  Code, der die <strong>semantische Konsistenz</strong> von Daten sicherstellt  Code, der <strong>Daten verarbeitet</strong>  Code, der die <strong>Verarbeitung</strong> von Daten <strong>koordiniert</strong></li>
+</ul>
+<p>Beispiele für diese Aspekte sind leicht gebracht:</p>
+<h5>Syntaktische Konsistenz</h5>
+<p>Eine Klasse strukturiert Daten zunächst syntaktisch, d.h. sie fasst zusammen und setzt in Beziehung, was überhaupt grundsätzlich zusammen gehört, z.B.</p>
+<p>class Kunde
+{
+  public string Name;
+  public List Adressen;
+}</p>
+<p><em>Kunde</em> ist ein Datentyp, der aus den Datentypen <em>string</em> und<em>List</em> zusammengesetzt ist. Dadurch bekommt er Grundfunktionalität, die eine Struktur definiert. Instanzen des Datentyps können dann jede Form im Rahmen der konstituierenden Typen annehmen. Ein <em>Kunde</em>-Objekt kann einen Namen mit 0 Buchstaben oder 1000 Buchstaben haben, er kann keine Adresse enthalten oder 1 Million Adressen.</p>
+<h5>Semantische Konsistenz</h5>
+<p>Alles was mit einem Datentyp syntaktisch möglich ist, ist aber nicht unbedingt innerhalb des definierenden Concern gewünscht. Es muss also eingeschränkt werden auf das, was ein Datentyp darstellen soll, auf seine Bedeutung. Semantische Regeln sind nötig. Die könnten für einen Kunden zum Beispiel sein, dass kein <em>Kunde</em>-Objekt ohne Name existieren darf oder dass es keine zwei Adressen in derselben Straße im selben Ort geben darf.</p>
+<p>Für die obige Klasse läge es dann z.B. nahe, den Zwang zum Namen mithilfe eines Konstruktors und einer Validation in einer Property auszudrücken:</p>
+<p>class Kunde
+{
+  public Kunde(string name)
+  {
+    this.Name = name;
+  }</p>
+<p>private string _name;
+  public string Name
+  {
+    get { return _name; }
+    set {
+          if (string.IsNullOrEmpty(value)
+            throw SemanticError("Kunden müssen einen Namen haben!");
+          _name = value; 
+         }
+  }</p>
+<p>…
+}</p>
+<p>Syntaktische und semantische Korrektheit sind nach außen durch den Kontrakt eines Datenmodells definiert. Sie drücken sich daher “an der Oberfläche” von Daten aus, in dem API den man benutzt, um mit ihnen umzugehen.</p>
+<p>Und nach innen beziehen sich syntaktische wie semantische Konsistenz nur auf die zu einer Datenstruktur gehörenden Daten. Für die syntaktische ist das klar. Aber für die semantische mag das nicht so einfach zu schlucken sein. Doch ich meine es ernst: Semantische Konsistenz bezieht sich für mich nur auf die Daten innerhalb einer Datenstruktur; Beziehungen zu anderen, außerhalb liegenden Daten, sind dafür irrelevant. Semantische Korrektheit bedeutet, dass Veränderungen an Daten innerhalb eines gewissen Rahmens stattfinden müssen, der jenseits des struktuellen liegt – aber deshalb nicht grenzenlos ist. Zwei Beispiele:</p>
+<ul>
+<li>Aufgabe der semantischen Konsistensicherstellung kann es sein, einen Kunden auf maximal drei Adressen zu begrenzen oder keine Dubletten bei den Adressen zuzulassen.  Keine Aufgabe der semantischen Konsistenzsicherstellung ist es jedoch, zu verhindern, dass einem Kunden eine Adresse zugewiesen wird, die schon bei einem anderen Kunden hinterlegt ist. Das würde über die zu einer Datenstruktur <em>Kunde</em> wie oben skizziert gehörenden Daten hinausgehen.</li>
+</ul>
+<h5>Datenverarbeitung</h5>
+<p>Wenn Daten syntaktisch und semantisch so sind, wie sie sein sollen, dann kann man mit ihnen etwas anfangen. Dann kann die Datenverarbeitung beginnen. “Und Action bitte!” könnte man sagen ;-)</p>
+<p>Es könnten zum Beispiel Kunden mit einem gewissen Umsatz in einem gewissen Zeitraum einen Gutscheincode mit Verfallsdatum per Email geschickt bekommen. Dazu müssten verschiedene Daten verschiedener Typen durchsucht und aggregiert werden, andere Daten würden erzeugt und es würde ein Seiteneffekt (Email) generiert. Vielleicht so:</p>
+<p>void Gutschein_verteilen(int mindestumsatz,
+                         Zeitraum umsatzZeitraum,
+                         double gutscheinbetrag,
+                         string emailtext)
+{
+  foreach(var kunde in DB.LadeAlleKunden())
+  {
+    var zeitraumUmsatz = DB.LadeRechnungenEinesKunden(kunde.Kundennr)
+                        .Where(rg =&gt; umsatzZeitraum.Enthält(rg.Datum))
+                        .Sum(rg =&gt; rg.Nettoumsatz);
+    if (zeitraumUmsatz &gt;= mindestumsatz)
+    {
+      var gutschein = new Gutschein(kunde, gutscheinbetrag);
+      DB.SpeichereGutschein(gutschein);
+      Email.SendenAnKunde(kunde, emailtext);
+    }
+  }
+}</p>
+<h5>Datenverarbeitung nutzt also Daten über deren Oberfläche. Sie selektiert, transformiert, generiert, verändert sie. An Details der Syntax oder Semantik der einzelnen Daten ist Verarbeitung nicht interessiert. Verarbeitung geht mit Black Boxes im Sinne eines gewissen Zwecks um.</h5>
+<h5>Koordination</h5>
+<p>Datenverarbeitung findet in Schritten statt. Egal wie groß die sind, es sind immer mehrere Schritte. Am einfachsten zu erkennen ist das, wenn mehrere Methoden daran beteiligt sind.</p>
+<p>Das ist selbstverständlich – aber genau darin liegt das Problem. Da es ohne Schritte in einer bestimmten Reihenfolge nicht geht, nehmen wir die Herstellung der Reihenfolge nicht als einen eigenen Aspekt wahr.</p>
+<p>Aber es ist etwas anderes, einen Umsatz zu berechnen oder eine Email zu verschicken oder einen Gutschein zu erzeugen, als diese Funktionalitäten in eine bestimmte Reihenfolge zu bringen.</p>
+<p>Die obige Methode <em>Gutschein_verteilen()</em> hat vor allem die Aufgabe, Arbeitsschritte im Sinne der Aufgabe “Gutschein verteilen” zu koordinieren. Erst muss dies geschehen, dann dann jenes, schließlich noch etwas anderes. Sie stellt einen Schritt-für-Schritt-Verarbeitungsfluss her.</p>
+<p>Sie tut allerdings noch etwas anderes. Sie bringt Schritte nicht nur in eine Sequenz, sondern trifft auch noch Entscheidungen. Das heißt, sie verarbeitet auch Daten.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/275f6a9363b3df3a.png" /></p>
+<p>Ist das nicht normal? Doch, das ist ganz normal. Die Methode ist typisch. Das ist ja mein Punkt: Deshalb ist es so schwer zu sehen, dass es den Koordinationsaspekt überhaupt gibt.</p>
+<h3>Responsibilities/Verantwortlichkeiten</h3>
+<p>Mit der Zerlegung in Concerns und Aspekte sind Funktionseinheiten noch nicht fein genug definiert, würde ich sagen. Die Verarbeitung von Daten (Aspekt) in einem Cache (Concern Performance) ist sicherlich nicht mit einer Funktionseinheit erledigt. Also gilt es, auch Funktionalität noch zu zerlegen in überschaubare Verantwortlichkeiten.</p>
+<p>Das führt für mich schließlich zu einem konsequent prinzipienbasierten Codebaum:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/94f07770ae0a3d4d.png" /></p>
+<p>Zu einer Anforderung ist zunächst festzustellen, welche Concerns an ihr beteiligt sind. Innerhalb der Concerns geht es dann um die Identifikation der Aspekte. Und pro Aspekt ist dann die Funktionalität in überschaubare Verantwortlichkeiten zu gliedern.</p>
+<p>Vielleicht hört sich das sogar noch gar nicht so merkwürdig an. Clean Code Developer bemühen sich darum in irgendeiner Weise sicher jeden Tag. Aber ich glaube, im Ergebnis ist eine so systematische Trennung selten. Sie passt nämlich nicht so recht ins übliche OO-Denken.</p>
+<h3>Praktische Konsequenzen für Entwurf und Implementierung</h3>
+<p>Nun zur Disziplin des Prinzipienreitens. Ich nehme das entwickelte Schema mal ernst. Das bedeutet: Jede Funktionseinheit dient nur einem Aspekt. Code, der Datensyntax definiert, tut dann nichts anderes. Code, der semantische Konsistenz herstellt, tut dann auch nichts anderes. Ebenso Aktionen und Koordinationen: sie tun nichts anderes. Aktionen koordinieren nicht, Koordinationen tun nichts.</p>
+<p>Wie sieht dann Code aus? Anders als vorher? Ja, ich denke. Als Beispiel mag diesmal ein Tic Tac Toe Spiel dienen.</p>
+<h5>Syntax</h5>
+<p>Ein Tic Tac Toe Programm hat sicherlich einen Zustand, es hält also Daten. Das könnte ein Spielstand sein, der Auskunft gibt, welcher Spieler dran ist, ob das Spiel noch läuft (oder durch Patt oder Gewinn beendet ist) und wie die Spielsteine auf dem Spielbrett liegen.</p>
+<p>enum Spieler
+{
+  Keiner, Kreuz, Kreis
+}</p>
+<p>enum Spielmodus
+{
+  Läuft, KreuzHatGewonnen, KreisHatGewonnen, Patt
+}</p>
+<p>class Spielstand
+{
+  public Spieler SpielerAmZug = Spieler.Kreuz;
+  public Spielmodus Modus;
+  public Spieler[,] Spielbrett = new Spieler[3,3];
+}</p>
+<p>Dieser Code definiert eine Datenstruktur, ein Schema. Er steht für den Aspekt “Syntaktische Konsistenz” des Concern “Money”, also der Businessdomäne. Die syntaktische Konsistenz stellt der Code ohne weiteres Zutun her.</p>
+<h5>Semantik</h5>
+<p>Jetzt die semantische Konsistenz. Zu ihr gehört, dass Spielfelder nur einmal von <em>Keiner</em> auf <em>Kreuz</em> oder <em>Kreis</em> gesetzt werden können oder dass, wenn das Spiel beendet ist, kein Spieler mehr dran ist und auch keine Veränderungen mehr am Spielbrett vorgenommen werden können. Wohin mit dieser Funktionalität?</p>
+<p>Ich behaupte mal keck: Wenn “Semantische Konsistenz” ein anderer Aspekt ist als “Syntaktische Konsistenz”, dann gehört seine Implementation nicht in die Funktionseinheiten des Aspekts “Syntaktische Konsistenz”. Also brauche ich eine weitere Funktionseinheit, z.B. in dieser Weise:</p>
+<p>class Spiel
+{
+  private Spielstand _spielstand;
+  …     
+}</p>
+<p>Die Aufgabe von Spiel ist, die Datenstruktur vor semantisch inkonsistenten Veränderungen zu schützen. Das bedeutet, sie darf den Spielstand nicht nach außen zeigen, denn sonst könnte ja jeder nach Belieben darauf schreibend zugreifen. Stattdessen muss sie ihn hinter einer Reihe von domänenrelevanten Operationen verstecken. Das ist sogar Objektorientierung par excellence, denn das nennt sich Kapselung.</p>
+<p>Naheliegend scheint für Tic Tac Toe die Operation <em>Ziehen()</em>. Mit ihr wird ein Stein für den aktuellen Spieler auf ein Spielfeld gesetzt; die Umgebung soll sich nicht darum bekümmern, ob das ein Kreis oder ein Kreuz ist. Beim Ziehen verändern sich Daten, deshalb ist es ein Kommando (Command) im Sinne von <a rel="noopener" href="http://en.wikipedia.org/wiki/Command-query_separation">CQS</a>.</p>
+<p>Wer anschließend mit dem neuen Spielstand arbeiten will, darf allerdings nicht darauf hoffen, dass <em>Spiel</em> ihn so einfach liefert wie <em>Spielstand</em>. Spiel mag Daten <em>haben</em>, aber Spiel selbst <em>ist keine</em> Datenstruktur. Spiel ist nur für Semantik, nicht für Syntax zuständig. <em>Spiel</em> hat deshalb keine Properties. Im Sinne von <a rel="noopener" href="http://de.wikipedia.org/wiki/Domain-Driven_Design">DDD</a> würde ich <em>Spiel</em> daher eine Entität nennen.</p>
+<p>Irgendwie muss ja aber z.B. die Anzeige des Programms mindestens das Spielbrett in die Hand bekommen, um es anzuzeigen. Dazu kann <em>Spiel</em> eine Abfragemöglichkeit (Query) anbieten, z.B. <em>AktuellerSpielstand()</em>.</p>
+<p>class Spiel
+{
+  private Spielstand _spielstand</p>
+<p>public void Ziehen(int spielfeldindex) { … }</p>
+<p>public Spielstand AktuellerSpielstand() { … }
+}</p>
+<p>Wie der Spielstand auf die Query zurückgegeben wird, ist natürlich die Frage. Da sehe ich mehrere Abstufungen.</p>
+<ul>
+<li>Der Spielstand kommt in einer speziellen Datenstruktur zurück, die nur dafür da ist, gelesen zu werden, z.B. <em>SpielstandView</em>.  Der interne <em>Spielstand</em> ist so definiert, dass nur <em>Spiel</em> ihn überhaupt verändern kann. Ihn rauszureichen, bringt ihn also nicht in Gefahr.  Der interne <em>Spielstand</em> wird kopiert in einen neuen <em>Spielstand</em>. Der könnte zwar von der Umwelt von <em>Spiel</em> verändert werden, doch das würde den internen Spielstand nicht in Gefahr der Inkonsistenz bringen.  Der interne <em>Spielstand</em> wird ohne weiteres komplett rausgereicht in dem Vertrauen, dass niemand in der Umwelt auf ihn schreibend zugreift.</li>
+</ul>
+<p>Ja nach Anwendung, Entität, Teamorganisation kann eine andere Option angemessen sein, um Zustand aus einer Entität rauszureichen. Am saubersten wäre Option 1 – aber auch am aufwändigsten. Am einfachsten wäre Option 4 – aber auch am risikoreichsten.</p>
+<p>Ich persönlich hätte in einer kleinen Tic Tac Toe Anwendung kein Problem, Option 4 zu wählen. Der Zustand ist trivial und es gibt auch nicht mehrere Sichten darauf. Für andere Szenarien würde ich mich aber sicher auch mal anders entscheiden.</p>
+<p>Alles in allem ist das für diesen Artikel jedoch eine Nebensächlichkeit. Wesentlich finde ich die deutliche Trennung von syntaktischer und semantischer Konsistenzverantwortlichkeit.</p>
+<p>Beim Datenmodell diese beiden Aspekte auseinander zu halten, scheint mir zunehmend wichtig. Es sind zwei Seiten einer Medaille.</p>
+<h5>Aktionen</h5>
+<p>Genauso sehe ich es inzwischen bei den Aspekten Verarbeitung und Koordination. Sie sind für mich nämlich die zwei Seiten der Medaille Prozess. Oder vielleicht sollte ich Aktion statt Verarbeitung sagen? Dann bestünde der Prozess aus Aktion und Koordination. Geht besser über die Zunge, oder? ;-)</p>
+<p>Ja, das fügt sich jetzt noch ein bisschen schöner. Da sind Daten und Prozess und zu beiden gehören zwei Aspekte:</p>
+<ul>
+<li>
+<p>Datenmodell   Syntax  Semantik</p>
+</li>
+<li>
+<p>Prozess   Aktion  Koordination</p>
+</li>
+</ul>
+<p>Beim Datenmodell geht es, nun, um Daten. Da ist alles ein bisschen steifer ;-) Daten sind halt Daten sind halt Daten. Die stehen nur in der Gegend herum – bis jemand mit ihnen etwas tut. Das ist dann ein Prozess. Der hat Eingaben und Ausgaben und liest aus Ressourcen und verändert Ressourcen. Das alles sind Daten, also ist ein Prozess der Datenverarbeiter schlechthin.</p>
+<p>Der tut seine Sache meistens in mehreren Schritten, in einzelnen Aktionen. Jede Aktion trägt zum Prozessergebnis ein Stück bei. Jede Aktion sollte dafür in einer eigenen Funktionseinheit stehen. Beispiel Tic Tac Toe: Nach einem Zug muss der neue Modus ermittelt werden. Liegt ein Gewinn vor oder Patt oder ist nur der andere Spieler dran?</p>
+<p>Das hat nichts mit der syntaktischen oder semantischen Konsistenz der Daten zu tun. Hier geht es um einen Prozess, der auf einem Spielstand arbeitet, ihn auch verändert – aber nicht im Sinne einer Datenkonsistenz. Nachdem <em>Ziehen()</em> ausgeführt wurde, sind die Daten konsistent. Wenn nun aus ihnen ermittelt wird, ob ein Gewinn vorliegt, dann trägt das nichts zur Konsistenz bei. Falls jedoch nach der Prüfung der Modus verändert werden soll, dann selbstverständlich in konsistenter Weise.</p>
+<p>Wenn ich die Prinzipien, Concerns und Aspekte weiter ernst nehme, dann bedeutet das, die Funktionseinheit zur Modusermittlung muss wiederum separat sein von der Datenstruktur und der Entität. Weder <em>Spielstand</em> noch <em>Spiel</em> können zuständig dafür sein festzustellen, ob ein Gewinn vorliegt. Der Prozess dafür muss woanders aufgehängt sein. Wie wäre es mit eniem Schiedsrichter, der nach jedem Zug das Spielergebnis prüft?</p>
+<p>class Schiedsrichter
+{
+  public void SpielergebnisBeurteilen(Spiel spiel)
+  {
+    var spielstand = spiel.AktuellerSpielstand();
+    Spielmodus gewinnerSpielmodus;
+    if (GewinnFeststellen(spielstand.Spielbrett,
+                          out gewinnerSpielmodus))
+      spiel.SpielBeenden(gewinnerSpielmodus);
+    else if (PattFeststellen(spielstand.Spielbrett))
+      spiel.SpielBeenden(Spielmodus.Patt);
+  }</p>
+<p>private bool GewinnFeststellen(Spieler[,] spielbrett) {…}</p>
+<p>private bool PattFeststellen(Spieler[,] spielbrett) {…}
+}</p>
+<p>Der Schiedsrichter schaut sich das Spielbrett des Spielstands des Spiels an, beurteilt ob ein Gewinn vorliegt usw. und teilt ggf. dem Spiel den neuen Modus mit. Das kann dann in semantisch konsistenter Weise tun, was immer es tun muss, um seinen Zustand zu ändern.</p>
+<p>Zu sehen sind verschiedene Aktionen mit fokussierter Verantwortlichkeit: <em>GewinnFeststellen()</em> und <em>PattFeststellen()</em>. Dazu kommt ein weiteres Kommando auf den Daten: <em>SpielBeenden()</em>.</p>
+<p>Aktionen sollen nur eines sein: atomare Funktionalität im Sinne eines Concerns. Von <em>GewinnFeststellen()</em> und <em>PattFeststellen()</em> nehme ich das einmal an. Doch diese Forderung gilt auf jeder Ebene. Eine Funktionseinheit soll sich entscheiden, welchen Aspekt sie implementiert. Und wenn sie sich für Aktion entscheidet, dann soll sie sich darauf konzentrieren. Wie steht es in dieser Hinsicht mit <em>SpielergebnisBeurteilen()</em>?</p>
+<h5>Koordination</h5>
+<p><em>SpielergebnisBeurteilen()</em> implementiert keine atomare Funktionalität im Sinne eines Concerns. Sie ist zusammengesetzt, da sie ja Aktionen und Kommandos aufruft. <em>SpielergebnisBeurteilen()</em> kann daher nicht dem Aspekt Aktion/Datenverarbeitung angehören. Auch geht es nicht um Datenkonsistenz.</p>
+<p>Es bleibt nur der Schluss, dass <em>SpielergebnisBeurteilen()</em> zum Aspekt Koordination gehört. Das bedeutet für mich, die Methode muss sich darauf beschränken, den Verarbeitungsfluss zu regeln. Ihre Aufgabe ist ausschließlich zu koordinieren, welche Aktion auf welche folgt.</p>
+<p>Das tut <em>SpielergebnisBeurteilen()</em> vor allem mit Sequenzen, z.B. folgt auf <em>spiel.AktuellerSpielstand()</em> immer <em>GewinnFeststellen()</em>. Aber auch Fallunterscheidungen kommen zum Einsatz.</p>
+<p>Die finde ich knifflig bei der Koordination. Sie sollten vermieden werden, weil sie Domänenfunktionalität darstellen. In einer <em>if</em>-Bedingung steckt immer ein wenig Logik des Concerns. Das kontaminiert den Aspekt-Code.</p>
+<p>Deutlicher ist das oben in <em>Gutschein_verteilen()</em>. Dort steht ein Ausdruck in der Bedingung, der morgen anders sein könnte, weil sich eine Geschäftsregel geändert hat. Wird auf solch ein Detail nicht geachtet, verteilt sich Domänenlogik schnell nicht nur horizontal auf derselben Abstraktionsebene, sondern auch vertikal. Damit ist dann keine saubere Hierarchisierung zur Abstraktion und damit zur Bewältigung von Kompliziertheit/Komplexität mehr möglich.</p>
+<p>Für den vorliegenden Fall würde ich die <em>if</em>-Anweisungen akzeptieren, weil der Code überschaubar ist und die konkreten Bedingungen in einer Funktion versteckt sind. Ganz allgemein würde ich aber empfehlen, Koordinationscode anders aussehen zu lassen als Aktionscode, um nicht Gefahr zu laufen, dass “action creep” einsetzt. Wenn nicht sonnenklar ist, dass Code nur koordinieren soll, kommt irgendwer früher oder später auf den Gedanken, ihn mit anderen Aspekten “zu verschmutzen”.</p>
+<p>Wie könnte so ein anderes Aussehen aussehen? Mir fallen dazu natürlich Event-Based Components ein ;-) Wer hätte das gedacht. Das könnte ungefähr so gehen:</p>
+<p>class SpielergebnisBeurteilen
+{
+  public SpielergebnisBeurteilen(GewinnFeststellen gewinnFeststelen,
+                                 PattFeststellen pattFeststellen,
+                                 Spiel spiel)
+  {
+    _process = gewinnFeststellen.Process;
+    gewinnFeststellen.Gewonnen += spiel.Gewonnen;
+    gewinnFeststellen.NichtGewonnen += pattFeststellen.Process;
+    pattFeststellen.Patt += spiel.Patt;
+  }</p>
+<p>private Action _process;
+  public void Process(Spieler[,] spielbrett)
+  {
+    _process(spielbrett);
+  }
+}</p>
+<p>Die Klasse <em>SpielergebnisBeurteilen</em> ist jetzt ein reiner Koordinator. Im Konstruktor wird der Datenfluss zusammengesteckt, d.h. die Zusammenarbeit der Aktionen koordiniert. Das sieht etwas kryptisch aus – an dieser Stelle sage ich aber mal, das ist ein Feature. Denn weil das so aussieht, kommt man kaum auf die Idee, den Code anzufassen, um mal eben noch ein bisschen Domänenlogik reinzufummeln.</p>
+<p>Verstehen soll man den Code auch nicht. Der kann nämlich generiert werden. Verstehen soll man das Modell des Codes, sozusagen den Koordinationsplan:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d104d9452821bbf8.png" /></p>
+<h3>Zusammenfassung</h3>
+<p>Ich glaube, wir sollten die Prinzipien SRP und SoC noch ernster nehmen, wenn wir wahrhaft sauber programmieren wollen. Sie sollten uns leiten – und nicht ein irgendwie geartetes Werkzeug wie eine Programmiersprache.</p>
+<p>C# &amp; Co bieten eine Hand voll Ausdruckmittel. Die sind an sich neutral. Dass man Daten und Methoden in einem Konstrukt zusammenfassen kann, bedeutet nicht, dass man es in einer gewissen Weise tun muss. Wenn es eine Klasse <em>Kunde</em> gibt, dann muss die nicht deshalb eine Property <em>Name</em> und auch noch eine Methode <em>BestimmeOffenePost()</em> haben.</p>
+<p>Statt einer naiven oder gar falschen Abbildung der Welt aufzusitzen sollten wir uns von Prinzipien leiten lassen. Das bedeutet für mich, dass Code, der unterschiedlichen Concerns und unterschiedlichen Aspekten angehört, sauber getrennt wird.</p>
+<p>Code, der Struktur definiert, sollte nur das tun. Code, der semantische Strukturkonsistenz sicherstellt, sollte nur das tun. Code, der Daten verarbeitet, sollte nur das tun. Code, Datenverarbeitung koordiniert, sollte nur das tun.</p>
+<p>Damit uns diese Separation leicht fällt, sollten wir für sie klare Ausdruckweisen mit den Mitteln unserer Programmiersprachen suchen. Die könnten zum Beispiel sein:</p>
+<ul>
+<li>Datenstrukturen (Syntax) werden über Klassen/Strukturen definiert.</li>
+<li>Die semantische Konsistenz von Datenstrukturen stellt ein Klasse sicher, die sie als Zustand enthält und ihre konkrete Form gegenüber der Außenwelt verbirgt.</li>
+<li>Datenverarbeitung, d.h. Domänenlogik, findet in Aktionsklassen statt (EBC-Bauteile). Diese Klassen sollen sehr feingranular sein, um sie wiederverwenden zu können und sie nicht mit Koordination aufzuladen.</li>
+<li>Koordination der Datenverarbeitung findet in speziellen Koodinationsklassen statt (EBC-Platinen). Ihre Aufgabe ist ausschließlich, Aktionen zu Prozessen zusammen verbinden.</li>
+</ul>
+<p>Objektorientierung behält damit ihren Platz. Das ist gar keine Frage. Aber ihr Bedeutung verändert sich. Objektorientierung ist nicht mehr “für alles zuständig”, ist nicht mehr die alleinige Brille, durch die Software gesehen werden sollte. Stattdessen sollten ihre Mittel, wie sie eine Sprache wie C# implementiert, differenziert im Sinne der beiden großen Aspektgruppen Datenmodell und Prozess eingesetzt werden:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/db5e2558753baa9b.png" /></p>
+<p>Interessant ist dabei die semantische Konsistenz. Dort begegnen sich traditionelle OOP und “POP” (Prinzipienorientierte Programmierung). Denn: Semantische Konsistenz kann nur über Prozesse hergestellt werden.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/0e7f1ac9000fb0b6.png" /></p>
+<p>In diesem Sinne: Alles fließt – aber wir sollten gut darauf achten, wo. Lassen wir uns das Denken nicht durch ein Werkzeug vernebeln, sondern denken wir in Prinzipien.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f7305543dc9de714.gif" /></p>
+<h2>Kommentare</h2>
+<p><strong>mythicrider</strong> (2011-01-17):</p>
+<p>Sehr interessant!
+Was ich nicht ganz verstehe: Warum ist "public void Ziehen(int spielfeldindex)" bei der Semantik angesiedelt, ich hätte die mehr bei den Aktionen erwartet bzw. sehe sie mehr als Aktion?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-01-17):</p>
+<p>@mythicrider: Ziehen() verändert gezielt den Zustand des Datenmodells. Das darf nur in bestimmter Weise geschehen. Deshalb ist es für mich Semantik.</p>
+<p>Die Implementation ist dann in Form eines Prozesses :-) Da ist eine gewisse Überschneidung mit Aktion und Semantik. Aber ich würde eher sagen: Die Semantik stößt einen Prozess an, wenn sie komplizierter ist.</p>
+<hr />
+<p><strong>mythicrider</strong> (2011-01-18):</p>
+<p>Das heißt es gibt die Semantik "Ziehen" und den Prozess "Ziehen" und der Prozess ruf lediglich die Semantik?
+Und wenn die Semantik einen Prozess anstoßen kann (quasi die entgegengesetzte Richtung) macht sie sich ja vom Prozess abhängig, oder ist dann hier wieder EBC im Spiel?</p>
+<p>Ich kann mir das Zusammenspiel untereinander noch nicht ganz vorstellen</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-01-18):</p>
+<p>@mythicrider: Ich kann verstehen, dass dir da etwas noch nicht klar ist. Ich suche auch noch nach einer etwas besseren Darstellung... einstweilen versuche ich es aber mit den bisherigen Begriffen.</p>
+<p>Also: Mir geht es erstmal um eine grundsätzliche Kategorisierung von Code - und daraus folgend um eine physische Trennung oder gar eine spezielle physische Form für die Kategorien (Aspekte).</p>
+<p>Nun sehe ich die Zustandsveränderung am Spielstand zuerst mal als Aspekte "Semantische Korrektheit". Ich denke, darüber können wir uns einig sein. Solange die überschaubar ist, ist alles in Butter. Einfach eine Methode auf der Klasse für die semantische Korrektheit (Entität) implementieren.</p>
+<p>Nun aber: Wenn die semantische Korrektheit nicht in einfach zu überschauender Weise umgesetzt werden kann... dann ist dafür ein Prozess nötig. D.h. der Aspekt "semantische Korrektheit" wird implementiert mit Aspekten "Aktion" und "Koordination". Dafür sind weitere separate Funktionseinheiten aufzusetzen.</p>
+<p>Am Anfang gilt somit: Semantische Korrektheit == Aktion. Später gilt: Semantische korrektheit -&gt; Prozess (lies "A -&gt; B" als A ist abhängig/nutzt B).</p>
+<hr />
+<p><strong>Mike Bild</strong> (2011-02-13):</p>
+<p>Leider bin ich erst heute zum lesen gekommen. Sehr cooler "totales" SoC und SRP Artikel! Sehr schön finde ich die Prinzipien der Trennung von syntaktisch/struktureller/schematischer und semantischer Konsistenz (wie Invarianten), sowie der Unterscheidung von Verarbeitung (Worker/Action) und Koordination/Controller (Prozess oder Fluss). Dein Artikel beschreibt sehr genau das Fachliche, die Business Domäne, bzw. Spiel Schema und Logik und lässt ein bisschen die technischen Aspekte wie Speichern, Log oder Remoting außen vor. Gut so, denn hier findet sich die technische Domäne wieder. Du schaust in Richtung CQ(R)S auch das finde ich passend. Diese darf mit dem fachlichem Kontext nur sehr gezielt zu tun haben und sollte sich sicher gleichen Prinzipien unterwerfen. Danke für diesen sehr spannenden Einblick. Cheers, Mike</p>
+<hr />
+<p><strong>Mike Bild</strong> (2011-02-13):</p>
+<p>Ich denke semantisch Korrektheit kann sich auf zwei Dinge beziehen - Zustand und Prozess bzw. Fluss. Ersteres lässt sich aus meiner Sicht gut und gern mit Invarianten eines Objektes, oder größer eines Systems, und/oder auch mit einer State Machine beschreiben. Letzteres als Workflow oder Pipeline. Beide müssen in eine bestimmt definierte, semantische korrekte, Ausführung gebracht werden. Ziehen() wäre für mich demnach auch eine durch ein Command ausgelöste Aktion die den Spielstand (Status) in einer bestimmten Semantik, evtl. durch Invariante gesichert, verändert. Nun könnte man vielleicht auch sagen, dass Spiel eine State Machine für Spielstand ist. Die Hoheit über die Transitionen hätte damit Spiel. Die Transitionen werden dann über das Command Ziehen ausgelöst. Cheers, Mike</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

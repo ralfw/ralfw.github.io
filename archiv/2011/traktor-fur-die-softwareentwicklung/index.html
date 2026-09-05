@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Traktor für die Softwareentwicklung — ralfw.de Archiv</title>
+<meta name="description" content="Wer ist eigentlich am wichtigsten in einem Softwareentwicklungsprojekt? Sind es die Entwickler, ohne die es zu keiner Software kommt? Oder ist es der Requirements Engineer, ohne de">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/traktor-fur-die-softwareentwicklung/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Traktor für die Softwareentwicklung — ralfw.de Archiv">
+<meta property="og:description" content="Wer ist eigentlich am wichtigsten in einem Softwareentwicklungsprojekt? Sind es die Entwickler, ohne die es zu keiner Software kommt? Oder ist es der Requirements Engineer, ohne de">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/traktor-fur-die-softwareentwicklung/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Traktor für die Softwareentwicklung</h1>
+    <div class="doc-meta"><span>16. Feb. 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/02/traktor-fur-die-softwareentwicklung.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/traktor-fur-die-softwareentwicklung/</code></span></div>
+    <div class="art"><p>Wer ist eigentlich am wichtigsten in einem Softwareentwicklungsprojekt? Sind es die Entwickler, ohne die es zu keiner Software kommt? Oder ist es der Requirements Engineer, ohne den die Entwickler nicht wüssten, was sie tun sollen? Oder ist es der Verkäufer, ohne den es gar kein Projekt gäbe, für das Anforderungen erhoben werden müssen? Oder ist es der Kunde, der schließlich das Geld gibt? Oder ist es – sofern vorhanden – die Qualitätssicherung, ohne die man das Entwicklungsprodukt nicht auf den Anwender loslassen kann?</p>
+<p>Natürlich sind all diese Rollen wichtig. Erst wenn alle zusammenspielen, kommt gute Software heraus. Und dennoch… ich denke, es gibt eine erste Rolle und den vielen gleichen, den <em>primus inter pares.</em>Ohne sie geht nichts. Und ohne ein größeres Bewusstsein ihr gegenüber wird es nicht besser mit der Softwareentwicklung. Merkwürdigerweise hat diese Rolle keinen eigenen Namen, glaube ich. Ich kenne zumindest keinen.</p>
+<p>Diese Rolle, die ich meine, die wichtigste, das ist… die Abnahme.</p>
+<p>Der Abnehmer, d.h. der, der prüft, ob eine Software den Anforderungen entspricht, ist die wichtigste in der Produktionskette vom Kunden über den Verkauf bis zum Anwender.</p>
+<p>Scrum betraut den ProduktOwner (PO) mit der Verantwortung. Da ist die Abnahme Teil des Prozesses. Mich stört dabei allerdings die Personalunion von Anforderer und Abnehmer. Der PO schiebt vorne Anforderungen rein und nimmt hinten ihre Erfüllung ab. Klingt plausibel, denn weiß er als Anforderer nicht am besten, ob seine Wünsche erfüllt sind? Angesichts der Wichtigkeit der Abnahme finde ich die Vereinigung jedoch kontraproduktiv.</p>
+<p><strong>Und warum ist die Abnahme so wichtig? Weil an ihr das liebe Geld hängt.</strong> Erst wenn Software abgenommen ist, fließt das Geld vom Kunden zur Softwareentwicklung.</p>
+<p>Alles, was im Backlog steht, alles, was das Team so mühevoll produziert, alles, was die Qualitätssicherung durchwinkt, all das ist eitler Tand, solange er nicht abgenommen ist. Backlog, entwickelte Features und qualitätsgesicherter Code inkl. aller Dokumentation ist <a rel="noopener" href="http://de.wikipedia.org/wiki/Umlaufbestand">Umlaufbestand</a> und damit gebundenes Kapital.</p>
+<p>Wenn ein Team von 5 Entwicklern einen Sprint von 14 Tagen hinlegt, dann ist dieser Umlaufbestand am Ende des Sprints sehr hoch. Sein Wert beträgt nach landläufiger Rechnung mindestens 5 * 10 Arbeitstage * Deckungskosten/Entwickler, also z.B. 50 * 300 EUR = 15.000 EUR. Wenn dann der PO nicht zügig die produzierten Features abnimmt, ist das ein Problem. Dann fließt kein Geld. Das heißt, das Softwareentwicklungsunternehmen tritt in Vorleistung und kann ein Liquiditätsproblem bekommen.</p>
+<p>Soweit aber nur die landläufige Rechnung in einer idealen Welt, in der der PO quasi blitzartig abnimmt.</p>
+<p>Jetzt ein Blick durch die Brille der Durchsatzrechnung (<a rel="noopener" href="http://en.wikipedia.org/wiki/Throughput_Accounting">throughput accounting</a>) der <a rel="noopener" href="http://en.wikipedia.org/wiki/Theory_of_Constraints">Theory of Constraints (TOC)</a>. Dazu hänge ich mal die Rollen zu einer Produktionskette zusammen:</p>
+<p>Backlog füllen (Bf) –&gt; Features implementieren (Fi) –&gt; Qualität sichern (Qs) –&gt; Features abnehmen (Fa)</p>
+<p>Jeder Produktionsschritt kann theoretisch 8 Std pro Tag leisten. Allerdings haben sie unterschiedliche Kapazität und stehen in der Praxis eben nicht 8 Std pro Tag zur Verfügung.</p>
+<p>Die Leistungsfähigkeit der Schritte misst sich am Backlog. Bf ist also das Maß aller Dinge. Wenn Bf 8 Std das Backlog füllt, wie lange braucht dann Fi, um diese Menge an Features umzusetzen? Wie lange braucht Qs, um die Qualität zu prüfen? Wie lange braucht Fa, um die Features abzunehmen?</p>
+<p>Ganz grob sehen die Verhältnisse vielleicht so aus:</p>
+<p>Bf:Fi = 1:10 bis 1:50 – Fi braucht 10 bis 50 Mal so lange wie Bf für eine Menge an Features.</p>
+<p>Bf:Qs = 1:0,1 bis 1:5 – Die Qualitätssicherung kann manchmal sehr schnell sein, manchmal braucht sie allerdings auch einige Zeit; in jedem Fall sollte Qs aber schneller als die Entwicklung sein.</p>
+<p>Bf:Fa = 1:0,1 bis 1:2 – Die Abnahme sollte nicht so lange dauern wie die Qualitätssicherung; aber das ist sicherlich von der Güte der Anforderungen abhängig. Je besser die Definition of Done, je umfangreicher die Akzeptanztests, desto schneller die Abnahme.</p>
+<p>Die langsamste Produktionseinheit ist Fi; sie ist der Engpass der Produktion. So scheint es und deshalb wird dort auch am meisten herumgeschraubt, um die Effizienz zu erhöhen.</p>
+<p>Meiner Erfahrung nach geschieht das durchaus zurecht. Die Effizienz der Softwareentwicklung hat, um es vorsichtig auszudrücken, oft noch einiges ungehobenes Potenzial. Im Sinne der TOC lohnt sich die Effizienzsteigerung dort jedoch nicht, solange sie nicht wirklich der Engpass ist. Und das scheint mir der Fall in vielen Projekten.</p>
+<p>Oberflächlich betrachtet, scheint die Fi immer der Engpass – aber nur solange die Produktionskette unvollständig ist und ohne die Abnahme gesehen wird.</p>
+<p>Agile Softwareentwicklung kennt eine Definition of Done. Die empfinde ich oft jedoch noch als sehr technisch. Ihr fehlt der Reflex, den Abnehmer einzubeziehen. Alle Akzeptanztests sind eitel, solange nicht ein vom Kunden autorisierter Abnehmer sie durchführt und abzeichnet. Denn erst dann kann Geld fließen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/89da173b87c743ec.png" /></p>
+<p>Wo ist aber dieser Abnehmer? In vielen, nein, in den meisten Projekten, die ich als Berater im Rahmen meiner Arbeit als <a href="www.clean-code-advisor.de">clean-code-advisor</a> sehe, gibt es einen solchen Abnehmer nicht. Es gibt erstens niemanden, der verlässlich abnimmt, und zweitens sogar einen eigenen Willen hat, abzunehmen und deshalb immer wieder an den Kettengliedern vor sich zieht.</p>
+<p>Die allermeisten Projekte, die ich sehe, haben keinen Traktor. Das heißt, auch wenn die Kapazität von Fa im Vergleich zu Fi oder Bf gering sein muss, gibt es sie im Grunde nicht.</p>
+<p>Nehmen wir an, Bf hat 3 Tage lang am Anfang des Monats das Backlog gefüllt; nehmen wir an, Fi und Qs haben es geschafft, einen Großteil dieser Füllung bis Monatsende abzuarbeiten. 30.000+ EUR liegen damit auf Halde. Sie können erst nach offizieller Abnahme abgerechnet werden. Aber wo ist der Abnehmer?</p>
+<p>Der bräuchte nach obigen Kapazitätsverhältnissen ja vielleicht nur 1-2 Tage, um die Halde durchzuarbeiten. Doch diesen Abnehmer gibt es in den meisten Fällen nicht. Ja, genau, es gibt niemanden, der konsequent jeden Monat 1,2 oder 3 Tage nur dafür zuständig ist, gelieferte Features abzunehmen. Geschweige denn, dass es jemanden gäbe, der das nicht nur alle Monate tut, damit gar nicht so eine große Halde entsteht, sondern jede Woche oder gar jeden Tag.</p>
+<p>In den meisten Projekten ist also gegen die Intuition nicht Fi oder Qs der Engpass, sondern Fa. Fa steht nicht verlässlich mit vielleicht 1 Tag pro Woche (oder 4 Tagen pro Monat) zur Verfügung, sondern vielleicht nur mit 1 Tag pro Monat. Fa fällt damit sozusagen 3 von 4 Tagen, die nötig wären, aus.</p>
+<p>Jetzt die Frage, wie teuer ist dieser Ausfall, dieser Mangel an Kapazität. Der Kunde mag rechnen, dass der Abnehmer pro Tag vielleicht 500 EUR kostet. Deshalb will er ihn auch nur so wenig wie möglich bei der lästigen Abnahme einsetzen, die ja irgendwie nichts bringt. Er spart also 1.500 EUR, wenn er ihn nur 1 Tag/Monat statt 4 Tage dem Projekt zuteilt.</p>
+<p>Aus Sicht der Softwareentwicklung sieht das Bild jedoch anders aus. Denn wenn der Abnehmer nur 1 Tag statt 4 verfügbar ist, d.h. auch nur 25% der Halde abnehmen kann, dann wird die Halde immer größer. Am Ende des ersten Monats liegen 30.000+ EUR auf Halde, der Abnehmer prüft im Rahmen seines Tages 25% und es werden 7.500 EUR zur Bezahlung freigegeben.</p>
+<p>Am Ende des zweiten Monats liegen dann schon 52.250+ EUR auf Halde. Davon werden wieder nur 7.500 EUR bezahlt, weil der Abnehmer nur einen Tag Zeit hat. Und so weiter, und so fort.</p>
+<p>Natürlich ist das eine vereinfachende Rechnung – aber vielleicht gar nicht so stark, wie es scheint. Denn was an Abnahmefrequenz und –kapazität in manchen Projekten mehr vorhanden ist, wird durch Abnahmeverweigerungen womöglich wett gemacht. Abnahmen laufen ja nicht problemlos einfach durch, sondern führen sofort oder im späteren Betrieb auch zu Abweisungen.</p>
+<p>Ich bleibe deshalb dabei: <strong>Der erste Engpass der meisten Projekte ist die Abnahme. Sie ist nicht verlässlich und mit zu wenig Kapazität ausgestattet. Und vor allem, sie wird ihrer Rolle nicht gerecht, weil sie nicht wirklich an der Kette vor sich zieht. Sie steht nicht jeden Tag auf der Matte und fragt, “Wo sind die nächsten Produkte, die ich abnehmen kann?”</strong></p>
+<p>Und das hat Auswirkungen. Weitreichende. Die erste und für Manager eigentlich unmittelbar spürbare: die Liquidität ist geringer als sie sein könnte. Immer wieder tritt die Entwicklung in Vorleistung, weil sie auf Halde produziert hat. Da ist man stolz, dass die Anforderungen munter ins Backlog fließen; man freut sich an einer schnurrenden Implementierung und einer sauberen Qualitätskontrolle – nur am Ende wird nicht abgenommen. Die ganze schöne hohe Qualität liegt dann auf Halde. Und letztlich weiß keiner, ob die hohe Qualität überhaupt den Kundenwunsch trifft. Denn das stellt sich erst heraus, wenn sie auch abgenommen wurde.</p>
+<p>Die zweite, eher subtile Auswirkung: Solange der Engpass Abnahme nicht beseitigt ist, lohnen alle anderen Verbesserungsmaßnahmen an Produktionsschritten davor nicht. Das ist eine ganz klare Aussage der TOC.</p>
+<p>Es lohnt nicht, den Verkauf anzukurbeln, wenn hinten keine Abnahme stattfindet. Insofern könnte es sogar eine Maßnahme sein, den Verkauf in die Abnahme einzubeziehen. Vielleicht sollte er seine Provision erst bekommen, wenn auch abgenommen ist?</p>
+<p>Es lohnt nicht, Aufwand in Continuous Integration zu stecken, solange es keine “Continuous Acceptance” gibt. Dasselbe gilt für höhere Effizienz bei der Implementation oder mehr Kapazität in der Qualitätssicherung. Das alles führt nur zu einer schnelleren Füllung der Halde. Produktionskosten werden schneller in Bestände überführt; der Durchsatz steigt deshalb aber nicht.</p>
+<p><strong>Deshalb lautet in letzter Zeit meine erste Frage an Projektverantwortliche, wenn sie um Rat suchen: Wer ist für die Abnahme zuständig, wie aktiv zieht derjenige am Team, wie hoch ist die Abnahmefrequenz?</strong></p>
+<p>Bevor nicht diese Verantwortlichkeit ganz klar zugewiesen ist, bevor nicht die diese Rolle von sich aus und ganz verlässlich immer wieder bei Fi und Qs auf der Matte steht, bevor nicht mindestens jede Woche, besser noch jeden Tag!, abgenommen wird, solange lohnt kaum eine andere Maßnahme.</p>
+<p>Das mag bitter klingen, weil Softwareteams, die sich an Problemen aller Art abarbeiten, auf die Abnahme wenig Einfluss haben, aber es hilft nichts. So ist die Natur der Dinge. Und die Praxis Prozessoptimierung in vielen Branchen und zahllosen Unternehmen zeigt, dass es nur so geht: Verbesserung muss am Engpass ansetzen, sonst verpufft sie und/oder führt zu Frust. Der Engpass in der Softwareentwicklung, deren Zweck das Geld verdienen ist, ist nun aber zunächst derjenige, der das Geld freigibt.</p>
+<p>Bringen Sie also die Abnahme als Traktor für den ganzen Entwicklungsprozess in Stellung, dann wird alles andere leichter oder gar erst möglich.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/b987944fab97de66.gif" /></p>
+<h2>Kommentare</h2>
+<p><strong>Achim</strong> (2011-02-16):</p>
+<p>Ist das letzte Bild unten ein Versehen oder entzieht sich mir einfach die Beziehung zum Artikel?</p>
+<hr />
+<p><strong>Andreas Adler</strong> (2011-02-16):</p>
+<p>Ich denke das Bild bezieht sich auf den im letzten Abschnitt (und zuvor mehrmals) genannten Begriff "Engpass".</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-02-16):</p>
+<p>@Achim: Andreas hat es erfasst, es geht um den Engpass. Und wie jede Hebamme weiß, muss der erweitert werden, wenn es vorwärts gehen soll. Der Engpass ist sozusagen der Geburtskanal des Erfolgs.</p>
+<p>Insofern sehe ich das, was ich tue, auch als Hebammenkunst. Ich helfe meinen Kunden bei der Geburt ihres Babys, ihres Projektes durch Engpässe hindurch.</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-02-16):</p>
+<p>YMMD! Lange nicht so gelacht: "Der Engpass ist sozusagen der Geburtskanal des Erfolgs."</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-02-16):</p>
+<p>hmmm...eine Abnahme kann doch nur erfolgen, wenn es auch (potentielle) Kunden gibt. Das ist somit also eine absolut abhängige Rolle einer anderen...damit kann es doch schon mal nicht die wichtigste sein. Oder mach ich da gerade einen logischen Denkfehler?
+Glaubst du, dass sich erst durch eine korrekte Abnahme erste Kunden für ein  Produkt begeistern können?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-02-16):</p>
+<p>@Anonym: Wenn es keinen Kunden gibt, dann liegt das Problem sicher nicht in der Abnahme. Dann kann der Engpass im Markt liegen oder er liegt im Verkauf.</p>
+<p>Das ist aber nicht das Problem der meisten Teams. Sie arbeiten ja an Projekten, die sicher nicht ohne irgendeine Form von Kunde gestartet worden wären. Es gibt also jmd, der Interesse an einer Software hat - wer immer das konkret sein mag. Und der muss dazu motiviert werden, dass eine kontinuierliche Abnahme erfolgt.</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-02-16):</p>
+<p>Der ganze Web 2.0-Markt basiert ja so ein bisschen darauf, dass sich Kunden schon irgendwie irgendwann in ausreichender Anzahl finden lassen.
+Bei Shareware, Apps usw. ist es ja ähnlich. Und das macht ja alles auch einen größeren Anteil am IT-Kuchen aus.
+Also ich kann mir schon viele Szenarien vorstellen, wo man nicht genau weiß, ob man Kunden hat.</p>
+<p>Die einzige Rolle, die nur sich selbst braucht um tätig werden ist eigentlich der Entwickler.
+Und selbst wenn das was er macht niemand anderen interessiert, dann kann er immer noch seine eigenen Produkte nutzen um sein Leben zu verbessern.</p>
+<p>Aber hier stellt sich zugegeben die Frage nach dem Ziel: Wenn es darum geht an Geld für Arbeit innerhalb eines Prozesses zu kommen, in dem es nur "bekannte" gibt, ist die Abnahme wohl möglich der größte Engpass. Aber ich kenne auch viele Arbeisprozesse (wie oben beschrieben), wo es auch eine Menge unbekannte gibt.</p>
+<hr />
+<p><strong>Achim</strong> (2011-02-16):</p>
+<p>@Ralf: Ok, ich verstehe was du sagen willst. Ich bezweifle, daß eine echte Hebamme dir die Analogie durchgehen lassen würde. Aber das müssen wir nicht hier ausdiskutieren! ;-)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-02-17):</p>
+<p>@Anonym: Es gibt immer einen Kunden.</p>
+<p>Der Kunde ist der, der die Anwendung erstens haben will und zweitens für das Geld sorgt.</p>
+<p>Wer ungefragt sein Glück mit einer Webapp versuchen will, der muss seinen Abnehmer beim Kunden suchen.</p>
+<p>Wer ist das? Die potenziellen Anwender sicher nicht. In dem Fall ist der Kunde irgendwo intern. Auch in diesem Fall muss der aber natürlich einen Abnehmer stellen.</p>
+<p>Es gibt kein Herausreden: 1 Abnehmer, ganz konkret mit Name, Gesicht und also expliziter Verantwortlichkeit muss her. Wer das nicht schafft, hat schon angefangen in die Irre zu gehen.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

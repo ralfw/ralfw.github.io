@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lieber grün freuen als schwarz sehen - Zufriedener mit Unit Tests — ralfw.de Archiv</title>
+<meta name="description" content="Grad habe ich den Code für meinen nächsten dotnetpro-Artikel fertiggestellt. Zuerst wollte ich ihn einfach nur so runterprogrammieren. Zwar bin ich ein Freund solider Planung und a">
+<link rel="canonical" href="https://ralfw.de/archiv/2008/lieber-grn-freuen-als-schwarz-sehen/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Lieber grün freuen als schwarz sehen - Zufriedener mit Unit Tests — ralfw.de Archiv">
+<meta property="og:description" content="Grad habe ich den Code für meinen nächsten dotnetpro-Artikel fertiggestellt. Zuerst wollte ich ihn einfach nur so runterprogrammieren. Zwar bin ich ein Freund solider Planung und a">
+<meta property="og:url" content="https://ralfw.de/archiv/2008/lieber-grn-freuen-als-schwarz-sehen/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Lieber grün freuen als schwarz sehen - Zufriedener mit Unit Tests</h1>
+    <div class="doc-meta"><span>10. Aug. 2008</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2008/08/lieber-grn-freuen-als-schwarz-sehen.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2008/lieber-grn-freuen-als-schwarz-sehen/</code></span></div>
+    <div class="art"><p>Grad habe ich den Code für meinen nächsten dotnetpro-Artikel fertiggestellt. Zuerst wollte ich ihn einfach nur so runterprogrammieren. Zwar bin ich ein Freund solider Planung und automatischer Tests, aber ich hatte den Chor der Entwickler im Ohr, die da singen "Aber muss denn das immer sein?" So hatte ich mich entschieden, auf Contract-First Design zu verzichten, keinen DI-Framework einzusetzen und eigentlich auch keine großartigen Unit Tests anzulegen.</p>
+<p>Aber: Selten so gelacht. Diese Vorsätze konnte ich keine Stunde einhalten. Echt. Ich konnte nicht. Ich musste eine Architektur zumindest auf 2-3 Blättern skizzieren und Kontrakte andeuten. Die Last, das alles nur im Kopf zu versuchen, war mir einfach zu groß: ich hätte mich dafür anstrengen müssen und ich wäre in Sackgassen bei der ad hoc Implementierung gelaufen, die mich Mehraufwand gekostet hätten.</p>
+<p>Das hat mir schonmal gezeigt, dass Architektur eine Gewohnheitssache ist. Am Anfang kann man ohne, weil man sich ihres Wertes nicht so bewusst ist. Dann macht es Mühe, sich auf sie einzulassen. Es tut weh, seine Gewohnheiten zu ändern. Man muss sich schon dazu zwingen. Aber wenn man am Ende dieses Tals der Tränen herauskommt, dann ist der Prozess ganz natürlich. Dann kann man - oder zumindest ich - nicht mehr anders. Dann ist Architektur ein Muss. Sonst fehlt einfach etwas.</p>
+<p>Um den Beispielcode aber nicht mit Details zu überfrachten, habe ich trotzdem die Kontrakte nicht in eigene Assemblies gesteckt und auch kein DI-Framework benutzt. Soviel dann doch als Zugeständnis an den Entwicklerchor ;-)</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/bb9cd5e9224b577f.png" /></p>
+<p>Dann das Testen. Eigentlich wollte ich nicht. Aber dann konnte ich doch nicht anders. Die Architektur einfach so zu implementieren und dann durch das kleine Frontend zu testen... nein, das ging nicht. Ich habe es echt versucht. Aber ich hab es dann nicht ausgehalten, so lange auf Feedback zu warten. Um herauszufinden, ob eine Infrastrukturfunktionalität des Beispielcodes funktioniert, hätte ich irgendwie künstlich einen Durchstich vom Frontend dorthin machen müssen. Wasfürein Aufwand! Oder ich hätte einfach weiter programmieren müssen, bis irgendwann man ein Durchstich da ist. Welch frustrierende Wartezeit!</p>
+<p>Und so habe ich doch wieder alle Bereiche mit Unit Tests abgedeckt. Schritt für Schritt, eine Methode nach der anderen. Das hat sich einfach gut angefühl. Eine Erleichterung war es, nach ein wenig Programmierung mich beim Testen entspannen zu können.</p>
+<p>Zweierlei ist mir dabei aufgefallen:</p>
+<ul>
+<li>Proaktives Testen geschieht in einem positiven Gefühl. Ich bin ganz aufgeregt, wenn ich den Test schreibe, weil ich ja sehen möchte, ob meine Idee vom Code richtig ist. Wenn ich hingegen auf einen solchen sofortigen Test verzichte und darauf warte, dass irgendwann mal eine Nutzung durch das Frontend auf einen Fehler stößt, dann ist mein Gefühl negativ. Dann teste ich nicht proaktiv, sondern debugge, d.h. ich befinde mich in einem Problemmodus. Schlechte Laune garantiert.</li>
+<li>Ein häufigerer Rollenwechsel zwischen Programmierer und Tester schafft Abstand zu Code. So entsteht Raum für Reflektionen. Das kann nur positiv sein, denn dann sehe ich plötzlich Dinge, die ich beim unausgesetzten Programmieren "im Flow" übersehen würde. Solcher Rollenwechsel entschleunigt auch in gewisser Weise. Auch das ist gut: für die Seele und den Code.</li>
+</ul>
+<p>Also mal abgesehen von den Vorteilen automatischer Tests in punkto Refaktorisierbarkeit von Code habe ich für mich gemerkt, dass der Gewinn schon davor in einem guten Gefühl, in Entspannung liegt. Positive Einstellung und Entschleunigung machen einfach Spaß. Ich habe mich sozusagen grün gefreut angesichts der wachsenden Zahl kleiner grüner, also positiver Rückmeldungen vom Unit Testing Framework in <a rel="noopener" href="http://www.jetbrains.com/resharper/index.html">ReSharper 4.0</a> (s. Bild oben).</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/60dccec15bf0bca7.png" /></p>
+<p>So richtig zufrieden haben mich die grünen Rückmeldungen aber erst werden lassen, als ich zusätzlich noch auf die Codeabdeckung der Tests geachtet habe. Fehlerfreiheit lässt sich ja nicht nachweisen. Also sagt ein grüner Test nicht, dass Code ohne Fehler ist. Tests überprüfen nur Erwartungen. Um ein gutes Gefühl zum Code zu bekommen, muss ich mehr als eine Erwartung haben; jeder Teil des Codes - jede Verzweigung, jede Methode - sollte meine Erwartungen erfüllen. Also müssen meine Tests möglichst viel Code abdecken. Meine Wunschmarke ist 90% Codeabdeckung. 100% sind natürlich noch besser - wenn auch nicht immer ausreichend -, aber ab und an lasse ich mal den Code für einen exotischen Fehlerfall ungetestet.</p>
+<p>Mit der Integration von <a rel="noopener" href="http://www.testdriven.net/">TestDriven</a> und <a rel="noopener" href="http://www.ncover.com/">NCover</a> habe mein gutes, grünes Gefühl dann gefestigt. Wie das nebenstehende Bild zeigt, decken meine Tests 97% der Codebasis ab. Das finde ich für den Zweck des Beispielcodes ausreichend.</p>
+<p>Und so habe ich mich denn wirklich gut gefühlt, ganz grün vor Spaß, statt vor lauter Bugs schwarz geärgert. Architektur und Testen sind Gewohnheiten. Wenn man sie sich zum Nutzen der Codequalität einmal angeeignet hat, dann ist´s schwer, sie wieder abzustreifen. Aber es sind ja keine schlechten Gewohnheiten. Und sie haben mir ein gutes Gefühl verschafft. Was will ich mehr?</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2008-08-11):</p>
+<p>Hallo Ralf,
+Gratulation, das hört sich ja verdächtig nach "test infected" an (siehe <a rel="noopener" href="http://c2.com/cgi/wiki?TestInfected">http://c2.com/cgi/wiki?TestInfected</a>)</p>
+<p>Auf jeden Fall ein lohnendes Ziel.</p>
+<hr />
+<p><strong>Rainer</strong> (2008-08-15):</p>
+<p>Hallo Ralf,</p>
+<p>das Blanke Testen ist für mich nicht mehr alleine ausreichend. Der Nutzen muss klar daraus hervorgehen (ich kenne ihn, aber viele andere nicht). Ich plädiere dafür Tests vor dem eigentlichen Code zu erstellen. Getreut dem Motto Contracts First, sehe die Tests als Spezifikation an, also eben auch ein Contract. Deshalb Specification First.</p>
+<p>Ich habe daher vor kurzem angefangen mich mit dem Thema Behaviour Driven Developement (BDD) zu beschäftigen und nach ein, zwei kurzen Einführungsartikeln war für mich auch klar, dass dies die Art und Weise sein wird, wie ich in Zukunft meine Architektur, meine Tests aufbauen will. Den Vorteil, den ich bei BDD sehe, sind konkrete vorgehensweisen. Das ist besonders für Testneulinge vorteilhaft. Zumal habe ich auch noch damit zu kämpfen UnitTests als bewährtes und erfolgreiches Programmierparadigma durchzusetzen. BDD hilft mir den Benefit gut zu erklären, wenn ich mit Kollegen oder Vorgesetzten spreche. Vor allem hilft es mir auch Komponentenorientierung mit einem Container-Framework gut zu etablieren und meine Codebasis test- sowie wartbar zu halten.</p>
+<p>Ich bin also nicht nur Test Infected. Ich bin Behaviour Infected.</p>
+<p>Aus diesem Grund freue ich mich schon darauf, auf der .NET Open Space mit anderen über dieses Thema zu diskutieren.</p>
+<p>Grüße,
+Rainer</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2008-08-15):</p>
+<p>@Rainer: Ich stimme da ganz mit dir überein. Allerdings habe ich dann doch von "Tests" gesprochen, weil der Begriff schon etablierter ist als der des Verhaltens (Behaviour). Und am Ende geht es bei aller Definition von  Verhalten, d.h. bei der Erwartungsformulierung doch wieder um... Tests, d.h. Überprüfung von Erwartungen.</p>
+<p>Gegenüber TDD ist BDD eine Verbesserung, da durch die Umbenennung die eigentliche Absicht von TDD endlich klar wird.</p>
+<p>Weiterhin sehe ich aber eben zwei Zwecke, denen die Routinen dienen, die ich dann schreibe: Spezifikation und Test. Wenn ich noch keinen Code habe und mit BDD anfange, dann spezifiziere ich. Und später ist das sogar auch Dokumentation.</p>
+<p>Wenn ich aber Code habe und jmd meldet einen Bug, dann Spezifiziere ich nicht mehr, sondern schreibe einfach einen Test, eine Überprüfung, ob Code das leistet, was ich dachte, dass er leisten soll.</p>
+<p>Insofern denke ich, dass wir uns von BDD nicht davontragen lassen sollten und den Begriff "Test" nicht mehr benutzen.</p>
+<p>BDD ist ja auch "Design". Doch nicht alles, was ich als Entwickler tue, ist designen.</p>
+<p>Für Contract-first Design ist BDD aber eine gute Methode. Ohne Frage.</p>
+<p>-Ralf</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

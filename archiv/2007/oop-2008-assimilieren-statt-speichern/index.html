@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OOP 2008: Assimilieren statt Speichern - Networking für Daten in einer dynamischen Welt — ralfw.de Archiv</title>
+<meta name="description" content="Alles soll heute flexibel sein: Menschen, die sich auf Jobangebote bewerben, genauso wie Programmiersprachen. Statisch ist out, dynamisch ist in. Nur noch nicht so recht bei den Da">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/oop-2008-assimilieren-statt-speichern/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OOP 2008: Assimilieren statt Speichern - Networking für Daten in einer dynamischen Welt — ralfw.de Archiv">
+<meta property="og:description" content="Alles soll heute flexibel sein: Menschen, die sich auf Jobangebote bewerben, genauso wie Programmiersprachen. Statisch ist out, dynamisch ist in. Nur noch nicht so recht bei den Da">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/oop-2008-assimilieren-statt-speichern/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>OOP 2008: Assimilieren statt Speichern - Networking für Daten in einer dynamischen Welt</h1>
+    <div class="doc-meta"><span>31. Dez. 2007</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2007/12/oop-2008-assimilieren-statt-speichern.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/oop-2008-assimilieren-statt-speichern/</code></span></div>
+    <div class="art"><p>Alles soll heute flexibel sein: Menschen, die sich auf Jobangebote bewerben, genauso wie Programmiersprachen. Statisch ist out, dynamisch ist in. Nur noch nicht so recht bei den Daten. Denn da regieren Strenge und Statik. Daten werden einmal in Klassen oder Tabellen verpackt - und dann ändert sich diese Anordnung am besten nicht mehr. Falls doch, muss solche Veränderung gut geplant sein, damit die fein ziselierten Datenstrukturen nicht inkonsistent werden.</p>
+<h2>Datenspeicherung gehört zu einer statischen Welt</h2>
+<p>Daten in Container zu verpacken, die einander referenzieren, ist eben ein Informationsmodell für statische Datenstrukturen. Die Daten mögen sich ändern, aber die Strukturen, die Zusammenhängen bleiben konstant. Das ist völlig ok. Allerdings dient das vor allem einem Zweck: der 1:1 Speicherung und Reproduktion von Daten. Das Mittel der Wahl ist dabei das Kopieren dieser Daten. Wenn Sie z.B. Personendaten bestehend aus Vorname+Nachname in einer Datenbank speichern, dann werden die Bytes von Vorname und Nachname mindestens einmal in der Datenbank unverändert abgelegt, wahrscheinlich jedoch mehrfach. Jeder Index multipliziert ja gespeicherte Daten.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/4b98f75f314787bc.png" /></p>
+<p>Dass die Geschichte der Softwareentwicklung sich bisher vor allem mit solcher Datenspeicherung beschäftigt hat, ist verständlich. Wenn man etwas mit Daten der äußeren Welt tun will, dann holt man sie am besten erstmal 1:1 "ins System". Mit einer Sprache wie SQL kann man sie dann bei Bedarf in Form von Views umarrangieren; allerdings funktioniert das nur in Maßen, denn SQL kann die grundsätzliche <a rel="noopener" href="http://www.pilesys.com/new/Documents/Freeingdatafromthesilos-Pileexplained.pdf">Container-Referenz-Dichotomie</a> nicht aufheben.</p>
+<h2>Assimilierung für eine dynamische Welt</h2>
+<p>Seit der Geburt der relationalen Datenbanken sind nun aber einige Jahrzehnte vergangen. Die Welt hat sich verändert. Die Welt und damit die Anforderungen an die Datenbanken sind dynamischer geworden. Zusammenhänge, die gestern galten, sind morgen veraltet. Die auf Statik angelegten Datenstrukturen in heutigen Datenbanken sind somit kontraproduktiv. Sie sind wie Sand im Getriebe, wie Kalk in Gelenken.</p>
+<p>Das Problem sind zum Einen die festen Containergrenzen, in die Daten in großen Blöcken eingepfercht sind. Denn Daten in Containern lassen sich nicht mit Daten in anderen Container in neue Beziehungen bringen. Nur Container selbst können einander referenzieren. Zum anderen sind Referenzen als Teil der Daten in Containern ein Problem. Solange Referenzen in Container stecken, müssen Containerstrukturen nämlich verändert werden, um neue Beziehungen herzustellen. Solche Schemaänderungen widerstreben dann zurecht jedem Datenbankadmin, denn sie widersprechen dem grundlegenden Paradigma der statischen Strukturen aller Container-Referenz-Datenmodelle.</p>
+<p>Um nun Daten fit für eine dynamische Welt zu machen, muss also das Datenspeicherparadigma aufgegeben werden. In einer dynamischen Welt ist nicht mehr die 1:1 Speicherung und Reproduktion von Daten der Hauptzweck von Datenbanken. Die Reproduktion von Datenstrukturen ist nicht mehr der Rede wert; sie ist selbstverständlich.</p>
+<p>Der Hauptzweck der Datenverarbeitung ist heute vielmehr die Flexibilisierung von Daten. Sie müssen so gehalten werden, dass jederzeit neue Zusammenhänge zwischen ihnen hergestellt werden können. Daten müssen fähig werden zum Networking. Business Intelligence (BI) ist zwar schon eine Disziplin, die sich der Schöpfung von Werten aus neuen Zusammenhängen zwischen Daten widmet. Aber auch BI ist letztlich noch dem bisherigen Datenspeicherungsparadigma verhaftet.</p>
+<p>Wahre Dynamik und maximale Flexibilität erreicht die Datenverarbeitung erst, wenn Daten nicht mehr gespeichert, sondern assimiliert werden. Denn Daten wie andere "Dinge" der realen Welt, sind immer nur so flexibel, d.h. "verformbar", wie sie aus "verschiebbaren" Einzelteilen bestehen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/45dd33617f975d7e.png" /></p>
+<p>Dynamik kommt also erst in die Datenhaltung, wenn wir Daten nicht mehr als zu festen Blöcken in erhaltenswerten Containern zusammengesetzt ansehen, sondern als "Säcke" voller "Datenatome". Was diese Datenatome dann sind, ist zunächst einmal egal. Es können einzelne Bits, einzelne Zahlen, einzelne Zeichenketten oder einzelne 2 MB Blobs sein. Je feiner die Granularität dieser "Atome", desto höher jedoch die Flexibilität des "Datensacks".</p>
+<p>Und nicht nur das! Denn diese "Datenatome" können nicht nur innerhalb eines Sacks immer wieder neu arrangiert, sondern können maximal flexibel mit "Datenatomen" anderer Säcke in Beziehung gesetzt werden. Statt Datenblöcke also einfach nur 1:1 zu speichern, müssen wir sie "shreddern". Dann erhalten wir maximal verbindbare "Datenatome". Und diese "Datenatome" <em><a rel="noopener" href="http://de.wikipedia.org/wiki/Assimilation_%28Lernpsychologie%29">assimilieren</a></em> wir in eine "Wolke" schon existierender "Datenatome".</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d9a4c9f9c08b9262.png" /></p>
+<p>Assimilation besteht damit aus zwei Schritten:</p>
+<ul>
+<li>Datenblöcke in "Datenatome" zerlegen</li>
+<li>"Datenatome" mit schon vorhandenen vernetzen</li>
+</ul>
+<p>Und der zweite Schritt kann sogar beliebig oft wiederholt werden! Per definitionem ist nicht zu befürchten, die Struktur der "Datenatome" je verändern zu müssen. Es sind ja Atome; aus Sicht einer Anwendung haben sie daher keine weitere, für zukünftige Beziehungen relevanten internen Strukturen.</p>
+<p>Wo vorher noch Daten in Containern waren, sind nach der Assimilation die Container verschwunden und die Daten in eine "Datenwolke" (oder ist es eher ein "Datenplasma"?) aufgelöst und mit schon existierenden "Datenwolken" verschmolzen. Assimilation speichert Daten also nicht einfach, sondern löst sie in einem größeren Ganzen auf. Wie bei sonstigen Lösungen verschwindet das Aufgelöste jedoch nicht, sondern verteilt sich nur bzw. wird hier in das Vorherige integriert. Die ursprünglichen Daten sind also auch in der Gesamtheit alles Assimilierten noch enthalten - nur eben nicht klar umrissen an einem Ort wie die Datenkopien bei der üblichen Datenspeicherung. Dennoch lassen sich aus einem "Assimilat" auch wieder die ursprünglichen Daten in ihren Containern zum Zeitpunkt der Anlieferung regenieren.</p>
+<p>Um Daten wahrhaft flexibel zu halten, müssen wir also das Operationenpaar <em>Speichern/Laden</em> durch das neue Paar <em>Assimilieren/Regenerieren</em> ersetzen. Dem bisherigen Grundanspruch der 1:1 Datenhaltung wird damit immer noch Rechnung getragen. Doch darüber hinaus eröffnet die assimilierende Datenhaltung ganz neue Möglichkeiten zur Vernetzung von Daten, zur Bildung immer neuer Zusammenhänge.</p>
+<p>Assimilation ist die Grundlage für Synergieeffekte zwischen Daten. Durch Assimilation werden Daten so flexibel, wie sie eine immer dynamischer werdende Umwelt braucht.</p>
+<p>Oder passend zum Jahresschluss: Speichern war 2007... Assimilation ist 2008.</p>
+<h2>Kommentare</h2>
+<p><strong>k00ni</strong> (2008-01-01):</p>
+<p>Hallo. Die Gedanken sind genial. So habe ich über das Thema Datenbanken und Datenspeicherung noch nicht nachgedacht.</p>
+<p>Eine Frage habe ich aber: Wie willst du dieses Datenplasma speichern? Also werden die Daten wieder in Datenbanken abgelegt oder in XML-Dateien? Oder ist dafür eine neue Form der "Speicherung" nötig?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2008-01-01):</p>
+<p>@k00ni: Ein Pile - wie beschrieben in meiner Artikelserie (1/08, 2/08) in der dotnetpro - ist eine Datenstruktur bzw. ein Informationsmodell, mit dem Daten assimiliert werden können.</p>
+<p>Wie ein Pile dann implementiert ist, ist eine zweite Frage. Da können etablierte Technologien helfen. Am wichtigsten ist zunächst, dass wir einen frischen Blick auf die Daten werfen und sie nicht mehr als zu kopierende Blöcke ansehen, sondern als etwas zu shredderndes.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

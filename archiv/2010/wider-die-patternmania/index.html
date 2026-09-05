@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wider die Patternmania — ralfw.de Archiv</title>
+<meta name="description" content="Heute morgen habe ich hier im Blog meinen Ansatz für die Kata Tennis beschrieben. Den kommentierte Björn Rochel mit">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/wider-die-patternmania/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Wider die Patternmania — ralfw.de Archiv">
+<meta property="og:description" content="Heute morgen habe ich hier im Blog meinen Ansatz für die Kata Tennis beschrieben. Den kommentierte Björn Rochel mit">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/wider-die-patternmania/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Wider die Patternmania</h1>
+    <div class="doc-meta"><span>20. Nov. 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/11/wider-die-patternmania.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/wider-die-patternmania/</code></span></div>
+    <div class="art"><p>Heute morgen habe ich <a rel="noopener" href="http://ralfw.blogspot.com/2010/11/spiel-satz-sieg-furs-nachdenken.html">hier im Blog</a> meinen Ansatz für die Kata Tennis beschrieben. Den kommentierte Björn Rochel mit</p>
+<blockquote>
+<p>“Warum so abstrakt? Warum so viel Zeremonie? Eine Alternative wäre bsp. das State-Pattern. Finde ich persönlich deutlich einfacher und lesbarer.”</p>
+</blockquote>
+<p>Nach meinem Antwortkommentar bin ich daraufhin aber nicht recht zur Ruhe gekommen. Sein Einwand hat an mir genagt; ich fand meine Entgegnung noch nicht fundiert genug. Nun kann ich meine Position aber besser formulieren, glaube ich. Für einen Kommentar ist sie mir allerdings zu wichtig. Also ein weiterer Blogartikel.</p>
+<h3>Zu abstrakt?</h3>
+<p>Ist ein Zustandsautomat zu abstrakt? Dass er abstrakt ist im Vergleich zu Code, ist klar. Aber ist er zu abstrakt, d.h. unnötig abstrakt? Gibt es also ein absolutes, für alle Entwickler der Kata Tennis bestes Abstraktionsniveau, auf dem sie denken sollten? Ich behaupte, nein.</p>
+<p>Für mich einfachen Sterblichen ist ein Zustandsautomat zur Beschreibung der Tennis Zählregeln nicht zu abstrakt, sondern gerade richtig. Wenn ich die irgendwie formalisieren will, um eine bessere Übersicht zu bekommen, ist ein Zustandsautomat sehr, sehr praktisch. (Ob ich den grafisch entwerfe oder als Tabelle, ist egal.)</p>
+<p>Was wäre denn auch die Alternative? Eine Reihe von Wenn-Dann-Regeln? Das kann Björn doch nicht wirklich meinen.</p>
+<p>Meine Vermutung ist eher: Björn ist Tennisprofi und atmet die Regeln täglich, deshalb muss er darüber nicht mehr nachdenken. Deshalb findet er einen Zustandsautomaten zu abstrakt.</p>
+<p>Dagegen halte ich, dass es nicht darum geht, ob ein Entwickler meint, Anforderungen verstanden zu haben, sondern er muss das dem Auftraggeber – auch einen imaginierten wie bei einem Dojo – demonstrieren. Als Entwickler müssen wir also darlegen können durch eine eigene Beschreibung der Anforderungen, dass wir wissen, worum es geht. Zum Anforderungstext zu nicken, ist zu wenig.</p>
+<p>Wie hat Björn das aber dargelegt? Keine Ahnung. Sein Code bei github gibt darüber keine Auskunft. Wie hätte ich nach Darlegung der Anforderungen in Björn Vertrauen haben können, dass er korrekten Code schreibt? Weil er nach TDD vorgeht? Kaum. Das interessiert mich nämlich als Auftraggeber nicht. Vertrauen hätte aufbauen können, dass Björn mir in seinen Worten und/oder mit einer eigenen (abstrakteren) Darstellung widerspiegelt, was er verstanden hat. Meine Zustandsautomatengrafik ist so eine Darstellung, finde ich. Die könnte sogar ein Auftraggeber verstehen; aber wenn nicht, dann machts auch nichts. Dann kann ich mit dem Automaten in der Hand dem Auftraggeber erklären, wie ich danach die Regeln verstehe.</p>
+<p>Ergo: Zu abstrakt finde ich den Zustandsautomaten nicht, sondern als Beschreibung meines Verständnisses der Anforderugen unabhängig vom Code absolut nötig.</p>
+<h3>Zu viel Zeremonie?</h3>
+<p>Nicht nur soll der Zustandsautomat zu abstrakt sein, nein, er soll auch zu zeremoniell sein. Damit meint Björn wohl, dass er unabhängig von der Beschreibung unnötig ist und nicht zum Kern der Lösung gehört.</p>
+<p>Das verstehe ich nicht. Was ist an einem Zustandsautomaten unnötig für die Lösung? Er stellt vielmehr den Kern der Lösung dar. Er formalisiert das Tennis Zählregelwerk. Er fasst an 1 Ort zusammen, wie es geht. Auf dem Papier formuliert er kurz und knapp die Essenz der Zählung. Und in Code umgesetzt braucht er ganze 5 Zeilen</p>
+<p>private readonly int[,] _stateTransitions = new[,] {
+                              {1,2,3,6,5,6,-1,4,-1},
+                              {0,1,2,4,7,4,-1,8,-1} };
+internal int _currentState;
+…
+var transition = position == ScoringPositions.YouWin ? 0 : 1;
+_currentState = _stateTransitions[transition, _currentState];</p>
+<p>Ich bitte um Erhellung, wie das Regelwerk der Zählung knapper und auch übersichtlicher und auch leichter anzupassen hätte gefasst werden können. Björn braucht in seinem Code, der ohne Modellierung auskommt, immerhin mindestens 57 Zeilen und weitere, die ich auf die Schnelle nicht erkenne. Ist das ein Vorteil von weniger Zeremonie? Eine Zehnerpotenz mehr Codezeilen und weniger Verständlichkeit durch Verteilung der Verantwortlichkeit für die Zählung auf mehrere Klassen? Hm… ich bin im Zweifel.</p>
+<h3>Zu wenig Pattern?</h3>
+<p>Und schließlich eines meiner Lieblingsargumente – vor allem aus der Java-Ecke gehört: “Was du da machst, folgt nicht dem Pattern XYZ. Das ist nicht gut.” Oder in der allgemeineren Form: “Was du da machst, ist nicht wirklich objektorientiert.” Da muss ich immer schmunzeln. Als ob mehr Patterns oder mehr Objektorientierung irgendein Qualitätskriterium seien…</p>
+<p>Patterns und Objektorientierung sind nur Mittel zu einem Zweck. Die Frage muss also immer sein: Wird ein Zweck mit einem Pattern oder der Objektorientierung am besten erreicht?</p>
+<p>Diese Frage stelle ich an Björn:  Bist du wirklich der Meinung, dass du durch Befolgen eines Patterns, das dich 57+ Zeilen kostet – im Gegensatz zu meinen 5 Zeilen – irgendwie den Zweck “Tennis Zählregeln implementieren” besser erreichst?</p>
+<p>Das kann ich nicht glauben.</p>
+<p>Mein simpler “Beweis”: Wenn sich an der Zählregel etwas ändert, dann habe ich genau 1 Eingriffspunkt, nämlich die Tabelle mit den Zustandsübergängen. Ich muss mich also nur auf 2 Zeilen Code konzentrieren. Du hingegen müsstest schauen, ob eine oder mehrere deiner State-Klassen verändert werden müssten oder gar eine neue hinzukommen muss.</p>
+<p>Und nun noch fundamentaler: Patterns und Objektorientierung sind Implementationsdetails. Ob und wie ich sie einsetze muss für die Lösung relativ egal sein. Denn die Lösung sollte nicht allein und schon gar nicht sofort in Code formuliert werden. C# ist auch ein Implementationsdetail.</p>
+<p>Stattdessen – wie könnte es anders sein ;-) - sollte die Lösung zuerst modelliert werden. D.h. sie sollte unabhängig von Implementationsdetails formuliert werden. Keine Klassen, kein State-Pattern, keine Arrays… Genau das habe ich getan. Ich habe mir sprachunabhängig Gedanken gemacht, wie die Lösung aussehen könnte. Ein Zustandsautomat ist nicht an C# gebunden und das Datenflussdiagramme auch nicht.</p>
+<p>Und erst als ich auf Modellebene zuversichtlich war, die Lösung formuliert zu haben, habe ich mich an die Übersetzung gemacht. Da sind dann 5 Zeilen für den Zustandsautomaten rausgekommen und ca. 60 Zeilen für die gesamte Logik – also knapp nur 50% der LOC bei Björn. Die habe ich sehr wahrscheinlich dann auch schneller getippt und schneller getestet.</p>
+<p>Schneller und einfacher geändert sind sie auch, da es erstens viel weniger Funktionseinheiten (Klassen, Methoden) gibt und zweitens deren Verantwortlichkeiten nicht weniger klar sind als bei Björn.</p>
+<p><a rel="noopener" href="http://www.amazon.de/Modellierung-Grundlagen-formale-Methoden-Kastens/dp/3446415378"></a>Nebenbei: Wer meint, meine Lösung enthalte zu wenig Pattern, der schlage in der Literatur nach. Dort wird man finden, dass ein Zustandsautomat das um Jahrzehnte ältere Pattern im Vergleich zum State-Pattern und jedem anderen Designpattern ist. Ich habe also sehr wohl auf Patterns gesetzt; nur eben nicht die seit 15 Jahren hippen Entwurfsmuster. Entwurfsmuster entlasten also nicht von der Mühe, sich mit Modellierung auseinanderzusetzen. Eine Leseempfehlung dazu: <a rel="noopener" href="http://www.amazon.de/Modellierung-Grundlagen-formale-Methoden-Kastens/dp/3446415378">“Modellierung” von Kastens und Büning</a>.</p>
+<h3>Fazit</h3>
+<p>Kritik der Art “zu viel von …” oder “zu wenig von …” finde ich wenig hilfreich. Sie ist letztlich nur eine Gefühlsäußerung und nicht argumentbasiert. Denn Argumente beziehen sich auf eine Differenz zwischen Zweck und Mittel. Die habe ich aus Björns Kritik nicht wirklich herauslesen können.</p>
+<p>Aber ich bin offen: Wer mag, kann mir darlegen, warum meine gewählten Mittel Modellierung im Allgemeinen, Zustandsautomat und EBC-Diagramm im Besonderen und ihre Übersetzung in Code die Zwecke Testbarkeit und Evolvierbarkeit weniger gut erfüllen als eine andere Herangehensweise.</p>
+<h2>Kommentare</h2>
+<p><strong>Krzysztof Eraskov</strong> (2010-11-20):</p>
+<p>Sicher ist eine elegante Lösung normalerweise einer hässlichen vorzuziehen, aber Eleganz darf nicht wichtiger sein als Korrektheit. Und deine Lösung ist offensichtlich nicht korrekt, denn</p>
+<p>sut.AddScore(Players.Player1);
+sut.AddScore(Players.Player1);
+sut.AddScore(Players.Player1);
+sut.AddScore(Players.Player2);
+sut.AddScore(Players.Player1);</p>
+<p>muss natürlich zum Gewinn von Spieler 1 führen, tut es aber bei deiner Lösung nicht.</p>
+<p>Die Ursache ist ein Fehler im Zustandsautomat, der bei einem verlorenen Punkt im Zustand 40 immer in den Zustand deuce geht, egal wieviele Punkte der andere Spieler hat. Wenn man die Aufgabe mit einem Zustandsautomaten lösen will, müssen die Zustände die Punktzahlen beider Spieler berücksichtigen. Nur aus dem Zustand 40:30 würde es dann bei einem verloren Punkt in den Zustand deuce gehen (bzw. aus dem Zustand 30:40 bei einem gewonnenen Punkt).</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-11-20):</p>
+<p>Ralf, ich denke, dass du hier sehr verbissen argumentierst. Ein langer Blog-Kommentar sowie ein ganzer Blog-Eintrag sind sehr viel harter Stoff auf die wenigen Sätze vom Björn. Zudem stellst du mutmaßliche Argumente in den Raum. Bedenke, dass du als MVP, Fachautor und Initiator von CCD für den "normalen" Entwickler eine ziemlich einschüchternde Autorität darstellst.</p>
+<p>Ist doch klar, dass du
+a) als erfahrener Softwarearchitekt mit viel weniger Code-Zeilen auskommt und
+b) alles mit EBC löst! ;-)</p>
+<p>Gerade als "normaler" Entwickler nimmt man doch an einem Dojo teil, um von den anderen Schülern und vom Meister zu lernen! Hier hat ein Sensei aber fest zugeschlagen!</p>
+<hr />
+<p><strong>pvblivs</strong> (2010-11-20):</p>
+<p>Würde man die gleiche Sprache sprechen (für Deutsche immer schwer), fiele auf, dass State Machine und State Pattern kein großes Meer trennt.
+Der Unterschied liegt darin, dass die State Machine nur benutzt werden musste.
+Wie der Vorredner gesagt hat, eine schöne Lektion für einen Schüler, nicht alles mit Patterns neu zu programmieren, wenn man es mit Frameworks auch so bekommen kann. Ist einfacher, lesbarer, macht Kollegen glücklicher.</p>
+<hr />
+<p><strong>Unknown</strong> (2010-11-20):</p>
+<p>Irgendwie fühl ich mich ja geehrt eine
+so ausführliche Antwort zu bekommen.</p>
+<p>Du hast also geschaft die wesentlichen Teile des Katas in 5 Zeilen zu quetschen. Sind wir tatsächlich wieder bei C angelangt, wo wir mit Längen und Mikro-Effizienz von Programmen argumentieren müssen?</p>
+<p>Vielleicht waren "Abstrakt" und "Zeremonie" tatsächlich das falschen Worte. Sei es drum. Die gezeigte Implementierung ist mir im Vergleich zu den anderen Varianten einfach zu kompliziert. Ja, ich glaube kompliziert trifft es besser.</p>
+<p>Zeig Deinen Zustandsautomaten doch mal jemand, der die Regel für Tennis nicht kennt und versuch sie ihn das anhand des Codes alleine erklären zu lassen. Ich bezweifle das dies ohne die Modellierungskizzen erfolgreich sein wird.</p>
+<p>Ja, State Pattern und der Zustandsautomat sind ähnliche Ansätze. Wenn Du meinen Original Kommentar noch mal überfliegst, findest Du vielleicht die Stelle an der ich erwähne, das ich die explizite Modellierung von Zuständen ja positiv sehe.</p>
+<p>Das State-Pattern scheint mir die geeignete Wahl als eine Integer-basierte Zustandsmaschine. Nicht weil es ein Pattern ist und man Pattern für die Lösung nutzen muss, sondern weil es in meinen Augen expliziter UND lesbarer ist als Deine Zustandsmaschine.</p>
+<p>Thema Tests: Reichen dem Kunden die Tests nicht, um zu beweisen, dass die Anforderungen korrekt verstanden und umgesetzt worden sind? Ich bin da irgendwie ein wenig irritiert. Nicken und die Tests müssten doch reichen, oder?</p>
+<p>Eins noch zum Thema Modellierung/Vorgehensweise: Ich bin mir nicht bewusst, dass ich ein Wort über Deiner Vorgehensweise fallen lassen hab. Die ist mir ehrlich gesagt auch ziemlich wurscht. Siehst Du doch ähnlich, oder? Ich habe lediglich meine Meinung zu dem Ergebnis kundgetan.</p>
+<p>Wir können da gerne beim ArchOS noch mal drüber diskutieren ;-)</p>
+<p>VG
+Björn</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-11-20):</p>
+<p>So, in der Reihenfolge der Kommentareingänge. Schön, dass es soviel Feedback gab.</p>
+<p>@Krzysztof: Danke für den Hinweis auf den Fehler. Natürlich darf Eleganz nicht über Korrektheit stehen. Und man kann sich elegant hinlegen ;-) Das habe ich getan, weil ich 40:40 falsch umgesetzt habe.</p>
+<p>Die Lösung ist inzw angepasst. Für mich war dabei das schöne Gefühl, dass das ganz einfach war. Ich musste im Modell nur den Punkt lokalisieren, wo ich eingreifen muss und danach ergab sich eine einfache Umsetzung im Code.</p>
+<p>Aus dem Fehler sollte also nicht geschlossen werden, dass Modellieren nix bringt, sonder das Gegenteil. Im Modell war sofort zu sehen, dass eine Verknüpfung zwischen den Spielern fehlte.</p>
+<p>(Ich freue mich besonders über den Fehlerhinweis, weil der mir Anlass gab, meine Implementation auf Vordermann zu bringen. Bis dahin hatte ich nämlich EBC-Bauteile als Methoden implementiert, weil das zunächst einfacher schien. Der Fehler hat mir gezeigt, dass eine Änderung mit Klassen für Bauteile viel einfacher ist. Also habe ich refaktorisiert.)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-11-20):</p>
+<p>@Anonym: Habe ich verbissen argumentiert? Hm... Ernst ja. Aber verbissen? Hab ich gar auf Björn zu fest eingeschlagen? Ich hoffe, nicht.</p>
+<p>Björn weiß, dass ich ihn schätze. Habe ihn nicht umsonst zur prio als Sprecher eingeladen. Und er hat seine Sache dort sehr gut gemacht. Ich glaube daher, dass er meinen "Widerstand" richtig einzuordnen weiß.</p>
+<p>Ganz bewusst habe ich natürlich einen sehr direkten Ton gewählt. "Rumeiern" mag ich nicht. Immer wieder relativieren, bringt uns nicht voran. Hart, aber herzlich find ich passend. Und vor allem habe ich mir sehr bemüht, zu argumentieren und nicht nur eine Befindlichkeit gegen eine andere zu setzen.</p>
+<p>Habe ich eine besondere Verantwortung als MVP etc.? Hm... Ich weiß nicht. Muss ich länger als andere über meine Aussagen nachdenken? Ne, ich glaub, nicht. Ich habe höchstens eine Verantwortung authentisch zu sein und offen für Kritik an mir und sachlich. Aber auch da unterscheide ich mich eigentlich nicht von anderen, würd ich sagen.</p>
+<p>Ich habe Björn auch nicht per se kritisiert für seine Zahl an Codezeilen. Darauf schaue ich gar nicht so sehr. Doch er hat recht pauschal mit dem Patternpfahl gewunken, da wollt ich es wissen, ob es ihm denn etwas gebracht hat. Und siehe da, eine simple Metrik scheint mir das Gegenteil zu beweisen.</p>
+<p>Dass ich nun EBC benutzt habe, ist halt mein Steckenpferd derzeit ;-) Darum ging es mir nicht primär. Eine andere Art von Modell wäre mir auch recht gewesen bei anderen zu sehen. Doch Modelle fehlen soweit das Kata-Auge reicht. Schade.</p>
+<p>Und wenn du sagst, andere wollen beim Dojo was lernen, dann hab ich für die auch geschrieben. Denn ich möchte ihnen zeigen, dass TDD allein es nicht reißt.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-11-20):</p>
+<p>@Björn: "Sind wir tatsächlich wieder bei C angelangt, wo wir mit Längen und Mikro-Effizienz von Programmen argumentieren müssen?":</p>
+<p>Ne, sicher nicht. Es geht auch nicht per se um Kürze. Bei einer knappen Zehnerpotenz Unterschied jedoch, da würd ich doch mal hinschauen.</p>
+<p>"im Vergleich zu den anderen Varianten einfach zu kompliziert":</p>
+<p>Hm... definiere mal "kompliziert". Ist ein Zustandsautomat komplizierter als ein State-Pattern? Ne, das glaub ich nicht. Vor allem, weil du ja auch letztlich einen Zustandsautomaten implementiert hast. Der sieht nur anders aus.</p>
+<p>"Zeig Deinen Zustandsautomaten doch mal jemand, der die Regel für Tennis nicht kennt und versuch sie ihn das anhand des Codes alleine erklären zu lassen. Ich bezweifle das dies ohne die Modellierungskizzen erfolgreich sein wird.":</p>
+<p>Ah, hier sind wir beim Knackpunkt für dich, denke ich. Ich gebe dir recht, dass die Integers als Zustandsbezeichnungen nicht super zu lesen sind - allemal, da im Zustandsdiagramm die Zustände nicht nummeriert sind.</p>
+<p>Aber deshalb den Zustandsautomaten auf 5 Zeilen rauskippen und stattdessen 10 mal mehr Zeilen schreiben? Ne. Sorry. Das sehe ich anders. Denn die Lösung ist viel einfacher: Die Modellskizze ist Teil des Codes. Ich muss niemandem Code zeigen, der einfach nur verstehen will, wie das Programm grundsätzlich funktioniert. Ich zeige dem nur das Modell.</p>
+<p>Diese Wahl hast du nicht mal. Du musst Code zeigen. Das halte ich für falsch.</p>
+<p>Nur, weil irgendwann mal jmd gemerkt hat, dass Klassendiagramme das Papier kaum Wert sind, auf dem sie gedruckt wurden, weil der Code schon wieder woanders ist, soll nun der Code es allein richten? Ne, ne. Das ist für mich der falsche Ansatz.</p>
+<p>Ich will nicht per se Papier produzieren. Aber etwas Modell darf es schon sein.</p>
+<p>Reichen dem Kunden tests? Mag sein.  Akzeptanztests. Die laufen auf der Oberfläche dessen, was er bestellt hat. Hier: ein Tennis-API.</p>
+<p>Aber was dem Kunden reicht, reicht mir als Entwickler doch noch lange nicht.</p>
+<p>Den Fehler hab ich zunächst im API als Integrationstest nachgestellt. Klar. Aber danach wollte ich selbstverständlich ganz gezielt die Funktionseinheiten testen, die den Fehler verursachen. Und die sind nicht im API sichtbar.</p>
+<p>Auf dem ArchOS können wir natürlich nochmal drüber sprechen. Und nen Bierchen dabei schlürpfen :-)</p>
+<hr />
+<p><strong>Thomas Zeman</strong> (2010-11-20):</p>
+<p>Es mag für eine Kata als Qualitätsanspruch ausreichen, dass der Code die Aufgabe erfüllt. Vermutlich auch einfach deswegen weil, wenn die Kata erledigt ist, niemand mit der Tennis Kata Teil 2,3 und 4 auftauchen wird. Genau darum geht es aber an dieser Stelle in der professionellen Softwareentwicklung: Evolvierbarkeit. Daher ist für mich ein weiterer Anspruch an die Codequalität selbstverständlich auch wieviel Zeit es einen Entwickler kostet, bestehenden Code zu verstehen, um damit arbeiten zu können. Ein mehrdimensionales Array mit ein paar Zahlen darin lässt sich <em>ausschließlich</em> dann verstehen, wenn man dazu Dokumentation hat. Die muss geschrieben, verwaltet, gelesen und aktuell gehalten werden. Daher scheidet deine Lösung, Ralf, als Mittel zum Qualitätszweck für mich leider aus.</p>
+<p>Zu dem Unterschied zwischen "State-Pattern" und "Zustandsmaschine" sollte man vergleichen:</p>
+<p><em>'this'-Pointer</em> auf das <strong>State-Objekt</strong> &lt;-&gt; <em>_currentState</em> Index <strong>in die Score Enumeration</strong></p>
+<p><em>Methodenaufruf zur Transition</em> in das <strong>State-Objekt</strong> &lt;-&gt; <em>Lookup des nächsten States</em> anhand von <em>transition</em> und <strong>_currentState im Array _stateTransitions</strong></p>
+<p>Deutlich wird, dass die vorgestellte Implementierung nichts anderes als das State-Pattern eben mit Mitteln von imperativen Programmiersprachen wie C ist. ('this' vs. 'int', 'vtab' vs. 'array')</p>
+<p>Neben der erwähnten Dokumentationspflicht des Arrays, ist es auch noch nötig, das Array _stateTransitions und die Enumeration Scores abgestimmt zu halten; und das obwohl die Enumeration nicht einmal in der Klasse Player zu finden ist. CleanCode ich hör' dir trapsen ... :)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-11-21):</p>
+<p>@Thomas: Danke für deinen Einwand. Ich glaube, damit sind wir bei einem Kernmissverständnis der heutigen Softwareentwicklung.</p>
+<p>"Ein mehrdimensionales Array mit ein paar Zahlen darin lässt sich ausschließlich dann verstehen, wenn man dazu Dokumentation hat. Die muss geschrieben, verwaltet, gelesen und aktuell gehalten werden."</p>
+<p>Ich denke, wir sind uns einig, dass ein Kontext immer gegeben sein muss, um Code zu verstehen, oder? Wenn ich Björns Code irgendwem ohne weitere Angaben zum Problem gebe, wird ihn auch niemand verstehen.</p>
+<p>Den Kontext klar zu machen und dann Code vorzulegen, kann aber auch nicht reichen. Irgendwie und irgendwann mag man dann zwar verstehen, wie der Code funktioniert - doch das kann dauern. So passiert es jeden Tag in unzähligen Brownfieldprojekten. Alle wissen, worum es geht, es existieren Berge an Code - doch die Entwicklung hat Mühe mit dem Verständnis. Aber nicht, weil der Code zu knapp ist. Das passiert auch den größten Freunden von Patterns. Soviel kann ich dir versichern. Warum? Weil Patterns erstens falsch eingesetzt werden und zweitens, wenn der Projektdruck steigt, solche Feinheiten schnell unter den Tisch fallen. Es gibt keinen Zwang zum Pattern, man kann jederzeit ohne. Und dann ist ihr Einsatz vom Individuum abhängig, weil es allermeistens keinen systematischen Codereview gibt.</p>
+<p>Natürlich bin ich gegen beliebige Verkürzungen von Code. Es gibt auch eine Eleganzmanie, die alles auf möglichst wenige Konstrukte zusammenpressen will.</p>
+<p>Ich mache aber etwas anderes. Ich produziere auch keine Dokumentation. Ich modelliere! Das ist etwas anderes. Das Modell übersetze ich dann in Code - und schmeiße es dann natürlich nicht weg. Das machst du mit deinem Quellcode auch nicht nach der Compilation. Und du forderst auch nicht, dass man Funktionalität aus IL-Code ablesen kann.</p>
+<p>Programmierung ohne Modell macht es sich immer schwer. Deshalb sage ich mal provokant: Code ohne Modell ist nicht zu verstehen. Auch der wunderbarste Patterncode nicht. Das weiß jeder, der schonmal versucht hat, an Open Source etwas zu verändern. Warum ist das so mühsam? Weil Open Source gewöhnlich nur aus Code besteht. Da fehlt jede Abstraktion darüber. Die Wahrheit, die dort im Code steckt, ist daher kryptisch. Ich kann sie kaum deuten. Deshalb nützt sich nichts und die Realität ist, dass die allermeisten OOS Projekte keine Contributors haben.</p>
+<p>Modellierung ist daher der Ausgangspunkt für Clean Code für mich.</p>
+<p>Dass mein Zustandsautomat ein kleinwenig besser verständlich sein könnte, geb ich zu. Die Zustände hätten mit dem Enum Scores deutlicher in Verbindung gebracht werden können. Aber wenn wir uns auf die Detailebene begeben, dann kann ich dir an allen Kata-Lösungen etwas bemängeln.</p>
+<p>Ich stelle mal die Behauptung zur Diskussion in den Raum: Entwickler lernen nicht zu modellieren. Auf Befragen - und das tue ich - wissen sie ja nicht mal, was ein Modell ist (im Gegensatz zum Code). Weil sie es nicht lernen und wissen, finden sie das unnötig.</p>
+<p>"Was der Bauer nicht kennt, das frisst er nicht."</p>
+<p>Weiter bei Teil 2...</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-11-21):</p>
+<p>Teil 2:</p>
+<p>Dass Gurus wie Robert Martin oder Kent Beck dann auch nichts zum Thema sagen, sondern mit ihren Kommentaren zu Kommentaren weiter auf "die einzige Quelle der Wahrheit, den Code" fokussieren, macht die Sache da nicht besser.</p>
+<p>Andere sagen etwas zur Modellierung - z.B. Eric Evans -, aber werden dann natürlich, weil sie nur wenige sind, weithin missverstanden. Dazu habe ich ja auch schon etwas unter dem Stichwort Domänenobjektmodell gesagt.</p>
+<p>Bottom line: Code ist und bleibt ein Implementierungsdetail. Da wir ihn noch schreiben müssen, sollte er eine gewisse Qualität aufweisen. Absolut. CCD forever :)</p>
+<p>Aber Code ist nur ein Mittel. Das weiß jeder, der früher Assembler programmiert hat und dann C und dann C++. So wie ich zum Beispiel ;-)</p>
+<p>Code auf einem Abstraktionslevel wurde ersetzt durch Code auf einem höheren Abstraktionslevel. Das hat einen Moment verwirrt, man hat sich etwas geziert und versucht dagegen zu argumentieren. Doch am Ende war der Vorteil klar und niemand trauert den Assemblerzeiten nach.</p>
+<p>Dasselbe passiert hier gerade. Die bisherige Abstraktionsebene ist nicht abstrakt genug. Mit ihr kann man Lösungen entwickeln. Klar. Wie mit Assembler auch. Aber es ist nervig. Den Code sauberer zu machen ist nur eine vorübergehende Lösung. Notwendig, aber keine Wurzelproblembehandlung. Das Wurzelproblem liegt im Programmiermodell und in der niedrigen Abstraktionsebene.</p>
+<p>Bei so winzigen Beispielen wie Kata Tennis fällt das nicht auf. Klar. Die kann ich auch in Assembler komfortabel und lesbar lösen. Aber in richtigen Anwendungen, da fällt es auf. Wie gesagt: Man wähle ein beliebiges OSS Projekt und versuche darin Änderungen vorzunehmen. Ohne hohen Zeitaufwand für das Studium der Sourcen, d.h. Reengineering (!), ist das nicht machbar.</p>
+<p>Ohne Modelle geht es nicht (mehr).</p>
+<hr />
+<p><strong>Krzysztof Eraskov</strong> (2010-11-21):</p>
+<p>Auch mir kam deine Argumentation etwas verbissen vor. Das lag vor allem der Darreichungsform (extra Blog-Artikel, da dir dein einfacher Kommentar nicht mehr gereicht hat) in Kombination mit einer aus meiner Sicht ziemlich wackligen, um nicht zu sagen unhaltbaren Position, die du da vertrittst, nochmals verstärkt durch die im Code enthaltenen Fehler.</p>
+<p>Dass ich einen Fehler gefunden habe, kannst du natürlich als Indiz dafür sehen, dass deine Vorgehensweise die von dir beschriebenen Vorteile bezüglich der Feststellbarkeit der Korrektheit hat. Ich sehe das nicht so. Deine Skizze des Zustandsautomaten weicht nämlich von deiner Implementierung ab (in der Skizze gibt es zwei rote Pfeile, die aus dem Zustand 40 ausgehen, und die man durchaus so interpretieren kann, dass es von der Anzahl der Punkte des Gegners abhängt, ob der Automat im Zustand 40 bleibt oder in den Zustand deuce geht). Die Korrektheit des Programms lässt sich also offensichtlich nicht aus der (unterstellten) Korrektheit der Skizze ableiten.</p>
+<p>Insofern muss man deine Frage "Wie hätte ich nach Darlegung der Anforderungen in Björn Vertrauen haben können, dass er korrekten Code schreibt?" in Bezug auf die von dir unterstellten Vorteile so formulieren: "Wie hätte ich nach Darlegung der Skizze Vertrauen haben können, dass du korrekten Code schreibst?". Sicher kann so eine Skizze helfen, Fehler zu finden, die schon in einem Missverständnis der Anforderungen liegen, aber garantiert ist das offensichtlich nicht.</p>
+<p>Ich stimme dir darin zu, dass man Pattern nicht unreflektiert anwenden sollte. Für das Tennis-Problem wäre der State-Pattern sicher nicht die optimale Lösung. Das liegt wohl auch daran, dass es außer den den Zustandsübergängen keine Aktionen gibt, die durchgeführt werden müssen, und der State-Pattern somit seine Vorteile nicht ausspielen kann.</p>
+<p>Dein Ansatz ist aber auch keine gute Lösung, denn sie hat ein echtes Dokumentationsproblem. Dass die Zustände in der Skizze nicht nummeriert sind, ist nur die Spitze des Eisbergs. Selbst wenn sie das wären, gäbe es einen unnötigen Medienbruch, weil die Skizze physisch vom Code getrennt vorliegt, mit allen bekannten Problemen, insbesondere dass Codeänderung meist nicht in einer Änderung der Skizze resultieren.</p>
+<p>So wie ich dich an anderer Stelle verstanden habe, bist du der Meinung, dass Kommentare, die nur beschreiben, was der Code tut, vermieden werden sollten, dass nur kommentiert werden sollte, <strong>warum</strong> man etwas macht, nicht <strong>was</strong> der Code macht und dass insbesondere Code immer so geschrieben werden sollte, dass er aus sich selbst heraus verständlich ist. Diesem Anspruch wirst du hier nicht gerecht.</p>
+<p>Dabei wäre es so einfach gewesen: Man braucht nur ein Enum mit symbolischen Namen für die Zustände und ein ("doppeltes") Dictionary, das die Abbildung SxI-&gt;S repräsentiert (wobei S die Menge der Zustände ist und I die Menge der Inputs, also ob Spieler 1 den Punkt gewonnen hat). Dadurch würde aus jeder Zahl in deinem Array eine eigene Zeile, etwa in der Art</p>
+<p>_stateTransitions [Result.Win] [State.Points15] = State.Points30;</p>
+<p>Das ist natürlich deutlich länger (aber so lang nun auch wieder nicht; die Zahl der Zeilen der Klasse Player würde sich - den Enum schon eingerechnet - allenfalls verdoppeln), vor allem aber deutlich lesbarer und ohne weitere Kommentare oder gar externe Dokumentation (also insbesondere ohne externes Modell) verständlich. Das ist für mich mehr als eine Detail-Verbesserung.</p>
+<p>Ich vermute, dass dich gerade Existenz der Skizze dazu verleitet hat, so kompakten Code zu schreiben, dass dich die Existenz der Skizze mindestens hat übersehen lassen, wie schlecht die Qualität des resultierenden Code ist. Insofern lässt sich schon die Frage anknüpfen, ob nun durch die Skizze - also durch die Vorgehensweise, zuerst das Modell in grafischer Form darzulegen - etwas verbessert oder verschlechtert wurde.</p>
+<hr />
+<p><strong>Krzysztof Eraskov</strong> (2010-11-21):</p>
+<p>Auch mir kam deine Argumentation etwas verbissen vor. Das lag vor allem an der Darreichungsform (extra Blog-Artikel, da dir ein einfacher Kommentar nicht mehr gereicht hat) in Kombination mit einer aus meiner Sicht ziemlich wackligen Position, die du da vertrittst, nochmals verstärkt durch den im Code enthaltenen Fehler.</p>
+<p>Dass ich einen Fehler gefunden habe, kannst du natürlich als Indiz dafür sehen, dass deine Vorgehensweise die von dir beschriebenen Vorteile bezüglich der Feststellbarkeit der Korrektheit hat. Ich sehe das nicht so. Deine Skizze des Zustandsautomaten weicht nämlich von deiner Implementierung ab (in der Skizze gibt es zwei rote Pfeile, die aus dem Zustand 40 ausgehen, und die man schon so interpretieren kann, dass es von der Anzahl der Punkte des Gegners abhängt, ob der Automat im Zustand 40 bleibt oder in den Zustand deuce geht). Die Korrektheit des Programms lässt sich also nicht aus der (unterstellten) Korrektheit der Skizze ableiten.</p>
+<p>Insofern muss man die Frage "Wie hätte ich nach Darlegung der Anforderungen in Björn Vertrauen haben können, dass er korrekten Code schreibt?" in Bezug auf die von dir unterstellten Vorteile so formulieren: "Wie hätte ich nach Darlegung der Skizze Vertrauen haben können, dass du korrekten Code schreibst?". Sicher kann so eine Skizze helfen, Fehler zu finden, die schon in einem Missverständnis der Anforderungen liegen, aber garantiert ist das eben nicht.</p>
+<p>Ich stimme dir darin zu, dass man Pattern nicht unreflektiert anwenden sollte. Für das Tennis-Problem wäre der State-Pattern sicher nicht die optimale Lösung. Das liegt wohl auch daran, dass es außer den den Zustandsübergängen keine weiteren Aktionen gibt und der State-Pattern somit seine Vorteile nicht ausspielen kann.</p>
+<p>Dein Ansatz ist aber auch keine gute Lösung, denn sie hat ein echtes Dokumentationsproblem. Dass die Zustände in der Skizze nicht nummeriert sind, ist nur die Spitze des Eisbergs. Selbst wenn sie das wären, gäbe es einen unnötigen Medienbruch, weil die Skizze physisch vom Code getrennt vorliegt, mit allen bekannten Problemen, insbesondere dass Codeänderung meist nicht in einer Änderung der Skizze resultieren.</p>
+<p>So wie ich dich an anderer Stelle verstanden habe, bist du der Meinung, dass Kommentare, die nur beschreiben, was der Code tut, vermieden werden sollten, dass nur kommentiert werden sollte, <strong>warum</strong> man etwas macht, nicht <strong>was</strong> der Code macht und dass insbesondere Code immer so geschrieben werden sollte, dass er aus sich selbst heraus verständlich ist. Diesem Anspruch wirst du hier nicht gerecht.</p>
+<p>Dabei wäre es so einfach gewesen: Man braucht nur ein Enum mit symbolischen Namen für die Zustände und ein doppeltes Dictionary, das die Abbildung SxI-&gt;S repräsentiert (wobei S die Menge der Zustände ist und I die Menge der Inputs, also ob Spieler 1 den Punkt gewonnen hat). Dadurch würde aus jeder Zahl in deinem Array eine eigene Zeile:</p>
+<p>_stateTransitions [Result.Win] [State.Points15] = State.Points30;</p>
+<p>Das ist natürlich deutlich länger (aber so lang nun auch wieder nicht; die Zahl der Zeilen der Klasse Player würde sich - den Enum schon eingerechnet - allenfalls verdoppeln), vor allem aber deutlich lesbarer und ohne weitere Kommentare oder gar externe Dokumentation (also insbesondere ohne externes Modell) verständlich. Das ist für mich mehr als eine Detail-Verbesserung.</p>
+<p>Ich vermute, dass dich gerade die Existenz der Skizze dazu verleitet hat, so kompakten Code zu schreiben, dich aber mindestens hat übersehen lassen, wie schlecht die Qualität des resultierenden Code ist. Insofern lässt sich schon die Frage anknüpfen, ob nun durch die Skizze - also durch die Vorgehensweise, zuerst das Modell in grafischer Form darzulegen - etwas verbessert oder verschlechtert wurde.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-11-21):</p>
+<p>@Krzysztof: Also, dass man mir einen Blogartikel als Verbissenheit auslegt... Das find ich schon etwas verbissen. Denn ich hab ja klar gemacht, warum ich ihn geschrieben habe: weil der Platz in einem Kommentar für die Wichtigkeit des Themas zu klein ist. Ist das verbissen? Ne. Nur weil mir etwas wichtig ist und ich dafür eine besondere Form wähle, bin ich doch nicht verbissen.</p>
+<p>Und dass ich eine unhaltbare (!) Position vertrete... Boah, da muss ich mich erstmal setzen. Tu mir doch bitte diesen Gefallen:</p>
+<ol>
+<li>Formuliere meine Position in deinen Worten, damit ich sehe kann, ob ich sie überhaupt rüberbringen konnte.</li>
+<li>Erkläre mir dann, warum die Position unhaltbar ist. (Vor allem im Vergleich zu was.)</li>
+</ol>
+<p>Du hast völlig recht, dass meine Skizze des Zustandsautomaten fehlerhaft ist. Zwei rote Pfeile von der 40 weg, ist inkorrekt. Genau dort lag dann ja aber auch das Problem.</p>
+<p>Warum habe ich das Problem nicht selbst erkannt? Warum habe ich den Zustandsautomaten falsch übersetzt? Keine Ahnung. Passiert halt. Wofür ist das ein Beweis?</p>
+<p>Sollte ich mit der Modellierung aufhören, weil mir ein Übersetzungsfehler unterlaufen ist? Sorry, das ist doch Quatsch. Da hören wir besser alle gleich mit der Programmierung auf, weil wir immer wieder Fehler machen.</p>
+<p>Ich lese vielmehr zweierlei heraus:</p>
+<p>a.) Programmierung profitiert von vielen Augen. Es ist eine kollaborative Aufgabe. Und das geht leichter, wenn diese Augen nicht auf Text starren, sondern auf ein Modell.
+b.) Am Modell kann ich Inkonsistenzen leichter ablesen. Ich war zwar wohl systemblind, aber dir ist der doppelte Verlierer-Pfeil ins Auge gesprungen. Wunderbar.</p>
+<p>Korrektheit lässt sich überhaupt nicht beweisen/ablesen. Auch aus Code nicht. Ja, ich weiß: "Bubbles don´t crash." Aber das ist so ein Totschlagargument, dass ich nur gähnen kann. Denn erstens vernachlässigt es "lauffähige Bubbles" wie DSLs. Zweitens kippt es mit dem Blasenbad das Kind Abstraktion aus. Sehr schade.</p>
+<p>Was an meinem Ansatz ist denn nicht gut? Bring es bitte differenziert auf den Punkt.</p>
+<p>Ist es der Zustandsautomat? Nein.
+Ist es die Art der Implementierung des Zustandsautomaten? Ja.</p>
+<p>Aha, dann sind wir beieinander. Ich finde deinen Vorschlag mit den Dictionaries wunderbar. Wieder ein Beweis dafür, dass Programmierung davon profitiert, mehrere Köpfe zusammenzustecken.</p>
+<p>Meinen Job hab ich nicht darin gesehen, den besten Zustandsautomaten zu liefern, sondern die Modellierungsfahne zu hissen. Dabei ist was auf der Strecke geblieben. Passiert halt. Und andere kümmern sich dann darum. Arbeitsteilung. Wunderbar.</p>
+<p>Deinen Vorschlag hab ich aufgegriffen und meine Implementation auf Dict&lt;&gt; umgestellt. Siehe den ursprünglichen Blogartikel.</p>
+<p>Jetzt ist der Code natürlich länger. Aber ich halte ihn immer noch für besser les- und wartbar als ein State-Pattern. Und er ist immer noch modellbasiert.</p>
+<p>Hat mich das Modell zu irgendwas verleitet? Sollte Modellierung gar deshalb verworfen werden? Natürlich nicht.</p>
+<p>Das Modell hat keine Aussage über den Code gemacht. Das ist ja der Trick am Modell. Wenn ich besonders knapp übersetzt habe, dann nicht wegen dem Modell, sondern aus andern Gründen. Vielleicht, weil ich früher schonmal Zustandsautomaten so gemacht hatte? Könnte sein. Auf keinen Fall halte ich das Modell für überflüssig. Es hat mich geleitet und ist die Ebene, auf der ich weiterhin über die Lösung nachdenke. Warum sollte ich mich auch ständig auf Codeebene bewegen? Das muss mir mal einer erklären.</p>
+<p>Wie gesagt: Ich glaube inzw, dass Entwickler nicht modellieren, weil sie es schlicht nie gelernt haben. So rationalisieren sie sich zurecht, dass Modelle scheiße sein, weil schwer zu pflegen und redundant oder sonstwas.</p>
+<p>Und das mag für Nicht-Modell-Doku auch stimmen. Ein echtes Modell jedoch... das ist Gold wert.</p>
+<hr />
+<p><strong>JakeJBlues</strong> (2010-11-21):</p>
+<p>Hallo Ralf,</p>
+<p>bzgl. -&gt;
+"Ich glaube inzw, dass Entwickler nicht modellieren, weil sie es schlicht nie gelernt haben."</p>
+<p>Wen oder was Du als "Entwickler" bezeichnest?</p>
+<p>Gruß JJR</p>
+<hr />
+<p><strong>Krzysztof Eraskov</strong> (2010-11-21):</p>
+<p>Richtig, gegen Zustandsübergangsdiagramme und Zustandsautomaten habe ich nichts. Zustandsübergangsdiagramme sind nicht zu abstrakt, sondern im Gegenteil leicht zu verstehen, sofern die Zustände sinnvolle Namen haben und es weder zu viele verschiedene Zustände noch zu viele verschiedene Inputs gibt (oder wenn doch, zumindest die Zustandsübergangsfunktion "sparse" genug ist). Selbst wenn man für die Implementierung den State-Pattern gewählt hätte, wäre ein Zustandsübergangsdiagramm die richtige grafische Darstellungsform dafür gewesen. Und ein Zustandsübergangsdiagramm durch einen Zustandsautomaten statt durch einen State-Pattern zu implementieren, geht auch in Ordnung.</p>
+<p>Streiten kann man sich noch darüber, ob ein Zustandsübergangsdiagramm so günstig ist, wenn man von der konkreten Aufgabe weg auf die Klasse ähnlich gelagerter Probleme blickt. Wenn man alleine die Tischtenniszählung nimmt ...</p>
+<p>"Ein Satz endet, wenn ein Spieler elf Gewinnpunkte erreicht hat und dabei mindestens zwei Punkte Vorsprung hat, zum Beispiel 11:9, 12:10, 13:11. Beim Stand von 10:10 geht der Satz in die Verlängerung. Dabei wechselt das Aufschlagsrecht nach jedem Punkt. Die Verlängerung endet dann, wenn sich ein Spieler zwei Punkte Vorsprung erkämpft hat." Quelle: Wikipedia</p>
+<p>... sieht man, dass nicht nur für einen "normalen" Spielverlauf bis 11 Punkte die Zahl der nötigen Zustände (quadratisch) explodiert, sondern dass die Zahl der Zustände gar nicht endlich ist. Die Evolvierbarkeit stößt also bei diesem Modell schnell an ihre Grenzen.</p>
+<p>Das alles ändert ohnehin nichts daran, dass mindestens im konkreten Fall die von dir behaupten Vorteile nicht eingetreten sind. Weder hat das Modell das Vertrauen des Auftraggebers in eine korrekte Implementierung gerechtfertigt noch hat das Modell zu einer - schon im ersten Anlauf - guten Implementierung geführt. Ich würde im Gegenteil behaupten, dass die Existenz des Modells psychologisch eine im Sinne der genannten Kriterien gute Implementierung vereitelt hat.</p>
+<p>Das heißt natürlich noch lange nicht, dass Modelle grundsätzlich schädlich oder gar verwerflich sind. Es heißt nur, dass Modelle nicht automatisch Gold wert sind.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-11-21):</p>
+<p>@JakeJBlues: Entwickler sind die, die zu einer Veranstaltung wie der BASTA! oder VSone gehen, um dort was über VS oder WCF oder WF oder NHibernate oder EF zu lernen. Leute, die dann im Projekt Quellcode schreiben in C# oder Java oder C++ usw.</p>
+<p>Woher die das können, die Ausbildung... die ist egal. Also subsummiere ich auch mal die Informatiker darunter. Selbst wenn die eine Vorlesung hatten "Modellierung von Softwaresystemen", nehmen sie davon nicht unbedingt viel mit in die Praxis. Dasselbe gilt für Vorlesungen, die sich mit autom. Tests beschäftigen.</p>
+<p>Damit spreche ich selbstverständlich nicht über alle/100% Entwickler. Klar. Aber über die Mehrheit. Gern bin ich bereit, den Beweis bei einer der nächsten Entwicklerveranstaltungen mit einer Umfrage anzutreten.</p>
+<hr />
+<p><strong>JakeJBlues</strong> (2010-11-21):</p>
+<p>Hallo Ralf,</p>
+<p>"Entwickler sind die, die zu einer Veranstaltung wie der BASTA!"</p>
+<p>Alle anderen dann wohl, nicht :-D</p>
+<p>Wenn dann noch die Ausbildung egal ist -&gt;
+"Woher die das können, die Ausbildung... die ist egal."</p>
+<p>Gebe ich Dir wohl zu 100% recht, Entwickler nach Deiner Definition können nicht modellieren?!</p>
+<p>Gruß JJR</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-11-21):</p>
+<p>@Krzysztof: "Streiten kann man sich noch darüber, ob ein Zustandsübergangsdiagramm so günstig ist, wenn man von der konkreten Aufgabe weg auf die Klasse ähnlich gelagerter Probleme blickt."</p>
+<p>Warum sollte ich mich darüber streiten. Ich habe keine allgemeine Lösung für irgendwas liefern wollen, sondern nur eine konkrete für die Zählung beim Tennis.</p>
+<p>Neues Spiel, neues Modell. Wenn ich Reversi oder Tischtennis oder Bowling implementieren soll, sieht mein Modell anders aus. Womöglicht ist ein Zustandsautomat dann nicht mit von der Partie.</p>
+<p>"Die Evolvierbarkeit stößt also bei diesem Modell schnell an ihre Grenzen.": Die Evolvierbarkeit ist eben nicht schnell an ihre Grenzen gestoßen, weil ich 1. die Kopplung der Spieler sehr einfach nachrüsten konnte, um den Fehler zu beheben, und 2. der Umstieg von meinem Zustandsautomaten auf deinen möglich war, ohne auch nur einen Test ändern zu müssen.</p>
+<p>Das Modell - übrigens bestehend aus Zustandsautomat und (!) EBC-Diagramm - hat sich als evolvierbar erwiesen.</p>
+<p>Dass es von Tennis nach Tischtennis oder gar Fußball evolvieren können soll, hat niemand behauptet. Das kannst du auch nicht ernsthaft meinen.</p>
+<p>"Weder hat das Modell das Vertrauen des Auftraggebers in eine korrekte Implementierung gerechtfertigt noch hat das Modell zu einer - schon im ersten Anlauf - guten Implementierung geführt."</p>
+<p>Das ursprüngliche Modell war inkorrekt. Wie sollte da eine korrekte Implementierung rauskommen? Sollte ich aber, weil ich inkorrekt modellieren kann, die Modellierung sein lassen? Das ist doch Quatsch. Dann sollten wir - ich habs schon mal geschrieben - die Programmierung sein lassen. Die ist ständig voll von Fehlern.</p>
+<p>Der Trick ist vielmehr, dass am Modell das Problem am Ende sehr, sehr einfach zu sehen war. Der Übergang von 40:* zu 40:40=Deuce war schlicht nicht da. Das (!) ist der Vorteil des Modells.</p>
+<p>Man möge mir ein solches Missverständnis aufzeigen, wenn kein Modell vorhanden ist. Fällt das da auch ins Auge?</p>
+<p>Was meinst du mit "guter Implementierung"? Definiere "gut". Führt TDD zu einer guten Implementierung? Immer?</p>
+<p>"Ich würde im Gegenteil behaupten, dass die Existenz des Modells psychologisch eine im Sinne der genannten Kriterien gute Implementierung vereitelt hat."</p>
+<p>Das Modell hat keine gute Implementierung vereitelt. Wenn mein Verständnis der Anforderung inkorrekt ist, dann kann weder mein Modell korrekt sein, noch Code, den ich gleich ohne Modell schreibe.</p>
+<p>Es ist eine Illusion anzunehmen, dass "gleich coden" zu besseren Ergebnissen führt. Dann müssten wir ja nur extrapolieren und sagen: am besten gleich mit Assembler loslegen, also auf der niedrigsten Abstraktionsstufe. Dann wird alles noch korrekter.</p>
+<p>Weiter mit Teil 2...</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-11-21):</p>
+<p>Teil 2:</p>
+<p>Modelle sind Lösungen auf höherer Abstraktionsstufe als heutiger Quellcode. Nichts weiter. Keine Wundermittel, keine Silberkugeln, sondern konkrete Denk- und Kommunikationshilfen.</p>
+<p>Wer die ausschlägt, der bindet sich einfach ein Bein hoch. Warum sollte ich das tun? Gibt es einen Preis für einbeinige Sprinter? Ist Askese in der Werkzeugnutzung eine Tugend? Sind wir im Mittelalter bei Mönchen und Geißlern?</p>
+<p>Ich nutze jedes Tool, dass mir was bringt. Modelle bringen mir Überblick und einfachere "Knetmasse" für die Lösungsformung.</p>
+<p>Und nochmal: Bis mir einer zeigt, dass er modellieren kann und es trotzdem lässt, bleibe ich dabei, dass Modellierung hilft.</p>
+<p>Ob die Modellierung dann im Kopf stattfindet, weil der ein Meister ist, oder nur auf dem Papier... das ist mir egal. Auf Befragen kann mir der Meister dann auch sein Modell "dumpen".</p>
+<p>Wer allerdings kein Modell hat, der kann es nicht aufmalen. Und der soll bitte nicht über die Nachteile des Modellierens sprechen. Er hat es ja noch nicht versucht.</p>
+<p>(Dass du nicht modellieren kannst, behaupte ich übrigens nicht. Ich stelle diese These allgemein in den Raum. Wer nicht schwimmen kann, soll mir nichts über Delphin-Stil oder Schmetterling oder sonstwas erzählen.)</p>
+<p>Zum Versuchen des Modellierens möchte ich aber anregen.</p>
+<p>Wenn ich dabei Fehler mache... so what. Kann passieren. Warum soll ich die nicht öffentlich machen? Ein Fehler in der Anwendung spricht nicht gegen das Werkzeug. Vor allem nicht, wenn er nicht eklatant ist. Denn das war er hier nicht. Ich habe die Modellierung nicht ad absurdum geführt.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-11-21):</p>
+<p>@JakeJBlues: Natürlich geht die Majorität der Entwickler nicht zur BASTA! &amp; Co - und ist trotzdem Entwickler. Ich wollte damit nur Entwickler "anfassbar" machen. Da kannst du sie exemplarisch treffen.</p>
+<p>Die Ausbildung ist tatsächlich egal. "Entwickler" ist kein geschützter Begriff. Man erkennt ihn an dem, was er tut: Code in einer formalen Sprache schreiben. Und im engeren Sinn: Einer, der seine Brötchen damit verdient, C# (oder VB oder Java) Code zu schreiben, um seine Brötchen zu verdienen.</p>
+<p>Das tun Autodidakten und Dipl. Infs. gleichermaßen.</p>
+<p>Haben die gelernt zu modellieren? Ne. Ich war lange genug in der Uni, um das aus eigener Erfahrung beurteilen zu können. Und auch UML hat da nicht viel dran geändert.</p>
+<p>Modellierung ist kein Thema in den weitesten Teilen der Entwicklergemeinde - von Ruby über C# bis Go.</p>
+<p>Das heißt nicht, dass es keiner tut. Immerhin gibt es ja auch sowas wie MDSD. Aber es ist kein Massenphänomen. Es ist nicht der Default. Aber nicht, weil es schlecht wäre, sondern weil es schlicht nicht konsequent gelehrt wird. (Nein, UML ist keine Lehre der Modellierung. Eher schon DDD.)</p>
+<hr />
+<p><strong>JakeJBlues</strong> (2010-11-21):</p>
+<p>Hallo Ralf,</p>
+<p>verstehst Du unter "modellieren":</p>
+<p>eine Abstraktion des Problems auf Papier zu bringen?</p>
+<p>Gruß JJR</p>
+<hr />
+<p><strong>Sergey Shishkin</strong> (2010-11-21):</p>
+<p>Ob die Lösung zu abstrakt und zu zeremonisch ist oder zu wenig Pattern hat, ist mir grundsätzlich auch egal - da bin ich bei Dir. Was ich aber für wichtigen Metriken halte, sind Komplexität und Umfang des Codes.</p>
+<p>Deinen Zustandsautomaten in Form eines Integer Arrays finde ich unnötig komplex:
+{1,2,3,6,5,6,-1,4,-1},
+{0,1,2,4,7,4,-1,8,-1}
+Warum an der siebten Stelle -1 und kein 7 steht, kann ich spontan nicht sagen. Da finde ich die Lösung von Björn mit benannten Zuständen viel selbsterklärender.</p>
+<p>Den Umfang des Codes Deiner Lösung finde ich für die einfache Kata etwas übertrieben. Ich bin ein Minimalist mit dem Motto "less is more". Besonders im Code halte ich das für sehr wichtig. Weniger Code bedeutet weinger Wartungsaufwand, weniger Einarbeitungszeit, weniger Platz für Defekte. Aus diesem Grund habe ich mit meiner ersten C# Version nicht aufgehört und habe noch eine PowerShell Version entwickelt, weil ich glaubte, dass meine Tests noch einfacher und expressiver sein könnten.</p>
+<p>Was ich in Deiner Lösung aber sehr gut finde, sind die Skizzen. Das soll ich demnächst auch mal probieren. Allerdings, würde ich die Skizzen in der produktiven Anwendung sofort wegwerfen, da ich glaube, dass die Dokumentation nie veraltet werden darf. D.h. soll die Dokumentation ausführbar sein - Tests zum Beispiel.</p>
+<p>Ich hoffe, dass wir auf dem kommenden ArchOS auch ein CodingDojo durchführen können um wieder von einander was zu lernen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-11-21):</p>
+<p>@JakeJBlues: Wikipedia sagt zu Modell dies: http://de.wikipedia.org/wiki/Modell</p>
+<p>Da bin ich grundsätzlich dabei.</p>
+<p>Ein Beispiel für Modell ist auch Landkarte. Die Landkarte ist nicht die Realität - das ist ihr Zweck. Bewegen tut man sich am Ende im Gelände, aber den Überblick gewinnt man auf der Karte. Wer ohne Karte ins Unbekannte fährt, der kann sicherlich Abenteuer erleben. Wunderbar, wenn man Urlaub machen möchte. Aber z.B. für eine militärische Aktion ungeeignet. Da werden Karten studiert - oder extra aufgeklärt.</p>
+<p>Und beim Programmieren ist ein Modell die Beschreibung der Lösung mit anderen Mitteln als der Programmiersprache - und auch einem höheren Abstraktionsniveau.</p>
+<p>Ein Zustandsautomateb, EBC-Diagramme, ER-Diagramme... das sind Modelle (bzw. eigentlich erstmal Metamodelle). Wie die am Ende implementiert werden? Egal. Direkt in Assembler oder mit C#, objektorientiert oder mit Funktionaler Programmierung... alles ist möglich.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-11-21):</p>
+<p>@Sergey: "Deinen Zustandsautomaten in Form eines Integer Arrays finde ich unnötig komplex":</p>
+<p>Hm... was ist an den ursprünglichen 5 Zeilen komplex? Komplex im Sinne von "durch Nachdenken wird man nicht schlauer".</p>
+<p>Oder meinst du kompliziert (im Sinne von "durch Nachdenken wird man schlauer")?</p>
+<p>Sind die 5 Zeilen kompliziert? Zu kompliziert? Hm... Sie sind zugegebenermaßen nicht superleicht zu lesen. Allemal, da ich das Mapping der Zustände im Modell auf die Zustandsindizes nicht deutlich gemacht hatte im ersten Anlauf.</p>
+<p>Aber: Hey, es ist KISS. In jedem Fall ist eine 5 Zeilen-Lösung (auch wenn sie unwissentlich knapp daneben lag) weniger kompliziert als eine 50+ Zeilen-Lösung. Denn 50+ Zeilen wollen geschrieben, getestet und verstanden werden. Man sage mir nicht, dass das schneller ging als meine 5 Zeilen.</p>
+<p>"Den Umfang des Codes Deiner Lösung finde ich für die einfache Kata etwas übertrieben.": Warum ist meine Katalösung zu umfangreich? Weil ich zwei Projekte gemacht habe?</p>
+<p>Dagegen halte ich, dass für einfache Katas womöglich gar keine Tests nötig sind. Warum also welche schreiben? Bläht den Umfang nur auf.</p>
+<p>Zwei Projekte, ein Modell mit zwei Diagrammen: Das ist nicht zu umfangreich, sondern das ist der Zweck. Darin liegt die Übung.</p>
+<p>Katas sind nicht dazu da, einen "Ich habs irgendwie geschafft"-Kick zu bekommen, sondern eine "Programmierdisziplin" zu üben. Die meisten beschränken sich da auf TDD. Auch schön. Ich seh es breiter. Und das ohne Einbuße an Geschwindigkeit, denke ich. Aber selbst wenn... Mach du die Kata in 20 Minuten ohne Modell und mit der Hälfte der Codezeilen. Wenn das dein Übungszweck ist - schnell sein und Codezeilen sparen -, dann gut. Meiner ist es nicht. Das muss ich nicht üben, weil es für realistische Programmierung keinen Sinn hat.</p>
+<p>Auf dem ArchOS können wir weiter drüber plaudern.</p>
+<hr />
+<p><strong>JakeJBlues</strong> (2010-11-21):</p>
+<p>Hallo Ralf,</p>
+<p>OK, dann haben wir einen gemeinsame Grundlage. Die Frage ist nun, ob ein Entwickler grundsätzlich abstrahieren muß oder nicht. M.E. gibt es nun einmal sehr viele Entwickler, die einfach nur froh sind, wenn Sie das Problem in einer Programmiersprache irgendwie umsetzen können. Hier ist es ein wenig wie in der Mathematik ;-) Nehmen wir mal den <a rel="noopener" href="http://de.wikipedia.org/wiki/Satz_des_Pythagoras">Satz von Pythagoras</a>. Ich fürchte die Diskussion ist hier, soll ich als Beweis den geometrischen oder den "schönen abstrakten" im Vektorraum benutzen. Der Vorteil des geometrischen ist es, dass ein nicht so hohes "Abstraktionsvermögen" vorrausgesetzt wird.</p>
+<p>Hoffe Du stimmst mir zu, wenn ich zusammenfassend behaupten würde, wenn ich "das modellieren" bei den Entwicklern bemängle, dann sollte ich Ihnen zuerst Lösungen vorstellen, welche vielleicht nicht die elegantesten sind, aber (einfach) nachvollziehbar.</p>
+<p>Denke einfach, demnächst an den Pythagoras und den "Vektorraum" ;-)</p>
+<p>Gruß JJR</p>
+<hr />
+<p><strong>nsteenbock</strong> (2010-11-28):</p>
+<p>Hallo zusammen,</p>
+<p>ich hätte da noch zwei Anmerkungen zu diesem Thema.</p>
+<ol>
+<li>
+<p>Modellierung
+Es gab die Kritik, dass sich trotz vorheriger Modellierung seitens Ralf ein Fehler eingeschlichen hat. Hm... Voreiliger Schluss Einiger: Modellierung schützt mich (anscheinend) nicht vor Fehlern.
+Meiner Meinung nach ein Fehlschluss. Wäre dieser Fehler wirklich bis in die Implementierung gekommen, wenn Ralf sein Modell mit dem Kunden durchgesprochen hätte? Glaube ich nicht. Ganz im Gegenteil. Ginge es hier nicht um eine Kata, sondern ein reales Projekt, wäre der Fehler wahrscheinlich schon durch eine Besprechung des Modells mit dem Kunden gefunden worden.
+Punkt geht also an die Modellierung.</p>
+</li>
+<li>
+<p>Evolvierbarkeit
+Das geht jetzt direkt @ralf:
+Finde ich gut, dass Du ganz einfach eine Lösung zur Behebung des Fehlers gefunden hast. Das hat gezeigt, dass Deine Lösung auf jeden Fall evolvierbar war. ABER: Das was da jetzt nach Deiner Änderung an Code liegt ist nicht mehr evolvierbar!
+a.) Es wird mir suggeriert, dass die komplette Business-Logik in der Klasse <em>Player</em> liegt. Einfach, weil dort offensichtlich eine State-Machine "lebt". Automaten sollten meiner Meinung nach immer in sich geschlossene Einheiten sein. Jetzt "lebt" aber auf einmal ein Zustandsübergang in der Klasse <em>Determine_Winner</em>.</p>
+</li>
+</ol>
+<p>b.) Von einer Funktionseinheit mit dem Namen <em>Determine_Winner</em> erwarte ich nicht, dass sie auch nur ein einzelnes Bit in meinem Objektbaum verändert. Hm... bei näherem Nachdenken doch. Sie könnte vielleicht den Gewinner des Spiels setzen. Aber ich erwarte nicht, dass sie den Spielstand von 40-40 auf Deuce setzt.</p>
+<p>Meine Erkenntnis in Bezug auf Evolvierbarkeit wäre in diesem speziellen Fall also: Evolvierbarkeit bedeutet nicht nur Fehler einfach beseitigen zu können, sondern auch, Fehler einfach lokalisieren zu können. Letzteres finde ich leider in dem aktuellen Code nicht mehr so einfach.</p>
+<p>MfG,</p>
+<p>Nils</p>
+<hr />
+<p><strong>Krzysztof Eraskov</strong> (2010-11-28):</p>
+<p>Der Schluss war keineswegs voreilig sondern wohldurchdacht. Der Zustandsübergangsgraph war im ersten Anlauf so, dass man ihn für korrekt hätte halten können. Wie ich oben schrieb:</p>
+<p>"in der Skizze gibt es zwei rote Pfeile, die aus dem Zustand 40 ausgehen, und die man durchaus so interpretieren kann, dass es von der Anzahl der Punkte des Gegners abhängt, ob der Automat im Zustand 40 bleibt oder in den Zustand deuce geht"</p>
+<p>und weiter</p>
+<p>"Die Korrektheit des Programms lässt sich also offensichtlich nicht aus der (unterstellten) Korrektheit der Skizze ableiten."</p>
+<p>Mit der "unterstellten Korrektheit" war gemeint, dass der Auftraggeber die Skizze begutachtet und sie für korrekt hält. Es ist menschlich, nicht auf dem Schirm zu haben, dass eine Spezifikation so krass missverstanden wurde.</p>
+<p>Zugegeben das war ein spezieller Fall. Aber in diesem speziellen Fall halte ich es für durchaus wahrscheinlich, dass der Fehler nicht rechtzeitig aufgefallen wäre.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-11-28):</p>
+<p>@Krzysztof: Anforderungen können immer missverstanden werden. Und die Beschreibung einer Lösung kann immer korrekt aussehen, aber falsch sein. Natürlich zählt daher am Ende nur der Code und erfolgreiche Akzeptanztests.</p>
+<p>Auf welcher Ebene ist es aber leichter, Verständnisfehler zu erkennen? Ich behaupte weiterhin: auf der Modellebene.</p>
+<p>Noch ein Beispiel aus der Realität: Morgen mache ich einen Review. Ich kenne die Anwendung noch nicht. Was habe ich davon, wenn mir die Entwickler mit Klassendiagrammen kommen? Was habe ich davon, wenn sie mir mit Sourcecode kommen?</p>
+<p>Nichts.</p>
+<p>Ich verstehe dann nicht oder nur sehr schwer, was das Ganze soll. Auch ein normales Blockdiagramm hilft da wenig.</p>
+<p>Was ich brauche, um in eine Anwendung einzusteigen, sind Modelle. Und zwar mehrere, auf unterschiedlichen Abstraktionsebenen und unterschiedlicher Art (Daten, Funktionalität).</p>
+<p>Wer die erst am Ende produziert, benimmt sich der Vorteile, die sie für die Lösungsfindung bieten.</p>
+<p>Und ich bezweifle, dass du ohne Modelle auskommst. Die Frage ist vielmehr: Warum explizieren die Entwickler ihre Modelle so selten und glauben stattdessen, dass sie sie am besten gleich in Code gießen sollten?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-11-28):</p>
+<p>@nsteenbock: Liegt der Zustandsautomat nun in zwei Funktionseinheiten? Hm... nein, ich sehe das nicht so.</p>
+<p>Der Zustandsautomat in Player wird getriggert. Es kommen Ereignisse von außen. Ein Ereignis ist, dass ein Spieler einen Ball gewinnt. Ein anderes ist, dass beide Spieler Gleichstand bei 40 haben.</p>
+<p>Der Automat reagiert auf beides mit einem entsprechenden Zustandswechsel.</p>
+<p>Die Funktionseinheit Determine_winner verändert keinen Zustand. Es fließt aus ihr die Information über den Gewinner hinaus. Schau dir das EBC-Diagramm nochmal genau an.</p>
+<hr />
+<p><strong>nsteenbock</strong> (2010-11-28):</p>
+<p>@Krzysztof
+Mit voreilig meinte ich nicht, dass da einfach ohne Nachdenken eine Meinung kundgetan wurde. Aber egal - streichen wir einfach das Wort [i]voreilig[/i].</p>
+<p>Ich bin immer noch der Meinung, dass ein Modell hilft, solche Fehler zu vermeiden:</p>
+<p>[i]"in der Skizze gibt es zwei rote Pfeile, die aus dem Zustand 40 ausgehen, und die man durchaus so interpretieren kann, dass es von der Anzahl der Punkte des Gegners abhängt, ob der Automat im Zustand 40 bleibt oder in den Zustand deuce geht"[/i]</p>
+<p>Exakt. Das ist doch ein Punkt. Das Modell war nicht gut genug, weil es Interpretationsspielraum gelassen hat. Quasi ein Bug in der Modellierung. Behebt man jetzt diesen Bug oder sagt sofort "Modelle sind fehleranfällig, also lieber sofort implementieren"? Nur mal überspitzt formuliert.</p>
+<p>@ralf
+Ich hasse es, wenn Du Recht hast! ;-)
+Ja, wenn man konsequent in EBCs denkt, dann ist das vollkommen korrekt. Ich tue mich damit aber trotzdem noch schwer. Der Score eines Spielers ist per Definition abhängig vom Score eines anderen Spielers. Bei "traditioneller" Implementierung würde das für mich bedeuten, dass ein entsprechender Zustandsautomat nicht innerhalb des Spieler-Objekts leben kann.
+Bei EBCs geht es ja genau darum: Abhängigkeiten. Du hast gezeigt und jetzt auch mich überzeugt, dass man genau solche Probleme auflösen kann. Aber geht es noch ein wenig expliziter? So, dass ich das auf Anhieb sehe, dass hier nicht der vollständige Automat definiert ist?</p>
+<p>Grüsse,</p>
+<p>Nils</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-11-29):</p>
+<p>@nsteenbock: Ich finde das Modell aus zwei Gründen ausreichend:</p>
+<ol>
+<li>
+<p>Es spiegelt die Realität recht gut wider. Da gibt es Spieler und einen Schiedsrichter. Und darauf bin ich ohne Krampf gekommen.</p>
+</li>
+<li>
+<p>Das Modell war flexibel genug, einen Fehler sehr einfach zu beheben. Ich sehe auch nicht, warum diese Eigenschaft nun verschwunden sein soll.</p>
+</li>
+</ol>
+<p>Mehr als gut genug im Verhältnis auch zu anderen Werten wie Entwicklungsgeschwindigkeit brauche ich auch nicht. Nur weil ich modelliere muss ich nicht perfekt sein. Auch Modelle dürfen sich weiterentwickeln und refaktorisiert werden.</p>
+<hr />
+<p><strong>nsteenbock</strong> (2010-11-30):</p>
+<p>@ralf
+Ja, das Modell ist sicherlich in Ordnung. Was ich nicht gesehen habe war, dass ich mein Problem schneller finde, wenn ich das Modell anschaue. Im Code war es für mich schwerer auf den ersten Blick zu sehen. Im Zusammenhang mit dem Modell jedoch ganz klar.</p>
+<p>Das liegt natürlich daran, dass ich noch nicht so gefestigt in der EBC Denkweise bin(nehme ich jedenfalls an). Allein die Tatsache, dass es hier zu einem Missverständnis gekommen ist, muss aber meiner Meinung nach mindestens mal hinterfragt werden.</p>
+<p>Entwicklungsgeschwindigkeit bringt mir nichts, wenn ich bei der Fehlersuche Zeit zusätzlich investieren muss. Ich habe gefragt, wie man dieses Modell "expliziter" in den Code bringen kann. Einfach, dass ich merke, dass diese Dictionarys nicht die komplette Wahrheit sind bzw. nicht der vollständige Automat.</p>
+<p>Hm... nach einigem Nachdenken: Vielleicht sind es nur minimale Details, die mich vom Weg abgebracht haben. Eigentlich sind es 2 Sachen.</p>
+<ol>
+<li>
+<p>In_Deuce ... Ja, das ist meinem "noch nicht vollständig in EBC denken" geschuldet. Man kann es auch Schludrigkeit nennen. Ah, InDeuce ist bestimmt eine Methode, die einen Boolean zurückliefert(Spieler befinden/befindet sich im Zustand Deuce).</p>
+</li>
+<li>
+<p>Erst kommt die Definition des Zustandsautomaten, dann kommt mehr oder weniger Boilerplate-Code, wie dieser Zustandsübergang vollzogen wird. Dann kommt wieder ein Zustandsübergang, der von aussen als Event getriggert wird.</p>
+</li>
+</ol>
+<p>Für mich persönlich wäre alles alleine durch eine Änderung der Reihenfolge von AdjustScore und In_Deuce klarer geworden. Wenn wir nach Uncle Bob gehen, dann würde ich sagen Adjust_Score sollte so nah wie möglich an den Zustandstabellen sein. Vielleicht verlangen EBCs aber auch nach einer anderen Strukturierung?</p>
+<p>MfG,</p>
+<p>Nils</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

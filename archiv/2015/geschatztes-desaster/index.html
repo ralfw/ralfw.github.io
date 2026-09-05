@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Geschätztes Desaster — ralfw.de Archiv</title>
+<meta name="description" content="Glauben Sie noch, dass sich Aufwände in der Softwareentwicklung abschätzen lassen? Ja, wirklich? Dann beruht Ihr Glaube zumindest zum Teil auf der Vorstellungen, dass sich Schätzfe">
+<link rel="canonical" href="https://ralfw.de/archiv/2015/geschatztes-desaster/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Geschätztes Desaster — ralfw.de Archiv">
+<meta property="og:description" content="Glauben Sie noch, dass sich Aufwände in der Softwareentwicklung abschätzen lassen? Ja, wirklich? Dann beruht Ihr Glaube zumindest zum Teil auf der Vorstellungen, dass sich Schätzfe">
+<meta property="og:url" content="https://ralfw.de/archiv/2015/geschatztes-desaster/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Geschätztes Desaster</h1>
+    <div class="doc-meta"><span>20. Juli 2015</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2015/07/geschatztes-desaster.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2015/geschatztes-desaster/</code></span></div>
+    <div class="art"><p>Glauben Sie noch, dass sich Aufwände in der Softwareentwicklung abschätzen lassen? Ja, wirklich? Dann beruht Ihr Glaube zumindest zum Teil auf der Vorstellungen, dass sich Schätzfehler ausgleichen. Mal schätzen Sie etwas zu wenig Aufwand, ein andermal aber schätzen Sie etwas zu viel Aufwand. Oder?</p>
+<p>Ja, das hört sich plausibel an. Manche Aufgaben stellen sich als schwieriger heraus, als gedacht, andere als leichter. In Summe heben sich also die Schätzfehler auf. Deshalb funktioniert das Schätzen unterm Strich, auch wenn es nicht fehlerfrei ist.</p>
+<p>Ok, dann hier ein Gedankenexperiment:</p>
+<h3>Das Spiel</h3>
+<p>Sie haben eine Münze, mit der Sie Kopf oder Zahl mit einer Wahrscheinlichkeit von jeweils 0,5 werfen können.</p>
+<p>Nun bekommen Sie das Angebot, mit dem Münzwurf Geld zu verdienen - oder zu verlieren. Wenn Sie Kopf werfen, bekommen Sie 1€, wenn Sie Zahl werfen, dann müssen Sie 1€ abgeben. Es geht also um +1€ und –1€ mit einer 50%igen Wahrscheinlichkeit.</p>
+<p>Wenn Sie mit 0€ auf Ihrem Spielkonto beginnen würden, wie viel Geld wäre ungefähr nach 50 Würfen darauf?</p>
+<p>a) ca. 0€ b) ein deutlich von 0€ abweichender Betrag</p>
+<p>Überlegen Sie ruhig einen Moment…</p>
+<p>Ich habe diese Frage einigen mathematisch normal gebildeten Menschen gestellt. Deren überwiegende Antwort war a). Sie glauben, dass sie mit so einem Spiel über 50 Würfe weder Geld verdienen noch verlieren würden.</p>
+<p>Die Begründung: Gewinn und Verlust gleichen sich ja wegen der Wahrscheinlichkeit von 50% für beide Ergebnisse aus.</p>
+<h3>Die Statistik</h3>
+<p>Die Antwort aus dem Bauch heraus ist verständlich. Sie ist auch korrekt für eine genügend große Zahl von Spielen. Über ganz viele Spiele hinweg sollte der Kontostand bei 0€ sein. So wie der Mittelwert über viele Münzwürfe (Kontobewegungen) auch 0€ ist.</p>
+<p>Die Frage war ja aber nicht, wie der Kontostand im Mittel am Ende von vielen Spielen wohl wäre, sondern am Ende <em>eines</em> Spieles. Und da liegt die Antwort aus dem Bauch heraus weit neben der Realität.</p>
+<p>Am Ende eines Spieles ist der Kontostand sehr wahrscheinlich deutlich von 0€ abweichend. Hier als Beispiel ein Simulationsergebnis:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/43345d08afad00f9.png" /></p>
+<p>Sie sehen, am Ende des Spiels hätten Sie 10€ verloren!</p>
+<p>Oder hier ein Verlust von 4€:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/ac65f59a5513fb4a.png" /></p>
+<p>Oder hier ein Verlust von 16€:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/56e47a052dcc0858.png" /></p>
+<p>Oder hier, oh, ein Gewinn von 4€:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/36dcfd33a37813fb.png" /></p>
+<p>Usw. usf.</p>
+<p>Die Kontobewegungen (blaue Linie) in den Simulationen bewegen sich hübsch pendelnd um die Nulllinie. Pro Spiel ist die Zahl der Würfe groß. Der Mittelwert der Kontobewegungen ist nahe 0€.</p>
+<p>Doch die Kontostände… die bewegen sich deutlich unterhalb oder oberhalb der Nulllinie.</p>
+<p>Noch ein Beispiel gefällig? Hier ein Gewinn von 5€ - allerdings nur bis knapp nach der Spielmitte. Danach stürzt das Konto ab auf –6€.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/1ee47f008882bfaf.png" /></p>
+<p>Sie sehen, auch das Spiel mit einer Wahrscheinlichkeit von 50% für Gewinn und Verlust ist ein Spiel, bei dem Sie deutlich verlieren (oder gewinnen) können.</p>
+<h3>Auf der schiefen Bahn</h3>
+<p>So weit das faire Spiel. Beide Münzseiten werden mit derselben Wahrscheinlichkeit geworfen. Was aber, wenn die Münze unregelmäßig ist? Was, wenn Sie mit etwas größerer Wahrscheinlichkeit verlieren? Statt 50% Gewinnchance haben Sie vielleicht nur 45%. Dann kann Ihnen das passieren:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/763e7da09e382f45.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/b6b823219d3d402e.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/b39f20ab76b62fc6.png" /></p>
+<p>Klar, das Ergebnis muss nicht immer unter 0€ liegen - aber selbst im Mittel über viele Spiele hinweg, werden Sie die 0€ nicht mehr erreichen, sondern Verlust machen. Und das wird immer schlimmer, je weiter sich die Wahrscheinlichkeit für Zahl zu Ihren Ungunsten verschiebt.</p>
+<p>Mit einer größeren Wahrscheinlichkeit für Verlust als für Gewinn kommen Sie auf eine schiefe Bahn. Sie rutschen in die Spielschulden. Garantiert über mehrere Spiele hinweg. Aber auch steiler innerhalb nur eines Spieles.</p>
+<h3>Geschätzte Annahmen</h3>
+<p>Nun zurück zur Softwareentwicklung. Ich denke, Sie verstehen, worauf ich mit diesem Gedankenexperiment hinaus will:</p>
+<p>Selbst wenn sich Ihre Schätzfehler aufheben, laufen Sie Gefahr, Ihr Projekt ins Desaster zu fahren.</p>
+<p>Ihr Projekt ist wie ein Spiel. In dem schätzen Sie 50 Aufwände oder 100 oder 500… Das bedeutet aber nicht, dass Sie bei sich aufhebenden Schätzfehlern am Ende <em>on time, on budget</em> herauskommen. Wie die Simulationen zeigen, können Sie sich weit, weit in die Miesen gefahren haben. Und das, obwohl die Wahrscheinlichkeit für positives und negatives Verschätzen gleich sind.</p>
+<p>Sie könnten auch gewinnen. Das stimmt. Aber wollen Sie bei einem Projekt wirklich spielen? Ist es das, was Sie für Ihren Kunden sein wollen: ein Spieler, der auf sein Glück hofft?</p>
+<p>Wie die Grafiken zeigen, kann Sie das Glück ganz schön pro Spiel, ich meine, pro Projekt im Stich lassen. Und das, obwohl hier sehr günstige Annahmen zugrunde liegen.</p>
+<p>Annahme 1: Positives und negatives Verschätzen gleichen sich aus. Ist das aber in der Realität wirklich, wirklich anzunehmen? Das glaube ich nicht. Diese Abschätzung, die Sie da machen, dass das Verschätzen eine Wahrscheinlichkeit von 50:50 hat, hat einen Fehler. So wie ich die Entwicklungsrealität kennengelernt habe, verschätzen Sie sich mit viel größerer Wahrscheinlichkeit zu Ihren Ungunsten. Wir müssten also nicht mit 50:50 simulieren, sondern eher mit 20:80: nur mit einer Wahrscheinlichkeit von 0,2 schätzen Sie zu große Aufwände; in 80% der Fälle schätzen Sie jedoch zu kleine Aufwände. Damit fährt das “Projektkonto” direkt in die Miesen. Probieren Sie es selbst aus in einer kleinen Excel-Simulation.</p>
+<p>Annahme 2: Wenn Sie glauben, dass Sie sich in etwas so oft zu Ihren Gunsten wie zu Ihren Ungunsten verschätzen, dann beziehen Sie das wahrscheinlich auf die <em>Anzahl</em> Ihrer Schätzungen: bei 50 Schätzungen schätzen Sie 25 Mal zu wenig und 25 Mal zu viel.</p>
+<p>Aber was ist eigentlich mit der Größe des geschätzten Aufwandes? Der hängt von der Größe der Aufgabe ab. Diese Größe variiert jedoch wahrscheinlich beträchtlich. Mal sind die Aufgaben klein, mal sind sie größer, dann sogar groß. Wie ist diese Größenverteilung? Und verschätzen Sie sich bei jeder Größe in gleicher Weise?</p>
+<p>Glauben Sie wirklich, dass Sie auch das realistisch einschätzen? Ich erlaube mir, das zu bezweifeln.</p>
+<p>Wenn nun aber die Größen der Aufgaben unterschiedlich sind und Ihr Schätzfehler ebenfalls unterschiedlich ist… dann wird damit die Unvorhersehbarkeit des “Projektspiels” angeheizt.</p>
+<h3>TL;DR</h3>
+<p>Wenn Sie glauben, Aufwandsschätzungen in der Softwareentwicklung könnten funktionieren, weil sich positive und negative Schätzfehler doch aufheben würden… dann machen Sie die Softwareentwicklung zu einem Glücksspiel. Denn auch bei 50:50 Chancen für Gewinn und Verlust, kann Sie ein einziges Spiel mit mehreren “Würfen” weit in die Miesen führen.</p>
+<p>Dafür, dass das Gesetz der großen Zahl Ihnen ein ausgeglichenes Konto beschert, führen Sie einfach zu wenige Projekte durch.</p>
+<p>Widerstehen Sie also der Spielsucht. Glauben Sie nicht länger, am Ende doch noch abzuräumen und alle Schulden zurückzuzahlen.</p>
+<h2>Kommentare</h2>
+<p><strong>Steffen Z.</strong> (2015-07-20):</p>
+<p>Das klingt als zu sehr nach, dass das Schätzen eh zu sehr zum Verschätzen neigt. Also kann man es doch gleich ganz lassen. Das spart doch Zeit, oder? Falsch, denn durch den Versuch bestmöglich zu schätzen, muss ich mich ja mit der mir gestellten Aufgabe noch mal sehr viel genauer befassen. Bestenfalls wird hierbei die Aufgabe noch besser zerlegt und lässt sich noch besser schätzen. Schätzen ist, wie der Name schon sagt, nie genau, sondern eben nur eine Schätzung. Deshalb aber auf Schätzungen ganz zu verzichten, führt, und da werden Sie mir doch sicher recht geben, erst recht zu einem Desaster.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2015-07-20):</p>
+<p>Wenn ich mich mit Anforderungen erst ordentlich auseinandersetze, weil ich den Aufwand zur Umsetzung abschätzen soll... dann habe ich etwas grundsätzlich falsch verstanden bei der Softwareentwicklung.</p>
+<p>Dass sich aus einer Beschäftigung mit Anforderungen ein immer besseres Verständnis für den Umfang ihrer Umsetzung ergibt, ist selbstverständlich. Die Frage ist nur, was ich dann damit anfange, dass ich merke, etwas dauert bestimmt mehrere Tage oder Wochen?</p>
+<p>Wie an anderer Stelle schon dargelegt: eine vergleichende Schätzung finde ich völlig ok. Wenn ich von Aufgabe A und B gleich viel/wenig Ahnung habe, dann kann ich schätzen, dass ich für A einen doppelten oder dreifachen Aufwand als für B schätze. Wunderbar eine solche relative Größe.</p>
+<p>Was die aber für den Kalender bedeutet... keine Ahnung. Damit ist nicht klar, ob B 1 Tag oder 1 Woche oder 1 Monat braucht. Es lässt sich kein (!) Fertigstellungsdatum daran koppeln.</p>
+<p>Was soll bedeuten "nie genau"? Was soll das für einen Manager bedeuten? Was hat diese Präzisierung für eine Wirkung auf den Umgang mit dem Schätzergebnis? Was bedeutet "Ich schätze, ich brauche dafür 1 Woche - aber das ist natürlich nicht genau"? Was kann man mit so einem "nicht genauen" Wert anfangen - und was nicht?</p>
+<p>Führt der Verzicht auf Schätzungen ins Desaster? Ganz bestimmt nicht. Ich habe es neulich wieder in einem Projekt gemerkt:</p>
+<p>Am Anfang wurde eine von mir nicht erbetene Schätzung abgegeben. "Aufwand 3 Wochen!" Und dann? Was sollte ich damit machen? Die Kompetenz der Entwickler war mir völlig unbekannt. Hätte ich die Schätzung akzeptiert, hätte ich das Projekt auch sofort eingestampft.</p>
+<p>Stattdessen: Wir haben einfach angefangen. In Iterationen von max. 5 Stunden Dauer habe ich die Entwicklung mit Anforderungen "gefüttert" und die Umsetzungen abgenommen. Bis zur Fertigstellung des Projektes nach 20 Stunden, also einem Sechstel der geschätzten Zeit.</p>
+<p>Wo war das Desaster ohne Schätzung?</p>
+<p>Abschätzbar ist nur, worin man ausreichend Erfahrung hat, wo Reproduzierbarkeit möglich ist. Wenn ich massiven Aufwand in eine up-front Analyse stecken muss, um festzustellen, inwiefern Reproduzierbarkeit möglich ist, dann liege ich damit aber wahrscheinlich falsch. Allemal, wenn nicht ich die Umsetzung durchführe, sondern das andere tun werden - deren Zusammensetzung sich über die Umsetzungszeit verändern wird usw.</p>
+<p>Ich mag an einem confirmation bias leiden, dass ich immer nur Belege und Begründungen für die Unabschätzbarkeit von Softwareentwicklung finde. Aber ich bin offen dafür, dass man mir demonstriert, wie das verlässlich funktioniert mit dem Schätzen. Wir können uns dazu gern zu einer Aufgabe online verabreden, wo Sie mir das zeigen.</p>
+<p>Der schiere Wunsch, es möge doch aber gehen, oder der Verweis auf eine lange (nicht funktionierende) Praxis, die doch fortgeführt werden müsse... das überzeugt mich nicht.</p>
+<hr />
+<p><strong>rfilipov</strong> (2015-07-21):</p>
+<p>Ralf, dein Artikel über Schätzungen räumt mit einigem an Irrglauben auf. Bemerkenswert.</p>
+<p>Ich hoffe du könntest irgendwann das Thema Commitment analysieren. Situationen wo eine Schätzung mit einem Versprechen verknüpft wird. Warum es erwartet und gemacht wird.. Und die Konsequenzen die sich aus einem über-Commitment ergeben können.</p>
+<p>CU,
+Rusi</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2015-07-21):</p>
+<p>Zum Thema Versprechen habe ich mich ausführlich bei ich-verspreche.org geäußert.
+Ein Commitment ist ein Ergebnisversprechen: http://ich-verspreche.org/versprechen/ Wenn man zuverlässig arbeiten will, dann sollte man das nur eingehen, wenn man es auch halten kann. Ansonsten sollte ein Verhaltensversprechen abgegeben werden.</p>
+<p>Der Wahnsinn in Projekten ist, dass alle (oder zumindest Kunde und Management) glauben, dass es andauernd Ergebnisversprechen bräuchte, damit es vorangeht. Das ist aber Quatsch. Die Sucht nach Ergebnisversprechen ist meist eine Kompensation für Unlust oder Unvermögen.</p>
+<p>In der Natur gibt es keine Ergebnisversprechen und doch funktioniert das Leben seit Millionen Jahren tadellos. Nun plötzlich glauben Menschen, es ginge nur mit Ergebnisversprechen? Hm...</p>
+<hr />
+<p><strong>Norbert</strong> (2015-07-21):</p>
+<p>Ich sehe das grundsätzlich ähnlich.</p>
+<p>Allerdings gibt es auch noch Kunden, denen Schätzungen egal sind, denen aber auch Verhaltensversprechen egal sind. Es ist klar, dass der Lieferant Ressourcen an das Projekt setzt um einen Auftrag erfüllen zu können (=implizites Verhaltensversprochen, da der Auftrag sonst nicht bedient werden kann). Der Kunde möchte sich aber kein Fass ohne Boden kaufen, daher möchte er ein Ergebnisversprechen. Wenn schon der Zeitpunkt der Fertigstellung evt. nicht bekannt ist, dann muss es zumindest das Budget sein, denn auch er hat seine Planung durchzuführen.</p>
+<p>Natürlich kann ein mögliches Übereinkommen sein, dass das Projekt bis zur Erschöpfung der finanziellen Ressourcen (=definiertes Budget) betrieben wird. Der Kunde hat aber keine Ahnung was er nun für sein Geld bekommt. Das notwendige Vertrauen einen derartigen Kontrakt einzugehen haben nur sehr sehr wenige.</p>
+<p>"No estimates" und Verhaltensversprechen kann man firmenintern (z.B. Entwicklung eines Produktes im herkömmlichen Sinne) eventuell einführen (auch hier gibt es jede Menge Hürden zu überwinden). Im Projektgeschäft sehe ich das als sehr unrealistisch an.</p>
+<p>Ein Ausweg erscheint mir zwar erstrebenswert aber nicht möglich ...</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-07-21):</p>
+<p>Hallo Ralf,
+vielen Dank für deinen unermüdlichen Einsatz!
+Ich habe min. drei Bücher zum Thema Aufwandsschätzung in Softwareprojekten gelesen und keines hat mir geholfen. Warum? Alle Autoren nahmen an, dass man Arbeitsaufgaben durchführt, die man penibel dokumentiert hat und wiederholen kann. Das hat mit meiner Praxis aber null zu tun u. ich weiß auch nicht, wo auf dieser Erde es solche Softwareentwicklungsprojekte gibt.
+Gruß
+Andreas W.</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-07-22):</p>
+<p>Hallo Ralf,
+ich lese deine Blogs immer wieder gerne und das Thema "Schätzung" hast du ja schon sehr oft angesprochen. Im Grunde bin ich da voll deiner Meinung, da ich es immer wieder erlebt habe wie solche Projekte total verschätzt wurden ( dies jedoch nach oben und nach unten )</p>
+<p>Leider war es mir noch nie möglich KEINE Schätzung abzugeben. Der Versuch dies zu erreichen sorgte immer für großen Aufschrei. Sei es beim Kunden, der sich anhand des Stundenlohns die Kosten ausrechnen wollte oder sei es seitens der Businessabteilung die prüfen möchte ob die Anforderung im nächsten Sprint mit rein passt oder wie es verrechnet werden soll.</p>
+<p>Keine Schätzung zu machen scheint also auch nicht (noch nicht) zu funktionieren. Man muss sich also den Kunden/Manager/usw dazu erziehen und das ist nicht gerade leicht.</p>
+<p>Gruß
+Christian</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2015-07-22):</p>
+<p>@Norbert: Es gibt kein Fass ohne Boden, nur weil man kein Ergebnisversprechen abgibt. Das ist eines der großen Missverständnisse. Festpreisprojekte sind überhaupt kein Problem. Der Kunde hat 10.000€? Los geht's! Es muss nicht mehr ausgegeben werden.</p>
+<p>Allerdings: Was er für 10.000€ bekommt... das steht nicht fest.</p>
+<p>Wie bekommt er möglichst viel? Indem er jeden Tag Feedback gibt und neu bestimmt, was als nächstes am wichtigsten ist. So bekommt er das Maximum. Und das ist mehr (!) als er mit einem Ergebnisversprechen bekommen würde.</p>
+<p>Leider, leider finden das Kunden/Management unbequem. Da muss man ja dran bleiben... Das kann man nicht sich selbst überlassen und alles wird gut...</p>
+<p>Tja, so ist das mit Komplexität. Wenn man in der Erfolg haben will, muss man ständig dran bleiben.</p>
+<p>Warum verhalten sich Auftraggeber aber so widersinnig, wie Dreijährige? Weil sie zu wenig messen. Sie messen den Schaden nicht, der durch den gefühlten Zwang zu Ergebnisversprechen entsteht.</p>
+<p>Oder anders: Sie bemerken, dass Schaden entsteht - nur sie ordnen den Schaden nicht der Ursache zu. Wer möchte denn auch schon wahr haben, dass er selbst für Schaden verantwortlich ist?</p>
+<p>Was ist der Schaden?</p>
+<ul>
+<li>Aufwändige Nacharbeiten, um bei spätem Feedback Wünsche zu erfüllen, die vorher nicht klar waren.</li>
+<li>Verschwendete Ressourcen für Dinge, die am Anfang gewollt wurden, aber im Grunde nie gebraucht werden.</li>
+<li>Vertrauensverlust durch unzuverlässige Lieferungen.</li>
+<li>Mehraufwand für die Konfliktschlichtung (bis hin zu Anwalts- und Gerichtskosten).</li>
+<li>Demotivation von Mitarbeitern bis hin zu "Dienst nach Vorschrift" und mangelhafter Qualität durch Nachlässigkeit.</li>
+</ul>
+<p>Davon abgesehen benimmt sich jeder Kunde mit einem erpressten Ergebnisversprechen der Chance, weniger (!) zu bezahlen, als ursprünglich geplant oder mehr zu bekommen. Denn es gilt Parkinsons Gesetz: vereinbarte Budgets werden ausgeschöpft. Es gibt keinen Anreiz, besser zu sein.</p>
+<p>Was ist der Antrieb für solche Widersinnigkeit? Unsicherheit, Ignoranz, Angst.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2015-07-22):</p>
+<p>@Christian: Einfach nur keine Schätzung abgeben, ist zu wenig. Weigern allein reicht nicht. Man muss dem Kunden/Management ein Gegenangebot machen.</p>
+<p>"Was wäre, wenn du am Ende weniger bezahlen würdest?", "Was wäre, wenn du am Ende mehr für das Geld bekommen würdest?", "Was wäre, wenn wir viel genauer treffen würden, was du eigentlich brauchst?"</p>
+<p>Es kann mit jedem Budget begonnen werden. Eben standen 100.000€ im Raum - warum nicht senken auf 10.000€? Warum für 10.000€ nicht einfach loslegen - und jeden Tag mit dem Auftraggeber den Fortschritt und den Kurs besprechen? Und der Auftraggeber kann jeden Tag sagen "Stopp!" oder "Kurswechsel!"</p>
+<p>Wer das nicht denken kann, der hat keinen Arsch in der Hose ;-) Der will sich eine Pseudosicherheit erkaufen. Der meint, ein Blick in die Glaskugel auf dem Jahrmarkt könne helfen, die Geschäfte zu lenken.</p>
+<p>Jeder Kunde/Manager wird sich beim Bau seines Hauses total anders verhalten. Klar, da ist ein Festpreis festgelegt und er wird dafür kämpfen, dass der nicht überschritten wird. Aber was macht er denn dafür? Nach Auftragsvergabe fährt er bis zum Einzug in den Urlaub und lässt sich überraschen, wenn er zurückkommt?</p>
+<p>Wer hätte je von einem Häuslebauer gehört, der sich so verhält? Ich nicht. Was macht der Häuslebauer stattdessen? Er ist jeden (!) Tag auf der Baustelle, um die Handwerker zu überprüfen und ad hoc Plankorrekturen anzusagen.</p>
+<p>Und das bei einem simplen Haus!</p>
+<p>Ist es da ein erwachsenes Verhalten, sich bei einem viel komplexeren Vorhaben wie Softwareentwicklung über ein Ergebnisversprechen länger absetzen zu wollen? Kaum.</p>
+<p>Am Ende reden wir also nicht über echte Argumente, sondern nur über Emotionen und Bedürfnisse. Wer bei Software meint, ein Ergebnisversprechen müssen zwingend möglich und nötig sein, der rationalisiert sich etwas zusammen gegen die Realität und Natur der Softwareentwicklung. Das kann man auch Einbildung, Selbsttäuschung, Wahnvorstellung, Leugnen nennen.</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-07-24):</p>
+<p>Hallo Ralf,</p>
+<p>das genaue Schätzungen in der Softwareentwicklung nicht möglich sind, sehe ich genau so. Das ich deshalb auf Schätzungen verzichten kann, nicht.</p>
+<p>Um mal deine 10.000€ als Grundlagen zu nehmen. Wenn da ein Kunde zu dir Kommt und sagt, das er für den Betrag so was wie das Visual Studio Ultimate entwickelt haben möchte. Denke ich wirst du ihn direkt sagen, dass das nicht möglich ist (Du hast also eine Auwandsabschätzung gemacht). Und nicht sagen fangen wir mal mit den 10.000€ an und schauen wie weit wir kommen.
+Wenn der Kunde dann fragt, was kann ich für 10.000€ bekommen, könntest du z.B. sagen einen Editor mit Syntax Hightlightning und Compiler für eine Sprachen (Ich bin in den Thema jetzt nicht drin und würde nach Zeit für eine Abschätzung fragen. Intuitive halte ich es aber für Möglich). Und dann kann man noch über Features sprechen, die man für noch Implementieren kann. (Auch wider einer Abschätzung.)</p>
+<p>Grade in beide Extremen kann man eigentlich schon eine Abschätzung machen.</p>
+<p>Ich hab aktuell gar kein Problem, für meine Projekte eine Zeitabschätzung zu geben. Mein Chef weiß, das es nur ein grober Wert ist. Wenn ich schneller bin, bekommt er ein Feedback und wenn es zu Verzögerungen kommt auch. Und zwar sobald ich es weiß. Funktioniert für uns beide sehr gut.
+Und ich finde es auch vollkommen OK, mein Chef muss halt grob eine Planung machen.
+(Bei Kunden gehe ich so Ähnlich vor, nur das meine Grobabschätzung deutlich höher ist.)</p>
+<p>Ich persönlich finde einfach, das das Beste ist „offen“ darüber zu kommunizieren.</p>
+<p>MFG
+Björn</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-07-26):</p>
+<p>Hallo Ralf,</p>
+<p>ich bin ein großer Fan deiner Artikel und Blogs. Deine Argumentation aus diesem Artikel würde ich jedoch gerne noch einmal hinterfragen. Ich bin auch der Ansicht, dass Aufwände für umfangreiche Softwareprojekte im Vorfeld kaum sinnvoll zu schätzen sind. Allerdings argumentierst du, dass wir selbst für den 50:50-Fall stark daneben liegen und dass sich selbst hier Schätzfehler nicht in einem vertretbaren Rahmen ausgleichen. Da dies, ebenso wie den von dir befragten Personen, auch gegen meine Intuition geht, habe ich versucht, dieses Szenario konkreter zu machen und bin zu dem Ergebnis gekommen, dass das nicht ganz stimmt. Sofern ich mich nicht verrechnet habe, ist die Annahme der sich ausgleichenden Schätzfehler nicht komplett falsch. Die entscheidenden Ursachen für falsche Schätzungen liegen meiner Meinung nach woanders.</p>
+<p>Nimmt man analog zu dem Gedankenexperiment mit der Münze folgendes an:
+- Es sind Aufwände für 50 Arbeitspakete zu schätzen
+- Jedes Paket wird mit 2 Stunden beschätzt
+- Jede Schätzung ist entweder 1 Stunde zu hoch oder 1 Stunde zu niedrig
+- Die Wahrscheinlichkeit für „zu hoch“ und „zu niedrig“ beträgt jeweils 50%</p>
+<p>Daraus folgt, dass der Erwartungswert für den Aufwand bei 100 Stunden liegt. Dass dieser in der Regel nicht genau getroffen wird, sollte eigentlich jedem klar sein. Auch wird die absolute Abweichung für eine wachsende Anzahl von Arbeitspaketen tendenziell größer. Aber letztendlich kommt es doch auf die relative Abweichung an. Wenn ich einen Gesamtaufwand von 20 Stunden habe, dann sind 10 Stunden viel. Allerdings sind 10 Stunden im Verhältnis zu z.B. 1000 sehr wenig. Das ist wichtig und wird meiner Ansicht nach aus dem Artikel nicht ganz deutlich.</p>
+<p>Wie gesagt ist die relative Abweichung vom Erwartungswert entscheidend. Und dafür kann man basierend auf den o.g. Annahmen mit Hilfe der Binomialverteilungsfunktion ganz klare Aussagen machen. Z.B. ist die Wahrscheinlichkeit, dass der Aufwand höchstens 115 Stunden beträgt (analog zu mind. 16 EUR Verlust aus deinem Beispiel) also dass wir höchstens 15% über dem Erwartungswert liegen, etwa 98,4%. Damit kann man doch leben. Hier kann auch jeder abwägen, ob er es als verantwortungsloses Glücksspiel oder kalkulierbares Geschäftsrisiko sieht. Wem das nicht reicht: Die Wahrscheinlichkeit, dass wir mehr als 120 Stunden (also 20% drüber) liegen beträgt nur 0,3% (kurze Erläuterung s.u.). Wenn man dann z.B. eine Art Risksharing Modell mit dem Kunden vereinbaren würde, wären alle Beteiligten auf der sicheren Seite.</p>
+<p>Ich finde, dass unter den oben genannten Bedingungen sich die Schätzfehler in einem kalkulierbaren Rahmen tatsächlich ausgleichen! Ich denke hier stimmt die Intuition der befragten Personen. Aber so einfach ist das natürlich dann doch nicht.</p>
+<p>Deswegen ist die Annahme der sich ausgleichenden Schätzfehler meiner Meinung nach nicht das eigentliche Problem. Sondern das Problem ist, dass die getroffenen Annahmen einfach unrealistisch und fast immer falsch sind, besonders die Annahme, dass es möglich ist, alle nötigen Arbeitspakete im Vorfeld genau zu kennen und zu erfassen. Zudem können Ausreißer das Resultat besonders beeinflussen. Außerdem ist das Verhältnis von zu hohen und zu niedrigen Schätzungen nicht ausgeglichen und bei kleinen Anzahlen von Arbeitspaketen schlägt die Varianz zu buche.</p>
+<p>Kurze Erläuterung zur Wahrscheinlichkeitsberechnung:
+- H := „zu hoch“, T := „zu tief“, p(H) = p(T) = 0,5
+- n = 50
+- mind. 20 Stunden Mehraufwand bedeutet: Anzahl H &lt;= 15 bzw. Anzahl T &gt; 35
+- Da H ~ B(50; 0,5) (binomialverteilt mit n = 50 und p = 0,5), ist P(X &lt;= 15) = 0,003 lt. Wahrscheinlichkeitstabelle der Binomialverteilung</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2015-07-26):</p>
+<p>@Leif: Danke für deine Mühe und die Erläuterungen!</p>
+<p>Was ich mit den Grafiken <em>anschaulich</em> machen wollte war, dass es selbst bei sich ausgleichenden Wahrscheinlichkeiten Entwicklungen gibt, dass überhaupt Ausschläge passieren. Wer glaubt, eine "schwarze 0" quasi sicher auf dem Konto zu haben, der liegt falsch. Soweit eine erste Enttäuschung für die Intuition.</p>
+<p>Die zweite kommt dann, wenn man überlegt, wie intuitiv richtig überhaupt die Annahme sicher ausgleichender positiver/negativer Verschätzungen ist.</p>
+<ul>
+<li>Verschätzt man sich wirklich 50:50? Oder doch eher 60:40 oder 70:30?</li>
+<li>Bezieht sich das Verschätzen auf die Anzahl der "Schätzereignisse" oder die Größe der Schätzung? Verschätzt man sich also bei kleinen Aufwänden genauso oder anders als bei großen?</li>
+<li>Sind die Schätzungen wirklich unabhängig von einander?</li>
+<li>Wie verschätzt man sich bei der Anzahl der nötigen Schätzungen?</li>
+</ul>
+<p>Wer überprüft seine Intuition in Bezug auf diese Fragen? Ich kenne niemanden. Wer kann also belastbar behaupten, eine Ahnung von der Abweichung zwischen Schätzwunsch und Realität zu haben? Allemal, da ja eine Qualität, die auch hergestellt werden muss im Rahmen der Schätzung, nicht mal gemessen werden kann: die Evolvierbarkeit. Sie wird nicht vom Kunden explizit bestellt, sie wird nicht mit einer Wunschgröße angegeben.</p>
+<p>Und damit sind wir bei der Grundfrage: Wofür denn überhaupt vorhersehendes Schätzen?</p>
+<p>Aber dazu vielleicht ein andermal mehr... ;-)</p>
+<p>Hier wollte ich nur ein gewisses, aus meiner Sicht naives "Wohlgefühl" verstören.</p>
+<hr />
+<p><strong>rfilipov</strong> (2015-07-27):</p>
+<p>Hallo Leif,</p>
+<p>ich glaube diese Annahmen sind etwas schwierig:</p>
+<ul>
+<li>Es sind Aufwände für 50 Arbeitspakete zu schätzen</li>
+<li>Jedes Paket wird mit 2 Stunden beschätzt</li>
+<li>Jede Schätzung ist entweder 1 Stunde zu hoch oder 1 Stunde zu niedrig</li>
+<li>Die Wahrscheinlichkeit für „zu hoch“ und „zu niedrig“ beträgt jeweils 50%</li>
+</ul>
+<p>in der Realität ist es eher so:</p>
+<ul>
+<li>Es sind Aufwände für 50 Arbeitspakete zu schätzen</li>
+<li>Die tatsächliche Komplexität der Pakete ist normalverteilt</li>
+<li>Der tatsächliche Aufwand für die Pakete ist normalverteilt</li>
+<li>Der Aufwand korreliert oft, aber nicht immer mit der Komplexität</li>
+<li>Jedes Paket wird nach kurzer Überlegung und Bauchgefühl geschätzt</li>
+<li>Bei der Schätzung wird vor allem die Komplexität betrachtet</li>
+<li>Die Wahrscheinlichkeit für "zu niedrig geschätzt" ist dann oft proportional zu Komplexität und Aufwand</li>
+</ul>
+<hr />
+<p><strong>(anonym)</strong> (2015-07-27):</p>
+<p>Hallo Rusi,</p>
+<p>dass die Annahmen weitab von der Realität sind, ist klar. Meine Intention war, das Gedankenexperiment mit dem Münzwurf auf ein stark vereinfachtes Szenario in den Kontext von Softwareentwicklung zu übertragen mit den gleichen Wahrscheinlichkeiten, um zu zeigen, dass am Ende die relative Abweichung vom Erwartungswert zählt und nicht die absolute. Und dann stellt sich das nun mal so dar.</p>
+<p>Beim 50-fachen Münzwurf ist z.B. das Ergebnis von -16 EUR oder schlechter einfach extrem unwahrscheinlich (nämlich 1,6%)... analog dazu ein Aufwand von 116 Stunden oder mehr.. usw. Ich wollte nur eine direkte Vergleichsmöglichkeit der beiden Gedankenmodelle schaffen!</p>
+<p>"Die Wahrscheinlichkeit für "zu niedrig geschätzt" ist dann oft proportional zu Komplexität und Aufwand"</p>
+<p>Dies ist ja z.B. auch eine Annahme, die man erstmal empirisch belegen müsste und die sicherlich abhängig von anderen Merkmalen des Entwicklungsteams ist. (Ein Team schätzt ggf. tendenziell zu hoch, ein anderes zu niedrig.)</p>
+<p>Und dass die tatsächlichen Komplexitäten und Aufwände normalverteilt sind, verstehe ich nicht. Das müsste eher einen ziemlich verstreuten Graph geben. Ich würde denken, dass die relative Abweichung von Schätzung zu tatsächlichem Aufwand im Idealfall normalverteilt ist. (Ist aber wohl nicht so, da es Tendenzen nach "zu hoch" oder "zu niedrig geschätzt" gibt.)</p>
+<p>Es spielen IMO einfach so viele Faktoren eine Rolle, dass man das verallgemeinert kaum in Zahlen und Wahrscheinlichkeiten darstellen kann.</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-08-13):</p>
+<p>Hallo Ralf!</p>
+<p>Selbst das glaube ich nicht: "Sie ist auch korrekt für eine genügend große Zahl von Spielen"</p>
+<p>Warum sollte das so sein? Das Verhältnis zwischen Kontostand und Anzahl von Spielen wird zu Null tendieren, nicht aber der absolute Kontostand. Der wird vermutlich bei ganz vielen Spielen noch weiter von Null verschieden sein als bei wenigen.</p>
+<p>Manuel</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-09-25):</p>
+<p>Hallo Zusammen,
+soweit ich die interessante Diskussion überflogen habe, habt Ihr einen wichtigen Aspekt bisher nicht berücksichtigt, der einfach erklärt, warum wir zwangsläufig im Negativen Sektor von Ralfs Gedankenspiel landen: die Abhängigkeit von Aufgaben. Wenn ich mit Aufgabe b erst starten kann, wenn Aufgabe a erledigt ist, und Aufgabe a länger dauert als abgeschätzt, käme ich nur noch dadurch, dass ich b schneller bearbeiten kann, zurück auf die Zeitschiene. Je mehr Abhängigkeiten und je länger die Abhängigkeitsketten im Projekt, desto weniger kann und darf ich mich auf das von Ralf beschriebene Spiel einlassen. Agile Story Points helfen auch nur bedingt weiter. Wir kommen nicht umhin, unsere Aufgaben, incl. Abhängigkeiten detailliert zu verstehen und mit Unsicherheiten umzugehen.</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-11-23):</p>
+<p>Guten Tag,</p>
+<p>praktisch ist das in den meisten Fällen leider (noch) nicht umsetzbar. Warum?</p>
+<p>Ob ich nun sage, der Kunde hat 10.000 €, mal sehen, was er am Ende dafür bekommt oder andersrum sage, die Stunde kostet 100 €, mal sehen, wie lange wir dafür brauchen, ist letztlich egal. In beiden Fällen wird versucht, das Risiko auf den Kunden abzuwälzen, in beiden Fällen wird nicht Leistung sondern Arbeit bezahlt. Das macht die breite Masse so nicht mit.</p>
+<p>Worauf sich mancher noch einlässt, ist folgendes: man gibt dem Kunden eine grobe Hausnummer an die Hand, vereinbart aber die Abrechnung nach Aufwand, wobei ggf. gedeckelt wird.</p>
+<p>Michael</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

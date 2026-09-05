@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notorische Aspektlosigkeit — ralfw.de Archiv</title>
+<meta name="description" content="Immer wieder, wenn ich Resultate von Coding Dojos sehe, beschleicht mich ein ungutes Gefühl. Irgendetwas fehlt mir bei den Lösungen. Dabei ist es egal, ob das Coding Dojo in der Gr">
+<link rel="canonical" href="https://ralfw.de/archiv/2012/notorische-aspektlosigkeit/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Notorische Aspektlosigkeit — ralfw.de Archiv">
+<meta property="og:description" content="Immer wieder, wenn ich Resultate von Coding Dojos sehe, beschleicht mich ein ungutes Gefühl. Irgendetwas fehlt mir bei den Lösungen. Dabei ist es egal, ob das Coding Dojo in der Gr">
+<meta property="og:url" content="https://ralfw.de/archiv/2012/notorische-aspektlosigkeit/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Notorische Aspektlosigkeit</h1>
+    <div class="doc-meta"><span>4. Nov. 2012</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2012/11/notorische-aspektlosigkeit.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2012/notorische-aspektlosigkeit/</code></span></div>
+    <div class="art"><p>Immer wieder, wenn ich Resultate von Coding Dojos sehe, beschleicht mich ein ungutes Gefühl. Irgendetwas fehlt mir bei den Lösungen. Dabei ist es egal, ob das Coding Dojo in der Gruppe durchgeführt wurde oder sich jemand allein zum Einzeltraining ins Dojo begeben hat.</p>
+<p>Anlässlich eines kundeninternen Coding Dojos habe ich nun nochmal länger über die gefühlte Lücke nachgedacht. Als Aufgabe wurde die <a rel="noopener" href="http://codingdojo.org/cgi-bin/wiki.pl?KataWordWrap">Kata Word Wrap</a> bearbeitet. Der Abend war gut vorbereitet: Laptop, Beamer, Catering, Aufgabenbeschreibung. Und sogar Testfälle waren hübsch priorisiert schon notiert, damit sich die Gruppe auf die TDD-Fingerfertigkeit konzentrieren konnte [1].</p>
+<p>Nach knapp 90 Minuten war denn auch die Lösung fast wie aus dem Buch erarbeitet. Alles war harmonisch verlaufen. Kein Haareziehen, keine Weigerungen, mal nach vorn zu gehen und im Pair zu codieren. Alles hätte also gut sein können.</p>
+<p>Allein… der Code sah so aus:</p>
+<p><a rel="noopener" href="http://blog.code-cop.org/2011/08/word-wrap-kata-variants.html"></a></p>
+<p>oder vielleicht auch so:</p>
+<p><a rel="noopener" href="http://blog.code-cop.org/2011/08/word-wrap-kata-variants.html"></a></p>
+<p>oder er könnte auch so ausgesehen haben:</p>
+<p><a rel="noopener" href="http://thecleancoder.blogspot.de/2010/10/craftsman-62-dark-path.html"></a></p>
+<p>Letztlich ist es egal, wie genau er ausgesehen hat. Ich habe ihn nicht mitgeschrieben, die Beispiele oben sind aus den Weiten des Internet. Alle haben aber das gemeinsam, was ich als fehlend empfunden habe.</p>
+<p>Mir fehlen die Aspekte.</p>
+<p>Coding Dojo Lösungen sind nach meiner Erfahrung notorisch aspektlos. Oder anders ausgedrückt: die Prinzipien SRP und SoC finden selten Anwendung. SLA kommt allerdings hin und wieder vor.</p>
+<p>Worüber ich immer wieder gestolpert bin ist also die Unverständlichkeit der Lösungen. Wie funktioniert denn so ein Word Wrap. Schauen Sie sich einfach das erste Listing an und formulieren Sie in einem ganzen Satz, wie (!) das geht mit dem Wortumbruch.</p>
+<p>Ich bezweifle nicht, dass die Lösungen funktionieren. So unterschiedlich sie aussehen, die kanonischen Testfälle absolvieren sie fehlerfrei. Aber das ist ja seit 50 Jahren eher nicht das Problem in der Softwareentwicklung. Wir können lauffähige Software herstellen. Und auch noch solche, die performant, skalierbar, sicher usw. ist.</p>
+<p>Dass in der Eile da mal ein paar Bugs durch die Maschen schlüpfen… Das ist nicht schön, kriegen wir aber in den Griff, wenn wir mehr automatisiert testen. TDD hilft auch.</p>
+<p>Aber ist der nützliche Code, den wir da produzieren auch verständlich?</p>
+<p>Eher nicht. Und das beginnt bei so kleinen Beispielen wie den obigen.</p>
+<p>Vielleicht stelle ich mich jetzt dumm an? Vielleicht schade ich geradezu meinem Ansehen, wenn ich meine Begriffsstutzigkeit so deutlich dokumentiere? Keine Ahnung. Ist mir auch egal. Fakt ist, dass ich es schwierig finde, aus den obigen Beispielen herauszulesen wie (!) so ein Wortumbruch funktioniert.</p>
+<p>Vielleicht schauen Sie ja einfach drauf und sagen nach 10 Sekunden: “Achsooo! So geht das. Klar. Hätte ich auch so gemacht.” Kann sein. Dann beneide ich Sie. Ich würde das auch gern können.</p>
+<p>Bitte verstehen Sie mich richtig: Ich kann natürlich den Code lesen und herausfinden, wie er funktioniert. Ich kann auch selbst eine Lösung herstellen.</p>
+<p>Mir geht es aber nicht darum, ob ich irgendwie zu einem Codeverständnis gelangen kann, sondern wie schnell.</p>
+<p>Ich habe den vielleicht verwegen klingenden Anspruch, dass sich im Code die Domäne widerspiegelt. Dass oben drüber <em>Wrap()</em> steht, ist mir nicht genug. Dadurch weiß ich nur, worum es irgendwie geht. Das hilft mir wenig, wenn ich den Code ändern soll, weil ein Bug drin steckt oder sich die Anforderungen geändert haben.</p>
+<p>Sorry to say, die obigen Lösungen sind im Wesentlichen alle Monolithen. Kleine Steine, aber immer noch ziemlich strukturlose Steine. Nur Uncle Bob hat es etwas besser gemacht. Aber dazu gleich mehr.</p>
+<p>Ich hab es einfach satt, im Steinbruch zu arbeiten. Ich will nicht mehr Archäologie betreiben und darüber rätseln, was eine Entwicklerintelligenz irgendwann mal ersonnen hat, das ich mir nun mühsam wieder erarbeiten muss. Ich will nicht bei jedem 20-Zeiler Reverseengineering betreiben. Das ist einfach teuer. Das kostet wertvolle Lebenszeit. “Was will uns der Autor sagen?” ist eine Frage für das Feuilleton oder den Deutschunterricht.</p>
+<p>Jeder genügend obskure Code erscheint magisch ;-) (frei nach Arthur C. Clark)</p>
+<p>Was ist stattdessen will, ist eine irgendwie lesbare Lösungsbeschreibung – im Code. Ja, genau, im Code. Mir geht es nicht um Papierdokumentationsberge und auch nicht um mehr Kommentare. Ist schon so, im Code steckt die ultimative Wahrheit. Aber wenn das so ist, dann doch bitteschön etwas leichter erkennbar als bei den Upanishaden oder der Kabbala.</p>
+<p>Also, wie funktioniert ein Word Wrap? Keine Ahnung, wie die obigen Autoren meinen, dass es funktioniert. Aber hier mal ein Vorschlag:</p>
+<ul>
+<li>Der Input-Text wird in Worte zerlegt.</li>
+<li>Die Worte werden in Silben zerlegt.</li>
+<li>Die Zeilen des Output-Textes werden aus Silben zusammengesetzt, bis die maximale Zeilenlänge erreicht ist.</li>
+</ul>
+<p>Das ist mein Vorschlag für eine Lösung auf hohem Abstraktionsniveau, sozusagen ein Entwurf. Ich habe das Problem in drei Aspekte zerlegt: Wortermittlung, Silbenbestimmung, Zeilenzusammenbau. Der Entwurf folgt damit meiner Interpretation der Aufgabenstellung, die da lautet “KataWordWrap”.</p>
+<ul>
+<li>Ich nehme den Wortumbruch ernst. Deshalb taucht in meiner Lösungsskizze der Begriff “Wort” auf.</li>
+<li>Die Silben sind meine Hinzudichtung. Die stehen nicht in der Aufgabenstellung. Mit ihnen meine ich auch nicht un-be-dingt Sil-ben, sondern Abschnitte von Worten, zwischen denen getrennt werden darf. In der Problemstellung ist das jeder Buchstabe. Den Begriff “Silbe” habe ich hinzugedichtet, um das Problem an etwas Bekanntes anzuschließen.</li>
+</ul>
+<p>Mit dieser Lösungsidee im Hinterkopf schaue ich nun auf den obigen Code und sehe… nichts. Dort tauchen die Begriffe “Wort” oder “Silbe” nicht auf. Und Lösungsschritte sehe ich auch nicht.</p>
+<p>Allerdings macht Uncle Bob eine Ausnahme. Dessen Code liefert einen gewissen Hinweis auf seinen Lösungsansatz. Allerdings lese ich auch da nichts von “Wort” oder “Silbe”, sondern von “Zeilenbruch”. Hm… das ist interessant.</p>
+<p>Meine Interpretation: Uncle Bob löst ein anderes Problem als ich ;-) Uncle Bob löst das Problem “Zeilenlängenbegrenzung” (oder so ähnlich) und nicht das Problem “Wortumbruch”. Beides mag ähnlich klingen, ist aber etwas anderes.</p>
+<p>Wer hat nun Recht? Im Ergebnis würden wir wohl dasselbe liefern – aber unsere Lösungen würden sich eben unterscheiden. Wir sehen unterschiedliche Domänen.</p>
+<p>Aber auch wenn Uncle Bob eher die Domäne im Code repräsentiert, wie er sie aus der Aufgabenstellung herausgelesen hat, finde ich seinen Lösungsansatz noch nicht leicht zu lesen. Was bedeutet zum Beispiel <em>if (s.charAt(col) == ‘ ‘)</em>?</p>
+<p>Klar, dass kann ich mir irgendwie zusammenreimen. Aber ich will mir nichts mehr zusammenreimen. Ich habe mal Informatik studiert und nicht Ethnologie oder Archäologie. Wenn der Code nicht <em>intention revealing</em> ist, dann habe ich damit ein Problem.</p>
+<p>Code muss ich lesen und verstehen, nicht wenn und weil er läuft, sondern wenn er eben nicht läuft wie gewünscht, d.h. wenn ich an ihm etwas verändern soll. Dann muss ich verstehen, wie er seine Aufgabe heute erledigt und leicht die Ansatzpunkte identifizieren, wo ich Veränderungen im Sinne neuer Anforderungen anbringen muss.</p>
+<p>Was könnten denn Veränderungen sein, die an “Word Wrap” Code herangetragen werden?</p>
+<ul>
+<li>Die maximale Output-Zeilenlänge ändert sich. Es verändert sich nur eine Konstante.</li>
+<li>Der umzubrechende Text liegt nicht in einer Zeile, sondern in mehreren vor. Es verändert sich also die Struktur der Quelldaten.</li>
+<li>Der Quelltext hat mehrere Absätze, die im Output erhalten bleiben sollen. Eine Veränderung nicht nur in der Quelldatenstruktur, sondern auch in der Zieldatenstruktur.</li>
+<li>Worte sollen nicht mehr an beliebiger Stelle geteilt werden dürfen, sondern nur noch zwischen Silben.</li>
+<li>Beim Umbruch sind Satzzeichen zu berücksichtigen. So darf zum Beispiel ein Bindestrich nicht am Anfang einer neuen Zeile stehen.</li>
+</ul>
+<p>Ich behaupte nun nicht, dass eine Kata-Lösung all dies und mehr vorhersehen sollte. Keinesfalls! Die Lösung soll ausschließlich den aktuellen Anforderungen genügen. Auch wenn meine Lösungsskizze oben Silben erwähnt, würde ich also keine echte Silbenerkennung implementieren, sondern den Umbruch bei jedem Buchstaben zulassen.</p>
+<p>Dennoch ist ja eines immer wieder so überraschend wie Weihnachten: dass sich Software über die Zeit ändert.</p>
+<p>Deshalb sollten wir Vorkehrungen treffen, damit uns das leicht fällt.</p>
+<p>Für mich bestehen solche Vorkehrungen mindestens darin, die Aspekte des Lösungsansatzes klar im Code sichtbar zu machen. Und genau das geschieht eben nicht in den ersten beiden obigen Lösungen und nur bedingt bei Uncle Bob.</p>
+<p>Wir können Aspekte in Methoden oder Klassen verpacken. Je nach Umfang. Das ist doch kein Hexenwerk. Und wir können auch noch die fundamentalen Aspekte Integration und Operation trennen.</p>
+<p>Dann würden unsere Lösungen lesbarer, glaube ich.</p>
+<h3>TDD is not enough</h3>
+<p>Noch ein Wort zur Ursache der Unlesbarkeit. TDD ist da sicherlich nicht schuld. TDD ist ne gute Sache. Soll man im Coding Dojo gerne üben.</p>
+<p>Aber man sollte eben die Heilsbringererwartungen nicht zu hoch schrauben. TDD dreht sich am Ende doch “nur” ums Testen. Auch wenn es red – green – refactor heißt, so führt das eben nicht automatisch zu lesbarem, evolvierbarem Code.</p>
+<p>Eine gut priorisierte Liste von Testfällen plus red – green liefert Code, der in kleinen Schritten hin zu einer funktionalen Lösung wächst. Die Codeabdeckung wird groß sein. Das halte ich für das erwartbare Ergebnis, sozusagen das kleinste garantierte Resultat von TDD.</p>
+<p>Der Rest jedoch… der hat eben nichts mit TDD zu tun. Verständlichkeit, Evolvierbarkeit, punktgenaues Testen (also Unit Tests statt Integrationstests [2])… all das ist optional bei TDD. Es entsteht nicht zwingend. Das ist meine Erfahrung aus vielen Coding Dojos und zeigt sich auch an den obigen Codebeispielen.</p>
+<p>Damit behaupte ich nicht, dass das nie entstehen würde. Ich sage nur, das entsteht nicht durch TDD, sondern durch Refactoring-Mühe und –Kompetenz.</p>
+<p>Refactoring mit TDD gleichzusetzen, wäre jedoch falsch. Refactoring ist eine unabhängige Disziplin. Deshalb sage ich, Verständlichkeit und Evolvierbarkeit entstehen eben nicht durch TDD. Und wenn man in einem Coding Dojo TDD übt, dann übt man de facto eben eher nicht Refactoring. Das wäre auch eine Überlastung für die Beteiligten, ein Verstoß gegen das SRP, sozusagen. Mit der Definition von Tests, mit dem red-green-Rhythmus, mit KISS bei der Implementation, mit all dem haben die Beteiligten schon genug Mühe. Wenn Refactoring da nicht quasi im Stammhirn verankert ist, also schon als Reflex existiert, dann findet Refactoring nur auf Alibiebene statt, da wo es einem schlicht ins Auge springt, weil so deutliche Anti-Muster im Code zu sehen sind.</p>
+<p>Was dabei aber eher nicht entsteht, das ist Aspekttrennung. Und schon gar nicht entstehen getrennte Tests für Aspekte.</p>
+<p>Indem ich das so “anprangere” will ich nicht die Praxis der Coding Dojos herabsetzen. Mir geht es nur um realistischere Erwartungen. Die Ergebnisse sind schlicht und einfach Ergebnisse der grundlegenden Wahrheit: you always get what you measure. Denn was bei TDD “gemessen” wird, worauf das Augenmerk liegt, das sind die Tests. Es heißt ja “Test-Driven Development” und nicht “Design-by Testing” oder so. Tests stehen im Vordergrund und im Mittelpunkt. Und die kriegt man. Alle sind zufrieden, wenn sie im red-green-Rhythmus arbeiten und schrittweise die Lösung hinkriegen. Und auf dem nächsten Level dann noch bei jedem green in ein VCS einchecken.</p>
+<p>Das ist alles super. Nur eben auch nicht mehr. Es kommen Lösungen heraus, die testabgedeckt sind. Wunderbar. Man merkt ihnen an, dass sie stolz <em>geschrieben</em> wurden. Ans <em>Lesen</em> und spätere <em>Verändern</em> wurde dabei wenig Gedanke verschwendet. Während des Coding Dojos ist ja der ganze Kontext auch in allen Köpfen, die Lösung entsteht vor aller Augen. Niemand hat ein Problem mit der Verständlichkeit. Noch nicht.</p>
+<p>Deshalb erhärtet sich bei mir weiter der Verdacht: TDD is not enough. Wenn wir das sehr löbliche Üben auf TDD beschränken, dann tun wir zuwenig.</p>
+<p>Dass es darauf beschränkt ist, finde ich ja verständlich. red – green + KISS ist so schön greifbar. Da sieht man den Erfolg. Und KISS ist ganz im Sinne des alten Eleganzgedankens.</p>
+<p>Leider sind das Ergebnis dann lokale Optima. Knapper testabgedeckter funktionaler Code ist im Sinne dieses Vorgehens optimiert – aber hat nicht das Big Picture im Blick. Zu dem gehören für mich Verständlichkeit und Evolvierbarkeit.</p>
+<p>In diesem Sinne ist auch die Freude aller zu verstehen, wenn die Lösung kleiner wird. Weniger LOC sind gut. Als sei darauf ein Preis ausgelobt.</p>
+<p>Es gilt jedoch nicht <em>Verständlichkeit == Kürze</em>. Verständlichkeit mag mit Kürze korrelieren, deshalb ist jedoch der kürzeste Code nicht automatisch der verständlichste. Für mich darf also etwas “Fluff” in einer Lösung sein, gar etwas Redundanz, wenn dadurch Verständlichkeit und Evolvierbarkeit steigen.</p>
+<p>Versuchen Sie es doch mal. Einfach so als Experiment. Beim nächsten Coding Dojo könnten Sie sich bewusst mal die Frage stellen, welche Aspekte Sie erkennen – und dann überlegen Sie, wie Sie die in der Lösung deutlich sichtbar machen. Darauf aufbauen könnten Sie nach einer Formulierung der Lösung suchen, die ihre Funktionsweise leicht erkennbar macht. Wie arbeiten die Aspekte einer Lösung zusammen, um die Anforderungen zu erfüllen?</p>
+<h4>Fußnoten</h4>
+<p>[1] Dass Testfälle schon ausgearbeitet vorlagen, fand ich allerdings nicht so schön. Das schien mir dem Lerneffekt eher abträglich. Denn darin liegt ja eine der zentralen Herausforderungen bei TDD: relevante Testfälle überhaupt erst einmal erkennen und dann noch in eine Reihenfolge bringen, die ein kleinschrittiges Wachstum des Codes begünstigt.</p>
+<p>[2] Selbst bei Uncle Bob gibt es nur Tests für <em>wrap()</em>. Die herausgelöste Funktion <em>breakline()</em> wird nicht separat getestet, obwohl sie ein Arbeitspferd der Lösung darstellt. Damit sind alle Tests seiner Lösung Integrationstests – auch wenn sie auf einem höheren Abstraktionsniveau die Unit <em>wrap()</em> testen.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2012-11-04):</p>
+<p>Ich denke, dass viel um eine Lösung herumprogrammiert wird, anstatt sich um das Problem Gedanken zu machen.</p>
+<p>Die Unterteilung in die Teilschritte ist da schon ein Schritt in die richtige Richtung, erst einmal das Problem zu verstehen und auch danach die Tests zu schreiben.</p>
+<p>Der normale Weg ist eher so:</p>
+<ul>
+<li>eine Anforderung taucht auf</li>
+<li>die Lösung wird quasi mitgeliefert ("Das müsste rauskommen...")</li>
+<li>es wird ein Test auf Ausgabe geschrieben (nicht auf Funktionalität)</li>
+<li>das Ganze wird implementiert und gut ist</li>
+</ul>
+<p>So weit wäre die Welt ja in Ordnung, wenn nicht</p>
+<ul>
+<li>die Anforderung nicht ganz korrekt umgesetzt wurde ("Bei dem einen geht's, aber...")</li>
+<li>ein neuer Test notwendig ist</li>
+<li>und die Implementierung angepasst wird ("Na dann schreiben wir das eben ein bisschen um..." Q&amp;D)</li>
+</ul>
+<p>Meine Kritikpunkte</p>
+<ul>
+<li>der Code eine Art One-Hit-Wonder ist ("Es ist doch grün...?!")</li>
+<li>dass nur Workarounds geschaffen werden, anstatt das neue Wissen in den Code einfliessen zu lassen</li>
+<li>TDD, Refactoring usw. werden als Allheilmittel verstanden ("M. Fowler hat das in seinem Buch aber anders geschrieben...") anstatt als Werkzeuge</li>
+</ul>
+<p>Gerade das Verständnis im Einsatz von Werkzeugen (und das sie es sind) kommt m.E. auf Konferenzen, Treffen, Dojos, Vorlesungen usw etwas zu kurz... leider.</p>
+<p>Man möge mich eines besseren belehren (der Leser unsere Code-Zeilen wird es danken :)</p>
+<hr />
+<p><strong>Sageniuz</strong> (2012-11-05):</p>
+<p>Danke vielmals für diesen wirklich ausgezeichneten Post. Ich stimme mit dem Geschriebenen vollkommen überein.</p>
+<hr />
+<p><strong>Peter Kofler</strong> (2012-11-05):</p>
+<p>Ja das stimmt, dass TDD alleine uns nicht vor schlechtem Code schützt, und schon gar nicht vor schlechten Tests. Ich sehe das immer öfter dass der Fokus auf Konferenzen von "Use  TDD" auf "Manage Your Testing Hell" wandert.</p>
+<p>Danke für den Hinweis zu Word Wrap, ich werde dementsprechend einen neuen Post verfassen, mit Fokus auf Tell-Don't-Ask und Domänenkonzepten. Vielleicht kann dieser dann ja als positives Beispiel dienen ;-)</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-11-06):</p>
+<p>Ich kann dem auch nur zustimmen, bin aber mit dem Beispiel und der Lösung nur bedingt zufrieden.</p>
+<p>Nehmen wir jetzt die neue Anforderung: Blockssatz. D.h. die Umbrüche sollen so gemacht werden, dass man das Textbild "schön" zum einstellten Font aussieht. (Man muss also die Pixel der einzelnen Zeichen als Umbruchkriterien mit hineinnehmen).
+Eine weitere Anforderung wäre das Polygonzüge (einfachster Fall: Rechteck), die Umbruchgrenze markieren.</p>
+<p>Grundsätzlich sollte die (jede) Aufgabe sinnvoll zerlegt werden und der Code soll dieses direkt erzählen. Aber die Antizipation oder Extrapolation auf die nahe Zukunft steht im Konflikt zu KISS und YAGNI (die Betonung SILBEN halte ich für überbewertet).</p>
+<p>Zuoft sieht man schlecht strukturierten, undurchsichtigen Code, unpassendes Abstraktionsniveau oder einfach Verletzung von separations-of-concerns und man fragt sich: was mag der Code wohl tun? welche Gedanken hatte der Autor?</p>
+<p>Leider findet man auch schlechten Code in Zeitschriften, Blogs und auch in produktiven Systemen :-(</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-11-06):</p>
+<p>Freut mich, dass die Kommentare bisher so positiv waren. Hätte ich nicht gedacht. Dann hab ich wohl etwas angesprochen, was auch andere schon auf der Seele lag. Fein.</p>
+<p>@Anonym: Mit welchem Beispiel bist du nicht zufrieden? Kata Wordwrap finde ich genauso gut wie Kata Bowling oder sonst eine. Die Aufgabe kann ja nicht klein genug sein, um nicht schon Probleme zu zeigen. Denn wenn die Unverständlichkeit schon bei so trivialem Zeug auftritt, dann wird das bei Größerem nicht besser.</p>
+<p>Mit welcher Lösung bist du nicht zufrieden? Ich habe doch keine eigene angegeben. Die kommt erst noch ;-)</p>
+<p>Den Blocksatz als neue Anforderungn finde ich auch gut. Vielleicht nehme ich die sowie die mehreren Absätze und mehrzeiligen Quelltexte mal als weitere Iterationen in meine Lösung auf. Einfach um beispielhaft zu zeigen, was sich dadurch ändert.</p>
+<p>Zu den Silben sage ich noch etwas, wenn ich meine Lösung vorstelle. Nur soviel hier: davon bin ich auch erstmal wieder abgerückt.</p>
+<hr />
+<p><strong>McZ</strong> (2012-11-06):</p>
+<p>Die Frage ist doch, ob die Vorgabe der Testmethodik nicht bereits die Kodierung vorgibt. Bzw, ob sich die vorgegebenen Testfälle wirklich mit testwürdigen Aspekten befassen, oder ob sie zu hoch ansetzen und zu 80% immer die gleichen Trivialitäten testen. Wobei man sich dann wundert, dass Testfälle in die Dutzende ausarten.</p>
+<p>Vielleicht steckt da auch ein Missverständnis dahinter. TDD ist für mich kein architektonisches Mittel. TDD ist auch kein Tool, um "Fehlerfreiheit" zu garantieren. Es gibt keinen mathematischen Korrektheitsbeweis; vielmehr handelt es sich um so etwas wie Pseudo-Induktion ("für die definierte Menge von Eingabewerten sind die berechneten Ergebniswerte korrekt; also sind  vermutlich auch alle anderen Fälle korrekt; genau wissen wir das aber nicht"). Unterm Strich sind Tests ein statistisches Mittel, um ein Paradox zu umschiffen: die Funktion ist quasi ihr eigener Beweis.</p>
+<p>In dieser Hinsicht bekommt man das, was man via Testcase bestellt. Und so kommt dann halt Mach-mich-grün-Code zustande.</p>
+<p>Grundsätzlich denke ich, dass wir Kodierung viel zu kompliziert machen. Nehmen wir WordWrap; ich würde es in folgende Teilschritte zerlegen:</p>
+<p>1) Text in Bereiche (also Worte oder Silben, zzgl. Whitespaces usw) zerlegen
+2) Bereiche gemäß maximaler Breite und dem Vorhandensein eines Zeilenumbruchs trennen.
+3) Jede abgetrennte Sequenz zu einer Zeile zusammenführen
+4) Alle Zeilen durch Zeilenschaltung zu einem Ausgabetext zusammenführen</p>
+<p>Darauf folgt Pseudocode. In meinem Falle - FD-basiert und LINQ-like mit Erweiterungsmethoden - komme ich direkt auf:</p>
+<p>strBody _
+.Split(x, x =&gt; ...)  _
+.Split(x, y =&gt; ...) _
+.Select(x =&gt; String.Join(x)) _
+.Join(crlf)</p>
+<p>Und da Lambdas nicht gut zu testen sind wird daraus:</p>
+<p>strBody _
+.Syllables(de-DE) _
+.Wrap(200) _
+.Select(x =&gt; String.Join(x)) _
+.Join(crlf)</p>
+<p>Syllables und Wrap sind hierbei schlicht Komposite mit Inhalt Split(x, y =&gt; ...), wobei in dem Lambdas der Fähigkeit, eine Sequenz in Subsequenzen zu trennen, lediglich die der Problemstellung adäquate Trennungslogik beigefügt wird.</p>
+<p>Diese additive Logik kann man hervorranged mit TDD entwickeln. Man braucht Split nicht mehr testen, weil der Test bereits existiert. Man testet nur noch hinzukommmende Funktionalität, statt sich mit bekannten und gelösten Fragestellungen und als solches  Trivialitäten zu befassen.</p>
+<p>Man dreht damit den Spies um. So lange die einzelnen Teile getestet sind und Ihren Vorgaben entsprechen, so lange funktioniert auch das Komposit. Das Komposit selbt muss nicht getestet werden.</p>
+<hr />
+<p><strong>Carsten</strong> (2012-11-06):</p>
+<p>hier mal meine 50cts:
+TDD kann ein durchaus "Design"-Tool sein - aber IMHO eben nicht für Algorithmen sondern eher für die Schnittstellen zum Code.</p>
+<p>Wenn eine extrem einfache Funktion in sehr viele Testfälle ausartet, dann ist das für mich ein schönes Zeichen, dass man konkrete Werte testet, während man entweder nur Randfälle und einen typischen Fall oder eben gleich Eigenschaften testen sollte!</p>
+<p>Beispiel: eine Funktion, die eine Kollektion sortiert, muss eine Kollektion liefern, deren Elemente eben aufsteigend oder absteigend sortiert sind - das kann man sehr einfach durch einen Durchlauf und paarweise Vergleiche testen.
+Frameworks die so etwas mit zufälligen Daten machen gibt es ja mittlerweile auch in .net (FsCheck - Vetter von QuickCheck).</p>
+<p>TDD ist super - ich muss nicht bei jeder Änderung/Refaktorierung angst haben, dass ich anderen Code zerschossen habe (zumindestens kann ich mir <em>sicherer</em> sein, also nur mit einem groben Funktionstest).</p>
+<p>Aber ob jemand mit TDD auf so etwas wie z.B. QuickSort gekommen wäre? Ich weiß nicht - ich glaube da bleibt man bei dem hängen was man naive machen würde - sprich sehr wahrscheinlich einer sehr langsamen Variante (wie z.B. "(findFirst col)++(remove (findFirst col) col)" wenn ihr wisst was ich meine)</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-11-06):</p>
+<p>Hallo Ralf,</p>
+<p>"Kata Wordwrap" ist okay, hingegen ist die Kritik an den vorgestellten Lösungen nur bedingt berechtigt, denn aufgrund des Kata-Charakters gehe ich von einem geringen Reifegrad aus =&gt; d.h. nur die Tests sind grün. Mit dieser Vorstellung sind alle Lösungen okay, weil auch sie in der Tat recht klein/umfangreich und vermutl. auch keine hohe Reife besitzen.</p>
+<p>Mit Blocksatz wollte ich ein Beispiel liefern, das auch dein ersten Entwurf für die Problemzerlegung nicht gerecht wird, wo du ja ausdrücklich auf SILBEN hingewiesen hattest.</p>
+<p>SIMPL, KISS, YAGNI, Antizipation und sprechender Code sind eine ausreichend gute Basis, qualiativ hochwertigester Code entsteht nach und nach und nicht sofort in Iteration 1.</p>
+<hr />
+<p><strong>Thomas</strong> (2012-11-07):</p>
+<p>Hallo Zusammen,
+McZ deine Einleitung finde ich hervorragend. Ich würde sogar soweit gehen zu behaupten
+das "TDD" ein extremer Ansatz ist. Die Konzentration auf einen Aspekt der Entwicklung (Hier Testen)
+macht meiner Meinung nach den Entwicklungsprozess unausgewogen.
+Der zweite Punkt den ich bei TDD bemängele ist die Qualität der Entwicklertests. Jeder der schon mal
+in der entwicklungsbelgeitenden Qualitätssicherung gearbeite hat oder sich mit den Methoden beschäftigt
+hat ( z.B. ISTQB), weis das man sein eigenes Produkt / Entwicklung 'schlecht' testet. Das ist nichts schlimmes
+das liegt an uns Menschen.
+Ich habe die Erfahrung selber gemacht als ich Unittests für meine Code geschrieben habe. Ich war
+kritischer beim Test mit den Entwicklung anderer, als mit meinen eigenen. Ich denke es liegt daran,
+dass man seinen eigene Code, sein eigenes Produkt, seine eigene Entwicklung als sein 'Baby' ansieht und man
+selber stolz drauf ist. Natürlich will man seinem 'Baby' nichts böses tun und nicht kritisch
+(durch tests) gegenüber sein. Man beginnt halt Tests zu entwickeln die der Code besteht. Man kennt
+auch die Schwachstellen des eigenen Codes, aber man sagt sich natürlich 'der Code wird nie so eingesetzt
+- warum einen Test entwicklen?'. Und aus Projektmanagementsicht würde ich dazu sagen: "Warum soll
+ich Geld in die Entwicklung von Testfälle stecken, die eine geringere Qualität haben, als Testfälle
+die von Aussenstehenden (also nicht von den Softwareentwicklern) geschrieben sind."</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-11-08):</p>
+<p>@McZ: Ich stimme dir ebenfalls zu, aber ich denke, dass das Problem tiefer liegt...</p>
+<p>"Pseudo-Induktion" trifft's denke ich schon, eben eine TDD-Gläubigkeit ("Ist ja grün, dann kann's ja nicht falsch sein..."). Ist in diesem Fall aber eher ein falsche Annahme/Vorgehensweise.</p>
+<p>BTW: Die Trennung würde ich auch so machen :)</p>
+<hr />
+<p><strong>Robert</strong> (2012-11-09):</p>
+<p>Ein sehr treffender und guter Post! Ich hab mir bei vielen Dojos schon das gleiche gedacht (es ist zwar gelöst, aber kein Clean-Code).</p>
+<p>Die Preisfrage ist: Wie kann man bei den Teilnehmern ein Bewusstsein dafür schaffen, dass sie Clean-Code lernen sollen? Sie sind leider auch ohne glücklich...</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-11-09):</p>
+<p>Die grosse Zustimmung zum Clean-Code möchte ich gern aufgreifen und mehr als das verlangen:</p>
+<p>@Robert, alle:
+Wie sieht denn jetzt eine Ideallösung aus?</p>
+<p>Müssen wir auf Ralf warten?</p>
+<p>Reicht im ersten Schritt nicht auch eine 70% Lösung?
+Haben die Deutschen ein Problem mit Over-Engineering?
+Was darf die Lösung dieser Trivialaufgabe kosten?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-11-09):</p>
+<p>@Anonym: Auf mich warten? Wieso? Wer? Ne, auf mich muss keiner warten. You can clean code now! :-)</p>
+<p>Overengineering? Ja, davor haben viele Angst. Mit der Nationalität hat das eher nichts zu tun, würde ich sagen. Das hat was mit dem mindset unserer Zunft zu tun. Und da gilt: Eleganz! Die hat mit Sparsamkeit der Mittel zu tun.</p>
+<p>Und dann kommt KISS! Bei YAGNI zuckt niemand. Da wird munter alles mögliche drauflosprogrammiert - nur KISS muss es sein.</p>
+<p>So grassiert eine Aversion gegen "Overengineering". Was oberflächlich natürlich auch richtig ist. In Overengineering steckt ja schon ein negatives Urteil. (Dass Leute, die ohnehin zuviel tun, das aber nicht bemerken (wollen), die Overengineering-Watschen verteilen, ist natürlich eine Ironie.)</p>
+<p>Overengineering wie auch jeder andere Qualitätsmangel entsteht ja aber ausschließlich in Relation zu Werten. Welche sind denn das aber? Und welche Werte berücksichtigt man nicht bei dem Urteil?</p>
+<p>Wenn ein Wert lautet "Möglichst wenige LOC produzieren", na, dann mag meine Lösung für Wordwrap overengineert aussehen.</p>
+<p>Aber wenn ich dagegen halte "Evolvierbarkeit" und "detailliertere Testbarkeit"... dann sieht es anders aus, finde ich.</p>
+<p>Naja, nun muss ich mal demnächst meinen Lösungsvorschlag präsentieren, glaub ich ;-)</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-11-09):</p>
+<p>@Robert:
+<em>Die Preisfrage ist: Wie kann man bei den Teilnehmern ein Bewusstsein dafür schaffen, dass sie Clean-Code lernen sollen? Sie sind leider auch ohne glücklich...</em></p>
+<p>Das könnte ich mir nur durch den geringen Umfang und der quasi nicht vorhandenen Komplexität der Katas erklären.</p>
+<p>Für diese kleinen Spielereien braucht man nicht zwingend Clean-Code.</p>
+<p>Hier sind vielleicht die Veranstalter selber gefragt, ihre Dojo-Sessions entsprechend zu gestalten.</p>
+<p>Sie müssten davon weg kommen, immer wieder TDD beizubringen, sondern den Fokus mehr auf echte Software-Entwicklung richten.</p>
+<p>Unit Tests können nützlich sein, sind aber nicht zwingend notwendig, um funktionierende und korrekte Software zu erstellen.
+(Es stellt sich mir sowieso die Frage, wie man die Korrektheit der eigentlichen Tests gewährleisten will.)</p>
+<p>Vielleicht sollte wieder mehr das Gefühl für aussagekräftigen Quellcode geschult werden. Also, dass es eben nicht cool ist, kryptischen Code eingetippt zu haben, den man nach einem Monat selber nicht mehr auf Anhieb versteht.</p>
+<p>Irgendetwas in der Art. Aber bitte nicht mehr die immer gleichen TDD-Sessions, wo man vorher sein Gehirn auf Energiesparmodus schaltet und dann total naiv zu programmieren anfängt. (Also erst muss der Test rot werden und dann nur gerade so viel implementieren, dass der Test grün wird. Aber auf keinen Fall versuchen, weiter oder überhaupt erst zu denken. Das macht den ganzen TDD-Prozess kaputt. Immer schön dumm anstellen. Nur der Test leitet einen. ;-D)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-11-09):</p>
+<p>@Christian: Das hört sich doch gut an. Markig gesagt :-)</p>
+<p>Deshalb bieten Stefan Lieser und ich ja schon länger Application Katas an: http://clean-code-advisors.com/ressourcen/application-katas</p>
+<p>Das sind größere Katas, an denen man sich mal versuchen kann.</p>
+<p>Und ein ganz einfacher weg, um zu mehr Clean Code zu kommen:</p>
+<ol>
+<li>Die Aufgabe größer wählen, z.B. App Kata.</li>
+<li>Die Aufgabe in feine Scheiben zerlegen, sagen wir mal 3-4, also Inkremente.</li>
+<li>Alle Dojoteilnehmer (oder in Pairs) eine Scheibe implementieren lassen. Dann gibt es n Lösungen.</li>
+<li>Alle "Teams" rücken einen Platz weiter, d.h. an einen anderen Rechner und eine andere Lösung. Dort implementieren sie das nächste Inkrement.</li>
+<li>goto 3 - solange noch Inkremente zu fertigen sind.</li>
+</ol>
+<p>Aus Erfahrung kann ich sagen: Beim Wechsel zu einer fremden Lösung fliegen viele Kraftausdrücke durch den Raum :-)))</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-11-09):</p>
+<p>@Ralf: das ist ein guter Vorschlag.</p>
+<p>Bezogen auf die berufliche Programmiertätgkeit fallen mir, neben Pair-Programming, die allzuoft vernachlässigten Codereviews ein.</p>
+<p>D.h. man setzt sich mit dem Code des Kollegen auseinander und diskutiert diesen im Rahmen des Reviews (ggfs. öffentlich, teamweit).</p>
+<p>Meinen Eindrücken nach führt die Diskussion über Code insgesamt wieder für alle Beteiligten zu besserem Code (allein vielleicht dadurch, dass der Code wieder gereviewt werden kann).</p>
+<p>Die dahinter liegende Frage ist vielmehr, was ist guter Code? Ein schwierige Antwort.
+@alle: Was ist guter Code?</p>
+<p>Einfacher ist hingegen schlechten Code aufzudecken. Die Meinungsvielfalt ist in Detailfragen gross, aber andererseits liefern Reviews ein grossen Konsens für guten Code (ein Kriterium ist Verständlichkeit).</p>
+<p>"Tests are overrated" - http://www.infoq.com/presentations/francl-testing-overrated
+verdeutlicht die Bedeutung des Werkzeugs Codereview als qualitätssteigernde Massnahme.</p>
+<hr />
+<p><strong>McZ</strong> (2012-11-10):</p>
+<p>"Was ist guter Code?"</p>
+<p>Jeder Code, der es schafft, neben der Erreichung einer Zielstellung auch noch den Weg dorthin ohne Hilfsmittel verständlich zu machen.</p>
+<p>Und da hätten wir schon diverse Probleme mit unserem Hang, state-of-the-art sein zu wollen.</p>
+<p>Beispiel: ein Kollege von mir setzt für JEDE Lösung das Entity Framework ein.  Das ist natürlich bequem, und es tut was es soll. Aber er bekommt dann und wann schon mal so seine Problemchen, z.B. wenn ein String-Feld in der Datenbank auf einen benutzerdefinierten Typ serialisiert werden soll. Oder wenn ein Feld beispielsweise Serialisierungsoptionen für ein anderes Feld enthält.</p>
+<p>Und das Ganze nur, weil er sich weigert oder er es für Unsinn erachtet, zu jedem Datenobjekt einfach eine (oder mehrere) simple Adapter-Klasse(n) zu bauen, in denen dann zumindest für die CRUD-Operationen SQL-Code steckt.</p>
+<p>Das schreiben eines solchen Adapters kostet etwa 30 Minuten. Man kann dies auf 10 Sekunden verkürzen, wenn man einen kleinen Generator schreibt.</p>
+<p>Den Code dieses Adapters kann ich danach anpassen, wie ich will. Wenn ich nur für einen Typ die Daten im Speicher cachen möchte, dann sind das ein paar Zeilen Code. Dito wenn Schreibvorgänge gesammelt werden sollen.</p>
+<p>Alles ist an einem Ort, und mal ehrlich, das funktioniert mit jedem POCO-Objekt (ein Feature, welches die EF-Jungs groß herausstellen mussten).</p>
+<p>Statt dessen werden Konfigurationsdetails in der n-ten Abstraktion des Frameworks m versteckt. Wir fügen eine Menge Komplexität und neue Abhängigkeiten hinzu, und unterm Strich fährt man damit noch nicht mal besser, wie das Beispiel Umbraco 5 eindrucksvoll bewiesen hat.</p>
+<p>Coding-Dojos sind für mich ein zweischneidiges Schwert. Letztendlich dokumentieren sie ja nur die Verschiedenheit der beteiligten Menschen. Code-Reviews sind da nicht anders.</p>
+<p>Insofern bin ich fast geneigt zu sagen, dass ein Haufen von Entwicklern sich halt gemeinsam auf Patterns einigen muss. Damit legt man den internen Maßstab fest, wie Qualität gemessen wird.  Wer hinzustoßen möchte, bekommt beim Vorstellungsgespräch die simple Wahl "love it or leave it". Dann hat man auch ein Gerüst, an denen Code-Reviews dann wirklich objektiv und ohne Supervisor durchgeführt werden können.</p>
+<p>Natürlich birgt das die Gefahr, dass derjenige mit der höchsten Hierachiestellung diese "Enticklerverfassung" oktruiert. Ob das produktiv und in der Gruppe schlau ist, darf man bezweifeln.</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-11-10):</p>
+<p>@McZ: Hast du das deinem Kollegen auch so geschildert? Habt ich das besprochen? Habt ihr Alternativen (und deren Auswirkungen) abgewägt?</p>
+<p>In einer Gruppe führt systemisches Konsensieren zum allgemein akzeptablen Ergebnis.</p>
+<p>Ich habe die Details nicht genau verstanden, aber string als Platzhalter statt einem Schema zu nutzen birgt Gefahren. Generizität, Felxibilität könnten eine Antwort sein, aber vielleicht findet man dafür eine noch bessere Lösung.</p>
+<p>Hierarchien mögen in einer Gruppe das Meinungsbild prägen, aber das sollte nicht die Entscheidung der Gruppe sein. Hierarchie ist nicht Schlechtes, Macht zwecks Durchsetzung der Meinung ist schlechter.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

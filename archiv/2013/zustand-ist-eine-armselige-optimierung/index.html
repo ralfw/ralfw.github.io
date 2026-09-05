@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zustand ist eine armselige Optimierung — ralfw.de Archiv</title>
+<meta name="description" content="Das Denken des Softwareentwicklers kreist ständig um Daten. Wer auf Anforderungen schaut, sucht zuerst nach Daten. Wer an Infrastruktur denkt, denkt zuerst an Persistenztechnologie">
+<link rel="canonical" href="https://ralfw.de/archiv/2013/zustand-ist-eine-armselige-optimierung/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Zustand ist eine armselige Optimierung — ralfw.de Archiv">
+<meta property="og:description" content="Das Denken des Softwareentwicklers kreist ständig um Daten. Wer auf Anforderungen schaut, sucht zuerst nach Daten. Wer an Infrastruktur denkt, denkt zuerst an Persistenztechnologie">
+<meta property="og:url" content="https://ralfw.de/archiv/2013/zustand-ist-eine-armselige-optimierung/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Zustand ist eine armselige Optimierung</h1>
+    <div class="doc-meta"><span>22. Juli 2013</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2013/07/zustand-ist-eine-armselige-optimierung.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2013/zustand-ist-eine-armselige-optimierung/</code></span></div>
+    <div class="art"><p>Das Denken des Softwareentwicklers kreist ständig um Daten. Wer auf Anforderungen schaut, sucht zuerst nach Daten. Wer an Infrastruktur denkt, denkt zuerst an Persistenztechnologien. Und wenn nicht immer, dann zumindest oft.</p>
+<p>Nicht umsonst gibt es die Mittel der Objektorientierung als Weiterentwicklung von Sprachen wie C und Pascal: um Daten nicht nur zusammenzufassen (<em>class</em>), sondern auch noch funktional zu kapseln (<em>interface</em>).</p>
+<p>Was dann in Objekten steckt, ist Zustand. Das sind nicht nur einfach Daten, sondern Daten in einer aus vielen Veränderungen hervorgegangenen Konstellation.</p>
+<p>Hier ein simples Beispiel:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/806ef9bff06bf9a1.png" /></p>
+<p>Mit jedem Aufruf von <em>Sum()</em> berechnet ein <em>Aggregator</em> die Summe einer Anzahl von Werten. Zu diesem Zweck führt das Objekt einen Zustand. Der ist das Ergebnis einer Reihe von Veränderungen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2e497310f6d1a884.png" /></p>
+<p>Er stellt also einen Schnappschuss dar. Wie es zu ihm gekommen ist, liegt im Dunkeln.</p>
+<p>Das macht für diesen Zweck auch nichts. Ich meine nicht, dass man eine solche Aggregationsfunktionalität dringend anders realisieren müsste. Dennoch kann sie helfen, deutlich zu machen, dass solcher Umgang mit Daten nur eine Option von mehreren ist. Und das deshalb ihr Entscheidungen zugrundeliegen, die ungünstig sein können, wenn wir sie nicht kennen oder leichtfertig treffen.</p>
+<p>Wie könnte es anders gehen? Die Funktionale Programmierung (FP) würde vielleicht sagen, der Zustand in der Klasse sei unschön. <em>Sum()</em> ist keine reine Funktion, eben weil sie von unsichtbarem Zustand abhängt. Für einen gegebenen Input - z.B. (2) - lässt sich nicht vorhersagen, welchen Output sie erzeugt.</p>
+<p>Als Antwort könnte die Summierung so umgebaut werden:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/75119a109e2d3ce5.png" /></p>
+<p>Es gibt immer noch Zustand im obigen Sinne, doch der wird irgendwo gehalten. Er ist nicht mehr Sache der nun reinen Funktion <em>Sum()</em>. Für einen gegebenen Input - z.B. (2, 1) - ist deren Output immer gleich - z.B. (3).</p>
+<p>Ist dadurch etwas gewonnen? FP sagt, ja. Über reine Funktionen lässt sich besser nachdenken, die <em>composability</em> ist höher, die Testbarkeit besser. Und dann die Daten auch noch immutable sind… Besser geht´s nimmer ;-)</p>
+<p>Ich möchte jedoch noch ein Stückchen weitergehen. Selbst wenn der reingereichte Zustand immutable ist, juckt mich etwas.</p>
+<p>Warum gibt es in diesem Beispiel die Summe als Zustand? Ich glaube, der Grund ist ganz schlicht und einfach, aus Platz- und Performancegründen.</p>
+<p>Denn es ginge ja auch anders. Der Zustand als punktuelle Konstellation hervorgegangen aus einer Linie von Veränderungen, kann immer durch diese Linie plus eine Reihe von Transformationen ersetzt werden:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/292fac80482e6d90.png" /></p>
+<p><em>Sum()</em> hat jetzt überhaupt keinen Zustand mehr, weder internen noch externen. Stattdessen sieht die Funktion immer nur einen Liste von Veränderungen bestehend aus vielen historischen und einer aktuellen. Daraus berechnet sie das aktuelle Resultat - und schreibt die Liste der historischen Veränderungen fort.</p>
+<p>Das Ergebnis ist dasselbe wie in den Varianten vorher. Nur wird jetzt mehr Platz und Zeit gebraucht.</p>
+<p>Hat das einen Vorteil? Ja, ich denke, schon. Vorteil #1: Die Entwicklung des Ergebnisses ist immer komplett nachvollziehbar. Das hilft bei der Fehlersuche. Vorteil #2: Wenn eine Korrektur der Funktionalität nötig ist, können Ergebnisse nachträglich angepasst werden, falls das sinnvoll ist.</p>
+<p>Diese Vorteile stechen in diesem Kleinstbeispiel nicht so ins Auge. Aber wenn Sie das Aggregat mal als persistent und etwas umfangreicher ansehen, dann werden sie relevant. Dann ist es interessant, diese Option denken zu können.</p>
+<p>Ob die Liste der Veränderungen in die Funktion reingereicht wird oder aus einer globalen Quelle beschafft werden kann, finde ich gerade nicht so wichtig.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/6dd60f52d6607809.png" /></p>
+<p>Hier geht es mir um den Wechsel der Sichtweise: vom Zustand zum Veränderungsstrom. Dass es schlicht möglich ist, auf Zustand zu verzichten. Dass seine Herstellung eine selbstverständliche und intuitive Optimierung ist - die wir als solche erkennen sollten.</p>
+<p>Über die Optimierung in Hinsicht auf Platz und Zeit steckt darin sogar noch eine: eine Optimierung im Hinblick auf Form.</p>
+<p>Wenn Sie Zustand denken - sei das eine Summe wie oben oder eine Datenklasse wie Person, Auktion oder Produkt -, dann denken Sie auch immer sofort an eine konkrete Struktur. Sie überlegen sehr sorgfältig, wie die aussehen soll. Davon hängen Klassen-, Datei- und Datenbankstrukturen ab. Bei solchen Strukturen darf Ihnen kein Fehler unterlaufen. Davon hängt ja viel ab. Sie zu ändern, allemal, wenn sie persistent sind, macht viel Aufwand.</p>
+<p>Was aber, wenn es nicht mehr um Zustand geht? Dann müssen Sie nicht mehr über die eine beste Struktur für Daten nachdenken. Bei der obigen Summe ist diese Struktur trivial. Aber nehmen wir eine Software für ein Ortsamt: Wie sollte darin am besten die Klasse oder Tabelle oder das Dokument für einen Einwohner strukturiert sei?</p>
+<p>Wie lange sollte man darüber nachdenken? Wieviele Anforderungen sollte man dafür analysieren? Nach wievielen Jahren Entwicklung und Änderungen an der Software kann man sich sicher sein?</p>
+<p>Ich weiß es nicht. Und deshalb ist für mich jede Festlegung ohne Erfahrung und Mustererkennung eine vorzeitige Optimierung.</p>
+<p>Die Lösung besteht für mich darin, das harte Nachdenken aufzugeben. Schluss mit Zustand! Stattdessen einfach nur Veränderungen speichern. So, wie sie in einem Inkrement gerade anfallen.</p>
+<p>Aus diesen Veränderungen kann dann jederzeit eine Datenstruktur nach aktuellem Bedarf gegossen werden. Oben ist das zunächst nur eine Summe. Doch jederzeit könnte der auch noch ein Mittelwert zugesellt werden:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/ab9b2738d1250fcb.png" /></p>
+<p>Hinter dem steckt nicht nur eine andere Logik, sondern auch eine andere Datenstruktur (<em>double</em>).</p>
+<p>Zustand statt Veränderungen (events) zu speichern, ist mithin eine Optimierung, die unsere Optionen reduziert. Sie lässt uns langfristig verarmen - für kurzfristige Gewinne.</p>
+<p>Wir glauben, wir hätten weder Platz noch Zeit, um Zustände bei Bedarf aus den ursprünglichen Veränderungen herzustellen. Deshalb treiben wir viel Aufwand in Bezug auf universelle in-memory wie persistente Datenstrukturen. Doch letztlich wissen wir nicht, ob wir mit dieser Befürchtung recht haben. Wir probieren ja nie die Alternative aus.</p>
+<p>Dabei gäbe es viel zu gewinnen an Flexibilität. Und die brauchen wir dringend, wenn Software lange leben soll.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2013-07-22):</p>
+<p>Interessante Überlegung. Klingt ja schon fast philosophisch. Nur der Himmel könnte hierbei das Limit sein. Ich verstehe Zustand hier als Aggregat und benutzerdefinierte Datentypen. Ich werde das mal ausprobieren.</p>
+<hr />
+<p><strong>Thomas Zeman</strong> (2013-07-22):</p>
+<p>In der Tat interessant. Wie lange zurück allerdings speichere ich Veränderungen bzw. Ereignisse? Angenommen unendlich, dann wird es auch unendlich lange dauern den aktuellen Zustand (hier Summe) zu bestimmen.
+Die Sache erinnert mich btw. auch ein bisschen an "full backup" vs. "inkrementelle backups".</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-07-23):</p>
+<p>@Thomas: Wenn das Abspielen vergangener Ereignisse zu lange dauert, dann und erst dann solltest du optimieren. Dann nämlich weißt du, dass sich der Aufwand dafür lohnt. Tust du es vorher, schaffst du Verhältnisse/Strukturen, von denen du nicht weißt, ob sie wirklich nötig sind.</p>
+<p>Inkrementelles Backup oder eine Versionsverwaltung à la git sind natürlich sinnige Analogien. Beide spiegeln nicht die Dateisystemstruktur in ihren Repositories, sondern legen die Differenzen "irgendwie" ab. Wenn wir durch einen Repo-Browser darauf schauen, dann bekommen wir nur einen View zu sehen.</p>
+<p>Ich denke, genauso sollten wir (immer öfter) mit unseren Anwendungsdaten umgehen. Wir sparen uns einfach sehr viel gedanklichen Aufwand, ideale Strukturen zu suchen. Besser ist es, die nach Bedarf in vielfältiger Weise aus dem "Datengranulat" der Veränderungen/Ereignisse zu generieren.</p>
+<p>Wenn das dann mal zu langsam ist... dann können wir sie cachen. Da kommt dann z.B. das Read Model von CQRS ins Spiel. CQRS ist insofern also auch schon eine Optimierung.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

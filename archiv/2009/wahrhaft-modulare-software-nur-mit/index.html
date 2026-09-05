@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wahrhaft modulare Software nur mit konsequent weniger Abhängigkeiten — ralfw.de Archiv</title>
+<meta name="description" content="Warum hat die Softwareentwicklung das mit der Modularität bisher nicht so richtig hingekriegt? Mir scheint eine wesentliche Ursache die zu große Abhängigkeit zwischen Modulen. Wir ">
+<link rel="canonical" href="https://ralfw.de/archiv/2009/wahrhaft-modulare-software-nur-mit/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Wahrhaft modulare Software nur mit konsequent weniger Abhängigkeiten — ralfw.de Archiv">
+<meta property="og:description" content="Warum hat die Softwareentwicklung das mit der Modularität bisher nicht so richtig hingekriegt? Mir scheint eine wesentliche Ursache die zu große Abhängigkeit zwischen Modulen. Wir ">
+<meta property="og:url" content="https://ralfw.de/archiv/2009/wahrhaft-modulare-software-nur-mit/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Wahrhaft modulare Software nur mit konsequent weniger Abhängigkeiten</h1>
+    <div class="doc-meta"><span>26. Juli 2009</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2009/07/wahrhaft-modulare-software-nur-mit.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2009/wahrhaft-modulare-software-nur-mit/</code></span></div>
+    <div class="art"><p>Warum hat die Softwareentwicklung das mit der Modularität bisher nicht so richtig hingekriegt? Mir scheint eine wesentliche Ursache die zu große Abhängigkeit zwischen Modulen. Wir müssen anders über Abhängigkeiten nachdenken als bisher.</p>
+<p><a rel="noopener" href="http://www.nature.com/nature/comics/syntheticbiologycomic/index.html"></a> Darüber habe ich auch schonmal geschrieben, z.B. grad neulich <a rel="noopener" href="http://ralfw.blogspot.com/2009/06/wider-die-geieln-zukunftsfahiger.html">hier</a>. Doch mein Denken kreis immer wieder um das Problem. Deshalb hier nochmal eine etwas andere Perspektive, über die ich schon lange schreiben wollte. Anstoß hat jetzt ein <a rel="noopener" href="http://www.geo.de/GEO/heftreihen/geo_magazin/61305.html">Artikel in der Geo</a> über synthetische Biologie gegeben. Dabei geht es darum, neue Lebewesen (Bakterien) zu produzieren, indem man ihre DNA aus Bausteinen (<a rel="noopener" href="http://en.wikipedia.org/wiki/BioBrick">BioBricks</a>) zusammensetzt, die jeder eine gewünschte Eigenschaft beschreiben. <a rel="noopener" href="http://www.nature.com/nature/comics/syntheticbiologycomic/index.html">Ein Comic</a> erklärt recht plakativ, wie das zu verstehen ist und funktioniert. Nein, das ist kein Science Fiction! Es wird schon getan.</p>
+<p>Die Elektroniker können es also, die Bauingenieure, ebenso die Möbelbauer können es – und nun auch noch die Biologen. Alle können ihre Produkte aus Bausteinen, Bricks, Komponenten zusammensetzen.  Nur die Softwareentwicklung tut sich immer noch schwer. Warum?</p>
+<p>Naja, ganz grundsätzlich können wir das natürlich auch. Softwarebausteine gibt es schon lange. Früher mussten sie statisch gelinkt werden, heute geht das dynamisch. DLLs oder Bibliotheksassemblies sind kein Hexenwerk. Allemal die User Control Industrie hat das in den letzten 18 Jahren seit VB 1.0 bewiesen.</p>
+<p>Und dennoch: irgendwas fehlt, habe ich das Gefühl.</p>
+<p>Was das ist, ist mir jetzt nochmal wieder bewusst geworden bei Lektüre des BioBricks-Artikels. Es fehlt uns der rechte Umgang mit Abhängigkeiten.</p>
+<p>Ich stelle mal ein paar ganz unterschiedliche erfolgreiche Bauteile nebeneinander:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/0685a1d61bd2a7a2.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2da566f1faf6d05d.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/abb735ea80990b83.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c68d24d4eec604ff.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/dd23673ebbe3867e.png" /></p>
+<p>Warum sind Bauteile von Lego über Moto bis Steuerelement so erfolgreich? Warum funktioniert Wiederverwendung hier?</p>
+<p>Ich glaube, erfolgskritisch ist die Entkopplung von ihrer Umwelt. Klingt nicht neu, dass zur Modularisierung irgendwie lose Kopplung gehört. Aber es hilft ja nichts: Wenn wir wider diesen Wissens es nicht tun, dann kommen wir nicht dort an, wo wir hin wollen.</p>
+<p>All den erfolgreichen Bauteilen ist gemeinsam, dass sie keine internen funktionalen Abhängigkeiten haben. Was meine ich mit internen funktionalen Abhängigkeiten?</p>
+<p>Ich unterscheide zwischen Abhängigkeiten. Natürlich ist die Funktionalität eines Motors davon abhängig, dass er mit Treibstoff versorgt wird. Ein UI Control muss mit Daten gefüttert werden. In einen Transistor muss Strom fließen.</p>
+<p>Das sind für mich aber externe oder gar triviale Abhängigkeiten. Ich möchte sie mit dem Begriff Input belegen. Ohne Input erfüllt ein Baustein seine Zweck nicht. Doch dieser Input kommt von außen. Er fließt sozusagen in den Baustein hinein. An der Tonerkartusche wird von außen ein Zahnrad bewegt, ein Legostein wird auf eine Platte gesetzt, ein Treeview Control wird von außen mit Daten befüllt.</p>
+<p>Solchem Input, d.h. äußerer Abhängigkeit, stelle ich interne Abhängigkeit gegenüber. Intern ist eine Abhängigkeit, wenn ein Baustein beim Einbau intern verändert werden muss. Dann muss er nämlich seine Umgebung kennen.</p>
+<p>Ein unabhängiger, entkoppelter, echter und erfolgreicher Baustein sieht so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/8ae6d97c54a145f1.png" /></p>
+<p>Alle oben angeführten Bausteine entsprechen diesem Bild. Man steckt sie mit anderen zusammen zu einem größeren Ganzen – das dann wieder ein Baustein auf einer höheren Abstraktionsebene sein kann. Ein Motor als Baustein eines Autos besteht z.B. aus Zündkerzen, Zylindern, Rohren, Kolben usw. die alle für sich wiederum Bausteine in Bezug auf den Motor sind.</p>
+<p>Dieses Zusammenstecken geschieht entweder direkt wie beim Motor oder indirekt über ein Medium wie eine Leiterplatte:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/ace96e061319d9e8.png" /></p>
+<p>Indirekter Zusammenbau ist flexibler. Die Bauteile müssen nicht so gut aufeinander abgestimmt sein wie beim direkten Zusammenbau, wo wirklich eines in das andere passen muss.</p>
+<p>Was aber tun wir, wenn wir unsere “Bausteine”, die Klassen und Assemblies unserer Software entwerfen? Wir koppeln sie ganz fundamental eng, weil wir sie intern (!) voneinander abhängig machen. Da machen auch Interfaces und Adapter keinen Unterschied. Das sieht dann so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9650ea2e10a936ee.png" /></p>
+<p>Unsere Bausteine sind allermeistens keine Black Boxes, sondern höchstens Grey Boxes. Denn wo wir etwas über die Interna wissen, da herrscht zumindest etwas Durchsicht durch die Bausteinwand. Und nichs anderes als Interna sind es, wenn wir wissen, dass ein Baustein zur Adressdublettenprüfung von einem Persistenzbaustein abhängig ist:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9e0b5c90b8dee406.png" /></p>
+<p>Früher war diese Abhängigkeit statisch und dynamisch in der Klasse, heute ist sie nur noch statisch, weil die konkrete Implementation des Persistenzbausteins dynamisch zur Laufzeit per Dependency Injection (DI) in die Dublettenprüfung “gespritzt” wird. Ein Baustein A ist nicht mehr von einem konkreten Baustein B abhängig, sondern nur noch von Bausteinen, die irgendwie wie B aussehen und funktionieren.</p>
+<blockquote>
+<p>class EinfacheDublettenprüfung : IDublettenprüfung
+{
+    private IPersistenz db;        public Einfache Dublettenprüfung(IPersistenz db) { this.db = db; }        …
+}</p>
+</blockquote>
+<p>Das ist ein netter Fortschritt, der uns schonmal erlaubt, die Dublettenprüfung isoliert zu bauen und zu testen. Eine Komponentenwerkbank ist damit möglich, auf der ich immer nur an einem Baustein zur Zeit konzentriert arbeite.</p>
+<p>Je länger ich darüber jedoch nachdenken, desto mehr komme ich zu der Überzeugung, dass das nur eine Symtomkur ist oder ein Übergangsstadium. Wir sollten bei DI nicht stehenbleiben. Früher waren statische Abhängigkeiten, jetzt sind noch dynamische Abhängigkeiten. Morgen sollten es keine (internen) Abhängigkeiten mehr sein.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9081f274e553d253.png" /></p>
+<p>Ja, das meine ich so. Wenn ich die erfolgreichen Bausteine anschaue, dann lehren sie uns, dass sie nur praktikabel sind, weil sie eben keine internen Abhängigkeiten haben. Wir stecken nichts in sie hinein. Es gibt keine Dependency Injection in eine Tonerkartusche hinein. Alle Abhängigkeiten sind an der Oberfläche und heißen Input. Ihnen stehen gegenüber andere “Oberflächlichkeiten”, nämlich der Output – der wiederum Input für andere Bauteile ist.</p>
+<p>Solange wir unsere Softwarebausteine noch so entwerfen, dass wir sie (dynamisch) immer wieder anpassen müssen, solange haben wir ein Kompositionsproblem. Denn solange ist der Zusammenbau, die Komposition von etwas größerem immer schwierig. Solange gibt es nämlich kein Halten was die Kompliziertheit der “Steckverbindungen” angeht. Eine interne Abhängigkeit ist – so möchte ich mal sagen – per se eine enge Kopplung.</p>
+<p>Sobald wir aber dahinkommen, unsere Bausteine nur über Input- und Output-“Pins” zu verbinden, werden wir erleben, dass die Entkopplung steigt und die Wiederverwendbarkeit. Dann werden wir nämlich anfangen, wirklich hierarchische System mit Bausteinen auf unterschiedlichen Ebenen zu bauen, die insbesondere auf niederer Abstraktionsebene besser wiederverwendbar sind.</p>
+<p>Und dass sie das auf höherer Ebene nicht sind, macht dann nichts. Das liegt erstens in der Natur der Sache – ein Motherboard kann in weniger Zusammenhängen gebraucht werden als ein Kondensator, der darauf steckt – und zweitens können wir auf einer neuen “Leiterplatte” viel einfacher eine neue Baugruppe zusammenstecken.</p>
+<p>Für mich ich also eine fundamentale Separation of Concerns (SoC) überfällig, die noch klarer als bisher mit DI Containern zwischen Baustein und Leiterplatte unterscheidet. Voraussetzung dafür: die Bausteine werden intern unabhängig.</p>
+<p>Was könnte das für die Dublettenprüfung bedeuten? Sie wüsste nichts mehr von ihrer konkreten Umgebung. Sie würde von keinem Persistenzbaustein mehr abhängen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e456f2685be019bd.png" /></p>
+<p>Stattdessen hätte sie weitere oder anders gestaltete Inputs und Outputs, die dann mit beliebigen Inputquellen und Outputsenken verbinden ließen. Die Dublettenprüfung hätte damit die volle Hoheit über ihre “Oberfläche”. Sie wäre von keiner weiteren Schnittstelle abhängig.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f4f8d7733da3aa12.png" /></p>
+<p>Die Veränderung des Programmier- bzw. Denkmodells gegenüber dem heutigen mit seinen internen Abhängigkeiten wird noch deutlicher, wenn ich das obigen Zusammenspiel zwischen Dublettenprüfung und Persistenz “auseinanderziehe”:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/78b1f181694243aa.png" /></p>
+<p>Das bedeutet vielleicht etwas mehr “Leiterplattenaufwand”, aber das finde ich nicht schlimm. Der Gewinn an Entkopplung und Wiederverwendbarkeit und Klarheit (SoC) wiegt ihn mehr als auf.</p>
+<p>Allerdings: dafür ist ein Umdenken nötig. Das will geübt sein. Ich fange grad auch erst damit an. Aber ich bin guter Dinge, dass in dieser Richtung Erfolg zu finden ist. Mehr Evolvierbarkeit tut Not. Denn wenn die biologischen System evolvierbar sind und jetzt auch noch mit echten Bausteinen “programmiert” werden können, dann sollte das doch auch ein Rezept für die Softwareentwicklung sein.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9dfd56d562afa787.png" /></p>
+<h2>Kommentare</h2>
+<p><strong>Rainer Hilmer</strong> (2009-07-26):</p>
+<p>Ich trage schon lange eine Idee mit mir herum, die sogar noch einen Schritt weiter geht. Vielleicht ist sie absurd, aber ich wage mal, damit an die Öffentlichkeit zu gehen: Wenn wir uns die Analogien betrachten (Kondensator, Transistor, Motor etc), stellen wir fest daß diese Module nicht nur entkoppelt sind, sondern auch noch autark. Das entspricht meiner Idee der "Picobots" (wie ich sie nenne). Es handelt sich um Funktionseinheiten, die jede für sich entweder als eigener Thread oder als eigener Prozess laufen (in dem Punkt bin ich noch unschlüssig). Die Picobots müssen zentral koordiniert werden (was der Analogie zu einer Leiterplatine entspricht). Darüber könnten die Picobots dann auch aufeinander reagieren. Vorstellbar wäre auch ein Picobot-Cluster, ein Verbund, der komplexere Aufgaben verarbeiten könnte. Leider fehlt mir bislang die Zeit für eine Umsetzung.</p>
+<hr />
+<p><strong>Robert Mischke</strong> (2009-07-26):</p>
+<p>Wir haben Dinge wie Schalter, Kondensator, CPU, Leiterbahn, Platine in der Softwaretechnik und wir haben auch ähnliche Problemhöhen diese Komponenten zu verbinden.  Systeme die viele Komponenten kombinieren sind nicht einfach Modular zusammensteckt, sondern komplex.</p>
+<p>Auch etwas in Lego gebautes wird schwierig, wenn die Anforderungen steigen: Statik? Funktional? Sicher? Beständig? Und schon gibt es im Lego - Projekt neue Komponenten die da heißen könnten Türrahmen, Tragende Wand oder Dachstuhl.</p>
+<p>Du hast ja schon Controls aufgeführt, ich würde aber Ergänzen um eine Vielzahl von Komponenten in etlichen Bereichen, die als abgeschlossene Systeme Bausteinartig zusammengefügt werden können.</p>
+<p>Beispiele für kleine Komponenten wären Money, ImageConverter, BaseRepository. Beispiel für größere Komponenten sind PriceCalculationEngine, SomeImportantDataArchiver und auf Enterprise System Ebene: WebShop, Warenwirtschaft, ShippmentControl usw.</p>
+<p>Wie bei einem Auto wo Hersteller übergreifend Motoren und Platformen getauscht werden und die gleichen Schläuche und Chips in einem Nissan Micra oder in einer S-Klasse zu finden sein können gibt es auch austauschbar Komponenten verschiedenster Natur in der Software-Entwicklung.</p>
+<p>Komponentenorientierung finde ich sollte zu aller erst differenziert angegangen werden. Sonst bleibt ein Hammer für eine Vielzahl sehr unterschiedler Problemgrade.</p>
+<p>Für einige zentrale "Orte" mögen kontraktorintierte, Komponenten das richtige sein, für andere Bereiche in der selben Software-Lösung mag ein Komponente einfach nur eine Klasse sein, die Dienste bereitstellt, in einem anderem Teilbereich  ist eine Komponente mit vielen Klassen und in einer DLL genau das richtige.  Wenn und Clienten/Nutzer im selben System agil entwickelt (und refaktorisiert) werden, wären dann separate Kontrakte zunächst nur ein Klotz am Bein, was sich auch ändern können sollte.
+Was aus meiner Sicht hilft um Komponentenorientierung zu erreichen ist: DI, Assemblies , SOA, Interfaces und Separate Kontrakte, Plugin Archiktekturen (MEF würde mal hier reinzählen) . Aus meiner Sicht sollte aber DI und Assemblies die Basis sein und alles andere sollte nur nach Bedarf eingesetzt werden. Das heißt auch, dass man zu Interfacen refaktorisieren kann, wann man sie braucht und Kontrakte aus Ihren Aufwand erst dann rechtfertigen, wenn das Teilsystem zentral und genug ist.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-07-27):</p>
+<p>@Robert: Natürlich kann und soll es Bausteine in einer Vielzahl von Bereichen geben. Und natürlich auf unterschiedl Abstraktionsniveau. Das habe ich ja auch so geschrieben.</p>
+<p>Aber das ist alles nicht neu.</p>
+<p>Neu für mich ist die Erkenntnis, dass wir trotz DI und CfD an eine Modularisierungsdecke stoßen. Deren Stahlsträger sind die Abhängigkeiten zwischen (!) den Komponenten. Platt gesagt: DI ist eine Symptomkur. DI macht nur solange Sinn, wie wir überhaupt Abhängigkeiten zwischen Bausteinen haben. Fallen die Abhängigkeiten weg, dann brauchen wir auch kein DI mehr.</p>
+<p>Deshalb ich für mich die vornehmste Aufgabe derzeit, Lösungen zu suchen, in denen Bausteine eben keine (!) Abhängigkeiten mehr haben. (Oder zumindest weniger als früher.)</p>
+<p>So wie IoC/DI ein Umdenken waren, so bedeutet ZD (Zero Dependencies) :-) ein Umdenken.</p>
+<p>@Rainer: Freut mich, dass du dich geoutet hast mit deiner Idee. Zu deinem Trost jedoch: die ist nicht neu. Zumindest aus der Ferne betrachtet sieht sie so aus wie Active Objects (http://en.wikipedia.org/wiki/Active_object), Scala Actors (http://www.scala-lang.org/node/242) oder Erlang Prozesse (http://www.scala-lang.org/node/242). Das sind alles autarke Funktionseinheiten, die mit anderen solchen per Message kommunizieren. Auch die Application Space Workers (http://xcoappspace.codeplex.com/) können dazugezählt werden.</p>
+<p>Ob Autarkie dann bedeutet, dass jede solche Einheit wirklich einen eigenen Thread hat, sei dahingestellt. Eher nicht, denn das skaliert nicht. Aber das ist letztlich ein Implementationsdetail.</p>
+<p>"Picobot" find ich als Namen aber sexier als Actor oder Active Object :-)</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Dennis</strong> (2009-07-27):</p>
+<p>Hat jemand schon einmal geschaut, ob nicht die Thesen von Personalmanagment eher zur Softwareentwicklung passen?</p>
+<p>Eine Klasse hat ja im Grunde wie ein Arbeiter eine Aufgabe zu erledigen. Das Zusammenspiel der Klassen/Mitarbeiter wird durch den Capo organisiert. Diese Wiederrum müssen ja auch irgendwelchen Organisatinoseinheiten unterstellt sein.</p>
+<p>Schlussendlich bildet die Tätigkeit den Arbeitsprozess ab. Ist sicherlich ziemlich simpel betrachtet, aber ich kenne mich in Archetektur von Software und im Personalwesen nicht sooo super aus.</p>
+<p>Aber oft denke ich mir ein Prozess ist im Grunde nicht mehr als das Band im VW-Werk. Türen ran <em>klack</em> Scheibenwischer dran <em>klcack</em> usw. Schritte die alle jedoch von anderen Mitarbeitern ausgeführt werden bis das Endprodukt fertig ist. Jeder einzelne Mitarbeiter ist wiederrum austauschbar, da es sich um anlerntätigkeiten handelt.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-07-27):</p>
+<p>@Dennis: Personalmanagement mag nicht der richtige Ansprechpartner sein, aber die Organisationentwicklung vielleicht.</p>
+<p>Ja, ich sehe da auch Paralleleln zw. Software und Unternehmen. Beide produzieren etwas arbeitsteilig. Und zukünftig arbeiten die "Arbeiter" auch noch wirklich parallel.</p>
+<p>Wenn ich Architektur erkläre, dann gebrauche ich auch die Analogie, das sei, als würde man eine Firma organisieren. Da fallen uns sofort Verantwortlichkeiten ein. Warum nicht bei der Softwarearchitektur? Und diese Verantwortlichkeiten sind  in Unternehmen nicht gleich in Schichten organisiert.</p>
+<p>Und wo wir dabei sind: Mitarbeiter sind perfekte "Bausteine" :-) Total flexibel einsetzbar. Und man muss für keinen Einsatzort ihn ihnen Eingriffe vornehmen. Es sind geschlossene System.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Robert Mischke</strong> (2009-07-27):</p>
+<p>Hallo Ralf,</p>
+<p>jetzt verstehe ich ein weniger besser was das Ziel ist, wobei ich "Zero Dependencies" anders beschreiben würde. Für mich sind InputQuellen und Outputsenken aus System-/Architekturperspektive Abhängigkeiten, zumindest zu Diensten oder Funktionalität.</p>
+<p>Zum Duplettenbeispiel (Es geht eher um die Herangehensweise bei der Analyse, als um das konkrete Bespiel):</p>
+<p>Also bei uns würde eine Abhängig von Dublettenprüfung zu Persistenz wahrscheinlich auch heute schon nicht durchgehen.</p>
+<p>Entweder Dublettprüfung wäre eine: konkreter Dublettenprüfer wie zum Beispiel "AdressenDublettenprüfer" und der würde dann mit "AdressenService" arbeiten:</p>
+<p>AdressenDublettenprüfer --uses-- AdressenService</p>
+<p>oder auch möglich wäre, bzw. wahrscheinlicher wäre</p>
+<p>AdressenService  --uses-- AdressenDublettenprüfer
+und ergänzend:
+AdressenDublettenBearbeiter --uses-- AdressenDublettenprüfer
+AdressenDublettenBearbeiter --uses-- AdressenService.</p>
+<p>Der Punkt ist jedoch, das sich die Fragen um die Art der Beziehung drehen.
+Auf Modellierungsebene sind dann Beziehungen wieder logische und technische Abhängigkeiten.</p>
+<p>Auf Implementierungsebene könnte eine erforderlicher Service-Bus zum Beispiel den Zwang von InputQuellen und Outputsenken mit sich bringen. Sicher in bestimme Szenarien sinnvoll und auch wünschenswert, aber das eigentliche Problem liegt in der Modellierung! Schwierigkeiten die mir heute Begegnen scheinen meist durch falsche logische Kopplung und schwache Architektur zu entstehen, nicht durch Implementierungsprobleme.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-07-27):</p>
+<p>@Robert: Ein Implementierungsproblem sehe ich hier erstmal auch nicht.</p>
+<p>Ich sehe das Problem in genau dem, was du hier beschreibst:</p>
+<p>AdressenDublettenBearbeiter --uses-- AdressenDublettenprüfer
+AdressenDublettenBearbeiter --uses-- AdressenService.</p>
+<p>"Uses" macht A von B in "A --uses-- B" abhängig.</p>
+<p>So verständlich das sein mag, so normal das ist - diese Abhängigkeitskaskaden finde ich bedenklich.</p>
+<p>Irgendwo muss zusammengesteckt werden. Klar. Aber ich glaube, das sollte an einem anderen Ort geschehen als z.B. AdressdublettenBearbeiter.</p>
+<p>Ein Bus macht da schon einiges möglich. Aber so ganz zufrieden bin ich damit auch nicht. Da sind die Verbindungen dann nämlich quasi gar nicht mehr sichtbar, wenn alle immer nur Nachrichtentypen abonnieren.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Lars</strong> (2009-07-28):</p>
+<p>Hallo,</p>
+<p>interessante Gedankengänge...</p>
+<p>Meiner Meinung nach fehlt es im Gegensatz zu den anderen Domänen vor allem an einer sauberen Schnittstellendefinition, die wirklich das <em>ganze</em> Verhalten einer Komponente und deren Komposition abbildet.</p>
+<p>Die Ingenieursdisziplinen z.B. sind ja längst über den Status hinaus, Systeme zusammenzubauen und dann erst nachträglich zu verifizieren (wie es derzeit in der Softwareentwicklung ja in ist).</p>
+<p>Vielmehr hat man dort ein formales (in vielen Fällen mathematisches) Verständnis, das als Grundlage zur Beherrschung der Komplexität dient.</p>
+<p>So ist etwa das komplette Verhalten eines Transistors sehr exakt mathematisch beschreibbar, was z.B. die Planung eines Leiterplattenaufbaus (etwa durch Simulation) deutlich vereinfacht.</p>
+<p>Die drei Beinchen sind ja nur eine Art strukturelle Schnittstelle, aber nicht alles mit drei Beinchen funktioniert auf einer Leiterplatte auch in gewünschtem Maße.</p>
+<p>Dementsprechend verläßt man sich bei der Entwicklung der Leiterplatte ja auch nicht auf die drei Beinchen, sondern spezifiziert, welches Verhalten man von der dort eingesetzten Komponente (Transistor) erwartet. Für einen bestimmten Bausteintyp kann man einfach validieren, ob er der Spezifikation (also dem erwarteten Verhalten) genügt.</p>
+<p>Diese formale Beschreibung von Bauteilen hat sich in der Softwaretechnik so m.E. noch nicht etabliert. Viel mehr habe ich den Eindruck, dass Komponenten, die komplexer sind als eine Liste o.ä. einer formalen Beschreibung überhaupt nur schwer oder gar nicht zugänglich sind.</p>
+<p>Letztlich führt dies dazu, dass wir Systeme tatsächlich erst bauen müssen um sie nachträglich durch Ausprobieren (Unit testing, Integration testing) validieren zu können.</p>
+<p>Man stelle sich nur vor, Brücken würden so gebaut...</p>
+<p>Lars</p>
+<hr />
+<p><strong>Robert Mischke</strong> (2009-07-28):</p>
+<p>Hallo Ralf,</p>
+<p>das Zusammenstecken passiert in der DI Konfiguration  also dezentral.</p>
+<p>Wenn Du abstrahierst und einen generischen Dublettencher hast, der mit Dingen arbeitet wie IDublettenCheckable, dann kannst Du beliebig verschiedene Komponenten miteinander arbeiten lassen.</p>
+<p>Das würden dann zum Beispiel mit Autofac als Beispiel DI so ausseh können.</p>
+<p>builder
+  .Register(
+    c =&gt; new ConcreteDublettenchecker(c.Resolve<a href="">IDublettenDataProvider</a>))
+  .As<a href="">IDublettenChecker</a></p>
+<p>builder.Register(c=&gt;new SomeAddressServive(c.Resolve[IDublettenchecker]))
+  .As[IAddressService]</p>
+<p>usw. ("[" = "Spitzeklammer")</p>
+<p>Aber der generische, zusammensteckbare Ansatz, ist wahrscheinlich im Dublettecheckerbeispiel nicht der Beste Weg, denn allein schon die implizite Implentierungsaussage, es gibt verschiedene Umsetzungen von IDublettenchecker oder IDataAdressProvider, ist in 1 von 10 Fällen falsch. Es wird ein wertvolles Mittel aufgegeben den Quelltext über seine Intention sprechen zu lassen.</p>
+<p>Konzeptionell kommt man aus meiner Sicht nicht weiter weg von Abhängigkeiten, denn ein Feature das Dublettencheck beinhaltet, wird immer abhängig sein von etwas, das einen Dublettencheck ausführen kann, unabhängig wie loose-coupled das dann ist.</p>
+<p>Auf einer Analyse-ebene sind Dependencies Anforderungen, die es gilt zu finden, nicht zu vermeiden und die noch keine technische Umsetzung beinhalten. In der Implementierung, dann das Analyseergebnis aufzugeben empfinde ich als den falschen Weg.</p>
+<p>Gute Software wird aber die Abstraktion nur genau so weit treiben wie sie benötigt ist und die Menge Abstraktionen gering halten. Je direkter die Intention sichtbar ist, desto höher ist die Qualität.</p>
+<p>Aus meiner Sicht lässt sich mit DI auch entkoppelte, frei konfigurierbare Software, mit potentiell flexibel zusammensteckbaren Komponenten entwickeln. Die nächste Abstraktionsstufe, bzw. Enkoppelungsstufe ist immer nur eine Refaktorisierung weit entfernt.
+Soweit unserer Philosophie Software zu entwickeln, mit der wir aus meiner Sicht gut fahren und wir Abhängigkeitsprobleme von eigen-entwickelten Komponenten nicht als Architekturproblem sehen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-07-28):</p>
+<p>@Robert: Mir ist schon klar, wie DI funktioniert. Und mit DI ist schon besser als ohne DI.</p>
+<p>Doch nochmal: DI ist eben womöglich nur eine Symptomkur.</p>
+<p>Das Grundproblem, dass DI nicht angehen kann, weil es die Existenzberechtigung von DI ist, das ist, dass eine Funktionseinheit überhaupt (!) von einer anderen Abhängig.</p>
+<p>Für eine Datenzugriffskomponente ist es ganz verständlich, dass die von nichts weiterem abhängt. Sie ist in der untersten Schicht einer Anwendung. Sie ist das Blatt in einem Abhängigkeitsbaum. Sie braucht keinen Dienst der Anwendung, sondern höchtens etwas Externes. Aber darum geht es hier eben nicht.</p>
+<p>Eine solche Funktionseinheit zu entwickeln ist einfach, weil sie eben von nichts weiterem abhängt. Man muss sich keine Gedanken über Schnittstellen machen, deren Implementationen in sie hineingereicht werden. (Lassen wir die Schwierigkeit von Unit Tests gegen Datenbanken mal außen vor.)</p>
+<p>Wenn wir das aber gut finden, warum wollen wir das nicht häufiger? Warum suchen wir nicht aktiv(er) nach Wegen, um mehr oder womöglich sozusagen alle Funktionseinheiten als Blätter zu formulieren?</p>
+<p>Pointiert gesagt: DI ist das Problem, nicht die Lösung.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-07-28):</p>
+<p>@Lars: Soweit wie die Elektrotechniker mit ihren mathematischen Modellen sind wir nicht. Das erwarte ich auch nicht.</p>
+<p>(Aber davon mal abgesehen: So war es auch nicht immer. Früher haben Baumeister und Mechaniker auch einfach ausprobiert und gemacht, um dann zu sehen, was funktioniert. Kathedralen, die eingestürzt sind, sehen wir nur halt nicht mehr ;-) Uhren die nicht funktioniert haben,  sind auf dem Müll gelandet.)</p>
+<p>Ich bin schon zufrieden, wenn ein Baustein syntaktisch binär und semantisch nachvollziehbar beschrieben ist. Ein ausführbarer semantischer Kontrakt wäre natürlich noch schöner ;-)</p>
+<p>Worüber ich also nachgedacht habe, das ist das, was du mit "struktureller Schnittstelle" gemeint hast. Und darüber hinaus die grundsätzliche Art des Zusammenbaus. Auf Leiterplatten wird eben gesteckt, IKEA-Schränke werden zusammengesteckt und -geschraubt.</p>
+<p>Es geht mir also um mehr Stecken. Denn DI ist im Vergleich eher Verhaken. Und früher hatten wir nur Verschweißen.</p>
+<p>Fühlst du den Unterschied, den ich versuche zu machen?</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Robert Mischke</strong> (2009-07-28):</p>
+<p>Meine Punkte waren eigentlich eher:
+ 1:) Abhängigkeiten sind wichtig und sollten möglichst explizit gemacht werden.
+2) Abhängigkeiten sollten auf der richtigen Abstraktionsstufe ausgedrückt werden (was tendenziell öfter weniger abstrakt ist).</p>
+<p>(Klar eine Komponente sollte nicht mehr als 3, im Extremfall 5 Abhängigkeiten haben und auch möglichst sinnvoll gelayert sein.)</p>
+<p>(Auch eine Datenzugriffskomponente hätte in meinem UML Diagramm Abhängigkeiten (DB, Infrastruktur (Bsp.: Konfugration, ORM-Mapper, etc..)).. wobei jetzt kommen wir in einen Bereich wo die universelle Nutzung des Begriffs Komponente ein wenig in die Quere kommt.)</p>
+<p>Danke für Deinen sehr interssanten Post.</p>
+<hr />
+<p><strong>Lars</strong> (2009-07-28):</p>
+<p>Hallo Ralf,</p>
+<p>natürlich war es auch bei den Ingenieuren nicht immer so -- das nährt ja meine Hoffnung, dass die Softwareentwicklung eines Tages auch dort hin kommen kann :-)</p>
+<p>Natürlich würde eine "syntaktisch binär und semantisch nachvollziehbare" Beschreibung das Zusammensetzen von Komponenten erleichtern, also stecken statt schweißen.</p>
+<p>Aber ist das dann wirklich ein großer Schritt in Richtung "wahrhaft modularer Software" oder mehr eine Arbeitserleichterung ?</p>
+<p>(Frage ist ernst gemeint; ich sehe das Potenzial, bin mir aber noch nicht sicher, ob man die Softwareerstellung damit auf eines neues Niveau heben könnte.)</p>
+<p>Lars</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-07-28):</p>
+<p>@Lars: Syntaktische Schnittstellen haben wir ja grundsätzlich und die haben uns viel gebracht. IoC, DI, Contract-first Design - das ist alles wunderbar im Rahmen des Paradigmas, dass Komponenten direkt von einander abhängen dürfen.</p>
+<p>Semantische Schnittstellen bzw. Kontrakte sind auch nicht so schwierig. In der dotnetpro erscheint demnächst ein Artikel von mir dazu. Statt die Funktionalität eines Bausteines "auszurechnen", wird die einfach durch Tests beschrieben. Wenn der die alle schafft, dann erfüllt der Baustein die Anforderungen an seine strukturelle Schnittstelle und auch inhaltlich.</p>
+<p>Beides wird auch nicht überflüssig. Wenn wir einen Baustein haben, dann soll der auch weiterhin solche Kontrakte bieten.</p>
+<p>Worum es mir geht: Ich möchte das Denken dahingehend verändern, dass wir klarer zwischen Bausteinen unterscheiden, die keine Abhängigkeiten haben und solchen, die welche haben.</p>
+<p>Um die Komplexität unserer Software zu verringern, sollten wir danach streben, viiiiele Bausteine ohne Abhängigkeiten zu haben. Und wenige, die viel einfacher sind, mit womöglich vielen Abhängigkeiten.</p>
+<p>Letztere sind dann die Leiterplatten, erstere die Transistoren und Widerstände.</p>
+<p>Was könnte das Äquivalent in der SWentwicklung sein? Mir kommen da immer wieder Flows in den Sinn. Und damit kommt mir auch immer wieder Funktionale Programmierung in den Sinn.</p>
+<p>Wenn Funktionale Programmierung immer wieder davon spricht, keinen Zustand zu haben, dann denken wir schnell an Datenzustand. Das meint FP ja durchaus auch. Es geht aber auch um anderen Zustand, den ich mal "Abhängigkeitenzustand" nenne. Auch die 3-5 injizierten konkreten Komponentenimplementationen sind Zustand eines abhängigen Objektes.</p>
+<p>Solchen Zustand gilt es ebenfalls zu vermeiden bzw. zu zentralisieren, glaube ich.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Rainer</strong> (2009-07-29):</p>
+<p>Wieder sehr interessante Diskussionen hier. Ich finde es durchaus spannend, dass ich zeitgleich immer wieder auf ähnliche Beobachtungen Stoße. Erst gestern habe ich über Modulare Systemaufbauten mit Bustechnologie sinniert.</p>
+<p>Ich komme an meinem Arbeitsplatz gerade mit Automationstechnik in Verbindung (Controller, Sensoren, Komponenten). Und ich glaube zu verstehen worauf Ralf hier hinaus will.</p>
+<p>Wenn ich eine größere Produktionsmaschine denke ... da stecken ja einige Komponenten drinnen. Die Haben einen Input (bei einem Sensor z.B. die Raumtemperatur, die Luftfeuchtigkeit usw.) und einen Output, der wahrscheinlich auf den Bus gehängt wird. Wen dieser Wert interessiert hört auf den Bus und lässt sich die Ergebnisse liefern.</p>
+<p>Ein Event signalisiert ihm also... Kollege, es gibt Werte von SensorA, mach was damit.</p>
+<p>Schlussendlich benötigen wir wie Ralf ja klar herausgestellt hat Inputs und Outputs nach wie vor als Abhängikeiten, diese werden aber nicht mehr als Bestandteil der Komponente durchgeführt, sondern durch einen Controller, bei dem die ganzen Steckverbindungen druchgeführt werden.</p>
+<p>Hmm... haben wir deswegen weniger Abhängigkeiten? Im Bezug auf die einzelne Komponente ja. Im Bezug auf das Gesamtsystem nicht. Aber darum geht es uns ja, wir wollen Komponenten wirklich wiederverwenden können.</p>
+<p>Dann bekommen wir aber zwangsläufig komplexe Controller, die unsere "autarken" Komponenten miteinander verbinden. Die strukturellen Anforderungen in der SW-Entwicklung haben wir ja bereits. Komponenten als Model gibt es ja, eine Busarchitektur ist heute auch kein Problem mehr (Stichwort Messaging, EventAggregatoren).</p>
+<p>Funktionale Programmierung, die ja auch genannt wurde, bietet uns schon Methoden um genau das umzusetzen (Partial Applikation, Currying). Ein Input und ein Output. Die Funktion selbst ist ohne Abhängigkeiten ausser dem Input.</p>
+<p>Woran liegt es also, das wir uns trotzdem so schwer tun das ganze umzusetzen? Was ist das Problem, warum wir Software noch immer anders Schreiben? Wie kann ich anfangen in deinem Sinnen Software zu erstellen?</p>
+<p>Gruß,
+Rainer</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-07-29):</p>
+<p>@Rainer: Den Verweis auf die Hardware finde ich gut.</p>
+<p>Da gibt es Bauteile - die haben keine internen Abhängigkeiten. Im einfachsten Fall sind es Widerstand oder Kondensator oder Transistor.</p>
+<p>Dann gibt es schon kleine Baugruppen, z.B. Schwingkreis oder Sensor.</p>
+<p>Und dann gibt es größere Baugruppen oder Subsysteme, Grafikkarte, Motherboard, Memory-Stick, Tastatur.</p>
+<p>Ob ein "nicht-atomares" Bauteil nun eine Baugruppe oder ein Subsystem oder auch nur ein Baustein ist, ist eigentl egal. Auf allen Aggregationsebenen haben diese "Module" keine inneren Abhängigkeiten. Nichts wird in sie "hineingesteckt", sie werden intern nicht verändern.</p>
+<p>Ihre einzige Verbindung zur Umwelt sind Input- und Output-Schnittstellen.</p>
+<p>Wie baut man daraus Größeres? Indem man Input- und Output verbindet.</p>
+<p>Das kann direkt geschehen wie beim Motor. Das kann indirekt, aber sozusagen persönlich wie auf einer Leiterplatte. Das kann indirekt und unpersönlich wie mit einem Bus geschehen.</p>
+<p>Ich finde es naheliegend, in der Software das auch zu tun. Oder tun wir das schon? Einen Bus kennen wir auch - aber der scheint immer noch für Wenige relevant, für verteilte, große Systeme. Warum?</p>
+<p>Aber Leiterplatten haben wir nicht so recht. Und das direkte Zusammenstecken? Das sehe ich auch irgendwie nicht so recht.</p>
+<p>Nein, DI halte ich nicht für direktes oder indirektes Zusammenstecken in dieser Weise, weil DI eben DI ist: es wird intern in einem "Modul" etwas verändert. Das finde ich kontraproduktiv im Sinne konsequenter Komplexitätsreduktion.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Rainer</strong> (2009-07-29):</p>
+<p>Das DI keine Leiterplatine ist, in der wir ein Modul reinstecken halte ich für Diskusionswürdig. Ich weiß nämlich im moment nicht ob es eine sein könnte oder nicht. Wenn nein, wie erreichen wir diesen Zustand?</p>
+<p>Wodurch kennzeichnet sich eine Leiterplatine? Wir haben die Platine selbst, die im lithografischen Verfahren mit Masken und einer vielzahl an schichten aufgebaut ist. In diesen schichten wimmelt es nur so von Bahnen. So weit so gut. Wir haben also ein Medium, auf das wir Teile stecken können, unsere Komponenten ( ob im "Micro-" oder "Macrobereich" sei mal dahingestellt, also ob es atomare komponenten oder zusammengebaute sind). Die werden dann festegelötet, oder festgeklemmt (irgendwie befestigt um die Signale auf den Bahnen zu transportieren). Softwaretechnisch stelle ich mir ein System vor, das eine Plattform bietet, über die Kommunikation stattfinden kann. Und ich denke das haben wir mit DI aber auch. Die nimmt meiner Auffassung nicht die Rolle des Controllers ein, sondern eher die Rolle des Assemblierers. Er lötet, oder schraubt die einzelteile in der Platine fest. Diese haben eine deffinierte Schnittstelle, in der sie eingesteckt werden. Handelt es sich hierbei nur um Eingangs und Ausgangssignal? Weiß ich nicht. Kenn mich hier in der Microelektronik noch nicht aus. Fest steht, das auf so einer Platine Bausteine mit mehreren Pins aufsetzen können, die Signale Transportieren. Und als nichts anderes sehe ich unsere Interfaces in der Programmierung an.</p>
+<p>Meiner Meinung nach fehlt es noch an den Controller und "echten" Komponenten. Ich denke wir arbeiten in der SW noch immer mehr nach dem Prinzip der Leiterplatinen. Aber um wieder auf mein Automationsbeispiel einzugehen, findet ja zwischen N Platienen eine Kommunikation über ein weiteres Medium hinweg statt.</p>
+<p>Wir kommen dem Problem aber wohl näher. Ich glaube an der Stelle kann uns die FP etwas unter die Arme greifen, eine Kommunikation für unsere Automationsmaschine im SW-technischen Sinn zu gestallten. Wie schon erwähnt stellt die Input/Output Strategie nach dem uns allen bekannte EVA Prinzip für die FP mit nur einem Eingangs- und einem Ausgangssignal die Königsdisziplin dar. Hierdurch werden komplexe Systeme mathematisch beweisbar, oder wie schon zuvor genannt wiederum über Software simulierbar (durch ihre mathematische Beweisbarkeit).</p>
+<p>Für mich, das ist mein Credo, gilt es, Kommunikation über Input-/Ouput auf Softwarekomponenten erfolgreich umzusetzen, was du ja die ganze Zeit schon sagt. Aber wie? aber wie?</p>
+<hr />
+<p><strong>Robert Mischke</strong> (2009-07-29):</p>
+<p>Ich weiß nicht ob das genau passt, aber mir fallen da Yahoo-Pipes ein.</p>
+<p>Eine Komponente-Dublettenprüfer könnte mit der Außenwelt über WCF (oder ähnlich) kommunizieren. Die definierte Schnittstelle, würde gleich verschiedene Protokolle/Technologien, Steckverbindungen mitbringen.</p>
+<p>Kontrakte ließen sich über "Mapping-Files" oder "Attribute" definieren.  Die Beschreibung würde sagen: Methode A implementiert den Bestandteil A des Kontraktes. Für die beschriebenen Kontrakte liessen sich dann die entsprechenden Steckverbindungen generieren/nutzen.</p>
+<p>Je nach Systemumgebung wäre von der in Memory-Steckverbindung bis hin zum Web-service alles denkbar.</p>
+<p>Das klingt verdammt nach SOA, ist es wahrscheinlich auch, wobei Verteile-Systeme hier der Sonderfall sind und die Vielzahl der Verbindungen sich innerhalb eine App-Domain befinden dürften.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-07-29):</p>
+<p>@Robert: Yahoo Pipes geht in die richtige Richtung. Nur sollten wir nicht sofort verteilte Systeme denken, nur weil etwas auf einer expliziten Leiterplatte oder über einen Bus verbunden ist. Das halte ich nicht für zwingend notwendig. Wir müssen die SOA-Kiste nicht aufmachen. Und mit WCF kommen wir schon gar nicht weiter.</p>
+<p>Aber einer "SOA Haltung", d.h. eine, die konsequent Entkopplung denkt, die ist natürlich immer von Vorteil. Die können wir allerdings auch bei lokaler Kommunikation einnehmen.</p>
+<p>@Rainer: Ich sehe nicht, dass wir in der Software im Augenblick das Leiterplattenverfahren anwenden. Wie gesagt: DI ist das nicht.</p>
+<p>Statt zu sagen, "keine inneren Abhängigkeiten" - denn irgendwie scheine ich die nicht so richtig beschreiben zu können - wäre es vielleicht besser es positiv zu formulieren: Bausteine werden nur über ihre Inputs und Outputs mit einander verbunden. Ja, ich denke, das klingt knackiger.</p>
+<p>Also, versuchen wir es doch mal zu denken: Entwerfe eine Software, in der Funktionsbausteine keine Abhängigkeiten per DI injiziert bekommen und stattdessen nur mit ihren Inputs und an Outputs gebunden sind.</p>
+<p>Wie wäre das? Einfach nur mal so als Gedankenexperiment.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Rainer</strong> (2009-07-30):</p>
+<p>Ok, dann greife ich das mal auf. Die SW-Komponenten haben genau einen Eingang und genau einen Ausgang.</p>
+<p>Was heißt das aber nun? Kommt immer nur ein Signal über diesen Ausgang?</p>
+<p>Versuchen wir mal eine Analogie in Programmiersyntax herzustellen. Wie müsste ein solches Sprachkonstrukt aussehen? Ist das ein Inputparameter im Konstruktor, wenn ich das Klassentechnisch sehe. Oder hat das gar nichts mit der Strukturierung auf Codebene zu tun und ich verhaspel mich gerade mit Kleinigkeiten.</p>
+<p>Beim Beispiel der FP kann ich mir das gut vorstellen. Da haben wir das ganze schon erfolgreich seit Jahren am Laufen ... und wo wir bei FP sind. Da kommt mir auch gleich das perfekte beispiel. Der Pipeoperator. Mit F# haben wir den schönen Operator |&gt; damit erreichen wir genau das, was wir wollen, das Ergebnis aus einer Operation (also den Output) in die nächste als Input Stecken.</p>
+<p>Da muss ich auch gleich mal an die Linux-Shells denken. Die gute alte kommandozeile. Bekommt Input, macht Bearbeitung und schmeisst hinten wieder den Output raus.</p>
+<p>Ich denke das kommt ganz gut an das hin, was wir erreichen sollten. Sind wir nun da angekommen, wo wir hinwollen. Ist die Lösung wirklich nur so ein "einfaches" Konstrukt die der Pipe-Operator? Hört sich plausibel an, oder?</p>
+<p>Interessant wäre es jetzt, wie wir sowas im Mainstream C# abbilden können? Ich finde die Syntax von FP hier an dieser Stelle richtig sexy.</p>
+<p>Wie wäre es mit einer Extension-Method auf object mit dem Namen pipe. Geht das überhaupt so einfach mit einer statisch typisierten Programmiersprache? Na auf jeden Fall kann uns da Type-Inference oder Dynammic-Typing sehr viel Arbeit abnehmen. Verstehst du was ich meine?</p>
+<p>Das potenzial ist wohl da. Kann mich da auch noch an eine Diskussion zum Thema FP mit dir erinnern. Gibt es das Konzept des Pipeoperators in C# schon elegant umgesetzt und ich habe es bisher übersehen? Es ist ja schliesslich nichts anderes, als das was wir die ganze Zeit beschreiben. Output von Operation A auf Input von Operation B binden.</p>
+<p>Ideen, Vorschläge?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-07-30):</p>
+<p>@Rainer: Das geht schon in die richtige Richtung - greif am Ende aber zu kurz.</p>
+<p>Wie ein Pipe-Operator in C# aussehen könnte, habe ich hier im Blog schon beschrieben. Schau mal hier:</p>
+<p>http://ralfw.blogspot.com/2009/07/verstandnisvorteil-fur-flows.html
+http://ralfw.blogspot.com/2009/06/wider-die-geieln-zukunftsfahiger.html</p>
+<p>Aber Input/Output ist nicht so einfach. 1 Input für eine Funktion ist ok, aber es kann mehrere Outputs geben. Das lässt sich auf mehrere Weisen realisieren. Insofern ist nämlich eine Pipe nur ein simpler Sonderfall. Am Ende kommt man damit nicht weit.</p>
+<p>APIs für sync und async Flows (von denen ein Teil die Pipes sind) habe ich schon implementiert, s. z.B. hier: http://ccrflows.codeplex.com/. (Die Lib für sync Flows ist allerdings noch nicht veröffentlicht.)</p>
+<p>Fragt sich jetzt, was mal ein Szenario wäre, um das auszuprobieren.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Rainer</strong> (2009-07-30):</p>
+<p>Hab mir jetzt den kurzen Artikel von dir über Flows durchgelesen.</p>
+<p>Für mich steht an dieser Stelle fest, dass ich so etwas lieber mit einer Sprache mache, die weniger Rauschen erzeugt. Und da lerne ich dann lieber F# als mit C# so etwas zu bauen. Klar ist das mal für den Anfang hübsch, aber wie gesagt ist mir das Rauschen zu hoch. Der eigentliche Zweck es leicht verständlich darszustellen geht meiner Meinung nach verloren.</p>
+<p>Ich tendiere auch immer mehr zu Programmiersprachen, die mir die Arbeit abnehmen und von selbst typisieren. Wie schon vorhin erwähnt finde ich type inference oder dynamic typing hier sehr sinnvoll. wobei erstes auf Grund der Typsicherheit bevorzugt werden sollte. Ich gewöhne mich immer mehr an die "implizit typisiert" Entwicklung. Mir ist es ehrlich gesagt egal, was für ein Typ beim Input vorliegt, solange er die Eigenschaften Besitzt, die ich erwarte (duck typing)</p>
+<p>Ich plädiere für besser lesbare "Flows" (ich bevorzuge die Bezeichnung Pipe/Pipeline).</p>
+<p>Warum gibt es in C# eigentlich Generics? ... Weil ich eine lose typisierung erreichen will. Warum muss ich das selbst machen? Kann doch der Kompiler für mich erledigen, oder? Und wenn eine Funktion eine bestimmte Schnittstelle verlangt, dann ist es mir ehrlich gesagt egal, ob sie IInterfaceThis oder IInterfaceThat heißt, wenn beide die Methoden DoSomeStuff und DoSomeOtherStuff haben (Stichwort wieder duck typing oder vielleicht auch structural equality).</p>
+<p>Zum Thema mehrere Outputs ... gutes Argument, dazu nehmen wir dann ein Tupel. Schade, dass es auch dieses Konstrukt nicht in C# gibt. Bleibt uns also nichts anderes übrig einen Output als Container zu definieren (ob das eine eigene Tuple-Klasse ist oder ein Dictionary sei mal dahingestellt).</p>
+<p>Ich bin mir sicher, das wir alles hinbekommen, was wir auch mit FPs wie F# machen können, oder eine der "neuen" alten dynamischen wie Pyton oder Ruby. Aber zu welchem Preis? Da wo DSLs entstehen und zu besserem Verständnis und mehr Lesbarkeit führen entscheiden wir uns weniger.</p>
+<p>Ich bin nach wie vor der Meinung, das C# bessere "First-Class" Implementierung von Funktionalen Sprachen benötigt. Vielleicht wird ja F# das bessere C# ... lassen wir es mal dahin gestellt. Ich glaube es zwar nicht, aber ich bin wirklich gespannt, wie sie das in Zukunft weiter entwickelt.</p>
+<p>Deine Flows sind auf jeden Fall sehr gelungen! Mit der Verknüpfung der CCR bist du am Zahn der Zeit und schaffst die notwendige Parallelität.</p>
+<p>Um mal zum Schluss zu kommen. Für eine zeitgemäße Modularisierung benötigen wir für die breite Masse bessere Werkzeuge. Warum muss es denn immer umständlicher sein? Aber vielleicht sind solche Darstellungen auch nur noch eine Frage der Zeit. Vielleicht kommt ja mit der Intentional Domain Workbench die Revolution? Das Model gefällt mir jedenfalls. An unserem Problem ändert es erstmals nichts, aber wir müssen uns dann um einen Streitfaktor nicht mehr kümmern. Die Darstellung - wenn alles nur noch aus Expressions besteht.</p>
+<p>Güße,
+Rainer</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-07-30):</p>
+<p>@Rainer: C# ist nicht ideal für Flows. F# sehe ich da aber auch nicht unbedingt. Die Flows dort sind notwendig auch eindimensional, halt Pipes. Die sind jedoch zu einfach. Wir brauchen eine Abbildungsmöglichkeit für Prozesse mit Zweigen und Joins und Auswahlmöglichkeiten usw.</p>
+<p>C# mit einem Fluent Interface bietet da schon mehr - wenn auch mit Rauschen - als F# mit |&gt;.</p>
+<p>Ultimativ geht es aber nicht ohne DSL für Flows. Das ist für mich keine Frage.</p>
+<p>Tupels als Returnwerte sind übrigens auch nur eine Krücke. Die setzen nämlich voraus, dass ich für einen Input einen womögl mehrwertigen Output generieren. Das ist aber eine realitiätsferne Beschränkung. Wenn ich 1 Text in N Worte zerlege, dann will ich dafür nicht 1 Tupel oder Array generieren müssen, sondern ganz natürlich N Ergebnisse.</p>
+<p>Und ich will womöglich nicht nur N Worte, sondern auch noch eine Wortanzahl produzieren. Dann habe ich schon 2 grundsätzlich verschiedene Outputs. Warum die zwangsläufig in 1 Tupel quetschen?</p>
+<p>Ich habe insofern gar nichts mehr gegen Out Parameter.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Janek Fellien</strong> (2009-09-03):</p>
+<p>Leider finde ich den Artikel erst heute, möchte aber dennoch einen Kommentar diesbezüglich loswerden.</p>
+<p>Ich bin ganz und gar nicht der Meinung, dass man mit der losen Kopplung in der SW-Entwicklung an die Qualitäten von Baugruppen herankommt.
+Eine Baugruppe (Motor, Stuhl, Elektronisches Gerät uvm. ) ohne "starre" Bindung (Schrauben, Lötzinn, Kleber (man spricht von lösbaren und unlösbaren Verbindern)) entspricht eher einem Ersatzteillager.
+Nun projezieren wir das Ersatzteillager auf die Software und kommen zu den Objekten der Assemblies. Tolle Objekte, die wir für die Zusammenstellung von Softwarebaugruppen benötigen. Kennt jemand jemanden, der sich über den Typen String aufgeregt hat und wegen der losen Kopplung nicht benutzen möchte?</p>
+<p>Nein, im Ernst, ich bin eher der Meinung, dass die lose Kopplung mit der DI ihren Höhepunkt erreicht haben sollte, denn aus betriebswirtschaftlicher Sicht ist das "Erfinden" einer absoluten Trennung vergleichbar mit dem V8-Motor ohne Kupplung (!!). Wie soll da die Kraft auf die Räder übertragen werden? Wieviel Kraftstoff würde verbraucht werden um durch die Luftverwirbelung ein wenig Bewegung in das Fahrzeug zu bringen? Das will doch keiner bezahlen.</p>
+<p>Die wahre lose Kopplung ist das Weglassen von Komponenten, die ich für eine Lösung nicht brauche.</p>
+<hr />
+<p><strong>Carsten Posingies</strong> (2009-10-26):</p>
+<p>Hallo Ralf,</p>
+<p>Sorry, wenn ich Dich auch hier heimsuche mit meinen arg pragmatischen Einwänden...</p>
+<p>Auf ganz theoretischer Ebene finde ich Deine Gedankengänge spannend und bereichernd wie immer. Aber wenn Du mir eigentlich-gelerntem-E-Techniker schon so eine hübsche Steilvorlage bietest, kann ich nicht widerstehen.</p>
+<p>Damals, anno tobak, gab es "Rasterplatinen", im Format 160x100 mm, gebohrt im Abstand von 2,54 mm nach links und 2,54 mm nach unten. Da konntest Du dann Deine Widerstände, Kondensatoren, Dioden, Spulen, Transistoren und IC-Sockel reinpflanzen, mit einer Schaumgummimatte fixieren, umdrehen, um die Pins alle festzulöten.</p>
+<p>So weit, so gut. Deine Schaltung war dann fertig und funktionsbereit, ob nun ein markstückgroßer Sägezahngenerator oder ein symmetrischer Signalverstärker. Einerlei, sobald Du den Strom aus der Steckdose reingeleitet hast. Peng, Knall, Stink.</p>
+<p>Was ich damit sagen will, ist... Es gibt kein System ohne Abhängigkeiten. Dein schicker, selbstgebauter Aktiv-Verstärker funktioniert nur im Rahmen von Bedingungen, also in einem gewissen Kontext. Platt gesagt, wenn Du in var i zuerst "zwei" stopfst, kommt bei i + i vielleicht "zweizwei" raus, aber selten "vier", es sei denn, Du codest das explizit so aus. Dann bist Du aber schon wieder kontext-aware.</p>
+<p>Das heißt, egal, wie lose (oder auch gar nicht) Du explizit in Deinem Code koppelst, es gibt immer eine Meta-Ebene darüber, die den Kontext beschreibt. Selbst in der modernsten Physik gibt es ja keinen "luftleeren Raum" mehr, sondern eigentlich bloß (!) Wechselwirkungen, also Kontext.</p>
+<p>Zurück zu Deinen Beispielen. Ein Toner. Dessen Mechanik bewegt sich nicht "von Elfenhand getrieben", sondern weil es Spezifikationen (sprich: Kontext) gibt, die vorschreiben (!), wie die äußere Mechanik auszusehen hat, wenn sie das Zahnrad des Toners effizient (!) bewegen will. Da muss ein Zähnchen ins andere greifen, und am Ende steht eine Norm. Das gilt ebenso für die internen Übereinkünfte zwischen VW, Audi, Seat und Skoda. Die können ihre Komponenten nur deswegen frei durch das Unternehmen liefern, weil darüber eine Meta-Ebene existiert, die das Ineinandergreifen der Komponenten sehr präzise beschreibt.</p>
+<p>Freilich gibt es lustige Fernsehserien, die zeigen, wie man einen Porsche-Motor in einen Kadett schweißen kann. Aber was sie dazu bauen, sind Adapter, vulgo: Kupplungen.</p>
+<p>Und da Du ja Verteiler und Joints bemühst, da frag doch mal einen Klempner. Die kommen alle nicht aus der Luft. Die sind genormt. Also wieder eine Meta-Ebene.</p>
+<p>Letzendlich forderst Du das beliebige und zugleich sinnvolle (und damit schon wieder kontextbehaftete) Casten von einem ebenso beliebig definierten Typ in einen anderen im Vakuum. Schmeiß einen Krückstock rein, und hol eine Bierdose raus. Ohne Metadaten geht das halt nicht.</p>
+<p>SCA war da zB mal ein netter Ansatz, um sowas auf Methodenebene hinzukriegen. Hätte funktionieren können. Tat es aber nicht, weil sich nicht die ganze Welt sogleich davor verneigt hat. Und Microsoft auch nicht. Und die UDDI-Server sind ja inzwischen ebenfalls "legacy". Leider. Schön wäre es gewesen.</p>
+<p>Komponente A aus Deiner Feder, Komponente B aus Deiner Feder, dazwischen ein Verteilersystem. Funktioniert nur, wenn sich alle drei über ein Protokoll einig sind. Meta-Ebene. Deine Meta-Ebene so far. Jetzt kommt Komponente C und will auch mitmachen. Keine Meta-Ebene. ==&gt; Exception.</p>
+<p>Zurück auf Anfang.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-10-27):</p>
+<p>@Carsten: Ich sehe gar keine Differenz zwischen uns. Wo ist dein Problem mit meine Darstellung? Dass ich eine Metaebene vergessen habe?</p>
+<p>Ich habe nie behauptet, dass es keine Adapter geben soll. Im Gegenteil! Ich bin sehr für explizite Adapter, denn damit löse ich Abhängigkeiten raus aus "Komponenten".</p>
+<p>Mein Punkt ist der, dass Abhängigkeiten eben nicht mehr im Baustein stecken sollen. Das heißt nicht, dass er im luftleeren oder gar ätherlosen Raum hängt. Es bedeutet nur, dass er selbst nicht für seine Adaption an unterschiedliche Kontexte verantwortlich ist.</p>
+<p>Eine Methode</p>
+<p>string Reverse(string text);</p>
+<p>hat keine Abhängigkeit. Das macht sie unmittelbar zu einem Kandidaten für Wiederverwendbarkeit. Und sie ist einfach zu testen.</p>
+<p>Darum geht es mir bei Komponenten: Lege sie so aus, dass sie keine Abhängigkeiten haben. Dann wird alles einfacher. Stattdessen benutze Adapter, um sie zu Größerem zusammen zu setzen.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-10-04):</p>
+<p>Ich glaub ja, dass die ganze Sache am Ende immer darauf hinausläuft, dass wir in der IT immer noch zuviel Angst haben, Kontrolle zu verlieren und insb. die Kontrolle über die Effizienz bei der Ausführung. Sprachen wie Haskell, die das Thema grundsätzlich anders angehen (da braucht man kein DI im langläufigen Sinne) haben es darum schwer. Solange der ERP Anwender immer noch in Datenbanktabellen oder als Ersatzdroge in Exceltabellen denkt bleibt das auch so und um DAS zu verändern braucht es nicht nur auf Techie-Ebene ein Umdenken. Mich als Autofahrer ist das wünscht, wie der Frontscheinwerfer funktioniert.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

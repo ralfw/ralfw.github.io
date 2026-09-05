@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Agility leads to functional design and even TDD — ralfw.de Archiv</title>
+<meta name="description" content="What is it that the customer wants when she orders a software? Behavior. I define behavior as the relationship between input, output, and side effects.">
+<link rel="canonical" href="https://ralfw.de/archiv/2014/how-agility-leads-to-functional-design/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="How Agility leads to functional design and even TDD — ralfw.de Archiv">
+<meta property="og:description" content="What is it that the customer wants when she orders a software? Behavior. I define behavior as the relationship between input, output, and side effects.">
+<meta property="og:url" content="https://ralfw.de/archiv/2014/how-agility-leads-to-functional-design/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>How Agility leads to functional design and even TDD</h1>
+    <div class="doc-meta"><span>27. Sept. 2014</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2014/09/27/how-agility-leads-to-functional-design-and-even-tdd.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2014/how-agility-leads-to-functional-design/</code></span></div>
+    <div class="art"><p>What is it that the customer wants when she orders a software? Behavior. I define behavior as the relationship between input, output, and side effects.</p>
+<p>It´s like with the Turing Test. When can we consider a machine intelligent? As soon as we cannot tell from a dialog whether the "hidden participant" is a human or not. The Turing Test is about behavior.</p>
+<p>Requirements are met if some input leads to desired output and expected side effects. This includes performance, security, usability and other aspects. Behavior thus has functional as well as non-functional traits.</p>
+<p>Now the question is: How is behavior produced?</p>
+<p>It´s all about logic, program logic. That is operators, control structures and hardware access. Only such programming language statements are relevant to producing behavior by working on data.</p>
+<p>Nothing has changed since Niclaus Wirth wrote "Algorithms and Data Structures" back in the 1970s. Nothing even has changed since the days of assembler programming.</p>
+<p>Forget about Object Orientation. Forget about Functional Programming. At least for a moment. That´s all just tools, not givens.</p>
+<p>The main question in programming is, how to move efficiently and effectively from requirements to logic? You can imagine requirements and logic separated by a huge gap, a chasm even.</p>
+<p>On top there is the whole of all requirements for a software system. At the bottom there is all the logic that´s needed to show the required behavior. That´s just all operator statements, control statements, and hardware access statements.</p>
+<p>Except for trivial requirements we cannot jump over the chasm. For the Fizz Buzz code kata the whole logic might appear immediately before your minds eye. But probably not even for the Bowling Game code kata, and sure not for solving Sudoku puzzles.</p>
+<p>That means we need help to cross the chasm.</p>
+<p>To me this help comes as a three phase process.</p>
+<h2>1. Agile analysis</h2>
+<p>The first phase is about thinking. We need to analyze the requirements. But not just in any way. We need to keep the customer´s world and the developer´s world close together.</p>
+<p>Analysis to me means not only to understand what the customer wants, but also to slice it up into ever more fine increments.</p>
+<p>Increments are parts/aspects of the overall behavior. The customer can give feedback on them.</p>
+<p>User Stories and Use Cases are examples of such increments - but unfortunately they lack connection to the developer´s code reality. What´s the equivalent of a User Story in code?</p>
+<p>That´s why I prefer (and suggest) to find more tangible increments during requirements analysis. I call them Application, Dialog, Interaction, and Feature. (There are even two more, but these are the most important ones.)</p>
+<p>Analysis considers the problem. It´s tries to understand it - also by de-constructing into smaller problems. Analysis is a research task.</p>
+<p>I call this kind of analysis agile, because it produces increments. It´s not about technical artifacts, but just aspects the customer can relate to.</p>
+<p>To ask whether the requirements should be met by just one Application or more leads to smaller separate problems - and at the same to time artifacts tangible for the developer. An Application can be thought of as a project on any development platform/IDE. It´s represented by an executable file at runtime, an icon on a desktop or a URL to open in a browser.</p>
+<p>Requirements can be fulfilled by delivering one Application after another.</p>
+<p>The same is true for Dialogs. Each Application consists of a number of Dialogs through which users converse with the logic. Each Dialog delivered provides some value to the customer and can be given feedback on.</p>
+<p>For the developer a Dialog is very tangible, too. It´s usually encoded as a class (or module). For GUIs that´s readily done by the IDE.</p>
+<p>Dialogs in turn consist of a number of interactions. Buttons can be pressed, menu items clicked etc. There are many technical events happening on a user interface - but some are special. They trigger behavior. In GUI dialogs we write event handlers for that. I call them Entry Points into an application. They are like the Program.Main() functions of Java/C# programs.</p>
+<p>Interactions represent "single behaviors": Some input is taken from the user interface, output is produced to be displayed on the user interface, and possibly other side effects happen, e.g. data gets changed in a database.</p>
+<p>Interactions are clearly relevant to the customer. They have specific, tangible triggers. Their behavior can be exactly defined (At least it should be. The customer is responsible to provide approval criteria in terms of input/output/side effect relationships.)</p>
+<p>But at the same time Interactions are tangible for developers. Their equivalent in code is always a function.</p>
+<p>How much better is that than being confronted with a User Story?</p>
+<p>User Stories and Use Cases are nice and well - but they should be mapped onto Applications, Dialogs, Interactions before moving to the next phase. Nothing is lost for the customer by that - but much is won for the developer.</p>
+<p>And even further the analysis should go! Interactions are cross-cuts through the software. Much can happen while input is moved from the user interface through the bowls of the software to transform it into some output - again presented by the user interface. Such transformation certainly has many aspects to it. These aspects should be considered during analysis. I call them Features.</p>
+<p>A Feature is an aspect of an Interaction in a Dialog of an Application. It will be represented in code by at least one function of its own.</p>
+<p>Features thus are tangible for the developer - but at the same time are relevant to the customer. Take a user registration Dialog for example. Such a dialog will at least have one Interaction: register user, e.g. when hitting the OK-button.</p>
+<p>Taking this Interaction only as a whole and trying to figure out what logic is needed to me seems hard. Better to refine it, better to slice Features off it, e.g.</p>
+<ul>
+<li>Create new user</li>
+<li>Check if user name already exists</li>
+<li>Check if user name is well-formed</li>
+<li>Check if password is well-formed</li>
+<li>Check if password repetition equals password</li>
+<li>Show error message if check fails</li>
+<li>Encrypt password before storing it</li>
+</ul>
+<p>Features are the most fine grained requirements in agile analysis: they are increments and can be directly mapped to code. Software can be delivered Feature by Feature. Logic can be developed Feature by Feature.</p>
+<p>Agile analysis can and should of course be done together with the customer. It does not need to be comprehensive. Avoid big analysis up-front. Some top-down breadth-first then depth-first analysis is sufficient until you have enough Interactions and Features on your plate to let the customer do some prioritization.</p>
+<p>Then enter the next phase...</p>
+<h2>2. Functional design</h2>
+<p>Knowing which Applications, Dialogs, Interactions, Features there are does not close the requirements-logic-gap. Agile analysis makes it smaller, but it´s still too wide to jump across.</p>
+<p>Interactions exist side-by-side. Their connection is through data only. But Features are connected in all sorts of ways within Interactions. Their relationship is causal. The activity of one Feature leads to activity of other Features.</p>
+<p>Features form production processes: they take input and data from other resources and transform it into output and data in other resources.</p>
+<p>The appropriate way of thinking about how Features make up Interactions thus is data flows. Yes, data flows and not control flows. Logic is about control flow; that´s why it contains control structures.</p>
+<p>To find the right data flows to deliver the required behavior for each Interaction I call behavioral design or functional design.</p>
+<p>"Behavioral design" emphasizes the purpose, the results of what´s happening by data flowing.</p>
+<p>"Functional design" on the other hand emphasizes the technical side of data flows, their building blocks, which are functions.</p>
+<p>Designing data flows is an engineering task. It takes the results of the analysis phase and tries to solve the "behavioral problem" of an Interaction by combining Features already found with more Features, which only become visible/necessary when looking under the hood. Functional design considers technologies and paradigms to define appropriate data flows.</p>
+<p>Of course, such flow designs are "just bubbles" at first. But that´s not a drawback, it´s a feature. "Bubbles" can easily be revised, created, destroyed. "Bubbles" can be visualized, can be talked about among team members with just pen and paper as tools (enter: The Architect´s Napkin ;-).</p>
+<p>Behavioral design means solving problems on a conceptual level using a simple DSL: data flows. The syntax and semantics are easy to learn. They provide a framework for phrasing solutions using domain specific vocabulary.</p>
+<p>Functional design closes the requirements-logic-gap:</p>
+<p>The vocabulary in the data flows can then straightforwardly be translated into functions.</p>
+<p>Please note: Functions are not logic! Functions are containers for logic. Functional design thus results in a list of containers which then have to be filled with all the logic details that´s necessary to actually deliver the desired behavior.</p>
+<p>Data flows on the other hand lack many details. They are declarative by purpose. They describe behavior in a comparatively coarse grained manner. They are abstractions to help find logic containers and to be able to reason about it in a simpler way.</p>
+<p>Without data flows it´s hard to understand logic. You get bogged down in an infinite sea of details at no time.</p>
+<p>To avoid that during design as well as bug fixing and enhancing software use data flows. Done right they provide a smooth transition from analysis to coding - and even back. Because done right data flows are not just a matter of pen and paper but are clearly visible in code. If you look at data flow code you can "reverse engineer" the data flow design from it.</p>
+<p>But still... data flows won´t crash as long as they´re just designs.</p>
+<h2>3. Test-first coding - finally</h2>
+<p>The third phase is about coding; finally we´re talking algorithms. It´s imperative programming as you´re used to. But you start with something in your hands: a list of functions that have to be implemented. This means you can really focus on crafting code. It´s small pieces of logic at a time. (To be honest: Sometimes that´s even the most boring part ;-) Analysis and design have narrowed down the scope so much that you can do the final step from requirements to logic. It´s not a "leap of faith" anymore; it´s pretty straightforward craftsmanship.</p>
+<p>To manifest data flow designs use test-first coding. I´m not calling it TDD, because there is less or even no refactoring after the red-green steps.</p>
+<p>Data flows are easy to test. The strategy is obvious:</p>
+<ul>
+<li>Leafs of hierarchical data flows are not functionally dependent on any code you write. I call them Operations; they contain pure logic. That makes them easy to test. No dependency injection needed. That´s pure unit testing.</li>
+<li>Nodes within hierarchical data flows are not functionally dependent either. Although they depend on other nodes/leafs these dependencies are not functional in nature. That´s because the nodes do not contain any logic at all. Their sole purpose is Integration. Dependency injection might be needed - but it´s pure integration testing, that means tests do not check behavior but "wiring". Integration tests answer the question: Have all parts been wired-up correctly? And since Integration data flow nodes do not contain logic they are small. Often they don´t need to be tested automatically; a review is sufficient.</li>
+<li>The root node of a data flow hierarchy - often the Entry Point of an Interaction - needs to be checked with acceptance tests. This way it´s ensured the data flow actually produces the desired overall behavior as a whole.</li>
+</ul>
+<p>Data flow design ensures, all functions are small. Logic is "compartmentalized" in a way to make it easy to understand and test.</p>
+<p>Ideally each Operation is as simple as an average code kata. Functional design provides the developer with a function signature and test cases. That´s a very concrete base for driving the work of a craftsman to hammer out the algorithm, the logic.</p>
+<h2>What about classes?</h2>
+<p>At the beginning I asked you to forget about Object Orientation and other programming paradigms. Can you now see why?</p>
+<p>Software development in general is not about any of it. It´s about delivering logic. And in order to be able to do that it´s about analyzing and designing the solution as a preparation to code. And what to code in the first place is behavior, that means logic contained in functions. That hasn´t changed in all the decades since the invention of subroutines.</p>
+<p>Not to start software development by focusing on functions thus leads you astray. Focusing on classes (objects) first is, well, counter-productive.</p>
+<p>Classes are containers, containers for functions. Without knowing which functions are needed to produce behavior it´s a waste to look for classes.</p>
+<p>Functional Programming on the other hand puts functions first. That´s good - as long as that means data flows can more easily be translated into code. But don´t get mired in fancy languages features. Talking about Monads or recursion or statelessness can deflect your mind from more important things like delivering value to the customer.</p>
+<p>Functional design is not in contradiction with Object Orientation or Functional Programming. Take it more as a framework to use use these tools in. Tools need rules; we shouldn´t do with them all that´s possible but what´s healthy and beneficial in the long run.</p>
+<p>That´s why I´m not a fan of pure/traditional Object Orientation or Functional Programming. Such dogma does not lead to frequent delivery of and feedback on behavior. The trend towards hybrid languages is more to my taste. C# (and even Java) becoming more Functional, and F# or Scala being Functional but also supporting Object Orientation seems to the way to go.</p>
+<p>Hybrid languages make it easier to translate data flow designs into code with all their aspects, which includes local and shared state.</p>
+<h2>Summary</h2>
+<p>Considering all the details of an implementation of required behavior is a daunting task. That´s why we need a systematic way to approach it starting from requirements and leading to logic.</p>
+<p>To me that´s a three phase process starting with an agile analysis resulting in fine grained increments meaningful to customers and developers alike. Then moving on to designing a solution from the increment "powder" in the form of data flows, since they allow us to reason about it on a pretty high level of abstraction. And finally coding individual functional units of those data flows in a test-first manner to get high test coverage for the myriad of details.</p>
+<p>I´ve been working like this for the past couple of years. It has made my life as a developer and trainer and consultant much, much easier. Why don´t you try it, too? If you´ve any questions on how to start, feel free to write me an email.</p>
+<hr />
+<p><em>Footnotes: If your User Stories are already like what I call Features, that´s great. If not, but you like to stick with the User Story concept try to write them after you´ve uncovered Interactions and Features by agile analysis. This is of course not completely true. Not all design can be done up-front for an Interaction or even Feature. There are almost always aspects which cannot be foreseen. So you stumble across them during coding. That´s perfectly fine and does not cause harm. It just leads to an ad hoc extension of design. Because what to do during refactoring is crystal clear: morph the logic just implemented into data flows. Classes also contain data. Data structures can be build from them. As long as you use them for that purpose, go ahead. But don´t try to fit logic on them at the same time.</em></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

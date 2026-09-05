@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Testnähe aus der Distanz betrachtet — ralfw.de Archiv</title>
+<meta name="description" content="Die Diskussion um den besten Platz für Tests reißt nicht ab. Nach meiner Gegenüberstellung zweier Testplatzierungsstile hat Stefan nachgelegt und nun Ilker gekontert. Die WM ist vo">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/testnahe-aus-der-distanz-betrachtet/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Testnähe aus der Distanz betrachtet — ralfw.de Archiv">
+<meta property="og:description" content="Die Diskussion um den besten Platz für Tests reißt nicht ab. Nach meiner Gegenüberstellung zweier Testplatzierungsstile hat Stefan nachgelegt und nun Ilker gekontert. Die WM ist vo">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/testnahe-aus-der-distanz-betrachtet/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Testnähe aus der Distanz betrachtet</h1>
+    <div class="doc-meta"><span>13. Juli 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/07/testnahe-aus-der-distanz-betrachtet.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/testnahe-aus-der-distanz-betrachtet/</code></span></div>
+    <div class="art"><p>Die Diskussion um den besten Platz für Tests reißt nicht ab. <a rel="noopener" href="http://bit.ly/9BJhzJ">Nach meiner Gegenüberstellung</a> zweier Testplatzierungsstile hat <a rel="noopener" href="http://bit.ly/d6pkrt">Stefan nachgelegt</a> und nun <a rel="noopener" href="http://bit.ly/bOFpe8">Ilker gekontert</a>. Die WM ist vorbei, der Testball aber noch im Spiel… :-)</p>
+<p>Was für ein Spiel ist das aber? Ist es ein Nullsummenspiel? Und worum dreht es sich? Die erste Frage ist, was “nah am zu testenden Code” bedeutet. die zweite Frage, ob Nähe das wichtigste oder gar einzige Kriterium für die Platzierung von Testcode ist.</p>
+<h2>Nah und fern</h2>
+<p>Wie nah ist nah? Ist “nah am Code” nur dies? Test und System-under-Test (SUT) liegen im selben Projekt.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e40655cd0323f42f.png" /></p>
+<p>Oder wäre es sogar so noch besser? Der Test ist dem SUT visuell untergeordnet, um den Blick auf die Hauptfunktionalität nicht zu verstellen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/21b20299028a86bd.png" /></p>
+<p>Oder ist Nähe noch gegeben, wenn Tests in eigenen Unterverzeichnissen stehen?</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e7223fffa2d23c28.png" /></p>
+<p>Oder darf ich mit Recht behaupten, dass Tests platziert in einem eigenen Projekt noch nah sein können?</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/807cada5f5834686.png" /></p>
+<p>Hm… verwirrend diese Optionen. Oder sind sie gar nicht so verschieden, denn wie sieht es während der Arbeit an SUT und Tests in Visual Studio aus? Ist aus diesen Bildern die Platzierung der Tests abzulesen?</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e46d1286dce6eaad.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d18265e76f05f3b9.png" /></p>
+<p>Ich sehe da keinen Unterschied, obwohl die Tests sehr unterschiedlich platziert sind. Für die Arbeit am Code, also den ständigen Wechsel zwischen Test und SUT und Test und SUT, scheint es mir unbedeutend zu sein, ob die Tests als “near spec” im Projekt des SUT liegen oder in einem anderen Projekt. Solange sie in derselben Solution zu finden sind, können Tests und SUT ganz einfach so dargestellt werden.</p>
+<p>Wer es noch verwegener mag und einen großen Bildschirm hat, der legt sich Tests und SUT sogar nebeneinander. Solche Darstellung überwindet jede Distanz. Programmieren wird da zur Kuschelstunde ;-)</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/8f373b93c90b6b7d.png" /></p>
+<p>Angesichts dessen würde ich sagen, dass es während der Arbeit an Tests und SUT einerlei ist, ob die Tests im SUT-Projekt liegen oder in verschiedenen. Solange sie sich in derselben Projektmappe befinden, ist der Wechsel zwischen beiden einfach möglich. Im Editor kann man sie immer in die Nähe rücken. Dasselbe gilt für Testdaten.</p>
+<h2>Kohäsion</h2>
+<p>Für die Arbeitsgeschwindigkeit an Tests und SUT sollte es keinen Unterschied machen, in welchem Projekt Tests platziert sind. Wie sieht es aber mit der Verständlichkeit aus? Ist Code besser zu verstehen, wenn Tests inkl. Testdaten und SUT in einem Projekt liegen? Ist nicht die Kohäsion zwischen Tests und SUT höher als die zwischen zwei unterschiedlichen SUTs? Müssten daher nicht Tests sogar eher in einem Projekt zusammen mit ihrem SUT liegen als zwei verschiedene SUTs?</p>
+<p>Hier ein Blick in die Sourcen von RavenDB, der dokumentenorientierten NoSql-Datenbank von Ayende Rahien:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c888eb39041e8fff.png" /></p>
+<p>Die Tests für den Client liegen in einem eigenen Projekt. Ob sie sich nur auf das markierte SUT-Projekt beziehen oder auch die anderen Client-Projekte, ist nicht ersichtlich. Das widerspricht der hohen Kohäsion von Test und SUT, würde ich sagen. Die Zusammenhänge zwischen beiden zu erkennen, ist schwierig.</p>
+<p>Wer den Code grundsätzlich so strukturiert, d.h. viele Projekte in einer Projektmappe führt, der beklagt zurecht, dass die natürliche Kohäsion durch getrennte Projekte für Tests und SUT schwer auszudrücken ist.</p>
+<p>Wie gesagt, dem Wechsel zwischen SUT und Tests tut das keinen Abbruch. Doch die Übersichtlichkeit leidet zunächst.</p>
+<p>Was aber, wenn Software besser strukturiert ist? Wenn ihr ein Plan zugrunde liegt, der auch noch umgesetzt wird? Was wenn Plan und Code gar übereinstimmen? Hier ein Beispiel aus dem <a rel="noopener" href="http://bit.ly/bz1sTd">CCD Praktikum</a>:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/094405ca609da2b6.png" /></p>
+<p>Das ist der Plan für ein Feature eines Softwaresystems für Kinos, das wir im Praktikum begonnen haben. Der Plan zeigt die Prozessschritte für ein Feature. Er ist als EBC-Schaltplan ausgelegt. Die Kästen werden in Klassen übersetzt. Die Pfeile in Event-Eventhandler-Verbindungen. Darüber hinaus gibt es aber auch noch Zusammenfassungen zu Komponenten. Die habe ich farblich hervorgehoben. Sie werden in Projekte übersetzt.</p>
+<p>Im Repository sieht das dann so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/41e6c1df3772efa9.png" /></p>
+<p>Die Komponenten finden sich dort als Projektmappen in eigenen Verzeichnissen wieder. (Wer mag, kann die natürlich auch wieder in Unterverzeichnissen gruppieren.)</p>
+<p>Und innerhalb der Komponenten sind jeweils mindestens zwei Projekte zu finden, eines für das SUT sowie eines für dessen Tests:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/1e931436d3073431.png" /></p>
+<p>Die hohe Kohäsion zwischen Tests und SUT findet dadurch klaren Ausdruck, würde ich sagen. Wer Tests zu einem SUT sucht, weiß genau, wo er sie findet.</p>
+<p>Voraussetzung dafür ist natürlich der explizite Wille zur Architektur. Wo es den nicht gibt oder wo der nicht walten kann, weil der Brownfield-Matsch so tief ist… da mag es tatsächlich angezeigt sein, Tests und SUT im selben Projekt zu pflegen. Doch man sei sich bewusst, was dafür der Grund ist. Tests und SUT im selben Projekt ist dann ein Symptom der Grundproblems “Brownfield”. Tests und SUT im selben Projekt sind aus meiner Sicht daher kein Ziel, sondern nur eine Übergangslösung.</p>
+<h2>Trennung</h2>
+<p>Worin sich alle Diskutanten auch einig sind, das ist die Notwendigkeit der Trennung von Tests und SUT bei der Auslieferung. Tests und ihre Artefakte sollen nicht zum Kunden.</p>
+<p>Wenn Tests und SUT in verschiedenen Projekten liegen, ist diese Trennung trivial. Testsprojekte haben ein anderes Output-Verzeichnis als SUT-Projekte, so dass Visual Studio beim Bau einer Solution automatisch die Trennung vornimmt. Im SUT-Output-Verzeichnis kommt immer nur das an, was auslieferungsrelevant ist.</p>
+<p>Anders wenn Tests und SUT zusammen in einem Projekt stehen. Dann muss der Buildprozess explizit angewiesen werden, Tests und Testartefakte auszufiltern. Das mag eine Zeile Scriptcode sein oder viele. Egal. Wer den Buildprozess aufsetzt, muss daran denken. Und Entwickler müssen womöglich auch daran denken und während der Entwicklung Konventionen einhalten, die das ermöglichen.</p>
+<p>So hoch die Kohäsion zwischen Tests und SUT prinzipiell sein mag – bei der Auslieferung hört sich dann doch auf.</p>
+<p>Wenn es aufgrund von monolithischem Code nicht anders geht, die Kohäsion während der Entwicklung auszudrücken als durch Zusammenlegung von Tests und SUT in einem Projekt, dann sei es so und man filtere am Ende beim Build die Tests heraus. Aber, bitte, bitte, man verkaufe mir das nicht als Tugend. Zusätzlicher Aufwand ist zusätzlich fehleranfällig. Wenn ich ihn nicht treiben muss, dann möchte ich das auch nicht.</p>
+<p>Eine saubere, angemessene Planung mit klarer Übersetzungsregel schenkt mir also nicht nur Evolvierbarkeit, sondern auch übersichtliche Codeverhältnisse und weniger Aufwand für den Buildprozess. Dann bin ich für saubere, angemesse Planung, würd ich sagen. (Die nicht zu verwechseln ist mit BDUF.)</p>
+<h2>Fazit</h2>
+<p>Tests im selben Projekt wie ihr SUT? Ist einzig das zeitgemäß? Ich würde sagen, wir sollten nicht nach Geschmack und Mode und Zeitgeist entscheiden. Professionelle Arbeit braucht Werte und Prinzipien. Um welche geht es hier?</p>
+<p><strong>Produktionseffizienz</strong>: Tests im selben Projekt sollen die Arbeit beschleunigen. Der Wechsel zwischen beiden soll leichter fallen. Wie oben gezeigt, glaube ich daran jedoch nicht. Visual Studio macht es leicht, für die Arbeit an Tests und SUT Nähe im Editor herzustellen. Und mit einem Tool wie <a rel="noopener" href="http://bit.ly/9mTPl4">dotCover</a> wird es noch einfacher.</p>
+<p><a rel="noopener" href="http://bit.ly/9xMRtW"></a></p>
+<p>Als Beispiel die Open Source Software <a rel="noopener" href="http://bit.ly/9xMRtW">Lounge Repository</a>. Sie ist komponentenorientiert entwickelt, d.h. für jede Komponente gibt es auch eine Werkbank bestehend aus Tests und SUT in je verschiedenen Projekten.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/5147992fe5c9543c.png" /></p>
+<p>Allerdings bin ich bei der Codeorganisation einen Kompromiss eingegangen und habe alle Projekte in einer Projektmappe versammelt. Damit wollte ich es dem unbedarften Open Source Freund ein wenig einfacher machen, in die Quellen einzusteigen.</p>
+<p>Ich finde das übersichtlich; viel übersichtlicher als die RavenDB Sourcen trotz Multi-Projekt Solution. Die Tests liegen nahe dem SUT, sie sind damit “near specs”. Aber gerade geht es ja um Produktionseffizienz. Die ist nicht nur hoch, weil ich Tests und SUT side-by-side im Editor liegen können (s.o.), sondern auch, weil dotCover mir erlaubt, aus dem SUT zum Test zu springen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/8cde199b6bc21628.png" /></p>
+<p>Die Liste auf der rechten Seite zeigt die Tests, die eine bestimmte SUT-Zeile abdecken. Damit muss ich gar nicht mehr wissen, wo in einer Projektmappe Tests überhaupt stehen. Ich lasse schlicht alle Tests mit dotCover ausführen, bekomme einen Eindruck vom Nutzen der Tests aufgrund ihrer Codeabdeckung – und kann dann aus den SUT-Zeilen, an denen ich gerade arbeite, zu relevanten Tests springen. Im selben Projekt oder in anderen. Wenn das nicht effizient ist.</p>
+<p>Ebenfalls effizient ist, dass bei Trennung von Tests und SUT kein weiterer Aufwand für die Trennung beider Anteile während der Produktion zu treiben ist. Nicht anfallender Aufwand ist ganz eindeutig der kleinste mögliche Aufwand.</p>
+<p><strong>Übersichtlichkeit</strong>: Der nächste für die Kolokation von Tests und SUT reklamierte Wert ist die Übersichtlichkeit. Es sei übersichtlicher, wenn beide in einem Projekt lägen. Wie gesagt, das kann ich glauben, wenn es denn nicht anders geht. Wenn die Verteilung auf zwei Projekte ihrer natürlichen Kohäsion zuwiderläuft, weil sie dann sehr weit auseinander stünden in einer Projektmappe, dann mag die Kolokation einen Vorteil haben.</p>
+<p>Der Umkehrschluss ist jedoch aus meiner Sicht falsch: Weil Zusammenlegung im Matschfeld einen gewissen Vorteil haben kann, weil damit ein grundlegendes Problem pragmatisch kurzfristig kaschiert wird, deshalb sollten Tests und SUT möglichst immer zusammengelegt werden. Nein, so würde der Bock zum Gärtner.</p>
+<p>Darüber hinaus sollte Übersichtlichkeit aber noch weiter gefasst werden. Die zu einem SUT gehörenden Tests leicht finden können, ist eine Sache. Wie stehts aber mit der Identifikation von SUTs? Wie steht es mit Verantwortlichkeiten der Software im Allgemeinen auf unterschiedlichen Abstraktionsebenen?</p>
+<p>Übersichtlichkeit entsteht nicht nur durch Zusammenlegung, sondern auch durch Trennung. Mir scheint, dass dieses Prinzip schnell übergangen wird, wenn man im Kolokationsflow ist. Denn wo Tests und SUT zusammengeschnürt werden sollen, dann halte ich die Tendenz für hoch, auch anderes zusammen zu schnüren. Und am Ende entsteht bzw. wird erhalten der Monolith, das Softwaresystem mit hoher Entropie, das Brownfield.</p>
+<p>Statt Tests als Anlass zu begreifen, zumindest mal einen Concern aus dem großen Brownfield herausziehen zu können, trägt die Kolokation vielmehr zum Erhalt des status-quo bei. Schade.</p>
+<p><strong>Mein persönliches Fazit der Diskussion:</strong> Zeitgeist und Geschmack bringen uns nicht weiter. Meinungen sollten auf Prinzipien verweisen. Sie sollten zeigen, wie und warum und wann diese oder jene durch eine Praktik besser oder schlechter umgesetzt werden.</p>
+<p>Bei trivialem Code mag es daher ok sein, Tests und SUT zusammenzufassen. Eine Code Kata könnte dazu gehören – wenn man nicht gerade üben möchte, eine andere Codeorganisation einzuhalten.</p>
+<p>Jenseits des trivialen Codes bezweifle ich jedoch, dass Tests und SUT im selben Projekt der Produktionseffizienz und Übersichtlichkeit wirklich dienen. Sie sind mir eher Symptom für ein Wurzelproblem und Bequemlichkeitsmaßnahme. Mehr als eine Übergangslösung aus der Not geboren sehe ich in ihnen nicht. (Mann, oh, mann, wie störrisch und uneinsichtig ist das denn eigentlich ;-) Aber es hilft nix: “Hier stehe ich, ich kann nicht anders.” Für die Zukunft gelobe ich jedoch, den Kontext besser zu berücksichtigen. Bei einer Code Kata könnte ich mal von dieser “Prinzipienreiterei” abesehen ;-)</p>
+<h2>Kommentare</h2>
+<p><strong>Carsten</strong> (2010-07-13):</p>
+<p>„Aber es hilft nix: “Hier stehe ich, ich kann nicht anders.” Für die Zukunft gelobe ich jedoch, den Kontext besser zu berücksichtigen. Bei einer Code Kata könnte ich mal von dieser “Prinzipienreiterei” abesehen ;-)“</p>
+<p>Ich glaube, das kannst Du nicht. Deine Motivation ist „es besser zu wissen“. Du willst nicht überzeugen, Du suchst nach Bewunderung.</p>
+<p>Im vorliegenden Fall ist Dir meine gewiss, denn ich finde Du hast Recht.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-07-13):</p>
+<p>@Carsten: Freut mich, wenn du mit mir übereinstimmst.</p>
+<p>Aber das mit der Bewunderung stimmt so nicht. Ich freue mich natürlich, wenn Leute gut finden, was ich so "rauslasse". Viel angenehmer als Bewunderung ist aber das Gefühl, etwas verstanden zu haben. Wenn Puzzleteile an ihre Plätze fallen, wenn etwas verständlich wird, wenn es funktioniert, sich harmonisch anfühlt... dann habe ich für mich ein wichtiges Ziel erreicht.</p>
+<p>Schön natürlich, wenn ich mit solchen Aha-Erlebnissen durch Weitersagen auch noch anderen helfen kann.</p>
+<p>Will ich "es besser wissen"? Hm... ne, nicht im Sinne von "unbedingt Recht behalten". Am Ende ist mir die richtige Erkenntnis wichtiger als die Frage, woher sie kommt. Allerdings gebe ich meine Meinung nicht "kampflos" drein ;-) Wenn schon andere Meinungen übernehmen, dann sollen die auch mit guten Gründen vorgetragen werden. Ich bemühe mich zumindest auch darum.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Frank Striegel</strong> (2010-07-14):</p>
+<p>@Carsten: Hat dieser Kommentar irgendetwas zum Thema beigetragen? Also bitte, wenn Kritik, dann bitte konstruktiv!</p>
+<p>Gruss
+Frank</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-07-16):</p>
+<p>@Frank Striegel: Hat Dein Kommentar irgendetwas zum Thema beigetragen?</p>
+<hr />
+<p><strong>Frank Striegel</strong> (2010-07-19):</p>
+<p>@Anonym: Misst, jetzt hat mich jemand erwischt.</p>
+<p>Aber ich muss Dich enttäuschen, ich war mir dieser scheinbaren Widersprüchlichkeit bewusst. Warum scheinbar? Nun, weil ich denke, dass es, zwar nicht auf direkter, so doch auf abstraktere Ebene etwas mit dem Thema zu tun hat. Sind die Kommentare mit unnötigen Diskussionen (wie diese hier) überfrachtet, so sind die wertvollen Erkenntnisse aus den anderen Diskussionen nur schwer zu erkennen.</p>
+<p>Achja, es wäre schön, wenn hinter einer Kritik/Statement ein konkreter Name stünde...</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

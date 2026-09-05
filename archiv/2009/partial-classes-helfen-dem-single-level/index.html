@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Partial Classes helfen dem Single Level of Abstraction Prinzip [endlich-clean.net] — ralfw.de Archiv</title>
+<meta name="description" content="Eines meiner Clean Code Developer (CCD) Lieblingsprinzipien ist Single Level of Abstration (SLA). Wenn man es befolgt, dann wird Code ganz einfach viel lesbarer.">
+<link rel="canonical" href="https://ralfw.de/archiv/2009/partial-classes-helfen-dem-single-level/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Partial Classes helfen dem Single Level of Abstraction Prinzip [endlich-clean.net] — ralfw.de Archiv">
+<meta property="og:description" content="Eines meiner Clean Code Developer (CCD) Lieblingsprinzipien ist Single Level of Abstration (SLA). Wenn man es befolgt, dann wird Code ganz einfach viel lesbarer.">
+<meta property="og:url" content="https://ralfw.de/archiv/2009/partial-classes-helfen-dem-single-level/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Partial Classes helfen dem Single Level of Abstraction Prinzip [endlich-clean.net]</h1>
+    <div class="doc-meta"><span>25. Juli 2009</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2009/07/partial-classes-helfen-dem-single-level.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2009/partial-classes-helfen-dem-single-level/</code></span></div>
+    <div class="art"><p><a rel="noopener" href="http://www.clean-code-developer.de/"></a> Eines meiner <a rel="noopener" href="http://clean-code-developer.de/">Clean Code Developer (CCD)</a> Lieblingsprinzipien ist <a rel="noopener" href="http://clean-code-developer.de/wiki/CcdOrangerGrad#Onelevelofabstraction">Single Level of Abstration (SLA)</a>. Wenn man es befolgt, dann wird Code ganz einfach viel lesbarer.</p>
+<p>Eigentlich. Denn auch wenn bei einer einzelnen Methode durch Fokussierung auf ein Abstraktionslevel die Übersichtlichkeit steigt, so kann sie für eine ganze Klasse sinken. Das habe ich immer wieder bemerkt und auf Abhilfe gesonnen. Nicht immer besteht die nämlich im <a rel="noopener" href="http://clean-code-developer.de/wiki/CcdOrangerGrad#SingleResponsibilityPrinciple">Single Responsibility Principle (SRP)</a>, nach dem eine Klasse bei anhaltender Unübersichtlichkeit vielleicht besser in mehrere zerlegt werden sollte.</p>
+<p>Aber jetzt habe ich eine Lösung im Rahmen der verfügbaren Sprach- und IDE-Mittel gefunden, glaube ich. Als Beispiel eine Methode, die eine Textdatei erzeugt und mit Zeilen aus Dummy-Worten füllt. Solche Textdateien brauchte ich neulich mal für Tests eines <a rel="noopener" href="http://ralfw.blogspot.com/2009/07/verstandnisvorteil-fur-flows.html">kleinen Flow-Frameworks</a>.</p>
+<h2>V0 – Unrefaktorisiert</h2>
+<p>In der ersten Runde habe ich den Textfile-Generator natürlich einfach erstmal so runtergeschrieben. Nicht sehr clean, wie diese Abbildung zeigt:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e6bc2a26065cefc0.png" /></p>
+<p>Ich wollte möglichst schnell Funktionalität auf die Straße bekommen. Und da die Lösung einfach ist, war innere Qualität zunächst nicht so wichtig. Wer kennt das nicht? :-)</p>
+<p>Die zentrale Methode <em>Generate()</em> sieht daher sehr typisch aus. Es steckt alles drin, was ein Mann zur Textfile-Generierung braucht ;-) Da werden solange Zeilen bestehend aus Worten erzeugt, bis eine festgesetzte Gesamtzeichenzahl (<em>max_number_of_chars</em>) erreicht ist. Und die Zeilen haben auch eine ähnliche Länge (<em>MAX_CHARS_IN_LINE</em>), die sich aus der Summe von mehreren Worten unterschiedlicher Länge (von <em>MIN_WORD_LEN</em> bis <em>MAX_WORD_LEN</em>) ergibt, die durch Leerzeichen getrennt sind. Alle soundsoviele Zeilen feuert die Routine einen Event, den der Aufrufer für eine Fortschrittsanzeige benutzen kann.</p>
+<p>Das ist alles nicht schwer zu verstehen – aber wenn Sie in den Code blicken, müssen Sie schon einen Moment hinschauen, um die Algorithmusbestandteile zu identifizieren. Sie müssen sozusagen ihr geistiges Auge erst scharfstellen, bevor sie den Algorithmus wirklich sehen/verstehen.</p>
+<p>Auch mit der obigen Beschreibung dauert das etwas, weil die Bestandteile/Verarbeitungsschritte nicht klar getrennt sind im Quelltext. Ein wenig helfen die Einrückungen der Schleifen. Doch letztlich zeigen sie nur an, dass etwas zusammengehört, aber nicht was es ist.</p>
+<h2>V1 – Refaktorisieren mit SLA</h2>
+<p>Viel leichter haben Sie es, wenn die Methode <em>Generate()</em> dem SLA Prinzip folgt:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/af25e4eb10c45b6f.png" /></p>
+<p>Ah, jetzt sehen Sie klar! Die Dateierzeugung besteht aus drei Schritten: Initialisierung einer Statistik, der eigentlichen Textfile-Generierung und dann einem Abschlussbericht über die Statistik. Diese Methode liegen alle auf demselben Abstraktionsniveau – auch wenn unterschiedlichen Verantwortlichkeiten angehören (Statistik, Textfile-Generierung).</p>
+<p>Wenn Sie dann Details interessieren, dann schauen Sie sich die Methoden genauer an, z.B. <em>GenerateFile()</em>:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/ddb7b76710d8e593.png" /></p>
+<p>Ah, jetzt sehen Sie auch sofort klar! Geschrieben wird über einen <em>StreamWriter()</em> solange die Datei noch nicht groß genug ist. Eine Zeile nach der anderen wird erzeugt und zur Statistik hinzugefügt.</p>
+<p>Und wie wird eine Zeile erzeugt? Drill-down in die Methode <em>GenerateLine()</em> hinein:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e923c8b8269011ba.png" /></p>
+<p>Ah, alles klar! Eine Zeile wird aus Worten zusammengebaut und dann weggeschrieben.</p>
+<p>Und so weiter und so fort… SLA bietet Ihnen auf jeder Ebene einen schnellen Überblick des Zusammenspiels von Bestandteilen (ungefähr) gleicher Abstraktheit. Sie müssen sich nur soweit mit Details konfrontieren, wie für Ihr Informationsbedürfnis in einer Situation nötig ist.</p>
+<h2>SLA-Problem Unübersichtlichkeit im Großen</h2>
+<p>Wo Licht ist, da ist auch Schatten. So auch bei SLA. Die Übersichtlichkeit im Kleinen, in der Methode, führt relativ schnell zu einer Unübersichtlichkeit im Großen, in der Klasse. Denn aus einer überschaubaren Klasse mit einer Methode</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d46b0b46f279dd20.png" /></p>
+<p>ist eine geworden, die viele Methoden auf unterschiedlichem Abstraktionsniveau hat:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/7d06a79492ae801d.png" /></p>
+<p>Nun ist es einfach zu verstehen, was <em>Generate()</em> tut – aber die Klasse zu betrachten verwirrt eher, auch wenn die Sichtbarkeitsangaben helfen, einen Einstieg in die Interpretation zu finden.</p>
+<p>Schlimmer wird es mit der Unübersichtlichkeit, wenn Sie in den Quellcode schauen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/5c85e2d0a9900736.png" /></p>
+<p>Von Abstraktionsebenen keine Spur mehr. Methoden weiter oben mögen auf einem höheren Abstraktionslevel liegen als solche weiter unten. Aber klare Grenzen sind nicht zu erkennen. Ich habe mit Einrückungen experimentiert, aber die bleiben nicht immer erhalten.</p>
+<p>Was also tun? Muss ich denn für mehr Übersichtlichkeit gleich SRP in Anschlag bringen und neue Klassen definieren, z.B. eine für die Statistik, eine zum Erzeugen einer neuen Zeile usw. Das fände ich misslich. Denn eine weitere Klasse bedeutet immer mehr Aufwand als eine weitere Methode.</p>
+<h2>V2 – Partial Classes für mehr Übersicht</h2>
+<p>Jetzt habe ich allerdings eine Idee gehabt, die als Zwischenstufe helfen mag, die Übersichtlichkeit bei Anwendung von SLA zu erhalten, ohne auf SRP übergehen zu müssen. Ich zerlege meine methodenreichen SLA-Klassen in Partial Classes, die sich jeweils auf ein Abstraktionslevel konzentrieren.</p>
+<p>Der “oberste” Klassenbestandteil für das Beispiel sieht dann z.B. so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9acba0074e7d41bf.png" /></p>
+<p>Er zeigt die wesentliche Methode auf höchstem Abstraktionsniveau. Wenn Sie dann mehr wissen wollen, schauen Sie sich den “darunterliegenden” Klassenbestandteil an:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/eae4d104d78c54b0.png" /></p>
+<p>Hier finden Sie nun zwei Abstraktionsniveaus vereint. <em>GenerateFile()</em> liegt höher als <em>GenerateLine()</em>. Doch da der Klassenbestandteil insgesamt nicht zu lang ist (1 Bildschirmseite) und die drei Methoden eng zueinander gehören, habe ich keine weitere Aufteilung für nötig befunden.</p>
+<p>Insgesamt besteht der TextFileGenerator nun aus 4 Klassenbestandteilen, von denen drei die Textfile-Generierung schrittweise verfeinern und einer die auf verschiedenen Ebenen genutzten Statistikfunktionen zusammenfasst. Im Solution Explorer bekommen Sie also auch schnell einen Überblick über eine Klasse:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/bd34c2cc319382ab.png" /></p>
+<p>Ein weiterer Vorteil: Indem ich mit dem simplen SLA anfange, meinen Code zu refaktorisieren, und mit Partial Classes ein unaufwändiges Mittel nutzen kann, um die Übersichtlichkeit zu erhalten, merke ich ganz natürlich und konkret, wann sich das SRP lohnt. In diesem Szenario kristallisiert sich z.B. die Statistik als Kandidat für eine Auslagerung in eine eigene Klasse heraus. Aber das ist ein anderes Thema…</p>
+<p>Erstmal bin ich zufrieden, in einfacher Weise Übersichtlichkeit in Klassen mit Methoden auf unterschiedlichem Abstraktionsniveau herstellen zu können. Partial Classes to the rescue. SLA kann also eines meiner Lieblingsprinzipien bleiben.</p>
+<h2>Kommentare</h2>
+<p><strong>Laurin Stoll</strong> (2009-07-25):</p>
+<p>Hi ralf,</p>
+<p>Hm... ich weiss nicht. Eigentlich wäre es für den Sachverhalt, meiner Meinung nach, schon angebracht das SRP zu befolgen. Aber ok - es gibt manchmal einen Mittelweg, dass kenne ich selbst. Aber reichen dann Regions nicht?
+Von mehreren Klassen bist du ja nicht weit, wenn du mehrere Partial Classes hast...</p>
+<p>viele grüsse</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-07-25):</p>
+<p>@Laurin: Ich stimme zu, dass evtl eine eigene Klasse für die Stats sinnig wäre. Aber ich halte es für aufwändiger, darüber zu grübeln, als erstmal einfach die Funktionalität in Methoden auszulagern. Bei einem Prinzip zu bleiben (SLA) ist einfacher. Und es führt eben dahin, dass man Bruchstellen sieht oder "Cluster" von Funktionalität eigener Verantwortlichkeit.</p>
+<p>Mit Regions habe ich experimentiert. Die lage für mich auch nahe. Aber ich finde sie nicht so gut, auch wenn da eine Möglichkeit bestünde, unterschiedl Abstraktionsebenen zu schachteln.</p>
+<p>Das Problem mit Regions ist einfach, dass sie beim Ausdruck quasi verlorengehen. Zudem tendiert man dazu, Regions zu öffnen und zu öffnen und selten zu schließen beim Explorieren. Am Ende steht man dann wieder da und hat alles auf einer Ebene.</p>
+<p>Nein, nach einigem Experimentieren fühle ich mich mit partial classes ziemlich angekommen. Sie sind nicht optimal, aber derzeit für mich das kleinste Übel.</p>
+<p>Ein nächster kleiner Schritt sind dann geschachtelte Klassen. Das würde ich mit den Stats-Methoden machen. Die haben über die Klasse des Dateigenerators hinaus derzeit keine Bedeutung; also würde ich sie in eine Klasse rausfaktorisieren, die ich aber weiterhin lokal in der Dateigeneratorklasse lassen würde, um eben ihre begrenzte Relevanz auch in der Form zu dokumentieren.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Michael Ertelt</strong> (2009-07-27):</p>
+<p>Nichts gegen partielle Klassen, auch ich finde die in einigen Fällen sehr nützlich. Aber sind geschachtelte Klassen wirklich nur ein nächster kleiner Schritt, oder das Ziel? Die Statistik Methoden aus dem Beispiel auszulagern ist nur folgerichtig. Vielleicht sogar die internen Generierungsmethoden um sie austauschbar zu machen. Und dann auch noch die Art der Bereitstellung (Schreiben in eine Datei, in eine Datenbank, ...). Wie weit sollten wir hier gehen?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-07-27):</p>
+<p>@Michael: Gute Frage: Wie weit soll man gehen?</p>
+<p>Weil ich das auch nicht weiß, habe ich nach der Refaktorisierung mit SLA aufgehört.</p>
+<p>Du zeigst valide weitere mögliche Refaktorisierungen für mehr Flexibilität/Evolvierbarkeit auf. An dieser Stelle sehe ich aber nicht, dass ich sie brauche. Es geht ja nicht um einen Framework, den ich da basteln wollte.</p>
+<p>Deshalb spüre ich keinen Schmerz, rieche keinen Code-Smell ;-) Statt SoC wende ich daher YAGNI an: ich höre auf dran rumzuschrauben, weil ich nicht weiß, ob ich mehr Evolvierbarkeit brauche.</p>
+<p>SLA hat mich erstmal weit genug gebracht für die sichtbaren Anforderungen. Die partiellen Klassen habe ich dann nur eingeführt, weil ich das SLA-Ziel durch Aufspaltung am Ende verfehlt hatte. Der Code war im Detail übersichtlicher, aber nicht mehr im Ganzen.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Rainer</strong> (2009-07-28):</p>
+<p>@Ralf: Was hällst du von der Idee, die Zerlegung der Partial Klassen nicht mit einem Folder zu machen, sondern wie z.B. bei einer WinForm mit entsprechenden Unterdateien.</p>
+<p>Was ist dazu notwendig? Eine Datei steht im *.proj File als:</p>
+<p><Compile Include="CSharpClass.cs"/></p>
+<p>Um sie als zugehörig zu deklarieren benötigt sie noch ein DependentUpon Property, das ihm die Funktionalität signalisiert. Wäre dann aber nicht VS-Standard müsste über ein eigenes AddIn, oder z.B. R# realisiert werden. Notwendiger Code:</p>
+<p><Compile Include="CSharpClass_Refined.cs"/>
+<DependentUpon>CSharpClass.cs&amp;lt/DependentUpon&gt;
+    </Compile></p>
+<p>Fände ich persönlich "hübscher". Wenn dir die Idee auch gefällt, viel Spaß damit.</p>
+<p>Viele Grüße,
+Rainer</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-07-28):</p>
+<p>@Rainer: Den Gedanken an "eingeschachtelte" Dateien hatte ich auch. Aber ich habs nicht hingekriegt :-( Deshalb der Folder. Der ist ne Krücke, keine Frage.</p>
+<p>Also: Wie kann ich einfach Dateien anderen in einem VS-Projekt unterordnen? Wie sieht dafür ein Makro oder sowas aus?</p>
+<p>Wer hilft?</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Mike Hummel</strong> (2009-07-30):</p>
+<p>Hallo,
+ich möchte nicht schon wieder gegen reden, aber...</p>
+<p>Ich halte den SLA Ansatz für nicht besonders geeignet um Code leserlicher zu machen. Die eigentliche Funktionalität wird dadurch auseinander gehackt. Funktionen du definieren macht dann Sinn, wenn der Code darin mehr als einmal benutzt wird, wenn der Inhalt der Funktion nicht nur aus einer Zeile besteht.</p>
+<p>Ist es nicht ein besserer Weg die gewonnene Abstraktion wieder in eine Funktion zu vereinen und durch Kommentare voneinander zu trennen? In den Kommentaren kann man auch gleich wiedergeben was in den Abschnitten geschieht. Außerdem ist die Funktionalität als gesamtes erfassbar, ohne permanent durch sinnlose Funktionssprünge unterbrochen zu werden.</p>
+<p>Mit Gruß, Mike</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-07-30):</p>
+<p>@Mike: Tut mir leid, dass ich wieder nicht mit dir einer Meinung bin, Mike.</p>
+<p>Aber Kommentare sind eher ein Problem als eine Lösung. Kommentare verletzen leicht das DRY Prinzip. Da wird etwas gesagt, was der Code selbst eigentlich schon sagt - oder eben durch einen Funktionsnamen ganz leicht ausdrücken könnte.</p>
+<p>Insofern geht es eben nicht (!) um Wiederverwendbarkeit (bei SLA). Wiederverwendbarkeit sollte (zunächst) kein (!) Ziel der Softwareentwicklung sein. Sie wird zwar immer als Ideal ausgerufen - aber die Praxis zeigt, dass sie kaum zu erreichen ist und insofern vom Wesentlichen ablenkt.</p>
+<p>Methoden nicht zwar auch ein Mittel, um Wiederholungen zu vermeiden. Vor allem (!) sind sie jedoch ein Mittel, um zu strukturieren und damit lesbarer zu machen. SLA nimmt Methoden da sehr ernst.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Uli</strong> (2013-05-26):</p>
+<p>Hallo Ralf, würdest du das heute nochmal so umsetzen?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-05-26):</p>
+<p>@Uli: Warum nicht. Das ist in C# ein legitimes Strukturierungsmittel.</p>
+<p>Inzwischen habe ich aber ein Tool gefunden, um Dateien ohne Projektordner untereinander in VS anzuordnen.</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-03-28):</p>
+<p>Hallo Ralph,
+ist das ein freies Tool? Welches ist es?
+Gruß
+Robert</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

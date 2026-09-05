@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vom Problemtrichter zum Lösungsbaum — ralfw.de Archiv</title>
+<meta name="description" content="Software soll doch einfach nur laufen. Das wünscht sich der Kunde und meint damit, dass sie ein bestimmtes Verhalten zeigen soll. Sie soll gewünschte Funktionalität in bestimmter Q">
+<link rel="canonical" href="https://ralfw.de/archiv/2014/vom-problemtrichter-zum-losungsbaum/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Vom Problemtrichter zum Lösungsbaum — ralfw.de Archiv">
+<meta property="og:description" content="Software soll doch einfach nur laufen. Das wünscht sich der Kunde und meint damit, dass sie ein bestimmtes Verhalten zeigen soll. Sie soll gewünschte Funktionalität in bestimmter Q">
+<meta property="og:url" content="https://ralfw.de/archiv/2014/vom-problemtrichter-zum-losungsbaum/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Vom Problemtrichter zum Lösungsbaum</h1>
+    <div class="doc-meta"><span>20. Sept. 2014</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2014/09/vom-problemtrichter-zum-losungsbaum.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2014/vom-problemtrichter-zum-losungsbaum/</code></span></div>
+    <div class="art"><p>Software soll doch einfach nur laufen. Das wünscht sich der Kunde und meint damit, dass sie ein bestimmtes Verhalten zeigen soll. Sie soll gewünschte Funktionalität in bestimmter Qualität bieten, also z.B. rechnen, aber schnell, oder überweisen, aber sicher, oder Videos zeigen, aber für Millionen Benutzer gleichzeitig.</p>
+<p>Verhalten wird hergestellt durch Logik. So nenne ich die Summe aus Ausdrücken (Berechnungen, Vergleiche, logische Verknüpfungen, Transformationen mit Sprach- bzw. Plattformmitteln), Kontrollflussanweisungen (if, for, while usw.) und Hardwarezugriffen (mit Plattformmitteln).</p>
+<p>Experimentelle Zugabe:
+Sie können diesen Artikel auch als eBook lesen: <a rel="noopener" href="https://app.box.com/s/n0y1du5f4wjjt0d3wr4u">ePub</a>, <a rel="noopener" href="https://app.box.com/s/mm6r1xn7auxsiug2doyv">mobi/Kindle</a></p>
+<p>Denken Sie sich Logik quasi als Programmierung auf Assembler-Niveau – allerdings abzüglich Unterprogrammaufrufe.</p>
+<p>Damit Software gewünschtes Verhalten zeigt, braucht es keine Unterprogramme, keine Klassen, keine Vererbung, Polymorphie, Interfaces oder was der Sprachgimmicks mehr sind. Unterprogramme kommen später ins Spiel.</p>
+<p>Die Aufgabe für uns Entwickler ist also „nur", für ein gestelltes Problem, die passende Logik zu finden. Das hat sich seit den Anfängen der Programmierung nicht geändert.</p>
+<p>Und nochmal: Schon Unterprogramme gehören nicht mehr dazu. Sie sind nicht direkt verhaltensrelevant.</p>
+<p>Die Frage ist nun: Wie kommt man vom Problem zu dieser Lösung? Ich sehe auf dem Weg dahin zwei Arbeitsphasen:</p>
+<h3>Phase 1: Probleme in feine Inkremente zermahlen</h3>
+<p>In der ersten Phase muss das Problem, muss der Anforderungsberg zermahlen werden. Aus einem Monolithen – „Ich will alles!" – muss ein feines Granulat werden. Wir können nicht „Logik herunterschreiben" für ein Lastenheft von 500 Seiten, nicht einmal für eines mit nur einer Seite.</p>
+<p>Das ist uns allen auch klar. Wir bemühen uns um Anforderungszerlegung. Da werden Epics formuliert oder Use Cases oder User Stories. Wir versuchen, Software Feature für Feature zu realisieren.</p>
+<p>Etwas fehlt mir dabei jedoch. Ich finde diese Zerlegungen oft wenig handfest. Ich finde sie für Kunde wie Programmierer schwer zu begreifen. Nicht weil ihre Sprache zu kompliziert oder die Beschreibungen zu ungenau wären – was natürlich immer der Fall sein kann –, sondern weil ihnen der Bezug zu dem fehlt, was Anwender wie Programmierer am Ende „anfassen".</p>
+<p>Wo ist eine User Story in der Benutzeroberfläche einer Software? Keine Ahnung. Kann man mit dem Finger auf einen Use Case zeigen? Ich denke, nicht.</p>
+<p>Oder wo ist eine User Story im Code? Keine Ahnung. Kann man mit dem Finger auf einen Use Case zeigen? Eher nicht.</p>
+<p>All diese Zerlegungen lösen sich bei der Umsetzung auf, scheint mir. Sie sind irgendwie verschmiert über Benutzeroberfläche wie Codebasis.</p>
+<p>Ist das eine gute Sache? Mir scheint, nicht. Denn damit verteilt sich die Logik, die zu ihrer Realisierung geschrieben wird. Wenn dann etwas zu ändern ist, wird es schwer zu lokalisieren, wo Eingriffe nötig sind. Der Widerspruch zum Single Responsibility Principle (SRP) ist vorprogrammiert.</p>
+<p>Ich schlage daher eine andere Zerlegung von Problemen vor. Das bedeutet nicht, dass Sie keine User Stories &amp; Co mehr schreiben sollen, wenn Chef/Kunde/Tradition es fordern. Doch Sie sollten dabei nicht stehenbleiben.</p>
+<p>Ein für Benutzer wie Programmierer relevantes und greifbares Granulat besteht vielmehr mindestens aus diesen Größeneinheiten:</p>
+<ul>
+<li>Anwendung  Dialog  Interaktion  Feature</li>
+</ul>
+<p>Vor ein Problem gestellt, zerlegen wir es zunächst in Anwendungen. Die wiederum zerkleinern wir in Dialoge. Anschließend werden die zu Interaktionen zerrieben, welche wir zu Features zermahlen. Das ist kein linearer Prozess, das geht nicht geradlinig depth-first oder breadth-first. Dennoch ist es systematisch, weil es eben diese klare Hierarchie gibt, durch die wir uns vorarbeiten und in der wir die Ergebnisse verorten können.</p>
+<p>Im Grunde geht es darum, das Gesamtproblem durch einen Trichter zu pressen, bis unten nur noch einzelne Features heraustropfen. Das hat natürlich auch mit dem <em>cone of uncertainty</em> zu tun: je größer ein Problem, desto unsicherer, ob und wie es gelöst werden kann.</p>
+<h4>Findling Anwendung</h4>
+<p>Eine grobe Zerlegung des Problems „ganzes Softwaresystem" findet zunächst statt in Anwendungen (App). Anwendungen sind separat startbare Programme. Denken Sie „Icon auf Desktop" oder „eigene URL" oder EXE, die man als Batch in einem Terminal-Fenster starten kann.</p>
+<p>Eine App ist greifbar für den Anwender. Eine App ist aber auch greifbar für den Entwickler. Der weiß sofort, was er dafür tun muss: ein Projekt für seine Plattform in seiner IDE anlegen. Bei .NET gibt es da z.B. Konsolenprojekt, WinForms-Projekt, WPF-Projekt oder ASP.NET-Projekt. Bei Mono gibt es dann auch noch z.B. Xamarin.Forms für mobile Apps.</p>
+<p>Jede App ist kleiner als das Ganze, das der Kunde will – zumindest solange es mehrere Apps gibt. Jede App ist relevant für den Kunden, sie stellt ein Inkrement dar, zu dem er Feedback geben kann. Und gleichzeitig – das ist mir wichtig – ist eine App als Inkrement klar im Code verortbar. Man kann nicht nur am Bildschirm, sondern auch in einem Code-Repository den Finger darauf legen.</p>
+<h4>Kiesel Dialog</h4>
+<p>Selbst wenn sich ein Lastenheft in mehrere Apps zerlegen lässt, sind die natürlich immer noch zu groß, als dass man für sie die Logik herunterschreiben könnte. Weitere Zerlegung ist nötig.</p>
+<p>Deshalb sind für mich die nächste Granularitätsstufe Dialoge. Jede App erlaubt den Anwendern die Kommunikation durch einen oder mehrere Dialoge. Das können Fenster in einem GUI oder Seiten im Browser oder einfach Eingabeaufforderungen auf der Konsole sein. Oder es können sogar APIs sein, die per HTTP zugänglich sind.</p>
+<p>Über Dialoge wird Softwareverhalten getriggert. Anwender „drücken Knöpfe" auf den Dialogen und die Software tut etwas (Funktionalität) hoffentlich effizient genug (Qualität).</p>
+<p>Dialoge als kleinere Probleme, als Inkremente sind wieder für den Anwender greifbar – im wahrsten Sinne des Wortes, wenn wir an Touch-Displays denken. Er kann dazu Feedback geben.</p>
+<p>Für Programmierer sind Dialoge aber auch greifbar. Dialoge werden gewöhnlich als Klasse (oder Modul) realisiert. Wenn die Anforderung lautet „Wir brauchen einen Anmeldedialog", weiß der Programmierer sofort, dass über einen Designer in seiner IDE eine Klasse anlegen muss.</p>
+<p>Die Logik hinter einem Dialog wird kleiner sein als die der ganzen Anwendung sein. Ein Dialog hilft also, das Problem fassbarer, leichter lösbar zu machen. Gleichzeitig ist ein Dialog als Ausgangspunkt für diese Logik einfach im Code zu verorten. Man kann dort wie am Bildschirm den Finger darauf legen.</p>
+<h4>Sandkorn Interaktion</h4>
+<p>Doch Dialoge sind immer noch zu groß, um Logik für sie herunterschreiben zu können. Weitere Zerlegung tut Not.</p>
+<p>Dialoge fassen nicht nur Anzeigeelemente zusammen, sondern auch das, was ich Interaktionen nenne. So wie in einer zwischenmenschlichen Kommunikation Dialoge aus einzelnen Interaktionen (der eine sagt etwas, die andere antwortet usw.) bestehen, ist das auch bei Software.</p>
+<p>Eine Interaktion ist das Verhalten, das Software als Reaktion auf einen Trigger zeigt. Der Anwender gibt Daten in einem Registrierungsdialog ein, dann klickt er einen Button (Trigger) und die Software leistet Funktionalität in gewisser Qualität.</p>
+<p>Von solchen Interaktionen kann es pro Dialog viele geben. Sie hängen an Buttons, Menüpunkten, Tastaturkürzeln, Mausbewegungen, Gesten usw.</p>
+<p>Interaktionen sind für den Anwender relevant. Zu jeder kann er Feedback geben. Sie stellen Inkremente dar.</p>
+<p>Und gleichzeitig sind Interaktionen konkret für den Programmierer. Ihre Entsprechung im Code ist immer eine Funktion. Das kann ein Event-Handler einer Dialogklasse sein oder eine Methode einer Webservice-Klasse.</p>
+<p>Funktionen, also Unterprogramme kommen hier ins Spiel als Container für spätere Logik. Sie sind nicht Logik, sondern enthalten und ordnen Logik. Also dienen sie der Wandelbarkeit, nicht Funktionalität oder Qualität.</p>
+<p>Zu jeder Interaktion können Eingaben und Ausgaben definiert werden inkl. ggf. darüber hinaus nötiger Zustand (in-memory oder in einer Datenbank) sowie Seiteneffekte.</p>
+<p>Die Logik einer Interaktion wird kleiner sein als die eines Dialogs. Interaktionen machen es also leichter, das Problem zu lösen. Gleichzeitig sind die greifbar für Anwender wie Programmierer. Sie lassen sich im Code verorten.</p>
+<h4>Feinstaub Feature</h4>
+<p>Was ist ein Feature? Der Begriff „Feature" wird oft verwendet, wir haben ein intuitives Verständnis – doch was genau ist ein Feature?</p>
+<p>Meine Definition ist simpel: Ein Feature ist ein Inkrement <em>innerhalb</em> einer Interaktion – das sich im Code mit einer Funktion repräsentieren lässt.</p>
+<p>Features sind Softwareeigenschaften, zu denen der Anwender Feedback geben kann. Sie sind für ihn greifbar. Als Aspekte von Interaktionen sind sie nicht notwendig mehr Durchstiche durch die Software, sondern können in unterschiedlicher Tiefe des Verhaltens wirken.</p>
+<p>Bei der Registrierung eines Benutzers repräsentiert durch eine Interaktion eines Dialogs einer Anwendung könnte es z.B. diese Features geben:</p>
+<ul>
+<li>Benutzer speichern  Prüfen, ob Benutzername schon vergeben  Prüfen, ob Benutzername wohlgeformt  Fehler melden  Prüfen, ob Passwort wohlgeformt  Prüfen, ob Passwortwiederholung dem Passwort entspricht</li>
+</ul>
+<p>Für jedes dieser Features ist für den Programmierer wieder sonnenklar, was er tun muss: eine Funktion schreiben.</p>
+<p>Features sind mithin greifbar und relevant für Anwender wie Programmierer. Man kann einen Finger darauf legen während der Bedienung, man kann aber auch einen Finger darauf legen im Code.</p>
+<h4>Synthese</h4>
+<p>Wie gesagt, Use Cases oder User Stories können ihren Wert haben. Sie beschreiben gewünschtes Verhalten in einer Form, die nichts mit der Realisierung zu tun hat. Bei einer ersten Erkundung der Problemdomäne kann solche Unabhängigkeit nützlich sein, flüssiger zu kommunizieren.</p>
+<p>Am Ende jedoch, wenn es darum geht, Software verlässlich zu realisieren, d.h. Problembeschreibungen in Logik-Lösungen zu übersetzen, da glaube ich, dass wir konkreter werden sollten.</p>
+<p>Die Lösungsfindung sollte nicht beginnen, ohne ein Lastenheft, ohne Use Cases oder User Stories systematisch auf Apps, Dialoge, Interaktionen und schließlich Features zu mappen. Nur wird inkrementell für den Kunden vorangeschritten <em>und gleichzeitig</em> auch inkrementell im Code. Die Inkremente des Kunden lösen sich nicht mehr auf. Jedes auf allen Granularitätsebenen bleibt im Code als Einstiegspunkt für zukünftige Änderungen erhalten.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f87b95891d835c5a.png" /></p>
+<p>Das scheint mir grundlegend für hohe Wandelbarkeit, an deren Anfang Verständlichkeit steht. Und Code, in dem Inkremente sichtbar sind, ist verständlicher als Code, in dem sie aufgelöst sind.</p>
+<h3>Phase 2: Inkrementelle Probleme lösen</h3>
+<p>Um es auf den Punkt zu bringen: Ich glaube, dass wir mit dem Codieren, also letztlich dem Schreiben von Logik, nicht beginnen sollten, bevor wir nicht eine klar Vorstellung von mindestens einer Funktion haben. Nur dann lassen sich nämlich Akzeptanzkriterien sauber angeben. Die beantworten vor allem mit Beispielen die Frage: Welcher Input führt unter welchen Bedingungen (Zustand, Ressourcen) zu welchem Output und zu welchen Seiteneffekten?</p>
+<p>Im Sinne agilen Vorgehens entspricht so eine Funktion natürlich einem Inkrement. D.h. die Codierung kann erst beginnen, wenn mindestens eine Interaktion aus dem Monolithen Lastenheft herausgepresst wurde. Besser aber noch, wir haben auch die noch weiter zermahlen in einige Features.</p>
+<p>Mit Interaktionen und Features könnten wir losgehen. Aber ich glaube, wir sollten noch eine zweite Runde Nachdenken einlegen. Wer nach der Analysephase einfach eine Interaktion oder ein Feature herausgreift und darauf mit TDD einhämmert, um Logik auszutreiben, der arbeitet sicherlich hart – doch nicht notwendig smart.</p>
+<p>Denn Analyse ist keine Problemlösung. Durch Analyse wurde nur aus Anforderungen herausgelesen, was ist. Das ist Forschung, geradezu Archäologie. Es wird gehoben, was der Kunde will – soweit er das a priori, d.h. vor der Erfahrung einer Lösung, überhaupt formulieren kann.</p>
+<p>Wie jedoch die Lösung aussieht... welche Logik gebraucht wird... das ist nicht klar. Doch das ergibt sich nicht immer so einfach durch Vorlage von Akzeptanzkriterien selbst für ein Feature.</p>
+<p>Dazu kommt, dass Features – selbst übersetzt in Funktionen gedacht – nach der Analyse nur lose nebeneinander liegen. Ein Feinstaubhaufen ohne weitere Struktur, selbst wenn er in Interaktionsbeutelchen getrennt gesammelt in Dialogkästen in App-Schränken liegt, ist noch keine Lösung.</p>
+<p>Es muss ein Zusammenhang zwischen Features hergestellt werden. Und womöglich muss sogar noch weiter verfeinert werden, wodurch weitere Sub-Features entstehen, die dann wieder einen Zusammenhang brauchen.</p>
+<p>Neben der Analyse, dem Erkennen ist deshalb noch Entwurf nötig. Das klein, fein, feinst zermahlene Problem muss im Rahmen einer Lösung wieder zu einem Ganzen zusammengesteckt werden. Features verweisen auf Logik, die zu finden ist. Doch wie hängt die Logik des einen mit der Logik des anderen zusammen?</p>
+<p>Ich sehe Lösungen für das feine, inkrementelle Problemgranulat aus zwei Teilen bestehend. Sie beschreiben die Lösung auf unterschiedlichem Abstraktionsniveau: deklarativ, allgemein, grob und imperativ, konkret, detailreich.</p>
+<h4>Prozesse – Zusammenhang im Fluss</h4>
+<p>Die obere Ebene von Lösungen ist die der Prozesse. Dort besteht die Lösung auf einer Folge von Lösungsschritten. Was oben noch ungeordnete Aspekte (Features) waren, wird jetzt zu einer Sequenz:</p>
+<ul>
+<li>Prüfen, ob Benutzername schon vergeben, ggf. Fehler melden  Prüfen, ob Benutzername wohlgeformt, ggf. Fehler melden  Prüfen, ob Passwort wohlgeformt, ggf. Fehler melden  Prüfen, ob Passwortwiederholung dem Passwort entspricht, ggf. Fehler melden  Benutzer speichern</li>
+</ul>
+<p>Oder eben zu einem Fluss:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/86e0910635764834.png" /></p>
+<p>Hier fließt allerdings nicht Kontrolle, sondern es fließen Daten. Deshalb ist dieser Fluss deklarativ. Er zeigt nicht Logik, er zeigt keinen Algorithmus, sondern eben „nur" einen Prozess.</p>
+<p>Prozesse als Lösungen auf hoher Abstraktionsebene sind einfacher zu finden als Algorithmen. Hier kann man noch „Wünsch dir was" spielen. Man muss nicht genau wissen, wie die Schritte realisiert werden. „Wie geht das mit ‚Benutzer speichern'? Kommt da SQLite oder MongoDb zum Einsatz? Was ist das Datenbankschema?". Das muss nicht klar sein – auch wenn eine Idee davon hilft. Insofern auch bei den Lösungsphasen keine strickte Linearität.</p>
+<p>Prozesse bringen Features im Rahmen von Interaktionen in eine Reihenfolge. Es wird sozusagen eine Kausalkette definiert, die vom Trigger bis zur Reaktion der Software über den Dialog reicht. Daten fließen vom Benutzer als Impulse, die Verarbeitungsschritte anstoßen und zu neuen Daten führen, die am Ende wieder beim Benutzer laden.</p>
+<p>So existieren „Verhaltensprozesse" auf mehreren Ebenen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e4b08c2d32c72ca5.png" /></p>
+<p>Im Registrierungsdialog (Klasse) wird die Interaktion (Funktion) angestoßen, die aus einem Fluss von Features (Funktion) besteht. Solche hierarchischen Prozesse können viele Ebenen tief sein. Mit ihnen lassen sich die komplexesten Verhalten beschreiben – nicht obwohl, sondern weil sie deklarativ sind und eben nicht alle Details der Logik enthalten.</p>
+<p>Prozesse fädeln Features in einen Fluss wie Perlen auf eine Schnur. Der kann eindimensional wie oben sein oder zweidimensional mit mehreren Armen oder dreidimensional durch Schachtelung. Die Summe der Features plus weitere Prozessschritte, auf die man während des Prozessentwurfs zur Lösungsentwicklung kommt, ergeben am Ende das gewünschte Gesamtverhalten im Hinblick auf Funktionalität wie auch Qualität.</p>
+<p>Die Lösung ist damit vorhanden – allerdings noch nicht in Form von Code. Ein Prozess ist zunächst nur ein Plan, ein Entwurf. Allerdings ein für die Programmierung sehr geeigneter, weil jeder Prozessschritt in eine Funktion übersetzt werden kann, von der man auch schon weiß, in welchem Zusammenhang sie aufgerufen wird. Und das ist ja, wie oben schon gesagt, die Voraussetzung für die Codierung.</p>
+<h4>Algorithmen – Abarbeiten in Kontrolle</h4>
+<p>Ist der Prozess der „Herstellung von Verhalten zur Laufzeit" klar, dann – endlich – geht es an den Code. Denn nun bleibt nur noch die Logik zu finden und zu schreiben. Jetzt ist die unterste Ebene des Zerlegungsbaums erreicht, auf der die Lösung aus Algorithmen und Datenstrukturen besteht.</p>
+<p>Jetzt erst ist imperative Programmierung gefragt. Hier geht es um Details. Algorithmische Details und technische Details. Das ist schwierig. Da ist der ganze Softwerker gefragt. Doch zum Glück sind die „Logikhappen" überschaubar. Durch das bisherige Zermahlen ist das Problemgranulat sehr fein geworden, so dass die unterste Ebene der Prozesshierarchie – ich nenne das die Operationen – je Schritt mit einer überschaubaren Anzahl Codezeilen auskommen sollte.</p>
+<p>Zumindest sollte die inkrementelle Zerlegung mit anschließendem Prozessentwurf soweit gehen. Sie hören auf, wenn Sie meinen, dass ein Feature bzw. Prozessschritt mit vielleicht maximal einer Bildschirmseite Code in einer Funktion realisiert werden kann.</p>
+<p>Aber was, wenn Sie auf eine solch feingranulare Zerlegung nicht kommen? Dann ist das das sichere Zeichen dafür, dass etwas im Argen ist. Entweder sind die Anforderungen noch zu schwammig. Oder Sie verstehen sie noch nicht wirklich – und können deshalb keine gute Vorstellung für eine Lösung entwickeln. Oder Ihnen fehlt technisches Know-how für den rechten Einsatz von API z.B. für die Persistenz oder Security.</p>
+<p>Dann können Sie die Lösung noch nicht wirklich fertigstellen. Sie müssen eine Forschungsrunde einlegen, in der Sie Ihre Verständnis-/Wissenslücke irgendwie schließen.</p>
+<p>Tun Sie das aber nicht am Produktionscode! Probieren Sie Technologie oder algorithmische Ansätze an Prototypen aus. Bauen Sie sich im Repository eine kleine Sandkiste für diese Zwecke (eigenes Verzeichnis, eigener Branch). Forschung sollte nicht mit Handwerk vermischt werden.</p>
+<p>Wenn Sie später mehr wissen, kommen Sie zum Entwurf zurück und treiben ihn weiter, bis die Operationen alle überschaubare Größe haben. Dann und nur dann beginnen Sie mit der Codierung.</p>
+<h3>Zusammenfassung</h3>
+<p>Dass zur Softwareentwicklung irgendwie Zerlegung gehört, ist immer schon klar gewesen. <em>Stepwise refinement</em> oder <em>functional decomposition</em> klingeln bei Ihnen sicherlich im Hinterkopf. Das war so grundsätzlich immer richtig – ist mit der Objektorientierung jedoch etwas in Vergessenheit geraten und hat durch die Agilität einen neuen Blickwinkel erhalten.</p>
+<p>Die Zerlegung der Anforderung sollte nicht nur Kundenrelevantes produzieren, das iterativ realisiert wird. Nein, ich halte es für ebenso wichtig, diese Inkremente so zu formulieren, dass sie eine Entsprechung im Code finden. Damit ist der Übergang von den Anforderungen in die technische Realisierung, vom SOLL zum IST möglichst bruchlos. Das kann die Verständlichkeit und Wandelbarkeit und auch Produktivität nur beflügeln.</p>
+<p>Dann jedoch nicht stehenbleiben! Wenn die Probleme so klein wie Interaktionen und Features sind, lassen Sie die Tastatur am besten immer noch unterm Monitor. Nehmen Sie sich eine Feature oder eine Interaktion vor und entwerfen Sie die Lösung zunächst, statt sie sofort codieren zu wollen.</p>
+<p>Sehen Sie die Lösung dabei auf zwei Abstraktionsebenen: der noch eher konzeptionellen Prozessebene und so spät wie möglich erst auf der konkret algorithmischen. Logik ist im doppelten Sinn das Letzte mit dem Sie sich beschäftigen wollen. Vermeiden Sie es, so lange es geht. Wo die Logik beginnt, wo es um Kontrollfluss und Code geht, wird es ekelig.</p>
+<p>Das lässt sich nicht vermeiden, denn schließlich muss die Lösung irgendwann laufen. Dazu braucht es Code. Doch zu dem Zeitpunkt wollen Sie vorbereitet sein. Das, was zu codieren ist, sollte in kleine Häppchen portioniert sein. Imperative Programmierung ist schlicht die schwierigste.</p>
+<p>„Teile und herrsche" ist also weiterhin das Mittel der Wahl, um Softwareentwicklung in den Griff zu bekommen. Die Frage ist nur, wie teilen? Da sehe ich zwei Sphären mit drei unterschiedlichen grundsätzlichen Ebenen:</p>
+<ul>
+<li>Die Sphäre der Inkremente. Hier geht es um Probleme. Da muss zermahlen werden.  Die Sphäre der Funktionen. Hier geht es um die Lösungen. Da muss synthetisiert und realisiert werden.</li>
+</ul>
+<p>Das Ergebnis der Problemzerlegung sind so fein geschnittene Probleme, dass jedes in eine Funktion übersetzt werden kann. Dafür können Akzeptanzkriterien festgelegt werden. Aber diese Funktionen müssen zu deklarativen Lösungen zusammengefügt und dann ausgefleischt werden. Das sind die Ebenen der Prozesse und Algorithmen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e3be8101d861b1a4.png" /></p>
+<p>Das ist nicht die <em>functional decomposition</em> von früher. Es ist anders, weil der Ausgangspunkt Inkremente sind. Es ist anders, weil Prozesse deklarativ und datenflussorientiert sind. Die Kontrollflüsse, die Algorithmen der <em>functional decomposition</em> sind eingehegt in kleine „Bläschen" ganz am unteren Ende der Zerlegungshierarchie. Auf keiner anderen Ebene gibt es Logik. Es gibt keine funktionalen Abhängigkeiten mehr. Das macht das Resultat sauber.</p>
+<p>Wie kommen Sie dahin? Auch wenn die Zerlegung sehr geradlinig aussieht, läuft die Entwicklung wie ein Jojo über die Hierarchie hoch und runter. Breadth-first wechselt sich mit depth-first ab. Auf top-down folgt bottom-up.</p>
+<p>Das Ziel ist jedoch klar: die feingranulare Zerlegung von Anforderungen und Entwurf nach diesem grundsätzlichen Schema. Problem und Lösung gehen in einander über.</p>
+<p>Für mich funktioniert das seit Jahren gut und mit jedem Tag noch besser. Was früher irgendwie vielleicht früher oder später klappte und ansonsten holprig lief, ist nur systematisch und klar. Ich lasse mich nicht mehr von Dogmen ablenken („Agilität muss so und so laufen", „Objektorientierung muss so und so aussehen"). Es zählt, was zügig zu einem verständlichen und wandelbaren Resultat führt.</p>
+<p>Ich kann Ihnen diese Sichtweise nur ans Herz legen.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2014-09-24):</p>
+<p>Hm, da hab ich doch schon ein Bild zu gesehen - ich glaub es war in der aktuellen dotnetpro, in der Dojo-Lösung.</p>
+<p>Finde den Ansatz super und bin schon länger dabei deinen Ansatz IOSP (Stichwort: Software fraktale) zu verfolgen.</p>
+<p>Mir fällt es nur immer noch schwer, die Logik NUR in den Operationen zu haben. Ich ertappe mich selbst wie ich jedesmal wieder denke: "Hier ein IF (in der Integration), dass wird ja nicht so wild sein."</p>
+<hr />
+<p><strong>Stefan Bauer</strong> (2014-09-26):</p>
+<p>Klingt mir irgendwie vertraut. Ich versuche mir gerade weitere Ansätze zur Lösung von Problemstellungen beizubringen. Z.B. Softwaresysteme "systemisch" zu formulieren und zu beschreiben. Eine hierarchische Zerlegung eines Systems entfernt wichtige Aspekte. Diese Aspekte sollten als Beschreibung in Regeln definiert werden und lassen sich nicht abgekoppelt voneinander betrachten. Auch Regeln lasssen sich "hierachisch" ordnen. Priorität vs. Detailgrad. Genug philosophiert ... Ich stehe jedoch auch erst am Anfang des Weges und bin gespannt auf weitere Erkenntnisse.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2014-09-29):</p>
+<p>@Stefan: Als weitere Lektüre kann ich dir dieses Buch empfehlen: https://leanpub.com/thearchitectsnapkin-derschummelzettel</p>
+<p>Darin beschreibe ich ein bigger picture, von dem das hier Besprochene nur ein Teil ist.</p>
+<hr />
+<p><strong>Martin</strong> (2015-07-23):</p>
+<p>Die Aufteilung App - Dialog - Interaktion - Feature gefällt mir außerordentlich gut.</p>
+<p>Ich schreibe gerade ein kleines Software-Entwurfsdokument und komme mit diesen Begriffen und ihrer Granularität spontan sehr gut zurecht. Dabei fällt mir auf, dass ich in den Features teilweise Bezug auf andere Interaktionen oder Dialoge nehme, was wohl nur natürlich ist. Gefühlt entwerfe ich quasi grob die UI, aber in ausreichend logischer und vor allem grober Art und Weise, ohne viel Ballast. Schreibt sich auf jeden Fall gut hin. (Gefühlt besser als Use Cases, aber das ist ein anderes Fass.)</p>
+<p>Sehr schön, vielen Dank für diese Anregung!</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

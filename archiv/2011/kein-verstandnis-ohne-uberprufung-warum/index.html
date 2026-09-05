@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kein Verständnis ohne Überprüfung – Warum Wasserfallentwicklung nicht funktionieren kann — ralfw.de Archiv</title>
+<meta name="description" content="Gerade lese ich das Manuskript eines Buches, das demnächst im dpunkt.verlag erscheinen wird. Man hat mich nach meiner Meinung danach gefragt und ich finde es spannend. Die Autoren ">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/kein-verstandnis-ohne-uberprufung-warum/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Kein Verständnis ohne Überprüfung – Warum Wasserfallentwicklung nicht funktionieren kann — ralfw.de Archiv">
+<meta property="og:description" content="Gerade lese ich das Manuskript eines Buches, das demnächst im dpunkt.verlag erscheinen wird. Man hat mich nach meiner Meinung danach gefragt und ich finde es spannend. Die Autoren ">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/kein-verstandnis-ohne-uberprufung-warum/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Kein Verständnis ohne Überprüfung – Warum Wasserfallentwicklung nicht funktionieren kann</h1>
+    <div class="doc-meta"><span>1. Jan. 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/01/kein-verstandnis-ohne-uberprufung-warum.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/kein-verstandnis-ohne-uberprufung-warum/</code></span></div>
+    <div class="art"><p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e76c053bb746a658.png" /></p>
+<p>Gerade lese ich das Manuskript eines Buches, das demnächst im <a rel="noopener" href="http://dpunkt.de/">dpunkt.verlag</a> erscheinen wird. Man hat mich nach meiner Meinung danach gefragt und ich finde es spannend. Die Autoren schauen durch die Brille der Psychologie unter fragen kritisch, inwiefern liebgewonnene oder gehypte Praktiken eigentlich auf einem wissenschaftlichen Fundament ruhen. Das finde ich gleichermaßen wichtig wie erhellend. Schön, dass in der letzten Zeit die softe Seite der Softwareentwicklung zunehmend Beachtung findet. Und der dpunkt.verlag tut sich da in Deutschland besonders hervor.</p>
+<p>Aber mir geht es nicht um eine Buchrezension, vielmehr möchte ich Gedanken des Buches zum Anlass nehmen, mich selbst nochmal systematisch mit dem Vorgehen in der Softwareentwicklung zu beschäftigen. Was tun wir denn da eigentlich, wenn wir Anforderungen in Software gießen? Und wenn geklärt ist, was wir da tun, wie wird das am besten getan?</p>
+<p>Meine These: <strong>Softwareentwicklung ist verlustbehaftete Kommunikation unvollständiger Daten.</strong> Deshalb ist Softwareentwicklung so besonders.</p>
+<h3>Datenübermittlung systematisch</h3>
+<p>Softwareentwicklung setzt Ideen im Kopf des Kunden um in Software, die der Kunde nutzt. Es geht also um eine Transformation von Ideen in ein Produkt. Naja, das ist noch nichts Besonderes; nichts anderes passiert in einem Restaurant, in dem ein Koch eine Idee für ein neues Gericht hat und am Ende liegt etwas auf dem Teller des Gastes. Auch da wird eine Idee in ein Produkt transformiert. Dennoch glaube ich, dass es nützlich ist, genau hinzuschauen und den Prozess der Softwareentwicklung einmal zu visualisieren.</p>
+<p>Anfangen möchte allerdings mit simpler Datenübermittlung. Wenn einer “Daten im Kopf hat” die er einem anderen übermittelt, damit sie “in dessen Kopf sind”, dann sieht das so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a38cedfa0f6c5884.png" /></p>
+<p>Der Sender, der mit den Daten im Kopf, kann seine Gedanken leider nicht per Telepathie dem Empfänger zukommen lassen. Also muss er sie in ein Medium verpacken (enkodieren). Dieses Medium interpretiert (dekodieren) der Empfänger; dadurch entsteht bei ihm eine eigene Vorstellung von dem, was der Sender im Kopf hat.</p>
+<p>Wie das Bild zeigt, ist diese Datenübermittlung nicht problemlos. An mindestens zwei Punkten kann es zu Fehlern kommen:</p>
+<ul>
+<li>Es kann dem Sender passieren, dass er seine Daten nicht 100% korrekt auf das Medium überträgt. Oder vielleicht ist der Sender schuldlos und das Medium schlicht nicht reichhaltig genug, um die Daten 1:1 zu repräsentieren. In jedem Fall kann es leicht passieren, dass das Medium am Ende nur eine verarmte/reduzierte Version der ursprünglichen Daten transportiert.  Und dann kann es natürlich dem Empfänger passieren, dass er die Daten im Medium inkorrekt interpretiert. Dann entsteht bei ihm eine andere Vorstellung als beim Sender. Die Daten im Kopf von Sender und Empfänger stimmen nicht überein. Allemal kann das nicht anders sein, wenn das Medium die ursprünglichen Daten nicht korrekt enthält – aus welchem Grund auch immer.</li>
+</ul>
+<p>Übertragungsfehler – allemal bei menschlicher Kommunikation – sind mithin nicht zu vermeiden. Es stellt sich daher die Frage: Wie kann ein Sender eigentlich herausfinden, ob der Empfänger am Ende die beabsichtigten Daten “im Kopf hat”?</p>
+<p>Wären Enkodieren und Decodieren ohne Probleme, das Medium reichhaltig genug, die Kommunikation also verlust und fehlerfrei… dann könnte der Sender immer sicher sein, dass beim Empfänger das vollständige Bild entsteht. Dann würde es am Ende genügen zu fragen, “Alles angekommen? Alles verstanden?” Und der Empfänger bräuchte nur mit “Ack” oder “Roger” oder “Verstanden” antworten.</p>
+<p>Interessanterweise ist solch naive Nachfrage immer noch recht häufig zu hören. Achten Sie bei der nächsten Schulung einmal darauf oder wo immer ein Wissenstransfer stattfinden soll. Irgendwann wird da einer fragen, “Wie schaut es aus? Bis hierher alles klar?” und die kollektive Antwort der Wissensempfänger wird sein “Jo, alles klar. Es kann weiter gehen.”</p>
+<p>Leider hat diese Antwort jedoch keinen Wert. Wissensempfänger können nicht wissen, ob sie das zu vermittelnde Wissen tatsächlich schon haben. Selbst in viel simpleren Situationen kann der Empfänger nicht einfach so wissen, ob er korrekt empfangen hat. Deshalb gibt es Prüfsummen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2921f643dc3de09f.png" /></p>
+<p>Der Sender überträgt nicht nur seine Daten, sondern auch noch eine Prüfsumme, die sich aus den Daten errechnen lässt. Der Empfänger kann dann selbst feststellen, ob er korrekt empfangen hat, indem er mit demselben Algorithmus wie der Sender selbst die Prüfsumme berechnet und mit mitgelieferten vergleicht.</p>
+<p>Stimmen die Prüfsummen überein, ist alles ok. Stimmen sie nicht überein, sind entweder die Daten oder die Prüfsumme inkorrekt übertragen worden. Der Empfänger muss den Sender also nur im (unwahrscheinlichen) Übertragungsfehlerfall belästigen. (Das gibt dem Sender zwar keine Sicherheit darüber, ob der Empfänger überhaupt Daten empfangen hat, aber den Fall lasse ich mal außen vor. In den Kommunikationen, um die es mir geht, ist das kein wirkliches Problem.)</p>
+<p>Wenn für die zu übertragenden Daten eine Prüfsumme errechenbar ist, d.h. weitere Daten existieren, anhand derer der Empfänger prüfen kann, ob die eigentlichen Daten korrekt angekommen sind, dann ist Datenübertragung ohne weitere Kommunikation möglich. Dann kann der Datenstrom unidirektional vom Sender zum Empfänger fließen. Und nur im (seltenen) Fehlerfall ist ein Empfänger-Sender-Kommunikation nötig.</p>
+<p>Solange jedoch keine Prüfsumme existiert, kann der Sender ohne eine “Spiegelung” durch den Empfänger nicht wissen, ob der die Daten korrekt empfangen hat.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/759487bfbff2d255.png" /></p>
+<p>Wenn der Empfänger während der “Spiegelung” zum Sender wird, kann es natürlich wieder zu einer verlust- und fehlerbehafteten Kommunikation kommen. Falls das Verständnis beim Empfänger inkorrekt ist, ist seine Darstellung dessen gegenüber dem ursprünglichen Sender ebenfalls notwendig inkorrekt. Darüber hinaus ist es aber wahrscheinlich, dass der Empfänger nicht einmal in der Lage ist, sein eigenes Verständnis präzise zu vermitteln. Zumindest ist das der Normalfall bei nicht trivialen Daten, also in allen menschlichen Lernsituationen.</p>
+<p>Die Übertragung von Anforderungen aus dem Kopf eines Kunden in den Kopf eines Entwicklers kann nicht in einer Einbahnstraße geschehen. Anforderungen sind sehr komplizierte Daten, deren Enkodierung sicherlich stark verlust- und fehlerbehaftet ist. Dasselbe gilt für die Dekodierung. Das heißt, <strong>es sind viele Spiegelungen und Übermittlungswiederholungen nötig, um Anforderungen verlässlich zu übertragen.</strong> Zu glauben, es sei mit einem dicken Anforderungsdokument getan, das der Entwickler liest, versteht und in Software umsetzt, ohne großartig nachzufragen, ist naiv.</p>
+<h3>Anforderungen in Software transformieren</h3>
+<p>Am schönsten wäre es natürlich, wenn der Kunde selbst seine Software herstellen könnte. Mag sein – ist aber irreal. Soweit ist die Softwareentwicklung noch lange nicht, auch wenn Excel, Access und DSLs das manchmal suggerieren. Dennoch hier der Idealzustand im Bild:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/5b26a14e4aad4659.jpg" /></p>
+<p>Der Sender/Kunde enkodiert seine Anforderungen in eine Maschine (Software). Die transformiert dann Eingaben in Ausgaben, so wie der Kunde es sich wünscht.</p>
+<p>Da das Encodieren auch hier natürlich fehler- und verlustbehaftet sein kann, stellt sich die Frage, wie der Maschinenbauer feststellt, ob die Maschine das tut, was sie tun soll? Ganz einfach: er muss sie mit Testeingaben füttern und schauen, ob sie daraus die zu erwartenden Ausgaben macht. Zur Definition einer Maschine gehören also nicht nur ihre Transformationsregeln (funktionale Anforderungen), sondern auch Beschreibungen zulässiger Eingaben und der daraus zu erzeugenden Ausgaben.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/4ff9a8434ee7af70.png" /></p>
+<p>Wer eine Maschine bauen will, muss also sogar etwas mehr “im Köpfchen haben” als Regeln; er muss sehr konkret wissen, welche Eingaben erlaubt sind und in welche Ausgaben die durch eine korrekte Implementierung der Regeln in der Maschine transformiert werden sollen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/14f506f8fb8b69cd.png" /></p>
+<p>Damit stellt sich der reale Softwareentwicklungsprozess als Kette von Datenübermittlungen dar: der Kunde übermittel Anforderungen an einen Stellvertreter, der die Anforderungen dem Team vermittelt, das daraus eine Maschine baut, die der Kunde bzw. sein Stellvertreter prüfen müssen. Hier eine etwas verkürzte Darstellung der minimalen Entwicklungssequenz:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/0e93883403e3292d.png" /></p>
+<p>Eigentlich ganz einfach, oder? Es müssen die Anforderungen nur drei Mal verlust- und fehlerfrei enkodiert werden und zwei Mal verlust- und fehlerfrei dekodiert werden.</p>
+<h3>Entwicklung vs. Produktion</h3>
+<p>Selbst diese vereinfachte Darstellung der Softwareentwicklung sollte nun eines klar machen: Softwareentwicklung ist eben Entwicklung und nicht Produktion. Produktion ist nämlich, wenn eine existierende Maschine (oder Maschinerie) wiederholt Eingaben und Ausgaben transformiert. Die Eingaben mögen in einer gewissen, vergleichsweise geringen Bandbreite variieren und damit auch die Ausgaben. Aber letztlich läuft die Maschine(rie) ohne große Änderungen durch.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/10e0c6ab2f10aaae.png" /></p>
+<p>Das ist ja Sinn und Zweck einer Maschine(rie): Ermüdungsfrei immer wieder dasselbe tun. Ganz unkreativ – dafür verlust- und fehlerfrei.</p>
+<p>Wenn eine Software erstmal entwickelt ist, dann ist sie selbstverständlich eine solche Maschine. Dann kann der Kunde mit ihr Ausgaben aus Eingaben produzieren. Immer und immer wieder.</p>
+<p>Der Weg zur Software hin ist allerdings, der ist keine Produktion. Weder Kunde, noch Stellvertreter, noch Team sind Maschine(rie)n. Von ihnen kann bei aller möglicherweise vorhandenen Erfahrung nicht erwartet werden, dass sie verlust- und fehlerfrei Eingaben in Ausgaben transformieren. Enkodieren und Decodieren sind essenziell schwierig, sehr schwierig. Aus Anforderungen eine Software zu machen, ist mithin ein aufwändiger Kommunikations und Realisierungsprozess. Ansprüche, wie man sie an die Produktion stellt (z.B. gute Schätzbarkeit in puncto Geld- und Zeitaufwand), sind hier fehl am Platze. Softwareentwicklung ist vielmehr kreative Einzelstückherstellung, beginnt also immer wieder bei quasi Null.</p>
+<h3>Entwicklung als Lernprozess</h3>
+<p>Hier ein typischer Vermittlungsprozess ganz allgemeiner Art:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/fe5b74933bee77e7.png" /></p>
+<p>Die zu vermittelnden Daten sind kompliziert; es handelt sich um Wissen, also Fakten und Zusammenhänge. Enkodieren und dekodieren sind deshalb notwendig verlust- und fehlerbehaftet. Also ist eine Spiegelung des Empfangenen durch den Empfänger gegenüber dem Sender nötig. Und wenn der Empfänger “sich dumm anstellt” oder der Sender “sich nicht ausdrücken kann” oder schlicht die Natur der Daten auch bei kommunikationsfähigen und intelligenden Sendern und Empfängern keine Abkürzung erlaubt, dann ist eine “Datenübertragung” nur im Dialog möglich. Sender und Empfänger brauchen mehrere Iterationen, damit beim Empfänger die Daten in ausreichend hoher Korrektheit und Vollständigkeit ankommen.</p>
+<p>Das nennt man dann Lernen.</p>
+<p>Da es für nicht trivialen Lernstoff keine Prüfsummen gibt, braucht es einen Dialog, um Wissen vom Wissenden zum Unwissenden zu übertragen. Es geht zwar auch im Monolog, indem der Wissende sein Wissen einmalig enkodiert, z.B. in ein Buch oder ein Video, und der Unwissende dieses Medium wiederholt dekodiert und dann versucht, mit seinem Verständigs Eingaben in Ausgaben zu transformieren. Doch solches Autodidaktentum ist mindestens langwierig. Aber vor allem besteht keine Gewähr, dass der Unwissende je das Wissen des Wissenden erlangt. Denn bei aller Mühe, die sich der Wissende beim encodieren gibt, kann es zu Verlusten und Fehlern kommen. Wie aber soll dann der Unwissende aus einem löchrigen und/oder fehlerhaften Medium lückenloses und fehlerfreies Wissen dekodieren?</p>
+<p>Wer an effektiver und effizier Wissensweitergabe interessiert ist, der stellt sich besser auf einen Dialog mit dem Wissensempfänger ein.</p>
+<p>Jetzt konkreter für die Softwareentwicklung. Wie nun offensichtlich sein sollte, ist Softwareentwicklung Lernen. Der Stellvertreter lernt vom Kunden, der Softwareentwickler lernt vom Stellvertreter des Kunden, die Software “lernt” vom Entwickler. Mindestens drei Dialoge müssen also geführt werden, denn – darin sind sich wohl alle einige – Anforderungen sind keine trivialen Daten.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/00c4a3b624db6452.png" /></p>
+<p>An den drei Dialogen gehts nichts vorbei. Die Frage ist allerdings, wie sie geführt werden sollten? Sequenziell…</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/fc24e311f5f2a397.png" /></p>
+<p>…oder parallel/verschränkt:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/0fd8819a870915db.png" /></p>
+<p>Die Antwort sollte auf der Hand liegen: Sequenziell kommuniziert liegt eine erste Version der angeforderten Maschine nach 12 Kommunikationsschritten vor; mit verschränkten Dialogen steht eine erste Version jedoch schon nach 8 Kommunikationsschritten bereit.</p>
+<p>Als mehrstufige Wissensvermittlung sollte Softwareentwicklung auf keiner Stufe glauben, bei endgültigem Verständnis angekommen zu sein. Deshalb ist ein Vorgehen, das erst eine Stufe abschließt, um dann die nächste zu beginnen, kontraproduktiv. Missverständnisse kann es in allen Kommunikationsphasen geben. Vielmehr <strong>ist ein zügiges Fortschreiten von der Idee zu ihrer Manifestation in einer Maschine anzustreben</strong>, um dem Ideal der Selbstentwicklung durch den Kunden (s.o.) möglichst nahe zu kommen.</p>
+<p>Der Lernprozess ist nämlich noch unvollständig dargestellt. Die Herstellung der Maschine Software ist nicht schon abgeschlossen, wenn der Entwickler meint, den Dialog mit ihr beenden zu können. Softwareentwicklung ist vielmehr – da geht sie über das übliche Lernen hinaus – ein rekursiv gekoppelter Prozess.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/980b54ed066bcb35.png" /></p>
+<p>Lernen ist bei allem Dialog nur als Einbahnstraße gedacht: Wissen wird vom Wissenden zum Unwissenden übertragen. Was der dann damit macht, ist dem Wissenden recht egal. Der Lehrer soll nur sicherstellen, dass die Übertragung verlust- und fehlerfrei ist.</p>
+<p>Das ist anders bei der Softwareentwicklung. Da will der Wissende/Kunde hinterher mit dem Ergebnis der Übertragung, dem manifestierten Wissen, den Maschine gewordenen Anforderungen etwas anfangen. Deshalb kann der Kunde sich nicht darauf verlassen, dass die oben gezeigte Dialogkaskade – ob sequenziell oder verschränkt – bei genügend Mühe verlust- und fehlerfrei ist. Nein, der Kunde muss das Endergebnis auch noch selbst prüfen. Auch er muss mit der Maschine einen direkten Dialog führen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a5c412b2c84e5b4f.png" /></p>
+<p>Und dieser notwendige Dialog des Kunden mit der Software führt dann zu einer nächsten Lernkaskade. Beim üblichen Lernen steht der Lehrer nur am Anfang, seine Aufgabe ist das Senden (und die Überprüfung, ob der Empfang ausreichend ist). Bei der Softwareentwicklung steht der Lehrer/Kunde jedoch am Anfang und am Ende. Er ist gleichzeitig Sender und ultimativer Empfänger.</p>
+<p>Das ist aber nicht insofern etwas Besonderes, als dass die Kommunikation grundsätzlich so schwierig ist vom Sender bis zum Produkt/zur Maschine. Das ist auch in anderen Situationen so. Wahrhaft besonders ist die Situation, weil die zu übermittelnden Daten so kompliziert sind.</p>
+<p>Man mag es kaum glauben, aber es ist nicht zu leugnen:</p>
+<ul>
+<li>Kunden kennen nicht einmal die funktionalen Regeln der Maschine vollständig, die sie in Auftrag geben.  Kunden kennen die Eingabemenge der Maschine nicht vollständig.  Kunden kennen die Ausgabemenge der Maschine nicht vollständig.</li>
+</ul>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/bf2ed8ecfbb7e87b.png" /></p>
+<p>Das bedeutet für die Kette von Lernprozessen, aus denen die Softwareentwicklung besteht: Keine Stufe kann je sicher sein, dass sie das, was “eigentlich” gewollt ist, verstanden hat. Selbst nach einem Dialog mit seinem Sender hat der Empfänger kein wirklich, wirklich verlässliches Wissen. Kein Empfänger kann es haben, weil der ursprüngliche Sender, der Kunde, es nicht einmal hat.</p>
+<p>Das liegt nicht an der Dummheit des Kunden, sondern an der Komplexität der Materie. Softwaremaschinen sind zum einen komplizierter als die meisten Hardwaremaschinene, zum anderen ist ihnen aber auch etwas anderes enkodiert. Softwaremaschinen sind geronnene Geschäftsprozesse und keine Materialtransformatoren. Und da Geschäftsprozesse auch ohne Computer viel schwerer greifbar sind als die Produktion von Wurst, Schuhen oder auch Häusern – schon weil Geschäftsprozesse die enthalten, also umfassender sind –, ist das Wissen des Kunden über sich notwendig lückenhaft.</p>
+<p>Es geht also nicht ohne dass der Kunde selbst in Dialog tritt mit der Softwaremaschine, um erstens festzustellen, ob die Wissensvermittlung und Manifestation geklappt hat, und zweitens, um seine eigenen Vorstellungen in der Maschine reflektiert zu sehen. Erst durch den Dialog mit der Maschine kann der Kunde sich selbst und seine Wünsche verstehen. Software ist ein Spiegel; in ihm sieht der Kunde ein gnadenloses Abbild seines Selbstverständnisses bzw. seines Domänenverständnisses.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/127c2139a4f86a03.png" /></p>
+<p>Softwareentwicklung arbeitet an der Grenze des explizit für den Kunden wissbaren. Die Wissensübertragung ist schwierig, weil Enkodieren und Dekodieren über mehrere Studen immer schwierig ist, aber insbesondere das ursprüngliche Wissen unvollständig ist. Deshalb muss die Softwareentwicklung dem Kunden <strong>schnell und häufig den Spiegel des aktuellen Softwarestandes vorhalten. Nur so kann der Kunde über sein eigenes vermeintliches Wissen reflektieren.</strong></p>
+<h3>Prüfsummen für die Softwareentwicklung</h3>
+<p>Lehrer mögen es, wenn Schüler ihre Lernerfolge selbst kontrollieren können. Dann haben sie weniger Arbeit. Weniger Interaktionen im Dialog sind nötig. Und überhaupt mögen Sender Rückfragen nicht. Deshalb liegen Datenpaketen Prüfsummen bei.</p>
+<p>Um in der Softwareentwicklung die notwendigen Dialoge zumindest so kurz wie möglich zu halten, wäre es also nützlich, auch hier Prüfsummen zu haben. Was sind aber Prüfsummen für die funktionalen Regelwerke, die Kunden in Software gegossen haben wollen?</p>
+<p>Eingabe-Ausgabe-Paare sind solche Prüfsummen.</p>
+<p>Die vornehmste Aufgabe jedes Empfängers von Anforderungen in der Kommunikationskette der Softwareentwicklung ist es daher, beispielhafte Ein- und Ausgaben zu sammeln. Sie sind wichtiger als das Regelwerk der Maschine, da dies ohnehin sehr wahrscheinlich Lückenhaft ist oder im Extremfall gar nicht vorliegt. Die letzte Wahrheit liegt daher immer bei gegebenen Eingaben mit zugehörigen Ausgaben, d.h. Akzeptanztestdaten. Ihnen muss die Aufmerksamkeit bei der Anforderungserhebung zuvörderst gelten.</p>
+<p>Liegen Akzeptanztestdaten vor – je mehr desto besser –, kann ein Empfänger selbstständig prüfen, ob sein Verständnis des Maschinenregelwerks korrekt ist. Das senkt die Notwendigkeit für Interaktionen mit dem Sender.</p>
+<p>Eine Maschinenbeschreibung sollte daher nicht nur ein Tripel sein – {Funktionale Regeln R, Eingabemengenbeschreibung E, Ausgabemengenbeschreibung A} –, sondern mindestens ein Quadrupel: {R, E, A, ea} – mit ea als Menge von Paaren von Elementen aus E mit zugehörigem Element aus A.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/37dfd9c401c52bf5.png" /></p>
+<p>Spätestens der Entwickler sollte keine Anforderung entgegennehmen ohne Akzeptanztestdaten. Das spart Rückfragen bei vorgelagerten Sendern und somit Zeit wie Nerven.</p>
+<p>Und auf ein Kunde sollte keine Entwicklung beauftragen, ohne für jede Funktionalität Akzeptanztestdaten zu spezifizieren. Solange die Entwicklung nicht kurz und knapp demonstrieren kann, dass die korrekt transformiert werden, muss dem Kunden die Maschine nicht vorgeführt werden.</p>
+<p>Wie die korrekte Transformation demonstriert wird, damit der Kunde frühzeitig in “einen Spiegel blicken kann”, ist eine andere Frage. Jedes Mittel ist dabei recht; auf ein vollständige Software muss nicht gewartet werden. Ein spezieller Prüfstand kann auch ein probates Mittel sein – und sollte vom Kunden nicht abgelehnt werden mit dem Argument, da sei ja noch nicht alles fertig. <strong>Bei den Dialogen in der Kommunikationskaskade der Softwareentwicklung geht es um zügige Spiegelung aller möglichen Aspekte der Maschinendefinition im Kopf des Kunden. Komplette Benutzerschnittstellen sind dafür nicht unbedingt nötig.</strong></p>
+<h3>Zusammenfassung</h3>
+<p>Softwareentwicklung ist keine Produktion im üblichen Sinn. Sie ist ein Lernprozess, unvollständiges und gar fehlerhaftes Wissen aus dem Kopf des Kunden in eine dennoch korrekte Maschine transferieren soll.</p>
+<p>Da der Nürnberger Trichter bisher nicht erfunden wurde, ist Lernen ein mühsames Geschäft. Es bedeutet Dialog um Übertragungsverluste und –fehler bei der Wissensvermittlung zu kompensieren. Das gilt umso mehr, wenn das Lernen über mehrere Stationen erfolgen muss. <strong>Zentral für die Softwareentwicklung ist also die Kommunikations-, die Dialogkompetenz.</strong></p>
+<p>Eine besondere Herausforderung stellt dabei die mangelnde Qualität des expliziten Wissens im Kundenkopf dar. Spätestens sie zwingt den Prozess in eine ständige Rückkopplungsschleife mit dem Kunden. Je schneller der “anfassen kann”, was aus seinem Wissen gemacht wurde, desto eher kann er beurteilen, ob das, was er meinte zu wissen auch wirklich korrekt war. <strong>Unumgänglich ist also eine fortlaufende Prüfung von in Software manifestiertem Verständnis durch den Kunden.</strong></p>
+<p><strong>Um sich selbst für die Prüfung zu entlasten, kann und soll der Kunde jedoch möglichst viele Akzeptanztestdaten beibringen.</strong> Das Entwicklerteam belästigt ihn mit einer neuen Version der Softwaremaschine nur, wenn es aufgrund dieser Testdaten sicher ist, die Anforderungen korrekt verstanden und umgesetzt zu haben. Daran sollte dem Kunden sehr gelegen sein, so dass er sich auch mit speziellen Prüfständen zufrieden gibt und nicht darauf besteht, Anforderungen nur durch die endgültige Benutzerschnittstelle zu prüfen.</p>
+<p><strong>Prüfstände haben den Vorteil, dass sie viel einfacher zu realisieren sind als eine Benutzerschnittstelle und auch für ansonsten “versteckte” Subfunktionalität aufgebaut werden können.</strong> Der Kunde kann sich dadurch viel zügiger “einen Spiegel vorhalten”, um sein Verständnis der Domäne zu überprüfen. Dass Kunden solchen “Blick in den Spiegel” scheuen mögen, steht auf einem anderen Blatt und vergrößert die Herausforderung Softwareentwicklung. <strong>Softwareentwicklung ist wie ein Therapeut, der mit seinen Fragen nicht an der Oberfläche bleibt, sondern sich auch ins Unterbewusste gräbt.</strong> Und wer mag das schon?</p>
+<p><strong>Verständnis und Einfühlungsvermögen gehören mithin auch zu den wünschenswerten Kompetenzen eines Softwareentwicklungsteams.</strong> Wer therapeutisch arbeitet, sollte sich nicht wie ein Elephant im Porzellanladen benehmen.</p>
+<p>Und zuguterletzt: <strong>Was für Therapeuten angemessen ist, kann für Softwareteams nicht so falsch sein. Zur Softwareentwicklung gehört also auch die Reflexion, gar Supervision.</strong> Sonst ist nicht nur keine Nachhaltigkeit der unvermeidlichen eigenen Veränderung gewährleistet – die ist über Effizienz und Effektivität hinaus aber sehr wichtig für langfristigen Erfolg –, nein, Teams laufen sonst auch Gefahr, sich durch ihre Klienten nachteilig beeinflussen zu lassen. Ohne Reflexion/Supervision können auch “Softwaretherapeutenteams” in die Falle Gegenübertragung oder Neurose tappen. Aber davon ein andermal mehr…</p>
+<p>An dieser Stelle sollte nur soviel klar geworden sein: Wasserfall oder nicht ist keine Frage von Weltanschauung, sondern eine Frage der Qualität des expliziten Wissens eines Kunden und der Kommunikationskompetenz aller Beteiligten im Softwareherstellungsprozess.</p>
+<p>Da Menschen eine Menge wissen, aber oft sich selbst nicht kennen und dasselbe daher für Unternehmen, die aus Menschen bestehen, anzunehmen ist, sollte die Qualität des expliziten Wissens nicht allzu hoch eingestuft werden. Dasselbe gilt für die Kommunikationsfähigkeit vom Benutzer beim Kunden über einen ProductOwner bis zum Entwickler. Durchschnittlichkeit zu erwarten, scheint das Maximum. Und deshalb sind Wasserfall oder andere Vorgehensmodelle, die eher unidirektional sind und/oder viele Sender-Empfänger-Stufen bis zur Software haben, ungeeignet für die Softwareentwicklung.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/3a45736941d8f556.gif" /></p>
+<h2>Kommentare</h2>
+<p><strong>NoMe</strong> (2011-01-04):</p>
+<p>Hi Ralf,</p>
+<p>großartiger Artikel!</p>
+<p>Den kann man auch mal "IT-Fremden" zur Auf/Erklärung des Kunde-IT-Verständiss Dilemmas zukommen lassen.
+Gerade die psychologisch/therapeutische Betrachtung finde ich recht gelungen.</p>
+<p>Ich denke aber das durch unseren sozikulturellen Umgang mit "Fehlern" und der (fehlenden) "Aktzeptanz der eigenen Unvollkommenheit" gerade diese wünschenswerte (und notwendige) Reflexion nicht (ausreichend) stattfindet. Allerdings würde ich dies (fast) auf jegliche kommunikationsbasierte Problemlösungsstrategie beziehen.</p>
+<p>Viele Grüße</p>
+<p>Norman</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-01-05):</p>
+<p>Enttäuschender Artikel:</p>
+<ul>
+<li>
+<p>"wieder mal softwareentwicklung ist so besonders"...  es ist genau so eine Ing. Disziplin wie jede andere. .. nur schaffen es die SE immer wieder Ausreden zu finden .. und neue Methoden..</p>
+</li>
+<li>
+<p>Solche kommunikationsprobleme hat man überall .. ob man jetzt ein Auto kauf , sich ein Haus bauen lässt.
+Jeder Teilnehmer hat einen anderen Hintergrund mit anderen Erwartungen und sieht das ganze vielleicht etwas anders.</p>
+</li>
+</ul>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-01-05):</p>
+<p>@Anonym: Softwareentwicklung ist nicht besonders in der Art, wie Menschen kommunizieren. Deshalb kann SWentwicklung von anderen lernen.</p>
+<p>Und Softwareentwicklung kann sicherlich etwas von der Industrialisierung anderer Branchen lernen.</p>
+<p>Dennoch: Softwareentwicklung ist eben nicht dasselbe wie Autobau. Deshalb kommen Analogien auch an ihr Ende. Und der gute Rat "der richtigen Ing." führt manchmal nicht weiter.</p>
+<p>Erstens: Software ist virtuell und damit viel schneller viel größer zu entwerfen und auch zu realisieren. Ein Haus aus 5000 Einzelteilen zu bauen dauert deutlich länger als eine Software aus sovielen Einzelteilen zusammenzusetzen. Ergo: Software verlang früher mehr Vorsicht, was den Strukturaufbau angeht.</p>
+<p>Zweitens: Software hat einen anderen Zweck als eine Druckstraße oder eine Brücke. Sie fasst meist komplexe Prozesse, über die Menschen relativ wenig reflektiert haben. Ergo: Software verlang eine andere Intensität in der Kommunikation mit dem Auftraggeber/Anwender.</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-01-13):</p>
+<p>Hi,</p>
+<p>habe den Artikel sehr genossen.</p>
+<p>Als Nicht-IT-lerin bin ich in der Projektleitung einer großen Software-Einführung und daher sehr eng in Kontakt mit der Entwicklerfirma.</p>
+<p>Die "Stille-Post"-Problematik dominiert teilweise das Geschehen. Dazu kommt teilweise der Unwillen, nochmal eine kommunikative Schleife zu drehen.</p>
+<p>Viele Grüße
+   Susanne</p>
+<hr />
+<p><strong>Mo</strong> (2011-02-11):</p>
+<p>Hallo,</p>
+<p>ich finde diesen inhaltlich sehr lesenswert und möchste ein konstruktives Feedback geben: Ich empfinde es beim Lesen als sehr störend, wenn so viele eklatante Tippfehler drin sind. Den Text sollen/werden doch viele Menschen lesen. Dann sollten Sie ihm auch die Qualität geben, die er verdient hat. Die Bilder sind doch auch liebevoll zusammengestellt.</p>
+<p>Gerne mehr solche Texte!</p>
+<p>Viele Grüße
+Mo</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

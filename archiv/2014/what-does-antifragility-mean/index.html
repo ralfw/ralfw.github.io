@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What does Antifragility mean? — ralfw.de Archiv</title>
+<meta name="description" content="The notion of Antifragility has hit the software community, it seems. Russ Miles has posted a couple of small articles on it in his blog, asking what it could mean for software dev">
+<link rel="canonical" href="https://ralfw.de/archiv/2014/what-does-antifragility-mean/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="What does Antifragility mean? — ralfw.de Archiv">
+<meta property="og:description" content="The notion of Antifragility has hit the software community, it seems. Russ Miles has posted a couple of small articles on it in his blog, asking what it could mean for software dev">
+<meta property="og:url" content="https://ralfw.de/archiv/2014/what-does-antifragility-mean/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>What does Antifragility mean?</h1>
+    <div class="doc-meta"><span>5. März 2014</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2014/03/05/what-does-antifragility-mean.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2014/what-does-antifragility-mean/</code></span></div>
+    <div class="art"><p>The notion of Antifragility has hit the software community, it seems. Russ Miles has posted a couple of small articles on it in his blog, asking what it could mean for software development – but also he thinks are needed.</p>
+<p>I´ve read the canonical book on antifragility by Nassim Taleb, too. And I second: Antifragile software is software "that thrives on the unknown and change".</p>
+<p>But still… what does it mean? "To thrive on the unknown and change" to me is too fuzzy for me to help me in my day to day work. Thus I cannot even judge if Russ is right when he says, micro services help to implement Antifragility.</p>
+<p>That´s why I want to share some thoughts on the topic here. Maybe writing about it helps to clarify the issue for myself – at least;-)</p>
+<h2>Is Antifragility something to strive for?</h2>
+<p>To me that´s a definite Yes. Yes, I want my software to be antifragile.</p>
+<p>Clearly software should not be brittle/fragile.</p>
+<p>That´s why there exists a canonical non-functional requirement called robustness.</p>
+<p>But antifragility goes beyond that. Software should not just withstand stress, it should become better and better by being stressed. Software should improve because of strain, not despite it.</p>
+<p>To be more concrete: Changing requirements – functional as well as non-functional – should cause software to be able to adapt even easier to further changes.</p>
+<p>The status-quo seems to be the opposite: The more changes are heaped onto a software the more difficult changing it becomes. What we end up with is legacy code, a brownfield, a big ball of mud, spaghetti code. All these terms denote the same: a fragile code base. It´s fragile because the next change request might cause it to break down, i.e. to enter a state where it´s economically infeasible to further change it.</p>
+<p>So, yes, I guess Antifragility is something we really need.</p>
+<h2>Fragility and robustness</h2>
+<p>But how can we implement Antifragility? How can we check, if approach A, tool T, concept C, principle P etc. benefit Antifragility or harm it?</p>
+<p>I guess, we need to start with fragility and robustness to understand Antifragility.</p>
+<p>What´s fragility? It´s when a small change in the environment causes harm. A glass vase is fragile, because a slight change in pressure can cause it to break. A football in contrast is not fragile. It´s robust with regard to pressure.</p>
+<p>But maybe a football is not robust with regard to heat. Maybe it´s inflammable – and the glass vase not.</p>
+<p>What distinguishes a glass vase from a football is their capability to compensate change of certain environment parameters. For short I call this capability a buffer.</p>
+<p>If something is more robust or less fragile than something else, its buffers are larger. A glass vase and a football differ in their pressure buffers and their temperature buffers.</p>
+<p>That means, if you want to make something more robust, then you need to increase its buffer regarding certain changes. For that you have to know the potential forces/stressors/attack angles. Do you want an item to be more robust regarding temperature or pressure or vibration or radiation or acceleration or viruses or traumata?</p>
+<p>Into software you can build buffers for performance, scalability, security, portability etc. Software "can come under attack" from all sorts of non-functional angles. Today it´s 10 users per second, tomorrow it´s 1000 users. That´s stress on a software system. Does it have buffer capacity to compensate it? If so, it´s robust. If not, it´s fragile with regard to the number of users per second.</p>
+<h2>Antifragility</h2>
+<p>With this definition of fragility/robustness in place, what does Antifragility mean? Nassim Taleb says, it goes beyond robustness. Robustness is not the opposite of fragility, but just fragility on another level or less fragility.</p>
+<p>I´d like to call Nietzsche to the witness stand. To me he´s the godfather of Antifragility, so to speak, because he says:</p>
+<p>"What doesn´t kill me, makes me stronger." (Maxims and Arrows, 8)</p>
+<p>Yes, that´s what to me in a nutshell describes Antifragility.</p>
+<p>Let me dissect his statement:</p>
+<p>First Nietzsche acknowledges there are forces/stressed that can destroy an item. And I´d say, Nassim Talebl does not object. Antifragility does not equal immortality.</p>
+<p>Destruction occurs if the buffer capacity of some robustness is exceeded. A glass vase might withstand a larger temperature change than a football. But in the end even glass melts and thus the vase form is destroyed.</p>
+<p>That´s the same for antifragile systems. They have buffers, too. And those buffers can be stressed too hard.</p>
+<p>But here´s the catch: What if the buffer capacity is not exceeded? What if some stress could be compensated?</p>
+<p>For a more or less fragile/robust item this means, well, nothing special. It did not get destroyed. That´s it. Or maybe the buffer capacity is now lower. That´s what we call "wear and tear".</p>
+<p>An antifragile system, though, gets stronger. It changes for the better. No wear and tear, but increased buffer capacity. That´s the difference between levels of fragility and Antifragility.</p>
+<p>Fragile, even robust items have static buffers at best. Usually though, their buffers decrease under repeated stress. Antifragile systems on the other hand have dynamic buffer which grow because of stress. Of course, they don´t do that during stress, but after stress. That´s why antifragile systems need rest.</p>
+<p>Antifragile systems need time to replenish buffer resources – and extend their buffers. Try that out for yourself with some HIIT (high intensity interval training) for push-ups. It´s a simple proof for the Antifragility of your body. It might hurt a bit;-) but you can literally watch over the course of a couple of days how your buffers grow, how you get stronger.</p>
+<p>HIIT combines high stress (near depletion of buffers) and rest – and thus promotes growth.</p>
+<p>And that´s what Antifragility is about: growth. Antifragile systems grow as a reaction to stress. Increasing stressed buffers happens in anticipation of future stresses. Antifragile systems don´t want to be caught off guard again, so they increase their robustness. In essence that´s learning. A larger buffer next time means less risk of harm/destruction through a particular type of stress.</p>
+<p>At the same time, though, unused buffers shrink. That´s called atrophy. Stay in bed for a month and you´ll become very weak. Not after a night in bed, not after a day or two. But prolonged underusage of muscles causes them to dwindle.</p>
+<p>That´s just economical. Keeping muscle power buffers large costs energy. If those buffers are not used, well, then why spend the energy? It can be put to good use at other buffers or saved altogether.</p>
+<p>Antifragility thus does not just mean growth, but also reduction. Stripping down buffers is nothing to fear for a truely antifragile system, because it can build up any buffer at any time if need be.</p>
+<p>This (meta-)capability of course is also limited, however. It´s a buffer like any other. And it can be grown – or it can shrink. That´s what we usually call aging. A system ages if it loses its Antifragility. In the end it´s just robust – and finally worn down by some stress.</p>
+<h2>Becoming alive</h2>
+<p>If we want to talk about Antifragility in software development we need to talk about life. Software needs to become alive. Or the system consisting of code + humans needs to become alive. Truely alive.</p>
+<p>We need to identify stressors. We need to identify buffers to compensate those stressors. We need to measure the capacity of those buffers. We need to find ways to increase – and decrease their capacities timely and at will in reaction to stresses. We need to assess risks of stress recurrence in order to determine if increase or decrease is appropriate. We need to rest. And finally we need to accept death.</p>
+<p>To me that means, Antifragility is much, much more than SOLID code plus some micro services plus message based communication via busses plus reactive programming etc. First of all it´s not just about code, because code itself is not and cannot be alive. Thus code itself cannot change itself for the better after stress, like no football can increase its temperature robustness.</p>
+<p>Rather the "socio-mechanical" system made up of humans and their code needs to be formed in a way to be antifragile. Which of course also implies certain beneficial structures and relationship in code. But that´s not all to think about.</p>
+<p>So we´re not there, yet, I´d say. Antifragility is more than Agility + Clean Code. First of all it´s a mindset, a worldview. And as usual, to instill that into people is not that easy. It will take another 10 to 20 years…</p>
+<p>Therefore let today be the first day of another journey in software development. Let the Antifragility years begin…</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

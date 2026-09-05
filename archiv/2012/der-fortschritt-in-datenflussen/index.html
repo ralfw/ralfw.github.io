@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Der Fortschritt in Datenflüssen — ralfw.de Archiv</title>
+<meta name="description" content="Datenflüsse sehen einfach aus, sind es auch in gewisser Weise – dennoch haben sie es in sich. Da habe ich neulich gemerkt, als ein Programm, das ich mit Flow-Design locker entworfe">
+<link rel="canonical" href="https://ralfw.de/archiv/2012/der-fortschritt-in-datenflussen/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Der Fortschritt in Datenflüssen — ralfw.de Archiv">
+<meta property="og:description" content="Datenflüsse sehen einfach aus, sind es auch in gewisser Weise – dennoch haben sie es in sich. Da habe ich neulich gemerkt, als ein Programm, das ich mit Flow-Design locker entworfe">
+<meta property="og:url" content="https://ralfw.de/archiv/2012/der-fortschritt-in-datenflussen/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Der Fortschritt in Datenflüssen</h1>
+    <div class="doc-meta"><span>3. Sept. 2012</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2012/09/der-fortschritt-in-datenflussen.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2012/der-fortschritt-in-datenflussen/</code></span></div>
+    <div class="art"><p>Datenflüsse sehen einfach aus, sind es auch in gewisser Weise – dennoch haben sie es in sich. Da habe ich neulich gemerkt, als ein Programm, das ich mit Flow-Design locker entworfen hatte, sich dann doch nicht so verhielt, wie erwartet. Es hat funktioniert, das war kein Problem. Aber sein Output war irgendwie, hm, strange.</p>
+<p>Deshalb will ich hier einmal die Frage beleuchten, wie denn eigentlich die Verarbeitung in Datenflüssen fortschreitet. Oder besser: Welche unterschiedlichen Fortschrittsweisen kann es denn geben?</p>
+<p>Ein Beispielszenario soll die unterschiedlichen Fortschrittsweisen vergleichbar machen. Es ist ganz einfach:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/8d9dce9d39a1731f.png" /></p>
+<p>Nachrichten, die von einer Funktionseinheit verarbeitet werden, bezeichne ich mit deren Namen: a(x) kommt “von draußen” und wird von a() verarbeitet, b() erzeugt c(y), die von c() verarbeitet wird usw. Nachrichten tragen also das Ziel und nicht die Quelle im Namen. Für das Beispiel reicht das als Identifikation.</p>
+<p>Ausgehen von einer Nachricht a() erzeugen die Funktionseinheiten nun diese Nachrichten:</p>
+<ul>
+<li>
+<p>a(1)</p>
+</li>
+<li>
+<p>b(11)</p>
+</li>
+<li>
+<p>c(111)</p>
+</li>
+<li>
+<p>e(1111)</p>
+</li>
+<li>
+<p>e(1112)</p>
+</li>
+<li>
+<p>d(111)</p>
+</li>
+<li>
+<p>c(112)</p>
+</li>
+<li>
+<p>e(1121)</p>
+</li>
+<li>
+<p>b(12)</p>
+</li>
+<li>
+<p>d(121)</p>
+</li>
+<li>d(122)</li>
+<li>
+<p>c(121)</p>
+</li>
+<li>
+<p>b(13)</p>
+</li>
+<li>
+<p>c(131)</p>
+</li>
+<li>
+<p>e(1311)</p>
+</li>
+<li>
+<p>e(1312)</p>
+</li>
+<li>
+<p>d(131)</p>
+</li>
+<li>
+<p>c(132)</p>
+</li>
+<li>
+<p>e(1321)</p>
+</li>
+<li>
+<p>d(132)</p>
+</li>
+<li>d(133)</li>
+<li>
+<p>c(133)</p>
+</li>
+<li>
+<p>e(1331)</p>
+</li>
+<li>
+<p>e(1332)</p>
+</li>
+<li>
+<p>d(134)</p>
+</li>
+</ul>
+<p>Dieser Baum beschreibt Input-Output-Zusammenhänge, z.B. Input b(12) an b() führt zum Output d(121), d(122) und c(121). Das bedeutet auch, das c(121) nach d(122) erzeugt wird.</p>
+<p>Allerdings steckt keine Aussage darüber in dem Baum, wann die Nachrichten verarbeitet werden. Verarbeitet c() die Nachricht c(132) während b() noch weiteren Output generiert oder erst nachdem d(134) ausgegeben wurde?</p>
+<p>Darauf geben die Fortschrittsweisen Antwort.</p>
+<h3>Depth-first</h3>
+<p>Die naheliegende Vorstellung vom Fortschritt der Verarbeitungsweise des Flows ist wohl, dass jede Nachricht sofort verarbeitet wird. Auf einen Zeitstrahl aufgetragen sieht das so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d4cc365f68fe07b6.png" /></p>
+<p>Hier spiegelt sich der Baum direkt wider. So würde die Verarbeitung auch verlaufen, wenn der Datenfluss als Call Stack interpretiert würde, also die Funktionseinheiten sich geschachtelt aufriefen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/8e631e52b50b4a55.png" /></p>
+<p>Eine Schachtelung im Sinne einer Servicehierarchie soll ja aber gerade mit Flow-Design vermieden werden. Die Funktionseinheiten a()..e() sollen sich nicht kennen; c() soll nicht von e() abhängen, b() nicht von c() und d(), a() nicht von b().</p>
+<p>Alternativ kann diese Fortschrittweise aber auch mit Event-Based Components (EBC) erzielt werden: Wenn a() mit b(11) einen Event feuert, dann arbeitet b() als Event-Handler den erst ab, bevor a() dazu kommt, b(12) auszugeben. Wenn b() währenddessen c(111) erzeugt, arbeitet c() die Nachricht erst ab, bevor b() d(111) erzeugt usw.</p>
+<p>Alle Nachrichten werden also erstens sequenziell verarbeitet, d.h. nacheinander und auch noch streng in der Reihenfolge, in der sie erzeugt wurden. Und zweitens werden sie synchron verarbeitet, d.h. während der Verarbeitung wartet die erzeugende Funktionseinheit.</p>
+<p>Die synchron-sequenzielle Verarbeitungsweise geht depth-first vor. Die Verarbeitung jeder Nachricht fließt sofort soweit nach rechts durch wie möglich.</p>
+<h3>Breadth-first</h3>
+<p>Ist der depth-first Fortschritt der richtige, der beste, der einzig wahre Fortschritt für Datenflüsse? Ich glaube nicht. Er mag der naheliegendste sein, doch das scheint mir für eine Bewertung zu wenig. Denn warum soll es richtiger sein als etwas anderes, Nachrichten sofort in der Tiefe zu verarbeiten und dabei Quellfunktionseinheiten darauf warten zu lassen?</p>
+<p>Ich denke, zunächst einmal gleichberechtigt ist die breadth-first Verarbeitung von Nachrichten:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/afc2fc2e3d7e66a3.png" /></p>
+<p>Die hervorgehobenen Nachrichten zeigen den Unterschied gegenüber dem depth-first Fortschritt. a() erzeugt die Nachrichten b(11), b(12) und b(13) und die werden zuerst komplett abgearbeitet, bevor deren Output dran kommt. Und auch der wird zuerst abgearbeitet, bevor sein Output dran kommt usw. Die am weitesten rechts stehende Funktionseinheit e() erhält also hier als letzte Arbeit, weil sie am tiefsten im Baum liegt als der der Fluss angesehen werden kann, wenn man ihn um 90°dreht.</p>
+<p>Die Verarbeitung eilt damit nicht mehr bei jeder Nachricht zum Ende der Verarbeitung, sondern schreitet sequenziell über alle “Flussarme” hinweg fort. Ich stelle mir das als eine breite Welle vor.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/14c50c244fe60482.png" /></p>
+<p>Vorteil von depth-first ist, dass nach Anstoß eines Flows schnell erste Ergebnisse am Ende heraustropfen. Das bedeutet aber nicht, dass die Verarbeitung von weit vorangeschritten ist. Bei breadth-first hingegen können Sie sicher sein, dass Arbeitsschritte abgeschlossen sind, wenn ihre Ergebnisse verarbeitet werden.</p>
+<p>Das fühlt sich für mich mehr nach Datenfluss an: Ein Input kommt bei einer Funktionseinheit “auf dem Tisch”, wird verarbeitet, dabei wird Output erzeugt – und wenn das alles fertig ist, dann geht es bei der nächsten Funktionseinheit weiter.</p>
+<p>Zumindest empfinde ich das als “fluss-mäßiger”, wenn ich die Verarbeitung als synchron denke. Weder findet Verarbeitung auf mehreren Threads innerhalb einer Funktionseinheit statt, noch arbeiten mehrere Funktionseinheiten parallel. Wenn Funktionseinheiten ihre Arbeit abschließen können, bevor ihr Output verarbeitet wird, dann sind sie auch hübsch unabhängig von einander.</p>
+<p>Synchrone Verarbeitung ist für mich der default beim Flow-Design. Sowohl Flow-Design Implementierungen mit EBC wie mit der Flow Runtime folgen dem auch – auch wenn sie sich in der synchronen Verarbeitung unterscheiden, wie Sie hier sehen.</p>
+<p>Dennoch war ich damit nicht zufrieden. Denn dieser breadth-first Fortschritt hat sich in der eingangs erwähnten Anwendung als etwas merkwürdig angefühlt. Warum?</p>
+<p>Solange am Anfang eines Flusses nur eine Nachricht steht, macht breadth-first kein Problem. Dann läuft die große Welle langsam in die Tiefe.</p>
+<p>Falls auf a(1) jedoch noch a(2), a(3) usw. folgen und a(i) nicht komplett in der Tiefe verarbeitet ist, bevor a(i+1) eintrifft, kann es zum Stau kommen [1]. Es geht dann zwar alles ganz gerecht zu im Sinne sequenzieller Verarbeitung. Doch solche Gerechtigkeit ist nicht in allen Fällen wünschenswert. Manchmal wäre es gut, wenn Nachrichten einander überholen könnten – zumindest wenn sie in unterschiedlichen Flussarmen fließen. Warum muss ein d(2…) auf ein e(1…) zwangsläufig warten?</p>
+<h3>Round-robin</h3>
+<p>Angesichts des merkwürdigen Verhaltens der Anwendung habe ich einen Mittelweg zwischen depth-first und breath-first Verarbeitung gesucht. Eingefallen ist mir eine round-robin Verarbeitung von Nachrichten. Um das zu verstehen, hier die grundsätzliche Arbeitsweise der Flow Runtime:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/1a7f6229e59ac5de.png" /></p>
+<p>Nachrichten kommen von außen zur Flow Runtime, die sie asynchron verarbeitet. Nachrichten, die bei der Verarbeitung entstehen, fließen entweder hinaus, weil sie Endergebnisse darstellen – oder sie fließen zurück in die Runtime, um von folgenden Funktionseinheiten verarbeitet zu werden. a(i) ist eine Nachricht, die von außen zur Runtime kommt. b(i) usw. sind Nachrichten, die die Runtime quasi an sich selbst schickt.</p>
+<p>Jede Nachricht, die bei der Runtime eintrifft, wird auf deren einzigem Thread abgearbeitet; das symbolisiert der Kreis in der Funktionseinheit. Sie ist insofern autonom gegenüber ihrer Umwelt.</p>
+<p>Immer wenn eine Funktionseinheit eine Nachricht verarbeitet hat, schaut die Runtime nach, ob weitere Nachrichten zur Verarbeitung anliegen. Die stehen in einer Queue, über die die Runtime in einer Schleife läuft. Der Inhalt dieser Queue sieht für das Beispiel über die Zeit so aus (von links wird angehängt, von rechts entnommen):</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/caa138ece7467dcb.png" /></p>
+<p>Das erklärt die breadth-first Verarbeitung: Jede Funktionseinheit wird für eine Nachricht abgearbeitet und stellt ihren Output ans Ende der Queue. Der kommt dann erst dran, wenn der Output vorheriger Funktionseinheiten verarbeitet wurde.</p>
+<p>Dieses System habe ich nun aufgebrochen, indem nun jede Funktionseinheit eine eigene Queue besitzt:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/5341e5c35564140c.png" /></p>
+<p>Über diese vielen Queues läuft nun die Flow Runtime im round-robin Verfahren. Das bedeutet, für jede Nachricht geht sie eine Queue weiter. Es entsteht folgendes Muster:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/0fbdd54afee6b765.png" /></p>
+<p>Sie sehen, die Verarbeitung wird Nachricht für Nachricht gleichmäßig über die Funktionseinheiten verteilt. Die Verarbeitungsreihenfolge hat im Grunde nichts mehr mit der Tiefe einer Funktionseinheit im Fluss zu tun. Wo Output erzeugt wird, da wird er auch abgearbeitet.</p>
+<p>Käme nun ein a(2) zwischendurch an, so würde es alsbald zur Verarbeitung gebracht, wenn seine Queue an der Reihe ist. Es müsste nicht warten, bis alles, was vorher schon aufgelaufen war, abgearbeitet ist.</p>
+<p>Dieses Verfahren scheint mir noch gerechter als breadth-first. Es hat allerdings eine Besonderheit, derer man sich bewusst sein muss: Aufs Ganze betrachtet, erfolgt die Abarbeitung der Nachrichten nicht mehr notwendig streng in Erzeugungsreihenfolge. Nachrichten können einander überholen: e(1112) wird zum Beispiel vor b(13) verarbeitet.</p>
+<p>Bei depth-first Fortschritt ist b(13) noch nicht erzeugt, wenn e(1112) abgearbeitet wird. Bei breadth-first wurde b(13) erzeugt und schon abgearbeitet lange vor e(1112). Bei round-robin jedoch steht b(13) noch unverarbeitet in der b()-Queue, während e(1112) schon in Arbeit ist.</p>
+<h3>Asynchron im Kreis</h3>
+<p>Auch bei round-robin findet innerhalb der Flow Runtime noch keine Parallelverarbeitung statt. Trotzdem geht es überall voran, sobald die Runtime Gelegenheit hat, eine Nachricht zu verarbeiten. Das ist kein pre-emptive Multitasking, weil ja jede Funktionseinheit so lange an einer Nachricht herumlaborieren darf, wie sie mag. Insgesamt auf den ganzen Fluss gesehen, fühlt es sich dennoch so an, als würde quasi parallel gearbeitet.</p>
+<p>Richtig ernst wird das, wenn einzelne Funktionseinheiten asynchron arbeiten. Dann kann der Output während ihrer Laufzeit von der Runtime schon weiterverarbeitet werden.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/4e3d86878b6917c8.png" /></p>
+<p>Beispielhaft setze ich mal b() auf asynchrone Verarbeitung, damit Sie sehen, wie sich das Muster dann verändern könnte. Die Länge der Nachrichtenkästen soll nun die Verarbeitungsdauer andeuten.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/38bf1c5bc006253c.png" /></p>
+<p>Jetzt kommt es natürlich auch darauf an, wann b() Output erzeugt. c(111) wird parallel abgearbeitet und erzeugt e(1111). Währenddessen arbeitet b() weiter! Wann fließt dort aber d(111) heraus? Während c() am Werk ist und e(1111) generiert oder erst später? Denn danach richtet sich, ob auf c() unmittelbar e() folgt wie im Bild oder zuerst d().</p>
+<h3>Fazit</h3>
+<p>Die Verarbeitung in Datenflüssen ist anders als die in Servicehierarchien. Anders, doch deshalb nicht schlechter. Sie müssen sich umgewöhnen. Das mag schwer fallen, weil die “Stack-Denke” so tief in uns allen drin steckt. Doch ich meine immer noch, dass sich das lohnt.</p>
+<p>Denn anders bedeutet hier chancenreich. So strange das Verhalten der eingangs erwähnten Anwendung war, es hat mich wieder beeindruckt, wie leicht die Flow-Operationen zu testen waren, weil sie unabhängig von einander sind. Und es war ganz leicht, individuell für jede zu entscheiden, ob sie synchron oder asynchron laufen soll.</p>
+<p>Und letztlich finde ich es auch gut, überhaupt die Wahl zu haben zwischen Verarbeitungsweisen. Die könnte eine Runtime womöglich sogar zur Auswahl anbieten. Sogar den depth-first Fortschritt hatte ich schon einmal implementiert.</p>
+<h3>Fußnoten</h3>
+<p>[1] Dass weitere Nachrichten vor Abarbeitung beim Fluss eintreffen, setzt natürlich bei aller Synchronizität seiner Funktionseinheiten voraus, dass der Fluss als Ganzes gegenüber seiner Umwelt asynchron arbeitet. Das ist bei der Flow Runtime der Fall.</p>
+<h2>Kommentare</h2>
+<p><strong>Mike Bild</strong> (2012-09-09):</p>
+<p>Sehr interessant und riecht ein bisschen nach einem Event-Loop wie bei Dispatch-Queues, den Rx-EventLoopScheduler oder auch nach dem Prozessmodell von NodeJS oder nginx.</p>
+<p>Spannend ist natürlich Wie und Wo einer möglicher Synchronisierungspunkt in der nonblocking Ausführung erfolgt und ob diese Art der Ausführung möglicherweise nur bei Resourcenintensiven "IO Kontakt" bzw. "Side-Effects" nötig ist. Ohne "IO Kontakt" ist IMHO stack-based völlig ausreichend.</p>
+<p>Schön wäre hier eine Designhilfe bzw. Entscheidung "per Default" wie auch Dein "alles ist synchron/single threaded" in einem Framework.</p>
+<p>BG - Mike</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-09-09):</p>
+<p>@Mike: Naja, das kann man halt kaum anders machen. Über eine Queue werden Sender und Empfänger entkoppelt. Dadurch entsteht die Asynchronizität.</p>
+<p>So arbeitet zum einen die Flow Runtime im Ganzen gegenüber ihrer Umwelt. Aber so arbeiten auch async bzw. parallel operations innerhalb eines Flows in der Runtime.</p>
+<p>Seit dem Blogartikel ist die Runtime aber schon weiter. Man kann jetzt die Verarbeitungsweise (das Scheduling) einstellen. Es gibt die im Artikel beschriebenen Modi breadth-first und round-robin.</p>
+<p>Darüber hinaus kann die Runtime nun aber auch depth-first arbeiten.</p>
+<p>Alle diese Modi sind async gegenüber dem Aufrufer.</p>
+<p>Zusätzlich gibt es den Modus sync-depth-first, d.h. die Runtime ist komplett sync zum Aufrufer.</p>
+<p>In Flows kann natürlich weiterhin jede Operation async/parallel geschaltet werden.</p>
+<p>Für IO muss ich mir mal was überlegen. Entweder ist das unterhalb des Radars der Runtime. Wenn eine Operation IO macht, der async laufen kann, dann muss sie halt zusehen, wie sie das hinkriegt.</p>
+<p>Oder ich bohre die Runtime Config auf, dass man da async Methoden (nach dem Pattern des .NET Fx) als Operationen registrieren kann.</p>
+<p>Letzteres wäre irgendwie cool. Aber andererseits fühlt es sich so an, dass dann die Operationen seeehr feingranular würde. Da weiß ich nicht, ob das so schlau wäre.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2012-09-09):</p>
+<p>@Queues: Jepp, passt!</p>
+<p>@Scheduler-Model: Finde ich überzeugend.</p>
+<p>@Konzeptionelle Ausrichtung:</p>
+<p>Ich finde den Ansatz eines Computation-Frameworks/Runtime schon irgendwie passend. Denn das ist es aus meinem jetzigen Leserblickwinkel erstmal. IO/Side Effect Handling müsste, wie in Node.js auch, dann auch elementarer Teil der Runtime sein. Node.js löst das ja mit entsprechenden Modulen für nonblocking File-, Network-, usw. Access.  Es steht mir natürlich frei eigene nonblocking Module zu entwerfen. Der "default" ist aber, verwende unsere Module und konstruiere Deine nonblocking computation mit Deiner atomaren stack based - Das Model muss so und transformiert werden - Logik. Nett wäre sicher eine Art Actor Model bzw. Petri-Net Runtime die mir IO/Shared-State Access per Design abnimmt. Träume in .NET ;-) BG - Mike</p>
+<hr />
+<p><strong>herbivore</strong> (2012-09-11):</p>
+<p>Hallo Ralf,</p>
+<p>ich finde dieses spezielle Thema sehr spannend. Mich hat schon immer die MessageQueue in Windows fasziniert und ich habe schon lange überlegt, ob man das Prinzip für eigene Programm(architekturen) nutzen kann - leider ohne praktisches Ergebnis. Nun kann ich aber wenigstens etwas, dass ich aus den Überlegungen gelernt habe, hier anbringen. Dass man nicht nur eine globale Strategie braucht, sondern regelmäßig lokal entscheiden können muss, ob die folgende Operation synchron (als direkter Aufruf) oder asynchron (als Auftrag in die Queue) erfolgen soll. Genau so, wie man diese Entscheidung bei Windows mit SendMessage und PostMessage treffen kann (siehe dazu auch "[FAQ] Bestimmte Aktionen bis nach der laufenden GUI-Event-Behandlung verzögern", http://www.mycsharp.de/wbb2/thread.php?threadid=103960). Denn nur durch die Verwendung von SendMessage kann man sicherstellen, dass alle Nachrichten, die z.B. zu einem Fokuswechsel gehören, hintereinander weg verarbeitet werden, selbst wenn schon neue Benutzereingaben in der Queue warten. Würden einfach <em>alle</em> Nachrichten <em>immer</em> in die Queue(s) gestellt werden, würde es eine unübersichtliche und Fehler verursachende Verzahnung über mehrere Benutzereingaben hinweg geben. Das trifft natürlich vor allem dann zu, wenn die einzelnen Operationen (globale) Statusveränderungen durchführen, z.B. ein Form aktualisieren oder Ausgaben in eine Datei schreiben oder Datenbankänderungen durchführen.</p>
+<p>herbivore</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-09-11):</p>
+<p>@herbivore: Du kannst für jede Operation in einem Flow entscheiden, ob sie sync, async oder parallel laufen soll, wenn du die Runtime benutzt.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

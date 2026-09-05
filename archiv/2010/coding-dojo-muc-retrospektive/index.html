@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coding Dojo Muc Retrospektive — ralfw.de Archiv</title>
+<meta name="description" content="Softwareentwicklung mit Energie – die war wieder mal zu sehen beim Coding Dojo in München. Knapp 30 Entwickler waren zusammengekommen, um sich in geselliger Runde in der .NET Progr">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/coding-dojo-muc-retrospektive/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Coding Dojo Muc Retrospektive — ralfw.de Archiv">
+<meta property="og:description" content="Softwareentwicklung mit Energie – die war wieder mal zu sehen beim Coding Dojo in München. Knapp 30 Entwickler waren zusammengekommen, um sich in geselliger Runde in der .NET Progr">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/coding-dojo-muc-retrospektive/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Coding Dojo Muc Retrospektive</h1>
+    <div class="doc-meta"><span>30. Mai 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/05/coding-dojo-muc-retrospektive.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/coding-dojo-muc-retrospektive/</code></span></div>
+    <div class="art"><p>Softwareentwicklung mit Energie – die war wieder mal zu sehen beim <a rel="noopener" href="http://bit.ly/97fPBR">Coding Dojo in München</a>. Knapp 30 Entwickler waren zusammengekommen, um sich in geselliger Runde in der .NET Programmierung anhand einer Aufgabe zu üben.</p>
+<p>Das Coding Dojo Muc hat sein Format und seinen Rhythmus. Im Fokus steht gewöhnlich die testgetriebene Entwicklung (TDD) einer Funktionalität, die sich mit einer Funktion als API ausdrücken lässt  (Beispiele: FizzBuzz, LOC Counter). Das Motto: Alles denkt, einer tippt.</p>
+<p>Doch dieses Mal war vieles anders…</p>
+<h2>Der Ablauf</h2>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a0e61d8f1e3f17d9.png" /></p>
+<p>Dieses Mal hatte Ilker mich eingeladen, um in das Dojo ein wenig architektonisches Denken hineinzutragen. Das Motto: Alles denkt, keiner tippt ;-) Zumindest nicht die ersten zwei Stunden.</p>
+<p>Die Frage nun: hat das geklappt?</p>
+<h5>Die Aufgabe</h5>
+<p>Um architektonisches Denken zu üben, musste die Aufgabe natürlich etwas größer ausfallen als Dojo-gewöhnlich. Auf der anderen Seite durfte sie nicht zu groß sein, denn ich wollte ja auch mit Ergebnis mit den Teilnehmern erzielen.</p>
+<p>Angemessen erschien mir schließlich eine Spellchecker-Anwendung: Das Programm sollte Texte in verschiedenen Sprachen auf Rechtschreibfehler überprüfen. Wenn man so ein Programm aufsetzen will, sind mehr als eine architektonisch relevante Funktionseinheit nötig; Architektur lohnt sich also.</p>
+<p>Der Umfang dieser Aufgabe führte dann gleich zu einer ersten Neuerung bei Dojo: der Anforderungsanalyse. Nicht, dass bisher die Teilnehmer nicht versucht hätten, die Aufgaben zu verstehen. Aber so ein Programm machte eine systematischere Herangehensweise nötig. Die bestand aus zwei Schritten:</p>
+<h5>1. Featureliste</h5>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/37a4eb026206fe16.png" /></p>
+<p>Im ersten Schritt haben wir die Anforderungen mündlich ventiliert. Da kamen einige Fragen an den “Kunden” zusammen. Und der Kunde blieb keine Antwort, keinen Wunsch schuldig – allerdings konnte nicht alles wirklich in das Backlog übernommen werden. Wir hatten ja nur einen Abend für die Realisierung zur Verfügung. Nichtsdestotrotz war die Diskussion wichtig, um die Gruppe auf das Thema einzuschwingen.</p>
+<p>Was am Ende dann realisierbar erschien, haben wir in eine Featureliste übertragen. Wichtig dabei: Nur aus Kundensicht Relevantes ging darin ein.</p>
+<h5>2. Ubiquitous Language</h5>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9e9b8158af1ef148.png" /></p>
+<p>Die Featureliste hat den generellen Scope der Entwicklung abgesteckt. Sie hat eine Grenze gezogen. Wie sah aber das Terrain innerhalb dieser Grenze aus? Wie sollten Problem und Lösung zusammenfinden?</p>
+<p>Um einen Übergang in die Lösungswelt zu finden, haben wir im zweiten Schritt für die Features eine <a rel="noopener" href="http://bit.ly/9H5X1H">Ubiquitous Language</a> mittels einer <a rel="noopener" href="http://bit.ly/daHPon">Concept Map</a> erarbeitet.</p>
+<p>Darin wurden die zentralen Begriffe der Domäne nicht nur gelistet, sondern auch qualifiziert in Beziehung gesetzt. Interessante Erkenntnisse wurden dadurch herausgearbeitet:</p>
+<ol>
+<li>Um sich unzweideutig über die Domäne unterhalten zu können, ist zwischen <em>Prüfworten</em> und <em>Fehlerworten</em> zu unterscheiden. Prüfworte sind die, die auf Korrektheit geprüft werden müssen; Fehlerworte sind die, die als Inkorrekt erkannt wurden.</li>
+</ol>
+<p>Fehlt die Unterscheidung, wird die Rede über die Domäne im besten Fall mühsam, im schlimmsten Fall jedoch Missverständlich.</p>
+<ol start="2">
+<li>Nachdem das Flipchart schon fast voll war, stellte sich die Frage, wer denn überhaupt die Rechtschreibprüfung vornehmen würde. Ihre Elemente (z.B. Prüfworte, Wörterbuch) waren vorhanden, es fehlte aber eine Instanz, die damit umging.</li>
+</ol>
+<p>Diese Instanz war in der Diskussion immer implizit vorhanden. Das Team hatte sich oder das ganze Programm dafür in der Verantwortung gesehen. Das ist aber natürlich ungenügend, weil trivial bzw. impraktikabel. Es gilt vielmehr: Zentrale Domänenaufgaben müssen als “Bubbles” in einer Concept Map der Ubiquitous Language auftauchen.</p>
+<p>Und so wurde spät aber doch der <em>Prüfer</em> als Vokabel in die Ubiquitous Language aufgenommen. Er prüft, ob ein Wort im Wörterbuch und damit korrekt oder als Fehlerwort zu melden ist.</p>
+<h5>Die Architektur</h5>
+<p>Nach soviel Vorgeplänkel waren die Teilnehmer natürlich gespannt darauf, wie denn aus den Anforderungen eine Architektur entstehen würde.</p>
+<p>Einige wollten mit Klassendiagrammen anfangen. Andere wollten Schichten übereinander malen. Doch ich hatte mich entschieden, eine Architektur “nach der neuesten Mode” zu versuchen. <a rel="noopener" href="http://bit.ly/cGqAXF">Event-Based Components (EBC)</a> sollten es sein.</p>
+<p>Da keine Zeit für lange Erklärungen des Konzepts sein würde, fand ich mich mit dem EBC-Ansatz recht mutig. Aber es half nichts: Ich wollte einfach nicht mehr überholte Ansätze wie IBC (Injection-Based Components) widerkäuen. Viel simpler wäre es auch nicht nicht geworden. Womöglich sogar schwieriger, weil sich Abstraktionsniveaus mit IBCs schlechter modellieren lassen.</p>
+<p>Also bin ich mit einem System-Umwelt-Diagramm eingestiegen und habe dessen System dann als “Hauptplatine” einer EBC-Architektur verfeinert und bin dann nochmal eine Ebene tiefer in den SpellChecker (SC) hinunter gestiegen:</p>
+<p><img loading="lazy" alt="Bild nicht mehr verfügbar" src="/assets/_shared/placeholder-missing-image.svg" /></p>
+<p><em>(Bild nicht mehr verfügbar – ursprüngliche Quelle offline (googlecode.com, 2016 abgeschaltet), auch nicht im Wayback Machine archiviert. Original-URL: http://muccodingdojo100526.googlecode.com/hg/doc/03%20System-Umwelt-Diagramm.jpg)</em></p>
+<p><img loading="lazy" alt="Bild nicht mehr verfügbar" src="/assets/_shared/placeholder-missing-image.svg" /></p>
+<p><em>(Bild nicht mehr verfügbar – ursprüngliche Quelle offline (googlecode.com, 2016 abgeschaltet), auch nicht im Wayback Machine archiviert. Original-URL: http://muccodingdojo100526.googlecode.com/hg/doc/04%20SC%20Hauptplatine.jpg)</em></p>
+<p><img loading="lazy" alt="Bild nicht mehr verfügbar" src="/assets/_shared/placeholder-missing-image.svg" /></p>
+<p><em>(Bild nicht mehr verfügbar – ursprüngliche Quelle offline (googlecode.com, 2016 abgeschaltet), auch nicht im Wayback Machine archiviert. Original-URL: http://muccodingdojo100526.googlecode.com/hg/doc/05%20SC%20Platine.jpg)</em></p>
+<p>In drei Abstraktionsschritten von den Anforderungen zur Architektur. Das war sicherlich überraschend für einige Teilnehmer.</p>
+<p>Interessanterweise gab es aber weder dazu noch zu den “komischen Pfeilen”, die ja nicht wie üblich Abhängigkeiten, sondern Nachrichtenflüsse darstellen, grundsätzlich kritische Kommentare. Puh. Das hat mich erleichtert.</p>
+<h5>Die Kontrakte</h5>
+<p>Nach soviel Gerede und soviel Malerei stand dann zum Glück aber etwas Code auf dem Programm. Es galt, die die Kontrakte der ermittelten Komponenten festzuzurren. Trotz EBC bleibt Contract-First Design zentral für eine Architektur, die in der Implementierung nicht erodiert.</p>
+<p>Für die Kontrakte (und den weiteren Code) hatte ich schon ein <a rel="noopener" href="http://bit.ly/9tNu2d">Google Project</a> aufgesetzt und mit einer Visual Studio Solution ausgestattet. In die haben wir die Servicekontrakte für die Funktionalität und die Nachrichtenkontrakte “hineingegossen”:</p>
+<p><a rel="noopener" href="http://bit.ly/9tNu2d"></a></p>
+<p>Je Komponente (Bauteile und Platinen) ein Interface. Interface-Abhängigkeiten gibt es nicht – das ist ja der Trick bei EBCs.</p>
+<p>Hier ein Beispiel für einen Servicekontrakt:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/10cfedd525f20f49.png" /></p>
+<p>Und hier ein Teil des Nachrichtenkontrakts:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/40ceff1c6b8863ac.png" /></p>
+<p>Die Vokabeln der Ubiquitous Language tauchen konsequenterweise darin wieder auf.</p>
+<h4>Die Implementation</h4>
+<p>Nach mehr als 2,5 Stunden war es dann soweit. Die Teilnehmer konnten in die Tasten greifen. Vier kleine Teams gingen daran, die Bauteil-Komponenten zu implementieren. Auch Gastgeber Ilker ließ es sich nicht nehmen, mitzumachen.</p>
+<p>Anders als üblich arbeiteten die Teams allerdings still. “Entertainment” hatte es genug gegeben. Jetzt sollte nicht mehr lange (öffentlich) diskutiert werden. Gummi musste auf die Straße.</p>
+<p>Um aber nicht nur Gummi bei der Implementation, sondern auch bei der Integration auf die Straße zu bekommen, schlug ich vor, zunächst nur Minimalfunktionalität ohne Tests zu implementieren. Das versetzte mich in die Lage, die Platinen zu prüfen.</p>
+<p>Also machte der USB-Stick ein erstes Mal die Runde, um den Teams die Kontrakte zuzuspielen. Und dann ein zweites Mal die Runde zurück zu mir, um ihre rudimentären Implementationen abzuliefern. Darauf aufbauend war meine Aufgabe, die Hauptplatine und die SpellChecker-Platine zu implementieren und alles mit einer kleiner Host-EXE zu starten.</p>
+<p>Anschließend gaben die Teilnehmer alles, um ihre Implementationen auszufleischen.</p>
+<p>Um 22:17h war es dann soweit: Die Anwendung lief. Texte konnten gegen ein englisches und ein deutsches Wörterbuch geprüft werden. Dabei holperte es noch etwas im UI und die Wörterbücher waren mager – aber “der Kunde” konnte sehen, dass seine Anwendung lief.</p>
+<h2>Reflexion</h2>
+<p>Unterm Strich war das Coding Dojo ein Erfolg. Ich bin grundsätzlich zufrieden mit dem Ergebnis. Auch wenn es gedauert hat und wir über Stolpersteine gelaufen sind, gab es am Ende eine lauffähige Anwendung, die von einem verteilten Team realisiert worden ist.</p>
+<h5>Was ist gut gelaufen?</h5>
+<p>Ich würde sagen, dass das grundsätzliche Vorgehen gepasst hat. Anforderungen verstehen, Features aufschreiben, Context Map, Kontrakte implementieren: der Fluss war gut. Es gab allerdings Kritik, dass ich dabei zuviel angeleitet hätte. Diese Kritik kann ich gut nachvollziehen, doch ich sehe nicht, wie es hätte anders laufen können.</p>
+<p>Wenn bei sonstigen Dojos nach 3 Stunden eine Funktion realisiert ist, dann wäre bei einer ganzen Architektur am Ende kaum etwas Lauffähiges herausgekommen. So schön eine gemeinsame Entwicklung durch die Teilnehmer gewesen wäre – sie hätte nicht mehr als ein gutes Erlebnis produziert. Da bin ich mir sicher. Der Grund: Wenn schon bei der Implementation einer Funktion die Meinung weit auseinandergehen, dann ist das noch mehr der Fall beim Thema Entwurf. Die unterschiedlichen Ansätze, ein leeres Flipchart-Blatt zu füllen, sind dafür der Beweis.</p>
+<p>Ziel war nicht, die Gruppe “irgendwie” zu einem Ergebnis kommen zu lassen, sondern einen Weg systematisch zu beschreiten. Das bedarf der Anleitung.</p>
+<p>Ich behaupte nicht, dass der Weg, den ich durch den Architekturdschungel “vorgetrampelt” habe, der beste ist. Aber ich behaupte, dass er lohnenswert war, einmal erfahren zu werden. Ich bezweifle, dass viele von den Teilnehmern in ihren Projekten je erlebt haben, wie nach einer sauberen Planung echt parallel und ohne Codekollisionen entwickelt werden kann. Das zu demonstrieren, war mein Anliegen.</p>
+<p>Für eine “Diskussionskuschelrunde” mit etwas Architektur hätte Ilker mich auch nicht einladen müssen.</p>
+<p>Bei einem nächsten Übungsprojekt wäre es möglich, mehr Arbeit ins Team zu verlagern. Dann würde sich zeigen, ob es etwas vom Vorgehen mitgenommen hat. Bei diesem ersten Mal war jedoch Anleitung in Form eines “fragend entwickelnden Unterrichtsgesprächs” und einem Architekturparadigma nötig.</p>
+<p>Gefreut hat mich auch, dass die Concept Map so gut aufgenommen wurde und die Ubiquitous Language sich selbst bei diesem kleinen Projekt als hilfreich herausgestellt hat. Ich hatte mich zunächst gefragt, ob der Aufwand lohnt – doch jetzt bin ich gewiss. Die Concept Map sollte nie fehlen.</p>
+<p>Basierend auf der Concept Map habe ich dann auch die Nachrichtenkontrakte gestaltet. Darin kamen im Grunde keine einfachen Typen mehr vor. Statt eines <em>string</em> hat das Frontend ein <em>PrüfTextPaket</em> geschickt. Das hat niemand als Overkill bemängelt. Sehr schön. Ich fühle mich in dem Ansatz bestätigt, zumindest auf Komponentenebene im Grunde keine primitiven Typen mehr einzusetzen. Man vergibt sich mit primitiven Typen nämlich ein Mittel, den Code verständlich zu machen. Aber dazu mehr in einem anderen Blogartikel.</p>
+<p>Cool war es zu sehen, wie motiviert alle mitgedacht haben. Soviel Offenheit und Durchhaltevermögen bei Architekturdiskussion! Toll! Und dann auch zu später Stunde noch viel Ehrgeiz bei der Implementation. Wahnsinn!</p>
+<h5>Was ist weniger gut gelaufen?</h5>
+<p>Bis zur Implementation ist alles nach Plan gelaufen. Doch dann… Zwar hatte ich den richtigen Gedanken, Integrationsproblemen mit einer “Tracer Bullet” “Kurzimplementation” vorzubeugen. Aber die Ausführung habe ich schlecht vorbereitet.</p>
+<p>Das Problem war nicht so sehr, dass Code nur per USB-Stick die Runde machen konnte. Schöner wäre zwar gemeinsamer Zugang mit <a rel="noopener" href="http://bit.ly/9ocITc">Mercurial</a> Repository gewesen… doch es ging auch so. Nur langsamer. Viel schlimmer war, dass ich zuwenig über Konventionen gesprochen habe. Denn wo Tools fehlen, müssen Konventionen her.</p>
+<p>Die binären Kontrakte haben natürlich die grundsätzliche “Zusammensteckbarkeit” der getrennt entwickelten Komponenten garantiert. Das hat funktioniert. Wir hatten kein wirkliches Integrationsproblem der Assemblies.</p>
+<p>Wie der Code aber an mich ausgeliefert wurde, das war ein Problem. Visual Studio kann ja in so unterschiedlicher Weise benutzt werden. Da habe zuwenig erklärt bzw. vorgegeben. Besser wäre es gewesen, ich hätte für jedes Komponenten kurz eine Rumpf-Projektmappe aufgesetzt. Das hätte zwar etwas Zeit gekostet – am Ende wäre dadurch aber so mancher Reibungsverlust vermieden worden.</p>
+<p><strong>Lehre #1:</strong> Solange Konventionen für die Codeorganisation unbekannt sind oder noch nicht verlässlich eingehalten werden, sollten Komponentenimplementationen als Rahmen vorgegeben werden. Dann gibt es keine Frage, wohin der Output-Path zeigen soll, woher NUnit kommt, wo die Tests zu hinterlegen sind, wie die Bennungen sind, so dass der autom. Buildprozess schlank bleibt.</p>
+<p>Kreativität ist ja eine gute Sache – aber sie sollte einen Rahmen haben. Dass z.B. Entwickler die Freiheit haben, Komponenten nicht gem. der Ubiquitous Language zu benennen, ist falsch verstandene Kreativität.</p>
+<p><strong>Lehre #2:</strong> Die Ubiquitous Language ist heilig. Spaß mit Benennungen mögen Entwickler vielleicht hier und da in ihren Komponenten haben. An den Schnittstellen jedoch und auf Architekturebene ist dafür kein Raum. Verständlichkeit entsteht nur, wenn die gemeinsame Sprache auch wirklich gesprochen wird.</p>
+<p>Die Zeit war am Ende knapp. So haben wir alle auf eine erfolgreiche Integration gestarrt. Darunter hat die Codequalität gelitten. TDD im Speziellen war dieses Mal nicht wirklich ein Thema. Und Clean Code Developer Bausteine im Allgemeinen (jenseits der Architektur) auch nicht. So haben sich – wie ein Blick in den Code zeigt – Unschönheiten eingeschlichen. Manche davon waren sogar auf der Projektion zu sehen, weil sie mit dem GUI zu tun hatten.</p>
+<p><strong>Lehre #3:</strong> Keine Integration ohne Code-Review. Soviel Zeit muss sein. Für den Event war es ok, mal ohne Review zu leben. Es ging ja vordringlich um den Architekturentwurf. Die Implementierung am Ende war Kür und Spaß. Wenn es jedoch etwas ernster wird, dann gibt es kein “Done!” ohne Review.</p>
+<p>TDD erleben, ist eine gute Sache. Architekturen mit “parallel rauchenden Köpfen” umsetzen, ist aber auch eine gute Sache. Beides sollten Entwickler öfter tun. Für TDD mag dabei eine Projektion reichen. Beim parallelen Entwickeln ist jedoch erstens ein Coderepository und zweitens ein Zugriff für alle darauf unverzichtbar.</p>
+<p><strong>Lehre #4:</strong> Das Google Projects Repo war eine gute Sache  - allerdings nur für mich. Das sollte beim nächsten Mal anders sein. Wie könnte das gehen? Mehr Teilnehmer mit einem UMTS-Stick. Oder ein WLAN mit einem Rechner, der ein Repo hostet. Oder ich muss einfach auf dem Zettel haben, dass ich ja einen WLAN UMTS Stick habe, über den ich auch anderen Internetzugang geben kann. Die 4 Rechner hätte der wohl stemmen können.</p>
+<p>Schwieriger wird es bei der Versionskontrollsoftware. Viele sind mit SVN oder TFS vertraut. Mit denen würde ich soetwas aber nicht machen wollen. Ein verteiltes Versionskontrollsystem wie Mercurial (oder auch Git) ist viel besser geeignet für verteilte Teams. Da kann jedes Team z.B. in mehreren Commits bis zur Tracer Bullet Implementation kommen, die mit einem Push auf den Server schieben und dann lokal weiterarbeiten, während die Integration sich den Tracer Bullet Stand von allen mit Pull herunterlädt.</p>
+<p>Beim nächsten Mal versuche ich es mit <a rel="noopener" href="http://bit.ly/cRvdug">TortoiseHg</a> für alle. Das ist einfach zu bedienen. Damit bekommt jeder ein Clone, ein Commit und ein Push hin. Insbesondere ich Mercurial auch sehr tolerant gegenüber Löschungen und Umbenennungen.</p>
+<h2>Fazit</h2>
+<p>Trotz einiger Stolpersteine ist das Coding Dojo aus meiner Sicht schön gelaufen. Mein Eindruck war, die Teilnehmer haben etwas mitgenommen. Und sie haben auch Spaß gehabt. Sonst wären sie nicht bis zum bitteren Ende nach knapp 4 Stunden geblieben. Super! Danke an alle fürs Kommen und Mitdenken und Mitmachen.</p>
+<p>Und Danke an Ilker für die Einladung. Und Danke an Microsoft für Raum und Annehmlichkeiten. Von mir aus können wir das gern wieder mal machen ;-)</p>
+<p>Wem es Spaß gemacht hat und wer tiefer eintauchen möchte in systematischen Softwareentwurf und komponentenorientierte Entwicklung, der kann ja mal überlegen, ob er/sie beim <a rel="noopener" href="http://bit.ly/bz1sTd">Clean Code Developer Praktikum</a> im Juli mitmachen will. Das bietet 5 Tage Praxis pur – und ist auch noch kostenlos.</p>
+<h2>Kommentare</h2>
+<p><strong>Robert Seso</strong> (2010-05-30):</p>
+<p>ECB funktioniert in der Auspregung aber nur wenn alle Komponenten im selben Prozess leben, oder? Die Kontrakte mit Action und Func sind nicht (XML) serializierbar -- kann so eine Architektur auch dann funktionieren, wenn eine der Komponenten hinter einem Web Service lebt? In anderen Worten, kann man damit ein Request/Response Pattern bei auch bei Web Services ersetzen?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-05-30):</p>
+<p>@Robert: EBCs funktionieren wunderbar in asynchronen und verteilten Szenarien. Zur Asynchronizität habe ich in diesem Blog schon etwas geschrieben. Zur Verteilung werde ich das nachholen.</p>
+<p>-Ralf</p>
+<p>PS: Die Pins müssen ja nicht serialisierbar sein, sondern nur die Nachrichten.</p>
+<hr />
+<p><strong>Sebastian Jancke</strong> (2010-06-08):</p>
+<p>Ralf,</p>
+<p>kannst du die Bilder in größerer Version verlinken? Dann könnte ich diese lesen ;-)</p>
+<p>Gruß,
+Sebastian</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

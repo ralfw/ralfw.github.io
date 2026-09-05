@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warum überrascht Unwartbarkeit? [OOP 2009] — ralfw.de Archiv</title>
+<meta name="description" content="Warum sind Projekte immer wieder überrascht, dass sich ihr Code so schlecht warten lässt? Fehler zu beheben wird immer schwieriger. Neue Kundenwünsche einzubauen dauert immer länge">
+<link rel="canonical" href="https://ralfw.de/archiv/2009/warum-uberrascht-unwartbarkeit-oop-2009/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Warum überrascht Unwartbarkeit? [OOP 2009] — ralfw.de Archiv">
+<meta property="og:description" content="Warum sind Projekte immer wieder überrascht, dass sich ihr Code so schlecht warten lässt? Fehler zu beheben wird immer schwieriger. Neue Kundenwünsche einzubauen dauert immer länge">
+<meta property="og:url" content="https://ralfw.de/archiv/2009/warum-uberrascht-unwartbarkeit-oop-2009/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Warum überrascht Unwartbarkeit? [OOP 2009]</h1>
+    <div class="doc-meta"><span>22. Juni 2009</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2009/06/warum-uberrascht-unwartbarkeit-oop-2009.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2009/warum-uberrascht-unwartbarkeit-oop-2009/</code></span></div>
+    <div class="art"><p>Warum sind Projekte immer wieder überrascht, dass sich ihr Code so schlecht warten lässt? Fehler zu beheben wird immer schwieriger. Neue Kundenwünsche einzubauen dauert immer länger. Mir scheint, viele fühlen sich damit so plötzlich konfrontiert wie mit Weihnachten.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d5e0bf90f5066d4e.png" /></p>
+<p>Am Anfang ist diese Situation noch in weiter Ferne; man hat von ihr gehört und will auch rechtzeitig darauf achten. Aber es ist ja noch so lang bis dahin. Dann vergeht die Zeit mit Tagesgeschäftalltagsstress... und - zack! - steht die Unwartbarkeit vor der Tür und man hat eben doch vergessen, sich frühzeitig darum zu kümmern.</p>
+<p>Warum ist das so? Immer wieder. Es mangelt ja nicht an Kenntnis, dass es Unwartbarkeit gibt. Irgendwie liegt sie meistens jedoch in der Zukunft und betrifft ohnehin eher die anderen.</p>
+<p>Bei Weihnachten rührt die gefühlte Plötzlichkeit des Auftretens sicherlich vom Stellenwert her. Weihnachten ist nicht so wichtig wie die Dinge des Tagesgeschäftes. Außerdem scheinen die Weihnachtseinkäufe so leicht zu erledigen, dass dafür immer noch irgendwie Zeit ist. Das ist ja auch durchaus wahr. Selbst am heiligen Morgen lassen sich noch Geschenke kaufen - und das wird genutzt, wie die vollen Geschäfte zeigen.</p>
+<p>In Kauf genommen wird dabei jedoch, dass man dann damit zufrieden sein muss, was noch übrig ist. Die Qualität leidet also darunter, dass Geschenke auch noch bis kurz vor knapp gekauft werden können. Man ist eher bereit, sich mit dem, was übrig ist zufriedenzugeben, als rechtzeitig einzukaufen.</p>
+<p>Aber das ist natürlich unkritisch im Verhältnis zu dem, was in Projekten passiert, wenn sie sich von der Unwartbarkeit überraschen lassen. Deshalb lohnt die Frage doppelt, woher denn dort diese Überraschung kommt?</p>
+<p>Abgesehen einmal von einer allgemeinen Überschätzung oder gar Überheblichkeit, die das Problem entweder weit in der Zukunft, eher bei anderen oder als eigentlich nicht so schlimm einstuft, scheint mir hier die Natur der Sache der Kern des Problems. Das ist die Struktur von Software. Deren Komplexität macht nämlich die Wart- oder Unwartbarkeit aus.</p>
+<p><a rel="noopener" href="http://www.expasy.org/cgi-bin/show_thumbnails.pl"></a> Mir scheint nun, dass die Sorglosigkeit um Umgang mit der Wartbarkeit das Ergebnis einer Fehleinschätzung des Wachstums eben dieser Komplexität ist. Ich kann mir die Überraschung über Unwartbarkeit nur vorstellen als Überraschung über ein schnelleres Wachstum als erwartet. Man weiß, dass die Komplexität über die Zeit zunimmt, man weiß, dass damit die Gefahr von Unwartbarkeit droht. Soweit sind sich alle einig. Aber wer im Projekt ist, glaubt daran, dass die Komplexität überschaubar wächst. Dass sich die Unwartbarkeit langsam ankündigt und dann immer noch gegengesteuert werden kann. Und genau das sieht mir wie ein großes Missverständnis aus!</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/6fcd1fc5304a7926.png" /></p>
+<p>Komplexität wächst nicht linear! Doppelt soviel Code bedeutet nicht doppelt soviel Komplexität und damit nur etwas verringerte Wartbarkeit!</p>
+<p>Komplexität wächst vielmehr exponenziell! Und damit wächst auch die Unwartbarkeit exponentziell. Das bedeutet, mit der Unwartbarkeit ist es wie mit den Seerosen. Ein Beispiel aus der 10. Klasse: "Wenn die Seerosen auf einem Teich im Verlauf von 3 Monaten (90 Tage) jeden Tag ihre Zahl verdoppeln, wann bedecken sie den Teich zur Hälfte? Nach a) 10 Tagen, b) 45 Tagen, c) 60 Tagen, d) 89 Tagen?"</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/ec94dbf9b86f1604.png" /></p>
+<p>Wenn wir die Wartbarkeit von Software mal mit der Schiffbarkeit des Teiches in diesem Beispiel gleichsetzen und Schiffbarkeit (mit Ruderbooten) definieren als "Max. 25% des Teiches sind von Seerosen bedeckt", wann tritt dann Unschiffbarkeit ein? Am 88. Tag. Ganz plötzlich.</p>
+<p>Am 87. Tag ist der Teich nur zu einem 1/8 mit Seerosen bedeckt. Am 86. Tag ist es nur 1/16 oder knapp 6% usw. Das heißt, 90% der Zeit von 3 Monaten sind die Seerosen auf dem Teich kaum sichtbar; es sind hübsche Inselchen die weit weniger als 1% der Teichfläche bedecken. Dann jedoch, im Verlauf von 5 Tagen explodiert ihre Zahl. Wer am 87. Tag knapp 10% Bedeckungsfläche wahrnimmt und denkt, man solle gelegentlich mal überlegen, die Seerosen zurückzuschneiden, der muss nur ein Wochenende nicht hinschauen und hat keine Chance mehr zur Reaktion. Dann ist der Teich nämlich plötzlich komplett bedeckt.</p>
+<p>Genau so scheint es mir mit der Unwartbarkeit. Man kennt ihre grundsätzliche Möglichkeit (Analogie: man weiß, Seerosen können sich bis zur Unschiffbarkeit ausdehnen), man will auch darauf achten, dass sie nicht eintritt (Analogie: man schaut gelegentlich auf den Teich, was denn die Seerosen so machen) - aber schließlich wird man von ihr überrollt (Analogie: wenn man die Seerosen als signifikante Fläche wahrnimmt, dann ist es schon zu spät).</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9782b2700b676c64.png" /></p>
+<p>Das ist ja auch in anderen Bereichen ein oft beobachtetes Verhalten. Vorsorge in der Gesundheit oder im Umgang mit der Umwelt ist schwer "zu verkaufen", weil in beiden Bereichen vieles lange gut geht. Aber wenn es dann schlecht wird, dann oft sehr schnell. Dann kippt das Biotop um, dann ist der Herzinfarkt da - auch wenn kurz vorher noch alles ziemlich in Ordnung schien.</p>
+<p>In der Softwareentwicklung liegen die negativen Effekte von mangelnder Vorsorge und Voraussicht jedoch nicht so weit in der Zukunft. Hier reden wir nicht über Jahrzehnte, sondern über wenige Jahre oder gar nur Monate. Da sollte es doch möglich sein, über die Schwierigkeit von uns Menschen, mit exponenziellen Entwicklungen klarzukommen, einfach mal hinwegzuspringen. Im Vergleich zum Weltklima oder der Globalisierung ist doch ein Softwareprojekt eine simple Angelegenheit. Da sollte es uns leicht fallen, Wartbarkeit nicht so auf die leichte Schulter zu nehmen. Lassen wir uns also nicht länger von Unwartbarkeit überraschen. Wenn wir die Plötzlichkeit lieben, haben wir ja auch immer noch Gruselfilme oder Weihnachten ;-)</p>
+<h2>Kommentare</h2>
+<p><strong>Rene Drescher-Hackel</strong> (2009-06-30):</p>
+<p>Hallo Ralph,</p>
+<p>das mit der Wartbarkeit hast du als Entwickler oft gar nicht mehr in der Hand. In einem aktuellem Projekt ist genau das Problem aufgetreten. Wann immer es geht, unterziehe ich den Javascriptcode einem gewissen Refactoring, da es eine lebende AJAX-Anwendung ist. Früh habe ich erkannt, dass wir einige Konzepte neu überdenken müssten. Wenn aber der Projektleiter sagt, "das lassen wir erst mal so, das machen wir in der nächsten Version", dann weist du schnell, der Zug ist eigentlich endgültig abgefahren. Ich bedauere es immer wieder aufs Neue - aber so ist es nun mal und du als kleiner Entwickler hast eigentlich nicht wirklich Einfluss darauf.</p>
+<p>Gruß
+Rene</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-07-01):</p>
+<p>@Rene: Sicher gibt es immer wieder Punkte, wo "der kleine Entwickler" es nicht ändern kann, auch wenn er die Notwendigkeit dazu sieht.</p>
+<p>Sicher muss man immer auch mit einem gewissen Grad an Entropie/Unordnung leben. Flexibilität und Effizienz sind gegeneinander abzuwägen. Und manchmal ist Effizienz wichtiger.</p>
+<p>Aber wenn es zum Muster wird, wenn Refactorings wg "Aufschiebementalität" oder "Nach mir die Sintflut"-Denken ausbleiben, dann ist sicherlich Gefahr im Verzug.</p>
+<p>Ich würde sagen: Schreibe diese Fälle auf in einem kleinen Tagebuch. Notiere deine Beobachtung (Was sollte verbessert werden?) und deine Vermutung, wann und/oder in welchem Fall das Beobachtete zu einem Nachteil werden würde. Und natürlich, wie die Antwort des Projektleiters auf deinen Hinweis ist.</p>
+<p>So bist du in dieser frustrierenden Situation nicht ganz tatenlos und hast irgendwann mal eine Liste von Vorhersagen, die eingetreten sind. Je genauer du misst/schätzt, wieviel Aufwand nötig wäre für ein Refactoring und wieviel Aufwand am Ende durch die Unterlassung anfiel, desto besser. Allerdings gibt es da mehrere Zahlen:</p>
+<p>-Refactoringaufwand heute
+-Aufwand für neue Funktionalität morgen
+-Refactoringaufwand morgen</p>
+<p>Gib dem Projektleiter auch gern mal CCD Texte zum Lesen ;-) Oder diesen Blogartikel.</p>
+<p>-Ralf</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

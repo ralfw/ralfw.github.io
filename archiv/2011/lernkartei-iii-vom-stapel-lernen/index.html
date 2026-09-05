@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lernkartei III – Vom Stapel lernen — ralfw.de Archiv</title>
+<meta name="description" content="Die Lernkartei “zuckt schon”, wie der vorherige Artikel beschrieben hat. Als Anwender kann ich im Lernmodus Karteikarten “durchblättern”, also schon beurteilen, ob mir Darstellung ">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/lernkartei-iii-vom-stapel-lernen/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Lernkartei III – Vom Stapel lernen — ralfw.de Archiv">
+<meta property="og:description" content="Die Lernkartei “zuckt schon”, wie der vorherige Artikel beschrieben hat. Als Anwender kann ich im Lernmodus Karteikarten “durchblättern”, also schon beurteilen, ob mir Darstellung ">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/lernkartei-iii-vom-stapel-lernen/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Lernkartei III – Vom Stapel lernen</h1>
+    <div class="doc-meta"><span>22. April 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/04/lernkartei-iii-vom-stapel-lernen.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/lernkartei-iii-vom-stapel-lernen/</code></span></div>
+    <div class="art"><p>Die Lernkartei “zuckt schon”, wie der <a rel="noopener" href="http://ralfw.blogspot.com/2011/04/lernkartei-ii-erste-lerninteraktion.html">vorherige Artikel</a> beschrieben hat. Als Anwender kann ich im Lernmodus Karteikarten “durchblättern”, also schon beurteilen, ob mir Darstellung und Interaktionen gefallen. Lernen, im Sinne einer Wiedervorlage von nicht gewussten Antworten, kann ich mit dem Programm allerdings noch nicht. Das soll in der zweiten Iteration hier nun nachgerüstet werden.</p>
+<h3>Arbeiten mit der Lernkartei</h3>
+<p>Bevor ich mich aber in die Modellierung stürze, muss ich die Anforderungen verstehen. Was bedeutet denn das Lernen mit Karteikarten konkret, wie gehe ich dabei vor? Wie soll sich das Programm verhalten?</p>
+<h4>Struktur der Lernkartei</h4>
+<p>Ich stelle mir das so vor:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/3d9c0ebee870f6bb.png" /></p>
+<p>Die Karten, die ich lerne, nehme ich von einem Stapel (Batch). Der enthält für einen Stapeldurchlauf (Batch Run) nicht zuviele Karten.</p>
+<p>Gefüllt wird der Stapel aus Fächern (Compartment). Es gibt n+1 Fächer, von denen das 0-te eine besondere Bedeutung hat. Das 0-te Fach ist die Halde (Heap). Zu Beginn des Lernens mit einer Lernkartei liegen alle Karteikarten in der Halde.</p>
+<p>Wenn ich frische Karteikarten für den Stapel brauche (weil in den anderen Fächern gerade keine zum Lernen anstehen), nehme ich sie von der Halde. Und vom Stapel wandern sie in die Fächer 1..n. Dazu später mehr.</p>
+<p>Eine Karteikarte, deren Antwort ich weiß, die aus dem Fach n kommt, geht schließlich ins Archiv (Archive). Sie verlässt damit die Fächer und wird nicht wieder vorgelegt.</p>
+<p>Lernen ist mithin der Prozess, der die Halde ins Archiv transferiert.</p>
+<h4>Lernalgorithmus</h4>
+<p>Die Karten, die ich lernen will, liegen auf dem Stapel. Der sollte nicht zu hoch sein, damit nicht gewusste Karten immer wieder mal angeboten werden. Ich sag mal, mehr als 20-25 Karten liegen nicht auf dem Stapel.</p>
+<p>Vom Stapel lerne ich solange, bis nur 3 Karten darauf sind. Denn ab 3 Karten ist die Wiedervorlage nicht gewusster Karten so zügig, dass sie mir beim Lernen nicht mehr wirklich hilft.</p>
+<p>Lernen vom Stapel bedeutet:</p>
+<ul>
+<li>Ich nehme die oberste Karteikarte und schaue mir die Frage an.</li>
+<li>
+<p>Dann schaue ich mir die Antwort an und beurteile, ob ich sie gewusst habe.</p>
+</li>
+<li>
+<p>Wenn ich die Antwort gewusst habe, stecke ich die Karte ein Fach weiter. Jede Karte kommt aus einem Fach auf den Stapel; ich weiß also, welches Fach für sie dann das nächste Fach ist. Gewusste Karten wandern so von Fach zu Fach bis ins Archiv.
+Karte aus Fach f kommt auf den Stapel und wenn ich ihre Antwort weiß, vom Stapel in f+1 (bzw. ins Archiv).</p>
+</li>
+<li>
+<p>Wenn ich die Antwort nicht gewusst habe, stecke ich die Karte ans Ende des Stapels. Sie “blubbert” dann langsam wieder an seine Oberfläche, so dass ich mich mit ihr früher oder später wieder beschäftige.
+Karten aus Fach f, deren Antwort ich nicht weiß, verlieren ihre Herkunft und werden zurückgestuft auf Fach 1.</p>
+</li>
+<li>
+<p>Wenn ich mit dem Lernen aufhöre und noch Karten auf dem Stapel sind, kommen die zurück in Fach 1.</p>
+</li>
+</ul>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/98ad89beebb4b6cd.png" /></p>
+<p>Wenn der Stapel am Anfang des Lernens leer ist oder immer wenn er während des Lernens die minimale Anzahl an Karten erreicht, fülle ich ihn aus den Fächern wie folgt:</p>
+<ul>
+<li>Alle Karten, die in Fach 1 sind, kommen auf den Stapel.</li>
+<li>Wenn noch Platz auf dem Stapel ist, dann fülle ich ihn mit Karten aus dem letzten Fach, das voll ist. Die Fächer haben eine steigende Kapazität, damit Karten immer seltener zum Lernen vorgelegt werden. Das ist ja der Trick am Lernen mit der Lernkartei. Fach 1 hat eine Kapazität wie der Stapel k1=ks. Die weiteren Fächergrößen verdoppeln die Kapazität, k2=40, k3=80, k4=160, k5=320.
+Ich schaue also zuerst, ob Fach n voll ist, wenn nicht, dann ob Fach n-1 voll ist usw. Fach 1 ist zu diesem Zeitpunkt immer leer (s. Schritt 1). Aber Fach 0, die Halde, ist immer voll, egal wieviele Kartei noch auf Halde liegen.
+Dieses Vorgehen sichert zu, dass volle Fächer langsam abgearbeitet werden und dass immer wieder neue Karten von der Halde “ins Spiel kommen”. Schonmal gewusste Karten (in vollen Fächern) haben also Vorrang vor Karten von der Halde.</li>
+<li>Falls der Stapel immer noch nicht gefüllt ist (weil die Halde leer ist und kein anderes Fach voll), wird er aus den Fächern in der Reihenfolge 2..n bestückt.</li>
+</ul>
+<p>Ich finde den Umgang mit der Lernkartei (Flash Card Box) in dieser Weise geradlinig. Gelernt werden die Karten, die ich sozusagen in der Hand halte (Stapel) und gespeist wird der Lernstoff aus dem Karteikasten, d.h. den Karten, die ich schonmal in der Hand hatte, oder der Halde. Wenn ich neuen Lernstoff brauche, greife ich einfach in die Fächer.</p>
+<h3>Flow modellieren</h3>
+<p>Bisher sieht der Flow für das Lernen so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/cf0e89b0be601bee.png" /></p>
+<p>Die Karten, die am Ende herauskommen, sind “Zufallsprodukte” von <em>Get next card</em>.</p>
+<p>Ab jetzt sollen die Karten jedoch vom Stapel kommen. <em>Advance card</em> muss die aktuelle Karte entweder unter den Stapel schieben (wenn Antwort nicht gewusst) oder vom Stapel nehmen und ein Fach weiter stecken. Und <em>Get next card</em> muss die nächste Karte vom Stapel holen bzw. ggf. den Stapel neu füllen.</p>
+<p>Beide Funktionseinheiten müssen deshalb den Stapel kennen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/5c45cc9a99238b63.png" /></p>
+<p>Die kleine Tonne an den Funktionseinheiten ist die Kurzschreibweise für eine Abhängigkeit.  <em>Advance card</em> und <em>Get next card</em> sind also abhängig vom Stapel, sie haben damit gemeinsamen Zustand.</p>
+<p>Fragt sich jetzt nur, wie der Stapel initial gefüllt wird und wie die erste Karte bei Start der Anwendung in den View bzw. das ViewModel kommt. Dafür ist ein “Nebenfluss” nötig:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f02b5774cefe9088.png" /></p>
+<p><em>Open box</em> öffnet die Lernkartei (Flash Card Box) und sorgt dafür, dass <em>Get next card</em> die erste Karte vom Stapel ans ViewModel schickt.</p>
+<p>Achten Sie auf das (C) bei <em>Open box</em>, es zeigt an, dass die Funktionseinheit in der Config-Phase des Programmstarts ausgeführt wird. Zu dem Zeitpunkt sind alle Funktionseinheiten erzeugt, gebunden und mit ihren Abhängigkeiten versorgt (Phasen Build, Bind, Inject).</p>
+<p>Auf die Config-Phase folgt dann die Run-Phase, die eine ausgezeichnete Funktionseinheit startet, so dass es auch für den Anwender losgeht.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/5dc8e0b8a8a92d9e.png" /></p>
+<p>Der View selbst ist diese ausgezeichnete Funktionseinheit, der EntryPoint für die Flows.</p>
+<h5>Feature Slicing</h5>
+<p>Da ich noch keine echten Karteikarten habe, füllt <em>Open box</em> die Lernkartei mit Dummy-Karten. Im Fokus dieser Iteration ist das Vorgehen beim Lernen; dafür brauche ich als Anwender noch keine echten Karten, sondern muss nur beurteilen können, ob das Programm gem. Algorithmus mit der Lernkartei umgeht.</p>
+<p>Für diese Iteration specke ich sogar noch weiter ab. Das Programm soll noch nicht einmal den ganzen Lernalgorithmus implementieren, sondern nur das Lernen vom Stapel. Die Karten werden also noch nicht aus Fächern geholt und auch nicht weitergesteckt.</p>
+<p>Aus dem ganzen Feature “Lernen nach Lernalgorithmus” schneide ich mir nur eine dünne Scheibe (Feature Slice), um schneller etwas auf die Straße zu bekommen. Das Modell erfährt dadurch schon eine wichtige Erweiterung (es kommt Zustand hinzu, der Zustand wird initialisiert, der ganze Programmstart bekommt mehr Systematik) und als Anwender habe ich einen überschaubaren sowie schnell überprüfbaren Nutzenzuwachs.</p>
+<h3>Daten modellieren</h3>
+<p>Bisher waren die Daten, die da im Flow flossen, sehr einfach. Die Karte enthielt nur zwei Felder: Frage und Antwort. Dazu war nicht viel zu sagen. Doch jetzt kommt einiges hinzu: Stapel, Fächer, Archiv. Ein explizites Datenmodell lohnt sich daher:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d1c64e0bfe2985e1.png" /></p>
+<p>Die <em>Flash Card Box</em> ist die Spinne im Netz. Sie zieht Stapel, Fächer und Archiv zusammen. Und mehr nicht.</p>
+<p>Alle Datenfunktionseinheiten haben möglichst simple, auf den hiesigen Zweck zugeschnittene Schnittstellen.</p>
+<p>Für diese Iteration brauche ich allerdings nur die <em>Flash Card Box</em>, <em>Batch</em> und <em>Batch Card</em>. <em>Card</em> habe ich schon.</p>
+<blockquote>
+<p>Als Notation für das Datenmodell habe ich bewusst die “Krähenfußnotation” gewählt (mit etwas API-Zucker oben drauf). <a rel="noopener" href="http://www.tdan.com/view-articles/7474">Ich stimme nämlich Jim Stewart zu</a>, dass die am leichtesten verständlich ist. Ebenfalls bewusst habe ich im Diagramm auch Funktionseinheiten wiederholt (<em>Card</em>). Viele Linien, die alle auf den selben Kasten weisen, finde ich verwirrend. Sie machen das Verstehen von Diagrammteilen schwieriger und suggerieren Abhängigkeiten, wo keine sind.</p>
+</blockquote>
+<h3>Feature Slice implementieren</h3>
+<p>Plan a little, code a little. So geht die Implementierung für das Feature Slice leicht von der Hand. An den Kontrakten ist nur wenig zu machen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d1fe4b345ddfce02.png" /></p>
+<p>Und der Code für die Datentypen ist ganz einfach, weil er im Grunde nur eine Queue kapselt. Spannender ist da schon die Implementierung für die Aktionen <em>Advance card</em> usw. Die sind ja nun zustandsbehaftet:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a56455169eb9e99c.png" /></p>
+<p>Da schien mir ausnahmsweise mal eine Ableitung angebracht. Alle Aktionen, die sich eine <em>FlashCardBox</em> als Instanz teilen, erben von <em>FlashCardBoxEntity</em>. Die Klasse implementiert <em>IDependsOn</em> und enthält eine Variable für den Zustand:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/31f05e7e110d1a13.png" /></p>
+<p>So werden die Ationen übersichtlicher, weil sie sich aufs Wesentliche konzentrieren:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/ca12d5b00592a4f0.png" /></p>
+<p>Die Initialisierung erfolgt in der Startup-Phase Inject:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f745dfbb9eecf1e8.png" /></p>
+<p>Wenn Sie genau hinschauen, sind die Aktionen jedoch nicht direkt von <em>FlashCardBox</em> abhängig, sondern von <em>SharedState</em>. Warum das? Weil nur so es möglich ist, dass <em>Open box</em> für alle anderen den Zustand erzeugt und setzt.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/b22210b2e1453f5f.png" /></p>
+<p>Natürlich hätte außerhalb eine Instanz von <em>FlashCardBox</em> erzeugt und in alle injiziert werden können, doch dann hätte die einen parameterlosen Ctor haben müssen. Das fand ich unschön. Mit dieser Lösung jedoch ist es erstens möglich, die Lernkartei-Instanz auszutauschen und zweitens die Initialisierung mit einem Ctor sehr schön in einer Aktion zu kapseln.</p>
+<h3>Zwischenstand</h3>
+<p>Der Code ist wie immer im Mercurial Repository zu finden: <a rel="noopener" href="http://code.google.com/p/wpfflashcards/">http://code.google.com/p/wpfflashcards/</a></p>
+<p>Mir hat diese Iteration Spaß gemacht. Der entsprang besonders der Auflösung einer Spannung, in die ich mich hineinmanövriert hatte. Zu Anfang hatte ich nämlich geplant, das komplette Feature zu implementieren. Ich hatte es auch modelliert. Aber dann… war mir die Zeit zur Implementierung zu knapp. Ich fühlte mich unwohl. Sollte ich versuchen, alles huschhusch runterzucoden?</p>
+<p>Doch dann habe ich mich zum Feature Slicing entschieden. Warum nicht aus dem Gesamtmodell für das Lernen nur den Stapel herauslösen und implementieren? Ja, warum eigentlich nicht? Wenn unter Druck, dann ist das ein probates Mittel, ihn zu reduzieren: einfach die Nutzenscheibe dünner schneiden. Das ist viel besser, als mit dem ganzen Feature anzufangen und nicht fertig zu werden.</p>
+<p>Aus Anwendersicht ist nicht soviel auf die Straße gekommen, doch das, was da ist, ist solide gemacht. Das Modell ist sauber und zukunftstauglich. Und die Implementierung ist durch Tests gestützt.</p>
+<p>Aus Entwicklersicht kann ich zufrieden sein, weil ich Nutzen geliefert habe. Und gleichzeitig habe ich das Modell insgesamt runder gemacht, weil nun ein vernünftiger Anfang (<em>Open box</em>) für die Daten da ist. Die muss ich nun nicht mehr wie in der ersten Iteration in den Flow “hineinmogeln”.</p>
+<p>Mal schauen, was beim nächsten Mal dran ist. Wahrscheinlich werde ich das Lernen komplettieren mit Halde, Fächern und Archiv.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/026d959a4ff14efa.gif" /></p>
+<h2>Kommentare</h2>
+<p><strong>tanascius</strong> (2011-04-27):</p>
+<p>Hallo Ralf,
+ich habe Schwierigkeiten, dir zu folgen, was passieren soll, wenn der Stapel leer ist. Du schreibst da Sätze wie:
+"Aber Fach 0, die Halde, ist immer voll, egal wieviele Kartei noch auf Halde liegen."
+oder
+"Falls der Stapel immer noch nicht gefüllt ist (weil die Halde leer ist und kein anderes Fach voll), wird er aus den Fächern in der Reihenfolge 2..n bestückt.".</p>
+<p>Jetzt ist die Halde doch leer ... und warum sollten die Fächer denn nicht auch leer sein? Was hilft es dann sie 2..n durchzugehen?</p>
+<p>Vielleicht kannst du das noch etwas deutlicher beschreiben.
+Danke!</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-04-27):</p>
+<p>@Tanascius: Es gibt für Fächer drei zustände: Leer, gefüllt und voll.</p>
+<p>Leer ist leer. Voll ist aber nicht einfach nur nicht leer, sondern eben voll, d.h. es passt nix mehr rein ins fach. Gefüllt ist alles zwischen leer und voll.</p>
+<p>Die Halde ist besonders: Sie ist entweder leer oder voll. D.h. von der Halde können immer Karten auf den Stapel wandern in Schritt 2, um ihn aufzufüllen. Von anderen Fächern nicht.</p>
+<p>Sind andere Fächer nicht voll, wandern nur Karten auf den Stapel, falls die Halde leer ist.</p>
+<p>Wenn die Halde leer ist, dann sind alle Karten "im Spiel", also entweder in einem Fach oder im Archiv. Die Fächer sind dann also nicht zwangsläufig leer.</p>
+<hr />
+<p><strong>Florian Mätschke</strong> (2011-05-04):</p>
+<p>Lern-Rauschen:
+Hallo Ralf!
+Ich finde deine Beispiele sehr sauber und übersichtlich was die Umsetzung / Planung angeht. Allerdings erzeugt die "Anforderung" mit der Box teils ein gewisses Rauschen beim lernen/verstehen der Vorgehensweise mit Flow-Design/EBC und deren Evolvierbarkeit, wie ich finde. - Vermutlich wird dies in späteren Kapiteln im Flow-Design besser verständlich und übersichtlicher.
+Kurz,was ich sagen will:
+Auch wenn das Prinzip mit dem Lernkasten klar ist, sind manche Anforderungen (Mechanismen) schwer auf Anhieb zu begreifen. Wie dem auch sei....</p>
+<p>Ich habe in dieser Iteration übrigens mit einem Kollegen erstmals Flow-Design produktiv eingesetzt (gestern), mit dem Wissen, dass ich aus deinem letzten Vortrag und Wissen aus der dotnetPro hatte. Mein Kollege kannte weder Flow-Design noch EBC.
+Heute entwickelt er bereits in EBC, was wir gestern Nachmittag in FD entworfen haben. - Er ist begeistert, wie klar und schnell es geht.</p>
+<p>Anfangs noch ein paar Probleme mit dem Binden, aber das geht schnell.</p>
+<p>Was ich noch fragen muss: Mir ist aufgefallen, du verwendest bei den Funktionseinheiten immer nur Process() und Continue(). Hat das gewollte Vorteile?</p>
+<p>Was ist, wenn ich 2 oder mehr Eingänge habe? Process1(), Process2()?</p>
+<p>Danke!</p>
+<p>Grüße,
+Florian</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-05-05):</p>
+<p>@Florian: "Allerdings erzeugt die "Anforderung" mit der Box teils ein gewisses Rauschen beim lernen/verstehen" - Das versteh ich nicht recht. Du meinst, ich sollte die Anforderungen nicht erklären, sondern nur das Modell präsentieren?</p>
+<p>Das möchte ich aber nicht. Dann fällt das Modell vom Himmel und keiner weiß, warum es so aussieht. Ich denke, es ich wichtig, die Verbindung zwischen Anforderungen und Modell zu sehen. Deshalb muss ich die Anforderungen erklären.</p>
+<p>Freut mich, dass du mit deinen Kollegen einen einfachen Einstieg in Flow-Design gefunden hast.</p>
+<p>Process und Result bzw Continue sind Standardnamen, wenn eine Funktionseinheit nur einen Input und einen Output hat. Das ist bei Aktionen als Funktionseinheiten allermeistens der Fall.</p>
+<p>Bei Akteuren als Funktionseinheiten ist es anders; die haben oft viele Ein-/Ausgänge. Denen kannst du dann zweckspezifische Namen geben.</p>
+<hr />
+<p><strong>Florian Maetschke</strong> (2011-05-05):</p>
+<p>Hallo Ralf!</p>
+<p>Danke für die Hinweise zu Aktionen/Akteuren bei Funktionseinheiten.</p>
+<p>Ich meinte nicht, dass das Model weggelassen werden sollte.
+Viel mehr meinte ich, dass das Model schwerer verständlich ist, als z.B. eine Ampelschaltung an einer Kreuzung mit Fußgängerüberweg.
+Da weiß sofort jeder, was damit gemeint war.</p>
+<p>Vielleicht liegt es aber auch einfach nur daran, dass ich nie mit dem Prinzip Vokabeln gelernt habe.. hehe:)</p>
+<p>Bin gespannt auf Teil 4</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-05-05):</p>
+<p>@Florian: Ampelschaltung wäre vielleicht einfacher. Aber das ist es ja eben: Ich wollte nicht wieder so einfach. Flow-Design soll mit einem anspruchsvolleren Szenario demonstriert werden. Einfach kann jeder und ist schon oft gezeigt worden.</p>
+<p>Und wenn du bisher nicht so recht Vokabeln gelernt hast, dann ich mit dieser Anwendung endlich der richtige Zeitpunkt, damit anzufangen :-) (Aber du musst gar keine Vokabeln damit lernen; alles mögliche lässt sich mit Karteikarten lernen.)</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-05-14):</p>
+<p>Hallo Ralf</p>
+<p>Danke für das Sample.</p>
+<p>Zunächst einmal enspricht die Namensgebung der Klassen teilweise nicht den Microsoft Konventionen.</p>
+<p>Beispiele:
+Map_card_to_learningVM
+Fill_batch_from_compartment</p>
+<p>Gross- und Kleinschreibung und Verwendung von Underscore.</p>
+<p>Missbrauch der CodeBehind Funktionalität von VS bezüglich FlahsCardBoxEntity und Unterklassen.</p>
+<p>Bei WPF- und WinForms Applikationen habe ich die Erfahrung gemacht, dass der MVVM- und MVP-Pattern sehr sinnvoll ist.</p>
+<p>Wo ist in diesem Sample das Model? Entities sind Datenklassen und eigentlich keine Modelle.</p>
+<p>Das LearningViewModel (entspricht Presenter) sollte keine Properties wie Answer oder Question enthalten. Die Properties sollten in ein Model ausgelagert werden.</p>
+<p>Die Benennung der Klasse FlashCardBoxEntity bezüglich Entity ist irreführend (Datenklassen, EntityFramework). Vielleicht wäre Activity oder Action besser, als Entity.</p>
+<p>Diese Anwendung wäre womöglich einfacher per Workflows zu meistern.</p>
+<p>Grundsätzlich ist diese Idee, Komponten per EBC zu erstellen, die vollständig entkoppelt sind,
+sehr gut. Der Aufwand scheint mir sehr viel höher zu sein, als bei Interface Based Components.</p>
+<p>Mit den besten Grüssen.</p>
+<p>Stefan Werdenberg, Schweiz
+st.werdenberg@bluewin.ch</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-05-14):</p>
+<p>@Stefan:</p>
+<p>zur Namensgebung: Ob Namensgebung einer Microsoft-Konvention entspricht, finde ich nicht wichtig. Wichtiger ist, ob sie zu verständlichen Namen führt. Und da sage mir jmd, dass "Fill_batch_from_compartment" schlechter lesbar als "FillBatchFromCompartment" oder "Fillbachfromcompartment" ist.</p>
+<p>Wenn du allerdings darauf abzielt, die Bennung von Klassen durch "Verbphrasen" zu kritisieren, dann verliert dein Argument jede Bedeutung, weil es ja bei EBC genau darum geht, Klassen als Aktionen und nicht Substantive zu sehen.</p>
+<p>zu Missbrauch von Code Behind: Bitte zeige mir die Gebrauchsregeln für das, was du Code Behind nennst.</p>
+<p>Es geht ja nicht um Code Behind, sondern um hierarchische Anordnung von Projektelementen. Das ist ein allgemeines Stil- bzw. Strukturierungsmittel, das Code Behind anwendet, das aber natürlich auch anderen Zwecken dienen kann. Einen Missbrauch kann ich nicht erkenntn, sondern nur eine kreative Nutzung eines VS Features.</p>
+<p>zur Sinnfülle von MVVM und MVP: Es wäre schade, wenn dir entgangen wäre, dass ich MVVM implementiere.</p>
+<p>zu "Wo ist das Modell": Welches Modell meinst du denn? Das ViewModel ist da, wo die Klasse ViewModel ist.</p>
+<p>Und die FlashCardBox ist das Domänendatenmodell. Im Text ist das auch deutlich hervorgehoben.</p>
+<p>zu Properties auf LearningViewModel: Wir reden hier über MVVM, deshalb ist dein Verweis auf Presenter leider unpassend.</p>
+<p>Das Model ist die FlashCardBox, das ViewModel das LearningViewModel und der View der LeaningView. Wo ist die Abweichung von MVVM?</p>
+<p>zur Verwendung des Begriffs Entity: Der EF hat den Begriff nicht gepachtet und ist auch ansonsten kein Ausbund an Unterstützung von sauberem Code.</p>
+<p>Meine Verwendung von "Entity" für die Basisklasse folgt dem DDD. Schau mal in der Buch rein und sag mir dann, wo ich vom dortigen Konzept der Entity abweiche.</p>
+<p>zu Workflows: Ich wäre sehr interessiert zu sehen, wie du die Anwendung mit WF realisierst. Mach das doch mal und dann vergleichen wir in puncto Evolvierbarkeit. Da können wir alle nur lernen. Wäre schön.</p>
+<p>zur Höhe des Aufwands: Wenn du den Aufwand mit FD/EBC für höher hälst als mit IBC, dann wäre ich auch sehr interessiert daran, eine IBC Lösung zu sehen. Die sollte doch schnell zu machen sein, wenn es einfacher ist. Ich habe bisher ja nur vielleicht 0,5-1 Tag in die Programmierung investiert. Du solltest es also deutlich schneller hinkriegen. Wäre schön.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-05-14):</p>
+<p>Lieber Ralf</p>
+<p>Die EBCs sind auch bezüglich
+der Steuerung eines Flows, sehr interessant, da diese Architektur nicht nur eine kleinere
+Alternative zu WF ist, sondern darüber hinausgeht:
+Im Bezug auf asynchrone Programmabläufe
+verstehe ich die EBCs und Flow-Architektur und die eventbasierte Interaktion der Komponenten
+dann ähnlich einem organischen Biosystem,
+das "gleichzeitig" verschiedene Ereignisse bearbeiten oder an andere Organe (EB-Komponenten)
+ zur Bearbeitung weiterleiten kann.</p>
+<p>Die EBC-Variante erscheint für komplexe Flows einfacher erstellbar und modularer als WF;
+in der Denkweise herausragend und zukunftsorientiert
+im Sinne der Adaption organischer natürlicher Vorgänge.</p>
+<p>Eine eventbasierte Architektur ist überhaupt, sowie auch die OOP,
+eine Adaption unserer eigenen menschlichen Wirklichkeit.</p>
+<p>Bezüglich der Namensgebung. Ja, die Klassen müssen nur lesbar sein, dennoch finde ich die
+MS Konventionen schön und richtig und sie haben den Sinn, dass andere Entwickler leichter
+fremden Code lesen können.
+Vielleicht könnten wir uns darauf einigen, dass "FlashCardBoxModel" in einem Ordner "Models"
+zu einem schnelleren Verständnis Deines Samples führen würde. Zumal das
+ViewModel ja auch LearningViewModel und der View LearningView heisst.
+Womöglich denkst Du jetzt, der hätte ja auch einfach mal die Dokumentation
+lesen können - stimmt.</p>
+<p>Der MVVM Pattern ist eine kleine Abwandlung des MVP Patterns, wobei das ViewModel
+(siehe Schematas bezüglich MVP / MVVM) den Presenter widerspiegelt und der Vergleich
+ViewModel - Presenter deshalb keineswegs unpassend ist.</p>
+<p>Unterdessen habe ich mich in Dein Sample besser eingearbeitet und sehe die
+weitreichenden Überlegungen und Möglichkeiten, die darin vereint sind.</p>
+<p>Ich danke Dir, dass ich etwas gelernt habe.</p>
+<p>Mit den besten Grüssen.</p>
+<p>Stefan Werdenberg</p>
+<hr />
+<p><strong>Marcus Linke</strong> (2011-05-20):</p>
+<p>Hallo Ralf,
+erstmal vielen Dank für die Idee mit den EBCs.
+Die Modelierung mit diesem Ansatz gefällt mir sehr gut. In der letzten Woche habe ich intensiv mit Deinen Blog Artikeln und den Artikeln in der dotnetpro zum Thema beschäftigt.
+Sehr gut finde ich die Initiative mit der Lernkartei.
+Hierzu habe ich eine Frage:
+in wpffc.contracts befinden sich unter domaindata sowohl Klassen als auch Interfaces. Die Implementierung der Interfaces finde ich in der workbench für die flashcardbox. Soweit klar. Die Klassen Card und BatchCard sind mir nicht klar. Ich hatte die Contracte so verstanden, dass es generell Interfaces sein sollten.
+Ich möchte an dieser Stelle keine Haarspalterei beterieben - ich würde nur gern Deinen Gedankengang verstehen, der zu dieser Form geführt hat.</p>
+<p>Vielen Dank.</p>
+<p>Grüsse Marcus</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-05-20):</p>
+<p>@Marcus: Was in einem Kontraktassembly steht, muss nicht per se ein Interface sein. Kann auch eine Klasse sein, ein struct, ein enum. Whatever.</p>
+<p>Voraussetzung ist eher, dass das, was dort steht, schnell hingeschrieben ist. Und dass es eine gewisse Reichweite haben soll.</p>
+<p>Interfaces sind schnell hingeschrieben. Klassen mit Funktionalität nicht.</p>
+<p>Datenklassen sind ok im Kontrakt. Aber die Flashcardbox hab ich da rausgenommen, weil die Implementationsdetails nur relativ lokal bekannt sein müssen. Card allerdings ist ein Datentyp für Nachrichten. Der fließt weiter und ist einfacher. Also finde ich eine Klasse im Kontrakt ok.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Mirko Schneider</strong> (2011-08-16):</p>
+<p>Moin Ralf,</p>
+<p>zwei kleine Fragen dazu...
+1. Das Tracen in Deinen EBCs kommt ja eigentlich einem Logging gleich. Logging wird überall als Cross-Cutting-Concern propagiert, und ein solcher schreit per Definition doch danach, in einer eigenen EBC realisiert zu sein. Ist es einfach Nachlässigkeit, dass Du den Belang nicht ausgelagert hast?
+2. "var batchcard = batch.Dequeue();" ist dort eine Anweisung in Deiner Advance_card-Klasse. Warum ist diese Aktion nicht als EBC realisiert, die dann über seinen OutputPin die batchcard liefert?
+Haut dies in die Kerbe der expliziten Abhängigkeiten bei EBC (Explizite Abhängigkeiten = Abhängigkeiten von Query-Response-Funktionalitäten bzw. Status-Objekten; und beide liefern Informationen per Rückgabewert statt Event per Definition???!?)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-08-16):</p>
+<p>@Mirko: Zu 1. Das Tracing findet absichtlich in den Funktionseinheiten statt. Es soll eine Spur hinterlassen, welche Funktionseinheiten durchlaufen werden. Das lässt sich nicht auslagern.</p>
+<p>Tracing ist insofern kein Logging.</p>
+<p>Zu 2. Nicht jede Anweisung muss ja in eine eigene Funktionseinheit. "Advance_card" ist die Aktion im Modell. Sie erfüllt aus Sicht der gewünschten Funktionalität einen Nutzen. Dass darin auf eine Queue zugegriffen wird, wie das Verhalten genau aussieht, das ist aus Modellsicht - finde ich - uninteressant, das muss nicht näher spezifiziert werden.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

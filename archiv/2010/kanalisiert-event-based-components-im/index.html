@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kanalisiert – Event-Based Components im Dialog — ralfw.de Archiv</title>
+<meta name="description" content="Die Pins von Event-Based Components (EBC) sind bisher ganz einfach: Output-Pins sind Delegaten, Input-Pins sind Methoden. Beide haben 1 Parameter und liefern kein Resultat. Damit k">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/kanalisiert-event-based-components-im/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Kanalisiert – Event-Based Components im Dialog — ralfw.de Archiv">
+<meta property="og:description" content="Die Pins von Event-Based Components (EBC) sind bisher ganz einfach: Output-Pins sind Delegaten, Input-Pins sind Methoden. Beide haben 1 Parameter und liefern kein Resultat. Damit k">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/kanalisiert-event-based-components-im/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Kanalisiert – Event-Based Components im Dialog</h1>
+    <div class="doc-meta"><span>16. April 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/04/kanalisiert-event-based-components-im.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/kanalisiert-event-based-components-im/</code></span></div>
+    <div class="art"><p>Die Pins von Event-Based Components (EBC) sind bisher ganz einfach: Output-Pins sind Delegaten, Input-Pins sind Methoden. Beide haben 1 Parameter und liefern kein Resultat. Damit können Sie alle Kommunikationswünsche erfüllen. Irgendwie. Manchmal ist es jedoch etwas umständlich. Die Simplizität und Regelmäßigkeit der Beschränkung auf nur eine Signatur hat das für mich jedoch bisher wett gemacht.</p>
+<p>class Client
+{
+    public Action pingEvent;
+    …</p>
+<p>class Service
+{
+    public void DumpText(string text)
+    {
+        Console.WriteLine("text received: {0}", text);
+    }
+    …</p>
+<p>Ein Artikel über Axum in der dotnetpro hat mich nun allerdings nochmal nachdenken lassen. Ich bin weiterhin sicher, dass Pins keine beliebige Form haben sollten. Eine überschaubare Menge an Pin-“Formen” macht ein Tooling einfacher.  Andererseits wäre es schön, Kommunikationsmuster nicht immer wieder selbst mit speziellen Nachrichtentypen modellieren zu müssen.</p>
+<p>Beispielhaft habe ich für eine Request/Response Kommunikation <a rel="noopener" href="http://ralfw.blogspot.com/2010/02/mustergultig-event-based-components.html">hier</a> demonstriert und auch schon versucht, den Aufwand hinter einer Erweiterungsmethode zu verstecken. Für diese einmalige bi-direktionale Kommunikation ist das ok. Was aber, wenn zwei EBCs einen Plausch halten wollen? Ich skizziere das mal mit Standardtypen:</p>
+<pre><code>          **EBC A sagt…**        **EBC X antwortet…**                  string                                    int                  double                                    DateTime                  bool
+</code></pre>
+<p>Der Plausch beginnt, indem A an X einen string sendet. (Dass A nichts von X weiß, sondern einen string-Event feuert, lasse ich einmal außen vor. Auf einer Platine sind A und X mit einer Leiterbahn verbunden. Die Formulierung “sendet an” ist schlicht leichter zu verstehen.) Daraufhin antwortet X mit einem int-Wert. Den nimmt A auf und führt den Plausch mit einem double-Wert an X weiter. Den beantwortet X mit einem DateTime-Objekt und A beendet den Plausch mit einem bool-Wert.</p>
+<p>So eine Konversation können Sie mit den bisherigen Pin-Standardformen implementieren, doch das ist umständlich. Der Gesprächsfluss ist in den Methoden bei A und X nur schwer zu erkennen. Probieren Sie es aus.</p>
+<p>Dies und anderes wird aber einfacher, wenn Sie EBC-Pins nicht mehr “durch blankes Metall” und quasi direkt verbunden sehen, sondern durch eine sichtbare Leitung. Darauf hat mich der Axum-Artikel gebracht. Dort läuft die Kommunikation zwischen Axum Agenten nämlich durch Channels.</p>
+<p>Mit diesem Konzept habe ich nun ein wenig in der EBC-Welt gespielt. Herausgekommen ist das Folgende.</p>
+<h2>EinwegKommunikation</h2>
+<p>Wenn ein EBC nur einen Event feuern will, ohne ein Ergebnis im weiteren Verlauf der Methode zu erwarten, dann ist das eine Einwegkommunikation. Die wird ganz natürlich durch einen Delegaten als Output-Pin beschrieben. Das kann auch so bleiben. Eine Modellierung mittels Channels sollte auch hier jedoch schon möglich sein. Die sähe z.B. so aus:</p>
+<p>class Client
+{
+    public <strong>TriggerChannel</strong> noDataChannel;
+    public <strong>OneWayChannel</strong> pingChannel;
+    …</p>
+<p>Auf die Input-Pins haben Channels nur wenig Einfluss. Die werden weiterhin als Methoden implementiert:</p>
+<p>class Service
+{
+    public void <strong>Reactor()</strong>
+    {
+        Console.WriteLine("reacting");
+    }</p>
+<p>public void <strong>DumpText(string text)</strong>    {
+        Console.WriteLine("text received: {0}", text);
+    }
+    …</p>
+<p>Bitte beachten Sie: Ich erlaube jetzt auch parameterlose Methoden! Das scheint mit durch Einführung der Channels eine angebrachte Lockerung der Regelmäßigkeit. Events ohne Nachrichten tauchen häufig in Architekturen auf. Für die einen Dummy-Nachrichtentyp einzusetzen, erhöht die Lesbarkeit dann nicht.</p>
+<p>Verbunden werden Output- und Input-Pin mit Channel-Objekten:</p>
+<p>Client c = new Client();
+Service s = new Service();</p>
+<p>c.noDataChannel = new TriggerChannel(s.Reactor);
+c.pingChannel = new OneWayChannel(s.DumpText);</p>
+<p>Der OneWayChannel&lt;&gt; bringt hier zwar noch keinen Vorteil gegenüber den bisherigen Events. Dennoch scheint er mit angebracht, um alles, was bisher auch ohne Channels möglich war, konsequent mit Channel modellieren zu können.</p>
+<p>Events feuert der Client nun allerdings nicht mehr so offensichtlich. Seine Output-Pins sind ja Channels und über die werden Nachrichten versandt:</p>
+<p>this.noDataChannel.Trigger();
+this.pingChannel.Send(“hello, world!”);</p>
+<p>Für das grundsätzliche Prinzip der Kopplung von EBCs macht das keinen Unterschied. Alle Vorteile von EBCs gegenüber Injection-Based Components (IBC) bleiben erhalten. Und weitere kommen hinzu…</p>
+<h2>ZweiwegeKommunikation</h2>
+<p>Durch Channels auch Events ohne Parameter feuern zu können, ist nett. Noch netter ist es allerdings, eine saubere Abbildung für die Request/Response-Kommunikation zu haben. Der Vorschlag eines speziellen Request-Nachrichtentyps, den ein Tooling natürlich auch erkennen könnte, war praktikabel – doch irgendwie hat er das saubere Paradigma “verdreckt”.</p>
+<p>Die Kommunikation grundsätzlich über Channels laufen zu lassen und dann für Request/Response einen speziellen Channel zu haben, scheint mir sauberer. Aber sehen Sie selbst:</p>
+<p>class Client
+{
+    public <strong>RequestResponseChannel</strong> echo;
+    …</p>
+<p>Passende Input-Pins können verschiedene Formen haben:</p>
+<p>class Service
+{
+    public <strong>string EchoFunc(string text)</strong>
+    {
+        return text.ToUpper();
+    }</p>
+<p>public <strong>void EchoAction(string text, Action reply)</strong>
+    {
+        reply(text.ToUpper());
+    }
+    …</p>
+<p>Endlich können Sie in der Kommunikation zwischen Komponenten wieder Funktionen verwenden :-) Ist das nicht ein Gewinn. Die Regelmäßigkeit des Einsatzes von Channels erlaubt auch hier wieder etwas Öffnung für das Korsett der Input-Pin-Signaturen. Funktionen sind “serverseitig” die natürliche Form für Query-Prozessoren.</p>
+<p>Alternativ können Sie aber auch Antworten über einen reply-Pin zurückreichen. Das bietet sich an, wenn für eine Anfrage mehr als ein Ergebnis erzeugt wird – und diese Pin-Form hat Ausbaupotenzial. Aber davon ein andermal mehr.</p>
+<p>Die Bindung von Output- an Input-Pin ist denkbar einfach:</p>
+<p>c.echo = new RequestResponseChannel(s.EchoFunc);</p>
+<p>oder</p>
+<p>c.echo = new RequestResponseChannel(s.EchoAction);</p>
+<p>Beim Versand von Nachrichten fangen Channels an, ihren Vorteil gegenüber den bisherigen “blanken Drähten” auszuspielen. Sie können entweder ein Resultat so direkt am Ort der Anfrage verarbeiten, wie es eine nachrichtenorientierte Kommunikation erlaubt:</p>
+<p>Console.WriteLine("echo result: {0}",
+                  echo.<strong>Request</strong>("hello, echo")
+                      .<strong>Receive</strong>());</p>
+<p>Das ist zwar immer noch ein zweischrittiger Prozess, doch der ist einem Funktionsaufruf noch recht nahe.</p>
+<p>Oder Sie verlagern die Verarbeitung in eine Continuation:</p>
+<p>echo.<strong>Request</strong>("hello, echo")
+    .<strong>Receive</strong>(t =&gt; Console.WriteLine("echo result: {0}", t));</p>
+<p>Das sind dann nicht nur nachrichtenorientiert, sondern sogar schon asynchron aus. Ist es mit EBCs zunächst jedoch nicht.</p>
+<p>Die <a rel="noopener" href="http://ralfw.blogspot.com/2010/02/mustergultig-event-based-components.html">hier</a> beschriebene Request-Nachricht bot zwar auch schon so ein Programmiermodell, doch das war ein Sonderfall. Es musste speziell auf einem Nachrichtentyp implementiert werden. Mit Channels unterscheiden sich Einweg- und Zweiweg-Kommunikation hingegen nicht mehr so sehr. Sie laufen zwar über verschiedene Channels, doch das Programmiermodell ist gleich: in beiden Fällen erfolgt der Versand von Nachrichten mittels Channel-Methoden. Das halte ich für einen Gewinn an Regelmäßigkeit in der Verständlichkeit.</p>
+<h2>Mehrwegkommunikation</h2>
+<p>Regelmäßige Kommunikation via Channel macht es dann im nächsten Schritt möglich, auch Komplizierteres zu modellieren. Ich komme zurück auf den obigen Plausch zwischen zwei EBCs. Lassen Sie mich am besten dessen Implementation zunächst zeigen. Der Initiator sieht so aus:</p>
+<p>public void A()
+{
+    using(<strong>var x = chat.Open()</strong>)
+    {
+        <strong>x.Send("hello");</strong>
+        var i = <strong>x.Receive();</strong>
+        Console.WriteLine("  {0}", i);
+        <strong>x.Send(i/3.14);</strong>        Console.WriteLine("  {0}", <strong>x.Receive()</strong>);
+        <strong>x.Send(true);</strong>
+    }
+}</p>
+<p>und sein Gesprächspartner so:</p>
+<p>public <strong>IEnumerable Chat(IProducerConversation a)</strong>
+{
+    <strong>yield return a.WaitFor();</strong>
+    Console.WriteLine(<strong>a.Received()</strong>);
+    <strong>conv.Reply(</strong>a.Received().Length);
+    <strong>yield return a.WaitFor();</strong>
+    Console.WriteLine(<strong>a.Received()</strong>);
+    <strong>a.Reply(DateTime.Now);</strong>
+    <strong>yield return a.WaitFor();</strong>
+    Console.WriteLine(<strong>a.Received()</strong>);
+}</p>
+<p>Für beide Konversationspartner macht der Channel es möglich, dass sie trotz Nachrichtenorientierung ziemlich “natürlich” aussehen, d.h. die Sequenz der “Sprechakte” ist klar erkennbar. Sie stehen einfach untereinander in den jeweiligen EBC-Methoden.</p>
+<p>Für den Initiator A wäre das auch auf einem Weg wie bei Request/Response möglich gewesen. Aber nicht für seinen Gegenpart. Der wäre ohne Continuations mit einfachen Events nicht möglich. Und das wäre schlecht zu lesen.</p>
+<p>Indem X – ich habe die Seite des Gesprächs “Producer” genannt, A ist der “Consumer” oder “Initiator” – jedoch als Iterator ausgelegt ist, kann auch er sequenziell notiert werden. Das ist ein Kleinwenig umständlicher als beim Initiator, doch ich denke, das ist zu verschmerzen.</p>
+<p>Dieses Vorgehen habe ich mir bei der Concurrency Coordination Runtime abgeschaut. Funktioniert, wie Sie sehen, aber nicht nur für asynchrone Komponenten gut ;-) Eine Konversation ist dadurch zwar asymmetrisch, doch das finde ich auch nicht schlimm. Axum kann das zwar besser – Sie müssten dafür nur den Preis einer neuen Programmiersprache bezahlen. Angesichts dessen ziehe ich es vor, etwas Umständlichkeit in Kauf zu nehmen.</p>
+<p>Den Input-Pin stellt die Methode Chat() dar. Der Output-Pin sieht so aus:</p>
+<p>class Client
+{
+    public ConversationChannel chat;
+    …</p>
+<p>Indem Sie dem Channel einen Typ für die Kommunikation anhängen, haben Sie die Möglichkeit, eigenen Sende/Empfangsroutinen und weitere Funktionalität darauf zu definieren. Darüber hinaus sehe ich hier auch die Chance für die Definition eines Protokolls; Ihr Conversation-Typ könnte z.B. bestimmen, dass auf eine string-Nachricht vom Initiator ein double folgen muss. Sendet er etwas anderes, liegt ein Fehler vor. Dafür habe ich mir aber noch keine weitere Notation ausgedacht. Später einmal mehr dazu.</p>
+<p>Die Verbindung der Pins ist wie bei den anderen Channels ganz einfach:</p>
+<p>c.chat = new ConversationChannel(s.Chat);</p>
+<p>Wenn eine Konversation umfangreicher wird, können Sie natürlich auch überlegen, ob Sie sie mit einer IBC lösen; ein Interface mag eine natürlichere Ausdrucksform dafür sein. Allerdings verlieren Sie dann den recht einfachen Migrationspfad zur Asynchronizität. Ich ich vermute, dass es dann auch nicht mehr so einfach ist, den Austausch über ein Protokoll zu regeln.</p>
+<h2>Fazit</h2>
+<p>Für mich fühlt sich die Einführung von Channels in die EBC-Kommunikation stimmig an. Sie schließt die bisherigen Events nicht aus und führt die Eventhandler ein Stück aus ihren Beschränkungen. Indem Channels Methoden anbieten, ermöglichen Sie auf der Basis einer erweiterten Regelmäßigkeit deutlich mehr Flexibilität für die Gestaltung der Kommunikation.</p>
+<p>Channels erweitern das EBC-Paradigma ganz natürlich.</p>
+<h2>Kommentare</h2>
+<p><strong>Andre</strong> (2011-09-19):</p>
+<p>Gibts zu der Klasse RequestResponseChannel auch ein Implementierungsbeispiel?
+Und ist so ein Channel auch noch EBC 2.0 konform?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-09-19):</p>
+<p>@Andre: Hm... ich hatte den mal näher in der dotnetpro erklärt, glaub ich. Ansonsten aber keine Sourcen. Ist ja aber einfach zu bauen.</p>
+<p>Nur die Frage: Warum sollte man ihn bauen? :-) Ich habe ihn seitdem nicht wieder benutzt. EBC bzw Flow-Design hat sich anders entwickelt. Request/Response ist out.</p>
+<hr />
+<p><strong>Andre</strong> (2011-09-19):</p>
+<p>Bei dem ganzen EBC und FD Thema habe ich noch nicht ganz verstanden wie Getter/Setter umgesetzt werden sollten. Bei EBC 1.0 war das ja noch eher umständlich.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-09-19):</p>
+<p>@Andre: Es gibt in EBC keine getter/setter. Die haben nichts mit Flow zu tun.</p>
+<hr />
+<p><strong>Heiko S.</strong> (2011-11-04):</p>
+<p>Hallo, habe mir in den letzten Tagen vieles über EBC reingezogen, und nur hier werden Channels einmalig erwähnt. Der Blog ist ja aus dem Jahre 2010 - werden nun Channels weiterhin empfohlen oder nicht?
+Wenn ja, wie ist der interne Aufbau des Channels, gibt es evtl. ein Interface?</p>
+<p>Auch lese ich ab und zu etwas über EBC 2.0, aber wo ist denn (zentral) definiert was 1.0 und was 2.0 ist?</p>
+<p>Als ich mit dem Lesen der Dokumente begann, war alles relativ klar, aber so nach und nach kehrte immer mehr Unsicherheit ein. Bestes Beispiel genau hier: "EBC bzw. FD hat sich anders entwickelt. Request/Response ist out".
+Davon hab ich bei der ganzen Leserei nicht wirklich etwas mitbekommen :-(</p>
+<p>Gibt es denn eine Quelle wo komprimiert die aktuellen Eigenschaften der EBC "Norm" genannt sind?
+Oder kann man definieren, dass alle Blogs(dotnetpro-Artikel vor einem bestimmten Datum als "veraltet" gelten?</p>
+<p>Gruss Heiko</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-11-04):</p>
+<p>@Heiko: Die Kanäle kommen nicht wieder vor. Sind ne nette Idee, aber nicht wirklich wichtig - bisher.</p>
+<p>Einen Überblick über das zu Flow-Design geschriebene findest du hier: http://clean-code-advisors.com/ressourcen/flow-design-ressourcen</p>
+<p>Ansonsten hilft, die dotnetpro, mein Blog und die Diskussionsgruppen zu verfolgen.</p>
+<p>EBC 2.0 ist ein Begriff für den Wechsel von Akteuren zu Aktionen, d.h. die Benennung von Funktionseinheiten mit Verben statt Substantiven.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

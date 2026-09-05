@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Datenschutz — ralfw.de</title>
+<meta name="description" content="Diese Seite ist statisch. Keine Cookies, kein Tracking, keine Analysewerkzeuge, keine eingebundenen Inhalte von Dritten — Schriften, Bilder und Skripte liegen auf demselben Server ">
+<link rel="canonical" href="https://ralfw.de/datenschutz/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Datenschutz — ralfw.de">
+<meta property="og:description" content="Diese Seite ist statisch. Keine Cookies, kein Tracking, keine Analysewerkzeuge, keine eingebundenen Inhalte von Dritten — Schriften, Bilder und Skripte liegen auf demselben Server ">
+<meta property="og:url" content="https://ralfw.de/datenschutz/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <h1>Datenschutz</h1>
+    <div class="art"><p>Diese Seite ist statisch. Keine Cookies, kein Tracking, keine Analysewerkzeuge, keine eingebundenen Inhalte von Dritten — Schriften, Bilder und Skripte liegen auf demselben Server wie die Seite selbst.</p>
+<p>Gespeichert wird nur, was der Betrieb eines Webservers mit sich bringt: Der Hoster GitHub protokolliert beim Aufruf die IP-Adresse zu Sicherheitszwecken. Ich habe darauf keinen Zugriff und werte nichts davon aus.</p>
+<p>Verantwortlich für diese Seite ist die im <a href="/impressum/">Impressum</a> genannte Stelle.</p><div class="note"><b>Entwurf.</b> Dieser Text ist noch nicht freigegeben und juristisch nicht geprüft.</div></div>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

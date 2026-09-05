@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vom Wert des Schätzens im Angesicht real möglicher Unproduktivität — ralfw.de Archiv</title>
+<meta name="description" content="Ob Softwareentwickler Aufwand schätzen können oder nicht… Das lasse ich zur Abwechslung heute mal dahingestellt. Stattdessen frage ich mal: Was sagen Schätzungen denn eigentlich au">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/vom-wert-des-schatzens-im-angesicht/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Vom Wert des Schätzens im Angesicht real möglicher Unproduktivität — ralfw.de Archiv">
+<meta property="og:description" content="Ob Softwareentwickler Aufwand schätzen können oder nicht… Das lasse ich zur Abwechslung heute mal dahingestellt. Stattdessen frage ich mal: Was sagen Schätzungen denn eigentlich au">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/vom-wert-des-schatzens-im-angesicht/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Vom Wert des Schätzens im Angesicht real möglicher Unproduktivität</h1>
+    <div class="doc-meta"><span>18. Dez. 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/12/vom-wert-des-schatzens-im-angesicht.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/vom-wert-des-schatzens-im-angesicht/</code></span></div>
+    <div class="art"><p>Ob Softwareentwickler <a rel="noopener" href="http://ralfw.blogspot.com/2010/12/widerspruch-gegen-das-schatzen.html">Aufwand schätzen</a> können oder nicht… Das lasse ich zur Abwechslung heute mal dahingestellt. Stattdessen frage ich mal: Was sagen Schätzungen denn eigentlich aus?</p>
+<p>Szenario 1: Ein Manager fragt seine Frau, wie lang sie für den Weihnachtsbraten wohl braucht. Sie schätzt, dass es wohl 3 Stunden sein werden.</p>
+<p>Szenario 2: Ein Manager fragt den Klempner seines Vertrauens, wie lang er wohl für die Badezimmerrenovierung inkl. Austausch der Steigleitungen braucht. Er schätzt, dass es wohl 6 Tage sein werden.</p>
+<p>Szenario 3: Ein Manager fragt seinen Entwickler, wie lang der wohl für eine Zahlungseingangs- und Mahnwesen-Anwendung braucht. Der schätzt, dass es wohl 5 Wochen sein werden.</p>
+<p>Der geneigte Leser prüfe sich nun, wie er die Schätzungen in den drei Szenarien einschätzt. Sind die alle gleich vertrauenswürdig? Wenn nein, wodurch unterscheiden sich die Szenarien?</p>
+<p>In allen Szenarien sind in der Sache grundsätzlich Erfahrene befragt worden. Ich hoffe, da sind wir uns einig. Ja, die Größenordnungen liegen auseinander – Stunden, Tage, Wochen –, aber da sehe ich nicht das Problem. Wenn Erfahrene sich verschätzen, dann doch wohl um einen nicht allzugroßen Prozentsatz, oder? Aus 3 Stunden könnten 4 werden; die Hausfrau hätte sich um 33% verschätzt – aber, hey, das kann doch passieren, oder? Aus 6 Tagen können 8 werden; hey, kein Problem, sowas kann passieren, oder? Oder aus 5 Wochen werden 6 Wochen. Wer hätte das nicht schon bei Softwareentwicklung erlebt. Alles normal, oder?</p>
+<p>Das Problem sehe ich nicht beim Verschätzen. Ich glaube zwar immer noch, dass sich Hausfrau und Klempner weniger verschätzen als Softwareentwickler – aber für heute mal egal. Lassen wir sie alle gleich gut schätzen und sind wir mit 33% Überziehung zufrieden. Es könnte schlimmer kommen.</p>
+<p>Nein, das Problem liegt woanders.</p>
+<p>Szenario 1: Wie lange würde die Frau des Nachbarn des Managers für denselben Weihnachtsbraten wohl brauchen? Die schätzt auf 2 Stunden. Und der Mann der Chefin des Managers? Der würde auf 5 Stunden schätzen.</p>
+<p>Szenario 2: Wie lange würde der Schwager des Managers als Heimwerker für die Badrenovierung brauchen? Vielleicht 10 Tage. Und wie lange würde der Großklempner am anderen Ende der Stadt schätzen? Vielleicht 4 Tage.</p>
+<p>Bei Szenario 1 und 2 ist es relativ egal, wen man nach einer Schätzung fragt. Wenn der potenzielle Auftragnehmer einigermaßen erfahren in der Sache ist, dann werden die Schätzungen vielleicht um 50%-100% differieren. Hört sich viel an – ist es aber nicht. Denn:</p>
+<p>Szenario 3: Wie lange würde der Schwager des Managers für die Anwendung brauchen? Vielleicht 5 Monate. Wie lange würde der Senior-Entwickler aus dem anderen Team brauchen, der leider unabkömmlich ist? Vielleicht 5 Tage.</p>
+<p>Damit sind wir beim Kern des Schätzproblems der Softwareentwicklung: der ungewissen Produktivität.</p>
+<p><strong>In der Softwarebranche differiert die Produktivität einzelner Entwickler um mehr als eine Zehnerpotenz – unabhängig von der Erfahrung.</strong> D.h. der eine Entwickler braucht für eine Aufgabe 1 Stunde, der andere bis zu 10 Stunden und mehr. Das fängt schon beim Allersimpelsten an. Ich habe es selbst oft getestet mit Entwicklern, die ich in Trainings, in Bewerbungsgesprächen und bei Beratungen treffe. Denen gebe ich eine ganz, ganz einfache Aufgabe; manche brauchen dann 30 Sekunden, um sie zu lösen – und andere brauchen mehr als 3 Minuten. Wohlgemerkt für eine Sache, wo es keine zwei Meinungen gibt und das Ergebnis max. 5 Zeilen Code umfasst.</p>
+<p>In anderen Branchen gibt es natürlich auch Produktivitätsunterschiede. Ein Koch mag doppelt so schnell sein wie der andere, ein Klempner gar dreimal so schnell wie der andere. Im Einzelfall ist es dann misslich, wenn man an den langsamen Vertreter einer Zunft gerät – aber eigentlich ist der Unterschied fast vernachlässigbar gegenüber dem in der Softwarebranche.</p>
+<p>Das nun mal in Anschlag gebracht für das Schätzen: <strong>Wenn die Produktivität um den Faktor 10 differiert und ein Entwickler schätzt Aufwand… was sagt mir dann die Schätzung?</strong></p>
+<p>Sie sagt mir nur, dass der Entwickler ca. so lange braucht, wie er schätzt. Der Manager in Szenario 3 hört 5 Wochen, denkt sich seinen Teil, drückt den Entwickler dann auf 4 Wochen (weil Entwickler ja immer trödeln und Puffer einrechnen) – und ist zufrieden.</p>
+<p>Was der Manager nicht weiß ist, wie produktiv der Entwickler ist. Er kennt die Güte des Entwicklers nicht oder höchstens in Bezug auf andere Entwickler in seinem Team, von denen er auch nicht weiß, wie gut sie sind. Der Manager weiß wahrscheinlich nicht einmal, dass der Faktor 10 und höher für den Produktivitätsunterschied in der Branche ist.</p>
+<p>Dasselbe gilt natürlich für Teams. Vielleicht nivellieren sich im Team die Unterschiede aus – aber ist dann nur noch ein Faktor 5 gültig? Nein, ich denke er ist höher. Das liegt daran, dass die Ausbildung in unserer Branche so notorisch uneinheitlich und damit unzuverlässig ist. Wirklich gute Entwickler sind viel seltener – so mein Gefühl – als wirklich schlechte Entwickler.</p>
+<p>Selbst wenn ein Kunde also Angebote einholt für ein größeres Projekt – die reichen von 2000 PT über 2500 PT bis zu 3200 PT –, weiß er nichts darüber, wieviel Geld er womöglich verschenkt, weil sich das Problem eigentlich auch in 750 PT erledigen ließe – wenn denn wirklich gute Teams geschätzt hätten.</p>
+<p>Nun mag man sagen, “Tja, so ist es halt in der Softwareentwicklung…” Aber ich halte mal dagegen: Ist das nicht ein erbärmlicher Zustand? Wird da nicht volkswirtschaftlicher Schaden angerichtet, wenn die Produktivitätsunterschiede de facto so groß sind und es keiner in der Branche thematisiert und kein Kunde weiß?</p>
+<p>Was hat da Schätzen noch für einen Wert? 6 Tage oder 10 Tage für die Badrenovierung… geschenkt. Mehrere Wochen statt 5 Tagen aber… da sollte jeder Manager, jeder Controller hellhörig werden. Das passiert aber nicht. Stattdessen reibt sich der Manager die Hände, weil er aus 5 Wochen Schätzung 4 Wochen gemacht hat. Er sieht nur das Geld, was er (vermeintlich) gespart hat, aber nicht das Geld, das er verpulvert, indem er einen schlechten Entwickler beschäftigt.</p>
+<p><strong>Fassen wir uns alle mal an die Nase und fragen: Wie produktiv bin ich eigentlich?</strong></p>
+<p>Und dann frage man sich: Wie produktiv könnte ich sein? Wie produktiv kann “man” sein? Wie stelle ich eigentlich fest, ob ich produktiver geworden bin über die Jahre?</p>
+<p>“Ein Entwickler hat das im Gefühl” könnte die Antwort darauf frei nach Loriot sein. Aber ist das wirklich genug für eine Branche, die so wirtschaftsentscheidend ist wie die Softwarebranche? Das bezweifle ich.</p>
+<p>Es ist zutiefst unbefriedigend, dass die Produktivitätsunterschiede so groß sind. Dafür kann der Ausbildung nur die Note 5 gegeben werden.</p>
+<p>Und es ist zutiefst beängstigend, dass das Kunden offensichtlich nicht wirklich bemerken. Denn das zeigt einen verantwortungslosen Umgang mit dem hart erarbeiteten Geld ihrer Mitarbeiter.</p>
+<p><strong>Also: Bei der nächsten Schätzung die man einholt, einfach mal fragen: Wie gut ist der eigentlich, der da schätzt? Könnte es sein, dass es auch in der halben oder gar einem Viertel der Zeit ginge?</strong></p>
+<p>Wer darauf reagiert mit, “Kann ich ja eh nicht ändern. Hab nur den Entwickler/das Team”, der hat dann leider nicht begriffen, dass man mit Ausbildung und Übung die Produktivität steigern kann.</p>
+<p><strong>PS:</strong>Natürlich lässt sich darüber nachdenken, warum der Zustand in der Branche so ist, wie er ist. Das Umfeld muss es ja hergeben, dass solche Produktivitätsunterschiede überhaupt über Jahrzehnte existieren können. Meine Vermutung:</p>
+<ul>
+<li>Laien glauben nicht, dass es so sein kann. Deshalb hinterfragen sie die Leistungen nicht. Und Entwickler selbst glauben das auch nicht – bis sie mal mit ihren Leistungen im Vergleich konfrontiert werden.</li>
+<li>Das Metier ist so “ehrfurchtgebietend” oder esoterisch, dass sich Laien nicht an solch kritische Fragen trauen.</li>
+<li>Laien sind so glücklich darüber, dass es am Ende irgendwie überhaupt läuft, dass sie sich mit solchen Fragen nicht beschäftigen.</li>
+<li>Die Branche selbst hat kein Interesse, ihre hohen Aufwände zu reduzieren. Wenn sich mit billigen schlechten Entwickler Geld verdienen lässt, warum dann in gute investieren.</li>
+<li>Die formale Ausbildung ist an solch weltlichen Details wie Produktivität nicht interessiert. Und die Selbstbildung kann sowieso eher nicht leisten, Produktivität systematisch zu steigern.</li>
+</ul>
+<p><strong>PPS:</strong>Und nun? Ich behaupte mal: Wer diese Erkenntnis ernst nimmt und sein Team nur um 25% beschleunigt (auch das ja nur relativ zu bisheriger Performance), der hat die Nase vorn im Wettbewerb. Und ich behaupte sogar: Dabei kann die Qualität der Arbeit nur steigen – wie auch die Motivation. Warum? Weil Menschen, die sich ernst genommen fühlen, lieber arbeiten und gute Arbeit abliefern. Ganz zu schweigen davon, dass höhere Produktivität nur mit Mittel erreichbar ist, die auch höhere Qualität bringen. Command/Control und Zuckerbrot/Peitsche gehören nicht zu diesen Mitteln.</p>
+<h2>Kommentare</h2>
+<p><strong>Heiko</strong> (2010-12-19):</p>
+<p>Ich denke, dass beim Braten der Manager nicht nach 2,5h kommt und sagt, dass aus dem Braten doch nun bitte Weisswürste werden sollen oder dass dem Klempner nach Verlegen von Kupferrohren plötzlich gesagt wird, dass diese doch wieder raus müssten und Kunststoffrohre verwendet werden sollten.
+Viele Vergleiche mit anderen Branchen hinken leider.</p>
+<hr />
+<p><strong>Fabian Wetzel</strong> (2010-12-19):</p>
+<p>Hallo!
+Ich finde deine idee interessant was die extrem unterschiedliche effizienz angeht, aber kannst du das noch besser mit fakten statt mit empfindungen untermauern?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-12-19):</p>
+<p>@Heiko: Klar. Klempner und Hausfrau arbeiten in viel stabileren Kontexten.</p>
+<p>Aber steigert die größere Volatilität in der Software den Wert von Schätzungen? Nein.</p>
+<p>Außerdem ist die Produktivität in der Softwarebranche nicht um Größenordnungen verschieden, weil sich Anforderungen ständig ändern. Sie ist es in Bezug auf konstante Anforderungen.</p>
+<p>Wie gesagt: Das kann ich jederzeit nachweisen durch einen simplen Test, der nur 5 Zeilen Code produziert.</p>
+<p>Die Unterschiede resultieren mindestens aus a) unterschiedlicher "Geübtheit" in der Programmierung im Allgemeinen, b) unterschiedlicher "Intensität" der Arbeit (Stichwort Reflexion), c) unterschiedlicher Fähigkeit zu abstraktem Denken, d) unterschiedlicher Selbstsicherheit (im Angesicht von "abstraktem Zeugs"), e) unterschiedlich systematischer Ausbildung, f) unterschiedlicher Sicherheit im konkreten Werkzeuggebrauch.</p>
+<p>Dazu mögen andere Faktoren kommen.</p>
+<p>Vielleicht ist das in anderen kreativen Berufen auch so? Keine Ahnung.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-12-19):</p>
+<p>@Fabian: Hier einige Links zum Thema "Produktivitätsunterschiede":</p>
+<p>Joel Spolsky, http://www.joelonsoftware.com/articles/HighNotes.html - Wertet Messwerte aus</p>
+<p>Steve McConnel ("Code Complete"), http://bit.ly/ebShXF - Fasst einige Quellen zusammen</p>
+<p>Robert L. Glass, http://amzn.to/fOBlq3, "The best programmers are up to 28 times better than the worst programmers, according to “individual differences” research."</p>
+<p>Dazu addiere ich meine eigene bescheidene Erfahrung mit Dutzenden wenn nicht Hunderten Entwicklern über die vergangenen 10-15 Jahre, die ich in letzter Zeit versucht habe mit Tests zu objektivieren.</p>
+<p>Nicht nur habe ich dabei einen Produktivitätsunterschie von min. 1:6 festgestellt; es gibt aus meiner Sicht auch eine Korrelation zu "Verständnisproblemen".</p>
+<p>Entwickler, die beim Test länger als 2 Minuten brauchen, korrelieren stark mit denen, die in Trainings Schwierigkeiten haben mitzukommen.</p>
+<p>Ist das genug "Beweis" für einen existierenden, sehr großen Produktivitätsunterschied?</p>
+<p>Wenn ja, dann lauten die Fragen weiterhin: Wieviel sind dann Schätzungen wert? Wie kann es sein, dass die Branche so große Unterschiede ohne Aufschrei toleriert (und ja selbst produziert und perpetuiert)? Was sind die Konsequenzen, die Kunden aus der Kenntnis ziehen sollten?</p>
+<hr />
+<p><strong>Robert</strong> (2010-12-19):</p>
+<p>Hi Ralf,
+ich kann deinem Ansatz gut folgen. Ich finde es aber besser nicht den Begriff <a href="%E2%80%9C">Produktivität</a> zu gebrauchen. Du hast sehr treffgenau in deinem Blogbeitrag „Maschinen bauen, aber Software verschärfen“ den Vergleich gezogen zwischen Produktion und Entwicklung.</p>
+<p>Davor hast du in einem der Blogbeiträge zu „Widerspruch gegen das Schätzen“ von Kreativität gesprochen. Hier habe ich ein Problem mit deiner Vergleichsdarstellung von mehr oder weniger produktiv. Wir allen sind uns einig, dass Picasso ein großer Künstler war. Aber niemand käme auf die Idee, seine „Produktivität“ mit der von Leonardo DaVinci zu vergleichen.</p>
+<p>Wir produzieren nichts. Wir entwickeln und das ist ein kreativer Prozess. Ich kann hingehen, mir eine Staffelei kaufen, Leinwand, die besten Ölfarben, die ich für Geld bekomme und mir einen Trainer suchen, der mit die Tupftechnik beibringt. Ich bezweifele, dass ich jemals ein Monet werde.</p>
+<p>So ist es auch in unserer Branche. Sich die besten Tools holen, viele Lehrgänge besuchen wird aus uns per se nicht den nächsten Picasso machen. Auch Picasso hat klein angefangen und musste viel lernen. Aber zu allem Lernen, Üben und sich Verbessern gehört auch eine Portion Begabung. Denn nur wer die innere Leidenschaft hat, alles aus sich und seiner „Kreativität“ herauszuholen, der hat auch die Möglichkeit, das Große zu schaffen.</p>
+<p>Ansonsten bleiben wir alle kleine Durchschnittsmaler, an deren Namen sich hinterher niemand mehr erinnert. (Nicht ganz ernst gemeint und schon gar nicht diskriminierend in Bezug auf Maler)</p>
+<hr />
+<p><strong>Golo Roden</strong> (2010-12-19):</p>
+<p>Hallo Ralf,</p>
+<p>zwei Punkte:</p>
+<ol>
+<li>Hinkt der Vergleich total - denn so wohl bei der Renovierung als auch bei der Menüzubereitung handelt es sich um "Produktion" und nicht um "Entwicklung". Deswegen schätzen auch unterschiedliche Leute ungefähr gleich viel, weil Produktion nun mal im ungefähr gleichen Tempo vor sich geht, egal, wer sie durchführt (wenn man nicht gerade jemanden mit zwei linken Händen als Handwerker erwischt).</li>
+</ol>
+<p>Frag den Handwerker, wie lang es dauern wird, eine neue Art von Säge zu entwickeln - dann wird die Schätzung ebenfalls sehr subjektiv werden.</p>
+<ol start="2">
+<li>Dass verschiedene Leute bei dem Thema "Entwicklung" unterschiedlich schätzen, stimmt. Aber deswegen sollte (meiner Meinung nach) auch nur der schätzen, der die Aufgabe durchführt - oder eben das Team als Gesamtes, wie es in Scrum &amp; Co gemacht wird, wobei man dann ein vernünftiges Mittel braucht, um die unterschiedlichen Meinungen zu gewichten.</li>
+</ol>
+<p>Und damit schließe ich an meinen Kommentar zu dem anderen Eintrag an, in dem ich schrieb, dass sich jeder immer um ungefähr den gleichen Faktor verschätzt.</p>
+<p>Wenn ich also weiß, dass Entwickler A immer ungefähr um Faktor 5 daneben liegt, und Entwickler B nur um Faktor 3, dann kann ich beide Schätzungen entsprechend "korrigieren" und sie vergleichen. Dazu muss ich die Leute nicht kennen, ich muss nur ihre Historie bezüglich ihrer Schätzzuverlässigkeit kennen.</p>
+<p>Viele Grüße,</p>
+<p>Golo</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-12-19):</p>
+<p>@Robert: Ich find nix problematisch am Begriff "Produktivität". Der ist doch nur ein Name für den Quotienten aus "Ergebnis" und "Aufwand".</p>
+<p>Ob der Prozess kreativ ist oder mechanisch, ist egal. Ich kann fragen "Wieviele Schuhe repariert der Schuster pro Woche?" und kann zwei mit gleichem Input in ihrer Produktivität vergleichen.</p>
+<p>Ich kann auch fragen "Wieviele hochgeschätzte Bilder produziert ein Maler in seinem Leben?" oder "Wieviele zeitlose Stücke komponiert ein Komponist in seinem Leben?" Und dann kommt sicher raus, dass Picasso und Bach hochproduktiv waren.</p>
+<p>Kreativität und Produktivität widersprechen sich nicht.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-12-19):</p>
+<p>@Golo: Natürlich hinkt der Vergleich. Softwareentwicklung ist Entwicklung, Klempnern und Kochen sind Produktion. Klar.</p>
+<p>Das mag auch ein Grund für die Produktivitätsunterschiede sein. Und? Wofür ist das eine Entschuldigung, wenn es um den Glauben an Schätzbarkeit geht?</p>
+<p>Zu deinem 2. Punkt: Darum geht es mir ja gerade. Auch wenn der schätzt, der es am Ende tun soll - wieviel ist dessen Schätzung wert, wenn ich nicht weiß, wie produktiv der ist? Beim Handwerker kann mir das relativ egal sein. Da reden wir über einen Faktor 2 oder so. Aber bei einem Faktor 10+ kann und darf mir das eben nicht egal sein.</p>
+<p>Es geht auch nicht darum, dass Entwickler sich verschätzen! Selbst wenn Entwickler A sich nie verschätzt und die 5 Woche oder 10 Monate braucht - dann weiß ich immer noch nicht, ob er ein schlechter Entwickler ist, der gut schätzen kann. Ich weiß nicht, ob nicht die meisten anderen Entwickler nur 5 Tage bzw 1 Monat gebraucht hätten.</p>
+<p>Die gute Schätzung ist also nichts wert, solange ich nicht weiß, wie die Produktivität des Entwicklers ist. Und die kann mir eben beim Faktor 10 nicht einfach egal sein. Da wird unendliches Geld verbrannt, selbst wenn die Schätzungen regelmäßig eingehalten werden!</p>
+<hr />
+<p><strong>Andrea Kaden</strong> (2010-12-19):</p>
+<p>Wie es doch auch bei den Schätzungen menschelt: Teil 1
+Schätzungen werden gegenüber anderen Personen abgegeben und ich behaupte, für alle drei Szenarien wird die Schätzung des Aufwandes gegenüber verschiedenen Person anders ausfallen. Das bedeutet, bei der Beurteilung des Werts einer Schätzung spielt das das Verhältnis der beteiligten Personen eine Rolle.</p>
+<ol>
+<li>Da gibt es zum einen den Unterschied zwischen einer Aufwandsangabe unter Fachleuten und der gegenüber Kunden.</li>
+</ol>
+<p>Szenario 1: Die Hausfrau wird im Hausfrauenkreis Anerkennung bekommen, wenn sie die Zubereitung der Gans dieses Jahr deutlich geringer als bisher schätzt. Was natürlich nur "Anerkennungsgewicht“ hat, wenn die Qualität auch stimmt. Die ist bei der Gans sehr leicht messbar: Gutes Aussehen, Duft, Knusprigkeit....(Na, Appetit bekommen:-)?).</p>
+<p>Szenario 2: Der Klempner wird von Kollegen Anerkennung bekommen, wenn er von den Tücken der Renovierung berichtet und erzählt, dass er plant, in nur fünf Tagen damit fertig zu sein. Auch hier überzeugt nur die Kombination Qualität und Zeit.</p>
+<p>Szenario 3: Der  Softwarentwickler/in wird Anerkennung in Fachkreisen ernten, wenn die Aufwandsschätzung unter der branchenüblichen für ein entsprechendes Projekt liegt. Auch in diesem Fall sollte der Mix aus Qualität und Zeit der Maßstab sein. Aber wenn die Güte der Entwickler sich so unterscheidet, ist die Qualität, selbst unter Fachleuten, schwer zu beurteilen.</p>
+<p>Fazit: In Fachkreisen bekommt der Leistungserbringer Anerkennung für gute Qualität, erbracht mit geringem Aufwand. Ob Hausfrau, Klempner oder Entwickler, alle werden sich im Falle einer Überprüfung sehr bemühen, sich an ihre Schätzungen zu halten.</p>
+<hr />
+<p><strong>Andrea Kaden</strong> (2010-12-19):</p>
+<p>Wie es bei Schätzungen menschelt: Teil 2
+Betrachtet man nun die Schätzung gegenüber dem Ehemann, dem Chef, dem Manager, dem Kunden. Ich bin überzeugt, alle drei Szenarien gehen anders aus.</p>
+<p>Wenn es sich um eine in Stunden, Tagen, bezahlte Leistung handelt, würde ich spontan sagen, in allen drei Fällen, fällt die Schätzung des Aufwandes gegenüber dem Kunden, aber auch gegenüber dem Chef, Projektleiter, vielleicht gegenüber dem Ehemann, höher aus, ohne dass die Leistungserbringer lange darüber nachdenken. Und wenn Sie das tun, nach aller Lebenserfahrung wohl auch. Entweder geht’s um einen höheren Preis oder den berühmten Puffer. Erschreckend!!!</p>
+<p>In allen Szenarien, hängt die Schätzung auch davon ab, wie die Anerkennungskultur im Unternehmen gestaltet ist. Bekommt der Mitarbeiter nur Aufmerksamkeit und Anerkennung, wenn er ordentlich stöhnt und klagt, dann ist es nicht verwunderlich, wenn die Aufwandschätzungen nach oben ausschlagen.</p>
+<p>Wo bekommt ein Mitarbeiter Anerkennung, wenn er mit der Leistung deutlich unter der erwarteten Zeit geblieben ist? Eher werden doch sofort Zweifel an der Qualität laut.
+Da ist sowohl bei der Softwareentwicklung, der Klempnerei als auch der bratenden Hausfrau der Wurm drin, wenn alle drei nur bei vermeintlich großem Aufwand Anerkennung bekommen.
+Wenn die Hausfrau ankündigt, die Gans brät sich fast von allein und niemand sie dafür lobt, wird sie nächstes Mal wieder fünf Stunden brauchen. Ich glaube, genauso ist es bei dem Klempner und der Softwareentwicklung.
+Dann taucht die Frage auf, wie soll ich denn dem Kunden verkaufen, dass wir dieses Mal für’s Bad zwei Tage weniger brauchen, für die neue Anwendung zwei Wochen weniger? Was, auch noch termingerecht!? :-.</p>
+<p>Nur Mut, ich als Kunde freue mich und wenn die Qualität stimmt, bin ich happy, werde wieder kaufen und in meinen Fachkreisen berichten.</p>
+<p>Eine gesteigerte Produktivität erreicht man natürlich nicht, durch Termindruck, oder gar indem man ein paar Teammitglieder für andere Projekte abzieht. Produktivitätssteigerung geht nur im Team, in einem gut organisierten und gut kommunizierenden Team. Was würde sich ändern, wenn man den Teamkollegen als internen Kunden betrachtete, dessen Anforderungen man genauestens wissen möchte und termingerecht erfüllen will?
+Ziel muss es sein, im Unternehmen, aber natürlich gern auch im privaten Umfeld, eine Anerkennungs-Wertschätzungskultur zu schaffen, die anspornt produktiv und kreativ zu sein, die Mut macht. Ich erinnere: Wertschöpfung durch Wertschätzung.
+zum PS von Ralf: nein als Laie kann man mir nicht wirklich vorstellen, dass die Qualität der Entwickler so verschieden sein kann. Aber ich habe eine Ahnung davon. Da tröstet es wenig, dass es noch zahlreiche andere Branchen gibt, die mir als Kunden als Laien ein bißchen suspekt sind. Ein Gütesiegel, eine Art Selbstverpflichtung, sich an bestimmte Regeln zu halten wäre ein erster Schritt, der vermutlich für einen kleinen Vertrauensvorschuss sorgen würde.</p>
+<hr />
+<p><strong>Lars</strong> (2010-12-19):</p>
+<p>Über den volkswirtschaftlichen Nutzen mache ich mir lieber keine Gedanken.
+Retrospektiv waren meine "dreckigsten" Projekte die effizientesten. Ein komplexeres Makro, dass ich ca. 2001 (u.a. mit Hilfe des Office-Makro-recorders) erstellt habe, spart seit jeder Zeit täglich 15min Arbeitzeit und ich habe darmals ca. 2 Tage Arbeitszeit investiert.
+Das war wohl unter dem Aspekt einer meiner erfolgreichsten Projekte.</p>
+<p>Und andere Programme, die ähnlich lange laufen und eine tolle erweiterbare (Addin-)Struktur hatten, wurden nie erweitert, sodass ein Großteil der Arbeitszeit völlig umsonst war. Und selbst wenn man es jetzt erweitern würde, würde man es wohl eher neu schreiben, da sich in den letzten 10 Jahren SW-Entwicklung zu viel geändert hat.</p>
+<p>Es gab sich auch Projekte, bei denen sich eine gewisse Evolvierbarkeit ausgezahlt hat, aber das war nicht die Mehrheit.</p>
+<p>Man mag über die Script-Kiddys schimpfen, die in kürzester Zeit eine total unsichere social Network-Seite schreiben....die können jedoch in wenigen Monaten millionen wert sein. Und unabhängig wie moralisch sinnvoll man so eine finanzielle Bewertung hält, war es doch extrem effizient.</p>
+<p>Wenn es um Produktivität geht, dann müsste man häufig CCD&amp;co komplett ablehnen und wieder auf dreckige statische Programmierung umschwenken.
+So zumindst mein Fazit, wenn man in die Historie unter Effizienzgesichtspunkten blickt.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-12-19):</p>
+<p>@Andrea: Den Gedanken, dass Schätzungen vom Zielpublikum abhängen, finde ich interessant.</p>
+<p>Solche Publikümmer gibt es nämlich in den Projekten eigentlich immer: Den Kreis der Schätzenden, solange sie untereinander sind. Und dann den Kunden, für den geschätzt wird.</p>
+<p>Sind beide Publikümmer bei der Schätzung anwesend? Nicht unbedingt. Das könnte einen Einfluss haben.</p>
+<p>Die Anerkennungskultur im Allgemeinen ist auch spannend. Hm... Was ist anerkannt? Budgetüberschreitungen eher als Budgetunterschreitungen. Deshalb lieber mal zuviel schätzen.</p>
+<p>Das Spiel kennen nun aber alle Seiten - also gibt es Gegenkräfte und dadurch Spannungen. Weil die Regeln nicht expliziert sind.</p>
+<p>Am Ende ist es aber egal, ob die Schätzung genau ist oder nicht. Das ist der Punkt meines Artikels hier: Wo die Produktivitätsunterschiede so groß sind, kann man sich die Schätzung in die Haare schmieren, solange man nicht weiß, welche Produktivität der Schätzende hat.</p>
+<p>Würde da ein Qualitätssiegel helfen? Hm... ich würde erstmal auf "Freiwillige Selbstkontrolle" setzen.</p>
+<p>Schritt 1: "Wir überprüfen jedes Jahr zwei Mal intern, ob wir unsere Produktivität steigern konnten." (Über ein praktikables Verfahren wäre mal nachzudenken.)</p>
+<p>Schritt 2: "Wir vergleichen unsere Produktivität jedes Jahr einmal überbetrieblich mit ..." Es könnten sich zum Beispiel Arbeitskreise nicht konkurrierender Softwareentwickler (Firmen, Abteilungen) bilden.</p>
+<hr />
+<p><strong>Golo Roden</strong> (2010-12-19):</p>
+<p>Worauf ich hinauswollte:</p>
+<p>Ich kann es doch aber vergleichen? Eben mit der Historie.</p>
+<p>Angenommen, ich habe einen Auftrag zu vergeben. Und ich frage Entwickler A, wie lange er dafür braucht. Dann bekomme ich als Antwort vielleicht "2 Wochen".</p>
+<p>Frage ich Entwickler B, erhalte ich "4 Wochen".</p>
+<p>Wem soll ich den Auftrag nun geben? A oder B? Klar kann ich das nicht entscheiden, wenn ich nicht weiß, wie die Produktivitätsunterschiede sind.</p>
+<p>Genau das sagt mir aber die Historie. Wenn ich aus der Historie ersehe, dass A regelmäßig fünf Mal so lange braucht, B aber nur anderthalb mal so lange, dann habe ich historisch bedingte, und somit halbwegs verlässliche Anhaltspunkte, dass A de facto 2 * 5 = 10 Wochen brauchen wird, B aber nur 4 * 1.5 = 6 Wochen.</p>
+<p>Dann kann ich mir als Auftraggeber überlegen, wem ich den Job gebe (und ob ich ihn überhaupt einem von beiden gebe).</p>
+<p>Natürlich setzt das Transparenz (bezüglich der Historie) und Ehrlichkeit voraus - aber darum ging es ja nicht, sondern um die Frage, ob es an sich ein vernünftiges Maß dafür gibt.</p>
+<p>Natürlich habe ich damit auch kein absolutes und perfektes Maß - aber das gibt es sowieso nicht. Vielleicht arbeitet Entwickler B auch bewusst langsam, weil er weiß, dass er trotzdem noch gut abschneidet.</p>
+<p>Aber das ist mein Problem als Kunde - ich muss mir halt überlegen, wie viel mir der Auftrag wert ist.</p>
+<p>Das ist beim Handwerker nicht anders. Hier kann auch der Schnellste trotzdem noch bewusst langsam machen, oder oder oder ...</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-12-19):</p>
+<p>@Lars: Produktivität macht keine Aussage über Qualität. Sie bezieht sich immer nur auf eine gegebene Menge an Anforderungen.</p>
+<p>Entwickler A und B sollen hochqualitativen Code schreiben. A braucht 2 Wochen, B braucht 3 Wochen. Wer ist produktiver? Natürlich A.</p>
+<p>Entwickler S soll Code ohne Tests schreiben. Entwickler T soll Code mit Tests schreiben. S braucht 1 Woche, T braucht 2 Wochen. Wer ist produktiver? Das lässt sich nicht sagen. Äpfel würden mit Birnen verglichen.</p>
+<p>(In beiden Beispielen sollen die Entwickler natürlich dieselbe grundsätzliche Aufgabenstellung bearbeiten.)</p>
+<p>Ergo: Wenn ich zur Produktivitätsmessung ermuntere und zur Produktivitätssteigerung, dann rede ich damit nicht schlechter Qualität das Wort. Ich kann auch hohe Qualität hochproduktiv herstellen - oder mit mieser Produktivität.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-12-19):</p>
+<p>@Golo: Du vermischst zwei Aspekte: Schätzgenauigkeit und Produktivität.</p>
+<p>Wenn die Schätzgenauigkeit schlecht ist, dann nützt das ganze Schätzen selbstverständlich auch wenig. Dann gebe ich vielleicht lieber dem guten Schätzer den Zuschlag - wenn es denn solche Daten gibt.</p>
+<p>Am Ende brauchen beide aber eben 6 bzw. 10 Wochen - und ein anderer hätte nur 1 Woche gebraucht. Das (!) kann man in unserer Branche nicht wissen. Das ist mein Punkt.</p>
+<p>Schätzungenauigkeiten nivellieren die Produktivitätsunterschiede also nicht, sondern vergrößern das Problem eigentlich nur.</p>
+<p>Produktivität wird außerdem erst nach Abschluss der Arbeit gemessen. Sie hat mit Schätzen nichts zu tun.</p>
+<hr />
+<p><strong>Golo Roden</strong> (2010-12-20):</p>
+<p>Das hat aber nichts mit unserer Branche zu tun, das ist überall so.</p>
+<p>Auch beim Dachdecker weiß ich nicht, ob es ein anderer Dachdecker wegen höherer Produktivität nicht schneller machen würde.</p>
+<p>Von daher bleibt doch letztlich immer nur:</p>
+<ul>
+<li>Ich will X haben.</li>
+<li>X ist mir Y wert.</li>
+<li>Finde ich jemanden, der X für höchstens Y umsetzt?</li>
+</ul>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-12-20):</p>
+<p>@Golo: Natürlich ist das in allen Branchen so. Aber wenn der Unterschied nur bei Faktor 2 oder so liegt, dann ist das vernachlässigbar.</p>
+<p>Bei Faktor 10+ bekommt der Produktivitätsunterschied hingegen - für meinen Geschmack zumindest - eine andere Qualität. Aus "knapp daneben" wird dann "Geld verbrennen".</p>
+<p>Wie gesagt: Es geht mir nicht darum, dass der Auftraggeber zu massiven Verzögerungen beitragen kann. Das tut er aber unabhängig von der Grundproduktivität (oder eher Grundkompetenz) des Auftragnehmers.</p>
+<hr />
+<p><strong>Golo Roden</strong> (2010-12-20):</p>
+<p>Schon klar, aber woher weiß ich denn, wo der Faktor in anderen Branchen liegt?</p>
+<p>Ein richtig schicker Brabus-getunter Mercedes SLR kostet mich locker einen sechsstelligen Betrag. Woher weiß ich, ob man das Ding nicht in der gleichen Form für 10% des Preises bauen könnte? Wie viel bezahle ich nur für die "Marke"? Wie viel bezahle ich für ein (theoretisch) ineffizientes Produktionsverfahren? Keine Ahnung :-(.</p>
+<p>Und ein Auto ist nun wirklich handfest und das Paradebeispiel für Produktion (statt Entwicklung).</p>
+<p>Aber woher soll ich wirklich <em>WISSEN</em>, was die Produktion eines solchen Luxus-Autos kostet, beziehungsweise kosten könnte?</p>
+<p>Woher weiß ich, dass eine Dienstleistung ihren Preis wert ist? Mein Handytarif? Verursacht der wirklich Kosten in Höhe von X beim Betreiber? Wie viel schlagen die als Gewinn drauf? Wie viel günstiger könnte der Tarif sein, wenn das Netz intelligenter ausgebaut wäre? Auch das hat nicht wirklich was mit Entwicklung zu tun.</p>
+<p>Solche Beispiele finden sich doch zu Hauf. Und wie hoch der Faktor da liegt, kann ich nicht mal erahnen.</p>
+<p>Warum kostet eine Louis Vuitton-Handtasche 1.000 Euro, eine von TCM 50? Ist die von LV 20 Mal so viel wert? Hat das nur was mit Produktionseffizienz zu tun? ...?</p>
+<p>Kurzum, was ich sagen will: Du hast als Kunde bei hinreichend komplexen Produkten letztlich nie die notwendige Transparenz, geschweige denn, das notwendige Fachwissen, um den Faktor "Produktivität" überhaupt beurteilen zu können. Letztlich musst Du Dich auf Dein Bauchgefühl verlassen:</p>
+<ul>
+<li>Vertraust Du dem Anbieter?</li>
+<li>Steht der geforderte Preis in einem für Dich angemessenen oder guten Verhältnis zu dem, was Du ausgeben willst?</li>
+</ul>
+<p>Eine andere Möglichkeit hast Du doch letztlich nicht, oder?</p>
+<p>PS: Bei der ganzen Diskussion vergisst man auch, dass die Produktivität nicht der einzige Faktor ist, der den Preis hoch treibt. Um bei den Handtaschen zu bleiben: LV wäre nicht ein Luxusgüterkonzern, wenn sie nicht auch entsprechend Profit machen würden. Trotzdem träumen zig Frauen von einer echten LV-Tasche, weil sie eben für Luxus steht, weil sie etwas über die Trägerin aussagt. Da ist es absolut egal, wie die Produktivität ist - es geht um etwas anderes.</p>
+<p>Natürlich ist das bei Software nicht so extrem - aber auch hier treffe ich meine Kaufentscheidung nicht nur nach der Produktivität. Und selbst wenn ein Anbieter einen zigfach höheren Preis verlangt, heißt das noch nicht, dass er a) produktiver sein könnte, und dass er b) keine Kunden bekommt - einfach weil für die Kunden der Preis nicht alles ist.</p>
+<p>Wenn das so wäre, würde jeder Linux benutzen, und Windows wäre seit Jahren tot ... ist es aber nicht. Und warum? Weil ausreichend vielen Leuten Windows den Preis wert ist, den es (direkt oder indirekt) kostet. Wie dabei die Produktivität von der Entwicklungsabteilung von Microsoft ist, ist mir ehrlich gesagt herzlich egal.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-12-20):</p>
+<p>@Golo: Wir reden doch hier über Produktivität und nicht Preis.</p>
+<p>Preisbildung ist eine Sache des Marktes. Dass Preis nichts mit "Wert" in einem absoluten oder idealistischen Sinn zu tun hat, ist doch schon lange klar.</p>
+<p>Allerdings verkompliziert das womöglich die Sache :-) Du kannst am Preis nicht ablesen, ob einer produktiv ist oder nicht. Könnte man ja denken: Der Produktive ist mehr wert, also ist sein Preis höher. Ist aber nicht so einfach so.</p>
+<p>Ich bleibe dabei: Solange ich als Kunde einer Branche, deren Produktivität um eine Zehnerpotenz schwankt, nicht weiß, ob ich an einen produktiven oder unproduktiven Anbieter geraten bin, solange ist mächtig was im Argen.</p>
+<p>In anderen Branchen, älteren, hat es übrigens - so würde ich mal sagen - schon den Kampf um die Produktivität gegeben. "Industrie" als Begriff steht nämlich dafür. Bei der Industrialisierung ging und geht es um nichts anderes.</p>
+<p>Das Ergebnis für die Autoindustrie: lean production.</p>
+<p>Scrum oder auch Kanban haben dasselbe für die Softwareentwicklung aber noch nicht erreicht. Sie können auch nur helfen, würde ich sagen; am Ende muss noch mehr dazu kommen, um jeden einzelnen Entwickler und ihre Teams produktiver zu machen.</p>
+<hr />
+<p><strong>Haggy</strong> (2010-12-21):</p>
+<p>Auch wenn derVergleich etwas hinkt, zeigt er dennoch ein großes praktisch überall vorhandenes Problem an.</p>
+<p>Die RootCause sehe ich leichtanders. Nämlich in der Eigenheit eines komplexen Systems an sich.</p>
+<p>Schaue ich mir z.Bsp. einen Mediziner an habe ich das gleiche Problem.
+Fragt mal einen Arzt wie lange es dauert bis er eine Krankheit geheilt hat.</p>
+<p>Oder noch viel einfacher: Wie lange die Zeit im Wartezimmer sein wird...</p>
+<p>Komplexe Systeme sind viel abhängigervon den Individuen die sie managen.
+Es gibt mehr weiche als harte Faktoren.</p>
+<p>Oft sieht man dass Tools die Lösung versprechen. "Hol dir einen TFS und deine Entwicklung ist pünktlich."</p>
+<p>Oder in der Arztpraxis, hole dir einen Nummernapparat fürs Wartezimmer und die Patienten meckern nicht mehr.</p>
+<p>Dabei wird oft vergessen, dass es nicht um das harte mechanische sondern das "weiche" komplexe geht.</p>
+<p>So auch beim Entwickeln von Software. Das Tippen der Buchstaben für den Souce ist recht einfach und schätzbar. Sozusagen der harte mechanische Teil.</p>
+<p>Das Lösen der Domainprobleme, das überblicken neuer technischer bereiche,... ist der weiche Teil.</p>
+<p>Bei komplexen Systemen wird sich im allgemeinen (viel zu) schnell mit Halblösungen zufrieden gegeben.</p>
+<p>Um dieses Szenario in den Griff zu bekommen bleibt nur die Spezialisierung.</p>
+<p>Dies hat uns die Medizin etwas vorraus. Kardiologen, Internisten, Onkologen,...</p>
+<p>Und wie ist das bei uns ? "Softwaredeveloper" .</p>
+<p>Bei der Spezialisierung angelangt wiegt noch ein Punkt sehr stark den Golo indirekt erwähnt hatte.
+Verantwortungsvoller Umgang mit Zeitschätzungen.
+Eine Zeitschätzung wird nichtig wenn eine Aufgabe an einen andere Entwickler geben wird oder wenn sich die Anforderung wesentlich ändert.</p>
+<p>Man wird von einem Arzt auch nicht mit einem EKG untersucht wenn man Gelenkschmerzen hat...</p>
+<p>Zusammengefasst denke ich sollte man folgendes tun:
+1. Klare explizite Spezialisierungen
+2. Klar definierte Regeln für Zeitschätzungen und deren Gültigkeit</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

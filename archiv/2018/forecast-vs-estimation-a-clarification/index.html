@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forecast vs Estimation - A clarification — ralfw.de Archiv</title>
+<meta name="description" content="After my previous article on forecasting there was a discussion about whether I used these terms properly. I was referred to Wikipedia for „forecasting“ with the comment „Every for">
+<link rel="canonical" href="https://ralfw.de/archiv/2018/forecast-vs-estimation-a-clarification/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Forecast vs Estimation - A clarification — ralfw.de Archiv">
+<meta property="og:description" content="After my previous article on forecasting there was a discussion about whether I used these terms properly. I was referred to Wikipedia for „forecasting“ with the comment „Every for">
+<meta property="og:url" content="https://ralfw.de/archiv/2018/forecast-vs-estimation-a-clarification/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-01)"></span>ralfw.de</p>
+    <h1>Forecast vs Estimation - A clarification</h1>
+    <div class="doc-meta"><span>9. Juni 2018</span><span>Erstveröffentlichung: ralfw.de</span><span><a href="https://ralfw.de/forecast-vs-estimation-a-clarification/" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2018/forecast-vs-estimation-a-clarification/</code></span></div>
+    <div class="art"><p><img loading="lazy" alt="" src="/assets/01-ralfw.de/deec1cd5bfdce70c.png" /></p>
+<p>Is there a difference between estimating and forecasting? I think there is.</p>
+<p>After <a rel="noopener" href="https://ralfw.de/dont-be-wrong-on-average-software-delivery-forecasting-using-simulation/">my previous article on forecasting</a> there was a discussion about whether I used these terms properly. I was referred to Wikipedia for „<a rel="noopener" href="https://en.wikipedia.org/wiki/Forecasting">forecasting</a>“ with the comment „Every forecast is an estimate“:</p>
+<blockquote>
+<p>Forecasting is the process of making predictions of the future based on past and present data and most commonly by analysis of trends. A commonplace example might be estimation of some variable of interest at some specified future date. Prediction is a similar, but more general term.</p>
+</blockquote>
+<p>And I was pointed to <a rel="noopener" href="http://herdingcats.typepad.com/my_weblog/2016/11/estimates-forecasts-projects.html">this article</a> which is very strict about the use of the term „estimate“:</p>
+<blockquote>
+<p>An Estimate is a value inferred for a population of values based on data collected from a sample of data from that population. […] Estimates can be about the past, present, or future. […] In the project domain, an estimate is a calculated approximation of some desired measurement.</p>
+<p>Forecasts speculate future values for a population of possible values with a level of confidence, based on the current and past values as an expectation (prediction) of what will happen.</p>
+</blockquote>
+<p>Finally the Wikipedia entry for „<a rel="noopener" href="https://en.wikipedia.org/wiki/Estimation">estimation</a>“:</p>
+<blockquote>
+<p>Estimation (or estimating) is the process of finding an estimate, or approximation, which is a value that is usable for some purpose even if input data may be incomplete, uncertain, or unstable. The value is nonetheless usable because it is derived from the best information available.</p>
+</blockquote>
+<p>What can I say? That’s heavyweight authorities.</p>
+<p>Does that mean, though, I used the terms in a wrong way? Have I fallen into some „#noestimates trap“?</p>
+<p>Let me answer by clarifying what I meant to say. My intention was/is not to oppose any long standing formal definitions of the terms used in certain industries. Rather I’m trying to make my thoughts or an approach digestable for as many developers as possible by using terms in a way how I think they are understood commonly.</p>
+<p>Maybe that’s just a good intention, but does not work? You decide. But let me explain at least:</p>
+<h2>Prediction</h2>
+<p>When confronted with the question „How long will it take?“ a <em>prediction</em> is requested. „Prediction“ is <a rel="noopener" href="https://www.merriam-webster.com/dictionary/prediction">defined by Merriam-Webster</a> as:</p>
+<blockquote>
+<p>a statement about […] the future</p>
+</blockquote>
+<p>This also matches what Wikipedia is saying about forecasting:</p>
+<blockquote>
+<p>[which] is the process of making predictions […]</p>
+</blockquote>
+<p>I hope we all can agree about that much.</p>
+<p>Developers are asked to make statements about the future - which is notoriously uncertain regardless which method you use to predict it. Use a glass ball or use your gut feeling or use some fancy calculation or simulation… In the end the future might look quite different from your prediction.</p>
+<p>Since there are different approaches to predicting the future it seems useful to distinguish them with different terms.</p>
+<h2>Estimation</h2>
+<p>The term „estimation“ when used in software development refers to a prediction. At least very often and especially in the context of the #noestimates movement.</p>
+<p>Developers don’t feel burdened much when asked „What do you think, how many requests per second will this server be able to handle?“ They’d answer with a guess, an estimate, and a discussion might ensue, but usually no stress.</p>
+<p>On the other hand developers hate it when asked „What do you think, when will those user stories be done?“ This question immediately causes stress. And any estimate given will also cause stress later.</p>
+<p>It’s the second question my previous article revolved around. The kind of answer usually given to that question is what I’m calling an estimate. It’s a prediction, but a very special one.</p>
+<ul>
+<li>It’s a prediction based on a gut feeling.</li>
+<li>It’s a prediction delivered as a single number, e.g. a date or a number of days or some abstract value (e.g. story points).</li>
+<li>It’s a prediction which does not communicate any probability of its occurrence.</li>
+</ul>
+<p>A prediction with these kind of attributes I’m calling an estimation in the context of the question „When will it be done?“</p>
+<p>The term „estimation“ means much more in general. But I’m just concerned with a special case here.</p>
+<p>I’m using the term along <a rel="noopener" href="https://www.merriam-webster.com/dictionary/estimation">what Merriam-Webster defines</a>:</p>
+<blockquote>
+<p>a judgment or opinion about something</p>
+</blockquote>
+<p>„Judgement“ as well as „opinion“ refer to subjective statements. And that’s what software estimations are, I think, when someone says „That’s 15 story points“ or „That will take 5 days to finish“.</p>
+<p>Subjective statements defy explanation and reasoning. The estimate given is like it is; better not ask „Why?“</p>
+<h2>Forecast</h2>
+<p>Forecasts also are predictions. But they are completely different in my view.</p>
+<p>Have you ever watched a „weather estimation“ on TV? I doubt it. But you’ve watched a „weather forecast“. This alone should make it obvious that there is a big difference between the terms „estimation“ and „forecast“.</p>
+<p>Let me repeat what „Herding Cats“ says:</p>
+<blockquote>
+<p>Forecasts speculate future values […] based on […] current and past values</p>
+</blockquote>
+<p>The definitions of forecasting all refer to „past and present data“ in some way. Forecasting by definition thus is about observations and facts.</p>
+<p>A weather service does not predict how a storm will evolve by translating gut feelings into a single number. Instead it will feed objective data into a model to arrive at a set of possible futures with different probabilities.</p>
+<p>That’s what I’m referring to in the context of the question „How long will it take?“</p>
+<p>To answer the question with a forecast means:</p>
+<ul>
+<li>To make a prediction based on historical data.</li>
+<li>To deliver a prediction as a range of values.</li>
+<li>To communicate probabilities of those values as part of the prediction.</li>
+</ul>
+<p>In short: a forecast is not a single number, but a distribution calculated from observations of pertinent events.</p>
+<p>A forecast in thus is objective (even though it might be far off in the end). You are encouraged to ask „Why?“</p>
+<h2>Summary</h2>
+<p>Different meanings expressed by different terms based on an understanding commonly found among the target group of my article. I hope that is reasonable, and neither ignorant nor naive nor counter-productive.</p>
+<p>But if anyone objects I’d be most happy to learn more appropriate terms for the two sets of attributes I described.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

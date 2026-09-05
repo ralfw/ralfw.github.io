@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drei Zwecke fürs Refactoring — ralfw.de Archiv</title>
+<meta name="description" content="Refactoring ist zu einer festen Vokabel in der Branche geworden, würde ich sagen. Ohne Refactoring geht es in älteren größeren Projekten einfach nicht. Deshalb hat Refactoring, so ">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/drei-zwecke-furs-refactoring/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Drei Zwecke fürs Refactoring — ralfw.de Archiv">
+<meta property="og:description" content="Refactoring ist zu einer festen Vokabel in der Branche geworden, würde ich sagen. Ohne Refactoring geht es in älteren größeren Projekten einfach nicht. Deshalb hat Refactoring, so ">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/drei-zwecke-furs-refactoring/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Drei Zwecke fürs Refactoring</h1>
+    <div class="doc-meta"><span>23. Mai 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/05/drei-zwecke-furs-refactoring.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/drei-zwecke-furs-refactoring/</code></span></div>
+    <div class="art"><p>Refactoring ist zu einer festen Vokabel in der Branche geworden, würde ich sagen. Ohne Refactoring geht es in älteren größeren Projekten einfach nicht. Deshalb hat Refactoring, so scheint mir, ein sehr pauschal gutes Image. Refactoring sollte man können und tun. Bei TDD ist es sogar in der Definition: red-green-refactor.</p>
+<p>Mir scheint jedoch, dass wir gut daran täten, zu differenzieren. Ist Refactoring immer gleich? (Womit ich nicht “Extract Method” mit “Extract Interface” vergleichen will.) Hat Refactoring immer denselben Zweck? Zweck ist ja nicht, die Umstrukturierung von Code unter Beibehaltung der Funktionalität. Das ist nur, was passiert.</p>
+<p>Ich glaube, es gibt mindestens drei unterschiedliche Zwecke oder Ziele für Refactoring. Jeder hat mit innerer Codequalität vor dem Hintergrund des aktuellen Problemverständnisses zu tun. Innere Qualität existiert nämlich nicht absolut, so denke ich, sondern nur im Verhältnis zu einer Vorstellung davon, was eigentlich das Kern der Anforderungen an eine Software ist und wie eine Lösung grundsätzlich aussehen sollte.</p>
+<ul>
+<li><strong>Qualität steigern #1:</strong> Wenn von Refactoring die Rede ist, dann ist meist Refactoring zur Verbesserung der inneren Qualität gemeint. Sie stehen vor einem Brownfield und wollen daraus – zumindest in Teilen – eine blühende Wiese machen. Den Spaghetticode entzerren. Die technische Schuldenlast abtragen. Darum geht es bei legacy code. Die innere Qualität ist schlecht und bevor man auch nur daran denken kann, neue Funktionalität hinzuzufügen, müssen Sie erstmal Grund reinbringen.
+Beispiel: Die 10.000 Zeilen Klasse, die Sie zerlegen, um sie besser zu verstehen und dann zu erweitern.  <strong>Qualität beibehalten #2:</strong> Refactoring lässt sich nicht vermeiden, auch wenn die innere Qualität schon hoch ist. Denn neue Anforderungen mögen eine andere Struktur des Code erfordern. Also müssen Sie auch Refactoring betreiben, um eine hohe Qualität zu erhalten. Das finde ich wert es zu unterscheiden von Refactoring-Zweck #1.
+Beispiel: Das Refactoring nach den TDD red-green-Schritten.  <strong>Qualität transformieren #3:</strong> Schließlich gibt es noch einen weiteren Refactoring-Zweck, der nicht unbedingt mit neuen Anforderungen zu tun hat. Bei #1 geht es darum, Code für die Umsetzung von Anforderungen überhaupt fit zu machen; bei #2 geht es darum, fitten Code fit zu halten im Lichte neuer Anforderungen. Aber bei #3 ist der Code fit (hohe innere Qualität), keine neuen Anforderungen liegen an – und doch treibt Sie etwas zum Refactoring – und zwar eine neue Sichtweise auf Problem und Code. Domain Driven Design nennt das <em>refactoring to deeper insight</em>. Die tiefere Einsicht kann darin bestehen, dass Lösungsbestandteile umgewichtet werden oder Sie erkennen, dass zwischen manchen Bestandteilen eine engere Beziehung besteht, als zunächst gedacht. Das sollte sich dann auch in der Struktur des Codes ausdrücken.
+Wie gesagt: Anlass für ein solches Refactoring ist keine Schwierigkeit, Änderungen anzubringen, sondern die Erkenntnis, das Struktur und Problem nicht mehr optimal zueinander passen. Durch ein <em>refactoring to deeper insight</em> erhöht sich die Verständlichkeit von Code.
+Beispiel: Sie ziehen die Funktion <em>BonitätPrüfen()</em> aus einer Kundenklasse raus in eine eigene Klasse <em>Bonitätsprüfer</em>, nicht weil sie schwieriger zu ändern wäre in der Kundenklasse oder darin zu unschönen Abhängigkeiten führen würde, sondern weil sich herausstellt, dass die Bonitätsprüfung ein zentraler Bestandteil der Anwendung ist, der verdient, in einer eigenen Klasse oder gar Komponente repräsentiert zu sein.</li>
+</ul>
+<p>Mit dieser Unterteilung von Refactoring nach Zwecken, können wir nun besser in unseren Gesprächen unterscheiden, worüber wir sprechen. Wenn zum Beispiel ein Kunde hört, wir würden Zeit in Refactoring stecken und zuckt, weil er denkt, die innere Qualität müsse wohl schlecht sein, dann können wir schneller das Missverständnis aufdecken. Denn wo er an #1 gedacht hat, haben wir in Wirklichkeit über #3 gesprochen.</p>
+<p>Oder wir können uns Maximen formulieren:</p>
+<ul>
+<li>Vermeide Refactoring #1 von vornherein dadurch, dass du hohe innere Qualität produzierst mittels Flow-Design und/oder TDD.  Denke an Refactoring #2 im Zuge jeder Änderung an vorhandener hoher innerer Qualität.  Sei offen für tiefere Einsichten, die du im Code durch Refactoring #3 manifestierst, damit der Code noch besser verständlich wird.</li>
+</ul>
+<p>Mir hat diese Unterscheidung jedenfalls in der letzten Zeit geholfen.</p>
+<p>In diesem Sinne: happy refactoring!</p>
+<p><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY"></a><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY">Spendieren Sie mir doch einen Kaffee, wenn Ihnen dieser Artikel gefallen hat…</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

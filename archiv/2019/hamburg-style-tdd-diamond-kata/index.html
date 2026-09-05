@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hamburg Style TDD - Diamond Kata — ralfw.de Archiv</title>
+<meta name="description" content="In a previous article I tried to explain why I’m not satisfied with the existing schools of TDD: They are not really tapping the developers’ capability to think. At least for my ta">
+<link rel="canonical" href="https://ralfw.de/archiv/2019/hamburg-style-tdd-diamond-kata/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hamburg Style TDD - Diamond Kata — ralfw.de Archiv">
+<meta property="og:description" content="In a previous article I tried to explain why I’m not satisfied with the existing schools of TDD: They are not really tapping the developers’ capability to think. At least for my ta">
+<meta property="og:url" content="https://ralfw.de/archiv/2019/hamburg-style-tdd-diamond-kata/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-01)"></span>ralfw.de</p>
+    <h1>Hamburg Style TDD - Diamond Kata</h1>
+    <div class="doc-meta"><span>23. Juli 2019</span><span>Erstveröffentlichung: ralfw.de</span><span><a href="https://ralfw.de/hamburg-style-tdd-diamond-kata/" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2019/hamburg-style-tdd-diamond-kata/</code></span></div>
+    <div class="art"><p>In a <a rel="noopener" href="https://ralfw.de/hamburg-style-tdd/">previous article</a> I tried to explain why I’m not satisfied with the existing schools of TDD: They are not really tapping the developers’ capability to think. At least for my taste. Or to say it more bluntly: They are dumbing down developers.</p>
+<p>Sure, their motivation behind that is honorable. And they all assure us of still, no, hence getting to the best possible code result. Nevertheless I think this is doing productivity a disservice.</p>
+<p>Mileage always varies with different approaches, but for me the mileage so far has been too low with the established TDD styles. That’s why I came up with yet another one. I call it eclectic because it’s drawing from all sorts of approaches. And I might even not call it a programming style but a problem solving style.</p>
+<p>In my previous article I explained why I think TBC (Thinking Before Coding) and ADC (Analyse, Design, Code) are so important. But what does that mean when applied to concrete problems?</p>
+<p>Here’s a first problem I tackled to demonstrate this. I chose the Diamond kata because the originator of the Munich style TDD, David Völkel, was mentioned <a rel="noopener" href="https://twitter.com/DataDuke/status/1151989878499897344">in a recent tweet</a> teaching his style using this kata.</p>
+<p>Let’s start…</p>
+<h2>Problem description</h2>
+<p>First a problem description as I found it on the web:</p>
+<pre><code>Given a letter, print a diamond starting with ‘A’ with the supplied letter at the widest point.
+
+For example: print-diamond ‘C’ prints
+
+..A
+.B.B
+C...C
+.B.B
+..A
+
+(The dots '.' are just placeholders for spaces ' ' to make the result more clear.)
+</code></pre>
+<h2>1. Analysis</h2>
+<p>The first thing I do when faced with a programming problem is… I’m trying to understand it. Sure that’s also advocated by other TDD styles. But exactly does that mean? What’s the result of analysis?</p>
+<p>Analysis is the activity which in my view is supposed to produce understanding. But how to document my understanding?</p>
+<p>In the end there is no unambiguous understanding except when I’m able to solve the problem (or very similar problems in the same problem class). That means any software I produce needs to be able to do the same. Otherwise I might have understood, but wasn’t able to encode my understanding.</p>
+<p>Translated into code that means analysis results in two things:</p>
+<ul>
+<li>examples of successful problem solving (aka test cases)</li>
+<li>functions that actually show the behavior as described in the examples.</li>
+</ul>
+<p>I usually document my understanding in a file next to the code. In this case I used a <code>.md</code> file:</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/e0e8cbf7b32d0c11.png" /></p>
+<p>You see, first there is some text explaining what I gleaned from the problem description. An important aspect of that are terms of the domain language.</p>
+<p>But then there is a function and test cases. They are the real expressions of my understanding.</p>
+<p>The sample problem is so easy, however, I did not come up with my own test case. But if it’s more complicated I will go beyond whatever has been presented by the client.</p>
+<p>My analysis is complete once I really get my insights encoded as <em>acceptance tests</em> and the signatures of behavior delivering functions:</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/a467a1680fcd99d9.jpg" /></p>
+<p>I don’t need to know how to create the results. Just the surface of my „system under development“ needs to be clearly specified.</p>
+<p>That’s easy in this case of course. But what if I had a hard time to come up with an interface? Isn’t TDD supposed to help with that?</p>
+<p>Well, my view is: As long as you don’t know which functions should provide the requested services, you should not touch your production code. You’re not even in a situation to write tests.</p>
+<p>Lack of clarity of the interface is a clear sign of „chaos“ (in your head or the client’s head). <a rel="noopener" href="https://en.wikipedia.org/wiki/Cynefin_framework">And when in chaos the first thing to do is: act!</a></p>
+<p>In the case of programming that means whipping up a REPL or some other scratchpad and start „drawing“, start experimenting. Play around with interfaces all you want. Write a whole prototype, even.</p>
+<p>But don’t touch your production code! Not even backed by a test. Otherwise you’ll later on be sorry because you have to go through much refactoring. And that’s always putting strain on your codebase.</p>
+<p>The remedy to cluelessness is not refactoring! As long as you don’t have a clue how a system under development’s surface should look like, you’re clueless. You can’t even come up with clear cut test cases.</p>
+<p>It’s time for a different mode. Not the test-first mode, but an experimentation mode outside production code.</p>
+<p>Luckily that’s not the case for the Diamond kata, though. That means my analysis is complete.</p>
+<p>Bottom line: For me TDD always means ATDD (Acceptance Test-Driven Development). Don’t start work on production code before there is an acceptance test, i.e. a comprehensive test describing the required behavior.</p>
+<p>An acceptance test to me is a guiding light or a north start. Once the acceptance tests are going green I know my job is done. I don’t mind them staying red for a longer while. I simply don’t execute them all the time ;-)</p>
+<h2>2. Design</h2>
+<p>With the acceptance tests implemented I continue by TBC. I ask myself:</p>
+<ol>
+<li>Can I partition the overall problem into smaller, complementary problems which I then solve independently?</li>
+<li>Are there simpler problems nested inside the overall difficult one? Can I find a list of incremental tests?</li>
+</ol>
+<p>The second step is what TDD originally was about, I think. In my view, though, this only works well for very simple problems. It’s a not to be neglected question, but in my approach is not the first one to ask.</p>
+<p>My first step is to look for more or less obvious sub-problems which I can solve more or less independently - hoping that the solutions to the sub-problems later can be integrated into a solution for the overall problem. Each sub-problem again will be represented by a function responsible for some partial behavior.</p>
+<p>I’m using the good old „stepwise refinement“ approach, you could say. I’m recursively descending a problem tree.</p>
+<p>And why not? Just because it’s an old approach doesn’t mean it’s not fit for the modern world.</p>
+<p>But I’m using it with a twist! And that’s quite important for the clean code goal. My function hierarchies are free of functional dependencies. I’m not distributing logic vertically all over the hierarchy, but lump it together in the leaf functions, called <em>operations</em> according to the IOSP (Integration Operation Segregation Principle). That’s making a huge difference for understandability and testability!</p>
+<p>Here’s what I came up with as a design for the Diamond kata:</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/035c5794aa7313bf.png" /></p>
+<p>It’s more precisely documenting my understanding of the problem and delivering a <em>model</em> for the implementation.</p>
+<p>The model consists of yet more functions, but in addition to that also relations between those functions.</p>
+<ul>
+<li>There is a hierarchical relation: The original user facing function, the root function of the function tree depends on the other functions.</li>
+<li>There are before-after or sequence relations: The partial functions will need to be called in a certain order.</li>
+<li>There is an implicit aggregation relation: All functions will belong to the same module (class).</li>
+</ul>
+<p>Noteworthy of this kind of design is the absence of loops! To declarative and on a high level of abstraction a model needs to be free of imperative loops. Looping will occur in the end, but in the model it’s hidden.</p>
+<p>This design process maybe takes me 10 minutes. The most effort goes into actually writing the results down for the purpose of this article.</p>
+<p>Why should I not invest this short time up-front for design? It’s easy, and it delivers starting points for further tests. I don’t need to drive the implementation through the root function. That, to me, would feel artificial, and not simpler. And I would have to refactor more.</p>
+<p>My design will produce clean code, I’m confident. Because the implementation will follow the IOSP.</p>
+<p>Growing logic by applying tests primarily to the root function (and later refactor) is like <a rel="noopener" href="https://de.wikipedia.org/wiki/Williams_Christ">growing a Bartlett inside a bottle</a>. I call that <em>pear programming</em>.</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/d0e14f8e3bf16de9.jpg" /></p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/9a146f0edd41a389.jpg" /></p>
+<p>Source: <a rel="noopener" href="https://de.wikipedia.org/wiki/Williams_Christ">Wikipedia</a></p>
+<p>It can be done. It’s a piece of art, maybe. But I find that hard. The harder the more logic this way should be developed. Because that way it’s impossible to target pieces of logic with tests. All logic is always under test - unless you swap it out with <a rel="noopener" href="https://martinfowler.com/articles/mocksArentStubs.html">substitutes</a>.</p>
+<p>Substitutes, though, to me are additional complexity I want to avoid! I’m not saying they should not be used. But to base a programming approach on them is not my cup of tea.</p>
+<h3>A KISS for design</h3>
+<p>One argument against my approach, I hear, is that I’m not doing the simplest thing possible. Starting with a trivial test (even a degenerate test case) and then answering that with maybe only a singe line of production code would be much, much simpler. And it would immediately deliver a (small) value. And it would guarantee that no production code gets written without being covered by a test.</p>
+<p>By now you can imagine: I beg to differ.</p>
+<p>In fact I think my kind of design is the simplest thing you can do. I’m following the KISS principle to the letter.</p>
+<p>Why? Because I don’t even implement a single line of code (at first). What’s simpler than writing code? Not writing code! That’s faster, that does not produce waste which later needs to be refactored.</p>
+<p>Designing by stepwise refinement, by dissecting large problems into smaller ones is so simple because it „assumes“ that certain „services“ will be available. It does not care how they are going to be implemented. That’s details to wreck your brain about some other time.</p>
+<p>The above list of functions is a wish list. I’m wishing for help: „How nice it would be to have a function that does X…“ or „What a relieve it would be to not worry about problem Y anymore because a function is taking care of that…“</p>
+<p>If I cannot simplify a big problem by at least coming up with two partial problems which are smaller I guess I don’t really have a clue about what’s going on in the first place. Either I can solve a problem by writing the logic – or I can solve it by dissecting it into smaller, complementary problems.</p>
+<p>With regard to the Diamond kata wishing for help could run like this:</p>
+<ul>
+<li>„Oh, there is a single input letter, but the diamond consists of multiple letters up until the input letter. I wish there was a function taking care of getting me this list. The rest then can be accomplished by another function.</li>
+<li>„Hm… given a list of letters I need to generate the layers of the diamond. Half of them are unique. It would be nice to have a function doing that. Another one could then take care of building a full diamond from them.“</li>
+<li>„Now that I have a list of letters the hard part is to generate a single layer with the right spacing. I wish there was a function for that. Generating layers for all letters then is simple based on that.“</li>
+<li>„The most difficult thing about a layer is to get the number of leading spaces and separating spaces right. There should be a function calculating that for each layer. Arranging the letter in a layer based on that info then would be easy.“</li>
+</ul>
+<p>I find this most simple. And if it’s not then I need to double down on thinking the problem through or maybe go back to analysis. Not being able to come up with a „functional design“ to me is the first sign of cluelessness. I would not recommend to touch production code in such a state of mind.</p>
+<h2>3. Implementation</h2>
+<p>After design all’s prepared. At least that’s true in this simple case. I know all the functions that will be needed. I’ve a good feeling about this. If the problem was larger I would not have refined the whole function tree down to the last operation. Remember: I’m all for iterative and incremental progress. TBC with ADC is not about a resurrection of the waterfall.</p>
+<p>Backed by the acceptance tests I now implement the functions I „uncovered“ during design in any order. I could start with the seemingly simplest or simply with the first one. It pretty much does not matter.</p>
+<h3>Determine the layers</h3>
+<p>The partial problem of determining the number of layers with their respective letters (layer names) I attack using… incremental tests. Inside my approach I’m using pretty much Chicago style TDD. You see why I’m calling it eclectic?</p>
+<p>I come up with two tests growing in difficulty and implement the production code by going red-green-red-green.</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/d75d1325f12dd6dd.png" /></p>
+<p>There is nothing to refactor after the first test and not even after the second test. The function is so focused, so small.</p>
+<p>You might find that the code to get the second red test to green does not seem simple. If so I say: To hell with simplicity! At that point I had a clear idea of how to solve the problem once and for all. Why not just write it down?</p>
+<p>I could have used another test to drive out some pattern and refactor… but with this kind of small problem that seemed too much effort.</p>
+<p>Or if you find the implementation lacking with regard to null boundary checks let me say: To hell with defensive programming! It’s not the responsibility of this function to check if the seed is in a certain range. If so, it just fails. There is not even a requirement to behave in a certain way in such a case. Why should I implement a solution to a non-existing requirement?</p>
+<p>Defensive programming, I have to say, often is a form of procrastination. It’s applied to postpone solving the hard problems. It’s applied to ward off „friendly fire“ from code other team members might write. It thus is a substitute for the right thing to do: Doing real thinking about the real problem and drawing explicit trust boundaries during joint design sessions with other team members.</p>
+<h3>Calculate layer whitespaces</h3>
+<p>My approach again changes with the second function I implement: I go for a „one shot kill“: first a red test on an acceptance test level (for a partial problem), then all the necessary production code.</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/677972225209694d.jpg" /></p>
+<p>I’m not trying to crawl my way to a full solution with incremental tests because the solution is sitting right in front of me in the design. I’ve done „my math“ in the design document already; it was part of understanding the problem. Why shouldn’t I use that now?</p>
+<p>And again: the operation is so small. The loop is following a pattern, the calculations are trivial. If the one test would fail it would be easy to detect the cause.</p>
+<p>Of course the production code is benefiting from language features like <code>yield return</code>. No need to allocate a data structure to compile the results in. Also no need to define a data structure to carry both values for each layer. C# tuples as „ad hoc records“ are perfect for that.</p>
+<p>Please note how only the number of layers is passed to the function. No need to let it know about the layer letters. That’s decoupling in the small. It’s made easier by designing the functions before implementation. Refactoring to this kind of decoupling later on would be harder.</p>
+<h3>Generate the unique diamond layers</h3>
+<p>The third partial problem again is different from the previous ones. I now realize it’s too difficult to solve right away or with incremental tests. So I revert to stepwise refinement once again.</p>
+<p>The overall problem of generating the unique layers consists of the partial problem generating of generating just a single layer - and a remaining problem of doing that for all layer letters.</p>
+<p>It’s a typical „N:1 problem“. Or you could call it a mapping problem: the same thing is done for each item in a collection. However here it’s two collections of the same length. The layer letters have to be „merged“ with the layer whitespace calculations.</p>
+<p>What I do in this case I use a bottom up approach: first I implement the nested function for generating a single layer. I do that again with two incremental tests, red-green-red-green.</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/150b679d80ced2b3.png" /></p>
+<p>The first version of the production code might seem not really according to KISS. Why include the <code>if</code>? For the first test this condition was not necessary.</p>
+<p>Well… I guess my attention slipped a bit. I indulged in some look ahead. I knew a second test was coming which would need the conditional statement.</p>
+<p>(While I was writing it I actually stopped for a second and mused about it… but I did not draw the right conclusion: not necessary right now, throw away.)</p>
+<p>Please note the strange letter passed into the function: Why a <code>*</code> which is not a valid layer letter? This is my way of making obvious that this function does not care about „correct“ diamond characters. It’s focused on the layout of whatever it gets.</p>
+<p>After I got the generation of a single layer working I move a one level up the function hierarchy. Doing one layer is integrated by a function for generating all unique layers:</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/77bf30487517c8cb.jpg" /></p>
+<p>This one again is so easy, I just use a single test to drive its production code. I dare to do that because C# is offering powerful abstractions like Linq; there are no more loops to get right.</p>
+<h3>Build diamond</h3>
+<p>Finally I get to the function building the diamond from the layers. This again is so simple I just need one test:</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/8991fa7621664073.png" /></p>
+<p>As you can see the function consists of two parts. The levels of abstraction of its logic are not even: line 50 is slightly more abstract than line 51f. I need a bit more mental effort to understand what 51+52 are doing than what 50 does.</p>
+<p>But in the end it’s such a small function I don’t think more structure is needed. Or maybe this is a case where comments would help?</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/ef709bf813b0c5a4.png" /></p>
+<h3>Crossing the finish line</h3>
+<p>That’s it. All functions from the design have been implemented. They are doing their partial jobs. That means all „musicians“ are ready, the instruments are tuned. It’s time for them to come together as a band and play a concert.</p>
+<p>I do this by calling the partial functions from the root function:</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/7a692e76f933dfb3.jpg" /></p>
+<p>Calling functions is the root function’s only responsibility. I call that <em>integration</em> (or composition) as opposed to <em>operation</em>. Operation is what the other functions are doing. They contain logic, they are the real workhorses of the solution.</p>
+<p>(With the exception of <code>GenerateUniqueLayers</code> which I also view as an integration due to its shortness and usage of Linq, even though it’s not just calling another function but wrapping that.)</p>
+<p>Coding the integration is easy by definition. It’s so easy in fact, that intermediate integrations in an IOSP-based function hierarchy hardly need testing at all. It’s the same as if you extracted a method during refactoring: you don’t put that under test immediately.</p>
+<p>With the root function, the function which the user/customer is interested in, filled out I check the acceptance test cases from the beginning… And lo and behold they are both green!</p>
+<p>I’m done with solving the original problem.</p>
+<h3>Refactoring</h3>
+<p>So far no refactoring seemed necessary. Due to TBC the code already is very clean, I’d say: all functions are small, the integration gives a good overview of how the problem is solved, the SRP reigns.</p>
+<p>Now that I’m finished, though, I step back and try to imagine how a future reader of the code (possibly myself) would experience it.</p>
+<p>The first thing I notice is that <code>Print</code> still is kind of fraught with details. I decide to extract another function:</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/fc482ddb401fbdb7.jpg" /></p>
+<p>Now <code>Print</code> tells the story what a diamond production looks like in three easy „sentences“: <em>First calculate the size of the diamond by determining the layers it should consist of. Then actually generate those layers, but only the unique ones. Finally build the diamond from the layers.</em></p>
+<p>While reading this story no details of the processing steps are necessary to know. At first that’s what some developers cannot really accept; they tend to read the code depth-first. However, my approach favors breadth-first reasoning.</p>
+<p>And <code>GenerateUniqueLayers</code> is yet another integration which is focused on layer generation. It’s hiding the details of that so <code>Print</code> can be shorter and more conforming to the SLA principle.</p>
+<p>Although IOSP-based code is easy to understand due to many small methods and clearly visible processes, code sometimes cannot tell the full story. Why are things how they are, what do certain terms mean?</p>
+<p>Even with this small example I felt that was the case. So I also added an introductory comment:</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/fcfda9b9df9abfc0.jpg" /></p>
+<p>To me comments are not a code small per se. It’s what the comments are used for that is important. Background information, documentation of decisions, some kind of glossary… all that and more can be valuable in code.</p>
+<h3>Deleting tests</h3>
+<p>Finally, now that I’m satisfied with my solution, a fundamental act of refactoring. It’s almost unheard of, I’d say, but I’m doing it on a regular basis as part of my approach: I delete tests.</p>
+<p>Yes, that’s true. I delete tests which would make future refactorings harder.</p>
+<p>To see which tests are of no longterm use I simply set the accessibility of all methods to <code>private</code> which haven’t explicitly been ordered by the customer. Methods not used in acceptance tests are obviously not used and should be hidden as structural details.</p>
+<p>All methods of the single class of my solution except for <code>Print</code> thus go <code>private</code>. And all tests exercising these methods go red and are deleted. That’s seven test functions.</p>
+<p>The only remaining, stable, long term tests are the <em>acceptance tests</em>. Or more generally tests of methods which need to remain public on other classes I might have designed (or which were created during refactoring). Tests of methods on such classes which also haven’t been requested by the customer and might vanish at any time I call <em>module tests</em>.</p>
+<p>And the tests which just got deleted to me are <em>scaffolding tests</em>. Like a scaffold on a building they were useful while building up the logic. But once the logic is complete they are torn down like a scaffold on a building. Otherwise they would impede future changes of the overall structure.</p>
+<p>But isn’t it a waste of time to write those tests in the first place if they get thrown away? I don’t think so. They were of great help to develop logic function by function. They were like finely honed probes measuring some quality of my code at precise points. Also they can guide later decisions with regard to modularity: If I very much hesitate to delete a scaffolding test that might be a signal to extract a module on which the function under test is <code>public</code>.</p>
+<p>I would not have been able to drive my logic test-first at such detail and in such isolation only with tests going through the root function. „Pear programming“ to me is too inflexible, too cumbersome. I like fine grained control over my logic and tests. I like to build my ship outside the bottle before I shove it in and erect the masts.</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/f4bc307c4939ab60.jpg" /></p>
+<p>Source: <a rel="noopener" href="https://www.wikihow.com/Build-a-Ship-in-a-Bottle">wikiHow: How to Build a Ship in a Bottle</a></p>
+<p>What I hear from developers trying one of the other TDD styles often is they feel trapped by all their tests. Refactoring becomes impossible without turning many tests red which then requires them to correct them.</p>
+<p>I’m suffering much less from such effects. Because I keep less tests around.</p>
+<p>The most important and long living tests are the acceptance tests. They exercise the logic in a solid way.</p>
+<p>Module tests complement acceptance tests; they knit the safety net more finely. But if they turn red due to refactoring I’m very willing to throw them away instead of repairing them.</p>
+<h2>Summary</h2>
+<p>Hamburg style TDD is about thinking before coding, the absence of functional dependencies (substitutes are comparatively rarely used), and also about the „art of letting go“. Don’t attach yourself too much to your tests.</p>
+<p>It’s an outside-in approach to problem solving and programming.</p>
+<hr />
+<p>PS: You might be wondering if all this leads to overengineering. So many functions… isn’t that much overhead?</p>
+<p>Well… this is the alternative: The same logic sitting in just a single function.</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/580f44baa715dd92.png" /></p>
+<p>Is that, what you like to see when asked to fix a bug? Multiply the number of lines by 2, 5, 10, 50 because that’s how long functions in „real code bases“ usually are; even methods with 5000 lines of code and more are not unheard of.</p>
+<p>Functions not following the IOSP tend to grow indefinitely. There are no boundaries to growth. And the general recommendation „keep your functions small“ is pretty fuzzy. What does „small“ exactly mean? And where to stop, what else to do?</p>
+<p>The IOSP is a great guideline towards codebases with all small functions.</p>
+<p>But the above function still is small. Why have more than one function? Reason no. 1: Because this is an exercise. Reason no. 2: Even small functions can contain logic that is hard to get right. Wouldn’t you want to be able to check that easily?</p>
+<p>But the above function is not what a classic TDD approach – aka „pear programming“ – would have led to. Fewer functions would have been extracted from the growing logic in the single function under test.</p>
+<p>That’s true. But firstly refactoring is hard and easy to avoid. Secondly the result probably would have been a root function not conforming to the SLA: there would be a mixture of logic and function calls in it. That would not be easy to understand.</p>
+<p>Finally I find code refactored from functions with functional dependencies and driven by TDD often not easy to read because it’s hard to extract responsibilities cleanly once they were entwined. Sure, not to refactor is no solution. But not having to refactor due to a clean design before coding leads to better results in my experience.</p>
+<p>PPS: It’s never over! Today’s clean code is tomorrows dirty code.</p>
+<p>Cleanliness of code is subjective and relative to your understanding/knowledge. If you gain new insights clean code you wrote yesterday will turn into somewhat dirty code.</p>
+<p>A case in point the <code>BuildDiamond</code> function. I expressed some concern regarding it and even suggested comments to improve it. But just know I had another idea:</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/424387efa45c5a8a.png" /></p>
+<p>This to me is cleaner. It’s the same functionality, hence I call it a refactoring. But instead of extracting structures I redesign the approach to solving this partial problem and implemented it using more of the power of Linq. Now the function shows better SLA; no comments are needed.</p>
+<p>I changed the logic even without the scaffolding tests being present anymore. I was confident the acceptance tests would catch any regression.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

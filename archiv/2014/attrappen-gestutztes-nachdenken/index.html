@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Attrappen gestütztes Nachdenken — ralfw.de Archiv</title>
+<meta name="description" content="Wie viel Design vor dem Codieren darf es denn sein? Diese Frage erhitzt immer wieder die Gemüter. Neulich auch das von Robert C. Martin. Der reagierte nämlich sehr barsch auf einen">
+<link rel="canonical" href="https://ralfw.de/archiv/2014/attrappen-gestutztes-nachdenken/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Attrappen gestütztes Nachdenken — ralfw.de Archiv">
+<meta property="og:description" content="Wie viel Design vor dem Codieren darf es denn sein? Diese Frage erhitzt immer wieder die Gemüter. Neulich auch das von Robert C. Martin. Der reagierte nämlich sehr barsch auf einen">
+<meta property="og:url" content="https://ralfw.de/archiv/2014/attrappen-gestutztes-nachdenken/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Attrappen gestütztes Nachdenken</h1>
+    <div class="doc-meta"><span>10. März 2014</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2014/03/attrappen-gestutztes-nachdenken.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2014/attrappen-gestutztes-nachdenken/</code></span></div>
+    <div class="art"><p>Wie viel Design vor dem Codieren darf es denn sein? Diese Frage erhitzt immer wieder die Gemüter. Neulich auch das von Robert C. Martin. Der <a rel="noopener" href="http://ht.ly/t2UdI">reagierte</a> nämlich sehr barsch auf einen Blogartikel von <a rel="noopener" href="http://blog.testdouble.com/posts/2014-01-25-the-failures-of-intro-to-tdd.html">Justin Searl</a>.</p>
+<p>Martin sieht nun einen Unterschied in der Notwendigkeit zu entwerfen zwischen größeren Strukturen und kleineren. Für die einen sollte man explizit entwerfen, für die anderen sich durch TDD treiben lassen. Ich allerdings erlaube mir anderer Meinung zu sein. Für mich gibt es keine wie von Martin beschriebene Diskontinuität. Vielmehr sehe ich Software als selbstähnliche Struktur, die deshalb auf allen Ebenen auch ähnlich behandelt werden will. <a rel="noopener" href="http://geekswithblogs.net/theArchitectsNapkin/archive/2014/01/31/the-self-similar-software-development-process.aspx">Ausführlicher erkläre ich das ein einem englischen Blogartikel</a>.</p>
+<p>Damit sei das Thema erledigt – doch dann ließ mich der Artikel von Searl nicht recht los. Der beschreibt nämlich einen TDD-Ansatz, den Searl für mindestens didaktisch günstiger hält als “den traditionellen”.</p>
+<p>Schon beim ersten Lesen flog mich da eine Ähnlichkeit zu Flow-Design an, doch ich konnte sie noch nicht recht greifen. Als mir jedoch die Mock-Frameworks <a rel="noopener" href="http://www.typemock.com/isolator-product-page">TypeMock Isolator</a> und <a rel="noopener" href="http://www.telerik.com/products/mocking.aspx">JustMock</a> einfielen, habe ich mich darangesetzt, und Searls Vorschlag ausprobiert. Das Ergebnis hat mir sehr gefallen.</p>
+<p>Schon lange setze ich keine Mock-Frameworks mehr ein, weil die Zahl der Attrappen zum Test meiner Flow-Designs klein ist. Für noch ausgefeiltere Mock-Frameworks wie die beiden hatte ich deshalb schon gar keinen Bedarf. Doch jetzt finde ich sie sehr nützlich. Lange hat das Profiler-gestützte Mocking auf einen Einsatzzweck bei mir gewartet, nun ist er da: mit <a rel="noopener" href="http://www.telerik.com/products/mocking.aspx">JustMock</a> kann ich Flow-Designs schneller in Code übersetzen – und das top-down.</p>
+<p>Wie ich mir das denke, <a rel="noopener" href="http://geekswithblogs.net/theArchitectsNapkin/archive/2014/02/10/recursively-descending-test-driven-development-aided-by-thinking.aspx">habe ich in einem längeren englischen Blogartikel beschrieben</a>. Der ist als Dialog abgefasst, weil er eine Herangehensweise an TDD beschreibt – wie weiland Martin <a rel="noopener" href="http://thecleancoder.blogspot.de/2010/10/craftsman-62-dark-path.html">es getan hat</a>.</p>
+<p><a rel="noopener" href="http://geekswithblogs.net/theArchitectsNapkin/archive/2014/02/10/recursively-descending-test-driven-development-aided-by-thinking.aspx"></a></p>
+<p>Den Dialog zu schreiben, hat Spaß gemacht. Das war mal ein ganz anderes Format als sonst. Doch, ja, ich gebe zu, er ist ein bisschen lang und gewunden geworden. Jedenfalls für den normalen Leser im Web, der schnell, schnell Informationen sammeln will.</p>
+<p>Deshalb habe ich das Vorgehen in einem englischen Folgeartikel nochmal systematischer beschrieben. <a rel="noopener" href="http://geekswithblogs.net/theArchitectsNapkin/archive/2014/02/12/informed-tdd-ndash-using-mocks-to-allow-for-true-stepwise.aspx">“Informed TDD” habe ich diese Herangehensweise genannt</a>, weil hier TDD nicht “blind” aufgrund von Testfällen betrieben wird, sondern geleitet durch ein entwerfendes Nachdenken.</p>
+<p><a rel="noopener" href="http://geekswithblogs.net/theArchitectsNapkin/archive/2014/02/12/informed-tdd-ndash-using-mocks-to-allow-for-true-stepwise.aspx"></a></p>
+<p>Ich verstehe, wenn manchem der Entwurf am Flipchart zu theoretisch ist. Zwar halte ich das für eine Gefühl, das sich mit etwas Übung überkommen lässt – doch erstmal ist es halt so. Mit “Informed TDD” kann hier jedoch schneller abgeholfen werden: Das Nachdenken kann kürzer ausfallen, weil es das Problem zunächst weniger tief durchdringen muss. Schneller kann man zur Tastatur greifen und schonmal Code schreiben, der das Nachdenken verifiziert. Schrittweise werden die durch “hartes TDD” zu lösenden Probleme auf diese Weise kleiner.</p>
+<p>Attrappen stützen also das Nachdenken. Und das ganz modern ohne spezielle Vorkehrungen für eine Injektion von Funktionalität.</p>
+<h2>Kommentare</h2>
+<p><strong>Michael</strong> (2014-03-13):</p>
+<p>Hallo Ralf,</p>
+<p>wenn ich deinen "ITDD"-Artikel richtig verstanden habe, demonstrierst du hier, dass man mit TDD und dem passenden Framework auch "Top Down" entwerfen kann (und nicht nur "Bottom Up", wie man das sonst meist sieht). Das ist sicher eine gute Idee, sollte ich unbedingt mal ausprobieren. Trotzdem hört sich das für mich an wie "alter Wein in neuen Schläuchen". So richtig "neu" ist "Top Down" Entwurf ja schließlich nicht - ich kann mich erinnern, Top Down- und Bottom-Up-Entwurfstechniken vor fast 30 Jahren im Informatikunterricht in der Schule gelernt zu haben. Aber vielleicht ist ja diese "klassische" Technik tatsächlich im Zuge des TDD-Hype ein wenig zu sehr in den Hintergrund gerückt.</p>
+<p>Grüße</p>
+<ul>
+<li>Michael -</li>
+</ul>
+<hr />
+<p><strong>(anonym)</strong> (2014-03-13):</p>
+<p>Warum heißt es <strong>"Attrappen gestütztes"</strong> und <strong>"Vertragsstrafe"</strong>, aber nicht <strong>"Attrappengestütztes"</strong> und <strong>"Vertrags Strafe"</strong>?</p>
+<p>Leute, so schwer ist das doch nun auch nicht. Beide Wörter schreibt man latürnich zusammen. Und wenn schon getrennt, dann bitte wenigstens mit Bindestrich. Läßt sich das einrichten?</p>
+<hr />
+<p><strong>Trupp</strong> (2014-05-02):</p>
+<p>Ich bin verwundert ueber diesen momentanenTDD bashing Hype. Ich bin ein Großer freund von konstruktive Kritik, ohne kann nix gescheites zustande kommen.  Aber was ist hier konstruktive?
+Das Testmethod nicht von Baum fehlt ist klar d.h. beginnt TDD immer mit der Entwurfsfasse. Wie diese Entwurfsfasse ausfällt hat nichts mit TDD zutun, nur mit Fähigkeiten des Entwicklers. Bis hierher sollten sich alle einig sein, und trotzdem „musste“ dass schon mehrmals im Web ausdiskutiert werden. Das Rotfasse kein Entwurf erfordert ist klar, es ist die Implementierung des Testentwurfs. Bb man Testinput „zeile1“  oder „zeile2“ nennt darf man nicht „Entwurf“ nennen da man damit das Wort bedeutungslos macht und alles ist „Entwurf“. Grün: die Implementierung muss trivial sein ansonsten ist der Test schlecht entworfen s. oben. Es ist kein TDD wenn in Grünfasse mehr als eine condition, iteration oder scalar zustande kommt s. unten. Refactoring: ist „Entwurf“! Hier wird’s lächerlich, das ganze schritt ist nur dafür da das man sein System auf low level designt und dann wird gesagt das man mit TDD nicht denken oder entwerfen muss.
+Jeder darf „anderer Meinung sein“. Nur was viele nicht wahrnehmen oder es ist ihnen egal ist, das öffentlich „anderer Meinung zu sein“ Verantwortung mit sich bring. Und wenn ein Experte öffentlich sagt 1+1=3 trägt er die Verantwortung alle falsch geteilte Apfel.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2014-05-02):</p>
+<p>@Anonym: Zur Getrenntschreibung s. §58 hier: http://www.duden.de/sprachwissen/rechtschreibregeln/getrennt-und-zusammenschreibung#K58</p>
+<p>Insofern sehe ich "Attrappengestützt" wie "Attrappen gestützt" als korrekt oder allemal tolerierbar an.</p>
+<p>"Vertragsstrafe" hingegen getrennt zu schreiben, macht keinen Sinn. "Strafe" ist ja kein Adjektiv oder Partizip. Genausowenig wäre Autohaus oder Blumenkasten ein Beispiel dafür, warum "Attrappen gestützt" zwingen zusammengeschrieben werden muss. Das Deutsche erlaubt es halt, dass neue Substantive aus mehreren anderen gebildet werden. Blumentopferde, Kapitänsmützenherstellervereinigung. Darüber hat sich schon Mark Twain lustig gemacht. Oder lustiggemacht? Hm...</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2014-05-02):</p>
+<p>@Trupp: Entwurf ist Planung von Struktur. Insofern muss Entwurf vor (!) dem handwerklichen Refactoring stattfinden. Denn sonst weiß das Refactoring nicht, welche Struktur es herstellen soll.</p>
+<p>Und ansonsten: Entwurf soll vor (!) den Phasen red+green stattfinden. Denn ohne einen Entwurf weiß ich nicht mal, wie das aussehen soll, was da implementiert wird. Ja, ohne Entwurf kann ich nicht mal wissen, welchen Test ist als nächsten schreiben soll. Denn das leitet sich aus dem entworfenen Lösungsansatz ab.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

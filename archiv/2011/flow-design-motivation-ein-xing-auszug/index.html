@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flow-Design Motivation - Ein XING-Auszug — ralfw.de Archiv</title>
+<meta name="description" content="Warum ist Flow-Design eigentlich so gegen den üblichen Programmierstrich gebürstet? Dazu habe ich anlässlich einer Diskussion im CCD XING-Forum etwas geschrieben, das ich auch hier">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/flow-design-motivation-ein-xing-auszug/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Flow-Design Motivation - Ein XING-Auszug — ralfw.de Archiv">
+<meta property="og:description" content="Warum ist Flow-Design eigentlich so gegen den üblichen Programmierstrich gebürstet? Dazu habe ich anlässlich einer Diskussion im CCD XING-Forum etwas geschrieben, das ich auch hier">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/flow-design-motivation-ein-xing-auszug/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Flow-Design Motivation - Ein XING-Auszug</h1>
+    <div class="doc-meta"><span>23. Juni 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/06/flow-design-motivation-ein-xing-auszug.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/flow-design-motivation-ein-xing-auszug/</code></span></div>
+    <div class="art"><p>Warum ist Flow-Design eigentlich so gegen den üblichen Programmierstrich gebürstet? Dazu habe ich anlässlich <a rel="noopener" href="https://www.xing.com/net/prid6d529x/ccd/fragen-und-antworten-zur-ccd-praxis-336277/ccd-lernen-am-konkreten-beispiel-36941585">einer Diskussion</a> im CCD XING-Forum etwas geschrieben, das ich auch hier für mitteilenswert halte.</p>
+<p>Anlass war ein <a rel="noopener" href="https://www.xing.com/net/prid6d529x/ccd/fragen-und-antworten-zur-ccd-praxis-336277/ccd-lernen-am-konkreten-beispiel-36941585/37272830/#37272830">Diskussionsbeitrag von Michael van Fondern</a>:</p>
+<blockquote>
+<p>Ich habe allerdings doch noch eine Frage, die du mir sicher beantworten kannst. Ich bin bisher bei der AppKata im Wesentlichen so vorgegangen</p>
+<ol>
+<li>
+<p>Datenabstraktionen bilden
+(z.B. in Iteration 1: CsvDataTable/CsvDataRecord als Abstraktion für eine Tabelle)
+Einfache Operationen, die sich unmittelbar auf diesen Daten ausführen lassen, die aber ansonsten keine spezielle Sicht implizieren, habe ich direkt bei diesen Klassen platziert (z.B. die CSV-Zerlegung direkt im Konstruktor des CsvDataRecord, oder die Spaltenbreitenberechnung).</p>
+</li>
+<li>
+<p>Abstraktionen für einzelne Prozessschritte bilden (die zudem auf den Daten aus Schritt 1 arbeiten)
+- als groben Prozessschritt habe ich die z.B. formatierte Sicht auf eine bestimmte Seite der Tabelle identifiziert und daraus eine Klasse gemacht; die einzelnen Teilschritte spielen sich dann als Funktionen in dieser Klasse ab. Wenn ich bei der Entwicklung / Weiterentwicklung irgendwann merke dass bei einzelnen Funktionen das SRP-Prinzip oder das SLA-Prinzip verletzt werden, refaktorisiere ich diese aus, platziere diese entweder in der Klasse selbst, oder bei einer Datenklasse, oder bilde ggf. auch neue Klassen dafür.</p>
+</li>
+</ol>
+<p>Meine Frage in Bezug auf EBC: was ist mit "Schritt 1 - Datenabstraktionen bilden" (auch in Form von "Objekten" der klassischen Objektorientierung, und ggf. unter Zuhilfenahme von Klassendiagrammen). Diesen Modellierungsschritt habe ich in deinen Artikeln, die du über EBC geschrieben hast, bislang nicht mehr gesehen, aber der ist doch immer noch sinnvoll, oder? Gerade, weil EB-Komponenten nur Nachrichten mit genau einem Parameter verschicken / empfangen. Oder hab ich das was nicht verstanden?</p>
+</blockquote>
+<p>Die beiden Schritte, die er zur Lösung der <a rel="noopener" href="http://clean-code-advisors.com/ressourcen/application-katas">CSV Viewer AppKata</a> getan hat, scheinen mir typisch. Deshalb hier meine Antwort in Gänze (mit einigen Hervorherbungen und Bonusbildern):</p>
+<blockquote>
+<p>Gut, dass du fragst :-) Du hast einen zentralen Punkt von Flow-Design identifiziert.</p>
+<p>Dein Vorgehen:
+1. Identifiziere Daten und unmittelbar auf ihnen ansiedelbare Operationen
+2. Identifiziere sonstige Operationen</p>
+<p>Das entspricht dem üblichen Vorgehen, würde ich sagen. So lehrt es die traditionelle Objektorientierung. Sie fokussiert auf deinem Schritt 1 - Schritt 2 ist eher ein Anhängsel, ein notwendiges Übel.</p>
+<p><strong>Objektorientierung traditionell bedeutet für mich Fokus auf Daten und Zuordnung von Funktionalität zu diesen Daten. Das Ergebnis sind Klassen als Blaupausen für Objekte.</strong></p>
+<p><strong>Flow-Design stellt das auf den Kopf. Mit voller Absicht.</strong> Weil der OO-Ansatz zu den Ergebnissen geführt hat, die wir heute allerorten sehen.</p>
+<p><strong>Das Missverständnis des OO-Ansatzes ist es, dass Software soetwas ist wie eine Maschine.</strong> Maschinen bestehen aus Teilen, Kolben, Zündkerzen, Lichtmaschinen, Transistoren, ICs, Widerständen, Zeilentransformatoren, Tastaturen usw. usf.
+Wenn man eine Maschine bauen will, dann überlegt man sich, wie die Bauteile aussehen sollen. Man denkt in distinkten Funktionseinheiten, die Zustand haben und mehr oder weniger tun. Eher mehr. Allemal bei Software, da man dort quasi immer bei Null anfängt.</p>
+<p>Ein Elektrotechniker hat es einfacher: Der sitzt vor einem Kasten mit Standardbausteinen, die er "nur noch" zu etwas Neuem "verrühren" muss.</p>
+<p>Softwareentwicklung kennt solche Standardbausteine im Grunde nicht (lassen wir ein paar Bibliotheken und Steuerelemente mal außen vor). Jedes Projekt erfindet sie daher neu in Form von Objekten. Dabei schießt man schnell über das Ziel hinaus. Die Standardbausteine sind keine Standardbausteine, weil sie einfach so groß werden. Deshalb immer wieder das Gejammer über mangelnde Reusability. Man möchte in die Position eines Elektrotechnikers kommen.</p>
+<p>Wenn wir uns aber von dem Missverständnis verabschieden, dass Software eine Maschine ist, dann wird alles leichter. Es ist müßig, nach "Standardbausteinen" zu suchen. Der Setzkasten ist leer. Unsere Aufgabe sollte nicht sein, ihn erst zu füllen und dann mal zu schauen, was wir mit unseren eigenen Bausteinen bauen können.</p>
+<p>Also geben wir den Fokus auf Datenstrukturen mit Funktionalitätsanhängseln auf. Weg mit dem Objektfokus. Weg mit dem Bauteildenken. (Dass auch im Flow-Design noch von Platinen und Bauteilen die Rede ist, ist ein Fehler, der korrigiert werden wird.)</p>
+<p>Flow-Design hat ein anderes Softwarebild. <strong>Für FD ist Software keine Maschine, sondern eine Ansammlung von Prozessen, oder - weil der Begriff Prozess schon so besetzt ist - eine Ansammlung von Verhaltensweisen.</strong></p>
+<p><strong>Bei FD beginnst du deshalb mit der Identifikation von Verhaltensweisen statt Daten, mit Verben statt Substantiven.</strong></p>
+<p>Was soll ein CSV Viewer leisten? Er soll eine CSV Datei seitenweise anzeigen.
+Irgendwie werden also mal ganz grundsätzlich Textzeilen eines bestimmten Formats in Seiten eines bestimmten Formats transformiert.</p>
+<p>Für denn OOPler stecken da natürlich hübsche Daten drin: Textdatei, Zeilen, Seiten. An die hängt er geistig schnell die ablesbaren Funktionen: lesen, formatieren.</p>
+<p>Aber da beginnt schon das große Rätselraten: Wozu soll denn eine Funktionalität wie das Auseinandernehmen eines CSV Textzeile gehören? Ist das eine Aufgabe des Textdateiadapterobjektes? Es liefert CSV-Datensätze zurück, die aus Spaltenwerten bestehen? Oder soll sich der Adapter darauf beschränken, Textzeilen zu liefern und die Formatierung bricht sie auf? Hm...</p>
+<p>FD ist da viel pragmatischer, direkter, natürlicher. Man fängt einfach mal an, die obige Anforderung zu formalisieren:</p>
+<p>(run) -&gt; (Dateiname von Kommandozeile holen)
+      -(dateiname)-&gt; (Erste Seite aus CSV Datei lesen)
+      -(seite)-&gt; [Seite anzeigen].</p>
+</blockquote>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d92f87d853095450.png" /></p>
+<blockquote>
+<p>Damit ist ein Programm beschrieben, das schonmal ein Feature der ersten Iteration realisiert. Das Abstraktionsniveau ist sehr hoch, klar, aber das ist ja gerade der Trick. Wir haben das Programm formulieren können, obwohl wir nur eine grobe Ahnung von der Lösung haben.</p>
+<p><strong>Die Anforderungen sagen mir vor allem, was zu tun (!) ist. Welche Transformation erwartet der Benutzer? Denn um Transformationen geht es immer.</strong> Input wird in Output transformiert. So ist das Softwareleben. Immer. Unzweifelhaft.</p>
+<p>Essenziell dreht sich Software damit um Funktion und nicht Daten. In der Mitte von EVA stehen nicht Daten, sondern Transformation.</p>
+<p>Natürlich, ohne Daten geht es nicht. Aber wir dürfen uns nicht ins Bockshorn jagen lassen, nur weil Daten am Anfang und am Ende von EVA stehen. Die Daten sind nicht der Grund, warum wir V entwickeln sollen. Die Daten sind vielmehr schon da. Die Vorstellung davon, wie Input und Output aussehen, ist selbst beim Kunden verhältnismäßig klar. Er mag die nicht formalisieren können, aber er hat Daten und will andere Daten bekommen, von denen er weiß, wie sie aussehen sollen. Sonst hätte er nicht den Wunsch nach einer Software, der ihm genau diese Daten erzeugt.</p>
+<p>Das, was dem Kunden aber viel, viel unklarer ist (und uns erstmal auch), das ist, wie die Transformation aussieht. Wie macht man das, den Input in den Output zu überführen? Das (!) herauszufinden, ist unsere Aufgabe.</p>
+<p>V ist also unklar und wird nicht klarer, indem wir mit OOP lange über E und A grübeln. Wir müssen sofort, wenn wir Anforderungen sehen, V in den Blick nehmen. Zunächst ganz grob, dann immer detaillierter, am Ende indem wir Code schreiben.</p>
+<p>Obiger Fluss ist ein grobes V für ein Feature des CSV Viewers. Noch gröber, aber recht uninteressant wäre:</p>
+<p>(run) -&gt; (Lade und zeige die erste Seite der CSV Datei an).</p>
+</blockquote>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d13365040113d0cb.png" /></p>
+<blockquote>
+<p>Im Zweifelsfall kannst du aber gern so beginnen. Dann wäre die Schrittfolge:</p>
+<ol>
+<li>(run) -&gt; (Lade und zeige die erste Seite der CSV Datei an).
+</li>
+</ol>
+</blockquote>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/006564088729c277.png" /></p>
+<blockquote>
+<ol start="2">
+<li>(run) -&gt; (Dateiname von Kommandoleise holen)
+        -(dateiname)-&gt; (Erste Seite aus CSV Datei lesen)
+        -(seite)-&gt; [Seite anzeigen].
+</li>
+</ol>
+</blockquote>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/0b75732717ae0e16.png" /></p>
+<blockquote>
+<p>und vielleicht folgende Verfeinerungen:</p>
+<p>3.1 Erste Seite aus CSV Datei lesen {
+    (in) -(dateiname)-&gt; (Lese Textdatei zeilenweise)
+         -(string<em>)-&gt; (Zerlege CSV Textzeilen in Werte)
+         -(CSVRecord</em>)-&gt; (Sammle Records für erste Seite)
+         -(seite)-&gt; (out)
+   }
+</p>
+</blockquote>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/334d9f96246041de.png" /></p>
+<p>3.2. Seite anzeigen {</p>
+<blockquote>
+<p>(in) -(seite)-&gt; (Normal. Seite auf max Spaltenbreiten)
+          -(seite)-&gt; (Formatiere Seite als Tabelle)
+          -(string*)-&gt; [Tabelle anzeigen]
+   }</p>
+</blockquote>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f9be88c10f4d1aff.png" /></p>
+<p>Jetzt überlegst du, ob du für jede Operation im Flow schon eine konkrete Idee zur Umsetzung hast. Und ob die Umsetzung wahrscheinlich nicht umfangreicher als vielleicht 50 LOC.</p>
+<blockquote>
+<p>Wenn ja, fang an mit dem Codieren, gern nach TDD. Wenn nein, verfeinere weiter, was noch zu kompliziert/unübersichtlich ist.</p>
+<p>Wenn du das nicht kannst, dann ist das nicht ein Signal dafür, mit TDD zu beginnen, um Lücken zu schließen, sondern ein Zeichen dafür, dass du das Problem und damit seine mögliche Lösung noch nicht gut genug verstanden hast. Oder vielleicht hast du auch ein Problem mit deinen Technologien. Eine Spike Solution könnte angezeigt sein.</p>
+<p><strong>Ein Problem nicht zu verstehen oder keine rechte Idee von der Lösung zu haben, sollte aber allemal ein Warnsignal sein, nicht (!) zu codieren.</strong></p>
+<p>Und was ist mit den Daten? Achja... da war doch noch was :-)</p>
+<p>Das FD Modell enthält natürlich Daten. Da gibt es Seiten und CSVRecords. Die musst du natürlich auch detaillieren und formalisieren. Aber dazu braucht es nicht mehr als z.B. ein simples Krähenfußdiagramm.</p>
+<p><strong>Und was ist mit Funktionalität, die direkt an den Daten hängt? Meine Meinung: die ist überbewertet, weit überbewertet :-)</strong></p>
+<p>Dass wir Daten und Funktionen in Klassen zusammenfassen können, ist schön. Das will ich nicht missen. Aber eher nicht für das, was zwischen den Operationen fließt. Das sind Datendaten :-) Datenstrukturen, die im Wesentlichen funktionsfrei bleiben sollten. (ADTs machen da eine Ausnahme.)</p>
+<p>Wenn Operationen Zustand haben, dann ist es aber sehr schön, dass ich beides zusammenfassen kann.</p>
+<p>**Nun hast du zwei ganz einfache Modelle:</p>
+<ol>
+<li>Ein ganz einfaches Flussmodell für die so wichtige Transformation (V).</li>
+<li>Und ein ganz einfaches Datenmodell für E und A.**</li>
+</ol>
+<p><strong>Das nenne ich natürlich, direkt, einfach, verständlich.</strong> Kein Rätselraten, sondern ablesen, was in den Anforderungen steht, um es simpelst zu formalisieren.</p>
+<p>Verstehst du, was mich motiviert, <a rel="noopener" href="http://ralfw.blogspot.com/2011/04/der-objekte-kern.html">OO-Technik</a> mit der FD-Methode anzugehen und nicht mit der überkommenen OO-Methode und wie vorteilhaft FD ist?</p>
+</blockquote>
+<p>Mitteilenswert finde ich das unterschiedliche Softwarebild: Maschine vs Verhalten. Denn daraus folgt ein anderer Analyseansatz und eine andere Modellierung.</p>
+<p>Und warum ein so anderes Softwarebild? Weil Software sich eben als so volatil erwiesen hat. Maschinen sind statisch, Prozesse hingegen sind (im doppelten Sinn) immer im Fluss. Die Agilität hat das in puncto Vorgehen bei der Softwareentwicklung schon verstanden. Das Softwarebild hinkt mit dem OO-Fokus aber noch hinterher. FP ist ein Lichtblick, doch (noch lange) keine Option für viele Entwickler. Und warum auch dringend Technik (F# statt C#) und Methode (FD statt OOAD) ändern, wenn es (erstmal) reicht, nur die Methode zu ändern? Denn mit FD lässt sich sehr bequem “flüssige Software” entwickeln auf der Basis dessen, was wir gut kennen: OO-Technik.</p>
+<p><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY"></a><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY">Spendieren Sie mir doch einen Kaffee, wenn Ihnen dieser Artikel gefallen hat…</a></p>
+<h2>Kommentare</h2>
+<p><strong>Laurin Stoll</strong> (2011-08-01):</p>
+<p>Hallo Ralf,</p>
+<p>Immer wenn ich etwas Zeit finde befasse ich mich wieder mit dem Thema. Sehr spannend.
+Ich habe dazu noch eine Frage. Das war sehr motivieremd für FD.
+Mich bechäftigt die Frage wo denn die Untereilung in physische Komponenten dann ihren Stellenwert hat? Damit meine ich die identifizierung von Komponenten und Assemblies. Das wird ja dann eigentlich völlig unwichtig.
+Noch immer befassen wir uns beim komponentenorientierten Progammieren mit OO extrem viel mit dem Identifizieren von Komponenten und mit dem anlegen von assemblies welche diese Komponenten zusammenfassen. Wenn wir aber davon sprechen nur noch Prozesse abzubilden gibt es doch eigentlich keine gründe mehr diese Komponenen und assemblies zu identifizieren?
+Wie siehst du das? Natürlich hat das ganze seine Berechtigung wenn man mal merkt das die übrsichtlichkeit etwas hinkt...aber sonst....</p>
+<p>Lg
+Laurin</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-08-03):</p>
+<p>@Laurin: Komponenten sind aus meiner Sicht keine Modellierungselemente mehr. Sie kommen im Entwurf nicht mehr vor.</p>
+<p>Stattdessen benutze ich sie "nur" noch in der Arbeitsorganisation (oder evtl. noch mal wenn es wirklich um Wiederverwendung geht).</p>
+<p>Komponenten sind Codeeinheiten, an denen getrennt im Team gearbeitet werden kann, ohne sich ins Gehege zu geraten. That´s it.</p>
+<p>Das Ergebnis der Modellierung wird auf Komponenten verteilt, wie es halt passt. Erstes Kriterium für "Passen" ist natürlich der innere Zusammenhang von Modellierungseinheiten.</p>
+<p>Wie gesagt: das passiert nach (!) der Modellierung, nicht am Anfang. Ich setze mich also nicht hin und frage mich, "Hm... aus welchen Komponenten könnte die Anwendung bestehen?"</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-08-04):</p>
+<p>Hallo Ralf,</p>
+<p>Du schreibst:
+"Also geben wir den Fokus auf Datenstrukturen mit Funktionalitätsanhängseln auf. Weg mit dem Objektfokus. Weg mit dem Bauteildenken. (Dass auch im Flow-Design noch von Platinen und Bauteilen die Rede ist, ist ein Fehler, der korrigiert werden wird.)"</p>
+<p>Bis zum "Weg mit dem Objektfokus" stimme ich voll zu.</p>
+<p>Aber warum weg mit dem Bauteildenken? Warum weg von den Begriffen Platine und Bauteil?</p>
+<p>Wenn man sich Elektronik Bauteile ansieht, dann ist das doch genau das, was gemeint ist. <strong>Jedes elektronische Bauteil führt eine Transformation aus.</strong> Es gibt Eingänge und Ausgänge und dazwischen wird etwas verändert.</p>
+<p>Beim Bau einer Maschine, besser einer elektronischen Schaltung für eine Maschine, fragt man nicht "wie soll sie aussehen", sondern "was soll sie machen". Und das ist doch genau die Frage die wir uns auch beim Flow Design stellen, oder?</p>
+<p>Viele Grüße,
+Christof Konstantinopoulos</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-08-04):</p>
+<p>@chrkon: Bautail und Platine mögen Begriffe einer Implementation von Modellen sein. Aber ich halte sie für zu konkret für Begriffe der Modellierungssprache. FD != EBC.</p>
+<p>FD ist eine "Denke", EBC ist eine Implementation von Modellen, die mit dieser Denke entworfen wurden.</p>
+<p>Platine und Bauteil haben aus meiner Sicht nichts in einer "Denke" zu suchen. Da kann man von zusammengesetzten und atomaren Funktionseinheiten sprechen oder von Flows und Operationen oder so.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

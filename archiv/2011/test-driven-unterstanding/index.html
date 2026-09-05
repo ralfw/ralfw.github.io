@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test-Driven Unterstanding — ralfw.de Archiv</title>
+<meta name="description" content="Was ist es im Kern, das TDD ausmacht? Darüber habe ich anlässlich einer längeren Konversation mit Ron Jeffries in der Software Craftsmanship Google Group jetzt noch einmal nachgegr">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/test-driven-unterstanding/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Test-Driven Unterstanding — ralfw.de Archiv">
+<meta property="og:description" content="Was ist es im Kern, das TDD ausmacht? Darüber habe ich anlässlich einer längeren Konversation mit Ron Jeffries in der Software Craftsmanship Google Group jetzt noch einmal nachgegr">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/test-driven-unterstanding/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Test-Driven Unterstanding</h1>
+    <div class="doc-meta"><span>8. Juli 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/07/test-driven-unterstanding.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/test-driven-unterstanding/</code></span></div>
+    <div class="art"><p>Was ist es im Kern, das TDD ausmacht? Darüber habe ich anlässlich einer längeren Konversation mit Ron Jeffries in der <a rel="noopener" href="http://groups.google.com/group/software_craftsmanship">Software Craftsmanship Google Group</a> jetzt noch einmal nachgegrübelt. TDD hatte bescheiden angefangen als <a rel="noopener" href="http://en.wikipedia.org/wiki/Test-driven_development">Test-Driven Development</a>. Da ging es darum, Code in einer bestimmten Weise zu schreiben, um ihn von vornherein korrekt zu hinzukriegen. Doch dann wurde TDD befördert von einer Codiertechnik zu einer Entwurfstechnik für Code: aus dem "D" wie Development wurde eine "D" wie Design: <a rel="noopener" href="http://www.agiledata.org/essays/tdd.html">Test-Driven Design</a> [1]. Es ging nicht mehr nur um möglichst korrekten Code, sondern auch um möglichst gute Struktur. <strong>Korrektheit und Strukturqualität sind unabhängig von einander.</strong> Sie können korrekten, aber schlecht strukturierten Code schreiben - oder sie können wunderbar strukturierten Code schreiben, der nicht korrekt ist. <strong>Damit ein Werkzeug nützt, bedarf es nun jedoch nicht nur seiner Eignung, sondern auch einer Vorstellung vom Ziel, das Sie mit ihm erreichen wollen</strong>, würde ich sagen. Ein Pinsel ist zweifelsohne zweckdienlich, wenn man ein Bild malen will, doch im Pinsel steckt kein ästhetisches Gefühl und keine Intention. Wie steht es nun in dieser Hinsicht mit TDD? <strong>Die Eignung zur Herstellung von Korrektheit ist zweifelsohne vorhanden.</strong> TDD sorgt durch seine Regel red-green auf der Basis von KISS und kleinschrittigem Vorgehen nicht nur für korrekten Code, sondern auch noch für eine hohe Testabdeckung. Auch die Vorstellung vom Ziel des Einsatzes ist klar: korrekter Code. Sie steckt in den Testfällen, die genau angeben, wann Code korrekt ist, nämlich dann, wenn er für gegebenen Input den erwarteten Output liefert. Die Qualität der Arbeit mit TDD hängt also von der Qualität der Testfälle ab. Diesen Gedanken lege ich mal auf den mentalen Stack. Push(). Die Eignung von TDD zur Herstellung von gutem Design finde ich hingegen weniger offensichtlich. Sie basiert allein auf dem refactor Schritt am Ende der kleinen Iterationen. Schon das finde ich ein bisschen dünn, weil es dafür keine Kontrolle gibt. Wachsende Korrektheit lässt ist sichtbar machen: die Zahl der grünen Tests steigt und die prozentuale Testabdeckung bleibt auf hohem Niveau. Woran aber ist die (wachsende) Qualität des Designs ablesbar? TDD führt auch zu korrekten Ergebnissen mit hoher Testabdeckung ganz ohne Refactoring für besseres Design. <strong>Es gibt also für den Designaspekt bei TDD kein oder zumindest kein so naheliegendes Messinstrument wie für die Korrektheit.</strong> Und wie steht es mit der Zielvorstellung? Wohin, inwiefern soll denn Code, wenn der Test grün geworden ist, refaktorisiert werden? Woher kommt die Vorstellung davon? Hier wird für mich das Eis sehr dünn, auf dem TDD sich bewegt. <strong>In TDD steckt keine Vorstellung davon, wie gutes Design aussieht</strong> und es bietet auch kein Messinstrument für gutes Design. Die Behauptung, TDD führe zu gutem Design liegt allein im schlichten Vorhandensein des Refaktorisierungsschritts. Der ist aber nicht mehr als eine Erinnerung daran, sich bei jeder Miniiteration einmal Gedanken darüber zu machen. Und das wird dann in der Realität dann auch so gehalten: man kann sich darüber Gedanken machen, muss es aber nicht. Oder wenn, dann weiß keiner so genau, wann man sich genug Gedanken gemacht hat. Es fehlt ja jeder Maßstab und die handfesten Tests bleiben eh grün. Das bedeutet unterm Strich, dass die Qualität des Design nichts so sehr von TDD abhängig ist - Refaktorisieren kann man auch, wenn man nicht nach TDD vorgeht -, sondern von der Designkompetenz des TDD-Betreibers. Korrektheit ist abhängig von der Codierungskompetenz, Strukturgüte von der Designkompetenz. Ich finde, das hört sich sehr naheliegend an. <strong>Die Leistung von TDD für das Design besteht damit nur noch in der Mahnung, sich im Refaktorisierungsschritt darüber mal Gedanken zu machen. Das war's.</strong> Nicht mehr und nicht weniger tut TDD für gutes Design. TDD ist vollständig davon abhängig, dass sein Nutzer sich erstens für die Refaktorisierung Zeit nimmt und zweitens auch noch selbst eine Vorstellung davon hat, wohin er refaktorisieren will.  Nochmal, weil es so wichtg ist: <strong>TDD selbst legt überhaupt kein (!) Design nahe. Weder ein gutes, noch ein schlechtes.</strong> <strong>Gutes Design entsteht durch eine Vorstellung davon im Spannungsfeld von funktionalen und nicht funktionalen Anforderungen aufgehängt in einem Netz von Prinzipien.</strong> <strong>Einzig ist TDD zugute zu halten, dass es eben nahelegt, sich gutem Design schrittweise anzunähern.</strong> Eine Zielvorstellung bleibt es jedoch schuldig, ebenso eine Unterstützung bei der Messung, ob wie nahe man ihr gekommen ist. <strong>TDD ersetzt also nicht den Aufbau von Designkompetenz.</strong> Ist die nicht vorhanden, hilft TDD nur marginal, wenn überhaupt, beim Design und deckt den Mangel nicht einmal auf. Und wovon hängt die Qualiät eines Design ab? Klar, von der Designkompetenz. Genauso wichtig ist allerdings auch ein gutes Verständnis der Anforderungen sowie des Problems. Das sollte auf der Hand liegen. <strong>Wer nicht versteht, wofür er eine Lösung entwickeln soll, wird seine Lösung kaum angemessen strukturieren.</strong> Pop(). Hier kommt der Gedanke vom Stack ins Spiel. Denn wovon hängt die Qualität des Testfälle ab? Ebenfalls vom Anforderungs- und Problemverständnis. <strong>Wer die Domäne hinter den Anforderungen nicht versteht, wer dafür keine Lösungsidee hat, der kann keine angemessenen Testfälle bestimmen.</strong> Wie oft das der Fall ist und TDD es kaschiert, ist immer dann sichtbar, wenn TDD-Sitzungen mit Tests auf "Extremwerte" (z.B. Null oder Leerstring) beginnen. Das sind Verlegenheitstests, um ans Codieren zu kommen. Ihr Kundennutzen ist marginal. Sie verschieben die Notwendigkeit, sich mit dem Problem richtig auseinander zu setzen nur. <strong>Ohne tiefes Domänenverständnis keine guten Testfälle, die die Implementation in kleinen KISS-Schritten vorantreibt.</strong> <strong>Ebenso ohne tiefes Domänenverständnis kein gutes Design.</strong> Und ohne Designkompetenz auch kein gutes Design. Angesichts solcher Voraussetzungshürden frage ich mich, woher die Popularität von TDD rührt. Meine Erklärung: TDD wurde von Leuten erfunden und gepusht, die hohe Designkompetenz haben und einen Weg gesucht haben, die zügig im Code anwenden zu können, statt sich in Designsitzungen zu verlieren. Die Agilitätsgrundsätze lassen grüßen. Und bei denen funktioniert TDD auch durchaus. Insbesondere bei Code Katas. Denn die werden mit gutem Beispiel von denen vorgeführt, die erstens das Kata-Problem durchdrungen haben und zweitens hohe Designkompetenz besitzen. Guten Sportlern helfen mentales Training und optimierte Sportgeräte. Grobmotoriker hingegen brauchen keine Hightech, sondern müssen ersteinmal Grundfähigkeiten entwickeln. Es gilt die Bedingung für die Möglichkeit hoher Leistung zu schaffen. Dasselbe gilt bei der Softwareentwicklung. Damit TDD dem Schluss-D gerecht werden kann, müssen einfach zunächst die Bedingungen stimmen. Das, so scheint mir, ist aber seltener der Fall als man gern annimmt. Wo sollen Sie denn auch geschaffen worden sein, die Bedingungen? <strong>Wo wird hohe Designkompetenz systematisch vermittelt, die TDD zur Entfaltung bringen kann? Wo werden mentale Modelle gelehrt, die dann mit TDD anstreben kann?</strong> <strong>Das Missverständnis besteht also darin, dass TDD diese Kompetenz vermitteln oder ihre Abwesenheit kompensieren würde.</strong> Was bleibt dann noch von TDD-Anspruch? Test-Driven Development hat unzweifelhaft Wert. Wir brauchen systematisch mehr Korrektheit für unseren Code. Für ein Test-Driven Design ist aber mehr nötig; allemal da TDD kein Messinstrument für Designqualität bietet. Zuallererst müssen auch die Testfälle gut gewählt werden. Sonst wird selbst die Herstellung der Korrektheit schwierig. Und so komme ich zu dem Schluss: <strong>TDD kann nur etwas bringen, wenn man wirklich versteht, worum es geht und einen Lösungsansatz hat. Dann und nur dann kann sich Designkompetenz mit TDD noch günstiger als ohne entfalten.</strong> Doch wie zu einem Verständnis von Problem und Lösung kommen? Ich bin ja der Meinung, dass Nachdenken hilft. Nachdenken und eine Vorstellung vom Design einer Lösung im Kopf bzw. am Whiteboard entwickeln. Keine detaillierte, nicht auf Codeniveau, aber eine solide. Sie sollten das Zutrauen haben, die Lösung ohne große Probleme codieren zu können. (Was nicht bedeutet, dass Sie sich damit nicht verschätzen können. Aber das macht nichts. Das kompensieren die TDD-Minititerationen.) Ab einem gewissen Puntk jedoch, wird Nachdenken zu theoretisch und man tut gut daran, es mit lauffähigem Code zu untermauern bzw. zu befördern. Das kann ein Spike sein oder eben testgetriebener Code. Wenn der kleinschrittig entsteht, nähert man sich der/einer Lösung in kleinen Schritten. Hier bringt TDD etwas über die Korrektheit hinaus. Das letzte "D" würde ich dann aber ersetzen durch ein "E" für Exploration (TDE) oder ein "U" für Understanding (TDU). TD hilft der Korrektheit und dem Verständnis. Test-Driven Understanding ist ein einlösbares Versprechen, glaube ich. Das hat dann allerdings eine Konsequenz für die Praxis der beliebten Code Katas: man sollte sie eher nicht wiederholen. Denn wenn man sie einmal verstanden hat, dann kann man die Entwicklung von Verständnis an ihnen nicht mehr üben. Das jedoch ist das Schwerste in der Softwareentwicklung, scheint mir. Eine Problemstellung wirklich durchdringen, kostet einfach Mühe und Zeit und braucht auch wieder gewisse Kompetenzen. Coding Dojos scheitern weniger daran, dass die Regeln des TDD nicht beachtet oder Technologien falsch eingesetzt werden. Sie scheitern daran, dass das Problem ungenügend durchdacht wird - und die wie immer geartete Lösungsvorstellung auf wenig Designkompetenz trifft. Da kann dann TDD nichts retten. Wer TD fürs Development einsetzt, d.h. für mehr Korrektheit, der wird leicht Erfolge erzielen. Wer TD fürs Understanding einsetzt, wird auch voran kommen. <strong>Wer jedoch animmt, Designkompetenz durch “Rituale” ersetzen und Verständnis wie Lösungsentwurf überspringen zu können, der wird von TDD frustriert bleiben. TDD ist keine Abkürzung.</strong> Das Problem hinter TDD harrt also immer noch einer Lösung: Wie erhöhen wir in der Branche durchweg die Designkompetenz? <a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY"></a><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY">Spendieren Sie mir doch einen Kaffee, wenn Ihnen dieser Artikel gefallen hat…</a></p>
+<h4>Fußnoten</h4>
+<p>[1] Auch wenn ich unterschiedliche Links zu TD-Development und TD-Design angegeben habe, unterscheiden sich die Beschreibungen nicht wesentlich. Im Rückblick lässt sich daher wohl schwer sagen, wann aus welchem Grund aus Development Design geworden ist. Aber vielleicht kennen Sie den Umbruchpunkt und können für ihn einen Literaturbeleg liefern?</p>
+<h2>Kommentare</h2>
+<p><strong>Jens Schauder</strong> (2011-07-08):</p>
+<p>Hi Ralph,
+TDD misst durchaus die Qualtität des Designs, oder zumindestens eines Teils der Design Qualität: Die Testbarkeit.</p>
+<p>Durch das schreiben von Test erzwinge ich Testbarkeit und damit ein gewisses Maß an Modularisierung.</p>
+<p>Gerade bei Code Katas habe ich die Erfahrung gemacht, dass ein schlechtes Design sehr schnell sehr deutlich wird, während man mit einem herkömmlichen Ansatz oft lange am falschen Weg herumdoktert, bevor man merkt, dass es der falsche ist.</p>
+<p>Ein Grund Problem scheint mir in dem (Miß)-Verständnis zu liegen, dass allein das Refactoring zum Design beiträgt und keinerlei Kontroll Instanz hat. Die Kontrollinstanzen des Refactorings sind die folgenden Tests, die nicht zu letzt durch das Refactoring leicht von der Hand gehen sollten.</p>
+<p>Tun sie das nicht, habe ich entweder das Problem (und die Lösung) noch nicht ausreichend druchdrungen, nicht angemessen refactored oder (vermutlich auf Grund der ersten Möglichkeit) ein schlechtes Design gewählt.</p>
+<p>Zwingt TDD zu gutem Design? Nein. Aber es unterstützt es sehr stark.</p>
+<p>Ungeachtet dessen heißt für mich TDD immer noch Test Driven Development.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-07-08):</p>
+<p>@Jens: Erst wollte ich dir spontan zustimmen, dass TDD die Testbarkeit und damit das Design auf den Prüfstand stellt.</p>
+<p>Aber nach einem kleinen Moment überlegen, sehe ich das nicht mehr so.</p>
+<p>Erstens: Wenn wir über TDD reden, dann müssen wir über TDD reden und nicht über test first oder überhaupt konsequente Unit Tests.</p>
+<p>Dass konsequente Unit Tests - ob vorher oder hinter geschrieben - die Testbarkeit auf den Grill legen, ist klar. Isoliertes Testen ist umso schwieriger, je verwobener das SUT ist.</p>
+<p>Was leistet speziell TDD aber zusätzlich zu dem, was andere Ansätze schon geboten haben? Ich würde sagen, da bleibt dann nur die Testabdeckung und das kleinschrittige Vorgehen.</p>
+<p>Testbarkeit geht nicht auf das Konto von TDD.</p>
+<p>Zweitens: Gerade bei Code Katas habe ich schon soviele Lösungen gesehen, die eben nicht speziell testbar sind. Alle Tests sind dort Integrationstests, die am API ansetzen. Und wenn ich dann mal ermuntert habe, Methoden hinter dieser Fassade von private auf internal zu setzen, um sie testbar zu machen, dann gab es einen Aufschrei.</p>
+<p>Nein, in TDD steckt die Testbarkeit im Sinne kleiner, womöglich sogar unabhängiger Funktionseinheiten nicht. Die muss man speziell Wollen. Und das entspringt dann einer Designkompetenz, die nicht Teil von TDD ist.</p>
+<p>Schau dir selbst Kata-Code von den Gurus an. Hier ein Beispiel: butunclebob.com/files/downloads/Bowling%20Game%20Kata.ppt</p>
+<p>Die Domänenlogiktests laufen alle auf der einen, der zentralen API-Methode. Die Begründung: Andere Methoden sind per TDD als gutes Design mit Refaktorisierung ausgetrieben worden und müssen daher nicht getestet werden.</p>
+<p>Dass Refaktorisierung Funktionalität erhält und damit korrekten Code nicht inkorrekt macht und also solche privaten Funktionen nicht nochmal speziell getestet werden müssen, das stimmt.</p>
+<p>Der Trick ist nur: Je weiter man dieses Vorgehen treibt - und TDD setzt dem keinen Riegel vor -, desto schwieriger wird es am Ende, Fehler zu finden. Denn ein Integrationstest sagt nur, dass irgendwo etwas verrutscht ist/nicht stimmt.</p>
+<p>Würden hingegen auch noch Unit Tests für "entstandene Funktionseinheiten" existieren - die TDD nicht fordert -, dann könnte man sofort viel genauer sehen, wo was passiert ist. Das nenne ich dann wirklich gelebte Testbarkeit.</p>
+<hr />
+<p><strong>Urs Enzler</strong> (2011-07-09):</p>
+<p>Ich stimme zu dass TDD nicht automatisch zu gutem Design führt. und ganz besonders stimme ich zu dass vor dem Schritt 'Red' die Schritte 'Problem verstehen' und 'überlegen' kommen.
+Jedoch habe ich immer wieder festgestellt dass TDD trotzdem hilft bessere Designs zu erhalten. Denn die meisten Designfehler führen dazu, dass die Test kompliziert werden. Wenn man in der Lage ist, diesen 'Smell' zu erkennen, dann ist TDD sehr wohl ein Tool zur Verbesserung des Designs. Wenn nicht, dann ist es ein Tool das alles nur noch schlimmer macht (komplizierte, nicht wartbare Test zusätzlich).</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-07-09):</p>
+<p>@Urs: Da bin ich bei dir: Wenn das Testen schwierig wird, ist das ein Hinweis auf suboptimales Design. Klar.</p>
+<p>Aber wer den Schmerz spürt, weiß deshalb noch nicht, was ein gutes Design für die herzustellende Lösung ist.</p>
+<p>Oder anders: Gute Testbarkeit bedeutet für mich noch nicht gleich gutes Design. Zum guten Design gehört für mich mehr; Testbarkeit ist nur ein Kriterium.</p>
+<hr />
+<p><strong>Roland</strong> (2011-07-12):</p>
+<p>Hi Ralph,
+TDD führt  für mich zum Test-First  Ansatz, weil jede Codeänderung durch einen Test motiviert ist.</p>
+<p>TDD führt für mich persönlich auch zum besseren Design. Durch deinen Artikel bin ich mir aber nicht mehr ganz sicher ob es an mir liegt oder ob es an der Praktik liegt.</p>
+<p>Testbarkeit und Modularität gehören auf alle Fälle beide dazu. Wenn ich TDD anwende vermeide ich Singletons, meine Klassen werden instanzierbar und ich verwende dadurch das Prinzip „Inversion Of Control“ öfter. Außerdem trenne ich verstärkt die Aufgaben meiner Klassen – welches wieder dem Prinzip SRP entspricht – das bringt mich zu kleineren Klassen, die ich flexibler verknüpfen kann und ich unterscheide mehr zwischen Logik, Daten und Abläufen.</p>
+<p>Diese Liste lässt sich fortsetzen, aber die Frage ist eine andere: Würde ich das auch machen wenn  ich nicht TDD verwenden würde? Wahrscheinlich schon, weil ich die Designprinzipien kenne und versuche diese anzuwenden. Jens hat es da auf den Punkt gebracht: „Zwingt TDD zu gutem Design? Nein. Aber es unterstützt es sehr stark.“</p>
+<p>Wo hilft mir TDD?
+• TDD hat mir geholfen dass ich die Designprinzipien bewusster wahrnehme. Darin liegt für mich der wahre Nutzen.
+• Es unterstützt mich - eigentlich deswegen weil ich mich durch den Test-First Ansatz dazu zwinge an gewisse Regeln zu halten.
+• Ich lerne die Designprinzipien besser zu verstehen
+• Ich verwende es um Refactoring, Clean Code und die Designprinzipien anderen zu erklären – im weitesten Sinne zu schulen.</p>
+<p>Ich sehe TDD allerdings auch kritisch. Erstens, TDD und das Lösen von großen Aufgaben funktioniert m.M. nicht ohne sich vorher Gedanken über die Struktur meiner Applikation zu machen. Ich verwende TDD vor allem dann wenn ich mir klar bin über die kleinen Einheiten d.h. ich weiß genau welche Funktionalität ich mir erwarte. Zweitens, wenn ich in Zuge eines Refactorings eine neue Klasse entwickle, dann entwickle ich auch neue Testklassen – obwohl laut Lehre das nicht passt, weil ich dann die Hüte „Entwicklung“ und „Refactoring“ mische. Ich möchte aber die Integrationstest s, die du auch angesprochen hast vermeiden bzw. ich will sie gar nicht. In dem Fall schreibe ich entweder neuen Unit Tests oder ich verschiebe die alten in eine neue Klasse.</p>
+<hr />
+<p><strong>rfilipov</strong> (2011-10-26):</p>
+<p>@Ralph, von meiner subjektiven Erfahrung habe ich oftmals das Gefühl gehabt dass TDD gutes Design fördert, und damit auch die Design-Skills vom praktizierenden.</p>
+<p>Wenn man eine Gruppe von Klassen, jede für sich isoliert <em>unit</em>-testen will, wird man gezwungen stärker über Prinzipien wie SRP, Kohäsion und passende Entwurfsmuster nachzudenken.</p>
+<p>Beispiel: Objekt vom Typ A, welches man <em>isoliert</em> testen will erfüllt seine Aufgabe mit seiner eigenen Logik, und mit zusätzlicher Hilfe von Objekten vom Typ B und C, welche weitere Logik enthalten und welche A selbst mit new erzeugt. Im Unit-Test für A will man aber nur die Logik von A testen, isoliert von B und C (für diese gibt es weitere Unit-Tests). Die Lösung ist oftmals die Kollaborateure B und C dem A über dem Konstruktor zu übergeben, und im Unit-Test von A mit Mock/Stub Implementierungen zu ersetzen. Natürlich müssen B und C dafür Interfaces implementieren. Das ergebnis ist eine Losere Kopplung zwischen A und seine Kollaborateure.</p>
+<p>TDD fördert auch kleinere Klassen die  wenige aggegrenzte Verantwortlichkeiten haben, denn Blobs sind schwer zu testen, auch mit Kanonen wie JMockit.</p>
+<p>PS: TDD <em>ist</em> test-first, alles andere ist nicht mehr test-driven, sondern nur test-supported.</p>
+<hr />
+<p><strong>Peter Gfader</strong> (2013-06-09):</p>
+<blockquote>
+<blockquote>
+<p>TDD kann nur etwas bringen, wenn man wirklich versteht, worum es geht und einen Lösungsansatz hat.</p>
+</blockquote>
+</blockquote>
+<p>Ich behaupte sogar das "Software Entwicklung" nur dann etwas bringt wenn man versteht um was es geht.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

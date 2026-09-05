@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flüssiges SOLID — ralfw.de Archiv</title>
+<meta name="description" content="Es gibt unerwartete Hilfe für das Flow-Design von den objektorientierten Freunden des Clean Code. Innerhalb zweier Tage bin ich über sehr ähnliche, aber unzusammenhängende Aussagen">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/flussiges-solid_16/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Flüssiges SOLID — ralfw.de Archiv">
+<meta property="og:description" content="Es gibt unerwartete Hilfe für das Flow-Design von den objektorientierten Freunden des Clean Code. Innerhalb zweier Tage bin ich über sehr ähnliche, aber unzusammenhängende Aussagen">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/flussiges-solid_16/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Flüssiges SOLID</h1>
+    <div class="doc-meta"><span>16. Juni 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/06/flussiges-solid_16.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/flussiges-solid_16/</code></span></div>
+    <div class="art"><p>Es gibt unerwartete Hilfe für das Flow-Design von den objektorientierten Freunden des Clean Code. Innerhalb zweier Tage bin ich über sehr ähnliche, aber unzusammenhängende Aussagen gestolpert.</p>
+<p>Da schreibt einerseits der Chefredakteur des ehrwürdigen Dr. Dobb´s Journal, Andrew Binstock, in einem <a rel="noopener" href="http://drdobbs.com/architecture-and-design/230300002">Editorial</a>, wie wichtig er es fände, Klassen klein zu halten:</p>
+<blockquote>
+<p>“Small classes are much easier to understand and to test. If small size is an objective, then the immediate next question is, "How small? Jeff Bay […] suggests the number should be in the 50-60 line range. Essentially, what fits on one screen.”</p>
+</blockquote>
+<p>Und da schreibt andererseits der dänische <a rel="noopener" href="http://www.amazon.de/Dependency-Injection-Net-Mark-Seemann/dp/1935182501">Fachbuchautor Mark Seemann</a> in seinem <a rel="noopener" href="http://blog.ploeh.dk/2011/06/07/SOLIDCodeIsnt.aspx">Blog</a>:</p>
+<blockquote>
+<p>“Each class is very small, so although you have many of them, understanding what each one does is easy. […] However, when thinking about SOLID code, it actually helps to think about it more like a liquid […]. Each class has much more room to maneuver because it is small and fits together with other classes in many different ways.”</p>
+</blockquote>
+<p>Zwei Autoren stellvertretend für weitere, die dasselbe sagen: Klassen müssen klein sein, um evolvierbaren Code zu erhalten. Das ist ein Schluss, den sie aus anerkannten SOLIDen Prinzipien der Softwareentwicklung ziehen.</p>
+<h3>Kleine Klassen, nicht nur kleine Methoden</h3>
+<p>Bevor ich laut darüber nachdenke, was kleine Klassen für den Code bedeuten, möchte ich einen Einwand vorwegnehmen: “Warum sollen Klassen so klein sein und nicht Methoden? Reicht es nicht, wenn jede Methode einer Klassen vielleicht maximal eine Bildschirmseite füllt? Dann ist die doch auch schon viel übersichtlicher als üblich.”</p>
+<p>Absolut. Methoden sollten auch nicht umfangreich sein. Jeder Code, der mehr als eine Bildschirmseite umfasst, ist schwieriger zu verstehen. Auf einer Seite können wir Schachtelungen überblicken; wenn wir dafür scrollen müssen, verlieren wir schnell den Zusammenhang.</p>
+<p>Aber auch ich finde es nicht genug, wenn nur Methoden klein sind. Denn Methoden sind nicht die für die Laufzeit wesentlichen Funktionseinheiten. In einem objektorientierten Programm geht es eben um Objekte. Wie reden darüber, wie Objekte in Beziehung gesetzt werden. Abhängigkeiten gibt es nicht von Methoden, sondern von Interfaces, d.h. “ganzen” Objekten.</p>
+<p>Wenn ich mich durch Code arbeite, will ich daher schnell verstehen, was diese Objekte tun, nicht nur einzelne ihrer Methoden. Ich will die “rekombinierbaren Einheiten” der Software überblicken. Objekte sind mehr als Methoden, da sie Zustand haben können. Das macht ja gerade die Objektorientierung aus: Wir stellen Netzwerke aus zustandsbehafteten Funktionseinheiten her, die Anforderungen erfüllen.</p>
+<p>So ein Netzwerk gut zu verstehen, ist die Voraussetzung, es leicht zu verändern. Dazu kommt noch die Granularität seiner Bestandteile, der Objekte. Das ist ja Seemanns Argument: Strukturen aus feingranularen Objekten lassen sich leichter umformen, wenn neue Anforderungen das nötig machen.</p>
+<h3>Explodierende Abhängigkeiten</h3>
+<p>Wenn wir uns einig sind, dass Klassen die Funktionseinheiten sein sollten, die klein1 zu halten sind, dann jetzt zu den Folgen.</p>
+<p>Die erste offensichtliche Folge ist, dass die Zahl kleiner Klassen sehr viel größer sein muss, als die Zahl der bisherigen. Klassen von mehreren Hundert Zeilen sind keine Seltenheit; solche mit mehreren Zehntausend Zeilen habe ich aber auch schon gesehen. Wenn ich “klein” für den Gedankengang hier einmal mit 100 LOC gleichsetze und übliche Klassen von 300 bis 1000 LOC haben, dann wird die Zahl kleiner Klassen wohl mindestens 5 Mal so groß sein.</p>
+<p>Aber nicht nur das. Wenn aus einer Klasse 5 oder mehr werden, dann soll die Summe ja immer noch dasselbe leisten wie vorher. Das heißt, die Funktionalität muss immer noch irgendwie zusammenhängen. Diese vielen Klassen sind also notwendig voneinander abhängig. Wo vorher eine Klasse allein stand…</p>
+<p>A</p>
+<p>…da ist es zukünftig ein Wald aus Klassen:</p>
+<p>A1
+  B
+  C
+    D</p>
+<p>A2
+  B
+  E
+  F
+    D</p>
+<p>(Einrückung bedeutet hier Abhängigkeit, d.h. A1 braucht die Dienste von B und C, C wiederum von D usw.)</p>
+<p>Selbstverständlich sind diese Abhängigkeiten nicht alle statisch. Grundsätzlich isolierte Testbarkeit wird erhalten durch dynamische Abhängigkeiten und Dependency Injection. Das ist technisch nicht kompliziert – hat aber seinen Preis beim Testen. Abhängige Klassen können entweder nur mit Integrationstests geprüft werden – was die Fehlerfindung erschwert. Oder sie müssen mit Attrappen ihrer Abhängigkeiten ausgestattet werden – was den Testaufbau selbst mit Mock-Frameworks umständlich macht.</p>
+<p>Das hört sich nicht gut an, oder? Steigt die Evolvierbarkeit wirklich, wenn die Klassen klein und übersichtlich werden? Wird da der Teufel nicht mit dem Belzebub ausgetrieben? Vorher war der Code unübersichtlich, weil lang – nun ist der Code unübersichtlich, weil die Abhängigkeiten stark zugenommen haben.</p>
+<p>Auch wenn ich das nicht so einfach negativ sehe2, spüre ich auch einen Schmerz bei solcher Zunahme der Abhängigkeiten. Da helfen alle DI Container der Welt nicht. Sie verwalten nur das Elend.</p>
+<h3>Konzeptionelle Klimmzüge</h3>
+<p>Doch lassen wir die explodierenden Abhängigkeiten einmal außen vor. Sehen wir sie positiv im Sinne der Prinzipien “Lose Kopplung, hohe Kohäsion” und “Single Responsibility”. Das Entwicklerleben ist halt kein Ponyhof; Opfer sind zu bringen für die Evolvierbarkeit.</p>
+<p>Was aber mit den konzeptionellen Klimmzügen die Sie im Rahmen der Klassenverkleinerung vollbringen müssen? Da haben Sie in langen Entwurfssitzungen – oder agilen TDD-Impulsen – nun Ihre Klassen geschnitten; jede ist sorgfältig an die Problemdomäne angepasst; alles hat seine Ordnung – nur leider haben alles Nachdenken und auch der TDD-Druck es nicht geschafft, die Klassen wirklich klein zu halten. 500+ LOC sind herausgekommen für die zentrale Domänenmodellklasse oder die Verschlüsselungsklasse oder die Datenzugriffsklasse. Sie haben sich sogar bemüht, die Methoden klein zu halten. SLA rulez! Und nun kommt einer daher und sagt, wahrhaft SOLIDe clean sei Ihr Code erst, wenn die Klassen selbst klein seien. Ja, wie soll das denn gehen? Ein Kunde ist ein Kunde ist ein Kunde. Den kann man nicht so einfach aufteilen. Und die Verschlüsselungsfunktionalität passt auch so schön unter den Hut einer Klasse.</p>
+<p>Diesen Einwand verstehe ich auch sehr gut. Wer die Welt in funktionsreiche Akteure benannt mit Substantiven aufgeteilt hat, der tut sich schwer, diese Funktionalität weiter aufzuteilen. In was sollten Sie einen Kunden denn zerlegen? Naheliegende Abspaltungen von Funktionalität werden Sie schon selbst vorgenommen haben; Sie haben substantivische Sinnzusammenhänge selbstverständlich hergestellt. Die Bonitätsprüfung ist schon nicht mehr Bestandteil des Kunden, sondern eine eigene Klasse, von der der Kunde abhängig ist…</p>
+<p>public class Kunde
+{
+  …
+  private IBonitätsprüfung _bp;</p>
+<p>public Kunde(IBonitätsprüfung bp) {…}
+  …
+}</p>
+<p>…damit man hübsch objektorientiert fragen kann: <em>kunde.HatBonitätFür(100000)</em>.</p>
+<p>Es geht also nicht mehr kleiner, wenn die Problemdomäne sich noch sinnvoll im Code widerspiegeln soll.</p>
+<p>Die wunderbaren Flexibilitätsvorteile, die wahrhaft SOLIDer Code durch kleine Klassen verspricht, erscheinen damit unerreichbar. Sie sind dazu verdammt, unSOLIDe zu arbeiten, um nicht in Abhängigkeiten zu ersticken und/oder sich in einem konzeptionellen Wirrwarr zu verlieren.</p>
+<p>So scheint es zumindest…</p>
+<h3>Erlösung durch Perspektivwechsel</h3>
+<p>So gern Sie den guten Rat von Binstock und Seemann annehmen würden, Sie werden im Augenblick nicht können. Er käme Ihnen teuer zu stehen. Das ist auch meine Meinung. Aus Ihrer Perspektive der üblichen, der OOAD-geprägten Objektorientierung wäre der Preis für den Gewinn an Evolvierbarkeit durch wirklich kleine zu hoch.</p>
+<p>Solange Sie aus dieser Perspektive auf den Ratschlag blicken, kann ich Ihnen nicht dazu raten. Was aber, wenn Sie die Perspektive wechseln? Was, wenn Sie sich nicht mehr vor explodierenden Abhängigkeiten fürchten müssten? Was, wenn es keine konzeptionelle Schwierigkeit gäbe, Klassen zu zerteilen?</p>
+<p>Eine solche alternative Perspektive gibt es. Es ist die Perspektive des Flow-Designs (FD) und der Event-Based Components (EBC)3.</p>
+<p>Im Flow-Design sind Funktionseinheiten (lies: Klassen) nicht mehr voneinander abhängig. Wenn die eine Klasse Daten lädt, die andere sie verarbeitet und eine dritte sie speichert, dann kennen diese Klassen einander nicht, weder statisch noch dynamisch. Es gibt keinen Abhängigkeitsverhau und auch keinen Testattrappenalbtraum.</p>
+<p>In FD/EBC gibt es zwar noch Abhängigkeiten, doch die sind streng systematisiert und unkritisch. Kein Grund für Schlaflosigkeit. Die Evolvierbarkeit leidet unter ihnen nicht. Sie folgen einer grundsätzlichen Separation of Concerns.</p>
+<p>Darüber hinaus gibt Flow-Design den vorherrschenden Fokus auf Substantive auf. Funktionseinheiten (lies: Klassen) sind keine Akteure, sondern Aktionen. Denken Sie im Augenblick einfach mal nur “zustandsbehaftete Funktion”. Mit FD versuchen Sie zur Lösung eines Problems nicht ein paar Substantive zu finden, auf denen Sie dann in einem umständlichen Verfahren Funktionalität verteilen. Sie suchen vielmehr “nur” nach Funktionen oder “Verhaltensschritten”. Die können Zustand haben oder nicht. Egal. Vor allem Arbeiten Sie auf Input und erzeugen Output.</p>
+<p>Dieser Fokuswechsel von Substantiven/Akteuren/Dingen nach Verben/Aktionen/Verhalten führt automatisch zu sehr kleinen Funktionseinheiten (lies: Klassen). Und wenn nicht, dann lassen sich EBC-Klassen (lies: Verhaltensweisen) sehr viel leichter als OOAD-Klassen (lies: Dinge) in weitere Klassen zerlegen.</p>
+<h3>Fazit</h3>
+<p>SOLIDer Rat ist tatsächlich viel Wert – wenn Sie ihn im rechten Kontext beherzigen. Solange der die übliche methodische OOAD-Objektorientierung ist, wird es sie schmerzen. Doch mit Flow-Design und Event-Based Components wird aus vormals festen, unhandlich großen Klassen eine SOLIDe Flüssigkeit. Der Entwurf fließt, die Daten fließen, die Strukturen passen sich fließend an.</p>
+<p>SOLID ohne Flow-Orientation ist noch fest. Nomen es omen. Doch SOLID mit Flow-Orientation erzeugt Evolvierbarkeit und Testbarkeit. Oder umgekehrt: Flow-Orientation führt automatisch zu SOLIDem Code.</p>
+<p><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY"></a><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY">Spendieren Sie mir doch einen Kaffee, wenn Ihnen dieser Artikel gefallen hat…</a></p>
+<h4>Fußnoten</h4>
+<p>1 Ob “klein” nun heißt 25 Zeilen oder 50 oder 75, das finde ich an dieser Stelle nicht so wichtig. Bildschirmseiten bieten ja je nach Bildschirmauflösung und Font und Monitorgröße unterschiedlich viel Platz. Klassen, deren Methoden sehr unabhängig voneinander sind, verstehe ich auch schnell, wenn nur die Methoden leicht zu überblicken sind; dann wäre es ok, wenn ich ein bisschen scrollen muss. Bestehen unter den Methoden aber vielfältige Abhängigkeiten, dann ist das etwas anderes. Dann möchte ich möglichst viel der Funktionalität auf einen Blick sehen. Wie der Berater so schön sagt: Es kommt darauf an. Eine allgemeingültige Zeilenzahl, die niemals überschritten werden darf, lässt sich nicht definieren. Aber ich kann für mich sagen, dass ich unruhig werden, wenn der Umfang einer Klasse mehr als 2-3 Bildschirmseiten hat. Und ich kann nur an Ihre Sensibilität appellieren, den Schmerz zu spüren, wenn Sie zum Verständnis scrollen müssen.</p>
+<p>2 Oder genauer: Nicht die Abhängigkeiten haben zugenommen, sondern sie haben sich verändert. Vorher waren sie weniger sichtbar und einfacher. Die Methoden innerhalb einer solchermaßen geshredderten Klassen waren ja auch voneinander abhängig. Diese Abhängigkeiten sind nun explizit gemacht. Das könnte man auch positiv Entkopplung nennen, zu der ebenfalls positiv eine Zusammenfassung nach Kohäsion in neuen Klassen tritt.</p>
+<p>3 Über Flow-Design und EBC habe ich ausführlich in diesem Blog und in der dotnetpro geschrieben. Wer mehr dazu erfahren will, finde auf dieser Ressourcenseite Berge an Material: <a rel="noopener" href="http://clean-code-advisors.com/ressourcen/flow-design-ressourcen">http://clean-code-advisors.com/ressourcen/flow-design-ressourcen</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

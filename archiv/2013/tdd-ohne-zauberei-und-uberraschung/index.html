@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TDD ohne Zauberei und Überraschung — ralfw.de Archiv</title>
+<meta name="description" content="TDD bleibt für mich aktuell, auch wenn es ein alter Hut ist. Das liegt einfach daran, dass TDD landauf, landab nicht das liefert, was es verspricht. Wenn gewöhnliche Entwickler nur">
+<link rel="canonical" href="https://ralfw.de/archiv/2013/tdd-ohne-zauberei-und-uberraschung/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="TDD ohne Zauberei und Überraschung — ralfw.de Archiv">
+<meta property="og:description" content="TDD bleibt für mich aktuell, auch wenn es ein alter Hut ist. Das liegt einfach daran, dass TDD landauf, landab nicht das liefert, was es verspricht. Wenn gewöhnliche Entwickler nur">
+<meta property="og:url" content="https://ralfw.de/archiv/2013/tdd-ohne-zauberei-und-uberraschung/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>TDD ohne Zauberei und Überraschung</h1>
+    <div class="doc-meta"><span>24. Feb. 2013</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2013/02/tdd-ohne-zauberei-und-uberraschung.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2013/tdd-ohne-zauberei-und-uberraschung/</code></span></div>
+    <div class="art"><p>TDD bleibt für mich aktuell, auch wenn es ein alter Hut ist. Das liegt einfach daran, dass TDD landauf, landab nicht das liefert, was es verspricht. Wenn gewöhnliche Entwickler nur nach monatelangem Studium in Klausur die TDD-Weihen empfangen können, dann liegt etwas im Argen.</p>
+<p>In der dotnetpro stelle ich daher meine Gedanken zu einer Version 2.0 von TDD vor (Ausgaben <a rel="noopener" href="http://www.dotnetpro.de/articles/onlinearticle4407.aspx">3/2013</a> und 4/2013). Aber auch hier im Blog habe ich dazu schon einiges gesagt, z.B. <a rel="noopener" href="http://blog.ralfw.de/2012/12/die-tdd-single-responsibility.html">dass TDD in der heutigen Form für mich das Single Responsibility Principle verletzt</a>. Anlass war für mich ein Video von Corey Haines.</p>
+<p>Da war dann insbesondere ein Kommentator zu dem Blogartikel anderer Meinung. Und der hat auf ein aus seiner Sicht vorbildliches Beispiel verwiesen: <a rel="noopener" href="http://vimeo.com/album/205252">Brett Schucherts Demonstration der TDD-Implementation eines RPN-Rechners</a>.</p>
+<p>Leider, leider hat mich die Demonstration auch wieder enttäuscht. Und wieder aus den selben Gründen wie bei Corey Haines:</p>
+<ul>
+<li>Es gibt keine Erklärung des Problems.  Es gibt keine Sammlung und Priorisierung von Testfällen.  Lösung und Implementation sind nicht von einander getrennt. Damit fällt die Lösung während des Codes quasi vom Himmel.</li>
+</ul>
+<p>Zumindest Punkt 2 widerspricht ausdrücklich jeder TDD-Empfehlung, würde ich sagen. Deshalb kann die Demonstration nicht vorbildlich sein.</p>
+<p>Und Punkt 3 macht die Demonstration zu einem “magischen” Event, der suggeriert, so könne es jeder Entwickler: Die Lösung einfach kommen lassen. Das wird schon.</p>
+<p>Dabei haben sich alle, die TDD so demonstrieren, selbstverständlich über das Problem und auch ihren Lösungsansatz vorher ausführlich Gedanken gemacht. Entweder, indem sie sich hingesetzt und überlegt haben oder indem sie das Szenario einige Male ohne zu überlegen implementiert haben.</p>
+<p>Ich kenne keine (!) TDD-Demonstration, bei der die Aufgabe live gestellt wurde und dem Demonstraten vorher unbekannt war. (Falls jemand jedoch zu so etwas einen Link hat, möge er ihn bitte in einem Kommentar hier hinterlassen.)</p>
+<p>Also: TDD-Demos sind heutzutage weitgehend unrealistisch. Damit suggerieren sie, dass die TDD-Schritte red-green-refactor es allein richten. Das halte ich für mindestens fahrlässig, weil es ganz sicher in große Frustration bei vielen Entwicklern führt.</p>
+<p>Und wie sollte dann eine TDD-Demo aussehen?</p>
+<p>Ich lehne mich mal aus dem Fenster und behaupte: So wie im Folgenden.</p>
+<p>Dafür nehme ich das Beispiel von Brett Schuchert auf: den RPN Rechner. Das Problem ist mir damit zwar auch nicht unbekannt, aber ich habe versucht, mein Vorwissen so weit wie möglich zurückzunehmen. Allemal esse ich mein eigenes Hundefutter und gehe das Problem für alle sichtbar nach den von mir vorgeschlagenen TDD 2.0 Schritten an.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/92c774ca5a7a8db2.png" /></p>
+<p>Los geht´s…</p>
+<h3>Was ist eigentlich das Problem?</h3>
+<blockquote>
+<p><em>“Without requirements or design, programming is the art of adding bugs to an empty text file.” - <a rel="noopener" href="http://www.marcofolio.net/tips/27_inspiring_top_notch_programming_quotes.html">Louis Srygley</a></em></p>
+</blockquote>
+<p>Ich habe mir Brett Schucherts Lösung gar nicht ausführlich angeschaut. Seine Videos sind über 2 Stunden lang; er hat sich sehr viel Mühe gegeben. Außerdem wollte ich mich nicht für meine eigene Durchführung “kontaminieren”. Trotzdem habe ich natürlich beim Überfliegen Eindrücke gewonnen.</p>
+<p>Mein erster Eindruck: Brett sagt niemandem, was das Problem eigentlich genau ist. Weder zeigt er am Anfang mal ein Beispiel für einen RPN Rechner, noch sagt er, was das Ziel seiner Entwicklungsarbeit ist. Er mokelt vielmehr 51 Minuten im ersten Video an einem API herum, von dem niemand so recht weiß, warum er so aussieht, wie er aussieht.</p>
+<p>Wie kann man es besser machen?</p>
+<p>Man macht erstmal eine Skizze vom Problem. Was sind die Anforderungen? Man versucht das Problem zu verstehen. Hier die erste Doppelseite meiner Analyseskizze:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c625bdeb9de37bce.png" /></p>
+<p>Auf der linken Seite ist oben ein UI angedeutet und unten eine Folge von Eingaben mit zugehörigen Ausgaben; so habe ich mir die Funktionsweise eines RPN Rechners vorgestellt. (Dass Sie meine Schrift nicht lesen können, ist quasi unvermeidlich ;-) Aber das ist auch nicht nötig. Ich möchte Ihnen mit den Skizzenblättern nur einen groben Eindruck von meinem Vorgehen-/Denken vermitteln.)</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/235cb4c7291e87e7.png" /></p>
+<p>In der Mitte der linken Seite sehen Sie allerdings eine Verirrung. Da lag ich falsch mit meiner Vorstellung. Erst ein Blick auf den Taschenrechner von Mac OS X im RPN Modus hat mich eines Besseren belehrt. Das habe ich dann unten links und auch noch rechts ganz oben korrigiert.</p>
+<p>Nach ca. 5-10 Minuten “Scribbeln” und mit dem RPN Rechner herumspielen war mir das Problem klar. Dafür musste ich aber auch ein Anwendungsszenario im Blick haben. Deshalb findet sich links oben zuerst eine UI-Skizze. Nur wenn ich weiß, wie ein Benutzer wirklich mit einem RPN Rechner umgehen will, sollte ich mir Gedanken zu einem darunter liegenden API machen.</p>
+<p>Zu oft entwickeln wir einfach im luftleeren Raum, ohne Kontext. Wir imaginieren dann eine ganze Menge, was alles nötig sein könnte. Wir setzen dann ganz schnell eine technische Brille auf – und verlieren den Benutzer aus dem Blick. Damit ist der Verschwendung Tür und Tor geöffnet. Wir basteln dann nach den Regeln der Kunst an Zeugs herum, das nur wenig Realitätsbezug hat.</p>
+<p>Das halte ich für einen großen Übelstand. Da werden unbewusst unökonomische Muster eingeschliffen. Deshalb finde ich es bei jeder Übung wichtig, möglichst konkret und benutzerbezogen zu sein. Nur so üben wir uns auch ständig in agilem Denken.</p>
+<h3>Lösungsansatz formulieren</h3>
+<blockquote>
+<p><em>“First, solve the problem. Then, write the code.” - <a rel="noopener" href="http://www.marcofolio.net/tips/27_inspiring_top_notch_programming_quotes.html">John Johnson</a></em></p>
+</blockquote>
+<p>Erst nachdem ich ein Verständnis für das Problem entwickelt hatte, konnte ich mich daran machen, über eine Lösung nachzudenken. Genau: nachdenken. Ich habe also nicht Visual Studio angeworfen, um mit dem Codieren anzufangen.</p>
+<p>Erstens ist nichts einschnürender als Code. Zweitens wäre ich mit der Arbeit an den Rechner gekettet gewesen.</p>
+<p>Mit meinem Notizbüchlein konnte ich jedoch in der S-Bahn weiter über die Lösung nachdenken. Und zwar so konkret, dass die Codierung für mich hinterher ganz leicht war [1].</p>
+<p>Das Ergebnis sind die rechte Seite im oberen Bild und die beiden Seiten im nächsten Bild.</p>
+<p>Im ersten Bild rechts sehen Sie mein Flow-Design. Rechts oben der big picture Flow mit allen Interaktionen des einzigen Dialogs der Anwendung. Das sind Enter (Zahl eingeben), Drop (Zahl vom Stack entfernen) und Operator auslösen.</p>
+<p>Alle Domänenlogik fasse ich in einer EBC-Funktionseinheit zusammen: dem RPN Calculator.</p>
+<p>Unten auf der rechten Seite im ersten Bild sehen Sie dann eine Verfeinerung der Interaktion, die über einen Operator ausgelöst wird. Da habe ich mir klar gemacht, was mit dem Operator und der aktuellen Zahl im “Rechenwerk” passiert, wenn denn etwas berechnet werden soll.</p>
+<p>Bis hierhin hat es ca. weitere 7 Minuten gedauert. Nach runden 15 Minuten hatte ich also nicht nur das Problem verstanden, sondern auch einen Lösungsansatz. Dessen Kern war erstens ein Stack für die Zahlen, die auch im UI zu sehen sind, also die Operanden. Und zweitens gab es die Vorstellung eines Verzeichnisses von Operationen auf diesen Zahlen. Die ergab sich ganz natürlich aus der Verallgemeinerung der Interaktion des Benutzers in Bezug auf die Operatoren. Nicht jeder Operator für sich war für mich eine Interaktion, sondern sie alle sollten mit einer Interaktion abgehandelt werden, die mit dem konkreten Operator parametriert sein sollte [2].</p>
+<h3>Testfälle sammeln</h3>
+<p>Nach der Modellierung kannte ich den API des RPN Rechners. Ich musste mir nichts aus den Fingern saugen wie Brett. Dessen get/set für einen Akku und die Enter-Methode finde ich gänzlich unnatürlich. Er versucht da etwas 1:1 in einen API zu übernehmen, das er (ohne es uns wissen zu lassen) von einem UI abgeschaut hat. Aber warum sollte in einem API ein Repräsentant einer UI-Design-Entscheidung stehen? Dass es dort einen Enter-Button gibt, kann sich doch morgen ändern.</p>
+<p>Deshalb gibt es bei mir keinen sichtbaren Akku und auch keine Enter-Methode, sondern ein Push() und ein immer gleiches Resultat nach jeder Aktion. Push() abstrahiert von jedem UI. Es sagt vielmehr etwas über den Lösungsansatz für den RPN Rechner aus, dass es darin nämlich einen Stack gibt. Das ist echte Domänenlogik. Die abstrahiert von UI-Eigenheiten.</p>
+<p>Mit dem Entwurf für den RPN Rechner konnte ich dann konkret über Testfälle nachdenken. Die sehen Sie auf der linken Seite der nächsten Abbildung:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a01691a91359f050.png" /></p>
+<p>Für die drei Methoden meines API gibt es drei Gruppen von Testfällen, die ich als Tabellen notiert habe. Etwas schöner sieht so eine Tabelle natürlich in Excel aus. Sie ist der <a rel="noopener" href="https://github.com/ralfw/TDDaiymiByExample/blob/master/Examples/RPN%20Desktop%20Calculator.md">Reinschrift meiner Skizzen</a> für diese Dokumentation entnommen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f4b743eeaa8fe1d6.png" /></p>
+<p>Weil man es nicht häufig genug sagen kann: <strong>Über Testfälle nachdenken und sie priorisieren kann man nur und ausschließlich, wenn man einen Lösungsansatz hat, zu dem ein API gehört.</strong></p>
+<p>Wer TDD vorführt, ohne Testfälle zuerst zu benennen, und wer nicht erklärt/erklären kann, warum deren Reihenfolge so ist, wie sie ist, der führt TDD falsch vor.</p>
+<p>Wo Testfälle vom Himmel fallen oder sich überraschend ergeben, ist TDD magisch und suggeriert Einfachheit, die nicht vorhanden ist.</p>
+<p>Was ist meine Erklärung?</p>
+<ul>
+<li>Meine Testfälle gliedern sich von vornherein nach API-Methoden. Da gibt es keine Überraschung. (Was nicht heißt, dass ich mich Änderungen während der Implementation verschließe. Da kann es immer neue Erkenntnisse geben. Aber ich darf mit einer Idee beginnen.)  Innerhalb der Testfälle für eine API-Methode gibt es eine klare Aufteilung zwischen Eingaben und zugehörigen erwarteten Ausgaben.  Aus den Inputs kann nicht jeder Output erklärt werden. Der RPN Rechner hat einen Zustand. Der muss ebenfalls in die Testfälle eingehen.  Die Testfälle wachsen in Richtung zunehmendem Zustand, da der Input immer dieselbe Form hat.</li>
+</ul>
+<p>Mein TDD wie unten zu sehen, ist also nicht magisch und nicht überraschend, sondern ganz handfest. Es folgt einem Plan, der durch Überlegen entstanden ist. Das hat maximal 5 Minuten gedauert.</p>
+<p>Wem dieses Überlegen schon gleich zu viel sein sollte, wer das schon im Widerspruch zum rechten TDD sieht… Nun, dem habe ich eben nichts zu sagen. Wir leben dann auf verschiedenen Planeten. Das ist ok. Ich freue mich aber über jeden, der sich drauf einlässt. Dann können wir auch trefflich darüber debattieren, ob nicht der eine Testfall früher oder später liegen sollte oder der eine Schritt mehr oder weniger KISS ist.</p>
+<h3>Inkrementell vorgehen</h3>
+<p>Auch TDD tut gut daran, an den Kunden zu denken. Brett hat da allerdings niemanden im Blick. Er startet auch ohne UI. Das ist aus meiner Sicht aber kein Grund, nicht agil/inkrementell vorzugehen. Auch Entwickler, die einen API nutzen sollen, sind Kunden. Die Frage lautet deshalb für mich immer: Wie kann ich möglichst schnell einen kleinen Nutzenzuwachs bieten? Welchen Schritt kann ich tun, um etwas von Wert herzustellen, zu dem ein Kunde/Anwender Feedback geben kann?</p>
+<p>Deshalb habe ich einen Moment darauf verschwendet, die rechte Seite im zweiten Skizzenbild zu füllen. Dort sehen Sie fünf Inkremente angedeutet, die sich an den Interaktionen des Dialogs orientieren.</p>
+<ul>
+<li>Inkrement #1: Der Anwender kann Zahlen auf den Stack schieben, die Operanden. Das entspricht Push() auf dem RPN Calculator. Dazu kann der Anwender schon mal Feedback geben.  Inkrement #2: Der Anwender kann die aktuelle Zahl zum Stack-Top addieren. Jetzt ist der RPN Rechner schon ein bisschen nützlich, auch wenn er nur eine Operation beherrscht.  Inkrement #3: Der Anwender kann Zahlen vom Stack entfernen. Das entspricht Drop() auf dem RPN Calculator.
+Für diese Funktionalität in Inkrement #3 habe ich mich nur in Anlehnung an Bretts Demonstration entschieden. Er hat Drop() sogar noch vor der ersten Operation realisiert. Da wollte ich mich nicht lumpen lassen ;-)
+Ohne seine Vorlage hätte ich jetzt mit Operationen weitergemacht.  Inkrement #4 und #5: Jetzt endlich weitere Operationen. –, *, / als binäre Operationen und ! als unäre.</li>
+</ul>
+<p>Damit fiel es mir leichter, mich bei der TDD-getriebenen Implementation zu konzentrieren. Den Preis von weiteren 3 Minuten habe ich dafür gern gezahlt. Denn ich konnte sicher sein, selbst wenn ich bei der Implementation unterbrochen werde – was sehr wahrscheinlich ist –, habe ich immer etwas in der Tasche. Nach jedem Inkrement kann ich den Griffel fallen lassen und der Kunde hat schon etwas in der Hand; zwischen Inkrementen liegen Sollbruchstellen der Implementation.</p>
+<h3>Implementation nach red+green+refactor</h3>
+<blockquote>
+<p><em>“Programs must be written for people to read, and only incidentally for machines to execute.” -</em><a rel="noopener" href="http://www.marcofolio.net/tips/27_inspiring_top_notch_programming_quotes.html">Abelson / Sussman</a></p>
+</blockquote>
+<p>Auch wenn ich nach meinen Überlegungen gar nicht mehr so viel Lust hatte zu implementieren – ich hatte den Eindruck, das Spannendste schon erledigt zu haben: die Problemlösung –, habe ich mich natürlich an Visual Studio gesetzt.</p>
+<p>Das folgende Script zeigt die Schrittfolge meiner Codierung des RPNCalculator-Klasse. Das UI und die Integration von UI und RPNCalculator habe ich ausgelassen. Die sind nicht so spannend.</p>
+<p>NUnit Tests für das UI gibt es – aber die sind als Explicit markiert. Sie dienen nur der Überprüfung, ob die Events korrekt gefeuert werden bzw. die Anzeige des Resultats korrekt erfolgt. Das ist kein Hexenwerk, ändert sich nicht häufig und kann auch mal manuell getestet werden, falls nötig.</p>
+<p>Die Musik spielt in der Domänenklasse RPNCalculator. Darauf liegt auch bei Brett Schuchert das Augenmerk. Also los…</p>
+<p><a rel="noopener" href="http://www.scribd.com/doc/126885393/RPN-Desktop-Calculator-TDD">RPN Desktop Calculator TDD</a> by <a rel="noopener" href="http://de.scribd.com/ralf_westphal">Ralf Westphal</a></p>
+<p>Wenn Sie sich die Schrittfolge näher ansehen, stutzen Sie vielleicht hier und da. Nicht alles mag in Ihren Augen TDD der reinen Lehre sein. Die strebe ich aber auch nicht an. Mir geht es um pragmatisches, realistisches TDD.</p>
+<p>Dennoch hier ein paar Erklärungen, die Sie besänftigen mögen:</p>
+<ul>
+<li>Bei Schritt 2.1 sehen Sie, dass ich über einen Konstruktor in das System under Test (SUT) Zustand injizieren will [3]. Ja, da bin ich ganz schamlos. Das mache ich einfach. Ich weiß, dass das SUT Zustand hat. Warum soll ich den nicht explizit setzen? Das spart mir u.U. eine Menge Verrenkungen, um mit anderen API-Aufrufen an einen Punkt im Test zu kommen, wo ich endlich das überprüfen kann, was gerade Thema ist.  In Schritt 3.2 habe ich mich hinreißen lassen, wider besseren Entwurfswissens eine ganz einfache Implementation zu wählen. Die arbeitet schon irgendwie richtig, aber sie entspricht nicht dem, was Ziel sein muss: eine Auswahl der Operation aus einer Liste. Ich verdrahte die Addition fest.
+Das habe ich gemacht, um hier die TDD-KISS-Gemüter zu beruhigen ;-) Im richtigen Leben hätte ich mir erlaubt, schon die Struktur zu implementieren, die Sie nun erst in 6.1 eingeführt sehen.  Zu meiner eigenen Überraschung hat der Test in Schritt 3 (leider irrtümlich so benannt) gleich grün geliefert. Das hätte eigentlich anders sein sollen – aber es zeigt, dass auch ein Nachdenken über Testfälle in endlicher Zeit nicht perfekt ist.
+Dafür will ich mich nicht schelten. Kann halt passieren. Macht nichts.
+Da muss ich mich nächstes Mal nicht noch doller anstrengen, um bessere Testfälle zu finden. Ich nehme es einfach so und freue mich, dass ich etwas Implementationsaufwand spare.  Bei der Implementation zu 4.2 könnten Sie einwerfen, dass die nicht KISS sei. Das mag sein – aber: WTF. Das ist mir egal. Ich weiß doch schon, wie Resultate aus dem RPNCalculator geliefert werden. Warum soll ich mich dümmer stellen, als ich bin?  Ha, jetzt haben Sie mich: Nach der Implementation von 5.1 ist ein anderer Test auf Rot gegangen. Das darf doch nicht sein!
+Ja, das mag gegen die reine Lehre verstoßen. Aber auch hier: WTF. Das kann mal passieren. Ich finde das nicht schlimm. Es ist eher ein Zeichen dafür, dass die Implementation in 5.1 KISS ist. Sie konzentriert sich nur darauf, einen Test grün zu bekommen.
+Mit einer kleinen Nachbesserung zurre ich die Regression dann in 5.2 wieder fest. Es ist kein größerer Schaden entstanden.  Nun Trommelwirbel… Jetzt zum Kern der Domänenlogik: der leicht erweiterbaren Liste von Operationen. Auf die hatte ich in 3.2 noch verzichtet – doch nun kann ich nicht mehr an mich halten.
+In einem Rutsch refaktorisiere ich die bisherige Addition und füge auch noch die Fakultät hinzu. Ja, bin ich denn wahsinnig geworden?
+Nein, ich finde das halb so wild. Es sind ein paar Änderungen, die ich da vornehme – aber sie sind allesamt trivial. Und wenn dabei etwas verrutschen sollte, sehe ich sofort, wo das Problem liegt.
+Geht gar nichts mehr, dann ist etwas mit Auswahl und Aufruf der Operationen falsch.
+Schlagen nur die Additionstests fehl, dann habe ich die Addition falsch implementiert.
+Schlägt nur der Fakultätstest fehl, dann ist dort etwas falsch implementiert.
+Der neue Inhalt von Calculate() ist auch nicht spontan entstanden, sondern steht schon im erste Skizzenbild rechts unten. Ich lese die Implementation quasi nur ab.  Für die weiteren Operationen gehe ich eine Abkürzung in 7.*. Ich stecke die Testfälle in TestCase-Attribute und füge dem _operations-Verzeichnis einfach nur kurze Lambda-Ausdrücke hinzu. Das Muster ist immer gleich. Die Addition hat es vorgemacht.</li>
+</ul>
+<p>That´s it. Ich denke, damit habe ich eine Lösung geliefert, die nicht nur funktioniert, sondern auch Martin Fowlers Forderung erfüllt:</p>
+<blockquote>
+<p><em>“Any fool can write code that a computer can understand. Good programmers write code that humans can understand.” -</em><a rel="noopener" href="http://www.marcofolio.net/tips/27_inspiring_top_notch_programming_quotes.html">Martin Fowler</a> </p>
+</blockquote>
+<p>Nicht nur den Code kann man verstehen. Der ist ja denkbar kurz. Er ist auch erweiterbar – und zwar von vornherein und nicht erst nach einem überraschenden Refactoring. Er war ja schon so gedacht. Wer einen weiteren Operator hinzufügen will, der setzt in das UI einen Button dafür und trägt eine Operation in das Verzeichnis ein. Fertig.</p>
+<p>Eine Injektion von Operationen von außen oder auch nur eine eigene Klasse halte ich derzeit allerdings für überflüssig. Eine Refaktorisierung in dieser Hinsicht wäre für mich vorzeitige Optimierung. Die Anforderung dafür ist derzeit nicht aus dem Gesamtszenario ablesbar. Und einfach nur Prinzipien anwenden, weil ich sie gerade kenne, ist mir nicht Grund genug.</p>
+<p>Nicht nur der Code ist aber verständlich, die ganze Lösung ist es. Weil es dazu ein Modell gibt und der Code dieses Modell widerspiegelt. Dazu gehört natürlich auch noch die Integration, die ich hier bewusst ausgelassen habe, weil ich mich auf TDD konzentrieren wollte. Die finden Sie bei Interesse jedoch im Repository.</p>
+<h3>Fazit</h3>
+<p>Bubbles don´t crash – das ist wahr. Genauso kann man sagen, Landkarten seien nicht das Terrain. Ja, und? Sind Landkarten deshalb nutzlos? Kaum. Genauso wenig sind Bubbles, d.h. Entwürfe auf dem Papier nutzlos oder verschwendete Zeit, nur weil sie noch kein Code sind. Das ist ja gerade ihr Zweck. Sie sollen kein Code sein, damit man mit ihnen viel schneller vorankommt bei der Lösungsfindung.</p>
+<p>Wo Code ins Spiel kommt, wird es morastig. Wenn ich also über eine Lösung sinnen kann, ohne codieren zu müssen, kann ich mich nur freuen. Die ersten zwei Bilder haben gezeigt, dass ich das kann. Die spätere Implementation hat mich keines Besseren belehrt. Dennoch ist der Lösungsansatz auf Papier natürlich zunächst nur eine Hypothese. Das macht aber nichts. Im Gegenteil: Es geht gar nicht anders. Auch der Lösungsansatz, den Sie ohne Papier nur im Kopf während des TDD Code Slinging entwickeln, ist nur eine Hypothese.</p>
+<p>Wenn ich Ihnen hier Skizzen und Nachdenken präsentiert habe, dann nur, um etwas explizit zu machen, das sich nicht einmal vermeiden lässt. Corey Haines tut es, Brett Schuchert tut es, Sie tun es, wir alle tun es – fragt sich nur wann und wie nachvollziehbar.</p>
+<p>Ich finde meine Lösung insgesamt viel nachvollziehbarer als die der zitierten Herren. Da steckt keine Magie drin. Ich bin nicht (künstlich) überrascht über Testfälle, die sich auftun. Meine kleinen Überraschungen sehen Sie klar dokumentiert in der TDD-Schrittfolge und im Vergleich zu meinen Skizzen. Das ist real und nicht poliert.</p>
+<p>Wenn Sie ein Guru sind, kommen Sie natürlich ohne all das aus. Ich kann das leider noch nicht. Ich muss noch nachdenken – und dann tue ich das gern in Ruhe. Nicht immer, aber allermeistens. Ab und an klappe ich Visual Studio auch schneller auf. Doch dann meist, um im Rahmen meiner Lösungsfindung etwas zu explorieren. Dann bin ich jedoch in einem anderen Modus, dann bin ich Forscher und nicht Ingenieur.</p>
+<ul>
+<li><strong>Forscher</strong> finden heraus, was ist. Sie dokumentieren Zusammenhänge.  <strong>Ingenieure</strong> nehmen die Ergebnisse von Forschern und finden sehr kreativ Problemlösungen. Sie schaffen Neues.  <strong>Handwerker</strong> schließlich wenden Lösungen vor allem an. Sie setzen um, reproduzieren.</li>
+</ul>
+<p>Das sind drei zentrale Rollen, deren Hüte wir bewusst wechseln sollten. Wenn wir es nicht tun, riskieren wir Frust oder Schlimmeres.</p>
+<p>Durch die bewusste Herausstellung von Problemanalyse und Lösungsfindung/Entwurf möchte ich den Rollen Forscher und Ingenieur Raum geben. Wir müssen Probleme zunächst erforschen, dann müssen wir mit den Heuristiken und Technologien unseres Entwicklerwerkzeugkastens state-of-the-art Lösungen entwickeln – und erst am Ende setzen wir die handwerklich sauber mit TDD um.</p>
+<p>Alle drei Rollen nur in den red+green+refactor-Phasen innehaben zu wollen, tut uns nicht gut und dem Ergebnis auch nicht. Und letztlich tut es auch der guten Idee hinter TDD nicht gut.</p>
+<p>Bottom line: TDD ist eine feine Sache – wenn man die nicht magisch betreibt und überlastet.</p>
+<h4>Endnoten</h4>
+<p>[1] Ja, ich will es geradeheraus sagen: Das TDD-Vorgehen, welches ich hier zeige, weil ich mich nicht lumpen lassen wollte, hat mich am Ende auch langsam gemacht. Die kleinsten Schritte waren für mich nicht wirklich nötig. Ich hätte größere machen können – und hätte nur in eine kleinschrittigere Gangart zurückgewechselt, wenn ich in ein Problem gelaufen wäre.</p>
+<p>Das ist natürlich gegen die reine TDD-Lehre… Deshalb hab ich mich auch nicht hinreißen lassen… Doch es ist für mich ein realistischeres Vorgehen.</p>
+<p>TDD-Kleinstschritte sollten kein Dogma sein, sondern eine Methode unter bestimmten Bedingungen. Und diese Bedingungen sind, dass man eben noch nichts über die Lösung weiß. Das tue ich ja aber, indem ich vorher darüber nachdenke.</p>
+<p>Und dass das nicht nur eitle, nutzlose Gedanken sind, die nichts mit der Coderealität zu tun haben, dass ich mir so gar nichts vor dem Codieren vorstellen könne… Das versuche man mir bitte nicht einzureden. Irgendetwas müssen ein paar Jahrzehnte Softwareentwicklungserfahrung doch in meinem Hirn hinterlassen haben, oder?</p>
+<p>Wichtig sind nicht stets und ausschließlich die allerkleinsten Schritte, sondern ein gesundes Gefühl dafür, ob man sich noch in bekannten Gefilden mit dem Code bewegt. Je unbekannter, desto kleiner die Schritte. Selbstverständlich. Aber Lösungen lassen sich eben auch noch auf andere Weise als durch Codieren erkunden.</p>
+<p>Falls dabei mal etwas herauskommen sollte, das nicht KISS ist, dann finde ich das nicht schlimm. Ich habe in den Fall nämlich sehr wahrscheinlich Zeit gespart. Das kann mehr Wert haben als KISS-Code – solange die Verständlichkeit nicht grundsätzlich leidet.</p>
+<p>[2] Für Brett Schuchert ist das eine überraschende Erkenntnis, auf die er nach knapp einer Stunde Codieren stößt. Er muss dafür seine Implementation weitere 20 Minuten refaktorisieren.</p>
+<p>Das halte ich für unökonomisch, wenn ich durch 5 Minuten Nachdenken gleich darauf kommen kann, dass Operationen nicht durch einzelne API-Methoden repräsentiert werden sollten.</p>
+<p>Ich halte es für keine Tugend, sich solcher Erkenntnis mit Macht zu widersetzen. Und es ist auch keine Tugend, nicht nach Wegen zu suchen, um solche Erkenntnis möglichst früh zu gewinnen.</p>
+<p>[3] Eigentlich soll dieser spezielle Konstruktor internal sein. Das hab ich im TDD-Eifer übersehen. Sorry. Bei dem jetzigen Codereview für den Blogartikel kommt es ja aber heraus :-)</p>
+<h2>Kommentare</h2>
+<p><strong>tommes</strong> (2013-02-24):</p>
+<p>Hallo Ralf,</p>
+<p>danke dafür. Genau das hat mich auch an den meisten TDD-Demos gestört ohne das ich erkennen konnte was genau es war.</p>
+<p>Gruß Thomas</p>
+<hr />
+<p><strong>Patrick Koglin</strong> (2013-02-24):</p>
+<p>Netter Beitrag - für meinen Geschmack etwas lang. Daher Achtung - alles gelesen habe ich nicht. Dennoch mein Feedback:</p>
+<p>Ralf, du ( - ich hoffe du ist ok) hast Recht mit dem was du schreibst.</p>
+<p>Meine Ansicht:</p>
+<p>Erster Schritt: Fasse die Idee auf einem Papier zusammen. Modelliere den Flow.</p>
+<p>Zweiter Schritt: Überlege wie du den Flow in Code modellierst</p>
+<p>Dritter Schritt: Schreibe Code zu dem Flow - aber Testdriven.</p>
+<p>Das vermindert die Komplexität. Es macht eine sauschwere Sache handhabbar.</p>
+<p>Ich bin leider auch noch kein Guru und bin gezwungen so vorzugehen. Aber: I don´t care - it works.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-02-24):</p>
+<p>Etwas lang? Naja, wenn ich hier das "TDD Establishment" so angehe, dann muss ich ein bisschen Polster auf der Metaebene drumherum packen :-)</p>
+<p>Die Lösung an sich ist ja nicht aufwändig. Viel einfacher - nach meinem Empfinden - als das, was Brett präsentiert. Wenn sie im Code umfangreicher aussehen sollte, dann nur, weil ich auch noch ein UI dazu gepackt habe.</p>
+<p>Der RPNCalculator ist fast schon trivial. Einfacher jedenfalls als ein Infix-Rechner, der noch nicht einmal Operatorpräzedenzen kann.</p>
+<p>Freut mich, dass du Flow modellierst.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-02-24):</p>
+<p>Hallo, netter Beitrag - nur leider ist der RPN Rechner arg trivial (soweit ich mich erinnern kann so etwa auf Einführungskursmaterial für Datenstrukturen (Stack) - eine Implementation ohne UI braucht maximal ein paar Zeilen - z.B. http://learnyouahaskell.com/functionally-solving-problems).</p>
+<p>Ich sehe das ähnlich: komplizierte Probleme sollte man lieber erst einmal mittels Nachdenken und/oder Spike angehen, bevor man sich ins reine TDD stützt (wobei der Spike auch mittels TDD geschehen kann, wenn man gar keine Ahnung hat - allerdings wird das dann unter Umständen nur aufzeigen, wo man nicht weiterkommt).</p>
+<p>Nur: ich sehe das nicht als TDD Problem - allerhöchstens ist das ein Verständnissproblem der Leute, die TDD so naiv angehen (wollen).
+Wenn man die Schraube mit dem Hammer reinbekommen will (kann funktionieren - ist am Schluß nur nicht schön), dann ist das ja nicht die Schuld des Hammers...</p>
+<p>Warum also nicht diese wertvolle Arbeitsweise an den Mann bringen ohne dabei auf Reisser-Schlagzeilen wie TDD2.0 oder TDD richtig zurückzugreifen - geht doch auch ohne derartige Provokationen and die Gemeinde (oder?) :D</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-02-24):</p>
+<p>Der Kritikus ist natürlich anonym. Schade.
+Aber einerlei.</p>
+<p>Natürlich ist die Klasse zur RPN-Berechnung sehr einfach. Aber das sind ja 95% aller TDD-Beispiele, die so genannten Code Katas. Für mehr hat der gemeine Entwickler keine Zeit.</p>
+<p>Ein Buch wie "Growing Objects" macht da eine Ausnahme. Dort wird mal ein größeres Szenario angegangen. Sehr löblich.</p>
+<p>Leider bleibt das Nachdenken dort auch schnell auf der Strecke. Und die Visualisierung, d.h. der sichtbare, nachvollziehbare Entwurf auch. Schade.</p>
+<p>Wer größeres Angehen will, in dem dann irgendwo auch TDD zum Einsatz kommt, der sei herzlich zu Application Katas eingeladen: http://clean-code-advisors.com/ressourcen/application-katas</p>
+<p>Als Problem sehe "das" schon, denn die TDD-Proponenten geben sich eben mit Trivialem zufrieden. Sie erheben es zur Kunst, sich an Trivialem abzuarbeiten. Robert C. Martin wird nicht müde zu betonen, wie oft er die Primfaktorenzerlegung gelöst hat. Das ist für ihn eine Tugend.</p>
+<p>Klar, da kann man immer nochmal was dran lernen... aber ich empfinde das auch als Übertreibung. Nur wenn ich mit meiner Kritik anschlussfähig sein will, dann muss ich mich erstmal auf das Niveau begeben, wo heute TDD in der Literatur betrieben wird. Das ist vor allem bei Trivialem.</p>
+<p>Aus dem Fenster gelehnt habe ich mich schon, indem ich Bretts Szenario ein UI angedichtet habe. Damit wird es etwas realistischer.</p>
+<p>TDD hat den Anspruch eines Universalwerkzeugs. Oder anders: die üblichen Darstellungen lassen es so erscheinen.</p>
+<p>Deshalb finde ich es wichtig, das, was allermeistens unterschlagen wird, eben explizit zu machen. Deshalb TDD 2.0. Damit bleibt etwas erhalten - aber es kommt auch etwas hinzu: Analyse, Entwurf, Testfallpriorisierung und "TDD as if you meant it" machen für mich in Summe TDD 2.0 aus.</p>
+<p>Für wen das nur ist, was er immer schon gemacht hat, der muss ja nicht weiter zuhören und kann sich in dem guten Gefühl einrichten, seiner Zeit immer schon voraus gewesen zu sein.</p>
+<p>Für wen da aber etwas seltsam ist, der sollte überlegen, warum. Wie kann etwas seltsam sein, das er schon gemacht hat? Also kann es nur seltsam sein, weil er es eben nicht gemacht hat. Dann wird es aus meiner Sicht höchste Zeit.</p>
+<p>Geht es ohne Provokation? Schön wärs ;-) Wenn ich aber so sehe, was heute, nach 10 Jahren, immer noch in Coding Dojos abgeht, dann braucht es etwas Rütteln an den TDD-Stäben. Da arbeitet man sich einfach an Trivialem ab und erzählt noch auf dem Niveau von vor 10 Jahren, wie es gehen soll.</p>
+<p>Wir sind doch nicht im Kindergarten. Wir können als erwachsene Entwickler auch mal etwas größere Schritte machen.</p>
+<hr />
+<p><strong>Sageniuz</strong> (2013-02-24):</p>
+<p>Hi Ralf, (wie immer) toller Post. Vielleicht sind dir die folgenden Links bereits bekannt. Falls ja, würde mich wirklich interessieren ob deine Kritik auf all diese Videos deiner Meinung nach ebenfalls zutrifft.</p>
+<p>http://www.cleancoders.com/codecast/clean-code-episode-6-part-2/show
+Trifft zwar nicht ganz zu, da das Problem bekannt ist, allerdings analysiert Bob Martin im Vorhinein das Problem und entwirft ein grobes Design in Form eines UML-Klassendiagramms, d.h. er macht sich zumindest für die statische Struktur seines Designs im Gedanken bezüglich des Problems.</p>
+<p>http://www.jamesshore.com/Blog/Lets-Play/Lets-Play-Test-Driven-Development.html
+James Shore hat eine Reihe von TDD-Screencasts aufgenommen bei denen er zwar das grobe Ziel seines Projekts kannte, allerdings waren ihm die Teilziele nicht wirklich klar. Er zeigt auch, dass er für gewisse Dinge, bei denen er nicht wusste, wir er sie in seine bestehende Anwendung einbauen sollte, Spikes implementiert, um ein Gefühl für den ev. notwendigen Code zu bekommen.</p>
+<p>http://www.youtube.com/watch?v=IfYHrARvTxo
+In diesem Video zeigt Mark Seemann wie eine "reale" Vorgehensweise für TDD bei ihm persönlich aussieht. Er will dabei darauf aufmerksam machen, dass vorhandene TDD-Demos in der Praxis mit Sicherheit nicht so straightforward sind.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-02-24):</p>
+<p>@Sageniusz: Marks Mitschnitt find ich interessant in seiner Realitätsnähe. Da können wir uns mal beruhigt zurücklehnen, dass wir nicht die einzigen sind, die nur schwer in den TDD-Flow kommen ;-)</p>
+<p>Darüber hinaus hat es für mich keinen Wert. Das ist keine TDD-Didaktik - will es aber auch nicht sein. Alles ok.</p>
+<p>Diese Folge von Bob Martins Clean Coders Videoserie kenne ich nicht. Gebe nicht regelmäßig die $18 für seine Performance aus. Das ist mir zu teuer - wenn ich auch ok finde, dass er überhaupt Geld dafür nimmt.</p>
+<p>Dass er das Problem vorstellt und auch einen Lösungsansatz erarbeitet, find ich gut. Mit UML als Hilfsmittel würde ich jedoch wohl eher nicht übereinstimmen. Aber sei es drum. Er macht jedenfalls etwas explizit, das explizit stattfinden sollte. Alles ok.</p>
+<p>James Shore hat da inzwischen ein rechtes Opus Magnum erschaffen mit seinen hunderten Folgen "Let´s Play TDD". Da werden ganz viele Facetten automatisierten Testens und noch mehr angerissen. Von daher eine gute Sache.</p>
+<p>Aber ganz konkret in Bezug auf TDD bin ich nicht glücklich damit. Wie er die Probleme nebenher aus dem Hut zaubert...? Ne, nix für mich.</p>
+<p>Ich sag mal so: TDD nur als Screencast nur in einer IDE vorgeführt, kann es nicht bringen. In und mit einer IDE kann ich nicht nachdenken, nicht entwerfen. Da ist nur Code, Code, Code. Das (!) ist das Problem.</p>
+<p>Deshalb haben Stefan Lieser und ich ja auch einen anderen Videoansatz gewählt bei unserem Experiment neulich.</p>
+<p>TDD ist einerseits eine Codingpraxis. Insofern ist es aber vergleichsweise simpel. Refactoring ist eine separate Disziplin. Das Problem von TDD liegt vor dem Coden. Nur das zeigt eben keiner, weil das auch schwerer zu zeigen ist. Da muss man nämlich mehr als Person auftreten. Da kann man nicht nur einen Screenrecorder anschmeißen. (Oder wenn, dann muss man da mehr zeigen als Code.) Das braucht mehr didaktischen Aufwand. Den scheuen die meisten, sag ich mal. Womöglich wird man da auch angreifbarer? Keine Ahnung.</p>
+<p>De facto ist es jedenfalls so, dass sowas wie von Bob Martin die absolute Ausnahme ist - wo es doch die Regel sein müsste.</p>
+<p>Und auch mit größeren Szenarien. Er behandelt ebenfalls nur eine Micky Maus Code Kata.</p>
+<p>Aber ich will mal nix sagen: Die Micky Maus Beispiele sind auch fürs Üben des Nachdenkens ja nicht so schlecht. Wenn Nachdenken so schwer fällt, dann auch das eben an kleinen Beispielen üben.</p>
+<p>Wenn 10 Teams von 10 bei einem Coding Dojo keine Lösung für Roman Numerals hinbekommen, dann scheint Nachdenken/Problemlösung eine grundlegende Hürde. Dann müssen wir eigentlich Problemlösungsdojos einrichten.</p>
+<hr />
+<p><strong>Stelzi79</strong> (2013-02-24):</p>
+<p>Naja meiner Meinung hat sich dieser Blogpost gefühlte 90% des Inhalt nur mit der Lösung eines Problems befasst. Dass am Schluss der Lösung Tests zur Überprüfung der Lösung überlegt wurden, weicht dann von einem normalen gut überlegten Lösungsweges ab. Der eigentliche praktische Einsatz von TDD wurde dann leider ein wenig trivial und kurz abgehandelt.</p>
+<p>Ich finde ja, dass TDD nicht zum Finden einer Lösung gedacht ist, sondern ein Werkzeug zum qualitätsbewussten Umsetzung einer gefundenen Lösung ist. TDD ist so was wie VisualStudio nur auf einer abstrakteren Ebene.</p>
+<p>Somit finde ich, dass eine Vorführung von TDD sich auch rein auf die Umsetzung einer vorhandenen Lösung konzentrieren sollte. Voraussetzen würde ich dabei bei solchen Vorführungen, dass diese die gefundene Lösung nur kurz vorstellen und dass diese bereits gefundene Lösung eines Problems nun mittels TDD implementiert wird.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-02-24):</p>
+<p>@Wolfgang: Da kann ich im Großen und Ganzen zustimmen. TDD ist eine Implementierungsmethode. Eigentlich.</p>
+<p>Wenn da nicht immer wieder der Anspruch um die Ecke käme, dass sie mehr sei. Der entsteht nämlich immer, wenn vor dem TDD-Anlauf kein Lösungsansatz vorgestellt wird.</p>
+<p>Und selbst TDD als Lösungsimplementationsmethode genutzt ohne Testfälle explizit zu benennen, ist auch ungenügend.</p>
+<p>Ob ich nun TDD zu oberflächlich bei diesem trivialen Problem betrieben habe oder nicht... Ach, darüber will ich mich nicht streiten.</p>
+<p>Wenn denn TDD-Vorführungen oder auch Übungen in Dojos zumindest eine Lösungs inkl. Testfällen vorgeben würden, wäre die Welt schon mehr in Ordnung für mich. Dann wäre die Rolle des Entwicklers beim TDDlern klar: er ist Handwerker. Nicht mehr, aber auch nicht weniger.</p>
+<p>Dann könnte jeder schauen, ob er an seinen TDD-Fertigkeiten feilen muss oder doch eher an der vorbereitenden Kompetenzen als Forscher und Ingenieur.</p>
+<p>Aber so geschieht es halt nicht. Deshalb schwenke ich hier eine Flagge.</p>
+<p>Und deshalb scheint es mir auch am Einfachsten, TDD sozusagen zu erweitern. Einfach das Implizite, das Unliebsame, das leicht Vergessene mit in die Methode aufnehmen. Dann kann es auch mit geübt werden. Was auf dem Zettel steht, wir abgearbeitet.</p>
+<p>Heute steht red+green+refactor drauf und daran arbeitet man sich treu ab - leider mit zuwenig Erfolg. Beispiele habe ich genügend (genannt).</p>
+<p>Wenn aber auf der Checkliste analyze+design+prioritize+red+green+refactor stünde... dann würde eben das treu geübt. Und die Ergebnisse wären besser. Da bin ich gewiss.</p>
+<p>Es würde mehr auf den Tisch kommen, von dem man nicht weiß, dass man so wenig weiß.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-04-08):</p>
+<p>Hi Ralf, ich finde diesen Post so genial, dass ich beschlossen habe, das von dir empfohlene Vorgehen zu üben. Nach mehrmaligem lesen und zusammenfassen deines Beitrags, habe ich beschlossen einen RPN Rechner zu implementieren. Ich habe wirklich versucht die von dir propagierten Phasen diszipliniert einzuhalten. Da ich allerdings noch überhaupt keine Ahnung vom Problem hatte, hat die ganze Übung etwas länger gedauert. Das tatsächliche implementieren mittels TDD war jedoch mit Abstand die kürzeste Phase (so, wie von dir im Post erwähnt).</p>
+<p>Ohne mir deinen Lösungsansatz anzusehen habe ich mich also aufgemacht und versucht die Aufgabe umzusetzen. Ich habe meine erste Version auf Github öffentlich gemacht: https://github.com/ClausPolanka/RpnCalculator.</p>
+<p>Als ich deinen Post jetzt erneut gelesen habe um meine Lösung mit deiner zu vergleichen, ist mir dein Kommentar bezüglich Brett’s Enter-Methode aufgefallen. Ich bin ebenfalls auf diese Methode beim Entwerfen meines Lösungsansatzes gekommen. Ich habe den englischen Wikipedia-Eintrag als Grundlage für meine Problemanalysephase herangezogen. Folgendes steht im Abschnitt “Practical Implications”: „RPN calculators do, however, require an enter key to separate two adjacent numbers.” Ich habe das als Anlass genommen, dass die Enter-Methode sehr wohl ein Domänenaspekt des Rechners ist und habe sie daher in den API aufgenommen. Dein Kommentar „Dass es dort einen Enter-Button gibt, kann sich doch morgen ändern.“ verstehe ich jetzt also nicht so ganz. Ebenso ist der Stack ein wichtiger Bestandteil des Lösungsansatzes, jedoch nicht Teil meines öffentlichen APIs des Rechners. Ich tue mir leider noch ein bisschen schwer dabei, Domänenaspekte zu identifizieren, besonders die Unterscheidung zwischen Implementierungsdetail und API. Aus Benutzersicht hätte ich nie eine Push-Methode ins API aufgenommen. Ich dachte mir dabei, dass ein Stack zum Umsetzen der Lösung zwar notwendig ist, allerdings es sich dabei um ein Implementierungsdetail handelt. Falls du dir meine Lösung ansiehst, muss ich dazusagen, dass ich zum Testen eine RPN-Calculator iPad-App verwendet habe: https://itunes.apple.com/gb/app/rpn-70-calc/id436127144?mt=8. D.h., ich habe meine Testfälle auf diesen Rechner ausgerichtet. Ich weiß daher nicht genau ob die Behandlung der Grenzfälle (z.B.: das Überschreiten der Stack-Größe von 4 Ebenen) in jedem Rechner gleich implementiert ist. Werden alle 4 Ebenen verwendet, wird die letzte Ebene des Stacks (4.) immer mit dem letzten Eintrag nach-initialisiert. D.h., sobald z.B.: die Zahl 4 in die 4. Ebene geschrieben wird, und Elemente vom Stack gelöscht werden, werden die tieferliegenden Ebenen immer mit dieser 4 nachgerückt.</p>
+<p>Übersehe ich irgendetwas? Kannst du mir vielleicht weiterhelfen? Ich würde mich sehr über einen Kommentar von dir freuen.
+LG, Claus</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-04-11):</p>
+<p>@Claus: Ich verstehe dein Problem mit der Stacktiefe nicht. Wenn manche Implementationen da nur eine Tiefe von 4 zulassen, dann ist das deren Ding. In der Domäne "RPN Calculator" sehe ich diese Begrenzung nicht. Das ist eine Entscheidung der Entwickler, weil sie z.B. das UI einfacher halten wollen.</p>
+<p>Ich habe in meiner Impl. keine solche max. Tiefe.</p>
+<p>Aber wie gesagt: Wer es mag, der darf die Anforderungen gern so formulieren - und dann gibt es Tests dafür.</p>
+<p>Wg "Enter": Wenn bei mehreren RPN-Rechnern im UI ein "Enter" auftaucht, dann ist das ja nett. Das hat aber nichts mit Domänenlogik zu tun.</p>
+<p>Klar, ein User wüsste nicht, was "Push" bedeuten sollte. (Auf der anderen Seite: warum eigentlich nicht? da wird etwas in eine Liste geschoben.)</p>
+<p>Aber nur weil an der Oberfläche "Enter" steht, sollte deshalb doch nicht unten drunter auch eine Enter()-Methode stehen. Die Domänenlogik ist unabhängig von einem konkreten UI. Demnächst wird mit einer Wisch-Geste vielleicht die Zahl auf den Stack gepackt. Wo ist dann "Enter"?</p>
+<p>"Push" ist universell. Hinter einem Enter-Button steht die Methode Push(). Oder an einen OnEnter-Event ist die Methode Push() gebunden. Davon sieht ein Anwender nix. Aber der Entwickler drückt aus, dass er verstanden hat, was da passiert: Es wird eine Zahl auf einen Stack getan.</p>
+<hr />
+<p><strong>Sageniuz</strong> (2013-04-11):</p>
+<p>Hi Ralf, danke für deine Antwort. Dachte mir schon, dass das mit der Stacktiefe verwirrend ist. Aber dabei handelt es sich ja wirklich um ein Detail. Ich verstehe deine Sichtweise bezüglich der Enter-Methode, muss allerdings  für mich noch einmal darüber nachdenken. Ich werde es natürlich erneut probieren. Ich weiß zwar nicht ob du dir meine Lösung näher angesehen hast, jedoch würde es mich sehr interessieren, wie du den Code findest (ausgenommen der Enter-Methode natürlich). LG, Claus
+P.S.: Habe gerade deinen Slack-Post gelesen. Unglaublich genial. Danke dafür.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-04-12):</p>
+<p>@Claus: Habe mir deinen Code mal angeschaut.</p>
+<p>Find ich gut, dass du dem Projekt eine Datei mit deinen Schritten vorangestellt hast.</p>
+<p>Auf einer Skala von 1..10 ist das Ergebnis für mich bei 6 oder so. Für ne 10 würde ich mir ein einen knackigeren API wünschen und mehr Refaktorisierung.</p>
+<p>Du hast, wie es mir scheint, nicht mit TDD as if you meant it gearbeitet.</p>
+<hr />
+<p><strong>Sageniuz</strong> (2013-04-16):</p>
+<p>Danke Ralf für dein Feedback. Du hast recht, ich habe nicht mittels TDDaiymi gearbeitet sondern nur TDD. TDDaiymi muss ich mir noch einmal durchdenken und dann üben. Vielen Dank.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ordnungsaspekte für das Multithreading [OOP 2008] — ralfw.de Archiv</title>
+<meta name="description" content="Auf der VSone 2008 habe ich gerade einen Vortrag über Software Transactional Memory (STM) gehalten und meine Open Source Implementation NSTM vorgestellt. Der Vortrag war gut besuch">
+<link rel="canonical" href="https://ralfw.de/archiv/2008/ordnungsaspekte-fr-das-multithreading/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Ordnungsaspekte für das Multithreading [OOP 2008] — ralfw.de Archiv">
+<meta property="og:description" content="Auf der VSone 2008 habe ich gerade einen Vortrag über Software Transactional Memory (STM) gehalten und meine Open Source Implementation NSTM vorgestellt. Der Vortrag war gut besuch">
+<meta property="og:url" content="https://ralfw.de/archiv/2008/ordnungsaspekte-fr-das-multithreading/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Ordnungsaspekte für das Multithreading [OOP 2008]</h1>
+    <div class="doc-meta"><span>16. Feb. 2008</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2008/02/ordnungsaspekte-fr-das-multithreading.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2008/ordnungsaspekte-fr-das-multithreading/</code></span></div>
+    <div class="art"><p>Auf der <a rel="noopener" href="http://www.vsone.de/">VSone 2008</a> habe ich gerade einen Vortrag über <a rel="noopener" href="http://en.wikipedia.org/wiki/Software_transactional_memory">Software Transactional Memory</a> (STM) gehalten und meine <a rel="noopener" href="http://code.google.com/p/nstm/">Open Source Implementation NSTM</a> vorgestellt. Der Vortrag war gut besucht; das hat mich sehr gefreut und ermutigt, weiter an NSTM zu arbeiten. Ein wenig Hilfe von anderen Entwicklern wäre dabei natürlich schön... Bei den Collections, die für einen STM neu entwickelt werden müssen, ist einiges zu tun. (Vom .NET Fx angebotene Collections wie List oder Queue können nicht einfach "von außen" transaktional gemacht werden, da ihre internen Strukturen nicht auf STM basieren. Nur eine grundsätzliche thread-safety lässt sich von außen durch pauschale Sperren herstellen.)</p>
+<p>Nun finde ich Ordnung/Überblick immer gut. Deshalb habe ich mich gefreut, beim Blick auf die VSone Agenda eine persönliche Erkenntnis gehabt zu haben. Da war nämlich nicht nur ich mit einem Multithreading-Vortrag vertreten, sondern auch Bernd Marquardt zum Thema <a rel="noopener" href="http://en.wikipedia.org/wiki/OpenMP">OpenMP</a>. Dazu kommt noch, dass ich neulich ein wenig über <a rel="noopener" href="http://msdn.microsoft.com/msdnmag/issues/06/09/ConcurrentAffairs/default.aspx">Microsofts Concurrency Coordination Runtime (CCR)</a> gelesen hatte.</p>
+<p>Meine Erkenntnis war nun, dass ich in diesen/zwischen diesen Technologien ein Muster erkannt habe. Und Muster als Strukturierungen der Realität finde ich immer gut. Die erzeugen in mir immer ein Gefühl von Entspannung und Aha nach dem Motto "Achsoooo, so ist das! Eigentlich ganz einfach..." :-)</p>
+<p>Das Muster, das ich nun gesehen habe, betrifft die Einteilung von Multithreading-Themen. Herb Sutter hat ja auch schonmal eine Einteilung in <a rel="noopener" href="http://www.ddj.com/hpc-high-performance-computing/200001985">"The Pillars of Concurrency"</a> gemacht. Die gliedert die Parallelverarbeitung nach Zwecken. Das ist aber nur eine mögliche Dimension, finde ich. Eine andere ist die Einteilung nach "technischen Aspekten".</p>
+<p>Für mich teilt sich Multithreading danach auf in drei grundsätzliche Problembereiche:</p>
+<ul>
+<li>Code auf Threads verteilen: Code in einem eigenen Thread laufen zu lassen, kann so einfach sein, wie <em>ThreadPool.QueueUserWorkItem()</em> aufzurufen. Zum ersten Aspekt des Multithreading gehört aber mehr. Denn Code explizit auf Threads zu verteilen ist letztlich umständlich oder gar eine intellektuelle Herausforderung. Viel effizienter wäre es doch, wenn Sie sich über die Parallelisierung von Code gar keine Gedanken machen müssten. Mit implizitem oder zumindest deklarativem Multithreading wäre Ihnen eine Last genommen. OpenMP oder <a rel="noopener" href="http://dotnet.zcu.cz/NET_2004/Papers/C53.pdf">Active C#</a> sind dafür hilfreiche Technologien. Mit ihnen erzeugen Sie Threads nicht mehr explizit im Code, sondern sagen viel pauschaler "Hier soll etwas automatisch parallel laufen. Irgendwie."  Parallelen Code koordinieren: Paralleler Code läuft selten isoliert. Er muss vielmehr in seinen Aktivitäten koordiniert werden. Threads müssen sich abstimmen, in dem was sie tun. Sie wollen einander Aufforderungen schicken oder aufeinander warten. Der .NET Fx bietet dafür z.B. WaitHandle verschiedener Art. Aber andere Technologien machen es noch einfacher, z.B. die Ports der CCr oder Protokolle in Active C#. Ganz allgemein geht es bei der Koordinierung immer um Signale in Warteschlangen, auf die man warten kann.  Gemeinsame Ressourcen parallel nutzen: Wenn Threads dann laufen und sich koordinieren, womit arbeiten Sie dann? Häufig auf gemeinsamen Ressourcen. Die können sie aber nicht einfach so ohne Beachtung der anderen Threads egoistisch nutzen! Parallele Nutzung gemeinsamer Ressourcen läuft immer Gefahr, Inkonsistenzen zu erzeugen  - wenn sie sich nicht koordiniert. Koordinationstechnologien helfen also bei der gemeinsamen Ressourcenutzung. Aber eigentlich ist explizite Koordination genauso ineffizient wie explizite Parallelisierung. Auch hier ist also Abhilfe gefordert. Software Transactional Memory oder auch <a rel="noopener" href="http://ralfw.blogspot.com/2008/02/space-based-collaboration-jetzt-mit.html">Space Based Collaboration</a> sind Ansätze, die die Parallelnutzung leichter machen. Sie bieten Abstraktionen, hinter denen konkurrierende Zugriffe und ihre explizite Koordination verschwinden.</li>
+</ul>
+<p>Wenn ich zukünftig irgendwo etwas über Multithreading lese, dann werde ich mich sofort fragen, um welchen dieser drei Aspekte es dabei geht. Irgendwie ordnet sich für mich dadurch das Thema besser als bisher.</p>
+<p>Und ich habe damit Oberbegriffe in der Hand, die ich auch auf Herb Sutters Zwecke anwenden kann. Wie ist´s z.B. mit der Skalierbarkeit? Welche Aspekte haben Einfluss auf sie? Größere Skalierbarkeit ergibt sich z.B. immer durch weniger Koordination und weniger gemeinsame Ressourcen. Oder wie ist´s mit Responsiveness? Dafür ist es vor allem wichtig, Code einfach parallelisieren zu können. Dann nutze ich Parallelität nämlich eher, um responsive zu bleiben.</p>
+<p>Würde mich freuen, wenn diese Aspekte Ihnen auch ein wenig helfen würden, die Multithreading-Welt "geordneter" zu sehen.</p>
+<h2>Kommentare</h2>
+<p><strong>Maik G. Seewald</strong> (2008-03-19):</p>
+<p>Hallo Frank, leider arbeitet OpenMP nicht ganz so easy, was die Verteilung der Threads betrifft. Ich muss schon sehr genau wissen, was ich da wie verteile und wie ich Informationen zwischen den Threads austausche. Sicherlich automatisiert OpenMP vieles, aber ich kann immer noch Dead-Locks produzieren oder in Race-Conditions laufen. Aus meiner Sicht sind die Angebote der Softwareindustrie (IDE, Compiler), die Aufgaben der Parallelisierung effektiv zu lösen, nicht ausreichend. Auch die Funktionalen Programmiersprachen stecken noch in den Kinderschuhen. Ich schreibe übrigens zu diesem Thema in losen Abständen in/auf meinem Blog:
+http://webduke.blogspot.com/
+Viele Grüsse, Maik</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2008-03-19):</p>
+<p>@Maik: Ich weiß nicht, ob du mich meinst, denn ich bin Ralf und nicht Frank ;-) Aber ich nehme es mal an.</p>
+<p>Natürlich muss ich mich auch mit OpenMP um Deadlockvermeidung kümmern. Nichts anderes habe ich behauptet. Deshalb steht OpenMP ja beim ersten Aspekt des Multithreadings und nicht beim dritten.</p>
+<hr />
+<p><strong>Maik G. Seewald</strong> (2008-03-19):</p>
+<p>Sorry Ralf. Frank lief gerade in einem anderen Thraed und der war nicht richtig synchronisiert ;-)</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

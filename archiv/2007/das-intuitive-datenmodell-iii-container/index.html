@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Das Intuitive Datenmodell III - Container als Dokumente — ralfw.de Archiv</title>
+<meta name="description" content="Im Intuitiven Datenmodell (IDM) sind alle Werte einzigartig. Es gibt nur einen Vornamen &quot;Peter&quot; und nur einen Preis 12,34, egal in wievielen Containern diese Daten vorkommen. Aber ">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/das-intuitive-datenmodell-iii-container/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Das Intuitive Datenmodell III - Container als Dokumente — ralfw.de Archiv">
+<meta property="og:description" content="Im Intuitiven Datenmodell (IDM) sind alle Werte einzigartig. Es gibt nur einen Vornamen &quot;Peter&quot; und nur einen Preis 12,34, egal in wievielen Containern diese Daten vorkommen. Aber ">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/das-intuitive-datenmodell-iii-container/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Das Intuitive Datenmodell III - Container als Dokumente</h1>
+    <div class="doc-meta"><span>24. Feb. 2007</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2007/02/das-intuitive-datenmodell-iii-container.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/das-intuitive-datenmodell-iii-container/</code></span></div>
+    <div class="art"><p>Im Intuitiven Datenmodell (IDM) sind alle Werte einzigartig. Es gibt nur einen Vornamen "Peter" und nur einen Preis 12,34, egal in wievielen Containern diese Daten vorkommen. Aber das gilt nicht nur für solche atomischen Daten, sondern auch für Zusammensetzungen!</p>
+<p>Um das zu verdeutlichen, nehmen Sie eine relationale Datenbank mit einer Tabelle für Personen an:</p>
+<p>Personen(Vorname, Nachname)</p>
+<p>In der Tabelle stehen einige Datensätze:</p>
+<p>Personen("Peter", "Mustermann")
+Personen("Frank", "Müller")
+Personen("Gabi", "Mustermann")
+Personen("Gabi", "Müller")
+Personen("Susanne", "Frank")</p>
+<p>"Gabi" und "Frank" und "Mustermann" sind in der relationalen Datenbank selbstverständlich mehrfach enthalten, weil sie ja in mehreren Datensätzen vorkommen. Nicht so aber in einer intuitiven Datenbank (IDB)! Dort gibt es alle Zeichenketten nur einmal - unabhängig davon, wie sie in Containern gebraucht werden, d.h. ob sie einen Vornamen oder einen Nachnamen darstellen.</p>
+<p>"Gabi" usw. sind im IDM atomische Werte (Atomic Value, AV). Für eine IDB sind sie quasi unteilbar, sozusagen kleine Blobs ohne weitere Struktur. Sie entsprechen den Spalten im Relationalen Datenmodell oder Feldern in Klassen des Objektorientierten Datenmodells.</p>
+<p>Die Zusammensetzungen solcher AVs sind, wie könnte es anders sein, zusammengesetzte Werte (Composite Values, CV). Anders als im Relationalen Datenmodell sind CVs allerdings beliebig tief schachtelbar. Die Schachtelungstiefe in einer relationalen Datenbank ist flach: Tabelle/Satz/Spalte. Das war´s. Bei Klassen ist es etwas anders, da können Felder Strukturen (struct) enthalten, die wiederum Strukturen enthalten können usw. Objekte sind in anderen allerdings nicht physisch enthalten wie Datensätze in Tabellen. Wenn man davon spricht, dass ein Objekt ein anderes enthält, dann ist das nur eine logische Enthalten-Beziehung, die durch Referenzen hergestellt werden muss.</p>
+<p>Das IDM steht mit seiner beliebig tiefen Schachtelung, die keiner Ebene irgendeinen Vorrang gibt, daher dem XML Datenmodell am nächsten. Deshalb möchte ich die "Dateneinheiten", die man einer IDB zur Speicherung übergibt oder aus ihr ausliest, auch Dokumente nennen. Damit soll natürlich keine Nähe zu Word- oder Excel-Dokumenten suggeriert werden. Dokumente sind einfach nur Zusammenfassungen von Werten in einer für einen bestimmten Zweck geeigneten Struktur. Ob diese Werte dann Kalkulationen oder eine Bibliographie oder Kontaktdaten darstellen, ist unerheblich. Alles kann zu einem Dokument zusammengefasst werden. Und alles kann auch in immer wieder neuen Dokumenten zu einander in Bezug gesetzt werden.</p>
+<p>Die obigen Daten könnten einer IDB also z.B. in Form mehrerer Dokumente zur Speicherung übergeben werden. Das IDM basiert nicht auf XML, aber ich kann XML zur Beschreibung von IDB Dokumenten benutzen. Dann sähen die Dokumente für die obigen Daten z.B. so aus:</p>
+<p><Person>
+<Vorname>Peter</Vorname>
+<Nachname>Mustermann</Nachname>
+</Person></p>
+<p>oder</p>
+<p><Person vorname="Peter" nachname="Mustermann"/></p>
+<p>Atomische Werte könnten als Subelemente oder als Attribute notiert werden.</p>
+<p>Aber auch eine knappere Notation ist möglich, die eher der obigen für die Tabellen entspricht:</p>
+<p>Person(Vorname("Peter"), Nachname("Mustermann"))</p>
+<p>Sie steht XML ins nichts nach. Auch mit ihr kann ich Schachtelungen ausdrücken:</p>
+<p>Personen(
+  Person(Vorname("Peter"), Nachname("Mustermann"))
+  Person(Vorname("Klaus"), Nachname("Müller"))
+)</p>
+<p>Welche Notation ich im Folgenden benutze, hängt wahrscheinlich von meiner Tagesform ab ;-) Beide sind einfach zu lesen, denke ich.</p>
+<p>Eine Abbildung nach XML ist mir vor allem wichtig, um zu zeigen, dass das IDM nicht nur "outspacet" ist. Wer XML kann, der hat im Grunde von viel vom IDM verstanden.</p>
+<p>Und eine Abbildung auf zwei Notationen ist mir wichtig, um klar zu machen, dass das IDM eben letztlich notationsunabhängig ist. Beim IDM geht es nicht wie bei XML ursprünglich nur um Text. Es geht um ein Werteuniversum - dessen Inhalt sich auch in eine textuelle Dokumentenwelt abbilden lässt. Denn wie die Dokumente bzw. Daten intern abgelegt sind, ist unerheblich für das Intuitive Datenmodell. Es muss nur verwirklicht sein. Insofern ist auch eine objektorientierte Schnittstelle denkbar, z.B.</p>
+<p>IIntuitiveDatabase db;
+...
+ICompositeValue person = db.CreateCV("Person");
+person.Subvalues.Add(db.CreateAV("Vorname", "Peter"));
+person.Subvalues.Add(db.CreateAV("Nachname", "Mustermann"));
+...
+db.Store(person);</p>
+<p>Aber das sind im Augenblick Details. Wichtig ist, dass IDBs Dokumente speichern und liefern. Allerdings werden diese Dokumente nicht 1:1 in einer IDB abgelegt. Eine IDB speichert ja keine Kopien von Daten. Vielmehr werden die Dokumente "geshreddert" und so mit den schon vorhandenen Dokumenten "verwoben", dass den Bedingungen des IDM Genüge getan ist. Statt speichern würde ich eher sagen, dass IDBs Dokumente assimilieren. Sie nehmen sie auf, machen sie sich zu eigen - aber die Dokumente selbst verschwinden in dem Vorgang. Sie sind in der IDB nicht mehr ohne Weiteres erkennbar. Selbstverständlich kann man sie aber dennoch wieder herausbekommen ;-) Das Speichern von Daten in einer IDB ist insofern verlustfrei.</p>
+<p>Wenn ich sage, dass die Dokumente bei der Assimilierung verschwinden, dann möchte ich damit vor allem ausdrücken, dass eben keine einfachen Kopien von Daten in einer IDB abgelegt werden. Wenn ich Daten einer relationalen Datenbank hinzufüge (z.B. Personen mit jeweils mehreren Adressen), dann führt das quasi immer dazu, dass neue Datensätze erzeugt werden. Füge ich ein Dokument mit demselben Inhalt einer IDB hinzu, dann kann es aber sein, dass nichts passiert oder nur sehr wenig. Denn wenn ein neues Dokument Werte enthält, die schon assimiliert wurden, dann werden die eben nicht nochmals in der IDB angelegt.</p>
+<p>Insofern würde ich auch nicht sagen, dass in einer IDB diese oder jene Dokumente stecken. Die Dokumente A, B und C mögen assimiliert worden sein. Sie sind also schon in der IDB irgendwie drin und können auch wieder herausgeholt werden. Viel wichtiger ist aber das große Ganze, das durch die Assimilation entstanden ist. Aus dem können nämlich nicht nur A, B und C wieder generiert werden, sondern auch noch viele andere, neue, unvorhergesehene Dokumente, die sich quasi "einfach so" ergeben, weil A, B und C Gemeinsamkeiten aufweisen.</p>
+<p>Diese Gemeinsamkeiten müssen dabei nicht nur bei AVs liegen, sondern können auf jeder Ebene eines Dokuments, d.h. bei den CVs liegen. Das (!) ist der entscheidende Unterschied zu einer relationalen Datenbank oder einer XML-Datenbank.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2007-02-28):</p>
+<p>versteh ich noch nicht.</p>
+<p>bei diesem beispiel:
+Personen("Peter", "Mustermann")
+Personen("Frank", "Müller")
+Personen("Gabi", "Mustermann")
+Personen("Gabi", "Müller")
+Personen("Susanne", "Frank")</p>
+<p>wird also intern nur einmal "Mustermann" gespeichert?  dann muss ja trotzdem ffuer die person gabi mustermann eine referenz darauf gespeichert werden?  was ist denn eigentlich wenn man sich bei dem nachnamen von gabi verschrieben hat und ihn aendert? aendert sich dann der von peter auch, obwohl der richtig geschrieben war?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2007-02-28):</p>
+<p>@Usul: Ja, es wird nur einmal "Mustermann" gespeichert.</p>
+<p>Ja, irgendwie muss der Wert für Gabi Mustermann "Referenzen" auf die Subwerte "Gabi" und "Mustermann" enthalten. Aber das ist ein Implementationsdetail.</p>
+<p>Nein, der Nachname von Peter Mustermann ändert sich natürlich nicht, wenn man den von Gabi Mustermann ändert. Denn: "Mustermann" selbst ist unveränderbar. Um den Nachnamen von Gabi zu verändern, ändert man also nicht "Mustermann" in z.B. "Musterfrau", sondern ersetzt "Mustermann" durch "Musterfrau". Die Ersetzung geschieht im CV für Gabi und hat also nichts mit Peters CV zu tun.</p>
+<p>Aber das ist nur die halbe Wahrheit. Auf Veränderungen komme ich noch in einem Posting zu sprechen.</p>
+<hr />
+<p><strong>(anonym)</strong> (2007-03-01):</p>
+<p>interessant für zukuenftige threads zu dem thema waere auch eine abgrenzung zu objektdatenbanken.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2007-03-01):</p>
+<p>@Usul: Hm... ich muss mal drüber nachdenken, was sich da speziell sagen lässt, was nicht ohnehin am Ende auf der Hand liegt ;-)</p>
+<p>Soviel aber schon hier: Bei ODBMS ist man gewohnt, mit konkreten Datenstrukturen umzugehen, eben Objekten einer bestimmen Klasse. Bei RDBMS hingegen ist man gewohnt, mit generischen Strukturen/Containern umzugehen: Tabellen und Zeilen.</p>
+<p>Ein DataSet kann ich für eine Kundendatenbank oder einen Warenkatalog benutzen.</p>
+<p>Ein IDBMS bietet nun gegenüber RDBMS noch mehr Flexibilität. Es wäre eher zu vergleichen mit einem XML-Datenbanksystem. Um diese Flexibilität nutzen zu können, verbietet es sich eigentlich, mit konkreten Datenstrukturen darauf zuzugreifen. Sie würden den Möglichkeiten der freien Navigation über ursprüngliche Dokumentgrenzen hinweg ein Corsett anlegen.</p>
+<hr />
+<p><strong>(anonym)</strong> (2007-03-05):</p>
+<p>Hallo Ralf,
+ein sehr interessantes Denkmodell. Bis hierhin deckt es sich noch nahezu 1:1 mit Gedanken, die ich seit einigen Jahren schon mit mir herumtrage. Bin daher sehr gespannt, wie die Geschichte weitergeht - ob Du auf die gleichen oder ähnliche Fragen und Punkte wie ich stößt, und wie Du sie lösen wirst. Eine praktische Umsetzung habe ich bisher allerdings noch nicht hinbekommen (Zeit... Technologie... ungelöste theoretische Fragen...)
+Viele Grüße - Harald M. Genauck</p>
+<hr />
+<p><strong>(anonym)</strong> (2007-11-15):</p>
+<p>Intuitiv bedeutet ja, dass man einfach drauf kommt. Einfach: jeder sollte draufkommen. Tut man auch, aber dann macht man wieder das, was gelehrt wurde und akzeptiert ist.
+Es braucht keine patentierte Technologie, um Vernunft walten zu lassen. Aber eine vernünftige Implementation macht es dann doch auch komfortabel. Diese Revolution wird ihre Kinder nicht fressen!</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

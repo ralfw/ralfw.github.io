@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vom Guten im Schlechten - TurboDb besser dank &amp;quot;Passionsspiele&amp;quot; — ralfw.de Archiv</title>
+<meta name="description" content="In der dotnetpro 4/07 hatte ich unter dem Titel &quot;Passionsspiele&quot; - passend zum Ostermonat ;-) - von meinem Leidensweg bei der Portierung einer .NET 2.0 Anwendung nach Mono berichte">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/vom-guten-im-schlechten-turbodb-besser/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Vom Guten im Schlechten - TurboDb besser dank &amp;quot;Passionsspiele&amp;quot; — ralfw.de Archiv">
+<meta property="og:description" content="In der dotnetpro 4/07 hatte ich unter dem Titel &quot;Passionsspiele&quot; - passend zum Ostermonat ;-) - von meinem Leidensweg bei der Portierung einer .NET 2.0 Anwendung nach Mono berichte">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/vom-guten-im-schlechten-turbodb-besser/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Vom Guten im Schlechten - TurboDb besser dank &amp;quot;Passionsspiele&amp;quot;</h1>
+    <div class="doc-meta"><span>21. März 2007</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2007/03/vom-guten-im-schlechten-turbodb-besser.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/vom-guten-im-schlechten-turbodb-besser/</code></span></div>
+    <div class="art"><p>In der <a rel="noopener" href="http://www.dotnetpro.de/">dotnetpro</a> 4/07 hatte ich unter dem Titel "Passionsspiele" - passend zum Ostermonat ;-) - von meinem Leidensweg bei der Portierung einer .NET 2.0 Anwendung nach Mono berichtet. <em>dnpMelodie</em>, ein (noch und zugegebenermaßen rudimentärer) Windows Media Player/iTunes Clone, wollte ich mal eben so auf Linux umstellen, weil das aufgrund der komponentenorientierten Architektur einfach schien. Leider ging das aber daneben, weil Mono derzeit noch zu wenig kompatibel zu .NET 2.0 ist und... ja, und auch die Datenbank, von der ich dachte, das sie hüben wie drüben laufen würde, eben das nicht tat.</p>
+<p>Ich hatte mich für die Neuentwicklung der Datenzugriffskomponente, die zunächst auf die Jet Engine ausgelegt war, für <a rel="noopener" href="http://www.dataweb.de/">TurboDb von DataWeb</a> entschieden. TurboDb Managed ist eine rein in Managed Code geschriebene Datenbank und sah für mich daher so aus, als sei sie der ideale Kandidat. Wie sich dann allerdings herausstellte, war TurboDb Managed nicht 100% kompatibel zu Mono. Leider hatte ich das aber erst gemerkt, als ich die Datenzugriffskomponente schon neu entwickelt hatte. War dann schade, aber machte auch nicht soviel. Ich hab es dann mit <a rel="noopener" href="http://www.db4o.com/deutsch/">db4o</a> nochmal probiert und die DB-Engine lief dann auch unter Mono - nur meine Anwendung trotzdem noch nicht.</p>
+<p>Aber egal. Denn um die Inkompatibilität von TurboDb mit Mono geht es mir hier nicht. Nerviger waren vorher nämlich einige Stolpersteine während des Umbaus auf TurboDb unter .NET. Da funktionierte die SQL <em>ORDER-BY</em>-Klausel nicht wie mit der Jet Engine und ein Feldname war plötzlich ein reserviertes Wort und die Escape-Zeichen für solche Fällen waren schlecht dokumentiert. Davon habe ich dem Artikel im Sinne eines Entwicklungsprotokolls dann auch berichtet.</p>
+<p>Und nun hat mich der Hersteller von TurboDb kontaktiert, nochmal genauer erfragt, was mein Problem war... und hat die Probleme behoben. Hier ein Auszug aus der Email von DataWeb:</p>
+<blockquote>
+<p>Hallo Herr Westphal,  vielen Dank für Ihre Hinweise.  Bei der Sortierung haben Sie einen Bug entdeckt. Er betrifft Strings der Länge 1 in ANSI-String-Feldern (also nicht Unicode) der Länge 256 und darüber. Die Ursache liegt im Kompatibilitätscode zu alten Versionen, wo diese Felder nur bis 255 Zeichen lang sein durften. Der Fehler wird noch diese Woche behoben. TurboDB Managed unterstützt Bezeichner in doppelten Anführungszeichen, wie es der SQL-Standard vorsieht. Das ist auch dokumentiert (im Kapitel über Spaltennamen) wenn auch zugegebenermaßen etwas unscheinbar. Wir haben aber auf Ihre Bemerkungen hin auch die eckigen Klammern ergänzt, wie sie in der MS-Welt üblich sind. Außerdem gibt es jetzt ein AddWithValue für die Parameterkollektion. ...</p>
+</blockquote>
+<p>Das nenne ich prompte Reaktion! Toll! Danke, Herr Holzinger! Und was lernen wir daraus? Ein bisschen maulen in der Öffentlichkeit hilft. Die Hauptaufgabe von technischen Artikeln ist natürlich zu zeigen, was geht. Aber wenn etwas nicht geht, sollte das nicht einfach stillschweigend mit einem Workaround verborgen werden, sondern durchaus auch in einem Artikel zu Kenntnis der Leser wie auch des Herstellers gebracht werden. Und Hersteller - insbesondere kleinere wie DataWeb - können Pluspunkte sammeln, wenn sie solche Hinweise ernst nehmen und Reaktion zeigen. Sie können damit einen Vorteil gegenüber den Platzhirschen ausspielen: ihre Agilität. Es heißt ja schon lange nicht mehr "Der Große schlägt den Kleinen", sondern auch "Der Schnelle/Flexible den Langsamen/Starren". Also: Wer eine embedded Datenbank geschrieben in Managed Code sucht, der sollte einen Blick auf <a rel="noopener" href="http://www.dataweb.de/en/products/managed_database.html">TurboDb Managed</a> werfen. Man ist dort kundenorientiert. Das finde ich geiler als Geiz :-)</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2007-03-21):</p>
+<p>Hallo Ralf,</p>
+<p>wenn es schon einen neuen Stern am Himmel der 100% managed DB Engines gibt, hätte ich jetzt noch auf einen Vergleich mit VistaDB gehofft. VistaDB hat mich persönlich <em>(geprägt durch Deine Artikelreihe über CF &amp; Softwarezellen)</em> in [1] völlig überzeugt. Die gleiche Analyse wäre nun mit einem Konkurrenten wie TurboDb sicher interessant.</p>
+<p>Übrigens wird man auf der <a rel="noopener" href="http://www.vistadb.net">Startseite von VistaDB</a> mittlerweile mit einem Mono Logo empfangen, also scheinbar auch ein guter Kandidat für die Portierung Windows  Linux.</p>
+<p>[1] <a rel="noopener" href="http://weblogs.asp.net/ralfw/archive/2006/08/27/.NET-naked-_2D00_-See-these-hitherto-unpublished-pictures-of-the-.NET-Framework-architecture.aspx">.NET naked - See these hitherto unpublished pictures of the .NET Framework architecture</a></p>
+<p>--
+MfG,
+Daniel Kuppitz</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2007-03-21):</p>
+<p>@Daniel: Mir ging es ja nicht um einen DB-Vergleich. Ich mache auch zuwenig mit DBs derzeit, als dass ich eine klare Präferenz hätte. TurboDb Managed hörte sich passend an, also hab ich´s ausprobiert. Außerdem lag es mir etwas näher als VistaDb, weil ich mich vor einiger Zeit mit einem der TurboDb Entwickler nett unterhalten hatte. Meine Wahl war also ziemlich subjektiv.</p>
+<p>Ein Review/Vergleich von embedded RDBMS in der dotnetpro wäre aber natürlich mal eine Idee. Da gäbe es dann sicherlich eine Schnittmenge bei VistaDb und TurboDb, aber es gäbe auch Aspekte, wo sie sich bewusst unterscheiden.</p>
+<p>-Ralf</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OOP 2008: Open Source mit kommerziellen Tools - Adé Gewissensbisse — ralfw.de Archiv</title>
+<meta name="description" content="In der letzten Zeit habe ich einige Projekte dank Google Project Hosting ganz einfach in die Open Source Welt einbringen können. Da gibt es zum Beispiel einen Microkernel oder eine">
+<link rel="canonical" href="https://ralfw.de/archiv/2008/oop-2008-open-source-mit-kommerziellen/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OOP 2008: Open Source mit kommerziellen Tools - Adé Gewissensbisse — ralfw.de Archiv">
+<meta property="og:description" content="In der letzten Zeit habe ich einige Projekte dank Google Project Hosting ganz einfach in die Open Source Welt einbringen können. Da gibt es zum Beispiel einen Microkernel oder eine">
+<meta property="og:url" content="https://ralfw.de/archiv/2008/oop-2008-open-source-mit-kommerziellen/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>OOP 2008: Open Source mit kommerziellen Tools - Adé Gewissensbisse</h1>
+    <div class="doc-meta"><span>4. Jan. 2008</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2008/01/oop-2008-open-source-mit-kommerziellen.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2008/oop-2008-open-source-mit-kommerziellen/</code></span></div>
+    <div class="art"><p>In der letzten Zeit habe ich einige Projekte dank <a rel="noopener" href="http://code.google.com/hosting/">Google Project Hosting</a> ganz einfach in die Open Source Welt einbringen können. Da gibt es zum Beispiel einen <a rel="noopener" href="http://code.google.com/p/dotnetmicrokernel/">Microkernel</a> oder einen <a rel="noopener" href="http://code.google.com/p/nstm/">Software Transactional Memory</a> oder den Code zu meiner aktuellen <a rel="noopener" href="http://www.dotnetpro.de/">dotnetpro</a> Artikelserie über <a rel="noopener" href="http://code.google.com/p/dnppatviz/">Mustervisualisierung</a>.</p>
+<p>Mit dem kostenlosen <a rel="noopener" href="http://subversion.tigris.org/">Subversion</a> kann man den Quellcode von Google herunterladen. Mit dem kostenlosen <a rel="noopener" href="http://www.nunit.org/">NUnit</a> kann man die darin befindlichen Unit Tests laufen lassen. Und mit dem kostenlosen <a rel="noopener" href="http://www.microsoft.com/express/vcsharp/">C#</a> (oder <a rel="noopener" href="http://www.microsoft.com/express/vb/">VB</a>) Express von Microsoft kann man den Code auch übersetzen. Nein, sogar nur mit dem <a rel="noopener" href="http://msdn2.microsoft.com/en-us/netframework/aa569263.aspx">.NET Framework</a> und <a rel="noopener" href="http://en.wikipedia.org/wiki/MSBuild">MSBuild</a> sollte das möglich sein. Insofern haben mich bisher keine Skrupel geplagt, selbst mit einer kostenpflichtigen Visual Studio Version zu arbeiten. Die Nutzung der Quellen ist ja auch mit kostenlosen Tools möglich.</p>
+<p>Aber jetzt habe ich doch Gewissensbisse bekommen. Denn jetzt werden die Projekte so groß (oder meine Bequemlichkeitsansprüche sind gewachsen ;-), dass ich sie nach und nach mit einem automatischen Build-Prozess ausstatten will/muss. Den Anfang macht die dotnetpro <a rel="noopener" href="http://code.google.com/p/dnppatviz/">Mustervisualisierung dnpPatViz</a>. So sieht deren Quellcodebaum aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/6cede2d57933c82a.png" /></p>
+<p>Diese vielen Projekte halte ich nicht in nur einer Visual Studio Solution/Projektmappe, denn das ist einer echt komponentenorientierten Entwicklung abträglich. Um schnell einen Überblick über die Gesamtkorrektheit meiner Quellen zu bekommen, kann ich daher nicht einfach F5 in Visual Studio drücken, sondern muss viele Solutions übersetzen und dann eigentlich auch noch alle Tests laufen lassen.</p>
+<p>Ganz klar also, dass da ein automatischer Build- und Testprozess her muss. Aber womit den aufsetzen? Mit MSBuild oder NAnt wäre wohl die übliche Antwort aus der Open Source Welt. Die sind ja kostenlos.</p>
+<p>Doch dazu kann ich mich wirklich, wirklich nicht überwinden. MSBuild- und <a rel="noopener" href="http://nant.sourceforge.net/">NAnt</a> sind kostenlos - aber erfordern geradezu ein Studium. Wie lange soll ich mich denn in deren XML-Dialekte einarbeiten? Wieviel soll ich denn tippen, um mal ein paar Projekte zu übersetzen, zu testen und dann noch zu deployen oder in ein Repository zu laden usw.? Ne, tut mir leid, für solche Klimmzüge ist mir meine Zeit zu schade.</p>
+<p>Dabei gibt es doch Alternativen. Die Automatisierung von solchen Alltagstätigkeit und noch ganz anderer Prozesse (z.B. FTP-Upload oder Steuerung einer VM) kann auch viel einfacher sein. Viel einfach! Sie muss auch nicht aus Megabytes von XML-Verhauen bestehen. Sie kann nämlich aussehen, wie ein Workflow. Zum Beispiel so:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/0c2452b3c0624b63.png" /></p>
+<p>Das ist das Build-Script für die Mustervisualisierung. Hübsch visuell, intuitiv zu verstehen, leicht zu lesen und ohne eine Zeile Doku zu lesen in wenigen Minuten von der Übersetzung des ersten Visual Studio Projektes über die automatischen Tests bis zum abschließenden ILMerge zusammengesetzt.</p>
+<p>Das (!) nenne ich Produktivität.</p>
+<p>Und möglich ist´s mit <a rel="noopener" href="http://www.finalbuilder.com/">FinalBuilder</a>, einem wirklich coolen Tool. Das kostet zwar ein paar Euro - aber macht nix. Das Geld, was ich bei kostenlosen Tools spare, das habe ich mit FinalBuilder locker, ganz locker schon beim ersten größeren Einsatz wieder reingeholt. Ganz zu schweigen vom nervenschonenden Effekt eines grafischen Tools für "Build Workflows". FinalBuilder ist aus meiner Sicht für den Build-Prozess das, was VB 1.0 mal für die Windows-Entwicklung war. Aber genug des Schwärmens.</p>
+<p>Wenn ich oben noch von Gewissensbissen gesprochen habe... dann sind die inzwischen verflogen. Ich habe mich von ihnen verabschiedet und mich entschieden, auch meine Open Source Quellen mit FinalBuilder Scripts auszustatten.</p>
+<p>Open Source ist ja auch nur das: Open Source. Es sagt nichts darüber aus, mit welchen Werkzeugen die Open Sources zu bearbeiten sind. Die können von mir aus gern kostenlos sein. Aber wenn ich schon für meinen Entwicklungsaufwand in Form von freien Quellen kein Geld bekomme, dann will ich mich nicht auch noch für Admin-Angelegenheiten oder Organisatorisches verbiegen und durch aufwändige MSBuild-/NAnt-Programmierung draufzahlen.</p>
+<p>Kostenlose Quellen: ja. Kostenlose Tools, um mit den Quellen zu arbeiten: nur, sofern der Aufwand den Nutzen nicht übersteigt. Und die Grenze ist aber beim Build-Prozess überschritten. Deshalb habe ich jetzt keine Gewissensbisse mehr. Ein schönes Gefühl.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

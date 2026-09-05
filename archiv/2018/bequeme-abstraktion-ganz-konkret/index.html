@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bequeme Abstraktion ganz konkret — ralfw.de Archiv</title>
+<meta name="description" content="Bei der Lektüre von „Clean Architecture&quot; ist mir aufgefallen, dass Robert C. Martin immer wieder von Abstraktion spricht. Er beschreibt sogar eine Metrik für den Grad der Abstrakti">
+<link rel="canonical" href="https://ralfw.de/archiv/2018/bequeme-abstraktion-ganz-konkret/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bequeme Abstraktion ganz konkret — ralfw.de Archiv">
+<meta property="og:description" content="Bei der Lektüre von „Clean Architecture&quot; ist mir aufgefallen, dass Robert C. Martin immer wieder von Abstraktion spricht. Er beschreibt sogar eine Metrik für den Grad der Abstrakti">
+<meta property="og:url" content="https://ralfw.de/archiv/2018/bequeme-abstraktion-ganz-konkret/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-01)"></span>ralfw.de</p>
+    <h1>Bequeme Abstraktion ganz konkret</h1>
+    <div class="doc-meta"><span>29. März 2018</span><span>Erstveröffentlichung: ralfw.de</span><span><a href="https://ralfw.de/bequeme-abstraktion-ganz-konkret/" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2018/bequeme-abstraktion-ganz-konkret/</code></span></div>
+    <div class="art"><p><img loading="lazy" alt="" src="/assets/01-ralfw.de/4aa2f0d92e8941cd.png" /></p>
+<p>Bei der Lektüre von „<a rel="noopener" href="http://www.amazon.de/Clean-Architecture-Craftsmans-Software-Structure-ebook/dp/B075LRM681">Clean Architecture</a>" ist mir aufgefallen, dass Robert C. Martin immer wieder von Abstraktion spricht. Er beschreibt sogar eine Metrik für den Grad der Abstraktion von „Komponenten":</p>
+<blockquote>
+<p>Abstraktheit A = Na / Nc</p>
+</blockquote>
+<p>Mit</p>
+<ul>
+<li><em>Na</em> für die Zahl der abstrakten Klassen und Interfaces in einer „Komponente"</li>
+<li><em>Nc</em> für die Zahl der Klassen in der „Komponente"</li>
+</ul>
+<p>„Komponenten" mit <em>A=1</em> enthalten ausschließlich abstrakte Klassen bzw. Interfaces. Wenn jedoch <em>A=0</em>, dann enthalten sie nur nicht-abstrakte (oder konkrete) Klassen.</p>
+<p>Einerseits hat mir das gefallen, denn ich bin ein großer Freund von Abstraktion. Andererseits jedoch bin ich nicht ganz warm geworden mit dem, was Robert C. Martin da geschrieben hat.</p>
+<p>Abstraktion in der von ihm beschriebenen Weise ist nützlich. Ich möchte sie nicht missen. Nur scheint sie mir vergleichsweise, hm, schwach. Mit ihr werden wir nicht so viel produktiver, wie es nötig ist, finde ich. Darauf habe ich auch schon <a rel="noopener" href="https://ralfw.de/wider-die-konkret-sinkende-produktivitaet/">in einem anderen Artikel</a> angespielt. (Und obendrein führt sie zu einer selbst gemachten Komplexität, die ich gruselig finde. Aber davon ein andermal mehr.)</p>
+<p>Nun habe ich mir ein paar Gedanken gemacht, um mein Unbehagen zu konkretisieren. Jetzt kann ich genauer sagen, was mir fehlt.</p>
+<h2>Abstraktion ist nicht gleich Abstraktion</h2>
+<p>Zunächst einmal ist mir klar geworden, dass es überhaupt verschiedene Arten der Abstraktion gibt. Ich sehe derzeit diese:</p>
+<ul>
+<li>Aggregation</li>
+<li>Destillation</li>
+<li>Integration</li>
+</ul>
+<h3>Aggregation</h3>
+<p>Bei der Aggregation geht es darum, das Gemeinsame in Verschiedenem zu sehen. Diese Figuren…</p>
+<p><img loading="lazy" alt="Eine Vielheit" src="/assets/01-ralfw.de/be1624426b807e0c.png" /></p>
+<p>…lassen sich auf mehrere Weisen aggregiert, d.h. klassifizieren bzw. kategorisieren. Die Kategorien könnten z.B. Farben sein</p>
+<p><img loading="lazy" alt="Aggregate" src="/assets/01-ralfw.de/3566e9e6df32c38d.png" /></p>
+<p>oder es könnten „Grundformen" sein:</p>
+<p><img loading="lazy" alt="Aggregate" src="/assets/01-ralfw.de/72bfa9bc34368306.png" /></p>
+<p>Es liegt im Auge des Betrachters, wie bei der aggregierenden Abstraktion das Viele auf Weniges reduziert wird. Denn darum geht es: ums Reduzieren, ums Abziehen und Entfernen. <a rel="noopener" href="https://de.wikipedia.org/wiki/Abstraktion">Wikipedia</a> schreibt:</p>
+<blockquote>
+<p>Das Wort Abstraktion (lateinisch abstractus ‚abgezogen, Partizip Perfekt Passiv von abs-trahere ‚abziehen‘, ‚entfernen‘, ‚trennen‘) bezeichnet meist den induktivenDenkprozess des Weglassens von Einzelheiten und des Überführens auf etwas Allgemeineres oder Einfacheres.</p>
+</blockquote>
+<p>Das Unterscheidende wird vernachlässigt zugunsten von etwas Gemeinsamem. Details treten in den Hintergrund. In den Vordergrund tritt das Aggregat, die Klasse oder Kategorie als neues Ganzes, in dem die Vielheit eingeschlossen ist.</p>
+<p>Abstraktionen dieser Art machen es möglich, allgemeine Aussagen zu treffen. Aus Peter und Maria werden Kunden. Aus einem BMW und einem Toyota werden Kraftfahrzeuge.</p>
+<p>In der Softwareentwicklung abstrahieren wir durch Aggregation, wenn wir Funktionen in Klassen zusammenfassen oder Klassen zu Bibliotheken usw. <em>Module</em> sind das Mittel der aggregierenden Abstraktion.</p>
+<p>Aus den Funktionen <code>Read()</code> und <code>Write()</code> wird die Klasse <code>Repository{}</code>. Aus den Klassen <code>Game{}</code> und <code>Referee{}</code> wird die Bibliothek <code>TicTacToe.dll</code>.</p>
+<p>Module sind Kategorien, die Funktionen bzw. „kleinere“ Module zusammenfassen nach einem gemeinsamem Zweck.</p>
+<p>Bei der Aggregation bleibt das Aggregierte erhalten. Es wird lediglich zusammengefasst unter einer Überschrift. Die soll den geistigen Umgang damit erleichtern. Man muss sich nicht ständig mit einer großen Menge von Dingen oder ihren ganzen Details auseinandersetzen. Bei Bedarf steht das Aggregierte jedoch wieder als Einzelnes zur Verfügung.</p>
+<h3>Destillation</h3>
+<p>Die Destillation ist eine Aggregation - allerdings gehen bei dieser Abstraktion die vielen Einzelnen verloren. Die Destillation zieht eine Essenz aus dem Verschiedenem. Diese Essenz ersetzt anschließend das Verschiedene bzw. steht als etwas Eigenständiges und Neues neben ihnen.</p>
+<p>Wenn Sie einen Text lesen und ihn anschließend zusammenfassen, dann destillieren Sie. Der ganze Reichtum des Textes wird ersetzt durch Ihr <em>abstract</em>.</p>
+<p><img loading="lazy" alt="img-alternative-text" src="/assets/01-ralfw.de/197481b2b3ef9158.png" /></p>
+<p>In diesem Beispiel wird zuerst aggregiert; es entsteht die Kategorie „Blau“, in der Elemente nach ihrer gemeinsamen Farbe zusammengefasst sind. Und in einem weiteren Schritt wird diese Farbe als etwas Eigenständiges herausdestilliert; die ursprünglichen Elemente verschwinden. Die „Blauheit“ als Extrakt ist etwas Neues, das wiederum als Grundlage für Weiteres dienen kann.</p>
+<p>Dasselbe geschieht, wenn Sie aus verschiedenen Klassen eine Basisklasse, gar eine abstrakte Klasse oder ein Interface herausziehen. Der Detailreichtum der Logik in Ausgangsklassen verschwindet. Zurück bleibt eine Essenz.</p>
+<p>Jetzt ist klar, dass Robert C. Martin sehr pauschal in seinem Gebrauch des Begriffs Abstraktion ist. In seiner Metrik <em>A</em> setzt er zwei Abstraktionsarten ins Verhältnis: er teilt die Zahl der Destillate in einer „Komponente“ durch die Zahl ihrer Aggregate (oder die Summe aus Aggregaten plus Destillaten, damit keine Division durch 0 entsteht).</p>
+<p>Was aber ist denn entscheidend für die Segnungen einer Clean Architecture, die er in seinem Buch vertritt? Sind Destillate wichtig, um sauber zu sein? Welchen Stellenwert haben Aggregate?</p>
+<p>So viel ist klar: mit Destillaten kann man nicht nur Überblick gewinnen, sondern auch Produktivität - zumindest wenn das Destillat nicht nur ein Begriff ist, sondern Logik enthält.</p>
+<p>Herausdestillierte Logik ist wiederverwendbare Logik. Sie ist wie Milchpulver oder ein Same. Einfach Wasser drauf geben und sehen, was daraus entsteht ;-) Oder bei Logik: einfach weitere Logik in einer Ableitung/Implementation dazu geben und schauen, wie etwas Neues mit weniger Aufwand entsteht. Das ist der Gedanke hinter Vererbung, bei der die Basisklasse eine grundlegende Leistung anbietet, die abgeleitete Klassen „modulieren“.</p>
+<p>Da Robert C. Martin jedoch nur von abstrakten Klassen und Interfaces spricht, scheint er mir nicht so sehr an dieser Art Logik-Destillate zu denken. Es sind eher reine Form-Destillate bestehend aus Funktionssignaturen.</p>
+<p>Solche Form-Destillate bringen keinen Produktivitätsvorteil durch Wiederverwendbarkeit, sondern Polymorphie. Die ist nützlich für den Austausch von konkreten Objekten, sie macht flexibel. Wenn verschiedene Klassen auf demselben Form-Destillat basieren, können ihre Instanzen unterschiedslos dort benutzt werden, wo das Form-Destillat bekannt ist. Oder anders ausgedrückt: Robert C. Martin geht es um <em>Dependency Inversion</em>, also Abhängigkeit von Abstraktionen - genauer: Destillaten, noch genauer: Form-Destillaten -, statt von Implementationen. Konkrete Implementationen werden erst zur Laufzeit von außen bereitgestellt (<em>Inversion of Control</em>).</p>
+<h3>Integration</h3>
+<p>Aggregation und Destillation sind Abstraktionen, die auf dem Gemeinsamen in einer Vielheit basieren. Integration ist demgegenüber jedoch ganz anders. Integration bringt ganz bewusst das Verschiedene zusammen, <em>weil</em> es verschieden ist.</p>
+<p>Integration setzt etwas Neues aus sich ergänzendem Verschiedenen zusammen. Integration ist wie ein Puzzle: die Teile sehen alle unterschiedlich, gar sinnlos aus, doch zusammen ergeben sie ein bedeutsames Bild.</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/9cf66ce7aeaeba92.png" /></p>
+<p>Statt Integration kann man wohl auch Komposition sagen. Denn was entsteht ist etwas, das vorher nicht da war, ein kreatives Werk.</p>
+<p>Aggregation und Destillation schaffen im Grunde nichts Neues. Sie kontourieren und betonen lediglich, was schon vorhanden ist, eben das Gemeinsame in einer Vielheit.</p>
+<p>Demgegenüber ist Integration erfinderisch. Sie erkennt, wie Verschiedenes zusammengefügt werden kann zu etwas nützlichem Neuem.</p>
+<p>Destillation kann die Produktivität steigern durch Wiederverwendbarkeit. Integration hingegen steigert die Produktivität durch Bequemlichkeit.</p>
+<p>Früher mussten Sie einen Topf und einen Herd und einen Wecker getrennt bedienen, um Eier zu kochen. Heute benutzen Sie einfach einen Eierkocher. Oder allgemeiner: Wo heute etwas auf Knopfdruck entsteht, wofür früher viele Handgriffe nötig waren, ist Abstraktion durch Integration die Zauberformel dahinter.</p>
+<p>Früher musste man Code wie diesen Schreiben, um die Zeilen aus einer Textdatei zu lesen:</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/c2193284254a3be2.png" /></p>
+<p>Heute macht es die Nutzung einer Integration viel einfacher:</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/f283573d0fb460c6.png" /></p>
+<p>Die Framework-Methode <code>File.ReadAllLines()</code> abstrahiert von den Details der vielen einzelnen Logik-Anweisungen, die eigentlich nötig sind.</p>
+<h2>Integration schmerzlich vermisst</h2>
+<p>Es wird so viel über Abstraktion in der Softwareentwicklung gesprochen, doch ein differenzierter Blick darauf fehlt, finde ich.</p>
+<p>Und es wird so viel über Aggregation und Destillation gesprochen, dass man scheinbar übersieht, dass es auch noch die Integration gibt.</p>
+<p>Das ist schade, denn die Integration ist es, die vor allem einen Produktivitätsgewinn verspricht.</p>
+<p>Für Aggregation und Destillation braucht es zunächst eine gewisse Masse, eine Vielheit, bevor überhaupt Muster entstehen können, die man dann herauspräpariert. Das geschieht in einem „induktiven Denkprozess“, wie Wikipedia es nennt.</p>
+<p>Vielheit wiederum braucht Zeit. Es muss etwas aufgehäuft werden. Man muss zulassen, dass Verschiedenes entsteht, was sich später vielleicht wiederum zusammenfassen lässt.</p>
+<p>Zeit jedoch ist etwas, das in der Softwareentwicklung notorisch knapp ist. Angesichts des großen Wunsches nach mehr Produktivität entstehen daher vorzeitige Abstraktionen (<em>premature abstraction</em>) durch Aggregation und Destillation. Ihnen fehlt schlicht die Substanz. Die Vielheit ist nur mager, die Muster darin fadenscheinig. Und so ist ein Produktivitätsgewinn höchstens kurzfristig; mittelfristig entsteht Verschwendung, weil die vorzeitigen Abstraktionen aufgrund neuer Erkenntnisse aufgegeben bzw. umgebaut werden müssen.</p>
+<p>Wiederverwendung von Logik-Destillaten ist möglich - braucht aber Zeit. Produktivitätsgewinne durch sie sind keine leicht zu pflückenden Früchte.</p>
+<p>Produktivität durch Abstraktion für Bequemlichkeit hingegen ist viel früher zu erlangen. Abstraktion durch Integration kann schon am ersten Tag geerntet werden. Allerdings braucht es dazu ein anderes Mindset. Hier ist nicht Mustererkennung gefragt, sondern Kreativität und Erfindungsreichtum.</p>
+<p>Integration ist eine ursprüngliche Ingenieursleistung. Nicht Handwerker, nicht Forscher erfinden bequemlichkeitsstiftende Werkzeuge, sondern Ingenieure.</p>
+<p>Leider ist das Bewusstsein in dieser Hinsicht in der Branche vergleichsweise schwach entwickelt, wie mir scheint. Jedenfalls was die Abstraktion durch Integration <em>innerhalb</em> von Projekten/Produkten angeht. Über Projekte und Unternehmen hinweg gibt es einen ungeheuren Drang zur Vereinfachung, zu mehr Bequemlichkeit, zu mehr Produktivität durch Integration.</p>
+<h2>Vom Wesen der Integration</h2>
+<p>Abstraktion erzeugt eine Hierarchie. Vieles geht auf die eine oder andere Weise in Wenigem auf. Dieser Schritt kann beliebig oft wiederholt werden. Auch Abstraktionen lassen sich weiter abstrahieren.</p>
+<p>Ziel der Integration als Abstraktion ist es, mit dem entstehenden Wenigen etwas zu vereinfachen, d.h. es bequemer zu machen, einen Effekt zu erzielen.</p>
+<p>Integration geht dafür bottom-up vor. Aus einer Menge von Elementen werden solche ausgewählt, die zusammengesetzt etwas neues Nützliches ergeben. Ausgangspunkt ist dafür ein Problem, zu dem eine Lösung gesucht wird.</p>
+<p>Die Auswahl aus der Elementmenge erfolgt mithin zielgerichtet. Integration bringt nicht zufällig Elemente zusammen und fragt sich, was deren Summe wohl Nützliches darstellen könnte. Sie sucht vielmehr nach Passendem in dem, was vorliegt - oder generiert weitere Elemente, um die Auswahl zu erhöhen.</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/0f0846e3b42d4a20.jpg" /></p>
+<p>Zu einem Problem werden zuerst mögliche Lösungsbausteine gesammelt. Die sollten nicht zu grob und nicht zu fein sein. Grobe Bausteine sind sperrig und müssten vor Verwendung angepasst werden. Feine Bausteine andererseits müssten in unhandlich großer Zahl zusammengesetzt werden. Die Kunst der Integration beginnt daher beim richtigen Abstraktionsgrad der Menge von Einzelteilen.</p>
+<p>Aus dieser Menge werden dann geeignete Bausteine ausgewählt soweit vorhanden. Fehlen noch welche zu einer problemlösenden Integration, muss die Menge erweitert werden. Zur Kunst der Integration gehört mithin nicht nur handwerkliches Geschick, um existierende Bausteine nutzbringend zusammenzustecken zu etwas Größerem, sondern auch ein offener Geist bei der Suche nach weiteren Integrationskandidaten.</p>
+<p>Integration beginnt also bei einem Problem, aus dem eine Bausteinmenge abgeleitet wird, aus der dann Elemente zu eine Lösung integriert werden.</p>
+<p><code>Integration: Problem -&gt; Bausteinmenge -&gt; komplementäre Elemente -&gt; Lösung</code></p>
+<p>Das Ergebnis ist eine Hierarchie, deren Knoten einerseits Integrationen von darunter hängenden sind und andererseits selbst wiederum Elemente von darüber liegenden Integrationen. Integrationen hängen von ihren Teilen ab; fehlen welche oder mangelt ihnen eine Qualität, ist die Integration unvollständig.</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/4aa2f0d92e8941cd.png" /></p>
+<p>Mit jeder Integrationsebene, d.h. mit jedem Abstraktionsschritt, steigt dabei die Bequemlichkeit der Erreichung eines Zwecks - bei allerdings gleichzeitig abnehmender Breite des Einsatzgebietes.</p>
+<p>Die Leistung der Integration ist es, aus einem Haufen an Elementen etwas konstruktiv Neues zu bilden. Das ist das Mehr über die Summe der Teile hinaus.</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/07cd04ee2643e67d.png" /></p>
+<p>Integration ist eine wertschaffende, eigenständige Leistung. Sie ist kategorial anders als das, was die zusammengefügten Elemente zum Ganzen beitragen. Sie besteht in der Auswahl und im Verbinden von Einzelteilen, damit nützliches Neues entsteht, bei dem die Einzelteile quasi unsichtbar sind.</p>
+<p>—</p>
+<p>Softwareentwicklung braucht einen differenzierten Blick für alle Arten von Abstraktionen. Hier habe ich drei beschrieben - von denen ich die Integration für am entwicklungsbedürftigsten innerhalb von Softwareprojekten halte.</p>
+<p>So weit die recht theoretische Auseinandersetzung mit dem Thema. <a rel="noopener" href="https://ralfw.de/all-together-now-schrittweise-abstrahieren/">Im nächsten Artikel</a> will ich das mit einem Beispiel konkreter machen.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

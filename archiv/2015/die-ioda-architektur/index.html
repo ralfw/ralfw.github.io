@@ -1,0 +1,641 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Die IODA Architektur — ralfw.de Archiv</title>
+<meta name="description" content="Über die Jahre haben einige grundlegende Architektmodelle um unsere Gunst gekämpft. Mir fallen ein in chronologischer Reihenfolge ein:">
+<link rel="canonical" href="https://ralfw.de/archiv/2015/die-ioda-architektur/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Die IODA Architektur — ralfw.de Archiv">
+<meta property="og:description" content="Über die Jahre haben einige grundlegende Architektmodelle um unsere Gunst gekämpft. Mir fallen ein in chronologischer Reihenfolge ein:">
+<meta property="og:url" content="https://ralfw.de/archiv/2015/die-ioda-architektur/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Die IODA Architektur</h1>
+    <div class="doc-meta"><span>11. April 2015</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2015/04/die-ioda-architektur.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2015/die-ioda-architektur/</code></span></div>
+    <div class="art"><p>Über die Jahre haben einige grundlegende Architektmodelle um unsere Gunst gekämpft. Mir fallen ein in chronologischer Reihenfolge ein:</p>
+<ul>
+<li>
+<p><a rel="noopener" href="http://en.wikipedia.org/wiki/Model–view–controller">MVC</a> (Ja, das rechne ich zu Architekturmodellen, weil es Leute gibt die sagen, "Unsere Software hat eine MVC-Architektur.)</p>
+</li>
+<li>
+<p>das <a rel="noopener" href="http://en.wikipedia.org/wiki/Multilayered_architecture">Schichtenmodell</a></p>
+</li>
+<li>
+<p>Pat Hellands Executants, <a rel="noopener" href="https://msdn.microsoft.com/en-us/magazine/cc164125.aspx">Emissaries und Fiefdoms</a>  Alistair Cockburnss <a rel="noopener" href="http://alistair.cockburn.us/Hexagonal+architecture">Hexagonal Architecture</a> aka Ports-and-Adapters  Jeffrey Palermos <a rel="noopener" href="http://jeffreypalermo.com/blog/the-onion-architecture-part-1/">Onion Architecture</a>  Robert C. Martins <a rel="noopener" href="http://blog.8thlight.com/uncle-bob/2012/08/13/the-clean-architecture.html">Clean Architecture</a></p>
+</li>
+</ul>
+<p>Auch ich habe mir erlaubt, dieser Liste einen Eintrag hinzuzufügen. 2005 kam mit die Idee der Softwarezellen. Die habe ich <a rel="noopener" href="http://weblogs.asp.net/ralfw/410417">in einigen englischen Blogartikeln</a> beschrieben - allerdings sind da über die Jahre die Bilder abhanden gekommen :-(</p>
+<p>Leider ist es über die Jahre mit der Wartbarkeit/Wandelbarkeit von Software trotz dieser schönen Architekturmodelle nicht wesentlich besser geworden. Auch Anwendungen, die sich einen Schichtenmodells rühmen, waten heute meist im tiefen Brownfield.</p>
+<p>Woran kann das liegen?</p>
+<p>Ich glaube nicht, dass die Architekturempfehlungen falsch sind. Es steckt eine Menge Beachtenswertes in ihnen. Doch es muss auch noch etwas fehlen. Sonst wäre die Situation der Codebasen nicht so, wie sie ist.</p>
+<h2>Gemeinsamkeiten</h2>
+<p>Ich versuche mal, die obige Vielfalt ein wenig zu ordnen. Dann wird klarer, was da ist. Immer eine gute Sache, bevor man etwas verbessert.</p>
+<h3>Verantwortungsstruktur</h3>
+<p>Die augenfälligste Gemeinsamkeit aller Architekturmodelle ist die Benennung und Trennung von Verantwortlichkeiten. MVC und Schichtenmodell z.B. sagen ganz klar: Es gibt drei wesentliche Aufgaben in (jeder) Software. Die sollten in unterschiedlichen Modulen<a href="#fn:1">[1]</a> realisiert werden.</p>
+<p>Bemerkenswert ist, dass die Verantwortlichkeiten alle inhaltlicher Art sind. Sie beziehen sich auf die Herstellung von Verhalten zusammengesetzt aus unterschiedlichen Aspekten. So gehört zum Verhalten einer Software z.B. die Erzeugung von Seiteneffekten auf Bildschirm (Presentation Layer des Schichtenmodells oder View bei MVC) oder Festplatte (Data Access Layer des Schichtenmodells oder DB bei Clean Architecture) sowie ganz wesentlich die Domäne (Business Logic Layer des Schichtenmodells oder Entities bei Clean Architecture).</p>
+<h3>Beziehungsstruktur</h3>
+<p>Die identifizierten Verantwortlichkeiten setzen die Architekturmodelle in Beziehung. Sie definieren, welche Verantwortlichkeit mit welchen anderen in einem Abhängigkeitsverhältnis steht. Dabei geht es immer um funktionale Abhängigkeiten, d.h. Dienstleistungsbeziehungen.</p>
+<p>Beim Schichtenmododell ist das am einfachsten: jede Schicht ist nur von der darunterliegenden abhängig. Auch die Clean Architecture hält die Abhängigkeiten unidirektional: sie weisen von außen nach innen. Bei MVC und seinen Verwandten hingegen sieht es anders aus.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/616fc719db6267e5.png" /></p>
+<h3>System-Umwelt-Trennung</h3>
+<p>Und schließlich geht es auch noch um eine deutliche Trennung von Softwaresystem und Umwelt. Den Verantwortlichkeiten an der Systemgrenze kommt eine besondere Bedeutung zu. Das stellen insb. die Hexagonale Architektur und Softwarezellen heraus.</p>
+<p>Bei den Softwarezellen nenne ich diese Schale deshalb ausdrücklich Membran. Über Adapter findet ein bidirektionaler Austausch der Domäne mit der Umwelt statt.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/5defb59de939b003.jpg" /></p>
+<p>Anders als die Hexagonalen Architektur unterscheiden Softwarezellen jedoch, wie sie mit der Umwelt in Verbindung stehen. Dass die Umwelt auf sie einwirkt, ist davon zu trennen, dass sie auf die Umwelt einwirken. Ersteres geschieht durch Portal-Adapter, Letzteres durch Provider-Adapter.</p>
+<h3>Holarchie</h3>
+<p>Nur die Softwarezellenarchitektur schlägt darüber hinaus noch vor, Softwaresysteme auf mehreren Abstraktionsebenen mit dem selben Mittel zu beschreiben. Die Softwarezelle selbst ist damit Modellierungselement.</p>
+<p>Mit dem Schichtenmodell kann man eine Software einmal in Schichten zerlegen. Mit der Onion Architektur kann man eine Software einmal aufgebaut aus Schalen beschreiben. Aber mit Softwarezellen kann eine Software nicht nur einmal in Portale, Provider und Domäne zerlegt werden, sondern auch noch in kleinere Softwarezellen.</p>
+<p>Das Softwarezellenmodell ist mithin selbstähnlich hierarchisch. Auf jeder Ebene der Hierarchie befinden sich Softwarezellen, die wiederum aus Softwarezellen zusammengesetzt sein können.<a href="#fn:2">[2]</a></p>
+<p>Eine solche Hierarchie, bei der die Teile gleichzeitig Ganze sind, wird auch als <a rel="noopener" href="http://en.wikipedia.org/wiki/Holarchy">Holarchie</a> bezeichnet.</p>
+<h2>Das gemeinsame Problem: Funktionale Abhängigkeiten</h2>
+<p>Das sieht doch alles ganz ordentlich aus, oder? Mehr oder weniger detailliert werden inhaltliche Verantwortlichkeiten in funktionale Abhängigkeit gesetzt. Mal laufen die in die eine Richtung, mal in die andere. Wenn es damit nicht funktioniert, dann wird man das Modell wohl noch nicht sauber oder fein genug angewandt haben. Was sollte man auch anders tun?</p>
+<p>Meine Vermutung ist, dass das Problem tiefer liegt, wenn trotz der Architekturmodelle die Software in die Unwartbarkeit rutscht. Nicht sauber mehr davon anwenden hilft dann, sondern aufhören und etwas anderes tun.</p>
+<p>Woran könnte es denn aber liegen, dass es nicht einfach klappt mit diesen Modellen?</p>
+<p>Ich denke, die Separierung von Verantwortlichkeitskategorien ist nicht das Problem. Sie ist dringend nötig. Zuviel davon kann es kaum geben. Lieber die Verantwortlichkeiten etwas differenzierter sehen, als zu viel davon in einem Modul zu versammeln. Das Single Responsibility Principle (SRP) und seine Verwandten (SoC, SLA, ISP) sind nicht umsonst eines der immer wieder beschworenen Fundamente der Softwareentwicklung.</p>
+<p>Auch die deutliche Trennung eines Softwaresystems von der Umwelt durch eine explizite Membran ist nicht das Problem. Sie dient dazu, dass Softwaresystem im Sinne des SRP zu fokussieren und von äußeren Einflüssen zu entkoppeln.</p>
+<p>An einer holarchischen Sicht, die ohnehin von den meisten Modellen nicht thematisiert wird, kann es auch nicht liegen. Im Gegenteil: Ich denke, mehr davon würde der Softwareentwicklung helfen. Sie macht die Zerlegung von Kompliziertem einfacher, weil die Zerlegungsebenen immer wieder mit denselben Mitteln beschrieben werden.</p>
+<p>Was bleibt sind also die Abhängigkeiten.</p>
+<p>Ja, ich denke, dass die funktionalen Abhängigkeiten zwischen inhaltlichen Verantwortlichkeiten das Problem sind. Logische Kopplung lässt sich nicht vermeiden. Die jedoch mit funktionaler Kopplung auszuweiten, öffnet der Ausbreitung von Veränderungen Tür und Tor.</p>
+<p>Alle Architekturmodelle kranken an funktionalen Abhängigkeiten. Dabei ist es egal, ob die von links nach rechts oder oben nach unten verlaufen. <em>Funktionale Abhängigkeiten sind böse!</em></p>
+<p>Das wissen Sie aus Ihrem täglichen Leben: Solange Sie eine Aufgabe allein erledigen können, ist alles gut. Die Schwierigkeiten explodieren, sobald Sie davon abhängig sind, dass Ihnen jemand etwas zuliefert. Sie verlieren damit die Hoheit über die Erledigung. Wenn etwas nicht klappt, interessiert es den Abnehmer Ihrer Leistung nicht, ob Sie das zu verschulden haben oder Ihr Zulieferer. Sie sind Verantwortlich für das Ergebnis. Und schon fängt das Micro-Management an. Und schon seufzen Sie unablässig, “Wenn man nicht alles selbst macht…”</p>
+<h2>Inhaltsunabhängige Verantwortlichkeiten</h2>
+<p>Um aus dem Problem der funktionalen Abhängigkeiten zwischen inhaltlichen Modulen herauszukommen, schlage ich nun ein neues Architekturmodell vor. Es unterscheidet sich sehr grundlegend von den vorgestellten - aber genau das macht seinen Charme aus, finde ich. Aber der Reihe nach…</p>
+<h3>Unabhängige Module</h3>
+<p>Aus den funktionalen Abhängigkeiten kann man sich nicht herausdefinieren. Schichtenmodell wie Clean Architecture leiden gleichermaßen unter ihnen. Da hilft keine Änderung der Ausrichtung der Abhängigkeiten. Nicht die Richtung ist entscheidend, sondern ihre schiere Existenz.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/97e943988b038b0a.png" /></p>
+<p>Das bedeutet, eine bessere Architektur muss funktionale Abhängigkeiten komplett abschaffen. Welche Verantwortlichkeiten man auch identifizieren mag, die Module, in die man sie kapselt, sollten unabhängig von einander sein.</p>
+<p>Auf das Schichtenmodell bezogen würde das bedeuten: Presentation Layer, Business Logic Layer und Data Access Layer haben keine funktionalen Beziehungen zu einander. Keine. Nicht direkt, nicht indirekt. Sie kennen sich nicht einmal.</p>
+<p>Solche Module nenne ich <em>Operationen</em>.</p>
+<h3>Verbindende Daten</h3>
+<p>Natürlich können Operationen nicht komplett unabhängig von einander sein. Dann könnte man aus ihnen ja nichts Größeres zusammensetzen. Aber funktionale Abhängigkeiten im Sinne von request/response Dienstleistungsaufrufen gibt es nicht.</p>
+<p>Stattdessen kommunizieren die Operationen mittels Nachrichten. Sie tauschen also Daten aus. Und sie können auch Zustand, sogar gemeinsamen haben. Das heißt, Operationen sind von <em>Daten</em> abhängig.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f3b7ead5bf11a219.png" /></p>
+<p>In der Objektorientierung können Daten allerdings selbst wieder Funktionen anbieten. Sind Operationen dann nicht von diesen doch funktional abhängig?</p>
+<p>Technisch ist das richtig: Logik<a href="#fn:3">[3]</a> in einer Operation ruft Logik in Daten auf.</p>
+<p>Doch “inhaltlich” ist das für mich nicht gravierend. Die Logik in Daten ist ja dünn. Sie bezieht sich nur auf die Daten selbst, dient nur der Strukturherstellung und Konsistenz. Domänenlogik hat nichts in Daten zu suchen.</p>
+<p>Daten sind für mich auf einer Stufe mit APIs. Die müssen Operationen ja auch benutzen können. Daran lässt sich nichts ändern. Am besten deshalb, wenn APIs Black Boxes sind. Dann können sich Operationen nicht an ihre Interna koppeln. Dasselbe gilt für Daten. Datenstrukturen sind selbstgeschriebene APIs zur Verwaltung von Speicher. Wie eine Liste oder Queue oder ein Baum aus einem Framework, den Operationen nutzen.</p>
+<h3>Angezogene APIs</h3>
+<p>Operationen können nicht funktional unabhängig sein. Sie können ja nicht alle Logik selbst schreiben, die nötig ist, um Verhalten zu erzeugen. Sie müssen auf die Schultern von Riesen steigen, um Daten zu persistieren, Grafiken zu animieren, zu drucken, zu komprimieren, zu verschlüsseln, zu kommunizieren usw.</p>
+<p>Die Logik von Operationen muss sich deshalb abhängig machen von _API_s aller Art, die solche Dienstleistungen anbieten.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/b2535f8cc5c1fb23.png" /></p>
+<p>APIs kapseln Logik, anderer Leute Logik ;-) Für die nutzenden Operationen sind sie Black Boxes des notwendigen Logik-Übels. Denn wenn sich an der Implementation von APIs etwas ändern, dann muss Operationslogik u.U. nachgezogen werden.</p>
+<h3>Integrierte Prozesse</h3>
+<p>Auch wenn Operationen von Daten abhängig sind, kennen sie einander nicht. Es fehlt ihnen der funktionale Zusammenhalt, der nötig für das Gesamtverhalten eines Softwaresystems ist.</p>
+<p>Den herzustellen ist nun eine ganz eigene Verantwortlichkeit. Die herauszustellen ist zentral für meinen Architekturmodellvorschlag.</p>
+<p>Es braucht eine Instanz, die unverbundene Einzelteile zu einem Ganzen zusammensetzt. Diese Leistung nenne ich <em>Integration</em>.<a href="#fn:4">[4]</a> Einzelteile werden in und zu etwas größerem integriert.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e2a1f76540a2f3cf.png" /></p>
+<p>Für die Integration sind ebenfalls Module zuständig. Doch die enthalten keine Logik. Sie sollen nicht selbst mit Logik verhalten herstellen, sondern fügen andere Logik (Operationen) lediglich so zu Prozessen zusammen, dass in Summe Verhalten entsteht. Ohne Logik sind diese Prozesse nicht imperativ, sondern deklarativ; die Darstellung erfolgt in Form von Datenflüssen.</p>
+<p>Im Sinne des SRP halte ich das für sehr konsequent. Integration ist eine ganz eigene Verantwortlichkeit, wie Operation zu sein oder Daten zu strukturieren.</p>
+<p>Integrationsmodule sind zu diesem Zweck abhängig von Operationen, d.h. sie kennen sie, um sie “zusammenstecken” zu können. Doch eine funktionale Abhängigkeit besteht nicht. Denn Integrationen enthalten keine Logik.</p>
+<h2>Die IODA Architektur</h2>
+<p>Haben Sie es bemerkt? Die Module, von denen ich bisher gesprochen habe - Integration, Operation und auch Daten -, haben keinen inhaltlichen Bezug mehr. Das Architekturmodell, welches ich vorschlage, interessiert sich nicht dafür, ob sie ein Modul View nennen oder Business Logic oder Adapter oder Portal oder Use Case usw.</p>
+<p>Die Verantwortlichkeiten des Architekturmodells sind orthogonal dazu. Und sie sind viel universeller.</p>
+<p>Ich nenne es die <em>IODA Architektur</em>, weil damit seine Bestandteile in Richtung der Abhängigkeiten benannt sind.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c4b2b6c78b438eac.png" /></p>
+<p>In dieser Architektur gibt es Abhängigkeiten. Ohne Kopplung kein Verhalten erzeugt durch mehrere Beteiligte. Aber die sind unterschiedlich stark funktional. Vor allem fehlen aber funktionale Abhängigkeiten zwischen den “Arbeitspferden”, den Operationen. Sie tragen die Logik-Last eines Softwaresystems.</p>
+<p>Auch diese Struktur ist wieder rekursiv zu verstehen. Jedes Modul kann, wenn seine Aufgabe zu umfangreich wird, wieder nach IODA zerlegt werden. Das gilt insbesondere für Operationen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/95685179673e60b7.png" /></p>
+<h3>Zusammenfassung</h3>
+<p>Das unausgesetzte Problem des unwartbaren Codes wird nicht gelöst, in dem wir inhaltliche Module immer wieder neu in funktionale Abhängigkeiten verstricken. Ich bin davon überzeugt, wie müssen diesen ausgetretenen Pfad verlassen. Das Pferd der funktionalen Abhängigkeitshierarchien ist totgeritten.</p>
+<p>Stattdessen müssen wir uns auf grundlegende und universelle Verantwortlichkeiten besinnen und die weitgehend unabhängig halten. Das geschieht durch “ausbluten” von Datenstrukturen, d.h. Modulen, die Daten <em>sind</em>. Sie dürfen nur minimale Logik enthalten. Und das geschieht durch die Konzentration von Logik in Operationen, die einander nicht kennen (vgl. <a rel="noopener" href="http://blog.ralfw.de/2012/12/prinzip-der-gegenseitigen-nichtbeachtung.html">Prinzip der gegenseitigen Nichtbeachtung</a>).</p>
+<p>Dem Metamodell von Software muss das, was getan wird, egal sein. Welche Operationen, welche Daten es gibt, ist unwichtig. Aber dass es Operationen und Daten gibt, dass Operationen durch spezielle Instanzen zu einem Ganzen integriert werden, <em>das</em> kann dem Metamodell nicht egal sein.</p>
+<p>So entsteht <strong>Software als Summe von Prozessen, deren Schritte in Operationen implementiert sind, die Daten konsumieren und produzieren unter Zuhilfenahme von APIs.</strong></p>
+<p>Wenn das keine allgemeingültige Beschreibung jeder Art von Software ist, dann weiß ich auch nicht mehr ;-)</p>
+<hr />
+<ul>
+<li>Für mich sind Module Container für Code zur Entwicklungszeit zum Zwecke der Entkopplung. Logik in Modulen zusammenzufassen kapselt sie, um höhere Wandelbarkeit zu erzielen. Mit “Modul” meine ich kein Sprachkonstrukt einer speziellen Programmiersprache, sondern jedes Mittel, um Logik zu bündeln und Teile von ihr von außen unzugänglich zu machen. Unterprogramme sind insofern genauso Module wie Klassen oder Bibliotheken. <a href="#fnref:1">↩</a>  Mit dem Schichtenmodell oder MVC ist eine solche Zerlegung nich möglich. Mit der Hexagonalen Architektur oder auch Onion/Clean Architecture wäre die selbstähnliche hierarchische Zerlegung jedoch denkbar - nur habe ich sie in der Literatur bisher nicht beschrieben gesehen. <a href="#fnref:2">↩</a>  Logik sind für mich der Code, der Verhalten herstellt. Das sind Transformationen/Ausdrücke, Kontrollanweisungen und Hardware-/API-Zugriffe. <a href="#fnref:3">↩</a>  Manchmal denke ich auch, es handelt sich um Komposition oder Koordination. Aber “Integration” war irgendwie zuerst als Begriff in meinem Kopf, so dass ich ihn nun stehenlasse. <a href="#fnref:4">↩</a></li>
+</ul>
+<h2>Kommentare</h2>
+<p><strong>Erik</strong> (2015-04-12):</p>
+<p>Habe ich leider noch nicht ganz verstanden.</p>
+<p>"Stattdessen kommunizieren die Operationen mittels Nachrichten. Sie tauschen also Daten aus." Gibt es eine Art "Message Bus", die GUI Komponente sendet eine Nachricht "Validiere Eingabe", oder "Persistiere Daten" und die Integrationsschicht sorgt dafür, dass die Validierungslogik auf die erste Nachricht und die Persistenzimplementierung auf die zweite Nachricht reagiert?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2015-04-12):</p>
+<p>It's up to you :-) Die Architektur macht darüber keine Aussage, wie das technisch realisiert wird. Absichtlich. Nur soviel sei gesagt: Ein Message Bus ist jedenfalls nicht nötig.</p>
+<p>Du kannst mehr hier darüber lesen:
+http://geekswithblogs.net/theArchitectsNapkin/category/19719.aspx
+http://geekswithblogs.net/theArchitectsNapkin/category/19718.aspx</p>
+<hr />
+<p><strong>Denis</strong> (2015-04-12):</p>
+<p>In welchem Verhältnis steht Deiner Meinung nach Flow-Design zur IODA-Architektur?
+Ergibt konsequent angewendetes Flow-Design automatisch eine IODA-Architektur?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2015-04-12):</p>
+<p>IODA hat sich aus Flow Design entwickelt.</p>
+<p>Konsequentes Flow Design ergibt IODA. Nicht umsonst steckt da "IO" aus IOSP drin.</p>
+<p>Und IODA führt zu Flow Design, denn ich kann mit Integration ohne Logik nur als Form von Datenfluss vorstellen.</p>
+<p>IODA ist aber bewusst ohne Flows formuliert. Es geht um Struktur, nicht um Verhalten.</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-04-13):</p>
+<p>Ich habe nicht so viel Erfahrung wie Sie mit größeren Softwareprojekten, würde aber der These der sich verschlechternden Wartbarkeit zustimmen. Allerdings fehlt mir eine gute Analyse, inwiefern bessere Architekturmodelle hier helfen können. Die beschriebene Lösung ist meiner Meinung ein guter Ansatz, um mit funktionalen Abhängigkeiten umzugegehen, es fehlt aber der Schluss, dass damit auch die Wartbarkeit verbessert wird. Aus meiner Erfahrung kranken SW in erster Linie an der korrekten Anwendung von Architekturmustern und an dem fehlenden Wille, Zeit in Refactoring zu investieren und sich rechzeitig an neue nichtfunktionale Anforderungen anzupassen, als an den Mustern selbst. Das ist aber nur eine Thesen, die es zu beweisen oder widerlegen gilt. Gibt es hierzu eigentliche gute Studien, die über banale Experimente mit Studenten hinausgehen?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2015-04-13):</p>
+<p>Architekturmodelle und Entwurfsmuster sind Muster auf unterschiedlichen Abstraktionsebenen. Auch mit einer IODA Architektur kann man noch Entwurfsmuster einsetzen - wenn man unbedingt muss ;-)</p>
+<p>Viele Entwurfsmuster haben dieselbe Intention wie IODA: besserer Umgang mit funktionalen Abhängigkeiten. Die Lösung sieht dann aus wie beim Schichtenmodell. Es werden Verantwortlichkeiten definiert und Abhängigkeitsrichtungen vorgegeben.</p>
+<p>IODA steigt da aus. Es gibt keine inhaltlichen Verantwortlichkeiten. Es gibt keine (oder nur stark entschärfte) funktionalen Abhängigkeiten. Das ist aus meiner Sicht radikal und nötig.</p>
+<p>Das Problem ist weniger, dass Refactoring nicht betrieben wird. Das Problem ist, dass es überhaupt in dem Ausmaß nötig ist. Woher kommt das? Da fehlen nicht Entwurfsmuster. Es fehlt das Bewusstsein für die Schädlichkeit jeder funktionalen Abhängigkeit. Wie man sie auch dreht, mit Entwurfsmustern oder ohne: funktionale Abhängigkeiten sind der Feind. Also vermeiden, wo es geht. Dazu gibt IODA eine Anleitung.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2015-04-13):</p>
+<p>Hört sich nicht verkehrt an und ist sich selbst ähnliche Strukturen sind zum Teil auch schon Realität (siehe UI Development mit z.B. AngularJS, NodeJS, oder auch React - Views enthalten Views, Controller enthalten Controller, Modelle enthalten Modelle, etc.)</p>
+<p>Meiner Meinung fehlt es weniger an der "gescheiten" Auflösung der funktionale Abhängigkeiten in eine geeignete Struktur hinein. Da gibt es schon genug und es wird nicht signifikant besser. Stattdessen sehe ich meist fehlende  "deployment packages". Also Einheiten die tatsächlich über geeignete Mittel physikalisch getrennte Pakete ergeben. Im Vordergrund sollten deshalb "publish pakete" stehen. Erst mit der veröffentlichten eindeutigen Versionsnummer des Paketes ist eine Einheit "done" und kann in einer bestimmten Versionsnummer verwendet werden.</p>
+<p>Reine Struktur rund um Verantwortlichkeiten, nenne es Architektur, zum besseren Umgang mit funktionalen Abhängigkeiten ist meiner Meinung nach nicht genug. Sie führt immer "nur" zu ungenauen und wachsenden Code-Strukturen ohne klare Grenzen und fördert Integrationsprobleme. Nur die "Paket-Veröffentlichung" definiert Grenzen als natürliche Barriere.</p>
+<p>Jetzt könntest du sagen, dass dir Pakete, Veröffentlichung/Deployment und Referenzierung mit IODA gerade egal ist. Das geht schon und kann gemacht werden. Doch genau hiermit, so meine ich, müssen Anwendungen beginnen. Mit geschlossenen unveränderlichen logischen, strukturellen, funktionalen "Deployment-Einheiten". Dort beginnt Klarheit über die gedachte Aufgabe und Verantwortung, Abhängigkeiten (Version und Graph) und die Integration. Ein Refactoring ist nur innerhalb möglich. Nach außen gibt es einen immutable Contract. Änderungen müssen versioniert werden.</p>
+<p>Alle diese Dinge werden bei aktuellen Architekturerläuterungen außen vor gelassen. Es gibt "nur" Pfeile und Kästchen und im bestem Falle ein Framework.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2015-04-13):</p>
+<p>@Mike: Nur weil irgendetwas selbstähnlich ist, ist es ja nicht das, was die IODA Architektur beschreiben will. Den Vergleich mit geschachtelten Widgets finde ich unpassend.</p>
+<p>Wenn dir "Deploymentpakete" fehlen, ist das ein interessanter Gedanke. Nur ist das wieder ein ganz anderes Thema. Die IODA Architektur lässt ja auch erstmal offen, was Module sind. Oder ob das, was mit so einem Modell beschrieben wird, die Struktur eines Paketes beschreibt.</p>
+<p>Die IODA Architektur behauptet auch nicht, "genug zu sein". Wofür auch? Sie behauptet allerdings, manches ganz anders zu machen, um aus alten Problemen herauszukommen.</p>
+<p>Objektorientierung ist nicht genug. Tollste Deployment Pakete sind nicht genug.</p>
+<p>Anwendungen können nicht beginnen mit Deployment Paketen. Denn was soll in denen drin sein? Das weiß keiner, bis er nicht eine funktionale Lösung modelliert hat - und an deren Ende sich Gedanken macht, was in solchen Paketen zusammengeschnürt werden kann.</p>
+<p>Und wie ist die grundlegende Struktur einer funktionalen Lösung? Schichtenmodell? Nein. Nun kommt IODA ins Spiel.</p>
+<hr />
+<p><strong>Michael Ertelt</strong> (2015-04-14):</p>
+<p>Seit den Softwarezellen verfolgte ich die Ideen und konnte eine Reihe von Anwendungen mit dem Flow Design realisieren. Doch es gab immer noch einen Rest an Unzufriedenheit. Daher habe ich Zeit investiert und ein (zu IODA) nahezu identisches Design bereits mit hoher Zufriedenheit angewendet. Bei mir hat es keinen Namen, daher danke für den Beitrag. In einer Simulationsanwendung habe ich die Integration mit MEF und die Operationen als Tasks realisiert. Die Daten habe ich bewusst ausgelagert da sich so der Simulationsstatus wunderbar sichern und wiederherstellen lässt. Nur ein Beispiel, das Konzept halte ich nahezu ideal, wobei ich noch nicht überzeugt bin, dass sich diese Methode jederzeit optimal anwenden lässt. So teste ich derzeit bereits weitere Möglichkeiten. Danke für die Anregungen, guter Beitrag.</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-04-14):</p>
+<p>Evtl. habe ich es nicht verstanden.</p>
+<p>Zum Bild: wovon hängt denn API ab?
+Sind die Datentypen der API in der API selbst enthalten oder sind das die Daten? Wenn ja, dann fehlt die Abhängigkeit zwischen API und Daten.
+Wenn nein, wie benutzt man Daten ohne API? D.h. irgendeine API muss doch von Daten abhängen, wenn nicht, dann braucht man es nicht veröffenlichen - es ist ein Implementierungsdetail.</p>
+<p>Was heisst in diesem Zusammenhang "Messaging"? Ein weiterer Weg abseits von APIs?</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-04-15):</p>
+<p>Mein Verständnis möchte ich an einem Beispiel verdeutlichen.</p>
+<p>Wir nehmen die Operation 'ProcessOrders', welche Bestellungen verarbeitet. Dazu stellt es eine API bereit, die folgendermaßen aussieht:</p>
+<p>namespace MyCompany.MyProduct.ProcessOrders.Api {
+  interface IProcessOrder {
+    void Process(Order order);
+  }
+}</p>
+<p>Der Datentyp 'Order' wird von der Schnittstelle benutzt und liegt hier:</p>
+<p>namespace MyCompany.MyProduct.ProcessOrders.Data {
+  public class Order Order { ... }
+}</p>
+<p>Die Implementierung der Operation 'ProcessOrders' liegt hier:</p>
+<p>namespace MyCompany.MyProduct.ProcessOrders.Operation {
+  public class ProcessOrderOperation : Api.IProcessOrder {
+    public void Process(Data.Order order) { ... }
+  }
+}</p>
+<p>Falls 'ProcessOrderOperation' weitere Funktionalität von anderen Operations benötigt, referenziert und benutzt es die entsprechenden Fremd-APIs und/oder deren Data:</p>
+<p>using MyCompany.MyProduct.Crm.Api;
+using MyCompany.MyProduct.Crm.Data;
+using MyCompany.MyProduct.Other.Api;
+using MyCompany.MyProduct.Other.Data;
+using External.Other.Api;
+using External.Other.Api;</p>
+<p>namespace MyCompany.MyProduct.ProcessOrders.Operation {
+  public class ProcessOrderOperation : Api.IProcessOrder {
+    public void Process(Data.Order order) { ... }
+  }
+}</p>
+<p>Die Integration (Allokation und Verdrahtung) findet z.B. in Main statt:</p>
+<p>public static int Main(string[] args) {
+  ...
+  var crm = new Crm(..);
+  var others = new Other(...);
+  var po = new ProcessOrderOperation(crm, ..);
+  ...
+}</p>
+<p>Das 1-Methoden-Interface 'IProcessOrder' kann man auch an in C# gemäß EBC per Events und Delegates verbinden. Dann kann man auch auf API verzichten und nur die Datentypen aus Data einbinden.</p>
+<p>Messaging verstehe ich analog zu Events, wo direkt die Payload (die konkreten Datentypen), hier z.B. 'Order', verbreitet werden.
+Immutability, Copy-On-Write, oder Locks&amp;Shared data sind weitergehende Überlegungen.</p>
+<p>Damit ergeben sich vier Dlls:
+MyCompany.MyProduct.ProcessOrders.Api.dll
+MyCompany.MyProduct.ProcessOrders.Data.dll
+MyCompany.MyProduct.ProcessOrders.Operation.dll
+MyCompany.MyProduct.Main.dll</p>
+<hr />
+<p><strong>Mike Bild</strong> (2015-04-16):</p>
+<p>Sorry, Erschreckend! Ich versuche mal meinen Zugang zum Beispiel zu erklären.</p>
+<p>A) Meine Aussage - an Struktur mangelt es nicht - bestätigt sich. Denn von außen betrachtet ist</p>
+<p>Order äquivalent zu Model
+ProcessOrder äquivalent zu Controller
+Main äquivalent zu Integration / Bootstrap</p>
+<p>Hier wird nichts einfacher, klarer, effizienter oder "agiler" - nur anders. Leider gibt es keine "Referenzimplementierung", daher kann das Beispiel einfach zu stark gegliedert umgesetzt sein.</p>
+<p>B) Sorry, 4 Assemblies für einen beispielbedingten inhaltslosen Funktionsaufruf? Wie soll das nach 4 Stunden Arbeit aussehen? Wie nach 6 Wochen? Mir fehlt, wenn schon "andere" Architektur auf hohem Abstraktionsnivau, ein Konzept für Kohäsion, Kontext, Modularisierung und Integration von Modulen.</p>
+<p>C) Im Beispiel ist kein Unit- oder Integrationstest vorhanden? Wie sollen hier die Seiteneffekte (void) getestet werden? IMHO - das muss in einem Beispiel klar sein auch wenn es nicht immer gemacht werden muss. Nebenbei entstehen möglicherweise auch hier weitere Assemblies.</p>
+<p>D) Das, zumindest aus meiner Sicht, entscheidende Merkmal. Was sind publish/deployment packages? Wer sehr stark gliedert, braucht IMHO ein adäquates Konzept. Welches wird im Beispiel verwendet? Wie wird integriert? Wie ist der Workflow? Was ist mit Änderungen zwischen Abhängigkeiten? Was nutzt das "tolle" Design, ohne schnell, unkompliziert aber dennoch verständlich und reproduzierbar auf die Straße zu kommen.</p>
+<p>E) Das Modell gibt keine Aufkunft über "inhaltlichen Bezug". Meiner Meinung nach, ist damit die Kohäsionen in einem beliebigen Kontext eingeschlossen. Dennoch sehe ich im Beispiel DI =&gt; funktionale Kopplung - da ist wohl was schief gelaufen?</p>
+<p>Sorry, aber im Beispiel fehlt mir das Verständnis für das "radikal einfach". Zumal, für eine Architektur üblich, Systemgrenzen expliziet nicht berücksichtigt werden.</p>
+<p>void function ProcessOrder(Context ctx){</p>
+<p>var crm = ctx.CRM();
+ var order = ctx.Order();
+ ...</p>
+<p>ctx.Done(ctx);
+}</p>
+<p>//Main</p>
+<p>Promise
+ .Sequence(new Context(), new [
+  ValidateOrder,
+  ProcessOrder,
+  ExtendOrder,
+  SaveOrder
+ ])
+ .Then(...);</p>
+<p>hätte es in diesem Falle dann wohl auch getan und ließe sich noch weiter reduzieren. Von Architektur würde ich hierbei aber nicht sprechen.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2015-04-16):</p>
+<p>@Ralf: Der Vergleich ist vielleicht unpassend. Dahinter stecken jedoch sehr viele ähnliche Konzepte.</p>
+<p>IMHO - Anwendungen müssen mit "Deployment Pakete(n)" beginnen. Was will der Nutzer wie nutzen? Das ist die erste System-Umwelt - "Design-Einheit" :) - auch wenn der Nutzer nur ein Entwickler ist.</p>
+<p>Der Trick ist meiner Meinung nach, möglichst vieles klein und innerhalb fester, einschränkender physikalischer Grenzen umzusetzten und mit einem natlosen "Publish/Integration/Deployment" zu versehen.</p>
+<p>Wie gesagt, für eine "grundlegende Struktur" gibt es unterschiedlichste sinnvolle Lösungen. IODA kann eine sein, für einen anderen Fall aber nicht. Ich möchte jetzt gern etwas mitnehmen - In welchem Fall/Sub-System/UseCase/Domäne/etc. ist deiner Meinung nach und kurz erklärt IODA von besonders hohem Nutzen?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2015-04-16):</p>
+<p>@Anonym1: Ein API hängt von nichts mehr ab. Der ist aus Sicht der zu schreibenden Logik eine Black Box. Ein API hängt nicht von Daten der Anwendung hab. Oder kennt der .NET Fx z.B eine Klasse "KundeDTO", nur weil er sie per WCF verschicken soll? Kaum.</p>
+<p>Zu Messaging siehe die in meinem ersten Kommentar genannten Artikelserien.</p>
+<p>@Anonym2: Leider ist nicht erkennbar, was ProcessOrder() ist: Operation oder Integration. Auch von Main() lässt sich das nicht sagen. Es ist zu viel ausgelassen.</p>
+<p>Ob ein Interface 1 Methode hat oder nicht, ist unwesentlich für IODA. IODA macht ohnehin keine Aussage über Interfaces. Auch IoC/DI oder nicht ist IODA egal. Oder doch nicht? Hm... IoC ist nur ein Pflaster auf die tiefe Wunde der funktionalen Abhängigkeiten. IODA versucht die Wunde besser zu versorgen.</p>
+<p>@Mike: Deployment als nicht-funktionale Anforderung ist so orthogonal zu IODA wie zu Clean Architecture oder dem Schichtenmodell.</p>
+<p>Schneide deine Deployment-Pakete, wie du magst. IODA macht dazu bewusst keine Aussage.</p>
+<p>Bibliotheken und (µ)Services sind Module, die deploymentrelevant sind. Wenn du die nach IODA in Beziehung setzen willst, tu das gern.</p>
+<p>IODA ist von besonderem Nutzen in... allen Softwaresystemen :-)</p>
+<p>IODA ist - wie beschrieben - selbstähnlich. Ein Schichtenmodell mach für eine Anwendung vielleicht Sinn, aber für eine Komprimierungsbibliothek nicht.</p>
+<p>Nach IODA hingegen kann ich eine Anwendung, einen µService oder eine Persistenzkomponente strukturieren.</p>
+<p>Tut mir leid, wenn sich das unverhältnismäßig oder unbescheiden anhört. Das ist aber meine Erfahrung seit mehreren Jahren.</p>
+<p>Das Grund dafür ist aus meiner Sicht auch simpel: IODA ist leer. Es geht nicht um irgendeine Domäne oder Anwendungskategorie. Das ist bei MVC anders. Das ist beim Schichtenmodell auch anders. Selbst Clean Architecture ist aus meiner Sicht noch spezifischer, weil darin Use Cases und Domänenmodell vorkommen.</p>
+<p>Das ist alles auf gewisse Größenordnungen und/oder Einsatzszenarien (z.B. rich UI, Web) ausgerichtet.</p>
+<p>IODA macht sich davon frei. Endlich. Denn wenn ich morgen einen Batch schreiben muss oder ein Spiel oder einen Treiber... Was soll ich dann mit dem ganzen Zeug?</p>
+<p>IODA ist nicht alles. Es darf gern noch etwas mehr inhaltliche Struktur geben. (Die kommt durch Softwarezellen :-) Aber IODA ist genau deshalb für alles relevant.</p>
+<p>IODA steht für etwas Grundlegendes hinter (!) den üblichen Mustern. So wie Verlässlichkeit und Flow hinter den ganzen Vorgehensmodellen als Werte stehen.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2015-04-16):</p>
+<p>Ich finde das nicht unbescheiden ;)</p>
+<p>"Auch IoC/DI oder nicht ist IODA egal. Oder doch nicht? Hm... IoC ist nur ein Pflaster auf die tiefe Wunde der funktionalen Abhängigkeiten. IODA versucht die Wunde besser zu versorgen."</p>
+<p>Laut Napkin-Artikel machst du in deinen Beispielen DI = funktionale Abhängigkeiten. Nicht konsequent aber ab und zu. Ist auch okay, erhöht etwas die Arbeit und das Verständnis im Bootstrap und wird für Mocks benötigt. Funktionale Abhängigkeiten (z.B. externe APIs) werden also nicht eliminiert, sondern mittels DI entworfen, umgesetzt und integriert. Der entstehende Dep-Graph ist im Bootstrap "sichtbar" und wird über ein Package-Management Tool verwaltet. Richtig?</p>
+<p>Meistens arbeitest du mit Callbacks, also einer sehr einfachen Form des Messagings. Ab und zu sehe dann Events, Streams / Pipes oder Bus. Finde ich alles im jeweiligen Beispiel passend. Gibts auch ein Beispiel mit Promises / Task?</p>
+<p>Dein Vorschlag für Deployment-Einheiten sind Bibliotheken (Assemblies) und MicroServices (Process). Die Wahl des "richtigen Schnitts" liegt in meiner Hand. Hab ich das richtig verstanden?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2015-04-16):</p>
+<p>@Mike: Siehste mal, so entstehen Missverständnisse: Nur weil man DI macht, gibt es nicht unbedingt funktionale Abhängigkeiten. Das ist ja der Punkt!</p>
+<p>IoC/DI braucht man für Mocks oder für den Fall, dass parallel entwickelt wurde an Komponenten, also bottom-up nicht möglich war. Für sonst nix.</p>
+<p>Deshalb mache ich das auch nicht konsequent.</p>
+<p>Der Dep-Graph interessiert mich nicht mehr. Der ist gerichtet und nicht-zyklisch. Darüber muss ich nicht mehr nachdenken.</p>
+<p>Wichtig ist zu verstehen, dass eine funktionale Abhängigkeit nur dann existiert, wenn Logik (!) eine Funktion aufruft. Klingt doch auch plausibel, oder?</p>
+<p>In einer Integration werden nun zwar Funktionen aufgerufen - aber da steht keine Logik drin!!!</p>
+<p>Und da, wo Logik drin steht (Operation), da wird keine Funktion aufgerufen (die zu dem gehört, was man entwickelt). Also auch keine funktionalen Abhängigkeiten.</p>
+<p>Callbacks? Ne, benutze ich nicht. Die Bezeichnung suggeriert nämlich, dass einer, der aufruf, zurückgerufen werden will. Das gibts bei IODA aber nicht. Das ist dem PoMO geschuldet.</p>
+<p>Ich benutze Continuations. Daten fließen nur downstream. Aber auch das ist ein Implementationsdetail - genauso wie C# Events oder Queues oder Message Bus oder async/await oder Rx.</p>
+<p>IODA erzwingt keine bestimmte Implementationstechnik - solange die grundlegende Struktur erhalten bleibt.</p>
+<p>Leider muss ich sagen, dass du hier sehr technologieorientiert argumentierst. Das geht aber völlig am IODA-Punkt vorbei. Damit kannst du IODA nicht fassen. Technologie ist orthogonal zu IODA. (Wie auch zum Schichtenmodell oder Clean Architecture.)</p>
+<p>Es ist nicht mein Vorschlag, dass Deployment-Einheiten Bibs und Services sind. Ich sehe einfach keine anderen. Dafür sind beide gemacht.</p>
+<p>Funktionen und Klassen sind nicht fürs Deployment gemacht. Aber Bibs (und Komponenten als Spezialfall) und Services (als Spezialfall von Komponenten) sind genau dafür da. Sind sind opaque (wenn nicht sogar binär) oder gar autonom.</p>
+<p>(Eine weitere Deployment-Einheit ist natürlich die Anwendung selbst. Aber das lohnt der Erwähnung nicht hier.)</p>
+<p>Das ist ja auch mein Standpunkt in der µService-Diskussion: µServices sind Module, d.h. Code in µServices zu verpacken, dient ausschließlich (!) der Evolvierbarkeit (und Produktivität). Mit ihnen soll die Evolvierbarkeit zur Laufzeit verbessert werden.</p>
+<p>µServices dienen also nicht der Effizienz (z.B. Performance oder Skalierbarkeit oder Security). Dafür haben wir Serverprozesse. Die sind keine Module, sondern Hosts.</p>
+<p>Die Motivation, etwas in einen Host oder in ein Modul zu verpacken, ist also gänzlich unterschiedlich.</p>
+<p>Du sprichst über Laufzeitevolvierbarkeit. Dafür sind Module zuständig. Verpacke IODA-Module wie du magst. So wie du Schichten verpacken kannst, wie du magst.</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-04-16):</p>
+<p>@Mike: das Beispiel ist nur ein Beispiel (äh, ein Versuchsballon, um Feedback einzuholen). Ich dachte, ich haber es nicht zu stark vereinfacht, aber offenbar doch.
+Viele Wege führen nach Rom, ob funktionaler oder imperativer Stil - nun ja. Jedenfalls zeigt dein Code das ServiceLocator-Antipattern.
+Zum Testen etc. sage icht nichts. Schnittstellen erlauben testen.
+Was der Code eigentlich zeigt ist Komponentenorientierung und strikte Trennung zwischen Schnittstelle und Implementierung, sodass Schnittstelle und Implementierung getrennt versioniert werden könnten, falls die Implementierung einmal gebugtfixt wird.
+@Ralf: Aha, API hängt von nichts ab. Kommen also keine API's in Produkten, Komponenten vor? In Richtung Framework oder Betriebssystem oder sonstiges Low-Level-Zeugs sind also API's der akzeptierte Weg, zwischen Komponenten, Funktionseinheiten offenbar verpönt. Wenn API's offent so negatices Image haben, wieso sind die nicht komplett abgeschafft? Wieso können wir keine Schale oder Losigkeit um .NET legen und API-frei programmieren?
+Ernsthaft, wie sieht die Integration und Datenaustausch zweier Einheiten in Code aus?
+Data ist für mich auch eine API - zumindest ist das meine Begriffswelt.
+Mein Vorschlag für alle Losigkeit lautet:</p>
+<p>interface ICanDoAnything {
+  void Process(byte[] data)
+}</p>
+<p>Universell und einfach! Das ist doch super-lose und löst alle Probleme, oder?</p>
+<hr />
+<p><strong>Mike Bild</strong> (2015-04-16):</p>
+<p>@Ralf:  Ja Missverständnisse entstehen. Nicht so schlimm, deshalb können wir die ja Schritt für Schritt ausräumen ;).</p>
+<p>"funktionale Abhängigkeit nur dann existiert, wenn Logik (!) eine Funktion aufruft"</p>
+<p>Genau, wenn du eine dependency in etwas steckst, nehmen wir dein IRepository Beispiel aus Napkin, und dieses etwas dann eine methode darauf aufruft, nehmen wir Save(), dann ist das eine funktionalle Abhängigkeit. Aber, mein Fehler mich schlecht zu erinnern, dass eliminiert du ja in deinen Ausführungen. http://geekswithblogs.net/theArchitectsNapkin/archive/2013/08/19/messaging-for-more-decoupling.aspx</p>
+<p>Prima!</p>
+<p>Callbacks sind eine Form des IoC. Continuations oder der Continuation Passing Style eine spezielle Form Flows mit Callbacks umzusetzen. Du eliminierst also Dependencies über Callbacks und bildest zusätzlich Flow über ab CPS ab ;).</p>
+<p>Ja ich argumentiere erstmal technisch. Das ist mein Zugang zu deinem Konzept. Finde ich auch okay so, da Konzepte ohne Technologie selten Umsetzungen finden ;).</p>
+<p>"Funktionen und Klassen sind nicht fürs Deployment gemacht."</p>
+<p>Sorry, aber das sehe ich ganz und garnicht so. Denn dabei sind binaries / assemblies ein Implementierungsdetail. Was mich interessiert sind die Dateien, die API, die Integration und das Deployment. Selbstbeschreibend mit Abhängigkeiten und Version ist ein muss. Daran krankt die derzeitige Architektur und die Evolviebarkeite außerhalb des Codes.</p>
+<p>PS: "Deployment-Einheit ist natürlich die Anwendung selbst" - eine wichtige Erkenntnis - warum nicht alles so sehen? Alles ist ein Produkt, auch die verwendeten APIs.</p>
+<p>Zum Thema MicroServices und deinen Standpunkt. Ich verstehe deinen Ansatz - ABER ;)</p>
+<p>A) Ein MicroService ist ein Host-Process der eine API eben hosted.
+B) Ein MicroService ist eine ganz spezifische remoting API mit einem spezifischen Kontext. Weitere Integrationen innerhalb des MicroService sind also kaum noch nötig. Letztlich ist ein fein gegliedertes internes Design eine untergeordnete Entscheidung.</p>
+<p>Ja mir geht es bei "Architektur" um Laufzeitevolvierbarkeit. Den Blick und die Mittel für ein Anwendungs-SYSTEM zu schärfen. Und manchmal fängt es im "kleinen internen" an.</p>
+<p>PS: Das Schichtenmodell hats aber auch nicht mehr einfach, aber das ist einem Anwendungs-SYSTEM gerade egal ;)</p>
+<p>@Anonym:</p>
+<p>Ich benutze keinen ServiceLocator. Deshalb gibt es kein Antipattern. Mach nen</p>
+<p>using(var ctx = new Context(new CRM(), new Order()){</p>
+<p>Promise.Sequence(ctx, ...).Then(...)
+}</p>
+<p>draus - fertig. War auch zu ungenau und ist ein Laufzeitding - stimmt. Sind halt externe klassische APIs.</p>
+<p>Zu deinem Vorschlag</p>
+<p>"interface ICanDoAnything {
+void Process(byte[] data)
+}"</p>
+<p>Genau das ist Action bzw. mit JavaScript callback(err, data)!</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-04-16):</p>
+<p>@Mike: okay, auf Patterns springst du nicht an - man hätte auch Command verargumentieren können.</p>
+<p>Javascipt - nö. Das interface hat seinen Charme, man sieht es heute meist in JSON oder zuvor in XML. Ver- oder geändert hat sich aber nix! Hinsichtlich des Kopplungsgrads hat sich nicht viel getan, obwohl das vielerorts immer und immer wiederholt wird - einzig, hat man die Probleme woanders inverschoben.</p>
+<p>Was hier offenbar nicht verstanden wird, ist das eine Schnittstelle (oder API) eine TRENNENDES Element darstellt und als Kontrakt ZWEIER (oder mehr) Parnet agiert. Auf eine Schnittstelle kann ich aus zwei Seiten draufschauen:
+1) Aus Sicht des Anbieters, d.h. ich stelle die Funktion bereit.
+2) Aus Sicht des Nutzers, d.h. ich rufe die Funktion auf (kann auch nur eine Einruf im Sinne von "hier haste Daten" sein).</p>
+<p>Mit diesen beiden Sichten hat man alles und wird es leider auch nimmer mehr los.
+Bei typsicheren Sprachen kann man es explizit im Code manifestieren und vom Compiler überprüfen lassen. Man man aber auch generische bzw. dynamische Strukturen (Dictionary oder JSON) verwenden. Dann ist der Compiler raus - hoffentlich sind die Tests gut, d.h. Abdeckung hoch genug.</p>
+<p>Als goldende Regel muss man dann nur noch bedenken:</p>
+<p>JE MEHR API's ICH NUTZE, DESTO WENIGER CODE DARF DORT LIEGEN UND JE ÖFTERS ICH SELBST REFERENZIERT WERDE, DESTO WENIGER CODE DARF ICH ENTHALTEN.</p>
+<p>D.h. ein IOC/DI-Container nutzt viele API, nein die Implementierungen, also liegt dort nahezu Null Code, d.h. Logik.
+Eine API (oder bei Ralf auch Data und Data ist bei mir auch eine API) wird oft referenziert, d.h. dort darf nur minimal Code liegen.
+Operations, also die Implementierung einer API nutzt im Idealfall Null oder wenig API's, um die Abhängigkeiten schmal zu halten. Commands, Flows oder Integration nutzt APIs viele und verschiedene APIs, daher dort dort auch kaum Code (Logik) liegen.</p>
+<p>Damit vereinfacht sich das ganze Archutekturmodell auf API, Implementierung und zwischen APIs fliessen Daten, Commands oder sitzen Adapter. Oben, unten, Schichten etc. das interessiert alles nicht.</p>
+<p>Auf übergenerische Schnittstellen verzichte ich gern, weil ich den Compiler mag.</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-04-16):</p>
+<p>Programming wittout "if", stattdesse löst man in OO plymorph, und SRP/ISP, Separation of concerns oder Teile-und-Herrsche sind weitere weitervolle Regeln.</p>
+<p>Hört sich trivial an, ist in der Praxis aber so viel schwerer.</p>
+<p>Ich finde jede Beschreibung, vielleicht auch diese IODA dazu gut, aber mir fehlt das Fleisch. Beschreibende Worte (Regelwerke und leider auch Patterns) sind nicht genug, sonst würde man in der Praxis nicht soviele schlechte Umsetzungen sehen. Und zugegebenermaßen passiert es mir auch, aber alles ist klein genug, dass ich keine Angst habe, die eingeschlichenen Unsauberkeiten nicht wieder zu säubern.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2015-04-17):</p>
+<p>@Anonym: Wenn du Praxis sehen willst, dann kannst du dir 50+ "Musterlösungen" im Rahmen des Coding Dojos von Stefan Lieser in der dotnetpro anschauen.</p>
+<p>@Mike: I beg to differ. Wenn eine Methode Save() auf einem injizierten Repo aufruft, ist das eben nicht zwangsläufig eine funktionale Abhängigkeit. Das ist ja der Trick.</p>
+<p>Ja, da ruft ein Client Save() auf. Aber warum? Will er selbst etwas mit dem Ergebnis von Save() tun? Dann ist es eine funktionale Abhängigkeit. Dazu muss dann aber in dem Client Logik stehen.</p>
+<p>Steht im Client keine Logik, dann hat er selbst nicht vom Save()-Ergebnis. Also gibt es keine funktionale Abhängigkeit. Falls sich etwas in Save() ändert, gibt es keinen Grund, Logik im Client zu ändern. Dort gibt es ja keine.</p>
+<p>Das ist das Integration Operation Segregation Principle.</p>
+<p>Callbacks (oder Continuations) sind eine Form von Injektion. Aber das ist nebensächlich. Funktionale Abhängigkeiten gehen nicht durch ihre Nutzung weg.</p>
+<p>Dass du dir überlegst, wie ein Prinzip/Konzept umgesetzt in Code aussieht, ist ok. Am Ende muss ja Code geschrieben werden für jeden entworfenen Flow.</p>
+<p>Aber es bestimmt der Flow den Code und nicht umgekehrt. Du kannst das Prinzip nicht durch Technologie erklären oder auch nur motivieren.</p>
+<p>Die Motivation für IODA usw. ist unabhängig und vor jeder Technologie. Prinzipien und Meta-Modelle leiten das Handeln. Sie repräsentieren ein höheres Gut.</p>
+<p>In Datenflüssen gibt es prinzipiell keine funktionalen Abhängigkeiten (vgl. PoMO). Das bedeutet, es kann sie auch im Code, der die Datenflüsse implementiert, nicht geben. (Wenn man es denn richtig implementiert ;-)</p>
+<p>Beim Deployment sehe ich auch noch ein Missverständnis zwischen uns. Aber das lohnt der Vertiefung nicht, scheint mir. Bei IODA gehts nicht darum. Also sollten wir das Thema aus den Kommentaren hier heraushalten.</p>
+<p>Dass die Deployment/Packaging wichtig sind, verstehe ich aber natürlich.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2015-04-17):</p>
+<p>@Ralf:</p>
+<p>Funktionale Abhängigkeit existiert immer - auch mit deinem Trick statt Func mit Action zu arbeiten. Denn wir haben ja noch die Exceptions ;). Der Aufruf von Save() KANN also auch hier zu Seiteneffekten führen. Es muss also - wie du es sagst - richtig implementiert sein ;).</p>
+<p>Natürlich geht es mir auch im Flow, auch wenn ich hier und da andere Mittel einsetze.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2015-04-17):</p>
+<p>@Mike: Bitte lies doch genau, was ich geschrieben habe. Es geht nicht um einen Trick.</p>
+<p>Aber ich wiederhole nochmal:</p>
+<p>Eine funktionale Abhängigkeit ist nicht einfach da, weil eine Funktion aufgerufen wird.</p>
+<p>Funktionale Abhängigkeit hat nichts mit programmiersprachlichen Funktionen zu tun, sondern mit "Funktionieren".</p>
+<p>Eine funktionale Abhängigkeit ist da vorhanden, wo Logik andere Logik braucht.</p>
+<p>int f(int a) {
+  var x = a + 2;
+  var y = x + 3;
+  return y + 4;
+}</p>
+<p>f() enthält nur Logik. Wenn jetzt etwas von dieser Logik ausgelagert wird:</p>
+<p>int f(int a) {
+  var x = a + 2;
+  var y = g(x);
+  return y + 4;
+}</p>
+<p>Dann ist f(), d.h. die Logik von f(), funktional abhängig von g().</p>
+<p>Folgende Funktion ist jedoch nicht (!) funktional abhängig:</p>
+<p>int f'(int a) {
+  var x = h(a);
+  var y = g(x);
+  return k(y);
+}</p>
+<p>oder kürzer:</p>
+<p>int f'(int a) {
+  return k(g(h(a)));
+}</p>
+<p>f'() enthält keine (!) Logik. Damit ist f'() nicht funktional abhängig. f'() ruft ausschließlich Funktionen auf. Das macht aber keine funktionale Abhängigkeit. Denn f'() selbst tut nichts mit den Daten. Wenn sich an g() nun 14 addiert statt 3, dann muss f'() nicht verändert werden.</p>
+<p>Du erinnerst das SRP: "only one reason to change". Der einzige Grund für f'() sich zu ändern ist, dass der Fluss anders aussehen soll. Das ist aber nicht autom. der Fall, nur weil sich in h(), g(), k() etwas an der Logik ändert.</p>
+<p>h(), g(), k() wiederum sind auch nicht funktional abhängig. Die kennen einander ja gar nicht.</p>
+<p>Ich hoffe, nun verstehst du besser, was ich mit funktionaler Abhängigkeit meine und wir können das Thema zur Ruhe betten.</p>
+<p>IODA enthält keine funktionalen Abhängigkeiten aufgrund von IOSP und PoMO.</p>
+<p>Schichtenmodell &amp; Co jedoch enthalten funktionale Abhängigkeiten. Das macht ja ihr Problem aus. Sie trennen die Verantwortlichkeiten Operation und Integration nicht. Das halte ich für die zentrale Schwäche.</p>
+<p>Wer über SRP redet, muss halt rigoros sein. Und wer das ist, muss erkennen, dass ein Unterprogramm, das ein anderes aufruft und selbst noch Logik enthält, nie dem SRP dient, weil es zwei fundamentale Verantwortlichkeiten vermischt: die der Logik, also Verhaltenserzeugung, und die der Integration, d.h. der Zusammenstellung von Einzelverhalten zu einem Ganzen.</p>
+<p>Diese mangelnde Differenzierung spiegelt sich in Organisationen. Führungskräfte sind oft gleichzeitig Fachkräfte. Das haut dann da schon nicht hin. Wie soll es in der Software besser funktionieren?</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-04-17):</p>
+<p>@Ralf: Super Beispiel und toll erklärt :-)))</p>
+<p>Manchmal hilft ein Beispiel eben viel mehr als viele beschreibende Worte.</p>
+<p>In der Praxis muss man dann achtsam sein, dass sich in f() kein if einschleicht, um zu entscheiden, ob jetzt nur g(), nur h() oder beide hintereinander g(h(..)) oder h(g(..)) aufgerufen werden sollen.
+Da plädieren ich für eine polymorphe Lösung in der OO-Welt.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2015-04-17):</p>
+<p>@Ralf: Sorry, wir schweifen ab ...</p>
+<p>Letztlich ist f' = k(g(h(a))), egal welche Schreibweise gewählt wird, eine Funktionskomposition und nichts anderes als Logik. Hier wurde also per "Vorab"-Design eine Dekomposition durchgeführt.</p>
+<p>Aufgelöst könnte folgendes enstehen.</p>
+<p>h(a) = a + 1;
+g(a) = a + 1;
+k(a) = a + 1;</p>
+<p>(kgh)(a) = k(g(a+1))) = k(a+2) = a + 3
+(khg)(a) = k(h(a+1))) = k(a+2) = a + 3</p>
+<p>Das Ergebnis von f' ist immer a + 3, solange alle Operationen der Komposition dem Assoziativgesetz folgen geht alles in Ordnung. Ist das nicht der Fall wird es Tricky, z.B.</p>
+<p>h(a) = a + 1;
+g(a) = a * a;
+k(a) = a + 1;</p>
+<p>(kgh)(a) = k(g(a+1)) = k((a+1)^2) = a^2 + 2a + 1 + 1
+(khg)(a) = k(h(a^2)) = k(a^2+1) = a^2 + 1 + 1</p>
+<p>Somit steht f' in logischer Wechselwirkung (funktionaler Abhängigkeit) zu den Operationen in k,g UND h. Wer Logik in g ändert, muss an den Flow denken und diesen möglicherweise ebenfalls anpassen. Heißt, der Flow bestimmt die Logik und die Logik den Flow, weil Flow selbst Logik ist.Das ist mit MEINER funktionalen Abhängigkeit gemeint.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2015-04-17):</p>
+<p>@Mike: Ihr differieren wir in unserer Definition von Logik.</p>
+<p>Was ist deine?</p>
+<p>Meine ist: Anweisungen, die transformieren, die den Kontrollfluss verändern und die auf APIs (Frameworks) zugreifen.</p>
+<p>Nur Logik stellt Verhalten her. Das ist ihr Zweck.</p>
+<p>Ein Funktionsaufruf stellt kein (!) Verhalten her. Das Verhalten von f() mag sein, "Reagiere auf einen Input mit dessen Quadrierung."</p>
+<p>Dann ist es egal, ob es heißt:</p>
+<p>int f(int a) {
+  return a<em>a</em>a*a;
+}</p>
+<p>oder</p>
+<p>int f(int a) {
+  for(var i=2; i&lt;4; i++)
+    a *= a;
+  return a;
+}</p>
+<p>Das ist unterschiedliche Logik, die dasselbe Verhalten herstellt.</p>
+<p>Daran wird aber nichts verändert, wenn ein Funktionsaufruf eingezogen wird:</p>
+<p>int f(int a) {
+  for(var i=2; i&lt;4; i++)
+    a = Square(a);
+  return a;
+}</p>
+<p>int Square(int a) {
+  return a*a;
+}</p>
+<p>Ein Funktionsaufruf ist nicht verhaltensrelevant. Er stellt eben keine (!) Logik dar.</p>
+<p>Ergo: Eine reine Komposition, wie du sie nennst, oder eben meine Integration sind keine Logik. Es gibt mithin keine (!) funktionalen Abhängigkeiten.</p>
+<p>Wenn man jedoch Logik und Funktionsaufrufe mischt... dann entstehen funktionale Abhängigkeiten.</p>
+<p>Die gibt es in Operationen. Die sind abhängig von APIs, d.h. anderer Leute Funktionen. Aber nur dort. And that's the point.</p>
+<p>Wir sollten eine differenzierte Sprache pflegen. Wir sollten genau wissen, was Module sind, was Komponenten sind, was Logik ist und was Flow.</p>
+<p>Flow ist Datenfluss und kein Kontrollfluss.</p>
+<p>Logik ist Kontrollfluss.</p>
+<p>Logik ist imperativ, Datenfluss deklarativ.</p>
+<p>Imperative Programmierung "skaliert nicht". Insbesondere nicht, wenn man darin Logik und funktionale Abhängigkeiten mischt. Deshalb entstehen Unterprogramme mit 10000 Zeilen.</p>
+<p>Wenn man Logik wie hier definiert und Integration aber strickt trennt... dann entstehen keine solch langen Unterprogramme mehr. Das zeigt die Praxis. Da muss man nicht mal sagen, Unterprogramme sollen nicht mehr als N Zeilen enthalten. Es geschieht von allein.</p>
+<p>Dito ist dann auf einen Blick zu sehen, wie etwas funktioniert. In Integrationen ist der Flow sichtbar. Keine Logik trübt ihn.</p>
+<p>Und in Operationen... da steht Logik, aber vergleichsweise überschaubar. Da hat man den Kontrollfluss ebenfalls im Blick. Denn es gibt keine "Geheimnisse" "weiter unten", denn darunter sind nur Black Boxes: APIs.</p>
+<p>Diese Klarheit entsteht durch IOSP und PoMO. Das Ergebnis ist IODA.</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-04-17):</p>
+<p>In f() ist lediglich definiert, welche Funktionen aufzurufen sind (d.h. der Ablauf).
+Wenn g, h, k, geändert werden, mag f() falsch sein, aber das ist nicht das Problem von f(), sondern wenn ich die Implementierung grundlegend ändere (z.B. statt x + 3 mache ich x*x), dann ist das Ergebnis höchstwahrscheinlich falsch, aber es ist nicht das Problem von f().</p>
+<p>Die Dekomposition kann man immer betreiben - aber wo landen wir dann: alles in Main()?</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-04-17):</p>
+<p>@Mike: Wieso skaliert imperative Programmierung nicht?
+Skalierung beszogen auf was? Auf Hardwareressourcen, auf Software-Schreiber oder...?</p>
+<p>Aber damit scheift man ab.</p>
+<p>Wo ist das Problem, dass f() verschiedene Funktionen aufruft?
+Diese Funktionsaufrufe (sind bei mir nach wie vor Komponenten-API-Aufrufe) verbindet die Logik. f() ist Flow, d.h. dort ist das Kochrezept / der Ablauf definiert.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2015-04-17):</p>
+<p>@Ralf:</p>
+<p>Meine Definition von Logik hab ich bereits versucht zu klären:</p>
+<p>Wenn (kgh)(a) != (khg)(a) ist, dann ist Integration/Datenfluss für mich Logik.</p>
+<p>PS: Das ist, nach meiner Meinung, eher häufig so.</p>
+<p>Wartung &amp; Seiteneffekte (Evolvierbarkeit) - wer eine Operation (Kontrollfluß) oder Flow (Datenfluss/Integration) unbedacht ändert, läuft (wie ich meine fast immer) Gefahr, auch den Flow oder die Operationen in Abhängigkeit anpassen zu müssen. Ergo, ich habe mit bestimmten Änderungen ebenfalls ein Integrations- und Kontrollproblem. Daraus folgt für mich, vorab sollte das gewünschte Verhalten und Seiteneffekte auf Flow oder Operation gründlich analysiert werden. Und das geht mit IODA durch die vorgeschlagene Struktur schon einfacher.</p>
+<p>Imperative Programmierung "skaliert nicht". &lt;- Da stimme ich dir zu!</p>
+<p>Bitte nicht falsch verstehen, natürlich ist Dekomposition und Komposition (Integration) sinnvoll.</p>
+<p>@Anonym:
+"Wieso skaliert imperative Programmierung nicht?"</p>
+<p>Habe ich nicht behauptet, aber vertrete ich ;).</p>
+<p>"Wo ist das Problem, dass f() verschiedene Funktionen aufruft?"</p>
+<p>Weil Anwendungsentwicklung meist aus - mache aus a + 1 ein a * a und damit (kgh)(a) != (khg)(a) ist ;). Es entstehen ungewollte Seiteneffekte im Datenfluss (Integration), obwohl ich nur die Operation (Kontrollfluss) verändert habe. Was jetzt nicht heißt, dass diese Art der Integration nicht gut wäre. Es heißt, dass trotz rigorosen SRP funktionale Abhängigkeiten zwischen Datenfluss (Integration) und Kontrollfluß (Operation) existieren. Aus Systemsicht ist die Gesamtlogik dann eine andere.</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-04-17):</p>
+<p>@Mike: "Imperative Programmierung "skaliert nicht"" - deine Worte.</p>
+<p>Wenn ich die Implementierung ändere, sodass der Flow zu falschen Ergebnisse führt, kann man das nicht dem Flow anlasten.</p>
+<p>Wenn eine Schraube 20kN aushält und bisher es auch immer getan hat und es keinerlei Probleme gab, dann dann man der Schraube doch nicht die "Schuld" geben, wenn das Innengewinde des Motorblocks, indem man bisher die Schraube zigfach verbaut hatte, jetzt nicht mehr dieser Belastung standhält, weil man z.B. die Mischung des Gusses oder sonstwas geändert hatte. Ich finde das zu spitzfindig.</p>
+<p>Schnittstellen (der Kontrakt) haben immer zwei Partner: Nutzer und Anbieter. Wenn jetzt einseitig das Verhalten sich ändert, kann man dem anderen die Schuld geben. Oder man stellt fest, dass die Schnittstelle eben doch zu löcherig oder ungenau ist. Typ. in C# kann man für Basisdatentypen keine weiteren Constraints angeben, z.B. int nur von 10 .. 95. In anderen Sprachen geht das. Vor- und Nachbedingungen etc. Das ist aber alles nicht mehr Architektur. Daher sollten wir hier nicht kämpfen.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2015-04-17):</p>
+<p>@Anonym: Imperative Programmierung "skaliert nicht" - Nochmal, NEIN. Das hatte Ralf geschrieben und dem stimme ich zu. Bitte prüfen!</p>
+<p>Materialkunde und Mechanik ist jetzt nicht mein Fachbereich. So und so kann ich SW + Mathematik nur schwer damit vergleichen. Lieber wäre mir also ein logischer Ausdruck gewesen. Dennoch behaupte ich, dass nachhaltiges Engineering das prüft. Heißt, wir TESTEN den neuen Guss mit alten Schrauben und liefern evtl. neue Schrauben.</p>
+<p>Zu Schnittstellen:</p>
+<p>Der "klassische" Kontrakt, egal ob nun Interface, Funktion oder Datentyp, ist IMMER löchrig. Sie wird durch den Compiler / Interpreter immer nur auf struktureller Ebene (Syntax/Typ) geprüft. In den seltensten Fällen (auch dort löchrig) semantisch. Semantik ist IMHO jedoch entscheidend, da alles andere im Vergleich "einfach" ist bzw. schnell "auffällt". Meine Behauptung - wer schnell und einfach Laufzeittests in einem semantischen Kontext herstellen kann, ist besser dran.</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-04-18):</p>
+<p>@Mike: Sorry, Skalierungsprobeleme kommen von Ralf.
+Test, Prüfung und Semantik ist richtig, aber jetzt weniger das Thema.</p>
+<p>Ja, Analogien haben ihre Nachteile.</p>
+<p>Die (allgemeine) Mathematik halte ich hier und jetzt nicht für sinnvoll.</p>
+<p>Analogien halte ich dennoch nicht für verkeht. Vielleicht bekommt man passende Modelle und kann angewandte Mathematik betreiben.</p>
+<p>Was wäre in Software der Motorblock? Was die Schraube?</p>
+<p>Es gibt API, Implementierungen/Operations/Komponenten und Daten(strukturen), die hin- und hergereicht werden. Die Abhängigkeiten sind maximal schmal, aber nicht schmaler. Das ist doch was.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2015-04-18):</p>
+<p>@Anonym:</p>
+<p>Sorry, aber bei SW gibt es IMHO keine Analogie zu vorrangig materielle Güter. Der Wert von SW ist vor allem inhaltlich, immateriell bzw. stehen in einem Zusammenhang zu einer Sache. Wenn schon eine Analogie, dann würde ich ein Buch wählen. Ein Buch kann vom Autor oder Autorengemeinschaft besonders gut gegliedert, logisch, besonders sprechend beschrieben, etc. sein. Insgesamt ergibt sich durch viele Worte ein bestimmter Sinn oder Unsinn ;) und damit der Nutzen. Das Papier oder die PDF-Datei ist nebensächlich.</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-04-18):</p>
+<p>@Mike: Da hast du vollkommen recht. Die Analogie hilft nun auch wirklich nicht. Da stimme ich vollends zu.</p>
+<p>Aber: Software ist kein Selbstzweck!
+Die Mathematik wurde teils "erfunden", weil man physikalische Phänomene und Experimente beschreiben musste. Bei Software sehe ich es analog. Ebenso finde ich es verständlich, wenn man tatsächlich Beispiele abseits der Software, aus Mechanik, Physik, Biologie etc. findet. Vielleicht ist ein Buch passend, aber mir fällt es schwer. Das Schreiben eines Buches ist das Schreiben von Software, okay.</p>
+<p>Ich und viele andere lösen mit Software real existierende Aufgaben, Probleme, optimieren oder vereinfachen.
+Z.b. Geschäftprozesse, Simulationen oder Steuerung/Automation, um nur einige zu nennen.</p>
+<p>Im Rahmen des jeweiligen Kontextes denkt man nach, wie man es umsetzen möge, entwickelt Modelle und prägt es in Code aus.</p>
+<p>Wenn diese Aufgabenstellung mit den Gedanken aus Operations, Data, Integration und API strukturieren kann, weil man festgestellt hat, es erweist sich als gutes Strukturierungsmerkmal, dann ist das doch gut.</p>
+<p>Im konkreten Fall mappt man das dann auf die Problemdomäne. Und gemäß DDD und der Projektsprache, würde ich definitiv Softwarestrukturen wünschen, die der Problemdomäne nahe kommen. D.h. wenn es real einen Motorblock gibt, gibt es auch "Motorblock" in Software - eine Datenstruktur, eine Komponente oder vielleicht ein Funktion. Eine Schraube, dito.</p>
+<p>Der Anwendungsfall "Zylinderblock verschrauben" findet man auch.</p>
+<p>Ich bin immer bemüht den Kontext, den Zweck in Software erkennen zu lassen. Dabei nutze ich Regeln, wie z.B. IODA.</p>
+<p>Einerseits kann man Dinge anstrakt oder allgemein diskutieren, wie hier, aber man muss es konkret mappen, sonst verliert man sich. Ich will keine übergenerische Software. Mag cool sein, aber hat ebenso gravierende Nachteile (Verständnis, Debugging, etc.). Manchmal nehme ich sogar bewusst eine vielleicht schlecht Lösung in Kauf (die vielleicht wartungsintensiver ist), wenn das Verständnis gefördert wird.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2015-04-19):</p>
+<p>@Anonym:</p>
+<p>Natürlich ist Software kein Selbstzweck. Es dient ja einer bestimmten Sache. Im übrigen der Grund, warum ich Continuous Delivery für konkrete "kleine" Probleme als weitaus wichtiger empfinde, als gut gemeinte Entwürfe. Ist aber ein anderes Thema.</p>
+<p>Schön wenn du SW beschreibender gestalten möchtest. Wenn die Domäne das zulässt, mache ich das auch gern. Das hat aber mehr mit Analyse und Kommunikation zu tun.</p>
+<p>Die Sache ist doch, wie beschreibst du Sachverhalte in der Mechanik, Physik und evtl. Biologie? Wie beschreibst du Geschäftsprozesse oder Fertigungsanlagen? Wie beschreibst du Simulatoren, Treiber oder Netzwerkprotokolle?</p>
+<p>Du benötigst meist ein oder mehrere deterministische Model. Um das zu erstellen, gibt es Konzepte. Flow ist eins. Sogar ein ziemlich gutes, da es, wie du siehst (Seiteneffekte ausgenommen), sich meist auch mathematisch belegen lässt. Technologieneutral ist sie allemal, denn (kgh)(a) =</p>
+<p>F# k |&gt; g |&gt; h
+NodeJS k.pipe(g).pipe(h)
+Shell k | g | h
+...</p>
+<p>DDD ist auch eins. Vielleicht nicht so breit wie Flow aufgestellt, aber auch eins.</p>
+<p>Mir geht es, mal von den kleinen "Tricky" Denksportaufgaben abgesehen, um etwas anderes in diesem Artikel. Ein Umdenken auf die Systemebene. Ich meine letztlich ist es egal ob du (khg)(a) mit k.pipe(h) ... oder als k | h ... beschreibst. Das Konzept und die Seiteneffekte ;) sind gleich. Jetzt musst du nur noch schnell und einfach liefern und integrieren.</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-04-19):</p>
+<p>@Mike: ja, sehe ich auch so</p>
+<p>Lass und zu Thema zurückkommen.
+Mein erster Einwand war, die Abhängigkeiten, das ist jetzt mehr oder minder geklärt.
+Meine grundlegenden Prinzipien haben keine Neuausrichtung bekommen, für mich genügt es.</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-04-23):</p>
+<p>@Ralf: Sind dir die Arbeiten von Crista Lopes bekannt?
+https://github.com/crista/exercises-in-programming-style</p>
+<p>Hier werden verschiedene Programmierstile für ein Programmierproblem gezeigt. Interessant, wie auch die Vorträge von Crista.</p>
+<p>BTW: Ich habe ein Teil meiner Quellen nach der Funktionalen Abhängigkeit gescannt und das eine oder andere verschoben, sodass die Integration tatsächlich nur Integration und keine Logik macht. Sieht mancherorts wirklich klarer und verständlicher aus. Ist manchmal nur ein kleiner Gewinn, aber stetige Verbesserung macht gute Software :-)</p>
+<hr />
+<p><strong>Mike Bild</strong> (2015-05-08):</p>
+<p>@https://github.com/crista/exercises-in-programming-style</p>
+<p>Interessant. Danke. Wobei mir die Variante "I/O Monad"</p>
+<p>https://github.com/crista/exercises-in-programming-style/tree/master/24-quarantine</p>
+<p>in der Praxis doch sinnvoller erscheint.</p>
+<p>Gruß, Mike</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2015-05-08):</p>
+<p>@Anonym: Danke für den Hinweis. Interessanter Ansatz. Leider ist das Buch nicht als vernünftiges eBook erhältlich :-(</p>
+<p>Bei "Kata für Kata" gehen wir den umgekehrten Weg: unterschiedliche Probleme mit demselben Stil bewältigen.</p>
+<p>Für Spezialprobleme fein differenzierte Hammer zu haben, ist nicht schlecht. Aber die meisten Leute haben keine Zeit, sich so auf viele Tools einzustellen. Den meisten Leuten taugt daher eher ein Universalhammer für 80% der Probleme. Das ist Flow Design (am ehesten mit der Pipeline Lösung zu vergleichen).</p>
+<p>Und gelegentlich nimmt man dann einen anderen Hammer zu Hand, z.B. einen Zustandsautomaten für die Modellierug.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2015-05-08):</p>
+<p>@Ralf: +1</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

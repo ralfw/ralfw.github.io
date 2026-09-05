@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modelle für Geschäftsanwendungen mit Domain-Driven Design — ralfw.de Archiv</title>
+<meta name="description" content="Software soll man zuerst modellieren, heißt es. Nicht gleich loscodieren, sondern erst irgendwie planen. Dieses Planen bezeichnet man oft als Modellieren. Aber was bedeutet “Modell">
+<link rel="canonical" href="https://ralfw.de/archiv/2009/modelle-fur-geschaftsanwendungen-mit/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Modelle für Geschäftsanwendungen mit Domain-Driven Design — ralfw.de Archiv">
+<meta property="og:description" content="Software soll man zuerst modellieren, heißt es. Nicht gleich loscodieren, sondern erst irgendwie planen. Dieses Planen bezeichnet man oft als Modellieren. Aber was bedeutet “Modell">
+<meta property="og:url" content="https://ralfw.de/archiv/2009/modelle-fur-geschaftsanwendungen-mit/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Modelle für Geschäftsanwendungen mit Domain-Driven Design</h1>
+    <div class="doc-meta"><span>24. Sept. 2009</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2009/09/modelle-fur-geschaftsanwendungen-mit.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2009/modelle-fur-geschaftsanwendungen-mit/</code></span></div>
+    <div class="art"><p>Software soll man zuerst modellieren, heißt es. Nicht gleich loscodieren, sondern erst irgendwie planen. Dieses Planen bezeichnet man oft als Modellieren. Aber was bedeutet “Modellieren”? Was ist ein Modell für eine Software?</p>
+<h2>Was ist ein Modell?</h2>
+<p>Wikipedia sagt zum <a rel="noopener" href="http://de.wikipedia.org/wiki/Modell">Begriff “Modell”</a>:</p>
+<blockquote>
+<p>“Von einem Modell spricht man oftmals als Gegenstand wissenschaftlicher Methodik und meint damit, dass eine zu untersuchende Realität durch bestimmte Erklärungsgrößen im Rahmen einer wissenschaftlich handhabbaren Theorie abgebildet wird. Da im Allgemeinen nicht alle Aspekte der untersuchten Realität in Modellen abbildbar sind, wird Modellbildung oftmals als Reduktion, Konstruktion oder Abstraktion bezeichnet.”</p>
+</blockquote>
+<p>Achso, alles klar, oder? ;-) Nein, ich glaube, das verdient noch etwas Übersetzungsmühe. Die wichtigen Begriffe sind aus meiner Sicht:</p>
+<ul>
+<li>Realität: Die Problemdomäne mit ihren Anforderungen  Theorie: Das Modell als eine mit Unsicherheiten/Unvollständigkeiten behaftete Beschreibung der Realität  Reduktion: Das Modell beschreibt nur einen Ausschnitt der Realität  Abstraktion: Das Modell beschreibt die Realität in allgemeinen Begriffen</li>
+</ul>
+<p><strong>Ein Modell beschreibt also einen Ausschnitt der Realität in allgemeinerer Form und unter bewusster Auslassung mancher Details. Modelle konzentrieren sich also auf das Wesentliche aus einem bestimmten Blickwinkel.</strong></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/ea925c3463b2334f.png" /></p>
+<p>Beispiel: Für die Problemdomäne “Schuss aus einer Kanone” ist die Formel y=x^2 ein Modell, das den Flug der Kanonenkugel beschreibt. Das Modell reduziert die Problemdomäne, weil in ihm z.B. Flugbahneinflüsse durch Wind nicht berücksichtigt werden; und es abstrahiert von den Konkreta Kanone, Pulver, Kugel usw., indem es die Flugbahn mit rein mathematischen Mitteln beschreibt. In der Formel gibt es keine Kanone und keine Kugel und kein Ziel mehr, sondern nur noch Punkte in einem Koordinatensystem.</p>
+<p>Der Zweck solchen Modells ist es, eine Domäne in der Realität besser zu verstehen, um dann Antworten zu liefern. <strong>Ein Modell hilft also Fragen zu klären, die sich im Detailreichtum der Realität nicht so einfach beantworten lassen</strong>, z.B. die, wie eine Kanone ausgerichtet werden muss, um ein Ziel zu treffen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/41b2cb7b1fcce5ad.png" /></p>
+<p>Modelle sind damit wie Landkarten. Sie schaffen Überblick. Mit ihnen wird die Planung einer Lösung handhabbar, ohne dass man sie sogleich ausführen muss.</p>
+<p>Sie können sich von A nach B einen Weg durch ein Terrain bahnen. Das ist dann schon eine konkrete Lösung. Oder Sie können auf einer Landkarte mit dem Finger wandern. Da gewinnen Sie einen Überblick, erkennen Hindernisse, können Alternativen diskutieren. Im Gelände “implementieren” Sie dann Ihre Weg-Planung. Das geht zwar nicht glatt, aber die Wahrscheinlichkeit großer Überraschungen ist viel geringer als ohne Terrain-Modell. Die Landkarte hilft also bei Beantwortungen von Fragen an ein Terrain.</p>
+<p>Gleiches gilt für das Modell eines Hauses. Früher war ein solches Modell materiell. Es sollte z.B. dem Auftraggeber einen Überblick über das spätere Erscheinungsbild geben. Der konnte sich das anhand von Blaupausen schlecht vorstellen. Also baute ein Modellbauer ein Modell zum “Sehen und Anfassen”. Vor der Ausführung konnten anhand des Modells dann Fragen beantwortet werden wie z.B. “Ist die Anordnung der Räume so praktikabel, wie man es sich gedacht hat?” oder “Pass sich das Haus gut in die Umgebung ein?”</p>
+<p>Details der Realität wie Baustoffe oder Stabilität blendet so ein Modell aus, es reduziert die Realität. Und die Abstraktion besteht in der Handhabbarmachung. Das Modell ist kleiner als das spätere reale Haus. Es konzentriert sich auch auf das für die Fragestellungen Wesentliche, z.B. Größenverhältnisse oder Stil. Damit dient es einem einfacheren Erkenntnisgewinn als er möglich wäre, würde das Haus erst komplett ausgeführt.</p>
+<p>Eine Kulisse ist deshalb kein Modell. Erstens dient sie ohnehin nicht dem Erkenntnisgewinn, zweitens macht sie die Realität nicht wirklich handhabbarer, weil sie Originalgröße hat. Da nützt auch die Reduktion nichts, die eine Kulisse betreibt. Sie besteht z.B. nicht aus dem Baustoff realer Häuser.</p>
+<p>Dass dann heute Hausmodell meist virtuell sind, tut ihrem Modellcharakter keinen Abbruch. Im Gegenteil! Die Virtualität betont ihn. Sie reduzieren quasi maximal und können je nach Fragestellungen ganz unterschiedlich abstrahieren, z.B. indem sie sich auf das Aussehen oder die Wärmeleitung oder einen anderen Aspekt konzentrieren.</p>
+<h2>Modelle in der Softwareentwicklung</h2>
+<p><strong>Modelle in der Softwareentwicklung müssen dieselben Kriterien wie Modelle in anderen Bereichen erfüllen, um wirklich Modelle zu sein. Sie müssen also reduzieren und abstrahieren</strong> und es damit einfacher machen, Fragen zu beantworten bzw. einen Überblick zu gewinnen.</p>
+<p>Diese Modelle können sich auf die Problemdomäne beziehen und z.B. einfach nur die Realität des Kunden beschreiben. Dann dienen sie der Analyse. Oder sie können sich auf die Lösung beziehen, d.h. die Software, welche Anforderungen in der Problemdomäne des Kunden erfüllen soll. Dann dienen sie dem Entwurf. Wenn von Softwaremodellierung die Rede ist, sind Entwurfsmodelle gemeint. Darauf konzentriere ich mich denn auch im Folgenden.</p>
+<p>Wie könnte nun ein Softwaremodell aussehen? Im Grunde ist alles recht, was reduziert und abstrahiert – und zwar von der Implementation! Ha!</p>
+<p>Das müssen wir uns auf der Zunge zergehen lassen: <strong>Ein Entwurfsmodell abstrahiert von der Implementation.</strong> (Die Reduktion lasse ich mal unter den Tisch fallen, um die Argumentation einfacher zu halten.)</p>
+<p>Klar, abstrahieren muss ein Modell, sonst bietet es keinen Vorteil gegenüber der Implementation. Oder anders: Modellierung findet nur dort statt, wo abstrahiert wird. <strong>Was nicht abstrahiert, das ist kein Modell.</strong></p>
+<h2>Klassendiagramme modellieren nicht</h2>
+<p>Das lässt eigentlich nur eine sehr ernüchternde Erkenntnis zu: <strong>Die üblichen Klassendiagramme sind keine Modelle.</strong>Sie abstrahieren einfach nicht. Klassendiagramme sind nur eine andere Notation für das, was auch in Quellcode ausgedrückt werden kann – und zwar 1:1. Sie machen das zwar visuell, aber deshalb reduzieren sie allerhöchstens wenig (weil sie Methodenimplementationen auslassen). Vor allem abstrahieren sie dadurch jedoch nicht. Eine Klasse als Rechteck liegt auf keinem höheren Abstraktionsniveau als eine textuell beschriebene Klasse.</p>
+<p>Wer direkt mit Klassen seine Software entwirft, der modelliert sie also nicht, sondern legt gleich sozusagen “Stein auf Stein”. Da macht es auch keinen Unterschied, wenn diese Klassen mit CRC Cards im Rollenspiel gefunden werden. Solange Klassen gesucht werden, findet keine Modellierung statt.</p>
+<p>Das ist natürlich nicht per se falsch. Aber man sollte sich bewusst sein, dass man eben im Terrain wandert und nicht auf eine Karte blickt. <strong>Visualität macht noch kein Modell. Modell ist, was abstrahiert. Egal wie.</strong></p>
+<h2>Etablierte Modelle der Softwareentwicklung</h2>
+<p>Nachdem ich nun die für manche wohl heilige Kuh “Klassendiagramm” geschlachtet habe ;-), stellt sich ganz berechtigt die Frage, was denn dann Modelle sein sollen.</p>
+<p><a rel="noopener" href="http://www.amazon.de/Modellierung-Grundlagen-formale-Methoden-Kastens/dp/3446415378"></a>Ein Blick in die Informatikliteratur erhöht die Modellkenntnis, könnte man in Anlehnung an ein juristisches Sprichwort sagen. Da findet sich nämlich z.B. ein Titel wie dieser: <a rel="noopener" href="http://www.amazon.de/Modellierung-Grundlagen-formale-Methoden-Kastens/dp/3446415378">“Modellierung – Grundlagen und formale Methoden”</a>.</p>
+<p>Darin – soviel sollte inzwischen gewiss sein – findet sich kein einziges Klassendiagramm. Modellierung hat einfach nichts mit einem Programmierparadigma wie der Objektorientierung zu tun. Ja, ich möchte fast sagen, sofern in einer Darstellung Spuren einer Plattform oder eines Implementationsparadigmas zu finden sind, kann es kein Modell sein. Das trifft allemal auf Klassen und ihre Verwandten die Module zu. Klingt rigoros und ist hier bewusst so gemeint. Sie werden sehen, worauf ich abziele.</p>
+<p>Wenn kein Klassendiagramm, was aber dann als Modell? Unter anderem bietet das empfehlenswerte Büchlein diese Modellarten:</p>
+<ul>
+<li>Graphen  Endliche Automaten  Grammatiken</li>
+</ul>
+<p>Wenn Sie einen online Shop programmieren sollen, dann könnten Sie den z.B. als endlichen Automaten modellieren.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/32f34050cb0570ca.png" /></p>
+<p>Das ist eine echte Abstraktion der angestrebten Lösung! So bekommt man Übersicht, so lassen sich Fragen leicht stellen. Das versteht womöglich sogar der Kunde, für den Sie den Shop entwickeln.</p>
+<p>Die Visualität der Darstellung macht die Modellhaftigkeit allerdings nicht aus. Der Automat wäre immer noch ein Modell, würden Sie ihn als Tabelle beschreiben:</p>
+<pre><code>  Suchen In Warenkorb Zur Kasse Menge ändern Bezahlen  Z1 Z1 Z2        Z2 Z2   Z3      Z3       Z3 Z1
+</code></pre>
+<p>Warum nun aber ein Modell für den Shop und nicht einfach nur ein hübsches Klassendiagramm? Der Sprung wäre zu weit von der Problemdomäne direkt in die Lösungsdomäne. Sie würden quasi mühevoll einen Berg durchtunneln. Den Berg, der das Tal des Problems vom Tal der Lösung trennt.</p>
+<p>Mit einem Modell dazwischen machen Sie eine Wanderung vom einen ins andere Tal. Sie arbeiten sich einen Abstraktionsberg hinauf, der Ihnen auf dem Gipfel eine schöne Aussicht auf beide Täler bietet. Zumindest beim Abstieg ins Lösungstal können Sie daher Ihren Weg planen, weil Sie vom hohen Abstraktionsgipfel auf die Niederungen des Lösungsterrains blicken. Außerdem übersehen Sie aber auch noch das Terrain Ihres Aufstiegs. Sie bekommen also auch einen besseren Überblick über das Problem.</p>
+<p>In Bezug auf das Shop-Beispiel bedeutet das: Die herausgearbeiteten Ereignisse und Zustände machen dem Kunden klar, wie Sie seine Problemdomäne verstanden haben. Ihm geht jetzt womöglich auf, dass man nach dem Gang zur Kasse keinen weiteren Artikel mehr in den Warenkorb legen kann.</p>
+<p>Und Sie haben eine sehr abstrakte Beschreibung Ihrer Lösung, die Sie einfach in Code umsetzen können. Für Zustandsautomaten gibt es etablierte Implementationsstrategien. Die können Sie natürlich als Klassendiagramme skizzieren. Die Ebene des Modells verlassen Sie jedoch damit.</p>
+<p>Gleiches gilt, wenn Sie z.B. die Kommunikation zwischen Client und Server als Konversation in einer Sprache modellieren, die Sie mit einer Grammatik beschreiben.</p>
+<p>Und es gilt auch, wenn Sie Ihren Ansatz zur Lösung der KataPotter als Graph modellieren.</p>
+<p>Spüren Sie doch einmal in sich hinein: Fühlen Sie beim Umgang mit einem echten Modell nicht auch eine gewisse Leichtigkeit? Ist es nicht entspannend, sich nicht mit Klassen herumschlagen zu müssen? Oder wenn, dann sollten die Klassen sich quasi von allein ergeben aus dem Modell – als Implementierungsdetails nach einer Übersetzungsvorschrift. Das kann doch nur der Korrektheit Ihrer Lösung zuträglich sein.</p>
+<h2>Modelle für Geschäftsanwendungen</h2>
+<p>Jetzt zur Masterfrage: Wie sollen denn Modelle für Geschäftsanwendungen aussehen? Was, wenn Graphen, Automaten, Grammatiken nicht passen und auch keine griffige Formel Problem bzw. Lösung hübsch abstrakt beschreiben?</p>
+<p>Nun, nicht triviale Geschäftsanwendungen bieten sicherlich Platz für mehrere Modelle. Die Benutzerinteraktion mag eben doch passend mit einem endlichen Automaten modelliert werden. Und für die Planung von Ressourcen bietet sich vielleicht ein mathematisches Modell an.</p>
+<p>Doch die formalen Modelle aus Informatik und Mathematik decken sicherlich nicht die ganze Anwendung ab. Was also tun mit den Lücken? Oder was tun, um die verschiedenen kleineren Modelle unter einem Dach zusammenzufassen?</p>
+<p><a rel="noopener" href="http://www.amazon.de/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215"></a>Ich glaube, genau dafür macht <a rel="noopener" href="http://www.amazon.de/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215">”Domain-Driven Design”</a> (DDD) von Eric Evans einen Vorschlag. Der lautet: <strong>Modelliere (Geschäfts)Anwendungen mit Services, Entitäten bzw. Aggregaten und Value Objects sowie den “Hilfsdiensten” Applikationsschicht und Repository.</strong></p>
+<p>Dass es sich bei Services usw. um Elemente eines Modells handelt, können sie an der Abwesenheit von Implementationsdetails erkennen. Diese Konzepte haben nichts direkt zu tun mit Klassen. Sie können Service, Entität oder Repository auch mit C implementieren. Mit C# mag es leichter fallen, doch Objektorientierung ist nicht zwingend nötig.</p>
+<p>Die dynamischen Aspekte eines online Shops mögen Sie nun also mit einem endlichen Automaten modellieren. Was ist aber mit den statischen Aspekten? Was fließt durch den Automaten? Wer sind die Beteiligten an einem Bestellvorgang?</p>
+<p>Hier kommt DDD ins Spiel. Denken Sie nicht sofort in Klassen, sondern in DDD Begriffen. Für die gibt es später Übersetzungen in Klassen. Aber zunächst wollen Sie nichts von diesen Details wissen. Der online Shop lässt sich leichter auf einem höheren Abstraktionsniveau entwerfen.</p>
+<p>Fragen Sie also: Was sind die Entitäten? Was sind die Value Objects? Was sind die Services?</p>
+<p>Ohne hier näher auf DDD eingehen zu wollen, liegen folgende Elemente eines online-Shop-Modells nahe:</p>
+<ul>
+<li>Warenkorb-Entität  Warenkorbposition-Value-Object  Produkt-Entität  Kunde-Entität  Warenkorb-Aggregat  Warenkorb-Repository  Produkt-Repository  Kunde-Repository  Bestellung-Service</li>
+</ul>
+<p>Ähnliches hätten Sie auch gleich mit einem normalen Klassendiagramm entwerfen können? Irgendwie natürlich schon. Aber Sie hätten Ihr Denken damit nicht beschränkt. Sie hätten sich schnell in Details verloren. Zum Beispiel frisst “die Persistenzfrage” oft viele mentale Ressourcen.</p>
+<p>Mit DDD gibt es “die Persistenzfrage” jedoch im Grunde nicht. DDD sagt: Wo Entitäten sind, da sind Repositories mit ganz einfacher Schnittstelle für die Persistenz zuständig. DDD abstrahiert also von den vielen möglichen Wegen, Daten zu persistieren.</p>
+<p>Der Wert eines DDD-Modells liegt also in den Entscheidungen, die es schon für Sie getroffen hat. Wie werden Daten überhaupt zusammengefasst? Wie greift man auf Daten zu? Wie modifiziert man Date? Wie werden Daten persistiert? Darauf hat DDD einfache Antworten. Wer DDD betreibt, tut es dann halt so – und bekommt durch diese Beschränkung – oder besser: durch diese Fokussierung – Freiraum, sich um das Wesentliche der Problemlösung zu kümmern.</p>
+<p>Wie endliche Automaten und Grammatiken und mathematische Formeln ist DDD natürlich keine “one size fits all” Modellart. Ob sich ein Game oder eine Maschinensteuerung damit geeignet modellieren lässt, mag bezweifelt werden. Oder vielleicht auch nicht. Denn die Modellelemente von DDD sind so allgemein, dass sie sich womöglich in allen nicht trivialen Anwendungen finden lassen.</p>
+<p>Aber einerlei: Auch DDD hat selbstverständlich seine Grenzen.</p>
+<p>Dennoch glaube ich, dass es sich lohnt, beim Entwurf von Software Ausschau zu halten nach Anwendungsmöglichkeiten für DDD. DDD bietet ein unaufdringliches Metamodell mit einfach zu verstehenden Elementen. So hilft DDD, Software echt zu modellieren, d.h. sich nicht in Implementationsdetails zu verlieren.</p>
+<h2>Kommentare</h2>
+<p><strong>Laurin Stoll</strong> (2009-09-24):</p>
+<p>Sehr spannender Artikel. Mochte Klassendiagramme noch nie - genauso wie ich die verflixte, überall so hochgeschriebene, UML Modellierung nicht mag. Das sind nämlich auch meist keine Modelle.</p>
+<p>Wie sieht es mit funktionalen Dekompositionsbäumen und Softwarezellen aus? Siehst du das als Modelle? Abstrahieren und reduzieren tun sie wohl - ja - aber trotzdem sind sie schon sehr technischer Natur. Hm... ja sind wohl Modelle aber nicht für die Modellierung der Problemdomäne des Kunden...
+wie siehst du das?</p>
+<p>viele grüsse
+laurin</p>
+<hr />
+<p><strong>Marc Wittke</strong> (2009-09-25):</p>
+<p>Ralf, sehr interessanter Artikel. Ich denke aber, dass die meisten Akteure in unserer Zunft dieses Abstraktionsvermögen erst entwickeln müssen. Ganz besonders das Trennen von Problem- und Lösungsdomäne. Wie oft reden wir über einen Featurewunsch und der Einwand kommt sofort, dass das beim Implementieren so aber nicht geht. Na und - an der Stelle des "problemverstehens" ist das doch völlig egal. Wenn sich dann herausstellt, dass es wirklich nicht geht, passiert das immer noch früh genug. Die viel zu frühe Konkretisierung passiert nach meiner Beobachtung fast immer, Abstraktion ist eine Leistung, die anscheinend wirklich nicht einfach ist.</p>
+<p>Und Laurin, guter Einwurf mit den Softwarezellen... da bin ich auch gespannt. Ich denke, dass das Modelle sind, es fragt sich nur, auf welcher Ebene man den Schnitt zwischen Modell und - naja - Klassendiagramm (?) zieht.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-09-25):</p>
+<p>Mein Hauptkriterium für Modelle ist ihre Flughöhe (Abstraktionsniveau) über der Realität. Diese Realität ist entweder das Problem (Pizzalieferservice) oder die Lösung (Pizzalieferservicesoftware).</p>
+<p>Für einen Pizzalieferservice kann man ein Modell "bauen", z.B. in Form eines BPMN-Diagramms.</p>
+<p>Für eine Pizzaserviceliefersoftware kann man das auch, z.B. in Form eines endl. Automaten oder eben eines echten Domänenmodells bestehend aus DDD-Bausteinen.</p>
+<p>Das typische Domänenmodell oder Domänenobjektmodell ist für mich kein Modell. Es abstrahiert nicht (genügend). Da werden einfach nur Klassen "zusammengeballert", die halt Properties und Methoden haben. Das sind dann aber nicht gleich DDD Entities, selbst wenn sie IDs haben. Zu DDD Entities gehört mehr. Aber davon ein andermal.</p>
+<p>Und Softwarezellen? Ja, ein Softwarezellendiagramm ist natürlich ein Modell, weil es frei von Implementationsdetails ist. Portale, Adapter stehen für das Prinzip der Kapselung von Infrastruktur - mit egal welchen Mitteln. Logik, Portale, Adapter sind nicht festgelegt auf eine Implementation. Wenn ich damit modelliere, muss ich nicht wissen, ob ein Holon eine Klasse oder eine Komponente oder eine Methode sein wird.</p>
+<p>Am Ende ist das natürlich zu entscheiden. Auch ein Softwarezellendiagramm (bzw. ein Featurestream) muss übersetzt werden in programmiersprachliche Mittel. Da ist ein endl. Automat nicht anders.</p>
+<p>Aber lange Zeit vorher muss ich mich eben nicht entscheiden, sondern kann die Holons einfach nach Verantwortlichkeiten bilden und "verdrahten". Ich kann sie in die üblichen hierarchischen Nutzungsabhängigkeiten bringen oder zu einem Flow zusammensetzen. Egal.</p>
+<p>Software-Holons sind insofern auch noch unspezifischer/abstrakter als DDD-Bausteine. Sowohl Entität wie Service sind Holons. DDD gibt also Leitbilder vor für Logik-Holons.</p>
+<p>Grad gestern hab ich einen Vortrag über Softwarearchitektur gehalten. Da war es wieder ganz deutlich: Features treiben die Architektur von außen nach innen (bzw. im Durchstich). Für jedes Holon stellt sich dann die Frage, ob es eine Aufgabe komplett selbst erfüllt. Wenn nein, dann bekommt es "Helfer-Holons" zur Seite gestellt. Funktionale Dekomposition. Aber auf welcher Ebene? Sind diese Holons Klassen? Nein. Das ist egal. Ich muss mir darüber keine Gedanken machen. Und genau das (!) macht den Modellcharakter aus.</p>
+<p>Erst ganz am Schluss, wenn ich die Verantwortlichkeitskette im Sinne eines Features beschrieben habe (als Featurestream/Abhängigkeitsdiagramm und/oder als Datenfluss), dann mappe ich das Modell auf die Lösungsrealität der Programmierplattform. Dann ziehe ich Kreise um die zwei Holons dort und sage, das wird eine Komponente. Und dann dort drei Holons, die fasse ich zu einem Prozess zusammen, worin sie jeweils Komponenten sind. Und da drüber auch zwei Holons, die zusammen eine Portal-Komponente werden. Usw.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Frank</strong> (2010-03-19):</p>
+<p>Hallo Ralf, ziemlich echt sehr auffallend gut verständlicher Artikel, danke. Liegt genau an der Grenze meiner momentanen Abstraktionsfähigkeit. Im Comment geht es dann teilweise über diese hinaus, aber ansatzweise klingt es nach "verstehen wollen".</p>
+<p>Gruß, Frank</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

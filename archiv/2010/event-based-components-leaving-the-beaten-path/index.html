@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Event-Based Components – Leaving the beaten path of canonical object orientation — ralfw.de Archiv</title>
+<meta name="description" content="Object orientation as it is taught and practiced today has a problem: it leads to designs that are hard to change and hard to test, because classes depend on each other in intricat">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/event-based-components-leaving-the-beaten-path/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Event-Based Components – Leaving the beaten path of canonical object orientation — ralfw.de Archiv">
+<meta property="og:description" content="Object orientation as it is taught and practiced today has a problem: it leads to designs that are hard to change and hard to test, because classes depend on each other in intricat">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/event-based-components-leaving-the-beaten-path/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>Event-Based Components – Leaving the beaten path of canonical object orientation</h1>
+    <div class="doc-meta"><span>25. Juli 2010</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2010/07/25/event-based-components-ndash-leaving-the-beaten-path-of-canonical-object.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/event-based-components-leaving-the-beaten-path/</code></span></div>
+    <div class="art"><p>Object orientation as it is taught and practiced today has a problem: it leads to designs that are hard to change and hard to test, because classes depend on each other in intricate ways. I want to show you an alternative: Event-Based Components (EBC).</p>
+<h2>A litmus test: Tic-Tac-Toe</h2>
+<p>To see whether canonical OO really is adequate for designing software, let´s take a simple, well-known example: a Tic-Tac-Toe game with a whiteboard-friendly design exercise.</p>
+<p>The requirements: two players take turns marking fields in a 3x3 grid; the first to get three of their marks in a row, column, or diagonal wins; if the grid fills up without a winner, it´s a draw.</p>
+<p>The GUI is a simple 3x3 grid of buttons plus a status display showing whose turn it is or who has won.</p>
+<p>Try to design this with classes and their relationships/collaborations first – using whatever your favorite OOAD approach is, e.g. CRC cards or UML class/sequence diagrams. Chances are, you´ll end up with classes that reference each other in a tangled way: a <code>Game</code> class referencing a <code>Board</code>, a <code>Board</code> referencing <code>Cell</code>s, some <code>Player</code> class, and a <code>WinDetector</code> needing access to the <code>Board</code>'s state, and the GUI needing to be wired to all of this. Testing any one piece in isolation becomes hard, because of all the direct dependencies.</p>
+<h2>A simpler example first</h2>
+<p>Before tackling Tic-Tac-Toe in full, let´s look at an even simpler example to introduce the alternative approach: a colored rectangle on a form, toggled between red and green by a button.</p>
+<p>Requirements: on startup, the rectangle shows some initial color. Clicking the button toggles the color between red and green.</p>
+<p>Instead of designing this with classes calling each other, let´s design it as a flow of activities – boxes and arrows, resembling BPMN or UML Activity Diagrams, but used pragmatically rather than strictly:</p>
+<ul>
+<li>"Get Initial Color" – produces the color to show at startup</li>
+<li>"Toggle Color" – takes the current color and produces the opposite one</li>
+</ul>
+<p>Boxes represent activities named with verbs (what they do), and arrows represent data flowing between them (events carrying data), not method calls. No activity calls another; data just flows from one to the next.</p>
+<h2>Translating the diagram into code</h2>
+<p>Each activity becomes a class. Its inputs become methods (prefixed <code>In_</code>), and its outputs become events (prefixed <code>Out_</code>):</p>
+<pre><code class="language-csharp">public class ColorManager
+{
+    private Color currentColor = Color.Green;
+
+    public void In_ToggleColor()
+    {
+        this.currentColor = this.currentColor == Color.Green ? Color.Red : Color.Green;
+        this.Out_CurrentColor(this.currentColor);
+    }
+
+    public void In_GetInitialColor()
+    {
+        this.Out_CurrentColor(this.currentColor);
+    }
+
+    public event Action&lt;Color&gt; Out_CurrentColor;
+}
+</code></pre>
+<p>The GUI itself is modeled the same way, as a functional unit with its own inputs and outputs:</p>
+<pre><code class="language-csharp">public class WinMain : Form
+{
+    public event Action Out_Start;
+    public event Action Out_ToggleColor;
+
+    public WinMain()
+    {
+        InitializeComponent();
+        this.Load += (s, e) =&gt; this.Out_Start();
+        this.button1.Click += (s, e) =&gt; this.Out_ToggleColor();
+    }
+
+    public void In_CurrentColor(Color color)
+    {
+        this.panel1.BackColor = color;
+    }
+}
+</code></pre>
+<p>Note that neither <code>ColorManager</code> nor <code>WinMain</code> know about each other. They just define input methods and output events. The connections between them – the wiring – happen elsewhere, decoupled from either class:</p>
+<pre><code class="language-csharp">static void Main()
+{
+    var wm = new WinMain();
+    var cm = new ColorManager();
+
+    wm.Out_Start += cm.In_GetInitialColor;
+    wm.Out_ToggleColor += cm.In_ToggleColor;
+    cm.Out_CurrentColor += wm.In_CurrentColor;
+
+    Application.Run(wm);
+}
+</code></pre>
+<p>This wiring code directly mirrors the diagram: boxes become classes, arrows become event subscriptions. And because <code>ColorManager</code> and <code>WinMain</code> have no compile-time dependency on each other, either one can be tested, reused, or replaced in isolation.</p>
+<h2>Summary</h2>
+<p>This is the core idea of Event-Based Components: design software as a flow of independent, event-connected functional units, rather than a web of mutually referencing classes. Diagrams translate directly into code, and code stays traceable back to the diagrams. In later posts I´ll apply this to the Tic-Tac-Toe example and to more elaborate scenarios.</p>
+<h2>PS</h2>
+<p>Source code for these examples is available in a Google Project repository (see the link on the original article page).</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

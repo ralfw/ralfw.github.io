@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Feingranular – Methoden als Event-Based Components — ralfw.de Archiv</title>
+<meta name="description" content="Mit Event-Based Components können Sie sehr schön top-down, bottom-up oder nach dem Jo-Jo-Prinzip entwerfen. Es ist egal.">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/feingranular-methoden-als-event-based/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Feingranular – Methoden als Event-Based Components — ralfw.de Archiv">
+<meta property="og:description" content="Mit Event-Based Components können Sie sehr schön top-down, bottom-up oder nach dem Jo-Jo-Prinzip entwerfen. Es ist egal.">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/feingranular-methoden-als-event-based/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Feingranular – Methoden als Event-Based Components</h1>
+    <div class="doc-meta"><span>11. April 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/04/feingranular-methoden-als-event-based.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/feingranular-methoden-als-event-based/</code></span></div>
+    <div class="art"><p>Mit Event-Based Components können Sie sehr schön top-down, bottom-up oder nach dem Jo-Jo-Prinzip entwerfen. Es ist egal.</p>
+<h2>Holarchische Modellierung</h2>
+<p>Fangen Sie einfach an. Malen Sie einfach Systeme von Funktionseinheiten, die Ihr Problem durch den Austausch von Nachrichten lösen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2271ee9fb3238457.png" /></p>
+<p>Diese Funktionseinheiten sind einfach Verantwortlichkeiten. Wie sie später mal implementiert werden…? Keine Ahnung. Während der Entwurfszeit, mache ich mir da nicht viele Gedanken. Ich male einfach hin, was mir auf dem aktuellen Abstraktionsniveau in den Sinn kommt, das hilfreich sein könnte. Für eine kleine Funktionsplotteranwendung sind das halt zunächst diese beiden Funktionseinheiten.</p>
+<p>Wenn ich dann aber weiter überlege, dann fallen mir natürlich Subfunktionalitäten ein, z.B.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/5a2346e48748ae0c.png" /></p>
+<p>Was werden denn die eingeschachtelten EBCs in der späteren Implementierung? Immer noch keine Ahnung. Muss auch nicht sein. Es sind halt Funktionseinheiten, die mir sinnvoll erscheinen. Sie zerlegen die große ganze Funktionalität in besser handhabbare Teilfunktionalitäten. Je weiter mein Verständnis der Problemdomäne voran schreitet, desto mehr solcher Teilfunktionalitäten erkenne ich. Wenn ich z.B. darüber nachdenke, wie so ein Compiler aussieht, dann komme ich auf folgende Verfeinerung:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/ac29a6c374a7408f.png" /></p>
+<p>Was sind Scanner und Parser nun am Ende in der Implementation? Keine Ahnung. Damit muss ich mich während des Entwurfs nicht beschäftigen. Das ist das schöne an einer “holarchischen Modellierung” :-)</p>
+<p>Holarchisch ist dieser Entwurf, weil das System der Funtionseinheiten hierarchisch ist und auf jeder Ebene wieder aus “Teil-Ganzen” (Holon)  besteht. Jedes Blatt einer Ebene (im letzten Bild z.B. Parser) kann jederzeit weiter zerlegt werden. So ein EBC-Softwaresystem ist eine selbstähnliche Struktur, quasi fraktal :-)</p>
+<p>Ein Modell ist dieser Entwurf, weil die Elemente eben keine Codeartefakte sind. Ich denke beim EBC-Entwurf nicht in Assemblies oder Klassen oder Methoden. Ob eine Funktionseinheit wie Plotter oder Scanner am Ende als dieses oder jenes Artefakt implementiert wird, das ist während des Entwurfs unwichtig. Der soll nur ein problemlösendes System entwickeln.</p>
+<p>So weit, so gut.</p>
+<p>Nach dem Entwurf kommt aber natürlich irgendwann doch die Implementation. Dann müssen Sie sich Gedanken machen, wie Sie die geplanten Funktionseinheiten übersetzen.</p>
+<h2>Funktionseinheiten in Klassen übersetzen</h2>
+<p>In den bisherigen <a rel="noopener" href="http://ralfw.blogspot.com/search/label/Event-based%20Components">Blogartikeln</a> habe ich EBCs immer in Klassen übersetzt. Aus einem Blatt ist dort eine EBC-Bauteil-Klasse  geworden, deren Input-Pins Methoden und deren Output-Pins Events waren. (Statt Events werde ich in Zukunft jedoch normale Delegaten benutzen. Events haben einen Sonderstatus als Delegaten, der den Umgang mit Ihnen in generischer Weise manchmal erschwert.)</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a971a0270bf5e896.png" /></p>
+<p>Das ist eine sinnige Übersetzung für die allermeisten Fälle, denke ich, die auch für Nicht-Blätter ausreicht. EBC-Platinen, d.h. Funktionseinheiten, die andere aggregieren, enthalten allerdings keine eigene Domänenfunktionalität, sondern nur Code, um ihre Konstituenten zu verdrahten. Das passiert im folgenden Beispiel im Konstruktor.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/88f788c470ae07cf.png" /></p>
+<p>Diese Übersetzungen für Bauteile und Platinen reichen eigentlich völlig aus, um beliebig tief geschachtelte Systementwürfe in Code zu manifestieren. Es gibt keinen Impedance Mismatch zwischen Modell und Implementierung.</p>
+<h2>Funktionseinheiten in Methoden übersetzen</h2>
+<p>Eigentlich könnte ich zufrieden sein mit der Übersetzung von EBCs in Klassen. Aber irgendwie wurmt es mich, dass ich mit einerseits bei der Modellierung keine Gedanken machen soll darüber, wie die Implementierung einer Funktionseinheit aussieht. Andererseits jedoch werde ich quasi gezwungen, darüber nachzudenken, ob denn eine Funktionseinheit auch nicht kleiner als eine Klasse sei. Zwar sollte ein Architekturentwurf mit EBCs nicht zu detailliert ausfallen; immerhin soll sich ein Architekt nicht um Klassen, sondern um Komponenten kümmern. Doch irgendwie kann ich der Zerlegung nicht freien Lauf lassen, wenn Blätter zwangsweise in Klassen übersetzt werden müssen.</p>
+<p>Beim Funktionsplotter macht mir das noch keine Probleme. Scanner, Parser, Codegenerator sind umfangreich genug, um eine Übersetzung in Klassen zu rechtfertigen. Doch wie steht es mit einer Übersetzung einer Zeichenkette in ein Dictionary? Aus “a=1;b=2;…” soll ein <em>Dictionary</em> werden.</p>
+<p>Ein Softwaresystem könnte ich mir dafür so vorstellen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/ac14a01d7adcf164.png" /></p>
+<p>Wenn ich´s jedoch genauer bedanke, dann lohnen eigene Klassen für die Blätter in dieser Holarchie nicht. <em>SplitInfoPairs</em> usw. sind so einfach, dass diese Funktionseinheiten als Methoden implementiert werden können. Das erkenne ich jedoch erst am Ende; während des Entwurfs habe ich mir darüber keine Gedanken gemacht, sondern das Gesamtproblem soweit in EBCs zerlegt, wie ich Ideen für die Verarbeitungsschritte hatte.</p>
+<p>Wenn ein Problem vor Ihnen liegt, wissen Sie einfach nicht, wie tief Sie ein Lösungssystem schachteln können, ohne zu implementiere. Deshalb wissen Sie auch nicht, ob Sie am Ende nicht bei Funktionseinheiten ankommen, die im Grunde zu klein für eine Implementierung in eigenen Klassen sind.</p>
+<p>Aber wie können EBC-Bauteile, also Blätter des Zerlegungsbaumes, genauso systematisch in Methoden überführt werden wie in Klassen? Bei Klassen sind die Übersetzungen von Input- und Output-Pins klar. Was entspricht denen aber bei Methoden?</p>
+<p>Ich glaube, folgende Übersetzungen sind naheliegend:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d6933569d5223846.png" /></p>
+<p>Blätter, die in Methoden übersetzt werden sollen, haben nur 1 Input-Pin, aber beliebig viele Output-Pins. Der Input kommt als Parameter in die Methode, wie bei den Input-Pin-Methoden von Klassen-EBCs. Für den Output gibt es allerdings keine globalen Output-Pin-Delegaten; stattdessen werden die ebenfalls als Parameter hineingereicht.</p>
+<p>Warum keine Übersetzung dieser Blatt-EBCs in Funktionen? Weil ein Rückgabewert pro Input-Nachricht nur einmal geliefert werden kann. Wenn ein Input jedoch n&gt;1 oder n=0 Output-Werte erzeugen kann, dann ist deren Lieferung über einen Rückgabewert nur umständlich möglich.</p>
+<p>Im Sinne einer systematischen Übersetzung bin ich deshalb dafür, kleine Blatt-EBCs immer in Methoden nach dem obigen Schema zu übersetzen. Das mag zunächst eine wenig umständlich erscheinen, doch ich denke, die Regelmäßigkeit und damit leichtere Verständlichkeit ist dafür eine Entschädigung. Denken Sie also nicht über die “beste” Übersetzung nach, sondern konzentrieren Sie sich auf die Ausfleischung der systematisch erzeugten Form.</p>
+<p>Eine Ausnahme finde ich allerdings doch akzeptabel: Wenn eine Blatt-Funktionseinheit nur einen Output-Pin hat, kann sie als Funktion mit Rückgabewert <em>IEnumerable</em> definiert werden. So sind auch n=0 und n&gt;1 Rückgabewerte möglich.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a8ada1761ea4ef48.png" /></p>
+<p>Das eröffnet auch Möglichkeiten der Verkettung von EBC-Methoden mittels Linq.</p>
+<p>Für Platinen bedeuten Methoden als EBCs natürlich eine Veränderung der Verdrahtung:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/8227c2897f99bfe6.png" /></p>
+<p>Die Verdrahtung bleibt beschränkt auf den Konstruktor. Deshalb leitet der Input-Pin der Platine die Nachricht weiter an einen Delegaten, der die eigentliche Methode “umwickelt”. Der Input-Pin weiß dadurch nichts von einem evtl. Output des Pins, an den er weiterleitet.</p>
+<p>Dasselbe gilt für die Output-Pins, die an die Methoden übergeben werden. Auch das sind Delegaten, um dem Methoden-EBC Details über die Weiterverarbeitung seines Output zu verbergen.</p>
+<p>Ob die Platine wie hier die Methoden-EBCs selbst implementiert und somit nicht mehr sauber nur verdrahtet, sondern auch Domänenfunktionalität implementiert, ist nicht so wichtig. Ich finde das erstmal ok. Aber Sie können natürlich auch die Methoden als Delegaten via ctor-Parameter injizieren. Oder Sie könnten eine Basisklasse definieren, die nur die Methoden-EBCs implementiert und die Platine davon ableiten.</p>
+<h2>Funktionseinheiten im Flow</h2>
+<p>Methoden-EBCs wie eben gezeigt zu verdrahten, ist simpel, aber etwas nervig. Die temporären Variablen für die Lambda Funktionen machen den Code unübersichtlich. Deshalb komme ich hier auf ein Thema zurück, dass ich schon früher hier im Blog am Wickel hatte: <a rel="noopener" href="http://ralfw.blogspot.com/2009/07/verstandnisvorteil-fur-flows.html">Flows</a>.</p>
+<p>Wenn Methoden-EBCs so regelmäßig gebaut sind, dann ist dafür auch etwas Toolunterstützung möglich. Hier meine Idee davon, wie ein Flow-API für EBCs die Verdrahtung von Methoden-EBCs erleichtern könnte. Statt die Methoden mit Hilfsvariablen und auch noch in umgekehrter Reihenfolge zusammenzustecken</p>
+<p>public B2()
+{
+  Action input_z = m =&gt; Z(m, this.Output);
+  Action input_y = m =&gt; Y(m, input_z);
+  this.input_x = m =&gt; X(m, input_y);
+}</p>
+<p>könnten Sie sie in besser lesbarer Form verdrahten:</p>
+<p>public B2()
+{
+    this.input_x = Flow
+                     .StartWith(<strong>X</strong>)
+                     .Then(<strong>Y</strong>)
+                     .Then(<strong>Z</strong>)
+                     .Finally(<strong>b =&gt; this.Output(b)</strong>);
+}</p>
+<p>Hier ist vor allem die Reihenfolge erhalten, so wie die Nachrichten durch die EBCs fließen, von X nach Y nach Z.</p>
+<p>Die Implementation des APIs dafür sieht so aus:</p>
+<p>public static class <strong>Flow</strong></p>
+<p>{</p>
+<p>public static Flow <strong>StartWith</strong>(Action&gt; stage)</p>
+<p>{</p>
+<p>return new Flow(GenerateInputPinFactory(stage));</p>
+<p>}</p>
+<p>internal static Func, Action&gt; <strong>GenerateInputPinFactory</strong>(Action&gt; stage)</p>
+<p>{</p>
+<p>return outputPin =&gt; message =&gt; stage(message, outputPin);</p>
+<p>}</p>
+<p>}</p>
+<p>public class <strong>Flow</strong></p>
+<p>{</p>
+<p>private readonly Stack inputPinFactories;</p>
+<p>internal <strong>Flow</strong>(Delegate inputPinFactoryForStage)</p>
+<p>{</p>
+<p>this.inputPinFactories = new Stack();</p>
+<p>this.inputPinFactories.Push(inputPinFactoryForStage);</p>
+<p>}</p>
+<p>internal <strong>Flow</strong>(Stack inputPinFactories,</p>
+<p>Delegate inputPinFactoryForStage)</p>
+<p>{</p>
+<p>this.inputPinFactories = inputPinFactories;</p>
+<p>this.inputPinFactories.Push(inputPinFactoryForStage);</p>
+<p>}</p>
+<p>public Flow <strong>Then</strong>(Action&gt; stage)</p>
+<p>{</p>
+<p>return new Flow(this.inputPinFactories,</p>
+<p>Flow.GenerateInputPinFactory(stage));</p>
+<p>}</p>
+<p>public Action <strong>Finally</strong>(Action stage)</p>
+<p>{</p>
+<p>Delegate inputPin = stage;</p>
+<p>while(this.inputPinFactories.Count() &gt; 0)</p>
+<p>{</p>
+<p>Delegate inputPinFactory = this.inputPinFactories.Pop();</p>
+<p>inputPin = (Delegate)inputPinFactory.DynamicInvoke(inputPin);</p>
+<p>}</p>
+<p>return (Action)inputPin;</p>
+<p>}</p>
+<p>}</p>
+<p>Mit jedem <em>Do&lt;&gt;()</em> wird eine Factory-Methode auf einen Stack gelegt. Diese Methoden erzeugen später die Input-Pin-Delegaten für die Methoden. Die wiederum werden an die nächste Factory-Methode übergeben. Das geschieht in der handgeschriebenen Version mittels der temporären Delegaten wie <em>input_z</em>.</p>
+<h2>Fazit</h2>
+<p>Ich denke, es spricht für EBCs, dass das Konzept sich auch auf Methoden ausdehnen lässt. Bei der Planung müssen Sie sich nicht beschränken. Wenn Sie fertig sind mit dem Architekturentwurf auf beliebig vielen Abstraktionsebenen des Lösungssystems, dann schauen Sie einfach, wie Sie die Blätter des Funktionseinheitenbaums implementieren. Für viele werden sich Klassen anbieten. Für manche aber sicherlich Methoden. Für Platinen-Klassen, Bauteil-Klassen und auch Bauteil-Methoden haben Sie nun Implementierungsregeln.</p>
+<p>Ich finde das sehr beruhigend. Denn so kann ich mich einerseits auf den Entwurf konzentrieren; dabei muss ich nicht immer im Hinterkopf schon die Frage der Implementierung wälzen. Und andererseits kann ich mich bei der Implementierung auf die Domänenlogik konzentrieren, d.h. das Ausfleischen der Funktionseinheiten; ich muss mir den Kopf nicht über ihre Form zerbrechen.</p>
+<p>Systematik und Regelmäßigkeit helfen, den Blick auf dem Wesentlichen zu halten. Mein Gefühl ist, davon brauchen wir mehr.</p>
+<h2>Kommentare</h2>
+<p><strong>oo</strong> (2010-04-11):</p>
+<p>Schöne Zusammenfassung! Und kommt gerade richtig ;) Ich versuche das mal mit Rhino ESB zu koppeln.</p>
+<hr />
+<p><strong>Janek Fellien</strong> (2010-04-16):</p>
+<p>Hallo Ralf, das sieht wirklich toll aus, aber was ist mit Sprachen fern von Gererikern, Typensicherheit oder Delegaten?</p>
+<p>(Ich weiss, Disziplin, Disziplin und nochmals Disziplin)</p>
+<p>Es muss doch auch möglich sein für den Rest der Welt EBCs zu formulieren.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-04-17):</p>
+<p>@Agile Ära: EBCs kannst du mit jeder Sprache basteln, die Funktionszeiger bietet. Hier (http://renaud.waldura.com/doc/ruby/idioms.shtml) kannst du z.B. Funktionszeiger in Ruby, Java und Perl sehen.</p>
+<p>Je weniger eine Sprache allerdings bietet, desto kruder werden natürlich die EBCs. Das Programmiermodell bleibt aber.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-08-27):</p>
+<p>Hallo Ralf,</p>
+<p>ich habe noch ein kleines Verständnisproblem. Wie komme ich denn an die Ergebnis der Methodenkaskade wieder ran? Output ist ja als Action definiert.</p>
+<p>Angenommen, die Methoden X, Y und Z sind arithmetischer Natur und möchte das Ergebnis aller Rechenschritte einer Variablen z. B. vom Typ double zuweisen. Wie mache ich das? Muss ich dann statt Action eher Func verwenden? Das passt aber nicht zu der allgemeinen Signatur für EBCs, oder?</p>
+<p>Viele Grüße,
+Marcus</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-08-27):</p>
+<p>@Markus: Du du kannst dem letzten Schritt doch noch einen folgen lassen, der das Ergebnis in eine Variable tut.</p>
+<p>Mit EBC 2.0 gibt es das "Funktionsproblem" auch nicht mehr. Da sind alle Schritte Aktionen. Und Aktionen bekommen keine Antworten, sondern senden nur Daten weiter. Was weiter geschieht, bestimmen dann andere Aktionen.</p>
+<hr />
+<p><strong>Christoph Kögl</strong> (2011-02-08):</p>
+<p>Sorry, dass ich erst so spät kommentiere. Als (u.a.) altgedienter C++-Programmierer finde ich es richtig gut, dass signal/event-basiertes Entwerfen Programmieren seinen Weg nun auch in die .NET-Welt findet (wie in Kommentaren schon erwähnt gibt es ja dieses Konzept in Qt (und das ist beileibe nicht nur eine GUI-Bibliothek!) und in Form von Bibliotheken (Boost.Signal, libsigc++, sigslot) schon seit Jahren).</p>
+<p>Bei der Übersetzung von EBCs in Methoden hakt es bei mir jedoch aus. Und auch die vorgeschlagene Implementierung mit Flow/StartsWith/Then/Finally klickt nicht so richtig, ist mir zu viel Rauschen und Zeremonie. Wieso nicht so (Vorsicht, ich bin kein C#-Entwickler, habe den Code nicht ausprobiert):</p>
+<p>public B2()
+{
+  this.input_x =
+    m =&gt; X(m, n =&gt; Y(n, o =&gt; Z(o, this.Output)));
+}</p>
+<p>Dann sind X, Y, Z in der "richtigen" Reihenfolge, ganz ohne die Flow-API. Und wenn jetzt X, Y, Z schon keine Klassen mehr sind, sondern Methoden, was spricht gegen diese Simpel-Implementierung:</p>
+<p>class B2
+{
+  private V X(U m) {...}
+  private W Y(V m) {...}
+  private T Z(W m) {...}</p>
+<p>public void Input(U msg)
+  {
+    this.Output(Z(Y(X(msg))));
+  }</p>
+<p>public Action Output;
+}</p>
+<p>Hier sind jetzt zwar X, Y, Z in der "falschen" Reihenfolge hingeschrieben, aber das war bei Funktionsanwendungen schon immer so (und ist deshalb REINE Gewohnheit; und was ist mit den Schreibern von Hebräisch, Arabisch, Japanisch, ... die finden "von links nach rechts" auch nicht notgedrungen natürlich; die Mathematiker sind eben auch so welche ...). Dass Funktionsanwendung doch bitte dem "normalen" Lesefluss folgen möge ist eben eine reine Erwartungshaltung der prozeduralen Programmierer, die applikativen haben dieses Problem nie gehabt. Aber wenn es der Akzeptanz dient, sei's drum.
+Einen Einwand lasse ich auch noch gelten: Man kann eine Verdrahtung mittels Delegaten auch zur Laufzeit ändern, ein "Z(Y(X(msg)))"  nicht. Aber diese Änderbarkeit zur Laufzeit stand ja bei den EBC nicht im Vordergrund.</p>
+<p>Generell gefallen mir EBCs sehr gut. Im Kontext von Delphi habe ich sie ausprobiert (das geht jetzt endlich vernünftig, weil Delphi jetzt endlich "Generika" und Closures (aber leider keine nativen Multicast-Events) unterstützt), und es fühlt sich gut an! Ich meine: Aus EBCs kann was, muss was werden!</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-02-08):</p>
+<p>@Christoph: Dein</p>
+<p>this.input_x =
+m =&gt; X(m, n =&gt; Y(n, o =&gt; Z(o, this.Output)));</p>
+<p>find ich als eine mögliche Übersetzung von Flow Designs völlig ok. Mach das ruhig so, wenn du willst.</p>
+<p>Am Ende finde ich es so aber nicht wirklich flexibel. Ich denke, das wirst du auch merken, wenn du mehr mit EBC machst. Split und Join sind mit der Übersetzung nicht schön zu realisieren.</p>
+<p>Auch leidet die Lesbarkeit schnell, wenn es größer wird.</p>
+<p>Gegen die bei genügend harter Übung gute Lesbarkeit von f(g(h())), also von Schachtelungen, wehre ich mich. Klar, wenn ich dicke Hornhaut habe, dann merke ich so manches nicht mehr. Aber deshalb ich es trotzdem nicht so gut, in Dornengestrüpp zu packen.</p>
+<p>Schachtelungen können Menschen einfach nur schwer lesen. Das ist so. Mit Übung geht es einfacher - aber warum sollte ich üben, wenn ich ohne Übung leben kann?</p>
+<p>Der Verweis auf Hebräisch oder Chinesisch hinkt auch. Dort geht es nicht um Schachtelung, sondern nur Richtung. Und es gibt keine mehreren Abstraktionsebenen.</p>
+<p>Und wenn doch, wie bei Schachtelsätzen, die man ab und an - insbesondere in "guter" Literatur (wer liest die heute noch, außer bei der Vergabe des Bachmann-Preises?) - findet, dann ist das letztlich doch kein kopierenswerter Stil, wir die jeder Stilratgeber - von Schopenhauer bis Schneider - sagen wird :-)</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

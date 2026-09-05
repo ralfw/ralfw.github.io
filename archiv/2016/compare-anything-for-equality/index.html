@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compare Anything for Equality — ralfw.de Archiv</title>
+<meta name="description" content="Comparing objects for equality can be a pain in automated tests in C. It works fine for primitive data types and even collections based on IEnumerable&lt;T, when you use NUnit&#x27;s Asser">
+<link rel="canonical" href="https://ralfw.de/archiv/2016/compare-anything-for-equality/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Compare Anything for Equality — ralfw.de Archiv">
+<meta property="og:description" content="Comparing objects for equality can be a pain in automated tests in C. It works fine for primitive data types and even collections based on IEnumerable&lt;T, when you use NUnit&#x27;s Asser">
+<meta property="og:url" content="https://ralfw.de/archiv/2016/compare-anything-for-equality/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-01)"></span>ralfw.de</p>
+    <h1>Compare Anything for Equality</h1>
+    <div class="doc-meta"><span>17. Jan. 2016</span><span>Erstveröffentlichung: ralfw.de</span><span><a href="https://ralfw.de/compare-anything-for-equality/" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2016/compare-anything-for-equality/</code></span></div>
+    <div class="art"><p><img loading="lazy" alt="" src="/assets/01-ralfw.de/fd0ef4f8886322b4.png" /></p>
+<p>Comparing objects for equality can be a pain in automated tests in C#. It works fine for primitive data types and even collections based on <em>IEnumerable<T></em>, when you use NUnit's <em>Assert</em>-functions:</p>
+<pre><code>Assert.AreEqual (
+  new[]{ 1, 2 },
+  new[]{ 1, 2 }
+);
+</code></pre>
+<p>But once you  enter the realm of custom data types, you're lost:</p>
+<pre><code>class PersonWithFields {
+  public string Name;
+  public DateTime DoB;
+}
+
+Assert.AreEqual(
+  new PersonWithFields{ Name = &quot;Peter&quot;, DoB = new DateTime (1987, 5, 12) },
+  new PersonWithFields{ Name = &quot;Peter&quot;, DoB = new DateTime (1987, 5, 12) }
+); // will throw an exception
+</code></pre>
+<p>To make such a comparison work, you need to implement your own <em>Equals()</em> function and more.</p>
+<p>That's fine, when you need that in your code anyway. But it's overkill to do it just for testing purposes.</p>
+<p>However, in my experience, object comparisons in production code are far less frequent than in test code. That way, overriding <em>Equals()</em> etc. just makes testing harder – as much so that developers don't write automated tests at all.</p>
+<p>That's bad, I'd say.</p>
+<p>And switching to a language like F# which solves this problem by default is not an option for most.</p>
+<h2>The Equalidator to the rescue</h2>
+<p>But don't despair. Help is available from the Equalidator. It's a little library I wrote a couple of years back.</p>
+<p>You can add the Equalidator package <a rel="noopener" href="https://www.nuget.org/packages/equalidator/">from NuGet</a>. Or you can compile the tool yourself; it's <a rel="noopener" href="https://github.com/ralfw/Equalidator">hosted on GitHub</a>.</p>
+<p>With the Equalidator it's easy to check any two object graphs for equality. As a simple example comparison from above which did not work with NUnit:</p>
+<pre><code>equalidator.Equalidator.AreEqual (
+  new PersonWithFields{ Name = &quot;Peter&quot;, DoB = new DateTime (1987, 5, 12) },
+  new PersonWithFields{ Name = &quot;Peter&quot;, DoB = new DateTime (1987, 5, 12) }
+);
+</code></pre>
+<p>But you can go deeper. Let's compare two trees:</p>
+<pre><code>class Node {
+  public int Value;
+  public IEnumerable&lt;Node&gt; Children;
+}
+
+var root1 = new Node{
+  Value = 1,
+  Children = new[]{
+    new Node{Value = 11},
+    new Node{
+      Value = 12,
+      Children = new List&lt;Node&gt;(){
+        new Node{Value = 123}
+      }
+    }
+  }
+};
+
+var root2 = new Node{ ... };
+
+equalidator.Equalidator.AreEqual (root1, root2, true);
+</code></pre>
+<p>If the two object graphs are equal, i.e. contain the same values, then nothing happens. But if Equalidator finds a difference, it throws an exception.</p>
+<p>Currently this exception is a bit broad brush, but still... the comparison is done dilligently and you know if the two graphs "look the same".</p>
+<p>Equalidator comes with one switch only, currently at least. You can choose whether collections should be compared with strict type checking – and int[] then is never equal to a List<int> – or whether loose type checking should be used like this:</p>
+<pre><code>equalidator.Equalidator.AreEqual (
+  new[] {1, 2, 3},
+  new List&lt;int&gt;(new[] {1, 2, 3}),
+  true
+); // finds both collections to be equal
+</code></pre>
+<p>The default is <em>false</em> for the last parameter meaning strict type checking.</p>
+<p>I hope this little tools makes it easier for you to write automated tests. So I hope you'll write more of them from now on ;-)</p>
+<p>If you've any suggestions for Equalidator feel free to clone the repo, improve the code, and send me a pull request. (There is even some design documentation in the repo to make it a bit easier for you to find your way around in the code.)</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

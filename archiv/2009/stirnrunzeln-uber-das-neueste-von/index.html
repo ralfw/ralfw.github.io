@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stirnrunzeln über das Neueste von Microsoft seit geschnitten Brot [OOP 2010] — ralfw.de Archiv</title>
+<meta name="description" content="Grad scheint Microsoft wieder mal “the best thing since sliced bread” erfunden, wie es scheint. Der Reactive Framework (Rx) zaubert jedenfalls einiges breites Grinsen auf Gesichter">
+<link rel="canonical" href="https://ralfw.de/archiv/2009/stirnrunzeln-uber-das-neueste-von/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Stirnrunzeln über das Neueste von Microsoft seit geschnitten Brot [OOP 2010] — ralfw.de Archiv">
+<meta property="og:description" content="Grad scheint Microsoft wieder mal “the best thing since sliced bread” erfunden, wie es scheint. Der Reactive Framework (Rx) zaubert jedenfalls einiges breites Grinsen auf Gesichter">
+<meta property="og:url" content="https://ralfw.de/archiv/2009/stirnrunzeln-uber-das-neueste-von/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Stirnrunzeln über das Neueste von Microsoft seit geschnitten Brot [OOP 2010]</h1>
+    <div class="doc-meta"><span>14. Okt. 2009</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2009/10/stirnrunzeln-uber-das-neueste-von.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2009/stirnrunzeln-uber-das-neueste-von/</code></span></div>
+    <div class="art"><p>Grad scheint Microsoft wieder mal “the best thing since sliced bread” erfunden, wie es scheint. Der Reactive Framework (Rx) zaubert jedenfalls einiges breites Grinsen auf Gesichter bei Microsoft, hier der Erfinder des Ganzen, Erik Meijer, in einem Interview über Rx.</p>
+<p><a rel="noopener" href="http://channel9.msdn.com/shows/Going+Deep/Expert-to-Expert-Brian-Beckman-and-Erik-Meijer-Inside-the-NET-Reactive-Framework-Rx/"></a>
+(Achtung: Dieses Interview ist auf sehr hohem Abstraktionsniveau! Eine Beschreibung von Rx für Praktiker sucht man hier vergebens.)</p>
+<p>Den schätze ich eigentlich sehr, nicht nur für sein früheres “brainchild” Linq. In der letzten Zeit zaubert Erik Meijer aber zumindest mir kein beseeltes Grinsen mehr auf Gesicht, sondern Stirnrunzeln. Da war zuerst das ganz unglückliche <a rel="noopener" href="http://www.heise.de/newsticker/meldung/Webanwendungen-entwickeln-mit-Microsoft-Volta-167744.html">Project Volta</a>, welches fundamentalen Erkenntnissen zu verteilten Anwendungen zuwiderlief und jetzt <a rel="noopener" href="http://livelabs.com/blog/volta-offline/">zurecht offline ist</a>. Und jetzt kommt der Reactive Framework.</p>
+<p>Was ist der Rx? Das kann man <a rel="noopener" href="http://codebetter.com/blogs/matthew.podwysocki/archive/2009/10/14/introducing-the-reactive-framework-part-i.aspx">hier</a> und <a rel="noopener" href="http://themechanicalbride.blogspot.com/2009/07/introducing-rx-linq-to-events.html">hier</a> recht gut lesen. Ich möchte das jedoch lieber nicht selbst wiedergeben. Denn für mich besteht das Problem darin, dass ich neues Vokabular für etwas Altes benutzen müsste. Meine Kritik am Rx ist: es ist eben keine tolle neue Erfindung seit geschnitten Brot, sondern etwas lange Bekanntes in aufgehübschtes Gewand kleidet.</p>
+<p>Mit Rx ist Microsoft aus meiner Sicht nur über <a rel="noopener" href="http://de.wikipedia.org/wiki/Complex_Event_Processing">Complex Event Processing (CEP)</a> gestolpert. Wenn Erik Meijer die Rx-Interfaces als komplementär zu IEnumerable/IEnumerator ansieht und damit Linq-Queries auf Strömen von Events visioniert, dann ist das nichts anderes als eben CEP: statt auf fixen Daten Queries zu fahren, liest man Ströme von Daten ein und verarbeitet sie mit Queries. Das ist nicht neu, das ist kein Hexenwerk.</p>
+<p>Wer wirklich einmal ausprobieren will, was man mit einer Abfragesprache auf Event-Strömen tun kann, der kann mit NEsper spielen: <a rel="noopener" href="http://esper.codehaus.org/">http://esper.codehaus.org/</a>. Das ist (zusammen mit seinem Java-Bruder Esper) ein enterprise ready Open Source CEP Framework. Hier ein <a rel="noopener" href="http://esper.codehaus.org/tutorials/tutorial/quickstart.html">kurzes Beispiel</a> für die Ermittlung des Durchschnittspreises “vorbeirauschender” Bestellungen (OrderEvent) innerhalb von jeweils 30-Sekunden-Fenstern.</p>
+<blockquote>
+<p>select avg(price) from org.myapp.event.OrderEvent.win:time(30 sec)</p>
+</blockquote>
+<p>Das ist grundsätzlich nichts anderes tut Rx (s. dazu das Beispiel zur Generierung von Mouse Drag Events <a rel="noopener" href="http://codebetter.com/blogs/matthew.podwysocki/archive/2009/10/14/introducing-the-reactive-framework-part-i.aspx">hier</a>).</p>
+<p>Oder nehmen wir einfach nur Datenflüsse (data flows). Wo ist denn der Unterschied zwischen Rx, das nun wundersamerweise z.B. Mausereignisse als abfragbare Ereignisflüsse sieht? Oder als Flüsse, auf denen man Ereignisbehandlungsroutinen notieren kann. Tut mir leid, da ist nichts neues für mich dabei. Wenn ich im etablierten Paradigma data flow denke, dann ist das etwas uraltes und kann mit heutigen Mitteln bewältigt werden.</p>
+<p>Hier ein einfacher Event-Strom mit “Event-Handler”:</p>
+<blockquote>
+<p>new[] {1, 2, 3}.Subscribe(Console.WriteLine);</p>
+</blockquote>
+<p>Der “Event-Handler” braucht nur das altbekannte IEnumerable:</p>
+<p>static class EnumExt</p>
+<p>{</p>
+<p>public static void Subscribe(this IEnumerable eventStream,
+                                    Action handleEvent)</p>
+<p>{</p>
+<p>foreach (T e in eventStream)</p>
+<p>handleEvent(e);</p>
+<p>}</p>
+<p>}</p>
+<p>Aber damit nicht genug! Man kann auch IEnumerable-Ströme zusammenstecken zu “Pipes and Filters”. Das ist dann ein Flow. Warum nicht aus einer Zahlenliste die ungeraden herausziehen und negieren?</p>
+<blockquote>
+<p>Zahlen –&gt; UngeradeZahl | ZahlNegieren –&gt; Liste der negierten ungerade Zahlen</p>
+</blockquote>
+<p>Die Formulierung in Code ist denkbar einfach:</p>
+<blockquote>
+<p>new[] {1, 2, 3, 4, 5, 6, 7}
+    .Where(n =&gt; n%2 != 0)
+    .Transform(n =&gt; -n)
+    .Subscribe(Console.WriteLine);</p>
+</blockquote>
+<p>Und wenn noch ein Schritt dazukommen soll – z.B. die Quadratur der ungeraden Zahlen –, dann wird der einfach eingefügt:</p>
+<blockquote>
+<p>new[] {1, 2, 3, 4, 5, 6, 7}
+    .Where(n =&gt; n%2 != 0)
+    .Transform(n =&gt; n*n)
+    .Transform(n =&gt; -n)
+    .Subscribe(Console.WriteLine);</p>
+</blockquote>
+<p>Die Transformationsmethode ist straightforward eine Extension Method wie oben Subscribe():</p>
+<p>public static IEnumerable Transform(
+                 this IEnumerable eventStream, 
+                 Func processEvent)</p>
+<p>{</p>
+<p>foreach (TIn e in eventStream)</p>
+<p>yield return processEvent(e);</p>
+<p>}</p>
+<p>Wer will, kann sowas auch asynchron machen. Das habe ich schon in früheren Blogposts beschrieben:</p>
+<p><a rel="noopener" href="http://ralfw.blogspot.com/2009/07/ccr-flows-asynchrone-prozesse-mit-der.html">http://ralfw.blogspot.com/2009/07/ccr-flows-asynchrone-prozesse-mit-der.html</a>
+<a rel="noopener" href="http://ralfw.blogspot.com/2009/07/verstandnisvorteil-fur-flows.html">http://ralfw.blogspot.com/2009/07/verstandnisvorteil-fur-flows.html</a></p>
+<p>Flows habe ich aber natürlich nicht erfunden. Die sind alt. Hier eine Quelle, die das Paradigma schon in den 1970ern propagiert hat: <a rel="noopener" href="http://jpaulmorrison.com/fbp/">http://jpaulmorrison.com/fbp/</a>. Mainstream ist es aber nicht geworden, wie wir sehen. Schade. Denn in die Schritte in einem Flow <a rel="noopener" href="http://ralfw.blogspot.com/2009/06/wider-die-geieln-zukunftsfahiger.html">steigern die Evolvierbarkeit</a> von Software, finde ich.</p>
+<p>Jetzt noch die Umsetzung von Mausbewegungen in einen Strom, den man abfragen kann:</p>
+<p>public partial class Form1 : Form</p>
+<p>{</p>
+<p>private readonly EventStream mouseMovements = new EventStream();</p>
+<p>public Form1()</p>
+<p>{</p>
+<p>InitializeComponent();</p>
+<p>this.MouseMove += this.mouseMovements;</p>
+<p>}</p>
+<p>…</p>
+<p>Eine Klasse EventStream sorgt dafür, die Mausbewegungen (oder auch andere Events) in ein IEnumerable zu transformieren. Das kann man dann z.B. so durchlaufen:</p>
+<blockquote>
+<p>this.mouseMovements.Events()
+    .Where(args =&gt; args.X      .Subscribe(args =&gt; Console.WriteLine("{0}, {1}", args.X, args.Y));</p>
+</blockquote>
+<p>Wie macht EventStream das? Die Windows Message Loop darf ja nicht aufgehalten werden. Es geht nur asynchron. Also rufe ich die Concurrency Coordination Runtime (CCR) zur Hilfe:</p>
+<p>class EventStream</p>
+<p>{</p>
+<p>public class Event</p>
+<p>{</p>
+<p>public object Sender;</p>
+<p>public EventArgs Args;</p>
+<p>}</p>
+<p><strong>private Port events = new Port();</strong></p>
+<p>private void EventListener(object sender, EventArgs args)</p>
+<p>{</p>
+<p><strong>this.events.Post(new Event{Sender = sender, Args=args});</strong></p>
+<p>}</p>
+<p>public IEnumerable Events() where TEvent : EventArgs</p>
+<p>{</p>
+<p>Event e;</p>
+<p>while (this.events.Test(out e))</p>
+<p>yield return (TEvent)e.Args;</p>
+<p>}</p>
+<p>public static implicit operator MouseEventHandler(EventStream stream)</p>
+<p>{</p>
+<p>return stream.EventListener;</p>
+<p>}</p>
+<p>…</p>
+<p>}</p>
+<p>Mit der impliziten Konvertierung kann ich den EventStream einfach an einen Eventhandler für die Mausbewegungen binden, ohne zu verraten, wer intern die Verarbeitung übernimmt.</p>
+<p>Der Eventhandler schiebt dann jeden Event in einen CCR Port. Das ist sogar Thread-sicher. Und wenn ich die aufgelaufenen Events prozessieren will, dann hole ich sie mir über Events() als IEnumerable wieder heraus.</p>
+<p>Alternativ könnte ich natürlich auch einen Eventhandler registrieren, der life auf neue Events reagiert und sie z.B. in einen asynchronen Flow einspeist. Dann könnte ich in einer Kette von asynchronen Schritten filtern, transformieren, reagieren. Auch da wären Where(), Transform() und Subscribe() wie oben in den synchronen Beispielen möglich.</p>
+<p>Wo also ist das entscheidend neue beim Rx? Beats me. Ich kann nur die grübelnd die Stirn runzeln.</p>
+<p>Ok, der Rx mag hier und da etwas einfacher machen, weil er schon Abstraktionen bietet, die ich vielleicht erst bauen muss/müsste. Das wäre ne nette Sache – aber deshalb hat Erik Meijer nun nicht gleich “the best thing since sliced bread” erfunden. Er steht nur in einer langen Tradition. Die zu erwähnen und weniger die Flügel zu schlagen, um nicht zuviel Hype-Staub aufzuwirbeln, das fänd ich angemessen.</p>
+<p>PS: Oder übersehe ich hier die eigentliche Erfindung? Geht der brilliante Innovationshub an mir vorbei? Ich bitte um Erhellung.</p>
+<h2>Kommentare</h2>
+<p><strong>Holger Hoffstätte</strong> (2009-10-14):</p>
+<p>Ralf, Du hast in der Tat nichts übersehen oder mistverstanden. Alles was Du hier gerade so hervorragend auseinandergepflückt und mit Hilfe von Esper demonstriert hast, ist mir ebenfalls beim Betrachten der Rx Videos aufgefallen; ich konnte mich leider nur zu einem (leicht hämischen) tweet erbarmen: http://twitter.com/asynchronaut/status/4500448611</p>
+<p>Sicher ist es sinnvoll, daß man über event streams Filter laufen lassen kann. Blöderweise ist die Idee aber auch schon &gt;20 Jahre alt und wurde schon ~1986 bei Gelernter propagiert, der ja Tuplespaces erfunden hat. Die dürften Dir bekannt sein :)
+CEP engines sind ebenfalls im Markt etabliert, von daher ist es in der Tat eher ein architektureller Rückschritt, soetwas in die Sprache zu integrieren. Hauptsache es wurden wieder wieder eine PhD Arbeit und Research Papers geschrieben und ganz wichtig von Dualitäten in funktionalen Sprachen gefaselt, die auch recht an den Haaren herbeigezogen wirken - (eingebildete?) mathematische Eleganz und konzeptionelle Symmetrie hin oder her.</p>
+<p>Was mich am meisten an den Rx Videos bzw. vielen Microsoft-Entwicklungen ärgert, ist oftmals der Mangel an Horizont bzw. die Unwilligkeit anzuerkennen, daß vieles schon mal erfunden wurde - nur nicht bei Microsoft. Ich weiß nicht woran das liegt: akademische Hybris, Alter, oder einfacher nur der US-typische Hurra-Euphorismus wenn es darum geht, in der eigenen Sandkiste etwas neues zu erfinden - schließlich ist man ja bei den Besten Der Besten..</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-10-15):</p>
+<p>@Holger: Wirklich Neues ist halt selten. Wir sind in einer Zeit und in einer Branche, da Fortschritte allemal (wenn nicht schon früher) vor allem klein sind und dadurch entstehen, dass man irgendwas synthetisiert, d.h. Existierendes zusammenführt und ein kleinwenig mehr Summe des Ganzen erhält.</p>
+<p>IEnumerable war nur der Ausdruck eines Iterators in .NET und damit alt. SQL ist alt. Und Linq hat beides zusammengeführt. Das Mehr der Summe waren dabei Extension Methods, würd ich sagen.</p>
+<p>Jetzt Rx. Eventströme sind alt. Sie mit einer Abfragesprache zu analyiseren und gar neue Events daraus zu generieren, ist alt. Und Rx führt das bei .NET irgendwie zusammen und erzeugt ein kleinmehr mehr als die Summe. Was das Mehr konkret ist, verstehe ich aber noch nicht. Etwas Einfachheit? Hm...</p>
+<p>Was mir aufstößt ist dabei weniger ein "Mangel an Horizont", wie du es nennst. Ich kann nämlich nicht glauben, dass der Horizont von Erik Meijer so eng ist. Sondern eher der "Hurra-Euphorimus", d.h. eine gewisse Naivität und Unbekümmertheit.</p>
+<p>Der Westen wird immer noch von Redmond aus gewonnen, auch wenn dahinter eigentlich nur der Pazifik liegt ;-)</p>
+<p>Erik Meijer, der im Planwagen fährt und kindlich erstaunt ist über die Landschaften, durch die er da rollt, und dabei übersieht, dass dort schon Menschen leben. Es gibt schon Kultur in den unbewohnt geglaubten Gegenden.</p>
+<p>Hm... wenn ich diese Metapher so schreibe, dann ist der Horizont vielleicht doch nicht so weit? Egal. Denn am Ende find ich es mit oder ohne weiten Horizont für Microsoft grundsätzlich bedenkenswert laut zu verkünden, die Welt sei nun durch dies oder jenes gerettet. Selbst wenn sie es denn wirklich wäre!</p>
+<p>Bescheidenheit, Vorsicht, Zurückhaltung: das sind Tugenden, die ich zumindest im Fall wie bei Rx vermisse.</p>
+<p>Irgendwie verhält sich Microsoft auch ambivalent: auf der einen Seite CTPs bis zum Abwinken, also Zurückhaltung und ewige Unsicherheit, ob denn etwas schon "richtig" sei. Auf der anderen Seite dann aber solch ein Fanfarenstoß.</p>
+<p>Mit will auch nicht eingehen, warum man mit Rx ohne öffentliche Annäherung in Form von CTPs plötzlich hinterm Vorhang vorspringt es es gleich in die Produktion gibt. Denn anderes, was älter und ausgereift ist - z.B. CCR -, das findet und findet keinen Weg zu den Massen. Sehr schade.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Rainer</strong> (2009-10-15):</p>
+<p>Hi Ralf,</p>
+<p>ich kann deine Kritik gut verstehen im Sinne deiner Argumentationsführung. Ich habe mir letzte Woche das erste der C9 lecture Videos angesehen. Was ich aber im Moment nicht verstehe, ist die Kritik von Holger des fehlenden Horizonts, bzw. deine er wolle das als "die Erfindung" verkaufen. Aber vielleicht fehlen mir auch ein paar Informationsquellen, auf die du dich beziehst.</p>
+<p>In dem ersten Video macht er quasi nichts anderes als auf die Grundlagen in der FP aus der Geschichte heraus einzugehen und zu sagen, das alles schon mal da war und nichts neues erfunden wird. Er macht eigentlich genau das, nämlich zu erwähnen das es schon mal da war.</p>
+<p>Hast du dieses erste Video auch angesehen? Zu finden unter http://channel9.msdn.com/shows/Going+Deep/Lecture-Series-Erik-Meijer-Functional-Programming-Fundamentals-Chapter-1/</p>
+<p>Deine Lösung über die CCR finde ich übrigens sehr elegant - muss mir die CCR auch mal anschauen, hab die bisher ignoriert. Gefällt mir persönlich gut, dein Ansatz.</p>
+<p>Die Kritik an die Marktreife sehe ich auch und warum z.B. CCR da nicht weiter kommt. Was macht in diesem Zusammenhang der AppSpace?</p>
+<p>Rainer</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-10-15):</p>
+<p>@Rainer: Ich lese "have created a profound and beautiful .NET library that will take managed event based programming to new levels."</p>
+<p>und ich lese</p>
+<p>"Meijer and software design engineer Wes Dyer have designed what Meijer described as a major breakthrough in asynchronous programming: 'Of all the work I've done in my career so far, this is the most exciting,' Meijer told session attendees. 'I know it's a bold statement, but I really believe that the problem of asynchronous programming events has been solved.'"</p>
+<p>Das ist nicht bescheiden, das zeigt nicht, das man auf Existierendem aufbaut. Es klingt für mich wie "Wir haben es grad ex nihilo erfunden!"</p>
+<p>Wenn ich damit der einen oder anderen Person unrecht tue, dann ist das bedauerlich. Am Ende zählt aber nicht die persönliche Bescheidenheit eines Einzelnen, sondern die Gesamtbotschaft von Microsoft als Unternehmen. Und die ist nicht bescheiden, nicht zurückhaltend, nicht differenziert, wie ich finde. Sie ist euphorisch, sie erzeugt einen Hype.</p>
+<p>Aber es gibt natürlich auch andere, positive Beispiele von Microsoft.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Rainer</strong> (2009-10-15):</p>
+<p>@Ralf: Danke für deine Ausführungen, da stimme ich dir zu.</p>
+<p>Wurde bei Microsoft nicht schon immer viel Hype gemacht?</p>
+<p>Vielleicht ist dieser Hype eine gute Möglichkeit den bescheidenen Softwareentwickler, der Anwendungsentwicklung betreibt darauf aufmerksam zumachen. Ihm neue Ideen zu geben. Glaubst du er würde sich in Rahmen seiner Entwicklungszeit mit solchen Themen beschäftigen? Vielleicht kommt auch nicht jeder auf die Idee und sieht erst druch den neuen, andersartigen Input was er tun kann.</p>
+<p>Aber darum geht es dir ja gar nicht, dich stört die Haltung zu dem Thema, also die Art und Weise, wie das ganze präsentiert wird. Das es das tollste neueste "MS'sche" ist.</p>
+<p>Ja, da hast du wohl recht.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

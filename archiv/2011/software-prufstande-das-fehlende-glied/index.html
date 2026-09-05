@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software-Prüfstände: Das fehlende Glied in der agilen Softwareentwicklung — ralfw.de Archiv</title>
+<meta name="description" content="Software soll in dünnen Längsschnitten jeden Tag geliefert werden. Dass das mit Software geht, weil sie nicht aus Materie besteht, habe ich hier beschrieben. Und warum das sinnvoll">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/software-prufstande-das-fehlende-glied/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software-Prüfstände: Das fehlende Glied in der agilen Softwareentwicklung — ralfw.de Archiv">
+<meta property="og:description" content="Software soll in dünnen Längsschnitten jeden Tag geliefert werden. Dass das mit Software geht, weil sie nicht aus Materie besteht, habe ich hier beschrieben. Und warum das sinnvoll">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/software-prufstande-das-fehlende-glied/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Software-Prüfstände: Das fehlende Glied in der agilen Softwareentwicklung</h1>
+    <div class="doc-meta"><span>3. Jan. 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/01/software-prufstande-das-fehlende-glied.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/software-prufstande-das-fehlende-glied/</code></span></div>
+    <div class="art"><p>Software soll in dünnen Längsschnitten jeden Tag geliefert werden. Dass das mit Software geht, weil sie nicht aus Materie besteht, habe ich <a rel="noopener" href="http://ralfw.blogspot.com/2010/12/maschinen-bauen-aber-software.html">hier</a> beschrieben. Und warum das sinnvoll im Sinne eines schnellen Lern- und Klärungsprozesses für den Kunden ist, habe ich <a rel="noopener" href="http://ralfw.blogspot.com/2011/01/kein-verstandnis-ohne-uberprufung-warum.html">hier</a> erklärt. Schließlich habe ich noch <a rel="noopener" href="http://ralfw.blogspot.com/2010/12/bei-anforderung-vorgehen-teil-2.html">hier</a> ein Beispiele dafür gebracht, wie das konkret aussehen könnte.</p>
+<p>Dieses Denken macht für mich den Kern von agilem Vorgehen aus. Wenn ich Agilität auf einen Begriff eindampfen sollte, dann wäre das “Längsschnitt”. (Und wenn ich Lean auf einen Begriff eindampfen sollte, dann wäre das “Pull”. (Den Wert von “Pull” hatte ich schonmal <a rel="noopener" href="http://ralfw.blogspot.com/2010/12/ein-traum-von-softwareentwicklung.html">in einem Traum</a> angedeutet; aber ein andermal mehr davon. Heute geht es mir nur um Agilität.))</p>
+<p>Immer wieder höre ich dann jedoch den Einwand, dass sich nicht immer Längsschnitte durch eine Software legen ließen, die in einem Tag realisiert werden können. Dem widerspreche ich erstmal und behaupte, dass mit etwas Systematik, Bewusstheit und Kreativität das immer möglich sein sollte. Aber ich will anerkennen, es mag nicht immer einfach sein. Deshalb hier ein Vorschlag, der tägliche Lieferung und damit tägliche Zufriedenheit für das Team erreichbarer macht.</p>
+<h3>Wat is ne Feature?</h3>
+<p>Im Zentrum der Diskussion um Längsschnitte steht für mich ein Begriff: Feature. Der Kunde beschreibt seine Wunschsoftware in Use Cases oder User Stories. Die sind aber zu groß, als dass man sie zügig umsetzen könnte. Also zerlegt das Team sie in Features.</p>
+<p>Und was ist ein Feature? Ein Feature beschreibt eine überschaubare Funktionalität, d.h. es stellt Kundennutzen dar. Seine Überschaubarkeit gegenüber einer User Story resultiert aus einer gewissen Formalisierung. Zu einem Feature gehören für mich:</p>
+<ul>
+<li>Eine Interaktion der Umwelt mit der Software, die den zum Feature gehörigen Code – “Featureprozess” - anstößt. Das kann ein Button-Klick sein, eine Mausbewegung, ein Tastendruck oder ein Webserviceaufruf.
+Ein “Featureprozess” wird durch eine Interaktion zur Zeit in Gang gesetzt. Es können ihm aber auch verschiedene Interaktionen zugeordnet sein. Oder es kann eine Interaktion mehrere Features anstoßen.  Eingabedaten, die der “Featureprozess” verarbeitet. Eine leere Eingabe ist auch möglich.  Ausgabedaten, d.h. das Ergebnis, das der “Featureprozess” produziert. Es kann auch sein, dass keine Ausgaben produziert werden. Eingabe und Ausgabe beziehen sich auf die Umwelt, die mit der Software interagiert. Die Eingaben kommen aus der Umwelt von einer Rolle, die den “Featureprozess” aufruft; die Ausgaben gehen zurück an diese Rolle.  Ressourcen, die der “Featureprozess” nutzt. Das kann eine Datenbank sein oder ein Drucker, der Zugriff kann lesend und/oder schreibend sein. Wo er schreibend ist, erzeugt der “Featureprozess” einen Seiteneffekt. Ressourcen stellen Abhängigkeiten für den “Featureprozess” dar.</li>
+</ul>
+<p>Ein Feature kann also mit einem Quadrupel beschrieben werden, das aus den Mengen I (für die auslösenden Interaktionen), E (für die erwarteten und erlaubten Eingaben), A (für die erwarteten Ausgaben) und R (für die Ressourcen) besteht: Feature = (I, E, A, R).</p>
+<p>Als Flow Design Diagramm könnte ein Feature dann so aussehen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9b90cecf6d455eb1.png" /></p>
+<p>Ein Feature einer Tic Tac Toe Software ist sicherlich, ein neues Spiel zu starten (F1):</p>
+<ul>
+<li>Interaktion: Klick des Menüpunktes Game|New, aber es könnte auf dem iPhone auch eine Schüttelgeste sein.  Eingabe: keine  Ausgabe: der Spielstand eines neuen Spiels  Ressourcen: keine</li>
+</ul>
+<p>Für das Feature “Neues Spiel” gilt also 1 Interaktion = 1 Feature.</p>
+<p>Anders bei beim Klick auf ein Spielfeld. An dieser Interaktion hängen mehrere Features:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9976db8caa15fd5b.png" /></p>
+<p>Das erste Feature führt den Zug aus (F2), das zweite Feature prüft, ob durch den Zug das Spiel gewonnen wurde (F3). Zug ausführen kann unabhängig von einer Gewinnermittlung gedacht werden. Deshalb ist es allemal sinnvoll von zwei Features zu sprechen.</p>
+<p>Als Quadrupel notiert sehen die Features z.B. so aus:</p>
+<ul>
+<li>F1 = ({Game|New, Schütteln, Programmstart}, {}, {Spielstand}, {})  F2 = ({Klick auf Spielfeld}, {Zug}, {Spielstand}, {})  F3 = ({Klick auf Spielfeld}, {Spielstand}, {Spielstand}, {})</li>
+</ul>
+<p>Damit lässt sich doch schon was anfangen, oder? Jedes Feature stellt Kundennutzen dar. Jeden Tag ein Feature realisieren, würde das Team zufrieden stimmen und dem Kunden zügiges Feedback ermöglichen.</p>
+<h3>Feature Slicing</h3>
+<p>Was nun, wenn die Features noch zu groß für die Umsetzung innerhalb eines Tages sind? Dann heißt es klein schneiden. Stefan Lieser und ich nennen das Feature Slicing. Jeden Tag nur ein Feature Slice realisieren, ist auch eine gute Tat ;-)</p>
+<p>Natürlich will der Kunde eigentlich nur Features als Ganzes – so wie er auch die Software eigentlich nur komplett fix und fertig als Ganzes will. Tja… wir würden ihm die auch gern so liefern, doch so funktioniert Softwareentwicklung nicht. Darauf zu hoffen, dass Entwickler aus einem dicken Anforderungskatalog ohne Murren und Nachfragen im stillen Kämmerlein eine korrekte und vollständige Software zimmern, ist naiv.</p>
+<p>Alle Parteien sollten vielmehr daran interessiert sein, schnell und häufig Feedback zu bekommen und zu geben. Ja, das mag gerade für den Kunden nervig sein… aber Zugfahren ist in Zeiten von Schneechaos auch nerviger als Teleportation. Da die jedoch noch nicht erfunden ist, muss man in den sauren Apfel des Zugfahrens beißen. (Oder Auto fahren oder fliegen: einerlei, alles ist nerviger als Teleportation, da sind wir uns doch einig, oder? ;-) Dito für das häufige Feedback: nervig, jedoch unausweichlich, eine <em>sine qua non</em>.</p>
+<p>Also: jeden Tag ein Feature Slice liefern. So kommt Software verlässlich voran: “A feature slice a day keeps the lawyer away”, wie die Engländer sagen – oder so ähnlich ;-)</p>
+<p>Wie sähe das für die Tic Tac Toe Features aus, wenn wir mal annehmen, dass die zu groß für eine Realisierung in einem Tag sind?</p>
+<ul>
+<li>F1.1: Programm startet und zeigt ein nicht leeres Spielfeld an  F1.2: Anwender kann ein neues Spiel beginnen  F2.1: Anwender kann ins Spielfeld klicken und es wird immer ein Kreuz gesetzt  F2.2: Anwender kann ins Spielfeld klicken und es wird ein Kreus bzw. ein Kreis gesetzt, jenachdem welcher Spieler am Zug ist; Spielfeldinhalte werden dabei überschrieben  F2.3: Züge auf schon  besetzte Felder werden nicht ausgeführt  F3.1: Ein Zug in das erste Spielfeld wird als Gewinn erkannt  F3.2: Drei Spielsteine desselben Spielers in einer Spalte werden als Gewinn erkannt  F3.3: Drei Spielsteine desselben Spielers in einer Zeile werden als Gewinn erkannt  F3.4: Drei diagonale Spielsteine desselben Spielers werden als Gewinn erkannt</li>
+</ul>
+<p>Die Feature Slices können in dieser Reihenfolge realisiert werden oder aber auch in der Reihenfolge F1.1, F2.1, F2.2, F3.1, F2.3, F1.2, F3.2, F3.3, F3.4. Und so sähe dabei die Entwicklung des Modells über die ersten sieben Tage aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c00d995f85102a98.png" /></p>
+<p>Jeden Tag bekommt der Kunde ein bisschen mehr zu sehen. Jeden Tag kann er ein bisschen Feedback geben und damit der Entwicklung zeigen, ob sie noch auf Kurs ist. Oder er kann sogar das Projekt für beendet erklären. Vielleicht ist er erstmal zufrieden, wenn F2.3 realisiert ist? Er verzichtet auf eine automatische Gewinnerkennung und ist zufrieden mit dem Programm als “elektronisches Papier”, auf dem gespielt werden kann. Oder ihm ist plötzlich wichtiger, dass ein menschlicher Spieler gegen einen “TicTacToeBot” spielen kann. Oder er möchte, dass man verteilt spielen kann, d.h. ein Spieler an diesem PC, ein anderer an einem anderen.</p>
+<p>Wenn Feature Slices tagesdünn sind, kann der Kunde jeden Tag sein Verständnis der Problemdomäne aktualisieren und darauf aufbauend den Kurs ändern. Selbst Scrum erlaubt das eigentlich nur zu Beginn eines Sprints, also alle 2-3 Wochen. Im Durchschnitt läuft also die Entwicklung von 1-1,5 Wochen in eine potenziell verkehrte Richtung. Man möge das mit dem Tagessatz des Teams multiplizieren, um einen Eindruck vom Schaden zu bekommen, der durch infrequentes Feedback, d.h. einer großen Menge von “work in progress” (WIP) entstehen kann.</p>
+<h3>Mehr Flexibilität mit Prüfständen</h3>
+<p>Mit Feature Slicing, d.h. ganz dünnen Längsschnitten durch die Software, kommt man dem Ideal täglicher Lieferung schon sehr nahe, würde ich sagen. Ein Rest Unsicherheit bleibt jedoch: Können Feature Slices als ganze Längsschnitte einen Tag dünn geschnitten werden? Was, wenn gerade die Oberfläche, durch die der Kunde testen soll, ein Engpass ist?</p>
+<p>Dazu kommt, dass die Entwicklung in Features Slices in Form von Durchstichen Abhängigkeiten berücksichtigen muss. Das Feature “Gewinn prüfen” kann nicht eher als an Tag 4 angegangen werden - zumindest, solange die Überprüfung durch den Kunden von einer Interaktion mit der Benutzeroberfläche abhängig ist.</p>
+<p>Selbst bei einem so einfachen Szenario wie Tic Tac Toe gibt es Abhängigkeiten, die wie ein Korsett wirken:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d73b87fa3b30409d.png" /></p>
+<p>Feature Slice F1.2 ist abhängig von F1.1, ebenso F2.1. F2.2 ist abhängig von F2.1 usw. Die Pfeile im Abhängigkeitsdiagramm zeigen vom Abhängigen zum Unabhängigen. Sobald Unabhängiges realisiert ist, kann das Abhängige angegangen werden. Wenn F1.1 und F2.1 und F2.2 vorliegen, steht der Weg frei für F1.2 oder F2.2 oder F3.1, aber noch nicht F3.2.</p>
+<p>Das ist misslich, wenn Abhängiges risikobehaftet ist. Im Beispiel Tic Tac Toe könnte das die Gewinnermittlung sein, oder – falls der Kunde den Kurs geändert haben sollte – ein TicTacToeBot. Dann wäre es doch schön, Code für ein solches Features möglichst früh angehen zu können, um zu sehen, ob es realisierbar ist und welches Feedback der Kunde zu solch kritischem Anforderungsaspekt liefern kann.</p>
+<p>Dem widerspricht bisher, dass die Gewinnermittlung ein UI und einige Feature Slices braucht, um vom Kunden getestet werden zu können. Was also tun?</p>
+<p>Die Antwort kommt aus Maschinenbau und Elektrotechnik und heißt: Prüfstand.</p>
+<p>Hier ein Prüfstand für Motoren:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/7a02f1bf614e9133.jpg" /></p>
+<p>Hier einer für Stoßdämpfer:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/11eafbd2255582b0.png" /></p>
+<p>Und hier einer für eine Computerplatine:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/7805f83b3991d7b7.png" /></p>
+<p>Alle tun es. Nur die Softwareentwicklung nicht. Alle nutzen Prüfstände, um Subsysteme in Isolation zu testen.</p>
+<p>Die Softwareentwicklung kennt das zwar auch beispielsweise in Form von Unit Test Frameworks. Doch ein Unit Test Framework ist kein Werkzeug, das man einem Kunden in die Hand geben kann.</p>
+<p>Wenn ich Prüfstand sage, dann meine ich ein eigenständiges Programm, das den Zweck hat, eine Funktionseinheit, die an beliebiger Stelle eines “Featureprozesses” stehen kann, dem Kunden (!) für den Test zugänglich zu machen. Wie das geschieht, ist einerlei. Wenn es reicht, dafür einem <a rel="noopener" href="http://fit.c2.com/">FIT</a> (Framework for Integrated Tests) zu nehmen, dann gern. Aber wenn das nicht reicht, dann sollte man sich nicht scheuen, einen Prüfstand selbst zu bauen. Das muss nicht schwierig sein, da es dabei nicht um Benutzerfreundlichkeit und Robustheit geht. Es ist nur ein (temporärer) Testrahmen für ein Subsystem. Der selbst darf ruhig etwas fragil sein; es geht darum, was darin aufgehängt ist. Dessen Korrektheit und Robustheit zu testbar zu machen, ist sein Zweck.</p>
+<p>Wie könnte das für Tic Tac Toe aussehen? Wenn die Gewinnerkennung ein Feature wäre, das von einem frühzeitigen Feedback profitieren könnte, wie könnte dann ein Prüfstand aussehen? F3.1 hat eher mit der Gewinnanzeige im UI zu tun. Es ginge also um F3.2, F3.3 und F3.4.</p>
+<p>Wie wäre es damit?</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a8f3563db8cd718e.png" /></p>
+<p>Ein supersimples UI. Auf Knopfdruck wird der Text, der ein Spielbrett repräsentiert, in einen Spielstand (GameState) übertragen, an die Gewinnermittlung übergeben und das Ergebnis angezeigt.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/37b68b52bc83e250.png" /></p>
+<p>Damit könnte die Entwicklung beginnen, um vom Kunden Feedback nur zu diesem kritischen Aspekt der Anforderungen zu bekommen. Wenn die Lieferung der Feature Slices zu F3 dann positives Feedback bekommen, kann die Entwicklung die anderen Features angehen. Die Funktionseinheiten von F3 passen in deren Code, weil entweder schon vorher ein umfassenderes Modell entworfen wurde oder die Einpassung durch Flow Design einfach ist.</p>
+<h3>Zusammenfassung</h3>
+<p><a rel="noopener" href="http://www.sigs-datacom.de/fachzeitschriften/objektspektrum/archiv/artikelansicht.html?tx_mwjournals_pi1[pointer]=0&amp;tx_mwjournals_pi1[mode]=1&amp;tx_mwjournals_pi1[showUid]=6792"></a>Das Objektspektrum 1/2011 hat <a rel="noopener" href="http://www.sigs-datacom.de/fachzeitschriften/objektspektrum/archiv/artikelansicht.html?tx_mwjournals_pi1[pointer]=0&amp;tx_mwjournals_pi1[mode]=1&amp;tx_mwjournals_pi1[showUid]=6792">auch schon über Prüfstände berichtet</a>. Wir können von der Industrie lernen. Prüfstände helfen, die Entwicklungsreihenfolge zu flexibilisieren und das Ideal täglicher Nutzenlieferung zu erreichen.</p>
+<p>Prüfstände machen Akzeptanztests von “tieferliegenden” Features möglich. Es sind sozusagen Unit Tests, die der Benutzer durchführt. Sie setzen nicht an der Oberfläche einer Software an – dann wären es Integrationstests –, sondern an beliebiger Stelle darunter. Solange die prüfbare Funktionalität für den Kunden verständlich ist, also einen gewissen Nutzen hat, kann ein Prüfstand lohnend sein. Dann kann der Kunde motiviert werden, sie damit vorläufig zufrieden zu geben, um das Projekt in optimaler Weise voran zu bringen.</p>
+<p>Wichtig dabei zu betonen: Prüfstände sind keine Prototypen. Ein Prüfstand macht Produktivcode zugänglich. Was im Prüfstand hängt, wird nicht weggeschmissen. Das ist ja der Trick. Der Kunde prüft “realen Code” – allerdings in Isolation.</p>
+<p>Aus meiner Sicht sind Prüfstände ein “missing link” in der Kette aus Tests. Sie fehlen im Bewusstsein der meisten Teams. Da wird entweder in manuellen Tests durch die Oberfläche hindurch gedacht. Oder es werden mit Unit Test Frameworks Unit Tests und Integrationstests für den Anwender unsichtbare gefahren. Ersteres kann der Kunde verstehen, letzteres nicht. Also kann er erst einbezogen werden, wenn ausreichend Oberfläche zur Verfügung steht und Feature-Code darüber zugänglich wird.</p>
+<p>Mit Prüfständen jedoch kann der Kunde viel früher befragt werden. Das flexibilisiert die Entwicklungsreihenfolge und kann damit Kurs und Finanzierung eines Projektes beeinfluss. Insgesamt bekommt der Kunde mit Prüfständen schneller sichtbar Code für sein Geld. Und zwar Code, der bleibt. Darüber sollte er froh sein. Und darüber sollte das Team froh sein.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d4cdba623a997ac1.gif" /></p>
+<h2>Kommentare</h2>
+<p><strong>Robert Mühsig</strong> (2011-01-03):</p>
+<p>Hallo Ralf,
+ich mag den Gedanken von kurzen Iterationen um dem Kunden Stück für Stück neue Features zu erschließen, ein paar Fragen/Anregungen/Gedanken dazu:
+Was ist mit Zeit die ich für "Infrastukturthemen" (Buildserver konfigurieren...), Support (Bugs...) und Einarbeitung in neue Themen investiere? Wenn ich mich den ganzen Tag mit solchen Sachen beschäftigen muss um voran zu kommen, dann kommt das Projekt effektiv ja nicht wirklich voran.
+Damit das klappen kann, müssen die Feature Slices doch zum Teil hauchdünn sein und das Team muss eingespielt sein und der Build- und Deploymentprozess muss komplett automatisiert ablaufen können. Datenbank Schema Änderungen sind zum Teil an Live Datenbanken ja auch nicht gerade sehr beliebt.</p>
+<p>Wenn ich eine Webportal entwickel und betreibe, wohin gehen denn neue Releases. Schieb ich alles sofort auf Live? Oder sollte in diesem Fall der NightlyBuild/Release intern als "Beta" laufen? Die Grundidee ist ja, dass man jeden Tag dem Kunden/Nutzer(?) neue Interaktionsmöglichkeiten darbietet, oder sehe ich das zu eng?</p>
+<p>Viele Grüße,
+Robert</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-01-04):</p>
+<p>Hallo Ralf,</p>
+<p>das geht meiner Meinung und meiner Erfahrung nach an der Realität "Zusammenarbeit mit Kunden" vorbei. Diese Vorgehensweise ist theoretisch wünschenswert, um effizient und zielgerichtet Software zu entwickeln.</p>
+<p>Nur, den Kunden (bzw. den "abkommandierten" Mitarbeiter) möchte ich sehen, der sich "täglich" mit einem neuen Feature auseindersetzt. Jeden Tag eine "Besprechung" ansetzen. Jeden Tag für ca. 1/2 bis 1 h den Erläuterungen des Softwareentwicklers zu lauschen. Und dann in einem agilen Team auch ggf. mit immer wieder unterschiedlichen ProgrammiererInnen. Das ist für einen Kunden sicher ein "Spaß".</p>
+<p>Vermutlich sehe ich das zu eng, aber Kunden, gerade wenn sie auch von der jeweilgen Fachabteilung abkommandiert werden, sind hier äußerst unflexibel. Das setzt auch vorraus, das Kunden sich mit "jedem Detail" auseinander setzen müssen, was seltenst der Fall ist. Oft lautet doch der Kundenwunsch: "programmieren Sie mal, wir schauen uns das dann an". Erst wenn etwas nicht so funktioniert, wie der Kunde sich das vorgestellt hat, ist die Aufregung recht groß.</p>
+<p>Ja, die von Dir vorgestellte Vorgehensweise ist sicher gut, nur grau ist alle Theorie.</p>
+<hr />
+<p><strong>Andreas Richter</strong> (2011-01-04):</p>
+<p>Divide et impera.</p>
+<p>Das gilt in so vielen Bereichen. So auch im Feature Slicing. Aber genau da sehe ich in realen Projekten oft die größte Hürde. Ich denke, dass ist der Punkt, der geübt, geprobt und auch gelebt werden sollte.</p>
+<p>Dein TicTacToe Beispiel zeigt schön, was Aufwand und Nutzen beim Feature Slicing sind. Aber leider sind nicht alle Projekt von der Komplexität eines TicTacToe Spieles :)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-01-04):</p>
+<p>@Robert: Zeit, die du in Buildserver oder Lernen investierst, ist keine Entwicklungszeit. Ich habe aber nur über Entwicklung gesprochen. Da behaupte ich nicht mehr als: Wenn du entwickelst, dann schließe jeden Tag mit konkretem Kundennutzen ab.</p>
+<p>Warum aber nicht ein Team von 5 Leuten so beschäftigen: Einer setzt 3 Tage lang den Buildserver auf (währenddessen kommt der Rest auch ohne aus und kann trotzdem liefern), einer räumt Unsicherheiten mit einem Spike 2 Tage lang aus, und 3 entwickeln jeden Tag Feature Slices (und am 3. Tag kommt der vom Spike dazu).</p>
+<p>Und das Lernen? Na, dafür muss eh Zeit eingeplant werden. Zum Beispiel: Freitags werden nie Feature Slices realisiert, sondern immer nur persönliche Lernprojekte verfolgt.</p>
+<p>Dass ein Team eingespielt sein muss, setze ich voraus. Darüber sollten wir nicht reden müssen. Und wenn es nicht eingespielt ist, dann ist es kein Team. Dann sitzt da nur ne Gruppe von Leuten zusammen.</p>
+<p>Web-Anwendungen werden natürlich nie sofort live geschaltet. Da muss es immer nen staging server geben.</p>
+<p>Und wer ist der Kunde, dem man jeden Tag was zeigt? Nicht unbedingt ein Endanwender. Das kann gern der ProductOwner sein. Und das ist ein Vollzeitjob. Da soll sich kein Kunde was vormachen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-01-04):</p>
+<p>@Anonym: Alles, was wünschenswert ist, geht über den Ist-Zustand hinaus. Sonst wäre es nicht wünschenswert, sonder Realität.</p>
+<p>Wenn du also das, was ich beschreibe, für wünschenswert hälst, tu etwas dafür, dass der Wunsch Wirklichkeit wird.</p>
+<p>Sind Ansprechpartner nur abkommandiert und haben keine Lust auf Interaktion mit dir als Entwickler? Das ist dann ein Wurzelproblem. Das musst du lösen. Du musst dem Kunden klar machen, dass solch eine Haltung für ihn (!) teuer ist.</p>
+<p>Jeden Tag Besprechung? Klar. Warum nicht? Wenn du das nicht hinkriegst, dann ist wiederum das das Wurzelproblem. Dann musst du dem Kunden oder dem Projektleiter oder wem auch immer klar machen, dass das teuer ist.</p>
+<p>Kunden wissen nicht, wieviel sie ihre "Fehlverhaltensweisen" kosten. Das müssen dann eben lernen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-01-04):</p>
+<p>@Andreas: Natürlich ist TTT ein sehr kleines Beispiel. Das Vorgehen funktioniert aber auch in größeren Szenarien. Ich arbeite jeden Tag so. Es geht immer, wenn man den Willen dazu hat.</p>
+<p>"Graue Theorie"? Aus Theorie wird Praxis, indem man sie anwendet. Für mich ist das keine Theorie, sondern gelebter Entwickleralltag. Aber nur du kannst für dich das auch erreichen. Du musst tätig werden im Sinne der "grauen Theorie". Und wenn dir das schwer fällt, dann kann ich dir helfen. Ich komme gern vorbei :-)</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-01-04):</p>
+<p>Hallo Ralf,</p>
+<p>Du sagst:</p>
+<p>"Jeden Tag Besprechung? Klar. Warum nicht? Wenn du das nicht hinkriegst, dann ist wiederum das das Wurzelproblem. Dann musst du dem Kunden oder dem Projektleiter oder wem auch immer klar machen, dass das teuer ist".</p>
+<p>Wie teuer denn?</p>
+<p>Wenn Du den Kunden davon überzeugen möchtest, dass Dein Vorgehen besser ist, musst Du in der Lage sein, das zu quantifizeren. Und damit gerät man mit Deiner Argumentation spätestens hier in Beweisnot.</p>
+<p>Deine Behauptungen lesen sich sehr schön, haben aber leider keine Praxisrelevanz.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-01-04):</p>
+<p>@Anonym: Wenn ich heute etwas baue, das der Kunde in 2 Wochen (übliches Sprintende) abnimmt - und mir dann sagt, "Leider knapp daneben", und in den 2 Wochen von den 5 Personen im Team auch nur 20 Stunden (5% von 5<em>40</em>2 Stunden) geleistet wurden, die auf den Annahmen aufbauen, die sich nun nach 2 Wochen als falsch erweisen, dann sind wahrscheinlich 20*Stundensatz verbrannt, sagen wir mal 2000 EUR.</p>
+<p>Ist das eine greifbare Zahl für dich? Hast du so eine Zahl dem Kunden schonmal vorgerechnet? Sehr wahrscheinlich nicht. Ich kenne jedenfalls keinen Entwickler, der das mal gemacht hätte. Der Grund ist auch ganz einfach: Solche Funktionalität auf Halde (work-in-progress, WIP) wird buchhalterisch nicht erfasst. Dafür existiert allemal in der Softwareentwicklung kein Bewusstsein.</p>
+<p>WIP hat Geld gekostet und keiner weiß, ob das Geld je reinkommt. Wenn du 2 Wochen mit 5 Leuten arbeitest, dann hast du 40.000 EUR auf die Halde gelegt - und es ist nicht klar, was davon (gerade in Fixpreisprojekten) am Ende wirklich in Geld umgewandelt wird.</p>
+<p>Frag dich, ob du für 40.000 EUR die Hand ins Feuer legen willst, dass die so abgenommen werden. Oder frag deinen Projektleiter oder frag den Kunden. Bei Fixpreis sagt der Kunde vielleicht: mir doch egal. Aber dein Chef nicht. Gerade bei Fixpreis sagt der das nicht.</p>
+<p>Hast du ein Projekt nach Aufwand, sagt der Chef vielleicht "Mir doch egal." - aber der Kunde nicht.</p>
+<p>Und jetzt kommst du mit deiner Praxisrelevanz. Sind 40.000 EUR eine Frage an den Kunden (oder den Chef) in der Praxis wert, ob sie die auf Halde legen wollen, ohne zu wissen, ob dafür Gegenwert entsteht?</p>
+<p>Oder möchtest du vielleicht lieber nur für 1<em>5</em>8=4.000 EUR den Kopf hinhalten, d.h. den Aufwand von einem Tag bis zu Feedback?</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-01-05):</p>
+<p>Hi Ralf</p>
+<p>Was unterscheided die Definition von Feature von Leistungsfunktionen eines normalen Lastenhefts abgesehen von der geplanten Dauer.</p>
+<p>Lastenheft
+- Akteur, Vorbedingung, Ergeiniss, Ergebniss, Ablauf, Resourcen(LFx LDx usw usw)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-01-05):</p>
+<p>@Anonym: Keine Ahnung, was der Unterschied ist ;-) Ich kenne die offizielle, genormte, formale Lastenheftterminologie nicht.</p>
+<p>Wenn du willst, nenn Feature also gern Leistungsfunktion. Am Ende geht es mir nur darum, dass klar ist, wie der Auslöser eines Features aussieht und was rein/raus geht.</p>
+<p>Spannend wird es, wenn es dann darum geht, das Feature dünn zu schneiden: Leistungsfunktionsscheibchen :-) Die stehen im Lastenheft sicher nicht drin. Da ist Kreativität gefragt, um täglich Nutzen zu liefern.</p>
+<hr />
+<p><strong>Carsten</strong> (2011-01-06):</p>
+<p>Ralf,</p>
+<p>Ich finde die Anmerkungen von Anonym berechtigt und denke, dass Du diese vorschnell ad acta legst.</p>
+<p>Der fachliche Ansprechpartner ist bei Deinem Vorgehen der wichtigste Baustein. „Winkt“ er Features einfach so durch und erklärt Dir 6 Wochen später, dass das ja ganz anders gemeint gewesen sei, dann hilft auch das agilste Vorgehen nicht.
+Du wirst nun entgegnen, dass das ja schließlich das Problem des Kunden sei und dass Du mit dem Vorgehen dem Kunden zu jedem Zeitpunkt die Möglichkeit gegebenen hast, die Fehler zu erkennen. Mehr kann die IT ja nun nicht tun, aber ist das wirklich der Weisheit letzter Schluss?</p>
+<p>Zum anderen finde ich, dass ein Feature einen wichtigen Aspekt außer Acht lässt: es fragt nicht nach dem Warum, es fragt nach dem Wie. Ich bin der tiefsten Überzeugung, dass man bei der Softwareentwicklung den fachlichen Sinn erkennen muss; es ist nicht nur eine bloße Umsetzung von aneinandergereihten Anforderungen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-01-06):</p>
+<p>@Carsten: Ich beschäftige mich nicht mit Requirements Engineering. Da mag man mit dem Kunden über das Warum eines Features philosophieren. Alles wunderbar. Der Kunde soll kriegen, was er braucht und nicht nicht, was er will ;-)</p>
+<p>Am Ende muss aber feststehen, was er will. Vorher müssen wir nicht mit der Entwicklung anfangen. (Und sei es auch nur, dass er etwas vorläufig will.) Da setze ich an.</p>
+<p>Der fachliche Ansprechpartner - nennen wir ihn ProductOwner - ist tatsächlich die wichtigste Person. Er steht sowohl am Anfang der Produktionskette wie am Ende. Das (!) ist leider gar nicht im Bewusstsein der Kunden. Es gibt zwar PO-Schulungen... aber die werden bei weitem nicht so besucht, wie es sein sollte.</p>
+<p>Das ändert aber nichts daran, dass Softwareentwicklung nur gelingt, wenn der PO seinen Job gut macht. Fliegen gelingt auch nur, wenn der Pilot seine Sache gut macht. Ob jmd, den man plötzlich zum Piloten macht, das weiß oder nicht, ist dem Flugzeug und der Physik egal.</p>
+<p>Wenn Kunden ihre Meinung ändern, dann ist das wunderbar. Ich ermuntere ich sie auch immer dazu. Denk dir jeden Tag was Neues aus. Alles kein Problem. Lebe deine Freiheit!</p>
+<p>Das kann ich aber nur, weil ich dem Kunden nur 1 Tag WIP aufbürde. Kursänderungen sind bei Feature Slice Produktion billig. Wer seinen Kurs nach 6 Wochen ändert, der muss wissen, wieviel ihn das kostet. Kunden müssen spüren, wenn sie unangemessen für die Sache Software vorgehen. Das tun sie heute nicht wirklich. (Schmerzen tut es trotzdem. Aber sie schieben es auf andere Ursachen.)</p>
+<p>Es ist tatsächlich der Weisheit letzter Schluss, wenn man in seiner Aufgabe (IT oder nicht) das tut, was richtig und angemessen ist. Wenn der Arzt den Herzinfarktpatienten rettet und ihm sagt, "Mit dem Rauchen aufhören", dann ist das richtig. Das ist der Weisheit letzter Schluss für den Arzt. Er weist den Patienten auf einen Kausalzusammenhang hin.</p>
+<p>Wenn der Patient diesen Hinweis ignoriert - und das tun viele und sitzen ohne Beine immer noch quarzend in der Reha -, dann ist das seine Sache. Auch er kann nicht gegen die Biologie leben. Ist das der Weisheit letzter Schluss für den Patienten? Das muss er selbst entscheiden. Das ist nicht die Verantwortlichkeit des Arztes.</p>
+<p>Dito bei der Softwareentwicklung. Unsere Verantwortung ändert, wenn wir dem Kunden den Kausalzusammenhang erklärt haben. Aber das (!) passiert eben zu selten.</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-01-11):</p>
+<blockquote>
+<p>Oder möchtest du vielleicht
+lieber nur für 1<em>5</em>8=4.000 EUR
+den Kopf hinhalten, d.h. den
+Aufwand von einem Tag bis zu
+Feedback?</p>
+</blockquote>
+<p>... oft bekomme ich von Kunden dann zu hören, dass er nicht 1<em>1</em>4=400 EUR pro Tag drauf legen will um mir "meine Fehler" zu zeigen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-01-11):</p>
+<p>@Anonym: Damit verkennt der Kunde, dass es ja erstens nicht um "deine Fehler" geht. Und zweitens versteht er nicht, dass er diese Fehler am Ende ja eh sieht. Er kann sich also entscheiden, ob er sie früher sieht oder später.</p>
+<p>Wer Fehler, die ohnehin existieren, erst später sehen will... nun, der hat, so würde ich sagen, etwas so ganz allgemein im Leben nicht verstanden. Das ist wie bei Leuten, die die Rechnungsbriefe nicht öffnen und meinen, alles würde besser, wenn sie sie lange liegen ließen.</p>
+<p>Das nennt man auch Prokrastination.</p>
+<p>Nein, ich denke nicht, dass der Kunde hier bewusstes Zeitmanagement betreibt, wenn er sowas zu dir sagt.</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-01-13):</p>
+<p>@Ralf: Willkommen in der Welt der tatsachenverkennenden, zeitmanagementfreien und prokrastinierenden Kunden.</p>
+<p>Für den Entwickler muss genau hierfür eine Lösung gefunden werden. Denn viele Kunden sind so (sonst wären sie keine Kunden) und sie haben nunmal das Geld, das der Entwickler gerne haben möchte.</p>
+<p>Deswegen hilft (im Sinne von "Essen kaufen") es dem Entwickler nicht, auf die allgemeine Unbildung des Kunden hinzuweisen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-01-13):</p>
+<p>@"Immer noch Anonym": Letztlich ist es mir egal, wie der Kunde ist. Er ist kein König. Und ich behalte mir vor, auf unausgesetzte Ignoranz nicht einzugehen.</p>
+<p>Wer den Kunden hochstilisiert zu einem dominanten Kind, dem man sich beugen muss, weil es sonst mit Geld-, äh, Liebesentzug droht, der muss selbst sehen wie er glücklich wird. Aber ich verstehe jetzt ein wenig besser, warum es nicht besser wird: Weil die Softwareentwicklung ja den Mund nicht aufmachen darf. Sie darf den Kunden nicht "belehren", womit er es zu tun hat und was angesichts dessen für Verhaltensweisen angemessen wären.</p>
+<p>Nein, die Softwareentwicklung beugt sich am besten. Kann man auch Einknicken nennen. Auf die Knie. Programmiert, wie der Kunde es will. Er hat die Kohle, er kann sich benehmen, wie er will. Absolutistische Herrscher waren gestern; heute sind Kunden. Alles klar. Verstanden. Die Zeiten ändern sich eben doch nicht. Aufklärung war für die Katz. Es regiert das Gefühl und das Geld.</p>
+<p>Anonym: Ich wünsche dir, dass du nach deiner Facon glücklich wirst. Have a nice life with your customers.</p>
+<p>Ich wähle ein anderes Leben - und kann trotzdem in der Softwareentwicklung bleiben. Ist doch wunderbar, oder?</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-01-17):</p>
+<p>@Ralf:</p>
+<p>Wer redet denn von Frontenbildung?</p>
+<p>Am Ende geht es doch darum, zusammen zu arbeiten. Und da muss eben eine ordentliche Rechtfertigung her, wenn etwas den Kunden plötzlich Geld kosten soll, was es vorher nicht gekostet hat.</p>
+<p>Wenn man Geld vom Kunden einfordert, muss man das halt auch verargumentieren. Das tust Du nicht greifbar und kannst es auch nicht quantifizieren.</p>
+<p>Alles andere ist Schall und Rauch.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-01-17):</p>
+<p>@Anonym: Wenn meine Argumente für dich Schall und Rauch sind, dann mag das so sein. Wenn du daraus ableitest, dass sie für alle Menschen Schall und Rauch sind... dann finde ich das unpassend. Auf diesem Niveau hab ich keine Lust, mich mit dir weiter zu unterhalten - wer immer du auch sein magst.</p>
+<p>Bring Argumente und nicht nur Plattes wie "Sowas geht gar nicht" oder "Realitätsfern".</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-01-22):</p>
+<p>Hallo Ralf,
+ich lese schon länger die Artikel in der DotNetPro über das Pro und Kontra von Unittest. Auch den Artikel „Vom Saulus zum Paulus“ aus dem Heft 12/2010 fand ich sehr interessant.
+Da ich in der Softwarequalitätssicherung der Automobilindustrie arbeite und mich schon seit einigen Jahren mit dem Thema Qualitätssicherung und Testautomatisierung auseinander setze, möchte ich deinen Artikel nutzen und meine Sicht auf das Thema "Testen und Testautomatisierung" darstellen. (und wenn benötigt auch noch Prüfstandsentwicklung ;) )
+Ich denke die Prinzipien der Qualitätssicherung und Testautomatisierung sind für den Desktopbereich wie auch für Embedded Software Bereich ähnlich. Die Bereiche unterscheiden sich nur durch Technologien und die verwendeten Werkzeuge für die Testaufgaben.
+Ich persönlich empfinde den "TDD" Ansatz als Extrem, genauso wie das konsequente „Nicht Testen“. Ich denke, dass das Testen der Entwicklung angepasst werden soll und nicht das die Entwicklung sich dem Testen anpassen soll. Was nützt ein hochqualitatives Produkt wenn entscheidende Verkaufsfeatures nicht implementiert werden, weil sie nicht getestet werden können. In diesem Bereich sollte eher ein guter Mittelweg gefunden werden.
+Meiner Meinung nach liegt der Schlüssel zur Lösung des Problems „zu aufwendig, zu teuer, zu umständlich“ im Testmanagement  (zu aufwendig, zu teuer) und natürlich bei den verwendeten Werkzeuge (zu umständlich). Da das Testen eines Systems bekanntlich unendlich ist und nur durch Zeit oder Geld begrenzt wird, ist die Frage nach dem „Was soll  mit dem Budget und innerhalb der Zeit getestet werden?“ außerordentlich wichtig.
+ Ein weitere Punkt ist die verwendete Technologie. Ich habe bereits in Entwicklungsprojekten XUnit und Fitnesse eingesetzt. Durch die Praxis hat sich für mich gezeigt, dass der Fitnesse Ansatz für ein Projekt praktikabler ist. Mit dem Einsatz von XUnit Frameworks lassen sich schneller Testsets erstellen, jedoch ist die Wartung der Testsets im Laufe des Projekts zu aufwendig. Ich denke viele Testwerkzeuge unterstützen noch zu wenig Anforderungen die aus dem Kern des Testens kommen. Ich denke der Grund liegt darin das diese Anforderungen noch nicht genügend formuliert sind. Es zeigt, dass Projekteigenschaften, die im Bereich der Entwicklungsmethoden beachtet werden (z.B. durch Architekturen), im Bereich der Softwarequalitätssicherung noch nicht thematisiert sind, wie z.B. Es gibt keine vollständigen, fehlerfreien und unveränderlichen Anforderungen.
+Viele Artikel beschreiben die verwendete Technologie und wie man ein Set von Tests damit aufsetzt, was natürlich für den Einstieg wichtig ist. Das Thema Testmanagement wird aber in den meisten Artikeln nicht behandelt.</p>
+<p>Gruß Thomas</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

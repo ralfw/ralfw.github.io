@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCR Flows - Asynchrone Prozesse mit der CCR verdrahten — ralfw.de Archiv</title>
+<meta name="description" content="Neulich habe ich eine Lanze dafür gebrochen, zwei Probleme der Softwareentwicklung auf einen Streich zu lösen. Das würde Software zukunftsfähiger machen. Denn Abhängigkeiten und Sy">
+<link rel="canonical" href="https://ralfw.de/archiv/2009/ccr-flows-asynchrone-prozesse-mit-der/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="CCR Flows - Asynchrone Prozesse mit der CCR verdrahten — ralfw.de Archiv">
+<meta property="og:description" content="Neulich habe ich eine Lanze dafür gebrochen, zwei Probleme der Softwareentwicklung auf einen Streich zu lösen. Das würde Software zukunftsfähiger machen. Denn Abhängigkeiten und Sy">
+<meta property="og:url" content="https://ralfw.de/archiv/2009/ccr-flows-asynchrone-prozesse-mit-der/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>CCR Flows - Asynchrone Prozesse mit der CCR verdrahten</h1>
+    <div class="doc-meta"><span>2. Juli 2009</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2009/07/ccr-flows-asynchrone-prozesse-mit-der.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2009/ccr-flows-asynchrone-prozesse-mit-der/</code></span></div>
+    <div class="art"><p><a rel="noopener" href="http://ralfw.blogspot.com/2009/06/wider-die-geieln-zukunftsfahiger.html">Neulich</a> habe ich eine Lanze dafür gebrochen, zwei Probleme der Softwareentwicklung auf einen Streich zu lösen. Das würde Software zukunftsfähiger machen. Denn Abhängigkeiten und Synchronizität sind Behinderungen auf dem Weg in eine glückliche Projektzukunft.</p>
+<p>Das Mittel für diese “Wundertat”? Asynchrone Flows, d.h. Funktionseinheiten nicht mehr statisch voneinander abhängig machen und auch nicht mehr synchron miteinander kommunizieren lassen. Stattdessen Verarbeitungsschritte in einem expliziten, getrennten “Bereich” (Separation of Concerns) lose mit eigenständigen Verbindungsgliedern “zusammenstöpseln”.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/4015faa8d6c4943f.png" /></p>
+<p>Dazu hatte ich dann ein wenig über einen API spekuliert, der das möglich machen könnte. Damit lag ich – wie sich nun herausgestellt hat – wohl nicht ganz daneben. Denn nach einigen Versuchen habe ich nun so einen Flow API implementiert. Ich nenne ihn <strong>CCR Flows</strong>, weil er intern auf CCR (<a rel="noopener" href="http://msdn.microsoft.com/en-us/library/bb648752.aspx">Microsoft Concurrency Coordination Runtime</a>) Ports als “Verbindungsglieder” zwischen Prozessschritten setzt.</p>
+<p>Die CCR Flows sind jetzt Open Source (sogar inkl. Dokumentation sowie Unit Tests) und liegen bei CodePlex:</p>
+<p><a rel="noopener" href="http://ccrflows.codeplex.com">http://ccrflows.codeplex.com</a></p>
+<p>Über Feedback und Diskussion dort im Forum würde ich mich freuen. Es gibt natürlich noch etwas daran zu tun. Aber als Einstieg in ein anderes Programmiermodell finde ich den API nicht ganz schlecht. Ein Beispielprogramm in den Sourcen realisiert auch den Beispielprozess meines vorherigen Blogartikels. An dieser Stelle zum Schnuppern aber nur ein kleiner Prozess, der die Worte eines Textes extrahier und dann in zwei Schritten transformiert:</p>
+<p>Flow.Do(SplitTextIntoWords).Do(w=&gt;w.ToUpper()).Do(Reverse)</p>
+<p>Meine Vermutung, solcher Code lässt sich besser weiterentwickeln, weil schon bei jeder Prozessstufe (stage) viel entkoppelter gedacht wird. Denn diese Stufen kennen ihren Vorgänger und Nachfolger nicht! Sie haben keine Abhängigkeiten.</p>
+<p>Wie das genau geht, erklärt die Doku bei CodePlex. Ansonsten fragt mich einfach.</p>
+<p>Viel Spaß damit!</p>
+<h2>Kommentare</h2>
+<p><strong>oo</strong> (2009-07-11):</p>
+<p>Sehr interessant! Ich habe vor einigen Jahren was ähnliches ausprobiert und dem Ganzen sogar einen visuellen "Flow" Designer spendiert. Aus Zeitgründen liess ich es dann aber brachliegen. Interessiert?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-07-11):</p>
+<p>@OO: Natürlich bin ich interessiert, über den Flow Designer etwas zu erfahren.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

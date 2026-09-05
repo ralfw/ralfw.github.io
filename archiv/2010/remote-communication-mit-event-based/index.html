@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Remote Communication mit Event-Based Components und Application Space — ralfw.de Archiv</title>
+<meta name="description" content="Wie Asynchronizität über “Zwischenstücke” in eine EBC-Architektur eingebaut werden kann, habe ich in einem früheren Blogposting beschrieben. Jetzt ist in der myCsharp.de Community ">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/remote-communication-mit-event-based/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Remote Communication mit Event-Based Components und Application Space — ralfw.de Archiv">
+<meta property="og:description" content="Wie Asynchronizität über “Zwischenstücke” in eine EBC-Architektur eingebaut werden kann, habe ich in einem früheren Blogposting beschrieben. Jetzt ist in der myCsharp.de Community ">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/remote-communication-mit-event-based/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Remote Communication mit Event-Based Components und Application Space</h1>
+    <div class="doc-meta"><span>3. Juni 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/06/remote-communication-mit-event-based.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/remote-communication-mit-event-based/</code></span></div>
+    <div class="art"><p>Wie Asynchronizität über “Zwischenstücke” in eine EBC-Architektur eingebaut werden kann, habe ich <a rel="noopener" href="http://bit.ly/99ZMrL">in einem früheren Blogposting</a> beschrieben. Jetzt ist in der <a rel="noopener" href="http://bit.ly/a9rixo">myCsharp.de Community</a> die Frage aufgetaucht, wie denn eine verteilte Architektur mit EBCs realisiert werden könnte.  Die einfache Antwort: genauso ;-)</p>
+<p>Damit meine ich, dass das, was zum Aspekt remote communication gehört, in eine EBC Standardkomponente verpackt werden sollte. Die Domänenlogik-Komponenten bekommen davon nichts mit. Hier als Beispiel eine simple Echo-Kommunikation: ein Client schickt eine Nachricht an einen Service, der sie (fast) unverändert wieder zurückschickt.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/61ffff8a35bc6358.png" /></p>
+<p>Die Kontrakte für die Komponenten sehen so aus:</p>
+<p>public interface IClientEBC
+{
+    event Action Out_RequestTextProcessing;</p>
+<p>void In_ProcessedText(string text);
+}</p>
+<p>public interface IServiceEBC
+{
+    void In_EchoText(string text);</p>
+<p>event Action Out_Echo;
+}</p>
+<p>Und das sollte sich auch nicht ändern, nur weil sie nicht im selben Prozess laufen. Die Event- bzw. Nachrichtenorientierung der EBCs ist dafür eine gute Voraussetzung.</p>
+<p>Wie die Implementationen für die Kontrakte aussieht, ist eigentlich uninteressant. Ein Blick auf die Verdrahtung lohnt allerdings. Hier der Host für beide Komponenten, solange sie im selben Prozess laufen:</p>
+<p>namespace Servent
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var service = new ServiceEBC();
+            var client = new ClientEBC();</p>
+<p><strong>client.Out_RequestTextProcessing += service.In_EchoText;
+            service.Out_Echo += client.In_ProcessedText;</strong></p>
+<p>Application.Run(client);
+        }
+    }
+}</p>
+<p>(Ich habe die Client-Komponente als WinForms-Formular ausgelegt; deshalb ruft der Host am Ende Application.Run() auf.)</p>
+<p>Wie zu erwarten werden Instanzen beider Komponenten direkt zusammengesteckt. Der Client kommuniziert ohne Umwege mit dem Service.</p>
+<h2>Remoting zwischenstecken</h2>
+<p>Der Trick bei EBCs ist, dass Kommunikation über “Drähte” verläuft. Während Objekte normalerweise sozusagen zusammengeschweißt sind, gibt es bei EBCs immer eine Indirektion. Zwischen Client und Service sitzt ein Delegat.</p>
+<p>Wie ich <a rel="noopener" href="http://bit.ly/c9jWn9">in einem früheren Blogposting</a> gezeigt habe, ist das der Schlüssel zu großer Flexibilität. Denn wo sich Client und Service nicht wirklich “berühren”, ist es eigentlich egal, welche Distanz sie haben bzw. was zwischen ihnen sitzt.</p>
+<p>Das nutze ich für´s Remoting nun aus. Zwischen Client und Service schiebe ich einfach zwei Standardkomponenten:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/b0483819491b5d95.png" /></p>
+<p>Die Client-Komponente kommuniziert nun nicht mehr direkt mit dem Service, sondern mit einem Proxy für ihn. Und der Service wird nicht mehr von der Client-Komponente angesprochen, sondern von einem Stub.</p>
+<p>Ganz wichtig: Für Client und Service macht das keinen Unterschied! In WCF müssen Sie vorausschauen und für einen Service einen Service-Kontrakt definieren. Bei .NET Remoting müssen Sie einen Service durch Ableitung von MarshalByRefObject kennzeichnen. Immer, wenn Sie Funktionalität entfernt betreiben wollen, müssen Sie also speziellen Code dafür entwickeln.</p>
+<p>Das ist hier nun anders. Der Code der Standardkomponente ist immer gleich. Sonst wäre es ja auch keine Standardkomponente ;-) Mit EBCs müssen Sie nie mehr Code für die Verteilung entwickeln. (Oder höchstens einmal für das Kommunikationsmedium Ihrer Wahl.)</p>
+<p>Wie gesagt, Client und Service ändern sich nicht dadurch, dass Sie verteilt betrieben werden. Der Code jedoch, der die Komponenten verdrahtet, sieht anders aus. Er muss die Remoting-Infrastruktur starten und Client bzw. Service mit ihr verdrahten. Der Host für den Client sieht dann z.B. so aus:</p>
+<p>namespace Client
+{
+    static class Program
+    {
+        [STAThread]
+        static void Main()
+        {
+<strong>using (var host = new RemotingHost(0)) // #1
+            {
+                var proxy = host.CreateProxy(
+                                     "localhost:9000/EchoService", // #2
+                                     ProxyResponseHandlingModes.Sync); // #3</strong>                var client = new ClientEBC();</p>
+<p>client.Out_RequestTextProcessing += proxy.In_Send;
+                proxy.Out_Received += client.In_ProcessedText;</p>
+<p>Application.Run(client);
+            } 
+        }
+    }
+}</p>
+<p>Der Komponenten-Host – eine Konsolenanwendung – startet die Remoting-Infrastruktur (#1) und erzeugt dann darüber einen Proxy für den Service statt des Service selbst. Wo der Service läuft, gibt eine URL an (#2). Wie die Kommunikation zwischen Proxy und Service läuft, kann dem Client egal sein. Hier kommen der Einfachheit halber aber TCP-Sockets zum Einsatz. Die Option ProxyResponseHandlingModes.Sync (#3) legt fest, dass Antworten im Synchronization Context des Client ankommen sollen; so gibt es kein Problem in WinForms-Anwendungen, denn durch das Remoting sind garantiert mehrere Threads im Spiel.</p>
+<p>Hervorhebenswert: Der Proxy ist generisch. Er kann in jede Kommunikationsstrecke eingesetzt werden, die seinem Format folgt. Hier ist das eine bidirektionale Kommunikation auf zwei “Drähten”.</p>
+<p>Ein Client-Host unterscheidet sich, wie Sie sehen, nur marginal von dem, der Client und Service gehostet hat. So soll es sein.</p>
+<p>Und wie sieht es beim Service aus? Genauso simpel:</p>
+<p>namespace Service
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            using(var host = new RemotingHost(9000)) // #1
+            {
+                host.CreateStub(
+                        "EchoService",
+                        s =&gt; s.In_EchoText, 
+                        (s, c) =&gt; s.Out_Echo += c);</p>
+<p>…
+            } 
+        }
+    }
+}</p>
+<p>Der Service-Host startet dieselbe Remoting-Infrastruktur – allerdings unter Angabe eines TCP-Ports (#1). Die finden Sie beim Client in der Adresse des Service wieder (#2 im Listing davor). Der Client-Host übergibt an die Infrastruktur 0 als Port, weil ihm der Port egal ist. Er muss keinen Endpunkt definieren, weil er nicht explizit adressiert wird.</p>
+<p>Dann erzeugt der Service-Host einen Stub für den Service. Das ist der Kommunikationsendpunkt, bei dem Nachrichten vom Proxy ankommen. Er leitet sie weiter an den eigentlichen Service. Für den Service ist der Stub der Client. Und wieder ist die Infrastruktur generisch und der eigentliche Service merkt nichts davon, dass er nun entfernt von Clients betrieben wird.</p>
+<p>Achtung: Der Service wird hier nicht instanziert! Sein Typ und zwei Lambda Ausdrücke werden allerdings an die Factory-Methode übergeben. Die reicht sie weiter an eine <em>ServiceFactory</em> (s.u.). Das ermöglicht eine Erzeugung des Service für jede Nachricht wie beim Single-Call-Modus von .NET Remoting. Services zustandslos zu machen ist daher ein kleines Zugeständnis an die Verteilung. Allerdings ist das nicht zwangsläufig nötig; in diesem Fall ist es nur etwas einfacher, um die Diskussion um Remoting nicht noch mit Aspekten der asynchronen Verarbeitung zu belasten.</p>
+<p>Das war´s. So einfach kann Remoting mit EBCs sein.</p>
+<p>Fragt sich nur, wie es unter der Haube funktioniert :-) Ich habe es mit dem <a rel="noopener" href="http://bit.ly/beH33R">Xcoordination Application Space</a> implementiert. Ihn habe ich in der dotnetpro beschrieben und in Grundzügen auch <a rel="noopener" href="http://bit.ly/a7i1wU">in meinem englischen Blog</a>. An dieser Stelle halte ich deshalb meine Erklärungen knapp:</p>
+<h2>Host und Proxy der Remoting Infrastruktur</h2>
+<p>Der Remoting Host selbst ist einfach. Er startet eigentlich nur einen Application Space und dient als Factory für Proxy und Stub:</p>
+<p>namespace ebc.patterns
+{
+    public class RemotingHost : IRemotingHost
+    {
+        private readonly IXcoAppSpace space;</p>
+<p>public RemotingHost(int tcpPort)
+               : this(string.Format("tcp.port={0}", tcpPort)) { }
+        public RemotingHost(string configString)
+        {
+            this.space = new XcoAppSpace(configString);
+        }</p>
+<p>public void Dispose()
+        {
+            this.space.Dispose();
+        }
+    …</p>
+<p>Ein Proxy ist schnell erzeugt:</p>
+<p>public IRemotingProxy <strong>CreateProxy</strong>(
+       string serviceAddress,
+       ProxyResponseHandlingModes mode)
+{
+    var remoteStub = this.space.ConnectWorker&gt;&gt;(serviceAddress);
+    return new RemotingProxy(remoteStub, mode);
+}</p>
+<p>Dazu nimmt der Remoting Host Kontakt mit einem generischen Service-Worker auf, dessen Adresse ihm der Client übergibt. Und der RemotingProxy übernimmt die Aufgabe, EBC-Nachrichten in AppSpace Nachrichten zu übersetzen:</p>
+<p>namespace ebc.patterns
+{
+    public class RemotingProxy : IRemotingProxy
+    {
+        private readonly Port&gt; remoteWorker;
+        private readonly Port responses;</p>
+<p>private readonly Port exceptions;
+        private readonly SynchronizationContext ctx;</p>
+<p><strong>internal RemotingProxy(Port&gt; remoteWorker, ProxyResponseHandlingModes mode)</strong>        {
+            this.remoteWorker = remoteWorker;</p>
+<p>if (mode == ProxyResponseHandlingModes.Sync)
+                this.ctx = SynchronizationContext.Current;</p>
+<p>// Antwort vom Service verarbeiten
+            this.responses = new Port();
+            Arbiter.Activate(
+                new DispatcherQueue(),
+                Arbiter.Receive(true, this.responses, msg =&gt; this.ProcessMessageInSyncContext(msg, this.Out_Received))
+                );</p>
+<p>// Exceptions vom Service verarbeiten
+            this.exceptions = new Port();
+            Arbiter.Activate(
+                new DispatcherQueue(),
+                Arbiter.Receive(true, this.exceptions, ex =&gt; this.ProcessMessageInSyncContext(ex, this.Out_Exception))
+                );</p>
+<p>this.Out_Exception += ex =&gt; { };
+        }</p>
+<p><strong>void ProcessMessageInSyncContext(T msg, Action messageHandler)</strong>        {
+            if (this.ctx != null)
+                this.ctx.Send(x =&gt; messageHandler(msg), null);
+            else
+                messageHandler(msg);
+        }</p>
+<p><strong>public void In_Send(TRequest message)</strong>
+        {
+            var c = new Causality("ex", this.exceptions);
+            Dispatcher.AddCausality(c);
+            {
+                var req = new Request {
+                                  Data = message,
+                                  Response = responses};
+                this.remoteWorker.Post(req);
+            }
+            Dispatcher.RemoveCausality(c);
+        }</p>
+<p><strong>public event Action Out_Received;
+        public event Action Out_Exception;</strong>    }
+}</p>
+<p>Außerdem übernimmt der Proxy auch die Exception-Verarbeitung. Das habe ich bisher der Einfachheit unterschlagen. Wenn Exceptions vom Service kommen, dann leitet der Proxy sie auf einem speziellen Output-Pin weiter. Damit ist die Behandlung gleich, egal ob der Client Antworten vom Service in seinem Synchronization Context empfangen will oder nicht.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/741dd2691c495b65.png" /></p>
+<h2>Stub der Remoting Infrastruktur</h2>
+<p>Auf der Service-Seite sieht es etwas kniffliger aus. Die ist nämlich grundsätzlich multi-threaded. Derselbe Stub wird für viele Anfragen und Antworten benutzt. Daher müssen Antworten vom Service, der nichts von solchen Feinheiten weiß, mit Anfragen korreliert werden. Nur so können sie an den, der die Anfrage geschickt hat, zurückgesandt werden.  Deshalb ist der Stub nicht fest verdrahtet mit einer Service-Instanz (was allerdings möglich wäre). Das obige Bild von Stub und Service ist also eine Vereinfachung. In Wirklichkeit sind die Verhältnisse so:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d3d6a45765ed7b4e.png" /></p>
+<p>Das ändert zum Glück nichts daran, dass der Service nichts von seinem Glück wissen muss, remote betrieben zu werden.</p>
+<p>Wie funktioniert das Ganze nun? Also…</p>
+<ol>
+<li>Eine Anfrage kommt vom <em>RemotingProxy</em> über ein Transportmedium im <em>RemotingStub</em> beim <em>StubWorker</em> an. Der StubWorker ist ein AppSpace Worker, der die Übersetzung von CCR Port-Kommunikation auf EBC Events übernimmt. Da er asynchron arbeitet, braucht er eine Möglichkeit, Antworten Anfragen zuzuordnen. Deshalb enhält sein Nachrichtenaustausch mit einer angeschlossenen EBC KorrelationsIDs.</li>
+</ol>
+<p>namespace ebc.patterns
+{
+    internal class StubWorker
+                   : Port&gt;
+    {
+        private readonly Dictionary responsePorts = new Dictionary();</p>
+<p>[XcoConcurrent]
+        public void ProcessRequest(Request req)
+        {
+            var msg = new CorrelatableMessage(req.Data);
+            lock (this.responsePorts)
+            {
+                this.responsePorts.Add(msg.CorrelationId, req.Response);
+            }
+            this.Out_Received(msg);
+        }</p>
+<p>public void In_Reply(CorrelatableMessage msg)
+        {
+            IPort response;
+            lock (this.responsePorts)
+            {
+                response = this.responsePorts[msg.CorrelationId];
+                this.responsePorts.Remove(msg.CorrelationId);
+            }
+            response.PostUnknownType(msg.Data);
+        }</p>
+<p>public event Action&gt; Out_Received;
+    }
+}</p>
+<ol start="2">
+<li>Der Kommunikationspartner des Workers kann wg. der KorrelationsIDs nicht der Service sein. Der hat von solcherlei Dingen keine Ahnung. Stattdessen reicht der Worker die Anfrage weiter an die <em>ServiceFactory</em>. Die erzeugt dafür eine neue Service-Instanz – und schaltet ihr eine Standardkomponente vor, die Nachrichten mit KorrelationsID in solche ohne umwandeln kann (und umgekehrt).</li>
+</ol>
+<p>namespace ebc.patterns
+{
+    internal class ServiceFactory
+                   : IServiceFactory
+        where TService : new()
+    {
+        private readonly Func&gt; inputPin;
+        private readonly Action&gt; connectOutputPin;</p>
+<p>public ServiceFactory(
+                Func&gt; inputPin,
+                Action&gt; connectOutputPin
+            )
+        {
+            this.inputPin = inputPin;
+            this.connectOutputPin = connectOutputPin;
+        }</p>
+<p>public void In_Request(CorrelatableMessage request)
+        {
+            var corr = new SyncCorrelator();
+            var service = new TService();</p>
+<p>corr.Out_Received += this.inputPin(service);
+            this.connectOutputPin(service, corr.In_Correlate);</p>
+<p>corr.Out_Reply += r =&gt; this.Out_Response(r);</p>
+<p>corr.In_DeCorrelate(request);
+        }</p>
+<p>public event Action&gt; Out_Response;
+    }
+}</p>
+<p>Die <em>ServiceFactory</em> bastelt also dynamisch für jede Anfrage einen EBC-Platineninhalt zusammen, den sie mit ihren eigenen Pins verbindet.</p>
+<p>Das ist kein Hexenwerk, aber doch ein bisschen umständlich. Zum Glück muss es nur einmal implementiert werden und ist dann für alle Kommunikationen gleich. Einfacher wäre es allerdings, der Service wäre darauf ausgelegt, asynchron und thread-safe zu arbeiten. Dann käme er selbst mit KorrelationsIDs zurecht und müsste nicht immer neu erzeugt werden. Dann wäre das Bild tatsächlich so einfach wie oben: Stub spricht mit Service. Wie Sie sehen, geht´s aber auch so, ohne Vorüberlegungen. Das ist das schöne an EBCs.</p>
+<p>Im folgenden Bild stelle ich die beiden alternativen mal nebeneinander:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/bebc0a9ca1492a42.png" /></p>
+<p>Der Quellcode, den Sie <a rel="noopener" href="http://bit.ly/cYWhNK">in einem Mercurial Google Projekt hier</a> finden, spiegel das allerdings nicht wider. Er entspricht noch dem Bild, bei dem der <em>RemotingStub</em> die <em>ServiceFactory</em> enthält. Sauberer finde ich allerdings diese letzte abgebildete Variante. Sie entzerrt die Verantwortlichkeiten. Der <em>RemotingStub</em> ist nur für die Kommunikation zuständig – auch wenn das bedeutet, dass er Nachrichten mit KorrelationsIDs erzeugt/konsumiert. Darauf kann sich die bei Bedarf einstellen: Ist der Service nicht damit vertraut, muss er pro Nachricht neu instanziert werden. Dazu verdrahten sie ihn passend auf einer eigenen Platine.</p>
+<h2>Fazit</h2>
+<p>Client und Service müssen nicht speziell auf eine Verteilung vorbereitet werden. Und Sie müssen für eine Verteilung auch nichts extra programmieren, keine Service- oder Datenkontrakte sind nötig. Die Remoting-Infrastruktur kann generisch sein. Sie stecken sich also zusammen, was Sie brauchen.</p>
+<p>Das bedeutet nicht, dass Sie keinen Gedanken verschwenden sollen, ob Services lokal oder entfernt betrieben werden. Die grundsätzliche Asynchronizität (oder auch mal Unverfügbarkeit ;-) eines entfernten Dienstes können seine Implementation beeinflussen. An der grundsätzlichen Einfachheit des Zusammensteckens ändert das jedoch nichts. Mal stecken Sie nur weniger, mal mehr zusammen.</p>
+<p>Und nun: Basteln Sie schön :-) Arbeiten Sie mit der Remoting-Infrastruktur dieses Beispiels oder bauen Sie eine eigene auf Basis von .NET Remoting oder WCF oder was Sie wollen. Bei EBCs ist das noch erlaubt, weil sie so neu sind :-)</p>
+<h2>Kommentare</h2>
+<p><strong>lennybacon</strong> (2010-06-03):</p>
+<p>Hallo Ralf,</p>
+<p>Ich glaube Du hast ein "w" in "zusammengescheißt" vergessen :-P</p>
+<p>--Daniel</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-06-05):</p>
+<p>@lennybacon &amp; Tilman: Danke für den Hinweis. Hab ich korrigiert.</p>
+<hr />
+<p><strong>Benjamin Reichstein</strong> (2010-06-10):</p>
+<p>Vielen Dank für das ausführliche Beispiel. Kann ich aktuell sehr gut gebrauchen :)</p>
+<hr />
+<p><strong>S. Schwengel</strong> (2010-09-30):</p>
+<p>Sehr vielen Dank für Ihre Artikel in der Dotnetpro. Es ist immer wieder ein Vergnügen und eine Anregung für mich Ihren Gedanken zu folgen.
+Da ich aus der Elektrotechnik komme, mochte ich die Analogie zu den Platien. ;)</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Generiert – Architekturcompiler für Event-Based Components — ralfw.de Archiv</title>
+<meta name="description" content="Da hab ich ja was angerichtet: Event-based Components ziehen immer größere Kreise. Immer mehr Entwickler “wollen es tun”. Selten habe ich soviel direktes positives Feedback zu eine">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/generiert-architekturcompiler-fur-event/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Generiert – Architekturcompiler für Event-Based Components — ralfw.de Archiv">
+<meta property="og:description" content="Da hab ich ja was angerichtet: Event-based Components ziehen immer größere Kreise. Immer mehr Entwickler “wollen es tun”. Selten habe ich soviel direktes positives Feedback zu eine">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/generiert-architekturcompiler-fur-event/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Generiert – Architekturcompiler für Event-Based Components</h1>
+    <div class="doc-meta"><span>21. März 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/03/generiert-architekturcompiler-fur-event.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/generiert-architekturcompiler-fur-event/</code></span></div>
+    <div class="art"><p>Da hab ich ja was angerichtet: <a rel="noopener" href="http://ralfw.blogspot.com/search/label/Event-based%20Components">Event-based Components</a> ziehen immer größere Kreise. Immer mehr Entwickler “wollen es tun”. Selten habe ich soviel direktes positives Feedback zu einem Konzept bekommen. Irgendwie scheine ich da einen Nerv getroffen zu haben.</p>
+<p>Bei allem Wohlwollen haben EBCs aber natürlich auch noch Schwachstellen. Die kommen durch das Feedback und das “Herumspielen” mit dem Konzept ans Licht. Eines ist die Verdrahtung. Die ist zwar technisch simpel, aber nervig zu implementieren. Weil nicht nur wenige Komponenteninstanzen in andere zu injizieren sind, sondern viele Pins der Komponenteninstanzen mit denen anderer verbunden werden müssen, steigt der Aufwand für die Laufzeitintegration. Dem stehen zwar große Gewinne gegenüber – doch nervig bleibt die Verdrahtung.</p>
+<p>Besser würde die Lage natürlich, gäbe es einen hübschen EBC Designer à la <a rel="noopener" href="http://www.ni.com/labview/whatis/d/">LabVIEW</a>.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/42f182b1ddab2d11.png" /></p>
+<p>Soweit sind wir aber noch nicht. Das braucht noch etwas mehr Erfahrung mit EBCs, glaube ich. Und auch Zeit, denn einen Designer zu basteln, ist kein Pappenstil.</p>
+<p>Geht´s denn nicht aber auch ohne Designer schon ein bisschen einfacher? Einen <a rel="noopener" href="http://ralfw.blogspot.com/2010/02/bindungsenergie-gedanken-uber-ein.html">“automatischen Verdrahter”</a> hatte ich ja schonmal gebastelt. Der funktioniert aber nur in sehr einfachen Szenarien ausreichend. Wenn es komplizierter wird, reicht “Verdrahtung nach Konvention” nicht mehr aus. Dann müssten zusätzliche Informationen her. Dann wären wir wieder bei einer Architekturbeschreibung.</p>
+<p>Also habe ich mir gedacht: Warum nicht mit einer Architekturbeschreibung ohne Designer anfangen? Also habe ich mal “rumgesponnen”. Erst habe ich mir ne textuelle DSL überlegt. Doch dann dachte ich, dass es noch besser wäre, noch klarer zu entkoppeln. Also bin ich auf das gute alte XML gekommen.</p>
+<p>Wie wir am Ende Architekturen entwerfen und formulieren, ist egal. Eine graphische oder auch textuelle Notation wird sich immer in ein XML-Format übersetzen lassen. Das kann die Konstante in der Mitte sein zwischen Entwickler und Code.</p>
+<p>Deshalb habe ich mir mal ein ganz einfaches Format überlegt, mit dem man einfache EBC-Architekturen beschreiben kann. Als Beispiel eine Stopuhr-Anwendung. Zuerst die Architektur gemalt in Visio:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2a82d3734ee58d2c.png" /></p>
+<p>Und hier die Übersetzung in das XML-Format. Ich nenne es mal <em>ebclang</em> für EBC Language:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/20b00aad3dc2563c.png" /></p>
+<p>Die Komponenten sind für sich mit ihren Output- und Input-Pins beschrieben, anschließend die Verdrahtung. Ich denke, das ist recht einfach zu verstehen. Geschachtelte Komponenten habe ich einstweilen allerdings noch außen vor gelassen.</p>
+<p>Nachdem ich so eine XML-Architekturbeschreibung hatte, habe ich die von Hand ganz systematisch in Codeartefakte übersetzt. Das funktionierte sehr einfach. Es lässt sich gut automatisieren.</p>
+<p>Deshalb habe ich in einem Anfall von Lust am “mud wrestling” ;-) einen Übersetzer dafür gebastelt. Der ist aus dem Stand gleich zu sehr hübschem Brownfield Code geworden. Aber das macht nichts. Er ist als Spike Solution gedacht, nicht mehr. Ich wollte mit dem Code nur das Feld der Artefaktgenerierung explorieren, bevor ich eine “richtige” Version entwickle.</p>
+<p>Der ebclang.compiler übersetzt eine XML-Architekturdefinition wie oben in Assemblies und Visual Studio Projekte. Das sind im Einzelnen:</p>
+<ul>
+<li>myapp.messages.dll und myapp.messages.csproj: Ein Projekt, das alle Nachrichtentypen implementiert. Der Compiler legt jeden Nachrichtentyp, der kein Standardtyp ist, darin als Klasse an.<ul>
+<li>myapp.specifications.dll: Eine Assembly, die die Komponenten in Form von Interfaces spezifiziert.</li>
+<li>myapp.wiring.dll: Eine Assembly, die Komponenteninstanzen verdrahtet.</li>
+</ul>
+</li>
+</ul>
+<p>“myapp” steht für den Applikationsnamen wie im XML auf  angegeben. Die Spezifikation und das Wiring werden bewusst nur als Assemblies erzeugt, damit niemand auf die Idee kommt, sie zu verändern. Darin steckt die manifestierte Architektur. Die soll nur durch das XML veränderbar sein.</p>
+<p>Die Nachrichtentypen jedoch müssen “nachgebessert” werden können. Deshalb darf man am messages-Projekt arbeiten. Der Compiler überschreibt Nachrichtentypquelldateien nicht.</p>
+<p>Zusätzlich legt der Compiler noch Werkbänke für die Komponenten an. Das sind VS Projektmappen mit zwei Projekten, einem für die Komponentenimplementation und einem für deren Tests.</p>
+<p>Das Vorgehen beim Entwurf einer EBC-Architektur ist mit dem Compiler wie folgt:</p>
+<ol>
+<li>Anlegen eines Verzeichnisbaums für die Artefakte. Hier die Minimalstruktur:</li>
+</ol>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/48e9a98d798292a5.png" /></p>
+<p>Wurzelverzeichnis, darunter ein Verzeichnis lib/ mit nunit.framework.dll und weiteren für die Anwendung nötigen Bibliotheken. Und das Verzeichnis arc/, in dem die Architekturbeschreibung liegt. (Das Batch-File ruft den ebclang-Compiler für die XML-Datei auf.)</p>
+<p>Nach Übersetzung der Architekturdefinition sieht der Artefaktbaum so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/addf5396687038df.png" /></p>
+<p>Die .log-Dateien enthalten den C#-Compiler Output der Übersetzungen der myapp.* Projekte. Falls mal was schief gegangen sein sollte, darin nachschauen, bei welchem Generierungsschritt es gehakt hat. Der Compiler ist eine Konsolenanwendung und liefert auch noch Informationen während der Übersetzung.</p>
+<p>Die Projekte <em>.specifications und </em>.wiring sollten nicht weiter beachtet werden. Der Compiler könnte sie genauso gut löschen. Ich habe sie bisher zur Fehlersuche aber noch drin gelassen. *.messagetypes enthält das Projekt, in dem die Nachrichtentypen “ausgefleischt” werden können.</p>
+<p>Wichtig ist das bin-Verzeichnis in arc/:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/0f4d2ea079cce72a.png" /></p>
+<p>Hier sind die Assemblies angekommen, die der Compiler erzeugt hat. Von hier müssen sie in allen weiteren Anwendungsprojekten referenziert werden. ebclang.basics.dll enthält bisher nur einen Nachrichtentypen für bidirektionale Kommunikation (Request) und seine Erweiterungsmethoden.</p>
+<p>Mehr ist eigentlich nicht nötig als Vorarbeit durch den Compiler. Auf der Basis der Assemblies kann man loslegen mit der Anwendungsimplementation. Die aufwändige Verdrahtung steckt ja in *.wiring.dll. Das EBC-Leben ist damit einfacher geworden.</p>
+<p>Dennoch tut der Compiler etwas mehr. Er erzeugt auch noch Gerüstprojektmappen für die Komponenten im source/ Verzeichnis des Artefaktbaumes:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/0dbdbfdd77f2a7e2.png" /></p>
+<p>Diese Werkbänke geben den Rahmen vor, in dem Komponenten implementiert werden sollen. Erstens fokussieren sie den Blick, indem sie jede Komponente in eine eigene Projektmappe stellen. Zweitens geben sie vor, dass automatisiert getestet werden muss. Drittens setzen sie schon die Referenzen auf die generierten Assemblies und stellen den Output-Path auf ein globales bin-Verzeichnis.</p>
+<p>Das mögen Kleinigkeiten sein. Doch in <a rel="noopener" href="http://www.prodevcollege.de/produkte-sonsyncdev.html">Clean Code Developer Seminaren</a>, die viel mit Architektur zu tun haben, bemerken wir immer wieder, dass diese Kleinigkeiten viel Zeit kosten. Also habe ich versucht, hier eine erste Linderung zu bringen. Die ist noch nicht perfekt, weil z.B. keine Klasse für die Komponentenimplementation generiert wird, aber sie ist ein Anfang.</p>
+<p>Was bleibt ist die Visualisierung von Architekturdefinitionen. Die soll ultimativ natürlich ein Designer übernehmen. Bis dahin wollte ich aber nicht warten. Also habe ich noch einen kleinen Visualisierer für die XML-Definitionen gebastelt. Den macht man einfach parallel zu Visual Studio oder einem anderen XML-Editor auf und lädt die Architekturdatei. Immer, wenn die sich verändert, aktualisiert man die Diagrammdarstellung und bekommt visuelles Feedback.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e318275f44171afd.png" /></p>
+<p>Die Visualisierung ist natürlich nicht interaktiv und auch nicht besonders hübsch. Aber sie erfüllt erstmal ihren Zweck, denke ich. Und der ist, dass – wer will – einen leichteren Einstieg in den Umgang mit Event-based Components bekommt.</p>
+<p>Am Flipchart mit einer Architekturskizze beginnen, die in das XML-Format übersetzen und dabei die Übersetzung mit dem Visualisierer immer wieder überprüfen. Am Ende die Artefakte mit dem Compiler erzeugen und Nachrichtentypen sowie die Komponentenimplementationen in Visual Studio entwickeln.</p>
+<p>Fehlt am Ende nur noch eines: Ein Programm, dass die ganzen Komponenten instanziert und die generierte Verdrahtung aufruft. So ein Programm – ich nenne es Host – generiert der Compiler noch nicht. Aber es ist schnell geschrieben. Dem Compiler-Download liegt es in der Nachher-Version der Beispielanwendung bei:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c77cb2c746d1085e.png" /></p>
+<p>Mit einem DI Container wie Unity sieht ein Host z.B. so aus:</p>
+<p>19 static void Main()</p>
+<p>20 {</p>
+<p>21     Application.EnableVisualStyles();</p>
+<p>22     Application.SetCompatibleTextRenderingDefault(false);</p>
+<p>23 </p>
+<p>24     // Prepare Build</p>
+<p>25     IUnityContainer uc = new UnityContainer();</p>
+<p>26     uc.RegisterType(new ContainerControlledLifetimeManager());</p>
+<p>27     uc.RegisterType();</p>
+<p>28     uc.RegisterType();</p>
+<p>29 </p>
+<p>30     // Build &amp; Bind</p>
+<p>31     var mainboard = uc.Resolve();</p>
+<p>32 </p>
+<p>33     // Run</p>
+<p>34     Application.Run((Form)uc.Resolve());</p>
+<p>35 }</p>
+<p>Das Portal ist ein Singleton, damit es nicht zweimal instanziert wird. Einmal während der Injektion in das MainBoard und einmal am Schluss bei Run().</p>
+<p>Wer diesen ersten Wurf für einen Architekturcompiler für EBCs interessant findet, der kann ihn <a rel="noopener" href="http://www.ralfw.de/download/ebclang.compiler.spike.demo.zip">hier herunterladen</a>. Wie immer freue ich mich über Feedback.</p>
+<h2>Kommentare</h2>
+<p><strong>Rainer Hilmer</strong> (2010-03-21):</p>
+<p>Das sieht schon sehr gut aus und ich denke es geht in die richtige Richtung. Es freut mich zu sehen daß du weiter an EBC arbeitest. Bei dem ComponentBinder-Projekt auf Codeplex hatte ich den Eindruck, du wärst schon zu neuen Ufern aufgebrochen.
+Was ich noch richtig cool finden würde, wäre eine Erweiterung, welche die einzelnen Komponenten mit - ich bleibe mal bei der Elektronikersprache - Mess-Sensoren ausstattet. Diese liefern den aktuellen Status und dienen der Testbarkeit. Diese "Sensoren" könnten zu einem öffentlichen Sensorbus zusammengefasst werden. Daran könnte man z.B. ein Status-Display hängen, oder (um mal wieder mehr praxisbezogen zu argumentieren) z.B. ein Messaging Service. Die Anwendungsmöglichkeiten wären sicher vielfältig.
+Gruß
+Rainer</p>
+<hr />
+<p><strong>RHS</strong> (2010-03-21):</p>
+<p>Hallo Ralf,
+nun habe ich die ganzen Artikel zu ebc inkl. den Kommentaren gelesen.
+Es gibt sicherlich immer Vorteile und Nachteile einer Technologie oder eines Paradigmas. Die Praxis wird es zeigen, inwiefern es sich bewährt.
+Das ein oder andere hat man sicher schon öfters bewusst oder unbewusst in Projekten umgesetzt. Nun ist es schön, dass sich dafür Termini und standardisierte Vorgehensweisen entwickeln. Ich persönlich finde den Ansatz von ecb schon recht cool. Besonders auch die Tatsache, dass man sich einfach an eine Komponente oder zwischen Komponenten "klinken" kann.
+Was soll ich also noch sagen...? Ich werde nun das Ganze <strong>bewusst</strong> ausprobieren und hoffe auf eine rege Community zu diesem Thema.
+Viele Grüße
+Ralf (zufällig heiße ich auch so)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-03-21):</p>
+<p>@Rainer: Keine Sorge, es geht weiter mit EBCs :-) Wir stehen da erst am Anfang.</p>
+<p>Lass uns ruhig in der "Elektroniksprache" bleiben. Ich finde die noch sehr passend. Da können wir was lernen - um am Ende vielleicht darüber hinaus zu gehen.</p>
+<p>"Standardsensoren" für alle Komponenten wären eine schöne Sache. Die Stelle ich mir als Interface vor. Das kann eine Komponente implementieren oder nicht.</p>
+<p>Alle, die es implementieren, werden an den "Sensorbus" gehängt. Und auf dem kann lauschen, wer will. Komponenten können da etwas über ihre Arbeit veröffentlichen. Vielleicht sollte der deshalb eher "Log-Bus" heißen? Hm...</p>
+<p>Und ich kann mir auch noch ein weiteres "Standardinterface" vorstellen, eines für die Konfiguration von Komponenten. Nach den Build und Bind Phasen kann es noch eine Configure Phase geben, bevor es losgeht. Wer das Konfigurationsinterface implementiert, wird darin mit Konfigdaten versorgt.</p>
+<p>Außerdem könnte der Codegenerator gleich Code fürs Tracing generieren, d.h. in alle Drähte einen Lauscher einsetzen, der die Nachrichten in ein Tracelog wegschreibt. Das könnte durch einen einfach Switsch an/ausgeschaltet werden.</p>
+<p>Ach, es gibt sovieles, was mit EBCs so einfach wird... Aber fangen wir mal klein an und lernen wir, in "Events zu denken". Da sehe ich die Herausforderung für viele Entwickler - und am Ende den großen Gewinn.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Rainer Hilmer</strong> (2010-03-21):</p>
+<p>Hallo nochmal, Ralf.
+Das sind alles super Ideen, und ohhne dir jetzt Honig um den Bart schmieren zu wollen (dafür bin ich nicht der Typ), muß ich sagen daß meine Begeisterung für EBC stetig wächst. Weiter so!</p>
+<hr />
+<p><strong>RHS</strong> (2010-03-21):</p>
+<p>Es ist schon komisch, aber es lässt mich nicht los. Vielleich ist es Euphorie. Aber Euphorie treibt einen ja auch an.
+Ich möchte versuchen, dass Gelesene noch mal zusammen zu fassen.  Auch um zu schauen ob ich es verstanden habe.
+1.) Es gibt ein real existierendes (kein konstruiertes) Problem. Sonst gäbe es nicht wie von RalfW geschrieben ein breites pos. Feedback.
+Nämlich: Wie können Komponenten miteinander interagieren.
+2.) Das Problem wurde bisher noch nicht ganz zufriedenstellend gelöst.
+3.) Es gibt einen Ansatz (EBC), dieser hat offensichtliche Vorteile. Es lohnt sich also diesen weiter zu verfolgen bzw. auszubauen.
+4.) Mit Komponenten sind keine Klassen (Lego Bausteine) sondern kleine Häuser gemeint, die aus den Steinen erstellt wurden.
+Elektrotechnisch: Keine Transistoren oder Widerstande sondern eher integrierte Schaltkreise auf Platinen.
+5.) Statt zwischen den Häusern feste Kabel zu ziehen, um Nachrichten auszutauschen, macht man ein Fenster auf und ruft eine Nachricht hinaus. Ein anderer hat auch das Fenster geöffnet und hat auf genau so eine Nachricht gewartet. Schall breitet sich allseitig aus und es könnte also mehr als einen Lauscher geben.
+Die Nachricht wird verarbeitet oder weiter transportiert.
+Der Ablauf erfolgt synchron.
+Der Absender einer Nachricht teilt dem Empfänger gleich den Rückkanal mit.
+6.) Es wäre schön, wenn man die Komponenten und deren Kanäle für den Nachrichtenaustausch formal beschreiben könnte. Hier existiert bereits ein XML-Dialekt. ebclang
+7.) Kanäle sind immer unidirektional. (Vielleicht eher wie Ein-u. Ausgänge an einer SPS).
+8.) Weil bei vielen Kanälen das Ganze schnell unübersichtlich wird, ist ein Visualisierer (gibt es schon rudimentär) schön. Am besten ein interaktiver Designer für ebclang.
+9.) Es gibt bereits etwas, was die Komponenten automatisch verbindet. (Sozusagen die Pfade routet.) -&gt; ebc-binder
+10.) Das Endziel wäre dann vielleicht:
+a. Eine Art Miniframework für EBC?
+b. Ein Visual Studio AddOn, dass die Struktur in VS erzeugt und bereit stellt, um Event Based Components zu erstellen, zu verwalten?
+c. Es sollte erweiterbar sein.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-03-22):</p>
+<p>@RHS: Zu 1) Das real existierende Problem ist ein Mangel an "composability". "Traditionelle" Komponenten lassen sich noch nicht so zusammenstecken wie Elektronikbausteine. Sie sind noch von einander abhängig. Das ist bei physischen Bauteilen nicht der Fall.</p>
+<p>Zu 2) "Komponente" ist hier ein Modellbegriff. Der muss zwar am Ende in Code übersetzt werden, aber er ist zunächst kein Codeartefakt. Eine Komponente ist ein "Dings", das eben Output- und Input-Pins hat, auf denen es Nachrichten sendet/empfängt.</p>
+<p>Damit Komponenten zusammenarbeiten, müssen ihre Pins verbunden werden. Nennen wir diese Verbindungen mal Drähte.</p>
+<p>Nachrichten sind typsisiert. Also können nur Pins sinnvoll verdrahtet werden, deren Nachrichtentypen kompatibel sind.</p>
+<p>Es gibt "atomische" Komponenten, d.h. solche, die aus Sicht der EBC-Komponentenorientierung keine weitere Struktur haben. Das sind echte Black Boxes. Ich nenne sie mal Bauteile. Und es gibt Komponenten, die bestehen aus anderen Komponenten. Die nenne ich mal Platinen. Deren Aufgabe ist es, "ihre" Teilkomponenten zu verdrahten und damit zu einer größeren Komponente zu integrieren.</p>
+<p>Platinen und Bauteile sind also beides Arten von Komponenten. Bauteile verrichten Arbeit; Platinen verbinden diese Arbeiter.</p>
+<p>Wie Funktionseinheiten, die so aussehen (also typisierte Pins haben und entweder arbeiten oder verdrahten), dann in eine Programmiersprache übersetzt werden, ist eine zweite Sache. Da liegen Klassen nahe.</p>
+<p>Zu 5) Es ist richtig, dass Komponenten einfach Nachrichten an Output-Pins schicken. Sie wissen nicht, wer die dort abholt.</p>
+<p>Nicht richtig ist aber, damit sofort zu assoziieren, dass Pins immer an einem Bus hängen (müssen), an dem alle möglichen andere Komponenten lauschen. Selbstverständlich können Pins direkt verdrahtet sein mit anderen Pins. Ein Broadcast muss nicht stattfinden.</p>
+<p>Auch ein Rückkanal muss nicht immer mit Nachrichten mitgegeben werden. Das ist nur ein Pattern von mehreren möglichen für Antworten.</p>
+<p>-Ralf</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

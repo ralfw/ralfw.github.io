@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Das Intuitive Datenmodell II - Es kann nur einen geben — ralfw.de Archiv</title>
+<meta name="description" content="Wie im ersten Artikel beschrieben, halte ich die grundsätzliche Container-Referenz-Dichotomie aller existierenden Datenmodelle für ein ebenso grundsätzliches Problem. Sie ist wie e">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/das-intuitive-datenmodell-ii-es-kann/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Das Intuitive Datenmodell II - Es kann nur einen geben — ralfw.de Archiv">
+<meta property="og:description" content="Wie im ersten Artikel beschrieben, halte ich die grundsätzliche Container-Referenz-Dichotomie aller existierenden Datenmodelle für ein ebenso grundsätzliches Problem. Sie ist wie e">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/das-intuitive-datenmodell-ii-es-kann/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Das Intuitive Datenmodell II - Es kann nur einen geben</h1>
+    <div class="doc-meta"><span>11. Feb. 2007</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2007/02/das-intuitive-datenmodell-ii-es-kann.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/das-intuitive-datenmodell-ii-es-kann/</code></span></div>
+    <div class="art"><p>Wie <a rel="noopener" href="http://ralfw.blogspot.com/2007/01/das-intuitive-datenmodell-i-motivation.html">im ersten Artikel</a> beschrieben, halte ich die grundsätzliche Container-Referenz-Dichotomie aller existierenden Datenmodelle für ein ebenso grundsätzliches Problem. Sie ist wie eine gläserne Decke: Wir können durch sie Problemlösungen in weiter ferne sehen - aber sie lässt sie uns nur schwer oder gar nicht erreichen.</p>
+<p>Prinzipiell, ganz prinzipiell mag sich womöglich jedes Datenmodellierungsproblem mit jedem existierenden Datenmodell irgendwie realisieren lassen. Genauso ist es aber prinzipiell auch möglich, jede Software in Maschinencode zu schreiben.</p>
+<p>Ob die heutigen Datenmodelle ausreichend für die Zukunft sind, lässt sich daher nicht anhand dessen entscheiden, ob sich prinzipiell alle Modellierungsprobleme mit ihnen bewältigen lassen. Ihre Eignung ist vielmehr immer wieder (auch) an der Leichtigkeit zu prüfen, mit der sich Lösungen auf ihrer Grundlage finden lassen. Und genau da sehe ich Grenzen.</p>
+<p>Etwas greifbarer werden diese Grenzen vielleicht mit folgendem Bild:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/ddc42c262be5f189.gif" /></p>
+<p>Container können gewöhnlich ineinander geschachtelt werden, aber eine Beziehung lässt sich zwischen ihnen nur auf einer Ebene aufbauen. Objekte können nur andere Objekte referenzieren und nicht Teile von Objekten. Dasselbe gilt für Datensätze in relationalen Datenbanken. Nur bei XML ist es etwas anders: Dort kann jedes Element in beliebiger Schachtelungstiefe mit einer ID versehen werden, auf die woanders Bezug genommen werden kann.</p>
+<p>Die außer bei XML stark beschränkte Schachtelungstiefe im Verein mit nur einer adressierbaren Ebene von Containern macht es schwierig, Daten zu modellieren. Welche Daten sollten echt ineinandergeschachtelt werden? Welche Daten sollten besser über Referenzen verbunden werden?</p>
+<p>Diese Fragen stellen sich, solange überhaupt noch eine Entscheidung zwischen Container und Referenz getroffen werden muss. Was aber, wenn diese Entscheidung überflüssig würde? Was, wenn es nur noch ein Konzept gäbe? Das ist die Idee hinter dem Intuitiven Datenmodell (IDM) bzw. einer es implementierenden Intuitiven Datenbank (IDB, Intuivite Database).</p>
+<p><strong>Eine Datenwelt nur noch bestehend aus Containern</strong>Im Intuitiven Datenmodell gibt nur noch Container. Das IDM kennt keine Referenzen mehr. Alle Daten bestehen aus einer beliebig tief geschachtelten Menge von Containern - oder besser: Daten werden als eine Hierarchie von Werten angesehen. Im IDM gibt es nur noch Werte.</p>
+<p>Allerdings haben diese Werte eine ganz besondere Eigenschaft: sie sind immer einzigartig. In einer IDB existiert jeder Wert nur einmal! Das IDM beschreibt daher ein "universe of unique values". Sie können es von daher auch als mathematische Menge auffassen. Z.B. gibt es in der Menge der natürlichen Zahlen jede Zahl nur einmal.</p>
+<p>Allerdings unterscheidet sich das IDM auch gravierend von einer mathematischen Menge. Denn in einer IDB ist nicht nur jedes "Element", jeder Wert einzigartig, sondern kann selbst wieder Werte enthalten, die dann ebenfalls zur IDB gehören. Ein Wert selbst ist allerdings keine Menge, d.h. er kann den selben Wert mehrfach enthalten. Dennoch ist dieser eingeschachtelte Wert in einer IDB nur einmal vorhanden.</p>
+<p>Das IDM kennt zunächst zwei Arten von Werten: atomische Werte (Atomic Values, AV) und zusammengesetzte Werte (Composite Values, CV).</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f1e0a5bedd5fb1ea.gif" /></p>
+<p>Einn AV ist unteilbar und enthält keine weiteren Werte.</p>
+<p>Ein CV hingegen besteht aus anderen Werte, die zusammen seinen Wert ausmachen. Der Wert eines CV ist quasi die "Summe" der in ihm enthaltenen Werte (Subwerte).</p>
+<p>Da eine IDB jeden Wert nur einmal enthalten kann, lassen sich Werte auch als Identitäten auffassen. Die Identität eines CV ist dann zusammengesetzt, so wie die Identität einer Gruppe von Menschen auch zusammengesetzt ist aus den Identitäten der einzelnen Personen.</p>
+<p>Während der Wert eine AV jedoch noch quasi gleichgesetzt werden knn mit den rohen Daten, die er enthält (z.B. ein Name oder eine Telefonnummer oder ein Preis), so ist der Wert eines CV schnell nur noch abstrakt zu fassen; es wäre unhandlich, ihn als Verknüpfung seiner Subwerte zu notieren.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f2d4d9302489a2f0.gif" /></p>
+<p>CVs sind genauso einzigartig wie das, für was sie in der realen Welt stehen. Und das ist ein erstes Indiz dafür, warum ich das Datenmodell als intuitiv bezeichne.</p>
+<p>In der realen Welt gibt es nur Einzigartiges. Jeder Mensch, jedes Blatt am Baum ist einzigartig, jedes Auto, jeder Bleistift ebenso. Und wenn zwei Dinge noch so gleich aussehen, so sind sie doch nicht dieselben. Selbst eine exakte Kopie, selbst ein geklontes Lebewesen hat eine eigene Identität. Alles Materielle gibt es also nur einmal.</p>
+<p>Und genau diesen Umstand, mit dem wir alle täglich souverän umgehen, übertragt das IDM in die Welt der Datenmodellierung. Eine IDB enthält keine Kopien so wie relationale Datenbanken oder Objektmodelle. In einer IDB ist alles einzigartig.</p>
+<p>Und das hat Folgen... die ich aber erst im nächsten Artikel beschreiben will.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2007-02-26):</p>
+<p>Hallo Herr Westphal,
+auf einer sehr abstrakten Ebene finde ich das äußerst spannend. Die Frage für mich ist aber, wie stellen Sie den Bezug zur echten Welt dar? Wie werden Datensätze der realen Welt auf CVs abgebildet? Und wie umgekehrt? kommt das im nächsten Teil?
+Herzliche Grüße aus dem Bayerischen Wald</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2007-02-26):</p>
+<p>@Peter Pohmann: Klar, das zeige ich in den nächsten Teilen der Postingserie. Und ich denke, die Abbildung ist viel einfacher und konkreter, als der jetzige Abstraktionsgrad vermuten lässt ;-)</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

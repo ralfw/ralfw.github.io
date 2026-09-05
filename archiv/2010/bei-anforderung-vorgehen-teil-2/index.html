@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bei Anforderung vorgehen – Teil 2 — ralfw.de Archiv</title>
+<meta name="description" content="Neulich hab ich ein Szenario vorgestellt und ermuntert mal zu überlegen, wie die Anforderugen umgesetzt werden könnten. “Wann sieht der Kunde welche Funktionalität?” war für mich d">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/bei-anforderung-vorgehen-teil-2/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bei Anforderung vorgehen – Teil 2 — ralfw.de Archiv">
+<meta property="og:description" content="Neulich hab ich ein Szenario vorgestellt und ermuntert mal zu überlegen, wie die Anforderugen umgesetzt werden könnten. “Wann sieht der Kunde welche Funktionalität?” war für mich d">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/bei-anforderung-vorgehen-teil-2/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Bei Anforderung vorgehen – Teil 2</h1>
+    <div class="doc-meta"><span>21. Dez. 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/12/bei-anforderung-vorgehen-teil-2.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/bei-anforderung-vorgehen-teil-2/</code></span></div>
+    <div class="art"><p>Neulich hab ich <a rel="noopener" href="http://ralfw.blogspot.com/2010/12/bei-anforderung-vorgehen-teil-1.html">ein Szenario vorgestellt</a> und ermuntert mal zu überlegen, wie die Anforderugen umgesetzt werden könnten. “Wann sieht der Kunde welche Funktionalität?” war für mich die Kernfrage, denn daran scheiden sich die Geister, wenn es um Auslieferung in kleinen Inkrementen geht. Die zu sehen, scheint notorisch schwierig für Softwareentwickler.</p>
+<p>Heute stelle ich zu dieser Frage nun meine Antwort vor.</p>
+<h5>Schritt 1: Anforderungen klären</h5>
+<p>Worum geht´s eigentlich? Das ist natürlich als erstes zu klären. Das Szenario ist hier nur sehr pauschal beschrieben und der Auftraggeber steht nicht zur Verfügung. Deshalb kann dieser Schritt hier auch nur sehr allgemein ausfallen. Spekulation erlaubt :-)</p>
+<p>Es geht um eine Anwendung, die Produktionsabhängigkeiten aufzeigen soll.</p>
+<p><em>User Story: Der Materialplaner gibt eine Teilenummer ein und bekommt ein Diagramm angezeigt, das darstellt, wie das Teil in der Produktion benötigt wird.</em></p>
+<p>Wie das Diagramm aussehen soll, ist hier uninteressant. Wahrscheinlich weiß der Kunde das selbst nicht so genau ;-) Wir müssen also mit so einer simplen Beschreibung weitermachen.</p>
+<p>Eine User Story enthält für mich typischerweise mehrere Features. Ein Feature wird durch eine Interaktion “getriggert” und hat Eingaben, ggf. Ausgaben oder ggf. Seiteneffekte. Wie sieht es damit hier aus? Ich erkenne ein Feature:</p>
+<p><em>F1: Produktionsabhängigkeitsdiagramm anzeigen
+  Interaktion: Benutzer klickt auf einen Button
+  Eingabe: Teilenummer
+  Ausgabe: Diagramm
+  Seiteneffekte: keine
+  Benötigte Ressourcen: DB, Mainframe</em></p>
+<p>Für dieses Feature erbitte ich vom Kunden natürlich Akzeptanzkriterien, d.h. Eingaben und zugehörige Ausgaben.</p>
+<h5>Schritt 2: Architektur entwerfen nach nicht-funktionalen Anforderungen</h5>
+<p>Zuerst sind aus den Anforderungen die nicht-funktionalen Anforderungen herauszulesen. Sie zu erfüllen ist Aufgabe der Architektur, d.h. des Grundgerüstes, des Fundaments jeder Software.</p>
+<p>Nach dem <a rel="noopener" href="http://ralfw.blogspot.com/2010/12/was-ist-softwarearchitektur-teil-2.html">hier</a> vorgestellten Metamodell für Architektur identifiziere ich für die hiesigen Anforderungen…</p>
+<ul>
+<li>einen Bounded Context: Das angeforderte Anwendungssystem besteht nur aus einer Domäne. Es greif zwar auf andere Bounded Contexts zu (existierende Datenbank und Mainframe), aber es selbst stellt einen eigenen Bounded Context dar. (Aus größerer Entfernung betrachtet könnte man fragen, ob das Anwendungssystem nicht eher in einen schon existierenden Bounded Context gehört. Aber das lasse ich hier beiseite, weil der Auftraggeber nicht zur Verfügung steht für eine Diskussion.)  eine App: Die Anforderungen können mit nur einer App umgesetzt werden. Nur eine erkennbare Rolle interagiert mit dem Anwendungssystem.  eine Maschine: Die App kann ohne Probleme auf einer Maschine betrieben werden – allerdings greift sie auf andere Maschinen zu.  ein Prozess: Die App kann ohne Probleme in einem Prozess betrieben werden. Eine WPF-EXE als Host für die Funktionalität reicht. Die App ist also eine typische “C/S-Anwendung”. Sie wird auch nur gelegentlich und von wenigen Anwendern benutzt. (Das nehme ich der Einfachheit halber mal an ;-)  die Concerns: GUI, DB-Zugriff, Mainframe-Zugriff, Domänenlogik; Security ist lt. Anforderungen kein Thema</li>
+</ul>
+<p>Damit ist Grobstruktur für die Lösung beschrieben. Sie ist einfach. Aber es geht ja hier nicht um Kompliziertheit, sondern um Schrittfolge im Vorgehen.</p>
+<h5>Schritt 3: Modellieren nach funktionalen Anforderungen</h5>
+<p>Im Rahmen der Architektur entwerfe ich anschließend ein Modell für das Anwendungssystem. Das tue ich mit Flow-Oriented Modelling und komme für das einzige Feature auf den Fluss…</p>
+<p>GUI -&gt; Order in Zeitraum ermitteln (DB) -&gt; Teile zu Orders sammeln (Mainframe) -&gt; Orders nach gesuchtem Teil filtern (Logik) -&gt; Diagramm berechnen (Logik) -&gt; GUI  Annahmen, die ich mal mache, die aber natürlich im richtigen Leben mit dem Kunden besprochen werden müssten:
+ - Ich brauche die Orders eines Zeitraums aus der DB, um die zugehörigen Teile aus dem Mainframe zu ziehen.  Die Abfragen bei DB und Mainframe sind recht pauschal, deshalb ist hinterher ein eigener filter nötig.</p>
+<p>Die Architektur ist einfach, deshalb werden alle Funktionseinheiten des Modells im einzigen Prozess der einzigen App laufen. Die Concerns sind im Modell berücksichtig.</p>
+<p><strong>Schritt 4: Spike Solutions</strong>  Zumindest ich, der ich keine Ahnung von der Domäne habe und mit den Ressourcen keine Erfahrung habe, würde hier zwei Unsicherheiten erkennen: Zugriff auf DB und Zugriff auf Mainframe. Die würde ich mit Spike Solutions ausräumen, d.h. kleinen "Forschungsprojekten". Die weise ich an 1 Entwickler in meinem Team zu. Der soll im Verlauf von 1 Tag herausfinden, wie das geht, ob und wie wir an die daten herankommen.  Da ich optimistisch bin, dass es überhaupt geht, muss ich darauf erstmal nicht warten. Die Implementierung kann beginnen.  <strong>Schritt 5: Arbeitsorganisation</strong>  Die Arbeitsorganisation lasse ich hier aus. Sie würde aus Modell und Architektur Komponenten synthetisieren, die dann im Team parallel im Sinne eines Features implementiert werden können. Hier gäbe es mindestens 4 solcher Komponenten.  Komponenten dienen der Entkopplung von Entwurf und Unternehmens/Teamstruktur. Software sollte eine Struktur haben, die ihrem Zweck angemessen ist. Ohne weitere Maßnahmen spiegelt sich jedoch die Unternehmens(kommunikations)struktur in der Software wider. So sagt es <a rel="noopener" href="http://en.wikipedia.org/wiki/Conway">Conway´s Law</a>. Dem ist bewusst entgegen zu wirken. Das geschieht, indem Architektur und Modell eben nicht als Ziel haben, die Einheiten der Implementation zu definieren. Die sind vielmehr das Ergebnis einer ausdrücklichen Arbeitsorganisation, die die Entwurfsergebnisse in Komponenten verpackt, um sie Teammitgliedern zuzuweisen.  Die Zusammenfassung geschieht aus arbeitsorganisatorischem Blickwinkel, bewegt sich aber dennoch im Rahmen der architektonischen Mindestanforderungen. Es gibt keine Komponenten über Concerns hinweg.  <strong>Schritt 6: Implementierung</strong>  Bei der ganzen Aufgabe ging es mir eigentlich nur um diesen Schritt. Denn hier scheiden sich sehr schnell die Geister. Wie kann man solche Anforderungen an den Kunden bringen?  Eine Schätzung für den Aufwand gebe ich bewusst nicht ab. Soviel ist zwar klar: wir reden über Tage und nicht Wochen. Aber eine nähere Schätzung bringt nichts. Stattdessen sage ich dem Kunden, dass wir sehr schnell Risikofaktoren ausräumen werden – mit seiner Mithilfe. So kann er nach geringem Einsatz noch die Notbremse ziehen. (Ob dafür 1, 2 oder 5 Entwickler nötig sind, ist nicht so wichtig für das Weitere. Das Team sollte allerdings wg. der Spike Solution schon aus min. 2 Entwicklern bestehen.)  Was aber nun tun in den folgenden Tagen? Den Auftrag dankend entgegennehmen und am Ende liefern? Oder wie?  Meine Devise lautet: jeden Tag liefern. Ja, wirklich jeden Tag. Und immer in Inkrementen, mit denen der Kunde etwas anfangen kann. Also immer Längsschnitte durch die Anforderungen. Keinen Tag verschwenden mit Infrastrukturprogrammierung.  Das nutzt dem Kunden. Das nutzt dem Entwickler. Denn so wird jeden Tag wertvolles Feedback generiert.  An Tag 0 wurden die Anforderungen geklärt, die Architektur bestimmt und modelliert. Die Aufgabe ist ja überschaubar. (Wie gesagt, es geht um nicht mehr als beschrieben. Jetzt also nicht den Zeigefinger heben und einwänden, dass ja gar nicht über Security oder Internationalisierung oder Portabilität usw. gesagt wurde. Es ist einfach so einfach wie beschrieben. Es lohnt auch nicht das Philosophieren darüber, ob der Kunde nicht besser bedient wäre mit einem Business Process Reengineering oder so, damit das Anwendungssystem überflüssig wird.)  <strong>Tag 1:</strong>  Die Implementierung schreitet tageweise voran. Am Ende des ersten Tages ist natürlich nicht alles fertig. Also muss ich mich der kompletten Realisierung annähern.  Auf die Spike Solutions warte ich nicht. Sie laufen parallel. Ich habe also noch keine Adapter für DB- und Mainframe-Zugriff. Macht aber nichts.  Am ersten Tag enthalten die aus dem Modell übersetzten Funktionseinheiten für DB-Zugriff und Mainframe-Zugriff deshalb nur fixe Daten (s. Akzeptanzkriterien). Die Filterung scheint mir aber einfach zu sein. Also implementiere ich sie vollständig. Deshalb liefere ich am Ende von Tag 1 eine Anwendung, die auf festen Daten schonmal vollständig filtert - aber sie zeigt noch kein Diagramm, sondern nur eine Liste von Ergebnissen. Damit kann der PO überprüfen, ob ich bei gegebenen fixen Beispieldaten die Filterung korrekt verstanden habe und also die korrekten Ergebnisdaten anzeige (s. Akzeptanzkriterien).  Ein Tag Entwicklung liefert dem Kunden einen kleinen Nutzen. <strong>Tag 2:</strong>  Ich ersetze die Liste der Aufträge durch das Diagramm. Ich kann mich den ganzen Tag darauf konzentrieren. Der Kunde kann dann beurteilen, ob ich seinen Wunsch einer Ergebnisvisualisierung verstanden habe. Ein Tag Entwicklung liefert dem Kunden einen kleinen Nutzen. <strong>Tag 3:</strong>  Die Spike Solutions haben ergeben, wie ich auf die Ressourcen zugreifen kann. Damit fange ich beim Mainframe an. Ich suche mir von Hand einige Aufträge aus der DB heraus. Die werden nun als fixe reale Daten in die DB-Abfrage-Funktionseinheit eingetragen. Dann lasse ich die Mainframe-Abfrage damit laufen; die ist nun real. Der Kunde kann beurteilen, ob Daten aus der DB zu korrekter Interaktion mit dem Mainframe führen. Ein Tag Entwicklung liefert dem Kunden einen kleinen Nutzen. Beachte: Die wesentliche Infrastrukturprogrammierung hat im Rahmen der Spike Solutions stattgefunden. Da ist sie nicht sauber gewesen, dafür schnell und auf den Punkt. Meine Unsicherheiten sind beseitigt. Der Mainframe-Zugriff kann nun mit hoher Geschwindigkeit für den Produktionscode sauber implementiert werden. Copy &amp; Paste ist dabei ok. <strong>Tag 4:</strong>  Schließlich implementiere ich den DB-Zugriff. Auch den haben ja die Spike Solutions auf den Punkt gebracht. Die Anwendung läuft nun komplett mit realen Daten. Ein Tag Entwicklung liefert dem Kunden einen kleinen Nutzen.</p>
+<h5>Zusammenfassung</h5>
+<p>Man mag einwänden, dass bei diesem Vorgehen erst nach Tag 4 alles wirklich und real für den Kunden überprüfbar sei. Das stimmt natürlich in Bezug auf die Gesamtanforderungen.</p>
+<p>Aber genau da liegt der Hase im Pfeffer: Kunden müssen in die Pflicht genommen werden, nicht nur Gesamtlösungen abnehmen zu wollen (oder auch nur große Meilensteine). Sie müssen täglich (oder von mir aus auch alle 2-3 tage) ran. Warum? Weil nur so die Entwicklung keinen Ausschnuss produziert, d.h. Abfall in Form von falsch verstandenen und umgesetzten Anforderungen. Je mehr ungeprüft auf Halde vor dem Kunden liegt, desto größer erstens das darin gebundene Kapital (Funktionalität entwickelt, aber nicht bezahlt). Und zweitens desto größer die Gefahr, dass die Halde Annahmen enthält, die falsch sind und auch noch in weiteren Code eingehen. Kunden müssen lernen, "Vorläufigkeit" auszuhalten. Oben ist z.B. zuerst das UI nur vorläufig (Liste statt Diagramm) - aber in gewissem Umfang ist es funktional. Und das ist, was zählt. Es stellt einen kleinen Nutzen dar. Es ist eine Feature-Scheibe, ein dünner Längsschnitt durch das Anwendungssystem. Der Kunde kann mit dem Code etwas anfangen und Feedback geben.</p>
+<p>Das ist es, was ich an dem Szenario einmal demonstrieren wollte: diese Denke in Längsschnitten. Das ist für mich im Kern von Agilität. Kein Big Design Up-Front (BDUF), keine Infrastrukturprogrammierung ohne Kundennutzen, sondern jeden Tag ein Scheibchen mehr Funktionalität.</p>
+<p>Dass die nicht immer einsatzfähig ist, ist selbstredend. Darum geht es auch nicht. Wichtiger ist, dass Funktionalität nicht ohne Kundenfeedback als abgeschlossen betrachtet werden kann. Kommt das schnell, dann geht es auch schnell voran zur Einsatzfähigkeit. Ein weiterer Vorteil dieses Vorgehens: Der Kunde kann jeden Tag den Kurs ändern. Er hätte zum Beispiel nach Tag 1 sagen können, “Danke, eine Liste reicht mir. Ich hatte mir zwar eine Grafik vorgestellt, aber so geht es auch. Statt eines Diagramms möchte ich lieber die Möglichkeit, mehrere Teilenummern eingeben zu können.”</p>
+<p>Jeder Tag ist Kursänderungstag für den Kunden. Jeder Tag ist Erfolgstag für den Entwickler. Das sind für mich wichtige psychologische Aspekte der Softwareentwicklung. Sie fördern die Vertrauensbildung und die Motivation. Tägliche Auslieferung ist daher aus meiner Sicht anzustreben.</p>
+<p>PS: Zum Abschluss ein Wort an die ewigen Skeptiker, die da sagen werden, “Aber das geht nicht. Mann kann nicht alle Anforderungen so klein schneiden, dass man jeden Tag etwas Kundenrelevantes ausliefern kann.”</p>
+<p>Also…</p>
+<ul>
+<li>Habt ihr es probiert? Sehr wahrscheinlich nicht. Ich behaupte daher weiter, dass das geht. Im Zweifelsfall schickt mir eure Anforderungen und ich zeige euch, wie man sie in dünne Scheiben schneidet.</li>
+<li>Vielleicht, ganz vielleicht geht es am Ende doch nicht und ihr müsste mal 2 oder 3 Tage ohne Auslieferung vor euch hinmokeln. Naja, dann sei das mal so. Aber weiterhin solltet ihr anstreben, zurück zu täglicher Lieferung zu kommen. Für euch selbst. Ihr profitiert davon. Es ist zu eurem Vorteil. Denn wer möchte nicht jeden Tag das gute Gefühl haben, etwas für den Kunden Relevantes fertiggestellt zu haben? Wer möchte nicht häufiges Feedback in kleinen Happen statt einmal alle 2 oder 4 ode 12 Wochen? Wer möchte nicht, wenn Kurswechsel durch den Kunden unvermeidlich sind, dass die stattfinden auf der Basis abgeschlossener Funktionalität?</li>
+<li>Für den Kunden mögen tägliche Lieferungen ungewohnt sein. Er streubt sich, weil doch sein ProductOwner auch noch einen normalen Job hat und sich nicht immer mit den Releases rumschlagen kann. Dann nennt dem Kunden die Vorteile – wieder, weil ihr selbst eure Vorteile genießen wollt. Tut es aus eigenem Interesse. Die Vorteile für den Kunden sind: a) unmittelbares Feedback in einer Sache, in der er sehr wahrscheinlich selbst recht unsicher ist, b) jederzeitige Meinungsänderung, d.h. es wird wirklich immer nur gebaut und vertieft, was wichtig ist.</li>
+</ul></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

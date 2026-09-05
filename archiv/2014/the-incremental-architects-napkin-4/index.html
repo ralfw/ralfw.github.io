@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Inkremental Architect&#x27;s Napkin - #4 - Make increments tangible — ralfw.de Archiv</title>
+<meta name="description" content="The driver of software development are increments, small increments, tiny increments. With an increment being a slice of the overall requirement scope thin enough to implement and ">
+<link rel="canonical" href="https://ralfw.de/archiv/2014/the-incremental-architects-napkin-4/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Inkremental Architect&#x27;s Napkin - #4 - Make increments tangible — ralfw.de Archiv">
+<meta property="og:description" content="The driver of software development are increments, small increments, tiny increments. With an increment being a slice of the overall requirement scope thin enough to implement and ">
+<meta property="og:url" content="https://ralfw.de/archiv/2014/the-incremental-architects-napkin-4/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>The Inkremental Architect&#x27;s Napkin - #4 - Make increments tangible</h1>
+    <div class="doc-meta"><span>12. Juni 2014</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2014/06/12/the-inkremental-architectacutes-napkin---4---make-increments-tangible.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2014/the-incremental-architects-napkin-4/</code></span></div>
+    <div class="art"><p>The driver of software development are increments, small increments, tiny increments. With an increment being a slice of the overall requirement scope thin enough to implement and get feedback from a product owner within 2 days max. Such an increment might concern Functionality or Quality.</p>
+<p>To make such high frequency delivery of increments possible, the transition from talking to coding needs to be as easy as possible. A user story or some other documentation of what´s supposed to get implemented until tomorrow evening at latest is one side of the medal. The other is where to put the logic in all of the code base.</p>
+<p>To implement an increment, only logic statements are needed. Functionality like Quality are just about expressions and control flow statements. Think of Assembler code without the CALL/RET instructions. That´s all is needed. Forget about functions, forget about classes. To make a user happy none of that is really needed. It´s just about the right expressions and conditional executions paths plus some memory allocation. Automatic function inlining of compilers which makes it clear how unimportant functions are for delivering value to users at runtime.</p>
+<p>But why then are there functions? Because they were invented for optimization purposes. We need them for better Evolvability and Production Efficiency. Nothing more, nothing less. No software has become faster, more secure, more scalable, more functional because we gathered logic under the roof of a function or two or a thousand.</p>
+<p>Functions make logic easier to understand. Functions make us faster in producing logic. Functions make it easier to keep logic consistent. Functions help to conserve memory.</p>
+<p>That said, functions are important. They are even the pivotal element of software development. We can´t code without them - whether you write a function yourself or not. Because there´s always at least one function in play: the Entry Point of a program.</p>
+<p>In Ruby the simplest program looks like this:</p>
+<pre><code class="language-ruby">puts &quot;Hello, world!&quot;
+</code></pre>
+<p>In C# more is necessary:</p>
+<pre><code class="language-csharp">class Program {
+    public static void Main () {
+        System.Console.Write(&quot;Hello, world!&quot;);
+    }
+}
+</code></pre>
+<p>C# makes the Entry Point function explicit, not so Ruby. But still it´s there. So you can think of logic always running in some function.</p>
+<p>Which brings me back to increments: In order to make the transition from talking to code as easy as possible, it has to be crystal clear into which function you should put the logic. Product owners might be content once there is a sticky note a user story on the Scrum or Kanban board. But developers need an idea of what that sticky note means in term of functions. Because with a function in hand, with a signature to run tests against, they have something to focus on.</p>
+<p>All´s well once there is a function behind whose signature logic can be piled up. Then testing frameworks can be used to check if the logic is correct. Then practices like TDD can help to drive the implementation.</p>
+<p>That´s why most code katas define exactly how the API of a solution should look like. It´s a function, maybe two or three, not more.</p>
+<p>A requirement like "Write a function f which takes this as parameters and produces such and such output by doing x" makes a developer comfortable. Yes, there are all kinds of details to think about, like which algorithm or technology to use, or what kind of state and side effects to consider. Even a single function not only must deliver on Functionality, but also on Quality and Evolvability.</p>
+<p>Nevertheless, once it´s clear which function to put logic in, you have a tangible starting point.</p>
+<p>So, yes, what I´m suggesting is to find a single function to put all the logic in that´s necessary to deliver on a the requirements of an increment. Or to put it the other way around: Slice requirements in a way that each increment´s logic can be located under the roof of a single function.</p>
+<h2>Entry points</h2>
+<p>Of course, the logic of a software will always be spread across many, many functions. But there´s always an Entry Point. That´s the most important function for each increment, because that´s the root to put integration or even acceptance tests on.</p>
+<p>A batch program like the above hello-world application only has a single Entry Point. All logic is reached from there, regardless how deep it´s nested in classes.</p>
+<p>But a program with a user interface like this has at least two Entry Points:</p>
+<p>One is the main function called upon startup. The other is the button click event handler for "Show my score".</p>
+<p>But maybe there are even more, like another Entry Point being a handler for the event fired when one of the choices gets selected; because then some logic could check if the button should be enabled because all questions got answered. Or another Entry Point for the logic to be executed when the program is close; because then the choices made should be persisted.</p>
+<p>You see, an Entry Point to me is a function which gets triggered by the user of a software. With batch programs that´s the main function. With GUI programs on the desktop that´s event handlers. With web programs that´s handlers for URL routes.</p>
+<p>And my basic suggestion to help you with slicing requirements for Spinning is: Slice them in a way so that each increment is related to only one Entry Point function.</p>
+<p>Entry Points are the "outer functions" of a program. That´s where the environment triggers behavior. That´s where hardware meets software. Entry points always get called because something happened to hardware state, e.g. a key was pressed, a mouse button clicked, the system timer ticked, data arrived over a wire.</p>
+<p>Viewed from the outside, software is just a collection of Entry Point functions made accessible via buttons to press, menu items to click, gestures, URLs to open, keys to enter.</p>
+<h2>Collections of batch processors</h2>
+<p>I´d thus say, we haven´t moved forward since the early days of software development. We´re still writing batch programs. Forget about "event-driven programming" with its fancy GUI applications. Software is just a collection of batch processors. Earlier it was just one per program, today it´s hundreds we bundle up into applications.</p>
+<p>Each batch processor is represented by an Entry Point as its root that works on a number of resources from which it reads data to process and to which it writes results.</p>
+<p>These resources can be the keyboard or main memory or a hard disk or a communication line or a display.</p>
+<p>Together many batch processors - large and small - form applications the user perceives as a single whole:</p>
+<p>Software development that way becomes quite simple: just implement one batch processor after another. Well, at least in principle ;-)</p>
+<h2>Features</h2>
+<p>Each batch processor entered through an Entry Point delivers value to the user. It´s an increment. Sometimes its logic is trivial, sometimes it´s very complex. Regardless, each Entry Point represents an increment. An Entry Point implemented thus is a step forward in terms of Agility.</p>
+<p>At the same time it´s a tangible unit for developers. Therefore, identifying the more or less numerous batch processors in a software system is a rewarding task for product owners and developers alike. That´s where user stories meet code.</p>
+<p>In this example the user story translates to the Entry Point triggered by clicking the login button on a dialog like this:</p>
+<p>The batch then retrieves what has been entered via keyboard, loads data from a user store, and finally outputs some kind of response on the screen, e.g. by displaying an error message or showing the next dialog.</p>
+<p>This is all very simple, but you see, there is not just one thing happening, but several.</p>
+<ol>
+<li>Get input (email address, password)</li>
+<li>Load user for email address</li>
+<li>If user not found report error</li>
+<li>Check password</li>
+<li>Hash password</li>
+<li>Compare hash to hash stored in user</li>
+<li>Show next dialog</li>
+</ol>
+<p>Viewed from 10,000 feet it´s all done by the Entry Point function. And of course that´s technically possible. It´s just a bunch of logic and calling a couple of API functions.</p>
+<p>However, I suggest to take these steps as distinct aspects of the overall requirement described by the user story. Such aspects of requirements I call Features.</p>
+<p>Features too are increments. Each provides some (small) value of its own to the user. Each can be checked individually by a product owner.</p>
+<p>Instead of implementing all the logic behind the Login() entry point at once you can move forward increment by increment, e.g.</p>
+<ol>
+<li>First implement the dialog, let the user enter any credentials, and log him/her in without any checks. Features 1 and 4.</li>
+<li>Then hard code a single user and check the email address. Features 2 and 2.1.</li>
+<li>Then check password without hashing it (or use a very simple hash like the length of the password). Features 3. and 3.2</li>
+<li>Replace hard coded user with a persistent user directoy, but a very simple one, e.g. a CSV file. Refinement of feature 2.</li>
+<li>Calculate the real hash for the password. Feature 3.1.</li>
+<li>Switch to the final user directory technology.</li>
+</ol>
+<p>Each feature provides an opportunity to deliver results in a short amount of time and get feedback. If you´re in doubt whether you can implement the whole entry point function until tomorrow night, then just go for a couple of features or even just one.</p>
+<p>That´s also why I think, you should strive for wrapping feature logic into a function of its own. It´s a matter of Evolvability and Production Efficiency. A function per feature makes the code more readable, since the language of requirements analysis and design is carried over into implementation. It makes it easier to apply changes to features because it´s clear where their logic is located. And finally, of course, it lets you re-use features in different context (read: increments).</p>
+<p>Feature functions make it easier for you to think of features as Spinning increments, to implement them independently, to let the product owner check them for acceptance individually.</p>
+<p>Increments consist of features, entry point functions consist of feature functions. So you can view software as a hierarchy of requirements from broad to thin which map to a hierarchy of functions - with entry points at the top.</p>
+<p>I like this image of software as a self-similar structure on many levels of abstraction where requirements and code match each other. That to me is true agile design: the core tenet of Agility to move forward in increments is carried over into implementation. Increments on paper are retained in code. This way developers can easily relate to product owners. Elusive and fuzzy requirements are not tangible.</p>
+<p>Software production is moving forward through requirements one increment at a time, and one function at a time.</p>
+<h2>In closing</h2>
+<p>Product owners and developers are different - but they need to work together towards a shared goal: working software. So their notions of software need to be made compatible, they need to be connected.</p>
+<p>The increments of the product owner - user stories and features - need to be mapped straightforwardly to something which is relevant to developers. To me that´s functions. Yes, functions, not classes nor components nor micro services.</p>
+<p>We´re talking about behavior, actions, activities, processes. Their natural representation is a function. Something has to be done. Logic has to be executed. That´s the purpose of functions.</p>
+<p>Later, classes and other containers are needed to stay on top of a growing amount of logic. But to connect developers and product owners functions are the appropriate glue. Functions which represent increments.</p>
+<p>Can there always be such a small increment be found to deliver until tomorrow evening? I boldly say yes. Yes, it´s always possible. But maybe you´ve to start thinking differently. Maybe the product owner needs to start thinking differently. Completion is not the goal anymore. Neither is checking the delivery of an increment through the user interface of a software. Product owners need to become comfortable using test beds for certain features. If it´s hard to slice requirements thin enough for Spinning the reason is too little knowledge of something. Maybe you don´t yet understand the problem domain well enough? Maybe you don´t yet feel comfortable with some tool or technology? Then it´s time to acknowledge this fact. Be honest about your not knowing. And instead of trying to deliver as a craftsman officially become a researcher. Research an check back with the product owner every day - until your understanding has grown to a level where you are able to define the next Spinning increment.</p>
+<hr />
+<p><em>Footnotes: Sometimes even thin requirement slices will cover several Entry Points, like "Add validation of email addresses to all relevant dialogs." Validation then will it put into a dozen functons. Still, though, it´s important to determine which Entry Points exactly get affected. That´s much easier, if strive for keeping the number of Entry Points per increment to 1. If you like call Entry Point functions event handlers, because that´s what they are. They all handle events of some kind, whether that´s palpable in your code or note. A public void btnSave_Click(object sender, EventArgs e) {…} might look like an event handler to you, but public static void Main() {…} is one also - for then event "program started".</em></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

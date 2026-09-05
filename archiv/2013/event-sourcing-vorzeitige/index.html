@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Event Sourcing: Vorzeitige Datenstrukturoptimierung vermeiden — ralfw.de Archiv</title>
+<meta name="description" content="Datenstrukturen wohin Sie schauen. Wenn Sie Anforderungen studieren, sucht Ihr Gehirn sofort nach Zusammenhängen und Mustern für Daten. So sind Sie einfach trainiert. Die Objektori">
+<link rel="canonical" href="https://ralfw.de/archiv/2013/event-sourcing-vorzeitige/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Event Sourcing: Vorzeitige Datenstrukturoptimierung vermeiden — ralfw.de Archiv">
+<meta property="og:description" content="Datenstrukturen wohin Sie schauen. Wenn Sie Anforderungen studieren, sucht Ihr Gehirn sofort nach Zusammenhängen und Mustern für Daten. So sind Sie einfach trainiert. Die Objektori">
+<meta property="og:url" content="https://ralfw.de/archiv/2013/event-sourcing-vorzeitige/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Event Sourcing: Vorzeitige Datenstrukturoptimierung vermeiden</h1>
+    <div class="doc-meta"><span>3. Juli 2013</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2013/07/event-sourcing-vorzeitige.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2013/event-sourcing-vorzeitige/</code></span></div>
+    <div class="art"><p>Datenstrukturen wohin Sie schauen. Wenn Sie Anforderungen studieren, sucht Ihr Gehirn sofort nach Zusammenhängen und Mustern für Daten. So sind Sie einfach trainiert. Die Objektorientierung scheint das nahezulegen. Der Umgang mit Datenbanken erfordert das allemal.</p>
+<p>Ich kenne diesen Reflex jedenfalls genau. Wenn ich vor der Aufgabe stehe, einen Stack zu implementieren, frage ich mich, wie dafür die Daten strukturiert sein sollen. Speichere ich die Einträge in einem Array? Oder benutze ich besser eine Liste? Sollte die Liste einfach oder doppelt verkettet sein?</p>
+<p>Oder wenn ich vor der Aufgabe stehe, ein Tic Tac Toe Spiel zu implementieren, dann frage ich mich, wie das Spielbrett intern abgebildet werden sollte. Ist es besser, alle Spielfelder in einem eindimensionalen Array zu halten? Oder sollte ich ein zweidimensionales Array benutzen?</p>
+<p>Und falls dazu noch die Anforderung kommt, die Daten zu persistieren, dann mache ich mir Gedanken über das Persistenzparadigma – relational oder dokumentenorientiert oder key-value store usw. – und ein dazugehöriges Schema.</p>
+<p>Puh… ganz schön viele Gedanken, die sich um Datenstrukturen drehen. Aber das ist ja auch verständlich, weil es um <em>die eine</em> Datenstruktur geht, quasi das Herzstück der Codes. Denn alle Funktionalität muss damit leben. Da greift man besser nicht daneben, sonst knirscht das Software-Getriebe später.</p>
+<p>Dieses Vorgehen scheint alternativlos. So haben wir es schon immer gemacht. So muss man Softwareentwicklung planen.</p>
+<p>Oder?</p>
+<p>Nein! Ich glaube daran nicht mehr. Historisch gesehen finde ich diese Herangehensweise zwar verständlich – nur müssen wir deshalb ja nicht so weitermachen.</p>
+<p>Für mich scheint der “data structure first” Ansatz zunehmend kontraproduktiv. Er versucht gleich zu Beginn der Entwicklung etwas zu optimieren, das sich eigentlich erst über die Zeit ergeben muss. Beim Stack und für Tic Tac Toe mag das noch nicht so offensichtlich sein. Liegen da die Datenstrukturen nicht sehr klar auf der Hand? Aber bei Ihren Anwendungen ist das sicherlich anders. Beweis dafür ist die Bewegung, die über Jahre in Ihren Schemata stattgefunden hat. Die sehen sicherlich nicht mehr so aus wie am Anfang.</p>
+<p>Datenstrukturen sind kein Selbstzweck. Wenn Sie eine Datenstruktur planen, müssen Sie vielmehr immer genau im Blick haben, wer deren Konsument ist. Was sind dessen Bedürfnisse? Wissen Sie das aber genau? Können Sie das wissen? Ist das nicht auch eine Form von Big Design Up-Front (BDUF) und ein Fall von Premature Optimization?</p>
+<p>Klar, bei Tic Tac Toe ist da natürlich zunächst einmal der Anwender. Der will auf seinem Bildschirm ein zweidimensionales Spielbrett sehen.</p>
+<p>Und dann ist da die Domänenlogik. Die muss auch mit dem Spielbrett umgehen. Aber ist für sie ebenfalls eine zweidimensionale Struktur die beste? Vielleicht. Vielleicht aber auch nicht. Herausfinden werden Sie das erst, wenn Sie die Domänenlogik implementieren.</p>
+<p>Vielleicht ist es sogar so, dass verschiedene Aspekte der Domänenlogik unterschiedliche Datenstrukturen bevorzugen würden. Braucht die Bestimmung des nächsten Spielers eine zweidimensionale oder eindimensionale Datenstruktur oder gar etwas anderes? Wie steht es mit der Prüfung, ob ein Spieler gewonnen hat? Wie wird am leichtesten festgestellt, ob ein Zug überhaupt gültig ist?</p>
+<p>Wenn Sie nach der einen Datenstruktur zur Erfüllung aller Anforderungen an den Entwurf herangehen, befinden Sie sich schnell im Kreuzfeuer vieler “Stakeholder”, d.h. Aspekte. Die Suche nach einem Optimum ist da vergeblich, würde ich sagen. Es kann immer nur ein Kompromiss herauskommen. Die Frage ist nur, wie sehr Sie sich dabei aufreiben.</p>
+<p>Warum also nicht Zeit sparen? Schluss mit BDSDUF = Big Data Structure Design Up-Front. Seien Sie schnell statt gründlich – insbesondere wenn die Gründlichkeit ja ohnehin kein stabiles Ergebnis liefern kann. Statt in die Glaskugel schauen Sie auf die ohnehin stattfindende Entwicklung beim Umgang mit Daten und versuchen, Muster zu entdecken. Dann kommen Sie früher oder später schon zu stabile(re)n Datenstrukturen.</p>
+<p>Den Plural meine ich hier ernst. Statt sich auf die eine Datenstruktur zu kaprizieren, versuchen Sie mal, mehrere zuzulassen.</p>
+<h3>Events als Datengranulat</h3>
+<p>Ich will versuchen, Ihnen konkreter zu beschreiben, was ich damit meine. Als Beispiel soll Tic Tac Toe dienen. Die Verarbeitung eines Zuges könnte so aussehen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/02e6fb2184ccd9d0.png" /></p>
+<p>Klar ist dabei, womit die Verarbeitung angestoßen wird – durch Meldung der Koordinate des Spielfeldes, auf das ein Spieler einen Stein setzen will – und was die Verarbeitung am Ende als Ergebnis liefern soll: die aktuelle Konfiguration des Spielfeldes sowie den Spielstand (ob es weitergeht oder das Spiel zuende ist durch Gewinn oder Unentschieden).</p>
+<p>Alle anderen Daten liegen im Dunkeln. Also könnte es losgehen mit der Spekulation, wie denn “das Spiel” über diese Kette von Verarbeitungsschritten am besten repräsentiert werden sollte, was die eine beste Repräsentation sein sollte.</p>
+<p>Was immer Sie nun dazu denken… Ich möchte Ihnen etwas anderes vorschlagen. Wie wäre es, wenn es keine spielspezifische gemeinsame Datenstruktur gäbe? Wie wäre es, wenn es keine Datenstruktur gäbe, die den aktuellen Zustand darstellte?</p>
+<p>Stattdessen schlage ich vor, eine Liste von Zustandsänderungen zu führen. Im Falle von Tic Tac Toe ist das ganz, ganz einfach. Diese Zustandsänderungen sind die Züge. Jeder Zug verändert die Konfiguration des Spielbretts und den Spielstand. Das kann als Ereignis (Event) angesehen werden. Und diese Events schlage ich vor zu speichern.</p>
+<p>Statt Spielbrett mit Daten für Spielfeldbelegungen…</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/b1667eaf837bbc2f.png" /></p>
+<p>…gibt es eben nur eine Liste von Events:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/3fb3b51f13d48543.png" /></p>
+<p>Diese Events beziehen sich zwar auf die Vorstellung eines zweidimensionalen Spielbretts, doch das existiert eben nicht statisch.</p>
+<p>Und wie sollen die Verarbeitungsschritte nun vorgehen?</p>
+<p>Fangen wir mal einfach an: Für den Spielerwechsel muss nichts getan werden. Es ist kein spezieller Zustand zu führen. Welcher Spieler dran ist, ergibt sich aus der Anzahl der Züge:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/815a7dc1469a488d.png" /></p>
+<p>Das ist auch nur relevant für das Rendering des Spielbretts.</p>
+<p>Wie ist es mit der Zugausführung – vorausgesetzt, der Zug ist valide? Das ist ein Einzeiler:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a14867d7ab1c0906.png" /></p>
+<p>Es muss ja nur memoriert werden, welcher Zug gemacht wurde. Kein Spielstein wird auf einem Spielbrett platziert.</p>
+<p>Und wie sieht die Validation aus? Die beschränkt sich auf die Prüfung, ob die Koordinate des Zuges schon einmal vorgekommen ist:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a394f4e6f2082b7e.png" /></p>
+<p>Falls ja, liegt ein Fehler vor. Nur der Einfachheit halber bricht das Spiel dann mit einer Exception ab.</p>
+<p>Jetzt die Spielstandprüfung. Die ist aufwändiger. Aber das wäre sie auch, wenn der Spielbrettzustand vorgehalten würde:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/b4f8aaeb33cc2f05.png" /></p>
+<pre><code>Ob ein Unentschieden vorliegt oder nicht, ist schnell entschieden. Wenn alle Felder belegt sind, also 9 Züge gemacht wurden, geht nichts mehr.
+</code></pre>
+<pre><code>Die möglichen Gewinnpositionen werden einzeln geprüft. Züge auf horizontale, vertikale und diagonale Feldreihen werden selektiert. Falls in einer Reihe nur Züge desselben Spielers gemacht wurden, liegt ein Gewinn vor.
+</code></pre>
+<pre><code>Züge von Spieler X werden mit 1 bewertet, die von O mit –1. Eine Gewinnreihe hat dann den Wert 3 bzw. –3.
+</code></pre>
+<pre><code>Zum Schluss ist natürlich doch ein Spielbrett der herkömmlichen Art nötig. Das zeigt das obige Flow-Diagramm ja schon. Allerdings überlasse ich das nicht dem Spielerwechsel – das wäre ein Widerspruch zum SRP -, sondern verpacke es in eine eigene Routine:
+</code></pre>
+<pre><code>
+</code></pre>
+<pre><code>Bei CQRS spricht man von ReadModels auf der Query-Seite. Und genau darum geht es ja auch hier: eine Datenstruktur, die nur für lesenden Gebrauch bestimmt ist. Dass die jedes Mal neu generiert wird, macht nichts. Auch ein Cache ist eine Optimierung, die hier vorzeitig wäre.
+</code></pre>
+<pre><code>Zur Abrundung noch die Integration dieser Operationen in einer eigenen Methode:
+</code></pre>
+<pre><code>
+</code></pre>
+<h3>Fazit</h3>
+<pre><code>Ich habe mir die Entscheidung für die eine alleinseligmachende Datenstruktur gespart. Alle Aspekte des Tic Tac Toe Spiels haben für sich entscheiden können, was ihnen am besten taugt. Und wie sich herausstellt, konnten alle mit einer Event Source sehr gut leben.
+</code></pre>
+<pre><code>Das ist insofern bemerkenswert, als dass eine Event Source eine generische Datenstruktur ist. Die sieht in allen Anwendungen gleich aus. Es ist nicht mehr als eine Liste von Events. Zugegeben, die sind bei TTT sehr, sehr simpel. Aber auch wenn Events eigene Klassen sind, ändert sich das Prinzip nicht. Eine Event Source ist und bleibt eine schlichte Liste. Und aus der kann bei Bedarf jede konkretere Datenstruktur generiert werden.
+</code></pre>
+<pre><code>Deshalb bezeichne ich die Events auch als Datengranulat. Sie sind wie kleine Kunststoffkügelchen, aus denen man bei Bedarf allerlei Nützliches formen kann.
+</code></pre>
+<pre><code>Mit einer Event Source bin ich also schneller am Start. Und wenn ich feststelle, dass ich aus den Events die eine oder andere Datenstruktur öfter generiere, also sich ein Muster herausschält, dann kann ich mir Gedanken darüber machen, ob ich dafür einen Cache einrichte. Denn nichts anderes sind die üblichen fein ziselierten Datenstrukturen in unseren Anwendungen.
+</code></pre>
+<pre><code>Ihre Bevorratung dient der Effizienz – und kostet uns Zeit in der Entwicklung und Flexibilität während der Evolution der Software.
+</code></pre>
+<pre><code>Deshalb: Versuchen Sie doch einmal, solche vorzeitige Optimierung zu vermeiden. Geben Sie solchem Event Sourcing eine Chance.
+</code></pre>
+<h2>Kommentare</h2>
+<p><strong>Jander.IT</strong> (2013-07-03):</p>
+<p>Diesem Plädoyer kann ich nur zustimmen, genau so isses ;)</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-07-03):</p>
+<p>Hm, ist der event-store in dem Sinne nicht auch eine Datenstruktur? In diesem Falle hast Du Dich ja doch zumindest für eine "Datenstruktur" für die Züge entschieden!?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-07-03):</p>
+<p>@Frank: Es geht um Datenstruktur in Bezug auf die Domäne. Und da ist ein Eventstore als Liste von allen möglichen Events keine spezifische Datenstruktur.</p>
+<p>Deshalb kann man auch einen generischen Eventstore mit so einem Interface bauen:</p>
+<p>interface IBlackBox {
+..void Record(IEvent event);
+..IEnumerable Replay();
+..event Action Recorded;
+}</p>
+<p>Der Eventstore sieht halt in jeder Anwendung gleich aus. Das kann man von einem Domänenobjektmodell wahrlich nicht sagen.</p>
+<hr />
+<p><strong>Janek Fellien</strong> (2013-07-04):</p>
+<p>Ich bin so froh, dass wir uns die zwei Stunden auf der DWX genommen haben.</p>
+<p>:)</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-07-04):</p>
+<p>Hey - sehr cool!</p>
+<p>hier mal meine JS + ES Tic Tac Toe Variante</p>
+<p>https://gist.github.com/MikeBild/5926056</p>
+<p>Viele Grüße, Mike</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-07-04):</p>
+<p>... so nochmals ein kleines Update meines "Quick Tic Tac Toe Hacks" unter</p>
+<p>https://gist.github.com/MikeBild/5926056</p>
+<p>gemacht.</p>
+<p>So wird der Einsatz der Events und des Zustandsautomaten (Aggregate) hoffentlich etwas klarer.</p>
+<p>Ein bisschen Optimierung geht sicher immer noch. Feedback erwünscht ;)</p>
+<p>Greetz, Mike</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-07-04):</p>
+<p>... vielleicht auch hier noch ein paar Kommentare zur JS Lösung.</p>
+<p>Der Gedanke ist, einen "Endzustand" aus den entsprechenden Events über einen "Event zu Funktion" Pattern Match und einer Aggregation (Fold) als ein einziges Zustandsobjekt zu projizieren. Das geschieht mittels eines Loop über alle Events und Invoke der "passenden" Methode plus eines Zustandsobjektes. Das Zustandsobjekt kann natürlich über die $init einen Initialzustand erhalten. Danach wird schrittweise ein neuer Zustand (Aggregate bzw. Fold Left) erzeugt und  zurückgegeben.</p>
+<p>"Gewinner finden" habe ich über ein "Intersect" von "Eingabe-Menge" eines Spieles und "Lösungs-Mengen" gelöst.</p>
+<p>Bei mir wird der nächste Spieler über einen Toggle auf Zustand ermittelt.</p>
+<p>Fehleingaben, wie bsw. "belegte Position" werden in der Zustandsprojektion (Zustandsautomaten) einfach ignoriert. Durch Toggle des nächsten Spielers sehr einfach möglich.</p>
+<p>Dadurch kann ich eben alle Events speichern und erst in der Projektion "herauspicken" was toll ist und was nicht. -&gt; "Keine Events werden abgelehnt!"</p>
+<p>Die Projektionen sind letztlich sehr ähnlich zu Ralfs Implementierung (ReadModel_generieren) jedoch Teil des Interfaces "IBlackBox".</p>
+<p>IMHO ist mir die "IBlackBox" etwas zu "einfach", aber muss vielleicht auch so sein, da .NET eine nette Projektionssprache nämlich LINQ besitzt. In meinem Beispiel ist die Projektion hin zum (End)Zustand eines Event-Stream eben integraler Bestandteil. Finde ich persönlich auch ganz gut so.</p>
+<p>Mehrere Event-Streams zu einem Endzustand (joining) zu projizieren ist natürlich möglich. Das aber auch in einem anderen Beispiel ;).</p>
+<p>Greetz, Mike</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-07-04):</p>
+<p>@Mike: Interessante Lösung - leider verstehe ich sie nicht ;-)</p>
+<p>Ich sehe keinen Eventstore. Ich sehe nicht recht, wie das Verhalten erzielt wird. Und ich krieg nix zum Laufen. Was muss man eingeben?</p>
+<p>Insofern: Ideal für den heutigen "Clean Code" Kurs in Köln, wo wir immer auf der Suche nach einem Brownfield sind, das wir refaktorisieren können ;-)</p>
+<p>Aber vielleicht magst du ja selbst noch etwas säubern?</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-07-04):</p>
+<p>@ralfw: copy &amp; paste in ein bla.html und im WebBrowser laden. Fertig.</p>
+<p>In "Aggregate" liegt der Event-Store - Zeile 46 - mehr ist es nicht.</p>
+<p>Boah - "Brownfield" - LOL - immer sofort noch Release - gern nehmt es ruhig auseinander - dafür ist es von mir gemacht worden ;).</p>
+<p>Die Lösung ist etwas "breiter" ausgestellt, da ich hier sozusagen eine App-Kata umgesetzt habe. Benutzer Input und Output habe ich bereits eingebaut. Insofern etwas mehr Funktionalität und IMHO Vollständigkeit als in Deinem Post. Etwas "Handfestes" um das Prinzip zu klären.</p>
+<p>Was musst du eingeben? Die Koordinaten Deines Spielsteins. - Wie in deinem Beispiel - 11 für links unten - 33 für rechts oben.</p>
+<p>31 32 33
+21 22 23
+11 12 13</p>
+<p>Weitere Fragen? ;)</p>
+<p>Greetz, Mike</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-07-04):</p>
+<p>@ralfw:</p>
+<p>Ein zwei dinge sind mir in Deinem Beispiel aufgefallen:</p>
+<p>Algo: leider keine Gewinnermittlung für Diagonalen</p>
+<p>"validieren" vor "ausführen" - machbar ja - halte ich für keine so gute Idee. Folgt für mich  - vorzeitige Logik die mir eventuelle spätere Logiken, Zustände, Auswertungen (Data Mining) versperren könnten.</p>
+<p>Der Witz ist ja gerade, das ich alles annehmen sollte und erst später bei "Projektion" entscheide, was für den Use-Case wichtig ist.</p>
+<p>Greetz, Mike</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-07-04):</p>
+<p>@Mike: Gewinnermittlung findet für Diagonalen statt. Ist nur hier im Listingausschnitt abgeschnitten. Und es ist ein kleiner Fehler drin, der aber im Code korrigiert ist.</p>
+<p>Validation vor Ausführung finde ich zwingend - wenn man denn validieren will. Und ich verstehe nicht, was dein Argument dagegen ist.</p>
+<p>Und welche späteren Logiken? Es wird nichts ins Log eingetragen, was nicht korrekt ist. Das finde ich völlig legitim.</p>
+<p>Wenn irgendwann einer kommt und sagt, er will auch Fehleingaben sehen... na, dann kann man das umdrehen. Erstmal ist es für mich aber naheliegend, grobe Fehler aus dem Eventlog rauszuhalten.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-07-04):</p>
+<p>@Mike: In meinem Beispiel sind die Feldkoordinaten</p>
+<p>00 01 02
+10 11 12
+20 21 22</p>
+<p>"In Aggregate liegt der EventStore" - genau das meine ich :-) "Verständlich" finde ich das leider nicht. Da bin ich doch mehr als "least astonished".</p>
+<p>Dass "Handfeste" find ich gut. Eine weitere Diskussionsgrundlage. Andere Plattform. Super Sache. Nur eben... sorry to say... für mich nicht gut nachvollziehbar.</p>
+<p>Mit deiner Erläuterung der Eingabe konnte ich es dann auch bedienen.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-07-04):</p>
+<p>@Ralf: Diagonalen - okay, war nicht sichtbar.</p>
+<p>"Validation vor Ausführung finde ich zwingend"
+" Es wird nichts ins Log eingetragen, was nicht korrekt ist."</p>
+<p>Wer weiß das alles im Vorfeld? Was ist korrekt, was nicht? Damit muss eine Lösung "durchdachter" sein. Klaro - völlig legitim. War das so machen kann?!? Ich sehe hier nicht nur das Datenmodell "flexibel", sondern auch "Logik". Was ich später machen kann, mach ich später. Deine Lösung war sicher gut durchdacht ;-).</p>
+<p>"Fehleingaben sehen... na, dann kann man das umdrehen" - Und welche späteren Logiken?</p>
+<p>Umdrehen? Ja klaro geht, aber welcher Aufwand entsteht?</p>
+<p>Ich kann z.B. mit 2 weiteren Zeile + Klammern z.B.
+state.errors++; in 101 und 111
+gewünschte Funktion herstellen.</p>
+<p>Was ist damit gemeint? Information nur im äußersten Notfall vernichten, denn es könnte eine Relevanz in einem nicht (durch)dachten Use-Case geben. Auch hier vorzeitige "Logik" vermeiden.</p>
+<p>"In Aggregate liegt der EventStore" - "Verständlich" finde ich das leider nicht.</p>
+<p>Ist okay - geht besser, aber ich wollte gerade kein Super-Duper sauberes Framework bauen, sondern das Prinzip in ein paar knappen Zeilen zeigen. Das geht sicher auch besser.</p>
+<p>Jepp, deine Koordinaten sehen etwas anders aus. Ich war etwas Kreativ :) und habe mir in meinem kleinen "Hack" bei dir nichts angesehen. Kann sicher einfach umgebaut werden, da auch hier die "sortierbare" (aufsteigend) Koordinaten verwendet werden. Der Algo zur Lösung ist somit relativ stabil.</p>
+<p>Der Rest orientiert sich weitestgehend an eurem - im übrigen echt coolen - Beispiel der TTT Kata. ;)</p>
+<p>Was ich ebenfalls etwas kritisch finde ist, dass du dich etwas auf die Reihenfolge der Events in der Collection stützt. Hab ich noch nicht ganz durchdacht, aber macht mir (ES als Verallgemeinerung) etwas Bauchschmerzen. Kann aber auch egal sein... weiß ich gerade noch nicht ;).</p>
+<p>Vielleicht versuche ich mich heute Abend an einer weiteren Iteration AI ;)</p>
+<p>Greetz, Mike</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-07-04):</p>
+<p>@Ralf: "Reihenfolge der Events in der Collection" war falsch gesagt - Folge (streng monoton steigend) von Events ist ja richtig wichtig ;) - ich meine den unbedingten "Wechsel" von SpielerX und SpielerO Koordinate.</p>
+<p>Egal, was gemeint war - ES ist nicht nur für "großes" CQRS/DDD gut geeignet, sondern auch für "kleines" feines Casual-Game ala TTT. ;)</p>
+<p>Greetz, Mike</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-07-04):</p>
+<p>Warum soll ich mich nicht auf die Reihenfolge der Events verlassen?</p>
+<p>Es geht hier doch nicht um "the next enterprise software". ES wie jedes andere Mittel soll angemessen eingesetzt werden. Auch mit ES kann man übers Ziel hinausschießen, wenn man mehr Flexibilität als nötig einbaut.</p>
+<p>Das zentrale Prinzip ist, Zustandsdifferenzen in zeitlicher Abfolge zu speichern, statt Zustand selbst.</p>
+<p>Das tue ich. Mehr ist hier nicht nötig. Da darf ich alles mögliche auch als Randbedingung annehmen.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-07-04):</p>
+<p>@Ralf:
+"ES kann man übers Ziel hinausschießen, wenn man mehr Flexibilität als nötig einbaut".</p>
+<p>Das von mir zur Anschauung implementierte ES ist wie es ist. Mehr ist da nicht. Keine Erweiterungen und sonstige Framework-Tricks verwendet. Pure JavaScript - sehr einfach. Nur eben etwas anders eingesetzt.</p>
+<p>Von "Enterprise" kann bei 15 Zeilen Infrastruktur-Code (wohlgemerkt kein LINQ und so ein tolles Framework-Zeugs) sicher nicht die Rede sein. Und gerade das wollte ich durch vorerst fehlenden Bezug zu CQRS und DDD auch zeigen. Nix Enterprise, next Super-Duper Framework, verteilte Systeme und CAP Theorem. 15 Zeilen Pure JavaScript - mehr nicht.</p>
+<p>Wenn es um Randbedingungen im stillen Kämmerchen geht, dann ist jede noch so naive sogenannte "Brownfield"-Lösung mit der Begründung "Randbedingungen" gut genug.</p>
+<p>"Das zentrale Prinzip ist, Zustandsdifferenzen in zeitlicher Abfolge zu speichern, statt Zustand selbst."</p>
+<p>Ja richtig, aber IMHO unvollständig. Ala - hier hast Du eine Idee. Wie das genau gehen kann, kannst du dir mal selbst überlegen.</p>
+<p>Du hast in deinem TTT Beispiel mehr gezeigt - Super - selbiges hab ich mit meinem Beispiel und im Vergleich versucht.</p>
+<p>Nun gut, so ist das fürs erste besprochen.</p>
+<p>Grüße, Mike</p>
+<hr />
+<p><strong>Tilman</strong> (2013-07-05):</p>
+<p>Sehr interessant und bekommt meine gewogene Zustimmung. :-)
+Taucht der Event Store nicht auch auf bei einem Taschenrechner? Der Baum einer Rechnung bestehend aus Operatoren und Operanden mit der Berücksichtigung der Präzedenz ist doch eine Art Event Store (Record(3), Record('+')). Wobei die Events hier tatsächlich mit denen der Button_Clicked Events zusammen fallen. Zumindest ließe sich so ein Taschenrechner über einen Event Store wahrscheinlich ganz gut bauen.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-07-05):</p>
+<p>@ralf: Wenn du möchtest hier weitere Iteration</p>
+<p>https://gist.github.com/MikeBild/e10f1c3e90ce4d17022a</p>
+<p>Game-Logic und ES aus "only Client-Side" Single Page App wandert per Copy &amp; Paste auf die Node.JS Server-Side. Kleine handgemachte WebAPI als Interface dazwischen - fertig.</p>
+<p>@Tilman: Ja auch eine coole Idee. Events werden zu einem Taschenrechner-AST (Graphen) projiziert und dann das Ergebnis berechnet. Vielleicht gleich als nächstes Demo Projekt ;).</p>
+<p>Greetz, Mike</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-07-05):</p>
+<p>@Tilman: Klar, einen Taschenrechner kann man auch mit ES realisieren.</p>
+<p>Und dann kann man überlegen, ob ein AST gebaut werden muss oder nicht. Eben nur bei Bedarf und JIT.</p>
+<p>Stellt sich halt die Frage, was Events sind. Ist jede Ziffer ein Event, wird ein Event nur generiert, wenn ein Operator geklickt wird...?</p>
+<hr />
+<p><strong>Christof Konstantinopoulos</strong> (2013-07-05):</p>
+<p>Ein Vorteil wurde noch nicht angesprochen.</p>
+<p>Durch einen Event Store bekommt man quasi automatisch eine unbegrenzte Undo Funktion geschenkt!</p>
+<p>Genau auf solch einer Struktur bauen wir gerade eine größere Anwendung. Alle(!) Daten werden durch Events erstellt oder geändert. Statt der Daten werden diese Events persistiert. Die Daten liegen nur als Cache im Speicher.</p>
+<p>Wenn man nun eine Aktion (eine Datenänderung) zurück nehmen möchte, muss nur der letzte Event aus der Liste gelöscht werden. Dann baut man den Zustand (den Cache)von vorne wieder zusammen, in dem man einfach alle Events der Liste erneut ausführt.</p>
+<p>Auch mehrere Schritte zurück sind so kein Problem.</p>
+<p>Viele Grüße,
+Christof Konstantinopoulos</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-07-05):</p>
+<p>Ich bin begeistert.
+Hätte nicht Gedacht, das ein weiterer Artikel über Event Sourcing die Welt noch hätte bereichern können, aber du bringst es, toll zu lesen und sehr verständlich, auf den Punkt.
+Ich hoffe, dass dieser Blogpost die Skeptiker erneut zum Nachdenken und vielleicht sogar zum Umschwenken motiviert.</p>
+<hr />
+<p><strong>Tilman</strong> (2013-07-05):</p>
+<p>Wo liegen dann eigentlich die Vorbehalte gegen Event Stores?</p>
+<p>Einer könnte sein, dass die Daten sehr feingranular erodieren können. Heißt: Bei einer klassischen Datenbank wird der Zustand gespeichert. Wird ein Datensatz aus Versehen gelöscht, ist der ganze Zustand weg. Unter Umständen gibt es dann natürlich auch relationale Diskrepanzen. Aber jeder Zustand, der gespeichert ist, ist auch korrekt.</p>
+<p>Wird bei einem Event Store ein Datensatz (=Event) gelöscht, wird in der Aggregation der Zustand minimal verändert. Das mag weniger Auswirkungen haben als in dem Fall mit der relationalen Datenbank. Trotzdem hinterlässt das ein unangenehmes Gefühl.</p>
+<p>Trotzdem sind die Möglichkeiten, die ein solches Pattern mit sich bringt, gigantisch. Die Undo-/Redo-Funktion wurde schon genannt. Die gesamte Historie eines "Zustands" gibt es für lau.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-07-05):</p>
+<p>@Christof:</p>
+<p>Löschen!!! ist wie gesagt !!!keine gute Idee!!!. Das führt zur Informationsvernichtung. Ich kann aber nur einen bestimmten Teil des Event-Streams z.B. n-1 durch zur Projektion verwenden. Dann hätte ich einen Zustand ohne die letzt Aktion.</p>
+<p>@Tilman @Ralf: Ein ganz einfacher Taschenrechner ohne operator precedence geht natürlich sehr sehr einfach. z.B.</p>
+<p>div(5,sub(5,mul(8, add(6,init(0))))) -&gt;</p>
+<p>init0
+add6
+mul8
+sub5
+div5</p>
+<p>Immer schon "ausrechnen" nach jedem "Schritt" f(state, event) -&gt; state - fertig.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-07-05):</p>
+<p>@Tilman:</p>
+<p>Achso ... IMHO macht ES bei bereits gut strukturierten Daten (z.B. Stammdaten / hoch verdichteten Daten) oder Nutzen ohne Historie keinen so großen Sinn. Hier können die Argumente nicht so gut greifen. Zumal Struktur (RDB, OO, usw.) ja auch Ihre großen Vorteile hat. "Alles Einheitlich" ist auch hier wieder... Wer einen Hammer hat, sieht in allem einen Nagel. ;-)</p>
+<hr />
+<p><strong>Christof Konstantinopoulos</strong> (2013-07-05):</p>
+<p>@Mike: Löschen ist nicht per se böse. Es kommt auf den Anwendungsfall an. Bei uns sollen die Daten wirklich gelöscht werden.
+Die Informationsvernichtung ist dabei gewollt.</p>
+<p>Wie würdest Du die Projektion der Liste machen, wenn nach dem Undo neue Events dazu kommen?</p>
+<p>Die Liste von 0 bis n-1 ist ja nur der Bereich, der nach einem Undo gültig ist.</p>
+<p>Wenn nun zwei neue Events dazu kommen, müsste der Bereich aus zwei getrennten Listen [0..n-3; n-1..n] zusammen gesetzt werden. [n-2] wäre dabei das durch Undo entfernte, nicht mehr sichtbare Event.</p>
+<p>Das würde bei jedem Undo immer unübersichtlicher. Und Du müsstest diese Meta Information zur Liste zusätzlich speichern. Der Event Store wäre dann in sich selbst nicht mehr verständlich.</p>
+<p>Ich denke, dass durch das "nicht löschen" zu viel Datenrauschen entstehen kann. Ich glaube nicht, dass es sinnvoll ist Daten zu sammeln, weil man sie irgendwann mal brauchen könnte.</p>
+<p>Aber wie gesagt, das hängt vom Anwendungsfall ab.</p>
+<p>Viele Grüße,
+Christof</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-07-05):</p>
+<p>@Christof: ohne zu sehr ins Detail zu gehen. Wenn kein Append-only-Modell für dich in Frage kommt - warum nicht einfach ne Liste ;-) ... Hammer-Nagel Problem ... Die Projektion darauf kannste ja auch machen. Bei ES geht es eben genau darum, nix zu ändern. Der Grund ist, wo nichts geändert wird (Entität) gibt's keine Kollisionen.</p>
+<p>Greetz, Mike</p>
+<hr />
+<p><strong>Jürgen</strong> (2013-07-10):</p>
+<p>@Cristof:
+Das löschen eines Events ist doch auch nur ein Event, das entsprechend behandelt werden muss.</p>
+<p>So kommt es zu keinerlei Daten bzw. Event verlust.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

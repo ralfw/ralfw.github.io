@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Catch Exceptions in Concurrent Flows Using Causalities — ralfw.de Archiv</title>
+<meta name="description" content="The previous article showed you how to easily parallelize flow operation execution with NPantaRhei (download the sources from github).">
+<link rel="canonical" href="https://ralfw.de/archiv/2012/catch-exceptions-in-concurrent-flows/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Catch Exceptions in Concurrent Flows Using Causalities — ralfw.de Archiv">
+<meta property="og:description" content="The previous article showed you how to easily parallelize flow operation execution with NPantaRhei (download the sources from github).">
+<meta property="og:url" content="https://ralfw.de/archiv/2012/catch-exceptions-in-concurrent-flows/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>Catch Exceptions in Concurrent Flows Using Causalities</h1>
+    <div class="doc-meta"><span>5. Mai 2012</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2012/05/05/catch-exceptions-in-concurrent-flows-using-causalities.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2012/catch-exceptions-in-concurrent-flows/</code></span></div>
+    <div class="art"><p>The previous article showed you how to easily parallelize flow operation execution with NPantaRhei (download the sources from github).</p>
+<p>Once operations run concurrently, though, you´ve to pay your dues. Benefits or concurrent execution like higher performance, lower latency, or increased throughput come at a price. What that means conceptually e.g. for access to shared data, I leave to you to research. Here I want to show you how to practically handle errors in such flows. Because error handling cannot rely on the usual try-catch statement, you need to take care of it in your flow definition.</p>
+<h2>Causalities: Contexts for Exceptions</h2>
+<p>The question is: How to catch exceptions when there is no call stack anymore? You could do it by providing each operation with its own exception port and catch the exceptions yourself. This is ok, if you don´t want to check on too many operations. But what if an exeption occurs in an unchecked operation? One that you thought would not fail?</p>
+<p>Wouldn´t it be better to just be able to say: "From here on, however the data flows, if an exception occurs, it should be handled such and such."</p>
+<p>That´s what try-catch does in a call stack world. And that´s what CCR causalities do in a concurrent world.</p>
+<p>Causalities have been introduced by Microsofts Concurrency Coordination Runtime of ill fate. It was a great approach to more manageable concurrent programming, but did not gain much attention due to being buried inside Microsoft Robotics Studio. Nevertheless the concept stuck with me, and so I introduced it to the Flow Execution Engine.</p>
+<p>Think of a causality as a very flexible sleeve or tube around a flow:</p>
+<p><em>(Diagram not captured)</em></p>
+<p>All operations inside this sleeve share a common exception handler. If an exception occurs it is caught by the causality and relayed to an exception handling operation. Nothing has to be changed within the operations inside the causality sleeve. The information on where to pass an exception is out of band. Any exception is caught by the Execution Engine which checks if a causality is active, and if so passes the exception wrapped inside a FlowRuntimeException to the causality´s exception port.</p>
+<p>Once switched on, causalities stretch across the flow regardless where messages flow – until they are switched off. Even though the above drawing shows the causality as part of the flow it is in fact part of the messages flowing. When a message passes through the standard operation to switch on a causality, the causality is attached to the message. And when the message is worked on by an operation, the causality is copied to any messages produced by the operation. But that´s technical details. Better to think of a causality as a sleeve stretched over parts of a flow.</p>
+<p>Like try-catch clauses causalities can be nested. Switching on a causality in fact is pushing a causality on a stack:</p>
+<p><em>(Diagram not captured)</em></p>
+<p>An exception occurring in operations C,E,F will be relayed to the red inner causality´s exception port, an exception in A,B,D,G will be relayed to the green outer causality´s port.</p>
+<p>Please note: A causality is just a context for exceptions. It catches exceptions in any encompassed operations and relays them to a port. What you do with the exception is your business. The Execution Engine won´t halt because an exception occurred; it will continue processing messages. So if you want to change flow execution due to an exception, you have to build that into your flows.</p>
+<h2>Putting Causalities into a Flow</h2>
+<p>Back to the sample flow to show you, how to implement causalities using the Flow Execution Engine:</p>
+<p>First define the streams flowing to/from the causality operations. To push the causality on the stack, just use the push causality operation´s name. The output port to connect to the exception handler is called ".exception", though.</p>
+<pre><code class="language-csharp">fr.AddStream(&quot;.in&quot;, &quot;Pushc&quot;);
+fr.AddStream(&quot;Pushc&quot;, &quot;Find Files&quot;);
+fr.AddStream(&quot;Pushc.exception&quot;, &quot;Handle Exception&quot;);
+fr.AddStream(&quot;Find Files&quot;, &quot;Count Words&quot;);
+fr.AddStream(&quot;Count Words&quot;, &quot;Popc&quot;);
+fr.AddStream(&quot;Popc&quot;, &quot;Total&quot;);
+fr.AddStream(&quot;Total&quot;, &quot;.out&quot;);
+</code></pre>
+<p>Pushing and poping causalities is a matter of standard operations. Call them anyway you like. You can even reuse them in different parts of the flow:</p>
+<pre><code class="language-csharp">var foc = new FlowOperationContainer
+    .AddFunc&lt;string, IEnumerable&gt;(&quot;Find Files&quot;, Find_files)
+    .AddFunc&lt;IEnumerable, IEnumerable&gt;(&quot;Count Words&quot;, Count_words)
+    .AddFunc&lt;IEnumerable, Tuple&lt;int, int&gt;&gt;(&quot;Total&quot;, Total)
+    .AddPushCausality(&quot;Pushc&quot;)
+    .AddPopCausality(&quot;Popc&quot;)
+    .AddAction(&quot;Handle Exception&quot;, Handle_exception);
+fr.AddOperations(foc.Operations);
+</code></pre>
+<p>The exception handler is a method accepting a FlowRuntimeException:</p>
+<pre><code class="language-csharp">void Handle_exception(FlowRuntimeException ex) {
+    …
+}
+</code></pre>
+<p>Exceptions flow like any other data. Once the are caught by a causality you can process them in their own sub-flows.</p>
+<h2>Handling Unhandled Exceptions</h2>
+<p>If you don´t set up causalities or there are parts of your flows not covered by them, you can still catch exceptions. Just register an handler with the UnhandledException event of the Execution Engine:</p>
+<pre><code class="language-csharp">fr.UnhandledException += ex =&gt; {…}
+</code></pre>
+<p>It´s that easy.</p>
+<p>Just remember: Regardless of how you catch exceptions, they arrive on some background thread. So if you want to display some information on them in a GUI, you probably need to switch processing to the GUI thread. Use MakeSync on a causality exception handler operation; do it your own way for unhandled exceptions.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contract-first Design Beispielcode und Tool-Hinweise zu User Group Vorträgen — ralfw.de Archiv</title>
+<meta name="description" content="Am 20.3. und 22.3. habe ich Vorträge zum Thema Contract-first Design vor den .NET User Groups in Ulm und München (Download des Beispielcodes) gehalten. Insgesamt lauschten knapp 80">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/contract-first-design-beispielcode-und/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Contract-first Design Beispielcode und Tool-Hinweise zu User Group Vorträgen — ralfw.de Archiv">
+<meta property="og:description" content="Am 20.3. und 22.3. habe ich Vorträge zum Thema Contract-first Design vor den .NET User Groups in Ulm und München (Download des Beispielcodes) gehalten. Insgesamt lauschten knapp 80">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/contract-first-design-beispielcode-und/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Contract-first Design Beispielcode und Tool-Hinweise zu User Group Vorträgen</h1>
+    <div class="doc-meta"><span>25. März 2007</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2007/03/contract-first-design-beispielcode-und.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/contract-first-design-beispielcode-und/</code></span></div>
+    <div class="art"><p>Am 20.3. und 22.3. habe ich Vorträge zum Thema Contract-first Design vor den .NET User Groups in Ulm und München (<a rel="noopener" href="http://www.ralfw.de/download/ugmucsamples.zip">Download des Beispielcodes</a>) gehalten. Insgesamt lauschten knapp 80 Entwickler meinen Vorschlägen, wie Software ganz grundsätzlich mit Komponenten als binären Codebausteinen diesseits von SOA-Services und jenseits von Objekten strukturiert werden sollte.</p>
+<p>Mit Komponenten habe ich da natürlich das gemeint, was ich in meiner <a rel="noopener" href="http://ralfw.blogspot.com/2007/03/software-als-system-ix-komponenten-als.html">Serie "Software als System"</a> als hybrides Swolon im Schnittpunkt zwischen logischer und physischer Swolon-Hierarchie bezeichne. Auf den Weg von den Anforderungen zu den Komponenten oder das Big Picture von "Software als System" konnte ich allerdings nicht eingehen. Dafür war die Zeit zu knapp. Schon die theoretische Begründung und praktische Demonstration echter Komponentenorientierung hat ja 2-3 Stunden gebraucht - und alle UG Mitglieder haben tapfer ausgehalten.</p>
+<p>Und hinterher gab es auch noch interessierte Diskussionen, auch wenn die Implikationen meiner Vorschläge einige recht still gemacht hatten. Echte Komponentenorientierung bedeutet nicht nur, Klassen mal wieder mit Interfaces zu versehen, sondern funktioniert nur auf der Basis eines veränderten Entwicklungsprozesses und einer klareren Codeorganisation, als in den meisten heutigen Projekten. Ich hoffe aber, ich konnte auch den Nutzen eines Umdenkens in Richtung echter Komponentenorientierung vermitteln. Wer mehr Produktivität, bessere Testbarkeit, mehr nutzbringende Dokumentation oder schlicht mehr Qualität und Seelenfrieden haben möchte... der kommt um einige Kurskorrekturen in der Softwareentwicklung leider nicht herum.</p>
+<p>Zum Glück machen ein paar Tools den Einstieg aber leichter. Konsequente Komponententests brauchen zwar vor allem guten Willen, wenn der dann aber da ist, sind sie technisch recht einfach. VSTS enthält z.B. einen Unit Test Framework, der auch mit TFS integriert ist. Wer das Geld für VSTS allerdings nicht hat, muss nicht zurückstehen. <a rel="noopener" href="http://www.nunit.org/">NUnit</a> ist die Mutter aller automatischen Tests und kostenlos. Allerdings ist NUnit <a rel="noopener" href="http://www.nunit.org/index.php?p=vsSupport&amp;r=2.2.10">nicht wirklich gut in VS2005 integriert</a>. Macht aber nichts, denn NUnit-kompatible Werkzeuge wie <a rel="noopener" href="http://www.mailframe.net/">Testrunner</a> (s. folgende Abbildung) oder <a rel="noopener" href="http://www.testdriven.net/">TestDriven</a> lösen das Problem fast oder ganz kostenlos.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/88b10a09ec61fa63.png" /></p>
+<p>Klicken für Originalbild</p>
+<p>Ich bin mit Testrunner schon länger sehr zufrieden. Der macht Unit Tests während der Entwicklung wirklich schmerzfrei und bietet darüber hinaus auch noch eine Codecoverage-Analyse und Profilinginformationen.</p>
+<p>Aber Tests während der Entwicklung sind natürlich nicht alles. Echte Komponentenorientierung zerlegt eine Lösung in viele Assemblies, die in separaten VS2005 Projektmappen entwickelt werden. Die muss man den Überblick behalten und immer wieder integrieren. Ein erster natürlicher Integrationspunkt ist ein zentraler Build-Prozess, der die Komponenten periodisch unabhängig vom einzelnen Entwickler auf einem dedizierten Rechner nochmal übersetzt und testet und erst bei Fehlerfreiheit für andere zur Nutzung freigibt.</p>
+<p>Dafür setze ich <a rel="noopener" href="http://www.finalbuilder.com/">FinalBuilder</a> ein (s. folgende Abbildung; bezieht sich allerdings nicht auf das Beispiel aus dem UG Vortrag). Ein wirklich cooles Tool, mit dem sich die Übersetzung von VS2005 Solutions, deren Test, das Deployment auf einen FTP-Server, der Umgang mit einer Versionsverwaltung uvm. automatisieren lässt. Seit ich FinalBuilder habe, schreibe ich keine Batch-Dateien mehr.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/bf47e9130297d28e.jpg" /></p>
+<p>Klicken für Originalbild</p>
+<p>Das Bild zeigt ein komponentenorientiertes Projekt aus einer Artikelserie in der dotnetpro. Rechts ist das Script zu sehen, mit dem ich alle zugehörigen VS2005 Projektmappen übersetze und teste, rechts liegt die lange Liste mit vorgefertigten Aktivitäten, aus denen ich solche Scripte zusammensetzen kann. Da bleibt kaum ein Wunsch unerfüllt. Interaktion mit virtuellen Maschinen, parallele Abarbeitung, Workflow, VSS-, SVN-, CVS-, TFS-Nutzung... alles drin.</p>
+<p>Aber nicht nur ein umfassender Build-Prozess muss aufgesetzt werden, wenn echte Komponentenorientierung die beliebte allumfassende VS2005 Projektmappe in viele kleine zerschlägt. Es sind dann auch Integrationstestläufe womöglich außerhalb VS2005 nötig. Und der Debugger ist dann vielleicht auch nicht auf einem Staging-System zur Hand. Wer dann wissen will, was so läuft in seinem Programm, der braucht Einblick. Den kann Instrumentierung bieten (z.B. <em>TraceSource</em> einsetzen oder Performance Counter einrichten oder in ein Windows Log schreiben), aber ich finde es auch sehr nützlich, ohne vorgedachte Instrumentierung den Verlauf einer Software beobachten zu können. Derzeit gefällt mir dafür sehr gut <a rel="noopener" href="http://www.ipcas.com/trace-and-profile/c-sharp-and-vb.net-tracer-and-profiler/">SpeedTrace Pro</a> (s. folgende Abbildung).</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/97186c94ab936e6b.png" /></p>
+<p>Klicken für Originalbild</p>
+<p>Damit kann ich mich an ein Programm anhängen und mir den Verlauf der Arbeit protokollieren lassen. Das Ergebnis lässt sich filtern, zum Quellcode in Bezug setzen, ich kann sogar das Tracing erst bei einem bestimmten "Event" (Methodenaufruf) starten lassen.</p>
+<p>Zuguterletzt gehört zur echten Komponentenorientierung dann noch ein Service Locator oder Microkernel. <a rel="noopener" href="http://weblogs.asp.net/ralfw/archive/2006/08/02/Dynamic-component-binding-made-easier-_2D00_-An-easy-to-use-Microkernel-to-help-reap-Contract_2D00_First_2D00_Design-benefits-in-.NET-programs.aspx">Mein eigener kleiner Microkernel</a> steht zur freien Benutzung mit kurzen Erläuterungen online. Alternativen sind z.B. <a rel="noopener" href="http://www.springframework.net/">Spring.Net</a> oder <a rel="noopener" href="http://wiki.castleproject.org/index.php/Windsor_Container">Windsor des Castle Projects</a>. Die bieten mehr Leistung - für meinen persönlichen Geschmack allerdings oft zuviel. Ich persönlich kann mich auch nicht so recht mit dem Konzept der <a rel="noopener" href="http://weblogs.asp.net/ralfw/archive/2007/01/17/inversion-of-control-using-generics-revisiting-the-separation-of-use-and-implementation.aspx">Inversion of Control</a> (IoC) anfreunden, wenn es um das "Zusammennähen" von größeren Komponentengeflechten geht. Wenn es um Komponenten geht, die ich verkaufen will, oder die in Zusammenhängen eingesetzt werden sollen, in denen nicht sicher ein Microkernel vorhanden ist, dann ist IoC eine gute Sache, um Entkopplung aufrecht zu erhalten. Aber ansonsten ziehe ich innerhalb geschlossener Projekte einen Microkernel als generische Factory vor.</p>
+<p>Ich würde mich freuen, wenn ich mit dem <a rel="noopener" href="http://www.ralfw.de/download/ugmucsamples.zip">Beispielcode</a> des Vortrags vor der UG München und der kleinen Werkzeugliste hier den Einstieg in die echt komponentenorientierte Softwareentwicklung ein etwas erleichtern könnte. Wer das Szenario der Beispielanwendung noch nicht kennt, der sei hier kurz eingeführt (s. folgende Abbildung):</p>
+<blockquote>
+<p>Zwei kooperierende Komponenten sollen entwickelt werden. Die Calculator-Komponente kann Zahlenreihen zwischen zwei Grenzwerten berechnen und solche Zahlenreihen laden/speichern. Sie ist die zentrale Logik-Komponente des Szenarios und verkörpert nach außen die gesamte Funktionalität. Für die konkrete Speicherung ist dann allerdings die DataAccess-Komponente zuständig. Beide Komponenten sind durch einen Kontrakt definiert. Die Spezifikation der Calculator-Komponente besteht aus dem Calculator- und dem DataAccess-Kontrakt, ersteren exportiert sie, letzteren importiert sie. Die Spezifikation der DataAccess-Komponente besteht aus dem DataAccess-Kontrakt, den sie exportiert, und der Beschreibung des Persistenzformats.</p>
+</blockquote>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/83bb8cee932cd7b1.png" /></p>
+<p>Klicken für Originalbild</p>
+<p>Das ist natürlich ein supersimples Beispielszenario. Aber es ging bei der Demonstration nicht darum, komplizierte Funktionen zu implementieren, sondern den Prozess der Entwicklung echter Komponenten erlebbar zu machen. Theoretische Erklärungen am Flipchart sind eine Sache. Dann aber zu sehen, wie die Theorie in die Praxis umgesetzt wird, den Schritten wirklich zu folgen, das ist noch eine ganz andere Sache - und ein Vortrag das beste Medium, um das zu vermitteln. Ich hoffe, das hat geklappt. Freue mich über Feedback an: info (at) ralfw.de.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

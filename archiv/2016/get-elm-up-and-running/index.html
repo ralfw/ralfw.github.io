@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Get Elm up and running — ralfw.de Archiv</title>
+<meta name="description" content="I’m infatuated with Elm right now. A functional programming (FP) language to make HTML frontend development easier. Read about Elm’s virtues at the official Elm homepage: elm-lang.">
+<link rel="canonical" href="https://ralfw.de/archiv/2016/get-elm-up-and-running/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Get Elm up and running — ralfw.de Archiv">
+<meta property="og:description" content="I’m infatuated with Elm right now. A functional programming (FP) language to make HTML frontend development easier. Read about Elm’s virtues at the official Elm homepage: elm-lang.">
+<meta property="og:url" content="https://ralfw.de/archiv/2016/get-elm-up-and-running/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-01)"></span>ralfw.de</p>
+    <h1>Get Elm up and running</h1>
+    <div class="doc-meta"><span>20. Aug. 2016</span><span>Erstveröffentlichung: ralfw.de</span><span><a href="https://ralfw.de/get-elm-up-and-running/" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2016/get-elm-up-and-running/</code></span></div>
+    <div class="art"><p><img loading="lazy" alt="" src="/assets/01-ralfw.de/57f514957134df05.jpg" /></p>
+<p>I’m infatuated with Elm right now. A functional programming (FP) language to make HTML frontend development easier. Read about Elm’s virtues at the official Elm homepage: <a rel="noopener" href="http://elm-lang.org/">elm-lang.org</a>. In this article I don’t want to introduce you to the language. When you come back I’d rather like to show you a way to get Elm up and running on your computer without polluting your system with yet another framework 😉 Then you can do your own, local experiments.</p>
+<h2>Install Docker</h2>
+<p>The cornerstone for keeping your system clean from „framework pollution“ to me currently is <a rel="noopener" href="https://www.docker.com/">Docker</a>. With Docker you can set up any number of „virtual systems“ on your computer in a very lightweight manner. Don’t roll your eyes and think „Oh, no, not again all the hassle of setting up a virtual machine…“ Because Docker is not about virtual machines (VM), but about <em>containers</em>, which are <em>like</em> VMs but, well, easier to setup, manage etc.</p>
+<p>It took me quite some time to jump on the Docker bandwaggon. But after a short personal training by Tim Klug (from Hamburg’s .NET developer community) now I’m on it and it feels great. Already after just a few days with Docker on my Mac I can hardly imagine having ever done software development without it. It’s a godsend! Trust me</p>
+<p><img loading="lazy" alt=":-)" src="/assets/01-ralfw.de/347cf1c76e3545ad.png" /></p>
+<p>So before installing Elm switch over to Docker and <a rel="noopener" href="https://www.docker.com/products/overview">install it on your machine</a> be it a Windows, OSX or Linux computer. There are convenient installers available. It should be a no-brainer. Took me like a minute or so.</p>
+<p>Once you’re done with the installation quickly check if docker is running before you continue. Open a terminal window and execute this command</p>
+<pre><code>docker --version
+</code></pre>
+<p>If all’s well Docker will print its version number. If not, well, maybe you just have to explicitly start Docker first. Check your Mac launchpad or the Windows program menu.</p>
+<h2>Create your own Elm Docker image</h2>
+<p>To keep your host system free from framework pollution don’t download Elm to it, don’t install Elm on it. Instead run Elm only within the confines of a Docker container. Set up a virtual system just for Elm. To that end create a Docker container <em>image</em> with all that’s needed.</p>
+<p>An image is like a template for containers. When you run an application inside a container you instanciate the container from an image. Sounds like object-orientation for IT admin, doesn’t it? 😉</p>
+<p>Since you want to experiment with Elm and possibly want to run several Elm applications over time it’s handy to have a specific Elm Docker container image. It will be a pretty bare bones virtual Linux system with node.js, Elm, and Nginx. This, then, you can instanciate many times and each time fill the resulting container with another application.</p>
+<p>Sound’s difficult? But it’s not. You’ll see. Let’s get going:</p>
+<ol>
+<li>First create a directory for your Elm exploration on your local drive, i.e. the host system, call it <em>elmdemo.</em></li>
+<li>In that directory store a file named <em>Dockerfile</em> with the following content:</li>
+</ol>
+<pre><code>FROM debian:latest
+
+# prepare
+RUN apt-get -y update
+RUN apt-get -y install apt-utils
+
+# install curl
+RUN apt-get -y install curl
+
+# node + npm
+RUN curl -sL https://deb.nodesource.com/setup_4.x | bash
+RUN apt-get install -y nodejs
+
+# elm
+RUN npm install -g elm
+RUN npm install -g elm-test
+
+# nginx
+RUN apt-get install -y nginx
+
+# make elm reactor and nginx accessible
+EXPOSE 8000 80
+</code></pre>
+<p>The Dockerfile is like a Windows .bat file or a Mac bash script. Mainly it contains commands to be executed on the commandline <em>within a container</em>.</p>
+<h3>Build image</h3>
+<p>Now open a terminal window and change the working directory to the <em>elmdemo</em> directory.</p>
+<p>On the command line execute</p>
+<pre><code>docker build . -t elm
+</code></pre>
+<p>to build your own Docker container image.</p>
+<p>Docker will load the <em>Dockerfile</em> from the directory and interpret it. That means it will first download a prebuild base image from its own repository in the cloud. That will be a very stripped down version of a Debian Linux (see <em>FROM</em> clause in <em>Dockerfile</em>). Once this image has been downloaded Docker will run <em>within</em> that image all the commands tagged with the <em>RUN</em> keyword.</p>
+<p>This will take a little while and produce considerable output in the terminal window. But sit tight… it all will end well</p>
+<p><img loading="lazy" alt=":-)" src="/assets/01-ralfw.de/347cf1c76e3545ad.png" /></p>
+<p>That’s Docker’s promise. If it worked on my machine it will work on yours, because you’ll be using the same base image which Docker isolates from the rest of your host system.</p>
+<h3>Check image</h3>
+<p>In the end you can check the success of this operation by listing the docker images on your computer:</p>
+<pre><code>docker images
+</code></pre>
+<p>The output should look something like this:</p>
+<pre><code>REPOSITORY   TAG      IMAGE ID       CREATED        SIZE
+elm          latest   18ff64885a9e   1 minute ago   334.7 MB
+</code></pre>
+<p>And if you still can’t believe what just happened, actually instanciate this image:</p>
+<pre><code>Hereafter-2:elmdemo ralfw$ docker run -it elm
+root@943c1a41ef21:/#
+</code></pre>
+<p>You’re now <em>inside</em> the container in its root directory logged in as the root/admin user.</p>
+<p>Check if Elm has been installed (and I don’t have the slightest doubt about that) by running</p>
+<pre><code>elm --version
+</code></pre>
+<p>Elm will respond by printing its version number and all’s ready for your first experiment.</p>
+<p>But first type <em>exit</em> at the command prompt. You’ll return to your host system’s command prompt.</p>
+<h3>Clean up</h3>
+<p>You can move on to the next section now – or you can clean up a little. Because your container is still there. It’s like an empty soda can still sitting on Docker’s desk 😉 Why not toss it in the trash? Here’s how you garbage collect containers no longer used:</p>
+<pre><code>Hereafter-2:elmdemo ralfw$ docker ps -a
+CONTAINER ID   IMAGE   COMMAND      CREATED         STATUS                     ...
+943c1a41ef21   elm     &quot;/bin/bash&quot;  2 minutes ago   Exited (0) 3 seconds ago   ...                     silly_elion
+Hereafter-2:elmdemo ralfw$ docker rm 943
+943
+Hereafter-2:elmdemo ralfw$
+</code></pre>
+<p>First list all containers with <em>docker ps -a</em>. Then remove your container with <em>docker rm</em> by specifying the first couple of letters of its ID (e.g. <em>943</em>).</p>
+<p>You don’t need to do that. There is a way to restart a stopped container. But that’s beyond the scope of this article.</p>
+<h3>TL;DR</h3>
+<p>In case you do not want to go through all the trouble of generating you own Elm image you can download one I've set up with the above <em>Dockerfile</em> and made public. Download it from Docker using this command:</p>
+<pre><code>docker pull ralfw/elm
+</code></pre>
+<p>Please note: If you want to take this shortcut then you have to replace the image name "elm" in the following examples with "ralfw/elm".</p>
+<h2>Ready for your first Elm language experiment</h2>
+<p>Now you’re all set for your first Elm application. It’s just a hello-world example, but still… 😉 It will run within a Docker container, but you’ll be able to edit it with your favorite text editor/IDE and use it through your host system browser.</p>
+<p>Start with a simple text file called <em>main.elm</em> you create in the <em>elmdemo</em> directory. The content of the file is this short elm code:</p>
+<pre><code>import Html exposing (text)
+
+main =
+  text &quot;Hello, World!&quot;
+</code></pre>
+<p>The <em>main</em> identifier is Elm’s entry point into an application and in this case is assigned to a function which just returns the message to be displayed in your browser when opening the corresponding page. Elm will do all the magic in the background of calling the function within the context of a HTML page and rendering the function result.</p>
+<p>Store the file and then create a container from your freshly built Elm image like this. Be sure to run the terminal in your <em>elmdemo</em> directory:</p>
+<pre><code>docker run -it -p 8000:8000 -v $(pwd):/tmp/elmdemo elm
+</code></pre>
+<p>You saw the <em>docker run -it</em> command before. It’s starting a new instance of your image and places you within it.</p>
+<p>In addition to that, though, now it also makes the contents of your <em>elmdemo</em> directory available <em>within</em> the container. You find it in the intra-container directory <em>/tmp/elmdemo</em>, a so called Docker volume.</p>
+<p>Also it maps the exposed port 8000 (see <em>EXPOSE</em> in <em>Dockerfile</em>) to your host systems port 8000. An exposed port is like a hole drilled through the container’s wall. Through this hole you can talk to applications inside it. But since such a port might already be in use on a host system you can re-route it to some other port.</p>
+<p>Now you can run your first Elm application inside the container. The terminal window's command line should have switched to the root of the container again.</p>
+<h3>Run Elm's web server</h3>
+<p>Go to the volume directory and then, once you start Elm’s own web server,…</p>
+<pre><code>cd /tmp/elmdemo
+elm reactor
+</code></pre>
+<p>…you’ll be able to access it from outside the container, i.e. from your host system through your favorite browser on the exposed and mapped port. Point your browser to <em>http://localhost:8000</em> and you’ll see this:</p>
+<p><img loading="lazy" alt="elm reactor" src="/assets/01-ralfw.de/f1eee26b8ff18ba4.png" /></p>
+<p>Just in case your browser reports it cannot reach the server, try it again with an added command line parameter (you can terminate the running Elm web server by pressing Ctrl-C):</p>
+<pre><code>elm reactor -a 0.0.0.0
+</code></pre>
+<p>What you see when you are able to connec to Elm’s web server is the file and directory tree of the folder it got started in. That way you can easily switch between parts of your application. It’s a web server for developers.</p>
+<p>Now click on <em>main.elm</em> to start your first Elm application!</p>
+<p>However, what you’ll see is not yet the expected greeting, but this:</p>
+<p><img loading="lazy" alt="Reactor compiling Elm file" src="/assets/01-ralfw.de/5893d1cc93fc109a.png" /></p>
+<p>The web server first has to build your application. It get’s translated from Elm to JavaScript and some Elm libraries need to be downloaded into your bare bones application directory.</p>
+<p>This only takes a few seconds, though. And then, finally, there it is:</p>
+<p><img loading="lazy" alt="Hello, World!" src="/assets/01-ralfw.de/2e2a4ab80e3067c2.png" /></p>
+<p>Yay! Celebration!</p>
+<p><img loading="lazy" alt=":-)" src="/assets/01-ralfw.de/347cf1c76e3545ad.png" /></p>
+<h3>A roundtrip</h3>
+<p>Now change your program code in the editor on your host system. Let the message be <em>„Hello, World! v2“</em>.</p>
+<p>Save the changed <em>main.elm</em> file.</p>
+<p>Refresh the application page in your browser.</p>
+<p>Elm’s web server will again take a second to recompile the file and then display the new message.</p>
+<p>Done!</p>
+<p>If you like to try out more examples with your newly set up Elm infrastructure, check out the <a rel="noopener" href="http://elm-lang.org/examples">examples page</a> in the Elm documentation. Clip the Elm code from the online editor page and paste it into your <em>main.elm</em> file. Then do as above: save, refresh page.</p>
+<p>Voilá! That’s how your local „deployment cycle“ could look like.</p>
+<h2>Hosting Elm in a real web server</h2>
+<p>So far your Elm application was run in the Elm web server. But does it also work with regular web servers like Nginx? Here’s the proof:</p>
+<p>Stop the reactor web server in your container, exit the container, then start up a new container from your Elm image with this command:</p>
+<pre><code>docker run -it -p 80:80 -v $(pwd):/tmp/elmdemo elm
+</code></pre>
+<p>Again, you're making your development directory available inside the container. But this time you're wiring port 80 to the outside world. That's the port Nginx makes web pages available at.</p>
+<p>At the command prompt of your Docker container then do this:</p>
+<pre><code>cd /tmp/elmdemo
+elm make main.elm --output index.html
+</code></pre>
+<p>You switch to the application directory and actually compile your Elm code into HTML/JavaScript. <em>elm make</em> creates a static HTML file which can be accessed through any web server. You can even double-click it on your host system and view it right in your browser without any web server in between.</p>
+<p>Next make the file available via Nginx:</p>
+<pre><code>cp index.html /var/www/html
+nginx
+</code></pre>
+<p>This copies the compiled Elm code into Nginx' default website directory and starts the web server. (Don't worry that you don't see any response from Nginx. It's running just fine in the background.)</p>
+<p>If you now open your web browser and point it to <em>http://localhost:80</em> you'll be presented with the page generated by the Elm application served by Nginx.</p>
+<p>***</p>
+<p>Phew... That's it. You're done. Elm is up and running on your computer – without polluting it ;-)</p>
+<p>Now it's up to you to play around with it. Try it out like shown here with much of the comfort of your favorite development environment (see <a rel="noopener" href="http://elm-lang.org/get-started">here</a> for how to configure your editor) – or use <a rel="noopener" href="https://elm-lang.org/examples/hello">the online IDE</a> for some quick results.</p>
+<p>Enjoy!</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

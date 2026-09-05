@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gesetze der Softwareentwicklung II — ralfw.de Archiv</title>
+<meta name="description" content="Das erste Gesetz der Softwareentwicklung ist scheinbar trivial und doch sehr wichtig. Nach ihm können wir nur eine &quot;gute Software&quot;, d.h. eine Software mit wartbaren Strukturen für ">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/gesetze-der-softwareentwicklung-ii/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Gesetze der Softwareentwicklung II — ralfw.de Archiv">
+<meta property="og:description" content="Das erste Gesetz der Softwareentwicklung ist scheinbar trivial und doch sehr wichtig. Nach ihm können wir nur eine &quot;gute Software&quot;, d.h. eine Software mit wartbaren Strukturen für ">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/gesetze-der-softwareentwicklung-ii/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Gesetze der Softwareentwicklung II</h1>
+    <div class="doc-meta"><span>17. Okt. 2007</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2007/10/gesetze-der-softwareentwicklung-ii.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/gesetze-der-softwareentwicklung-ii/</code></span></div>
+    <div class="art"><p>Das <a rel="noopener" href="http://ralfw.blogspot.com/2007/09/gesetze-der-softwareentwicklung-i.html">erste Gesetz der Softwareentwicklung</a> ist scheinbar trivial und doch sehr wichtig. Nach ihm können wir nur eine "gute Software", d.h. eine Software mit wartbaren Strukturen für Anforderungen entwickeln, die wir kennen. Trivial ist das, weil es sich nicht nur selbstverständlich anhört, sondern im Grunde auch ist. Wichtig ist die explizite Formulierung dieses Gesetzes aber dennoch, weil die gängige Praxis in vielen Projekten im nicht Rechnung trägt. Denn da die Softwareentwicklung quasi schon sprichwörtlich nie alle Anforderungen kennt, sind die Softwarestrukturen immer suboptimal. Suboptimale Strukturen machen die Pflege von Software schwer und schwerer, also - so sollte man denken - investieren Projekte immer wieder Zeit, um die suboptimalen Strukturen zu verbessern. Sie würden dann quasi innehalten und für die implementierten Anforderungen die Strukturen verbesseren (<a rel="noopener" href="http://de.wikipedia.org/wiki/Refactoring">Refaktorisierung</a>), bevor weitere Anforderungen erfüllt werden. Dieses Innehalten kommt jedoch nur selten, sehr selten vor. Es scheint gegenüber dem Kunden (oder dem Chef als Vertreter der Kundschaft) keinen Wert zu haben. Deshalb wird dafür nicht systematisch Zeit eingeplant. Das Resultat: Die Struktur der Software verfällt über die Zeit. Die Entropie in ihr nimmt ständig zu, die Unordnung wächst (siehe auch Gesetz 4 der Softwareentwicklung).</p>
+<p>Aber lassen wir diese Entwicklung von Qualität für einen Moment außer acht. Nehmen wir Gesetz 1 mal einfach nur als trivial hin. Nehmen wir auch einfach mal an, wir würden alle Anforderungen für eine Software kennen. Schaffen wir es dann wirklich, eine optimale Struktur für unsere Software zu planen? Nein.</p>
+<p>Gesetz 1 definiert die entscheidende Voraussetzung für optimale Softwarestruktur, d.h. langlebige Software. Gesetz 1 sagt, ohne die Kenntnis aller Anforderungen kommen wir zu keiner langfristig guten Struktur. Anforderungskenntnis ist aber nur eine notwendige Voraussetzung, keine hinreichende. Denn leider gilt nicht nur Gesetz 1, sondern auch...</p>
+<h2>Gesetz 2: Optimale Strukturen lassen sich nicht aus Anforderungen ableiten</h2>
+<p>Selbst also, wenn wir die Anforderungen an Funktionalität, Performance, Wartbarkeit usw. kennen, dann können wir immer noch keine optimale Struktur für die Implementation ermitteln. Dafür gibt es zwei Gründe:</p>
+<p>a. Auch wenn wir meinen, die Anforderungen zu kennen, kennen wir sie nicht wirklich. Wir kennen sie nicht wirklich, weil entweder der Kunde sie (noch) nicht wirklich kennt; er weiß also selbst nicht, was er will bzw.  braucht. Oder der Kunde hat die ihm tatsächlich bekannten Anforderungen - natürlich unwissentlich und ungewollt - nur unvollständig mitgeteilt. Oder es gab schlicht Übermittlungsfehler, die Anforderungen sind bei uns nicht verlustfrei angekommen; wir meinen sie zu verstehen, missverstehen sie aber in Wirklichkeit. Auf die eine oder andere Weise kann es also leicht passieren, dass wir zurück bei Gesetz 1 sind: Wir kennen die wahren Anforderungen nicht, sondern nur eine Untermenge. Damit lässt sich kein optimaler Start machen.</p>
+<p>b. Selbst wenn wir nun aber die Kundenanforderungen wirklich, wirklich kennen sollten - was selten genug der Fall ist -, dann gibt es immer noch ein Problem bei ihrer Umsetzung: unsere Tools und Technologien. Unsere Branche ist wie kaum eine andere geprägt von ständigen Neuerungen. Materalien (APIs) und Werkzeuge (IDE, Sprachen usw.) sind in ständig wachsendem Fluss. Wir haben immer weniger Zeit, sie wirklich solide zu erlernen. Das bedeutet aber, dass wir immer wieder auf unangenehme Überraschungen bei ihrem Einsatz stoßen. Sie funktionieren nicht wie angenommen. Strukturen lassen sich aber nur für Bekannte Einsatzformen von Materialien und Werkzeugen planen. Wenn wir unseren Werkzeugkasten aber immer weniger beherrschen, er ständig wächst, dann können wir für ihn und mit ihm keine optimalen Strukturen entwerfen. Beispiel: Wer meint, der neue O/R Mapper funktioniert so und so und darauf aufbauend eine Architektur plant und dann stellt sich bei der Implementation heraus, der O/R Mapper funktioniert leider nicht so... der verlässt sehr schnell die scheinbar optimale Struktur und begibt sich in den Wald der ad hoc Anpassungen. Die widersprechen aber selbstredend jeder optimalen Struktur.</p>
+<p>Wenn Gesetz 1 trivial erscheint, dann sollte Gesetz 2 zumindest bescheiden machen. Wir sollten nie annehmen, überhaupt die triviale Anforderung von Gesetz 1 erfüllen zu können. Es gibt genügend Gründe, warum wir entgegen jeder Annahme eben doch nicht alle Anforderungen kennen. Und selbst wenn... dann beherrschen wir unsere Materialien und Werkzeuge, die sich quasi immer im Vorläufigen bewegen, nicht wirklich. Wenn wir ein Problem nicht schon 2-3 Mal mit durchaus unterschiedlichen Technologien gelöst haben, oder wenn wir neue Probleme nicht schon 2-3 Mal mit derselben Technologie gelöst haben, dann können wir überhaupt keine optimalen Strukturen planen.</p>
+<p>Optimale Strukturen sind nur dort möglich, wo wir sichere Kenntnis haben. Wer die Problemdomäne aber nicht 100% kennt oder wer seine Werkzeuge nicht 100% kennt, der kann nur suboptimale Strukturen entwerfen. Teams, die Auftragsentwicklungen machen, kennen die immer wechselnden Problemdomänen nicht, da ist Suboptimalität gar nicht zu vermeiden. Andere Teams machen jahrelang dasselbe; sie kennen die Problemdomäne aus dem Effeff. Sie leiden dann zumindest darunter, dass sie bei wachsenden Anforderungen keine wirkliche Konstanz in den Implementierungstechnologien haben.</p>
+<p>Gesetz 1 und Gesetz 2 machen also deutlich, dass optimale Strukturen kaum geplant werden können. Kommunikationsschwierigkeiten und ewige technologische Unerfahrenheit stehen dem allemal im Wege.</p>
+<p>Aber was, wenn wir mal träumen? Was, wenn wir mal ganz naiv annehmen, dass wir die Anforderungen doch wirklich, wirklich kennen und auch noch die Meister unserer Technologien sind? Dann tritt Gesetz 3 in Kraft.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2007-10-19):</p>
+<p>Guten Abend Herr Westphal,
+das 2. Gesetz spricht mir so richtig aus dem Herzen. Das erste Korrolar lautet bei uns:
+Um zumindest eine gute Software-Struktur zu finden muss man sich mindestens so sehr mit der Problemdomäne wie mit den konkreten Kundenanforderungen beschäftigen.
+Und wenn man dazu entweder nicht die Zeit oder das Grundwissen hat? Dann wird es eben nix!
+Bin gespannt auf das 3. Gesetz.
+Peter Pohmann, dataweb</p>
+<hr />
+<p><strong>(anonym)</strong> (2008-01-25):</p>
+<p>Das erste Gesetz des Softwareentwicklung laut sprich viel über Softwareentwicklung. ;)</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

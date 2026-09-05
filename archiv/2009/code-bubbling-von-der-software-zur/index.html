@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Code bubbling - Von der Software zur Schaumware — ralfw.de Archiv</title>
+<meta name="description" content="Was passiert mit Code unter Druck? Er wandert ins UI. Das ist eine Erfahrung, die ich gerade in der letzten Zeit immer wieder gemacht habe. Wenn ich mir Code in Projekten oder auch">
+<link rel="canonical" href="https://ralfw.de/archiv/2009/code-bubbling-von-der-software-zur/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Code bubbling - Von der Software zur Schaumware — ralfw.de Archiv">
+<meta property="og:description" content="Was passiert mit Code unter Druck? Er wandert ins UI. Das ist eine Erfahrung, die ich gerade in der letzten Zeit immer wieder gemacht habe. Wenn ich mir Code in Projekten oder auch">
+<meta property="og:url" content="https://ralfw.de/archiv/2009/code-bubbling-von-der-software-zur/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Code bubbling - Von der Software zur Schaumware</h1>
+    <div class="doc-meta"><span>26. Feb. 2009</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2009/02/code-bubbling-von-der-software-zur.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2009/code-bubbling-von-der-software-zur/</code></span></div>
+    <div class="art"><p>Was passiert mit Code unter Druck? Er wandert ins UI. Das ist eine Erfahrung, die ich gerade in der letzten Zeit immer wieder gemacht habe. Wenn ich mir Code in Projekten oder auch in Übungsaufgaben ansehe, dann findet der sich in umso größerer Menge im UI oder UI-nah, je höher der (Termin)Druck im Projekt ist. Wie Bläschen in der Limo wandert er nach oben in die Präsentationsschicht (wenn man in Schichten denken will).</p>
+<p>Ist ja auch klar: Wo keine Zeit ist, da fehlt Muße zum Denken. Ohne Denken, keine Planung. Ohne Planung, keine Vorstellung darüber, wie Code organisiert sein könnte.</p>
+<p>Die einzige Struktur die zwangsweise jedoch immer vorhanden ist, ist die Struktur des UI. In Ermangelung von Alternativen trägt man also Code in die durch das UI vorgegebenen Strukturelemente (Steuerelemente) ein.</p>
+<p>Das UI wird damit quasi zur Blume der Software: Dort schäumt der ganze Code, für den man in Ermangelung anderer Strukturelemente grad keine Zeit hatte, einen geeigneteren Ort zu finden.</p>
+<p>Aber wie mit dem Schaum im Glas ist es schwer, den Code im UI in tiefere Schichten zu drücken. Ist er erstmal dort oben, dann bleibt er dort auch. Der Schau auf dem Bier verschwindet irgendwann zwar von allein, die Codeblasen im UI jedoch nicht. Und je länger der Druck im Projekt anhält, desto mehr Code, der eigentlich tiefer angesiedelt sein sollte, blubbert nach oben.</p>
+<p>So ist es denn kein Wunder, dass manche Software eigentlich Schaumware (neudeutsch: foamware) ist.</p>
+<p>Schade . Denn zumindest minimale Strukturen unterhalb des UI zu finden, in und an denen Code auch unter Druck geeigneter und vor allem leichter testbar aufgehängt werden kann, ist gar nicht so schwer. Sogar mit ein bisschen "mechanischem" <em><a rel="noopener" href="http://www.clean-code-developer.de/wiki/CcdOrangerGrad#SeparationofConcerns">Separation of Concerns</a></em> ist da schon einiges zu erreichen. Denn eines ist gewiss: Code in einem Eventhandler eines Steuerelementes ist nie eine gute Sache, wenn der Code nicht unmittelbar mit dem Steuerelement oder seinen "Geschwistern" im UI zu tun hat.</p>
+<p>Prost!</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2009-02-27):</p>
+<p>Beim Foamware-Bier kann man immerhin noch etwas warten, bis es trinkbar ist. Das geht beim Code leider nicht ;)</p>
+<hr />
+<p><strong>(anonym)</strong> (2009-03-07):</p>
+<p>Hi Ralf,</p>
+<p>die wunderbare Methapher verstärkt die Feststellung eindrücklich. Du hast ja letztes Jahr einen guten Artikel über Druck und seine negativen Folgen geschrieben, diese Beobachtung fügt sich da nahtlos ein.
+Das die Ursache vielerlei Übels in der Sotwareentwicklung im Termindruck liegt, der Nachdenken, Reflektieren, Ausprobieren und auch Irrwege korrigieren verhindert, wird viel zu gering bewertet und publizistisch zu selten aufgegriffen.
+Das mag an einer Form der Kluft  zwischen Sales / Management und Entwicklung liegen. Da sich IMHO beste Qualität und Zeitdruck ausschliessen, sollte jeder der von Qualität spricht auch für die notwendige Zeit sorgen - also auch der Kunde.</p>
+<p>Viele Grüsse</p>
+<p>Joachim</p>
+<p>P.S.
+Ich stelle mir gerade vor, der UI-Code würde genauso verschwinden, wie der Schaum auf dem Bier - plötzlich geschieht nichts wenn der Button geklickt wird. Der Kunde ruft beim Support an und der Helfer sagt ganz lapidar: "Ach, das kennen wir schon, da ist jetzt der UI-Code weg."</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-03-08):</p>
+<p>@Joachim: Ja, der Zeitdruck... Nicht, dass wir nicht alle wüssten, dass (Zeit)Druck Qualität grundsätzlich im Wege steht. (Außer, wenn geringer Zeitverbrauch eben das Qualitätskriterium ist wie beim 100m Lauf.)</p>
+<p>Buchhaltung, Schuhreparatur, Tellerwaschen... all das wird schlechter gemacht, wenn Zeitdruck herrscht. Softwareentwicklung ist aber nochmal anders: Softwareentwicklung ist hochkreative Arbeit - im Gegensatz zumindest zum Tellerwaschen. (Ja, ich weiß, Buchhaltung kann auch sehr kreativ sein ;-)</p>
+<p>Kreative Arbeit jedoch ist noch sensibler gegenüber Druck als andere. Denn wenn Stress bzw. das dabei ausgeschüttete Adrenalin eines bewirkt, dann ist das Tunnelblick und Denkblockade. Beides ist der Kreativität nicht gerade förderlich. Nein, beides steht sogar im Gegensatz zu Kreativität.</p>
+<p>Ergo: Zeitdruck in der Softwareentwicklung ist doppelt kontraproduktiv.</p>
+<p>Aber wie das dem Management und dem Kunden beibringen? In kleinen Schritten. Mal schauen...</p>
+<p>Zum PS: Sehr schön! :-) Der UI Code ist weg. Verdunstet, die Anwendung ist fade geworden. Wie ein Sekt, der länger offen steht.</p>
+<p>-Ralf</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Incremental Architect&#x27;s Napkin - #1 - It&#x27;s about the money, stupid — ralfw.de Archiv</title>
+<meta name="description" content="Software development is an economic endeavor. A customer is only willing to pay for value. What makes a software valuable is required to become a trait of the software. We as softw">
+<link rel="canonical" href="https://ralfw.de/archiv/2014/the-incremental-architects-napkin-1/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Incremental Architect&#x27;s Napkin - #1 - It&#x27;s about the money, stupid — ralfw.de Archiv">
+<meta property="og:description" content="Software development is an economic endeavor. A customer is only willing to pay for value. What makes a software valuable is required to become a trait of the software. We as softw">
+<meta property="og:url" content="https://ralfw.de/archiv/2014/the-incremental-architects-napkin-1/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>The Incremental Architect&#x27;s Napkin - #1 - It&#x27;s about the money, stupid</h1>
+    <div class="doc-meta"><span>24. Mai 2014</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2014/05/24/the-incremental-architectacutes-napkin---1---itacutes-about-the.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2014/the-incremental-architects-napkin-1/</code></span></div>
+    <div class="art"><p>Software development is an economic endeavor. A customer is only willing to pay for value. What makes a software valuable is required to become a trait of the software. We as software developers thus need to understand and then find a way to implement requirements.</p>
+<p>Whether or in how far a customer really can know beforehand what´s going to be valuable for him/her in the end is a topic of constant debate. Some aspects of the requirements might be less foggy than others. Sometimes the customer does not know what he/she wants. Sometimes he/she´s certain to want something - but then is not happy when that´s delivered.</p>
+<p>Nevertheless requirements exist. And developers will only be paid if they deliver value. So we better focus on doing that.</p>
+<p>Although is might sound trivial I think it´s important to state the corollary: We need to be able to trace anything we do as developers back to some requirement.</p>
+<p>You decide to use Go as the implementation language? Well, what´s the customer´s requirement this decision is linked to? You decide to use WPF as the GUI technology? What´s the customer´s requirement? You decide in favor of a layered architecture? What´s the customer´s requirement? You decide to put code in three classes instead of just one? What´s the customer´s requirement behind that? You decide to use MongoDB over MySql? What´s the customer´s requirement behind that? etc.</p>
+<p>I´m not saying any of these decisions are wrong. I´m just saying whatever you decide be clear about the requirement that´s driving your decision. You have to be able to answer the question: Why do you think will X deliver more value to the customer than the alternatives?</p>
+<p>Customers are not interested in romantic ideals of hard working, good willing, quality focused craftsmen. They don´t care how and why you work - as long as what you deliver fulfills their needs. They want to trust you to recognize this as your top priority - and then deliver. That´s all.</p>
+<h2>Fundamental aspects of requirements</h2>
+<p>If you´re like me you´re probably not used to such scrutinization. You want to be trusted as a professional developer - and decide quite a few things following your gut feeling. Or by relying on "established practices".</p>
+<p>That´s ok in general and most of the time - but still… I think we should be more conscious about our decisions. Which would make us more responsible, even more professional.</p>
+<p>But without further guidance it´s hard to reason about many of the myriad decisions we´ve to make over the course of a software project.</p>
+<p>What I found helpful in this situation is structuring requirements into fundamental aspects. Instead of one large heap of requirements then there are smaller blobs. With them it´s easier to check if a decisions falls in their scope.</p>
+<p>Sure, every project has it´s very own requirements. But all of them belong to just three different major categories, I think. Any requirement either pertains to functionality, non-functional aspects or sustainability.</p>
+<p>For short I call those aspects:</p>
+<ul>
+<li><strong>Functionality</strong>, because such requirements describe which transformations a software should offer. For example: A calculator software should be able to add and multiply real numbers. An auction website should enable you to set up an auction anytime or to find auctions to bid for.</li>
+<li><strong>Quality</strong>, because such requirements describe how functionality is supposed to work, e.g. fast or secure. For example: A calculator should be able to calculate the sinus of a value much faster than you could in your head. An auction website should accept bids from millions of users.</li>
+<li><strong>Security of Investment</strong>, because functionality and quality need not just be delivered in any way. It´s important to the customer to get them quickly - and not only today but over the course of several years. This aspect introduces time into the "requrements equation".</li>
+</ul>
+<p>Security of Investments (SoI) sure is a non-functional requirement. But I think it´s important to not subsume it under the Quality (Q) aspect. That´s because SoI has quite special properties.</p>
+<p>For one, SoI for software means something completely different from what it means for hardware. If you buy hardware (a car, a hair blower) you find that a worthwhile investment, if the hardware does not change it´s functionality or quality over time. A car still running smoothly with hardly any rust spots after 10 years of daily usage would be a very secure investment. So for hardware (or material products, if you like) "unchangeability" (in the face of usage) is desirable.</p>
+<p>With software you want the contrary. Software that cannot be changed is a waste. SoI for software means "changeability". You want to be sure that the software you buy/order today can be changed, adapted, improved over an unforseeable number of years so as fit changes in its usage environment.</p>
+<p>But that´s not the only reason why the SoI aspect is special. On top of changeability (or evolvability) comes immeasurability. Evolvability cannot readily be measured by counting something. Whether the changeability is as high as the customer wants it, cannot be determined by looking at metrics like Lines of Code or Cyclomatic Complexity or Afferent Coupling. They may give a hint… but they are far, far from precise.</p>
+<p>That´s because of the nature of changeability. It´s different from performance or scalability. Also it´s because a customer cannot tell upfront, "how much" evolvability he/she wants.</p>
+<p>Whether requirements regarding Functionality (F) and Q have been met, a customer can tell you very quickly and very precisely. A calculation is missing, the calculation takes too long, the calculation time degrades with increased load, the calculation is accessible to the wrong users etc. That´s all very or at least comparatively easy to determine.</p>
+<p>But changeability… That´s a whole different thing. Nevertheless over time the customer will develop a feedling if changeability is good enough or degrading. He/she just has to check the development of the frequency of "WTF"s from developers ;-)</p>
+<p>F and Q are "timeless" requirement categories. Customers want us to deliver on them now. Just focusing on the now, though, is rarely beneficial in the long run. So SoI adds a counterweight to the requirements picture. Customers want SoI - whether they know it or not, whether they state if explicitly or not.</p>
+<h2>In closing</h2>
+<p>A customer´s requirements are not monolithic. They are not all made the same. Rather they fall into different categories. We as developers need to recognize these categories when confronted with some requirement - and take them into account. Only then can we make true professional decisions, i.e. conscious and responsible ones.</p>
+<hr />
+<p><em>Footnotes: I call this fundamental trait of software "changeability" and not "flexibility" to distinguish to whom it´s a concern. "Flexibility" to me means, software as is can easily be adapted to a change in its environment, e.g. by tweaking some config data or adding a library which gets picked up by a plug-in engine. "Flexibiltiy" thus is a matter of some user. "Changeability", on the other hand, to me means, software can easily be changed in its structure to adapt it to new requirements. That´s a matter of the software developer.</em></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

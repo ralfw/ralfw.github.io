@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Auf ins Raumzeitalter! - Asynchron und verteilt mit dem Application Space — ralfw.de Archiv</title>
+<meta name="description" content="Software verteilen ist keine leichte Sache. Muss das so sein? Nein, ich glaube nicht. Wir machen es uns nur selbst unnötig schwer, indem wir immer wieder und weiter versuchen, in v">
+<link rel="canonical" href="https://ralfw.de/archiv/2009/auf-ins-raumzeitalter-asynchron-und/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Auf ins Raumzeitalter! - Asynchron und verteilt mit dem Application Space — ralfw.de Archiv">
+<meta property="og:description" content="Software verteilen ist keine leichte Sache. Muss das so sein? Nein, ich glaube nicht. Wir machen es uns nur selbst unnötig schwer, indem wir immer wieder und weiter versuchen, in v">
+<meta property="og:url" content="https://ralfw.de/archiv/2009/auf-ins-raumzeitalter-asynchron-und/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Auf ins Raumzeitalter! - Asynchron und verteilt mit dem Application Space</h1>
+    <div class="doc-meta"><span>23. Mai 2009</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2009/05/auf-ins-raumzeitalter-asynchron-und.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2009/auf-ins-raumzeitalter-asynchron-und/</code></span></div>
+    <div class="art"><p>Software verteilen ist keine leichte Sache. Muss das so sein? Nein, ich glaube nicht. Wir machen es uns nur selbst unnötig schwer, indem wir immer wieder und weiter versuchen, in verteilten Systemen genauso zu kommunizieren, wie in lokalen. Corba, DCOM, .NET Remoting, Webservices, WCF: sie stehen alle in derselben Tradition. Sie alle favorisieren die synchrone, methodenbasierte Kommunikation zwischen entfernten Funktionseinheiten. Ihr Credo: Wenn <em>service.TueEtwas()</em> lokal der Ausdruck eines Servicewunsches ist, dann sollte das auch in verteilten Systemen so sein.</p>
+<p>Bei aller Nachrichtenorientierung, in der inzwischen WCF angekommen ist, halte ich das jedoch für falsch. Darüber habe ich auch schon ausführlich <a rel="noopener" href="http://ralfw.blogspot.com/search/label/Space%20Based%20Collaboration">hier im Blog geschrieben</a>. Nur wie können wir es anders machen?</p>
+<p>Klar, es gibt Alternativen. Es gibt Technologien für asynchrone, nachrichtenorientierte, event-driven Architekturen. MSMQ/<em>System.Messaging</em> gehört dazu und aufbauend darauf z.B.  <a rel="noopener" href="http://code.google.com/p/masstransit/">Mass Transit</a> oder <a rel="noopener" href="http://www.nservicebus.com">NServiceBus</a>. Von größeren und teureren Werkzeugen will ich gar nicht reden.</p>
+<p>Trotz dieser Ansätze bin ich jedoch nicht zufrieden gewesen. Denn Messaging - obwohl das für die Verteilung  "ehrlichere" Konzept als der Methodenaufruf - ist irgendwie auch einschränkend und immer etwas schwergewichtig. Die Einschränkung liegt im Fokus auf den "Röhren" zwischen Funktionseinheiten. Die halte ich aber für einen Sonderfall. Und die Schwergewichtigkeit liegt im API. Messaging ist eben eng verbunden mit MSMQ. Und Messaging konzentriert sich auf die Verteilung.</p>
+<p>Nun bin ich froh, sagen zu können, dass meine Zufriedenheit gerade sehr gestiegen ist. Denn <a rel="noopener" href="http://ralfw.blogspot.com/2008/02/space-based-collaboration-jetzt-mit.html">ein Projekt, an dem ich schon einige Zeit beteiligt bin</a>, trägt nun erstmalig öffentliche Früchte. Zusammen mit der TU Wien kann ich im Rahmen der Xcoordination Unternehmung (<a rel="noopener" href="http://www.xcoordination.com">www.xcoordination.com</a>) bekannt geben, dass wir die erste CTP unseres <strong>Xcoordination Application Space</strong> (AppSpace) bei CodePlex veröffentlicht haben: <a rel="noopener" href="http://xcoappspace.codeplex.com">http://xcoappspace.codeplex.com</a>.</p>
+<p>Nach Vorversuchen und Andeutungen ist nun live, wovon wir meinen, dass es das Verteilen von Software sehr viel einfacher machen kann. Der AppSpace ist damit einerseits tatsächlich als Ersatz für z.B. WCF gedacht - auf der anderen Seite lieben wir aber auch WCF.</p>
+<p>WCF ist cool. WCF ist breit und tief und universell. Das ist super! Aber wir glauben nicht, dass WCF einen API bietet, den der Durchschnittsentwickler direkt nutzen sollte, um seine Software zu verteilen. Der Preis für WCFs Mächtigkeit ist schlicht Komplexität und damit geringe Usability.</p>
+<p>Der AppSpace verbirgt diese Komplexität nun. Er bietet aufbauend auf WCF und anderen Kommunikationstechnologien einen API für die lokale wie die verteilte asynchrone Programmierung. Er abstrahiert von den Feinheiten der WCF.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/790a496edf15426a.png" /></p>
+<p>Wir meinen, dass damit ein Sprung in der Verteilung von Software geschafft werden kann wie vom Win16/Win32 API zu VB1.0. 1990 konnte man Windows programmieren - aber es war sauschwer, mit dem Windows API in C direkt umzugehen. Nur Experten konnten also das Potenzial graphischer Benutzerschnittstellen ausnutzen.</p>
+<p>Dann kam VB1.0 und alles wurde anders. Mit VB1.0 konnten plötzlich Millionen von Entwicklern graphische Benutzerschnittstellen programmieren. Dazu mussten Sie zwar gegenüber den bisherigen umdenken - Stichwort "Event-Driven UI" -, aber das war nicht so schlimm.</p>
+<p>Ähnlich sehen wir den AppSpace. (Ein bisschen Größenwahn kann nie schaden, oder? ;-) Mit dem Programmiermodell des AppSpace hoffen wir auch, die Verteilung von Code einer viel größeren Gruppe von Entwicklern zugänglich zu machen.</p>
+<p>Dazu ist zwar auch ein Umdenken nötig - Stichwort "Asynchrone Kommunikation" -, aber das wird hoffentlich nicht so schlimm. Vor allem ist der Gewinn doppelt, wenn man sich auf diesen Paradigmenwechsel von synchron nach asynchon einlässt. Nicht nur wird die Verteilung einfacher, man bekommt auch noch die lokale Parallelverarbeitung gleich dazu.</p>
+<p>Und warum soll nun der AppSpace der Bringer sein gegenüber anderen Messaging-Technologien? Weil sich der AppSpace eben nicht nur um Messaging dreht. Messaging ist für ihn ein Sonderfall. Oder Messaging passiert für ihn "unten drunter".</p>
+<p>Das zentrale Konzept beim AppSpace sind vielmehr Dienstleistungskomponenten. Er bleibt also so dicht wie möglich an der Objektorientierung und der synchronen Komponentenorientierung. Deshalb bietet er auch eine DI Container Schnittstelle. Er holt die Entwickler da ab, wo sie heute stehen: bei den synchronen Komponenten. Und dann bietet er ihnen schrittweise mehr. Zuerst unterstützt er sie auf der Basis der Microsoft Concurrency Runtime dabei, von lokal synchron auf lokal asynchron umzusteigen. Und dann unterstützt er sie beim Umstieg von lokal asynchron zu entfernt asynchron.</p>
+<p>Das halten wir für eine natürliche Progression im Denken und in der Codierung. Wer gelernt hat, lokal asynchron zu programmieren, der hat viel weniger Probleme, wenn es dann an die Verteilung von Code geht. Mit dem AppSpace bekommt er die Verteilung dann sozusagen geschenkt.</p>
+<p>Für die, die nun ganz gespannt darauf sind, wie denn der API des AppSpace aussieht, hier ein Codeschnippsel. Mehr gibt es bei CodePlex und demnächst in der dotnetpro. Auch Beispielprojekte werden wir bei CodePlex einstellen.</p>
+<p>So sieht der <strong>Kontrakt eines ganz simplen asynchronen Dienstes</strong> aus, der z.B. eine Zeichenkette empfängt und serverseitig ausgibt. Das ist trivial von der Funktionalität her. An dieser Stelle möchte ich aber nur zeigen, wie schlank der AppSpace API ist.</p>
+<p>Asynchrone Komponenten haben keine Methoden, die man direkt aufrufen könnte, sondern definieren einen Satz von Nachrichten (Message Contract), die sie über typisierte Microsoft CCR Ports empfangen.</p>
+<blockquote>
+<p>using Microsoft.Ccr.Core;
+using XcoAppSpace.Core;  public class PPingContract : Port
+{}</p>
+</blockquote>
+<p>Das ist die <strong>Implementation dies Kontraktes</strong>. Eine Klasse vom Kontrakt ableiten und für jede Nachricht eine Behandlungsroutine definieren:</p>
+<blockquote>
+<p>public class PingService : PPingContract
+{
+    [XcoConcurrent]
+    void ProcessPing(string text)
+    {
+        Console.WriteLine("processing: {0}", text);
+    }
+}</p>
+</blockquote>
+<p>Und jetzt der <strong>Host für die Serviceimplementation</strong>. Zwei Zeilen Code reichen aus. Die asynchrone Dienstleistung "läuft" in der Instanz eines Application Space:</p>
+<blockquote>
+<p>using(XcoAppSpace host = new XcpAppSpace("tcp.port=9001"))
+{
+    host.RunWorker</p>
+</blockquote>
+<p>("pingservice");</p>
+<blockquote>
+<p>Console.ReadLine(); // keep the host running while waiting for connections
+}</p>
+</blockquote>
+<p><strong>Der Client ist dazu symmetrisch!</strong> Das ist einer der Vorzüge des AppSpace. Das macht ihn einfach zu bedienen, weil die Zahl der zu lernenden Konzepte so überschaubar ist:</p>
+<blockquote>
+<p>using(XcoAppSpace client = new XcoAppSpace("tcp.port=0"))
+{
+    PPingContract p = client.ConnectWorker</p>
+</blockquote>
+<p>("localhost:9001/pingservice");      p.Post("hello, world!");      Console.ReadLine(); // keep client alive</p>
+<blockquote>
+<p>}</p>
+</blockquote>
+<p>Das ist´s so ziemlich. Wenn Sie den Code verstanden haben (und die CCR Grundlagen kennen), dann können Sie mit dem AppSpace lokal asynchron oder verteilt asynchron arbeiten. Rückhabewerte, Notifikationen, Publish/Subscribe... das alles ist mit den immer gleichen Mitteln leicht zu realisieren. Schauen Sie mal bei CodePlex vorbei, wo ich <a rel="noopener" href="http://xcoappspace.codeplex.com/Wiki/View.aspx?title=SampleDistributedComponent">dieses Beispiel noch etwas ausgebaut habe.</a></p>
+<p>Laden Sie den AppSpace aus dem <a rel="noopener" href="http://xcoappspace.codeplex.com/Release/ProjectReleases.aspx">Download-Bereich</a> herunter und spielen Sie mal damit. Ich freue mich über jedes Feedback. Bei allem Anspruch ist der AppSpace ja nicht fertig. Er ist erst am Anfang. Wir bei Xcoordination glauben aber, dass die Richtung stimmt. Wenn Sie wollen, gehen Sie in diese Richtung mit. Erste kommerzielle Projekte sind schon vorausgelaufen und melden zurück, dass es sich lohnt. Bei CodePlex und <a rel="noopener" href="http://www.xcoordination.com">www.xcoordination.com</a> gibt es viel Platz zum Diskutieren. Und außerdem ist der Application Space eine Open Source Software. Die können Sie aber sogar <a rel="noopener" href="http://xcoappspace.codeplex.com/Wiki/View.aspx?title=DownloadInstructions">kostenlos in Ihren kommerziellen Closed Source Projekten einsetzen</a>.</p>
+<p>Also, auf ins Raumzeitalter mit dem Application Space! Verteilung die einfach funktioniert.</p>
+<h2>Kommentare</h2>
+<p><strong>Unknown</strong> (2009-05-26):</p>
+<p>Beim direkten Messaging mit MSMQ geht es um die "Röhre". Bei MasstTransit/ NServiceBus um den MessageBus.
+Dort ist die Nachricht oder der Event im Fokus und nicht die Röhre. Man publiziert auf den Bus und die Infrastruktur kümmert sich um die richtige Röhre.
+In der jetzigen Form vom XcoAppsSpace steht der Port im Vordergrund. Der Port ist doch aber genau die Röhre.
+Ausserdem muss der Client sehr viel über den Service wissen: "localhost:9001/pingservice". Da wäre ein Publish/ Subscribe Mechanismus schön.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-05-26):</p>
+<p>@Christian: Schön zusammengefasst: Röhre vs Event. Und bei WCF geht es um noch nicht mal um die Röhre, sondern um Aufforderungen per Brief.</p>
+<p>Worum gehts bei AppSpace? Um die Röhre? Nein, genausowenig wie beim Bus. Beim Bus gibt es auch ein async Send() oder Post(). Dann kommt die Nachricht beim Bus eben auf einem Bus an, an den man sich als Abonnent hängen kann.</p>
+<p>Der Port ist beim AppSpace nur ein Mittel, nicht die "Metapher". Im Gegensatz zum Bus kommt die Nachricht an einem konkreten Ort an, bei genau einem Adressdaten.</p>
+<p>Der Trick ist nun: Bei MSMQ gibt es nur die Röhre. Beim Bus geht es um Abos. Und der AppSpace ist eine allgemeine Infrastruktur, mit der man beides bauen kann. Ein Worker am Ende eines Ports kann als Bus fungieren. Oder er kann ein Dienstleister sein. You choose.</p>
+<p>In den Usage Demos zum AppSpace ist ein Beispiel, wie man mit dem AppSpace einen Bus bauen kann. Nicht perfekt, nur als Denkanstoß. Genauso ist ein Beispiel dabei, wie man damit einen Load Balancer bauen kann. Nicht perfekt, nur als Denkanstoß.</p>
+<p>Publish/Subscribe? Nichts einfacher als das: Mit 2 Zeilen Code kann man jede async Komponente (Worker) in einen Publisher verwandeln. Und als Subscriber kann man serverseitige Nachrichtenfilter mit Lambda Expressions formulieren. Der AppSpace "remoted" diese Prädikate zum Publisher.</p>
+<p>Der AppSpace ist insofern ein Bauskasten, also der Anfang und nicht das Ende.</p>
+<p>In den nächsten Tagen werden wir auch wieder einen neuen Drop machen. Dann mit MSMQ-Transport und Named Pipe WCF Beispiel.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Alex</strong> (2009-05-26):</p>
+<p>da der AppSpace eine XMPP Schnittstelle hat, und XMPP Publish Subscribe (Pubsub) unterstützt wäre es relativ einfach dies zu erweitern.</p>
+<p>Oder wie Ralf schon sagt ist einfaches Pubsub mit wenigen Zeilen Code im aktuellen AppSpace schnell und einfach implementiert.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-05-26):</p>
+<p>@Alexander: Ja, wir könnten mit dem Jabber Kommunikationsservice im AppSpace Pub/Sub von Jabber nutzen. Das machen wir aber bewusst nicht, um solche Patterns trnasportunabhängig zu halten. Wer sich für net.tcp oder net.pipe oder rohe TCP Sockets entscheidet, der soll genauso Pub/Sub nutzen können.</p>
+<p>Aber es steht jedem frei, sich einen eigenen Jabber Kommunikationsservice zu schreiben, der Pub/Sub unterstützt (oder den vorhandenen aufbohren).</p>
+<p>In einer Demo weichen wir von unserer Philosophie allerdings ab: da zeigen wir, wie man mit Jabber ganz einfach Load Balancing implementieren kann. Eine Zeile Code genügt, in der man die Priorität einer Space-Instanz der aktuellen Last anpasst. Der Jabber Server macht den Rest.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Unknown</strong> (2009-05-26):</p>
+<p>"Usage Demos zum AppSpace"</p>
+<p>Die Demos würden mich interessieren. Nur finde ich CodePlex derzeit keinen Code. Suche ich an der falschen Stelle?</p>
+<p>Oder soll ich geduldig abwarten?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-05-26):</p>
+<p>@Christian: Nicht warten, herunterladen. Guckst du bei Releases! Hier die Usage Demos: http://xcoappspace.codeplex.com/Release/ProjectReleases.aspx?ReleaseId=27799.</p>
+<p>Im SVN Repo haben wir bei CodePlex noch nichts. Kommt aber auch noch.</p>
+<p>-Ralf</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

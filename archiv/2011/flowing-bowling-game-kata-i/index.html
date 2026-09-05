@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flowing Bowling Game Kata I — ralfw.de Archiv</title>
+<meta name="description" content="Ron Jeffries challenged me to show how Flow-Design and Event-Based Components can help software development. This is the problem he posed in the Software Craftsmanship discussion g">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/flowing-bowling-game-kata-i/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Flowing Bowling Game Kata I — ralfw.de Archiv">
+<meta property="og:description" content="Ron Jeffries challenged me to show how Flow-Design and Event-Based Components can help software development. This is the problem he posed in the Software Craftsmanship discussion g">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/flowing-bowling-game-kata-i/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>Flowing Bowling Game Kata I</h1>
+    <div class="doc-meta"><span>5. Juli 2011</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2011/07/05/flowing-bowling-game-kata-i.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/flowing-bowling-game-kata-i/</code></span></div>
+    <div class="art"><p>Ron Jeffries challenged me to show how Flow-Design and Event-Based Components can help software development. This is the problem he posed in the Software Craftsmanship discussion group:</p>
+<blockquote>
+<p>Solve bowling scoring. Here is the specification. Note that this is a simpler version than the one Bob Martin often uses. I'll take questions if you have any.</p>
+<p>Given a list of the rolls of a legal game of ten pin bowling, which you may assume are provided without error or omission, produce the total, final, score of the game.</p>
+<p>Examples: Twenty zeros produce zero. Twenty fours produce 80. Twelve tens produce 300.</p>
+</blockquote>
+<p>Since I don´t know much about bowling I consulted the description as a second source. I haven´t done the kata before and have not looked at any of the kata solutions on display on the internet. That´s fortunate for a fresh and unbiased start – but it´s also a pain, since I simply don´t like bowling. But, well, I don´t want to complain. Here we go…</p>
+<h2>Understanding the problem</h2>
+<p>I believe in thinking before coding. And the first thing to think about is the problem. Before I can start to code I need to understand the problem which also means I have at least an idea of how to solve it.</p>
+<p>It´s too bad I can´t show you the process of actually gaining an understanding of the problem. But what I can show you is data. Here´s a sample bowling game score sheet:</p>
+<p>This shows you how I interpret the rules I read. Not just as a test case, but with some explanations as to why the scores are calculated like that.</p>
+<p>The input to the solution I´m supposed to write would look like follows for this game:</p>
+<p>It´s just the number of pins knocked down with each roll.</p>
+<p>The combination of this list and the total score (here: 131) describes an acceptance test. Ron also provided me with some acceptance tests (see above).</p>
+<p>Please note: Acceptance tests given by the customer are not really enough. You yourself should reply back to your customer with a couple of acceptance test suggestions. That´s what my game score sheet is about. Because only by defining your own acceptance test cases and showing them to the customer you can be sure to demonstrate you understand the problem.</p>
+<p>If you explain something to someone – e.g. basic mathematical operations like +, –, *, / – and ask her, "Do you understand?" and she nods, that means nothing. You can only know if somebody understands what you´re saying by getting him to explain to you, what she understood or ask her questions.</p>
+<p>The above description/acceptance test case is my reply to Ron. Hope he agrees I understood the problem correctly.</p>
+<p>For the moment let me assume I did. What´s next?</p>
+<h3>"User Interface"</h3>
+<p>After I made sure I understand a problem, I like to clarify how the customer (here: Ron) wants to interact with my solution. Software is about transforming input into output. So how is the input provided? How should the output be returned? Often this entails user interaction and you need to talk with your customer about some kind of user interface. In this case, though, no UI is needed; at least Ron has not mentioned any. So I assume he´ll be satisfied with some kind of API. (As is the case for most.)</p>
+<p>The API I´d like to suggest is this (Warning: I´ll be using C# as my solution language):</p>
+<pre><code class="language-csharp">public class BowlingGame {
+    public static int CalculateTotal(IEnumerable&lt;int&gt; rolls) {…}
+}
+</code></pre>
+<p>Using it would look like this:</p>
+<pre><code class="language-csharp">var total = BowlingGame.CalculateTotal(new[]{3, 4, 5, …, 10, 3, 7, 5});
+</code></pre>
+<h3>Acceptance Test Code</h3>
+<p>With acceptance tests and a UI in hand, I set up acceptance test code. This makes sure I do not deliver a solution not meeting the minimum criteria agreed upon my the customer. Employing NUnit this can look like this:</p>
+<pre><code class="language-csharp">[Test]
+[TestCase(&quot;00000000000000000000&quot;, 0)]
+[TestCase(&quot;44444444444444444444&quot;, 80)]
+[TestCase(&quot;AAAAAAAAAAAA&quot;, 300)]
+[TestCase(&quot;192837465555647382915&quot;, 154)] // all spares
+[TestCase(&quot;000000000000000000195&quot;, 15)]  // focus: just one more roll after spare in 10th frame
+[TestCase(&quot;000000000000000000a34&quot;, 17)]  // focus: two more rolls after strike in 10th frame
+[TestCase(&quot;3451a45267354aa375&quot;, 131)]    // acceptance test case from blog entry
+public void AcceptanceTest(string rolls, int expectedTotal) {
+    var total = BowlingGame.CalculateTotal(String2Rolls(rolls));
+    Assert.AreEqual(expectedTotal, total);
+}
+</code></pre>
+<p>The first three test cases are Ron´s. Then follow additional ones I derived from my understanding of the rules.</p>
+<p>As soon as my solution delivers correct results for the acceptance test input data I´m ready to ship.</p>
+<p>If I´d continue with TDD to design the implementation, I´d start from here. But I don´t. I continue with some more thinking…</p>
+<h2>Modelling the solution I</h2>
+<p>Instead of sitting down and code I like to close in on a solution using a stepwise refinement process. Here´s my first step; I draw the solution on the highes level of abstraction possible. The whole solution is a single black box:</p>
+<p>There is a list of integers flowing into the one method representing the solution; and a single integer is flowing out of it as the result. Seen from far away that´s how the solution works, how in fact any solution works: rolls are transformed into a total score, input is transformed into output by a single action.</p>
+<p>Given an action I can decide if I want to switch to coding mode. If I feel the solution will be short and I feel comfortable writing it down, I´d switch. But if not I´d rather continue modelling with a graphic language. It´s so much easier to change a mental model of a solution if it´s just a diagram.</p>
+<p>In this case I decide to continue modelling not only because this is the purpose of the exercise, but also because I already have a clear vision of a more detailed design. Understanding the problem lead me to distinguish three operations:</p>
+<p>Calculating the total score consists of adding the pins in each frame, adding bonus points for spares and adding bonus points for strikes.</p>
+<p>I don´t think these operations are too far fetched. I find them pretty obvious from reading the requirements. I´d consider me not understanding the problem if I had no idea of these aspects of a solution.</p>
+<p>But since I´m very sure these operations contribute towards the solution, I use them to refine the all encompassing action.</p>
+<p>Now there are three functional units to put "domain logic" in – and one at the top just wiring them together. This is a stratified design: an operation on a higher level of abstraction is assembled from operations on a lower level of abstraction. A very well known approach to build complicated stuff all over the world.</p>
+<p>But wait: there is a list of integers entering the root functional unit, but a list of frames go into the first operation. This does not look right. Where are the frames coming from? And where is the total score calculated? Two more functional units are needed.</p>
+<p>This looks better: consistent and complete. This is even not very technical; I could explain it to the customer to make clear what kind of solution I envision.</p>
+<p>Should I start coding now? I guess that would be ok. All functional units seem to be quite small. And they represent crucial domain terminology.</p>
+<p>The basic idea of this solution is to transform the initial list of rolls into a set of frames – then enrich these frames with a score – and finally sum all frame scores. Hm… this sounds good. I should go back to the model and make it mirror this straightforward explanation.</p>
+<p>That´s jojo-modelling, I´d say :-) First top-down, then bottom-up.</p>
+<p>Now I can explain the solution to my fellow developers on three different levels. It´s complete on each level, but each level is lacking detail. That´s on purpose. Modelling with Flow-Design is about abstraction; and abstraction is about hiding details. That´s why Flow-Design does not want to duplicate what programming languages do. It´s not flow-charts, it´s data-flow. It´s not imperative, it´s declarative. The transformation depicted will magically happen like transforming data from sectors on a hard disk into records in memory magically happens when using SQL.</p>
+<p>And what about the data? Usual object orientation start with focusing on the data.</p>
+<p>With Flow-Design data is not the focus even though it´s about data-flow. Sure, in the end the details of the data flowing needs to be specified. But usually data is not the problem; how data should be structured mostly is pretty obvious. That´s probably one reason why you mostly start by modelling data structures: you feel comfortable, you get something done.</p>
+<p>In the end, though, data is not really the problem. Transformation is. As programmers we´re hired to implement transformations. And since a well known advice is to start work with higher risk tasks I´d argue it´s good advice to start with the transformations when programming. Either data structures are well known – or transformations drive data structures (like TDD is supposed to drive design).</p>
+<p>To start programming by identifying data classes from nouns in a requirements document might even be premature optimization. So be cautious about it.</p>
+<p>But, yes, I need to define Frame before I start coding. Here it is:</p>
+<pre><code class="language-csharp">class Frame {
+    public int[] Rolls = new int[2];
+    public int Score;
+}
+</code></pre>
+<p>More´s not necessary, I´d say. It´s devoid of functionality. Why? To be honest: I don´t know which functionality I should attribute to Frame. What´s the responsibility of Frame except to hold data? Responsibilities I feel sure about are modelled in the above diagram. To me it feels very natural to not force them onto frame.</p>
+<h2>Modelling the solution II</h2>
+<p>Although the above model seems to be up to the task, I don´t want to keep it as a secret: there is another way to model the solution. Maybe you even thought of this alternative first. It´s replacing the enrichment action sequence with parallel actions.</p>
+<p>This is not to suggest there will be running anything in parallel (although it could). It´s only to make clear the independence of the actions to sum pins and bonuses.</p>
+<p>Also note how frames enter the summation actions – but integers are leaving them. The list of frames will not get enriched. It´s just input to be traversed to calculate the output.</p>
+<p>To me that sounds even better than the first model.</p>
+<p>Nevertheless I´ll implement the first one because it lends itself nicely to a translation into very plain C# code as you´ll see. The second model I´ll leave to my colleague Stefan Lieser who´s working with me on Flow-Design and Event-based Components. I´ll describe it later in this blog.</p>
+<p>For now I hope you feel with me at least a little bit how easy it is to reason about different approaches when looking at a picture. Imagine juggling models only in your head? Or imagine sitting at your IDE and coding away using TDD. You´ll most certainly focus on just a single solution. TDD will drive you into one direction without showing you the alternatives. Or if alternatives show up you´d need to experiment with them in code. Sure, that would be executable experiments – but it would also be quite tedious to explore them. You simply cannot type as fast as you can draw or think. (At least I cannot.)</p>
+<p>So although "bubbles don´t crash" and there is no guarantee that the solutions are comprehensive I prefer to model them explicitly like this first. It´s sufficiently coarse grained to be swift. And it´s sufficiently fine grained as to make coding easier.</p>
+<h2>Translating the model</h2>
+<p>Enough scribbled. On to some code.</p>
+<p>How should I start coding the first model?</p>
+<p>Well, anyway I like. I can start top-down or bottom-up. The model tells me which functional units to code. I don´t need to find them out through refactoring, I know which ones are needed – at least at a certain level of abstraction.</p>
+<p>So I randomly pick Add_pins_in_frame to implement first. Here´s my test – yes, I´m coding test-first:</p>
+<pre><code class="language-csharp">[Test]
+public void Calc_basic_scores {
+    var frames = new[] { new Frame { Rolls = new[] { 1, 2 } },
+                          new Frame { Rolls = new[] { 3, 5 } } };
+    frames = frames.Add_pins_in_frame.ToArray;
+    Assert.AreEqual(new[] {3, 8 },
+                    frames.Select(f =&gt; f.Score).ToArray);
+}
+</code></pre>
+<p>I chose to implement the action as a C# extension method. As you´ll see this will make the code very readable:</p>
+<pre><code class="language-csharp">internal static class BowlingGameExtensions_Scoring {
+    public static IEnumerable&lt;Frame&gt; Add_pins_in_frame(this IEnumerable&lt;Frame&gt; frames)
+    {
+        foreach (var f in frames)
+        {
+            f.Score = f.Rolls[0] + f.Rolls[1];
+            yield return f;
+        }
+    }
+    …
+</code></pre>
+<p>This is easy enough, isn´t it? A small functional unit, readily understandable, with single responsibility.</p>
+<p>The other operations look the same. I spare you listing them here. They are all independent of each other. So they are easy to test.</p>
+<p>But what about the composit functional units like the root? I implement them too although they are hardly doing anything. Their only purpose is to "wire up" the actions they contain. Here´s the API function for which you saw the acceptance test above:</p>
+<pre><code class="language-csharp">public class BowlingGame {
+    public static int CalculateTotal(IEnumerable&lt;int&gt; rolls)
+    {
+        return rolls.ToFrames
+                   .Enrich_frames_with_score
+                   .Calc_total;
+    }
+}
+</code></pre>
+<p>How easy to read is this for you? How close to the model is this?</p>
+<p>Or here the other composite action:</p>
+<pre><code class="language-csharp">internal static class BowlingGameExtensions_Scoring {
+    public static IEnumerable&lt;Frame&gt; Enrich_frames_with_score(this IEnumerable&lt;Frame&gt; frames)
+    {
+        return frames.Add_pins_in_frame
+                    .Add_bonus_for_spares
+                    .Add_bonus_for_strikes;
+    }
+    …
+</code></pre>
+<p>This too faithfully represents the model. In fact I "mechanically" translated it from the model. Each functional unit in the model either becomes an operation and is fleshed out test-first. Or it becomes a composite just plugging together other functional units in the most legible and easy way possible. There´s never a control statement in implementations of composite functional units.</p>
+<p>There is a clear separation of concerns between operations and composites. The former need creative implementation, the latter only need mechanical implementation. They can even be generated from the model as Stefan Lieser´s solution will show.</p>
+<h2>Intermediate conclusion</h2>
+<p>Solving Ron´s problem this way was very straightforward. The hardest part was "decoding" the requirements. But once I understood the bowling score rules it took me just a couple of minutes to come up with the models.</p>
+<p>As said above, even the nicest model diagram is no guarantee to be correct/sufficient. Nevertheless it provides a lot of value:</p>
+<ul>
+<li>I was able to talk about my mental model with my colleague.</li>
+<li>We were able to weigh the different approaches against each other.</li>
+<li>The model described the most important part of any solution: the transformation. Flow-Design models are about functionality. The put action first and structure second.</li>
+<li>The model provided me with small, focused, independent functional units to implement. No refactoring was necessary.</li>
+<li>The model sports a fundamental and important separation of concerns between "doing" (operations) and "coordination" (composites).</li>
+<li>The model is easy to understand on different levels of abstraction "at a glance". (Which still requires understanding the visual notation and the domain terminology. My grandma sure would not understand these models.)</li>
+<li>The model is fully present in the code, i.e. each model element has a corresponding code artifact.</li>
+</ul>
+<p>But this is only one possible way of translating Flow-Designs into code. It´s the easiest way, because no tooling is required and the result is readily understood. However the code lacks the capability to reproduce the model; code and model can go out of sync. Also it can become tedious to write "coordinating" code by hand.</p>
+<p>That´s why the next article is going to show you a translation of model into Event-based Components.</p>
+<hr />
+<p><strong>PS:</strong> In case you think this solution is overengineered: Partly I agree. It´s a tiny problem that also could have easily be solved without an explicit design like this. But Ron posed this problem to challenge me, so I was required to use Flow-Design.</p>
+<p>On the other hand you never really know. A problem might look small – but in the end, once you understand it, is not. Also this approach lead to code that´s easy to evolve since it´s already refactored from the outset. Functionality is obvious and communicatable. Reasoning about where to apply changes if necessary is easy.</p>
+<p>TDD might have resulted in a similarly fine grained design. But that design never had been visualized so all reasoning would need to work on just code. At least I find that cumbersome.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

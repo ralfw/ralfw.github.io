@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OOP 2008: Was kommt nach OLTP? - oder: Wo ist die Killeranwendung für Microsoft Oslo — ralfw.de Archiv</title>
+<meta name="description" content="Erst waren Batch-Anwendungen, nun sind OLTP-Anwendungen... und was kommt danach? Was ist denn der Unterschied zwischen beiden? Wo lag die Entwicklung bisher?">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/oop-2008-was-kommt-nach-oltp-oder-wo/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OOP 2008: Was kommt nach OLTP? - oder: Wo ist die Killeranwendung für Microsoft Oslo — ralfw.de Archiv">
+<meta property="og:description" content="Erst waren Batch-Anwendungen, nun sind OLTP-Anwendungen... und was kommt danach? Was ist denn der Unterschied zwischen beiden? Wo lag die Entwicklung bisher?">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/oop-2008-was-kommt-nach-oltp-oder-wo/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>OOP 2008: Was kommt nach OLTP? - oder: Wo ist die Killeranwendung für Microsoft Oslo</h1>
+    <div class="doc-meta"><span>18. Dez. 2007</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2007/12/oop-2008-was-kommt-nach-oltp-oder-wo.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/oop-2008-was-kommt-nach-oltp-oder-wo/</code></span></div>
+    <div class="art"><p>Erst waren Batch-Anwendungen, nun sind OLTP-Anwendungen... und was kommt danach? Was ist denn der Unterschied zwischen beiden? Wo lag die Entwicklung bisher?</p>
+<p>Batch-Anwendungen waren asynchron, nicht interaktiv und eher auf ein Rechenzentrum beschränkt. OLTP-Anwendungen hingegen sind synchron, interaktiv und durchaus auch global. Anwendungen haben sich also in ihrem grundsätzlichen Antwortzeitverhalten und der Reichweite verändert. <strong>Früher war Warten angesagt, heute regiert die Ungeduld; früher fand EDV unter Verschluss statt, heute soll sie von überall her erreichbar sein.</strong></p>
+<p>Soviel zu den Unterschieden zwischen zwei grundlegenden Arten von Software der letzten 50 Jahre. Natürlich hat sich noch mehr getan: von graphischen Benutzeroberflächen bis Business Intelligence. Doch mich interessiert eher, was sich nicht getan hat. Wo hat es eher keine Veränderung gegeben, denn dort liegt das Potenzial für größere Veränderungen.</p>
+<p>Stellen SOA und Grid-Computing nicht ebensolche Veränderungen wie die Entwicklung von Batch zu OLTP dar? Nein, zunächst einmal nicht, denn SOA und Grids sind nur Architekturen und keine Anwendungsarten. Batch- und OLTP- haben zwar auch Architekturen, doch darüber hinaus stehen sie für eine bestimmte Form des Umgangs mit Computern und Daten. OLTP und SOA, das sind Äpfel und Birnen.</p>
+<p>Aber: C/S und SOA zu vergleichen, das ergibt Sinn. Und damit rühre ich an einer Konstante, glaube ich. Bei aller Veränderung in unseren Anwendungen haben sie sich doch in einem Punkt nicht wirklich weiter entwickelt. <strong>Heute wie vor 50 Jahren sind die allermeisten Anwendungen immer noch zentralistisch.</strong> Trotz (oder wegen?) LAN und Internet liegen die Daten zentral und Geschäftslogik läuft auch zentral. Daran ändert letztlich auch eine SOA nicht viel.</p>
+<p>Und mit diesem Zentralismus geht eine Arbeitsform einher, die sich ebenfalls nicht verändert hat: Daten werden von Menschen sequenziell bearbeitet. Da macht alle Multiuser-Fähigkeit unserer Anwendungen auch keinen Unterschied. Der eine kippt die Daten ins System, der andere holt sie raus und verändert sie, dann bearbeitet sie der nächste usw. An einem Gesamtdatenbestand arbeiten zwar gleichzeitig durchaus Tausende oder gar Millionen. Doch letztlich tun sie das alle isoliert voneinander. Ihre Zusammenarbeit ist über die Zeit gestreckt. Ich nenne das mal asynchrone Kollaboration.</p>
+<p><strong>Ob Batch oder OLTP, ob C/S, N-Tier oder SOA: Wir leben heute immer noch in einer Welt zentralistischer Anwendungen, mit denen wir asynchron kollaborieren.</strong></p>
+<p>Und nun kommt auch noch <a rel="noopener" href="http://blogs.msdn.com/swiss_dpe_team/archive/2007/12/17/project-oslo-the-internet-service-bus.aspx">Oslo</a>! Microsoft möchte mitspielen bei den großen Enterprise-Anwendungen. So produziert und projiziert man eine große Vision - fängt aber gleichzeitig an, sie schon im kleinen Umzusetzen. Die <a rel="noopener" href="http://labs.biztalk.net/">BizTalk Services</a> (BTS) sind der Anfang. Das ist cool. Wo andere riesige Geldbeträge fordern für einen ESB, da verschenkt Microsoft gleich einen ISB (Internet Service Bus).</p>
+<p>Aber was bringts? Ich glaube, das bringt erstmal nur "mehr vom Selben". Mehr Batch und mehr OLTP mit mehr SOA. Das ist natürlich nicht schlecht. Auch OLTP-Anwendungen können jede technologische Vereinfachung und jede Flexibilisierung vertragen. Aber einen so großen Sprung wie von Batch nach OLTP machen sie damit nicht.</p>
+<p>Wenn wir jedoch BTS ernst nehmen und mal über den OLTP-Tellerrand schauen, wenn wir mal die bisherigen Konstanten in den Blick nehmen und fragen, ob sie denn weiterhin konstant gehalten werden müssen... dann kommen wir zu einer nächsten Veränderungen der Qualität unserer Anwendungen. OLTP "fühlt sich ganz anders an" als Batch, es ist eine andere Qualität. Aber was könnte sich nun wieder ganz anders anfühlen als OLTP?</p>
+<p>Ich glaube, das erfahren wir, wenn wir die bisherigen Konstanten aufgeben: Zentralismus und Nacheinanderarbeit. Denn das wird mit einem ISB wie den BTS jetzt möglich.</p>
+<p><strong>Nach OLTP kommt SROC: Serverless Real-time Online Collaboration.</strong></p>
+<p>SROC-Anwendungen bieten wiederum eine neue Qualität: Sie machen die Zusammenarbeit von Menschen in Echtzeit an den selben Daten möglich, ohne dafür eine zentrale Infrastruktur aufsetzen zu müssen:</p>
+<ul>
+<li><strong>Serverless</strong>: SROC-Anwendungen brauchen weder für die Kommunikation noch für die in Arbeit befindlichen Daten eine zentrale Infrastruktur. SROC-Anwendungen spannen zwischen kollaborierenden Instanzen ein ad hoc Verbindungsnetz auf und arbeiten darüber an einem gemeinsamen virtuellen Datenraum. Ihre Skalierbarkeit muss nur proportional zur Zahl der Kollaborateure sein und nicht zur Gesamtbenutzerzahl, wobei gilt Kollaborateurzahl &lt;&lt; Gesamtbenutzerzahl.  <strong>Real-time</strong>: In SROC-Anwendungen kollaborieren Benutzer gleichzeitig. Nur wer anwesend ist, kann auch kollaborieren. Ein Chat ist die einfachste Form einer solchen real-time Kollaboration. Das steht im Gegensatz zur bisher üblichen asynchronen Kollaboration in OLTP-Anwendungen, bei dem z.B. Auftraggeber und Auftragnehmer eben nicht gleichzeitig an der Anwendung arbeiten müssen, um dennoch das gemeinsame Ziel zu erreichen. Asynchrone Kollaboration skaliert deshalb sehr gut - aber in diese Skalierbarkeit ist nicht für alle Kollaborationsprojekte nötig oder gar kontraproduktiv. Das weiß jeder, der schon einmal versucht hat, einen Konflikt per Email statt durch persönliche Kommunikation von Angesicht zu Angesicht zu lösen. Aufgaben, die ad hoc Absprachen und Reaktionsschnelligkeit erfordern, wo die Kommunikation fließen muss - das beginnt bei der Terminvereinbarung und endet bei Rettungseinsätzen -, sie werden am besten in real-time bearbeitet.  <strong>Online</strong>: Teams, die in Echtzeit an kreativen Problemlösungen aller Art arbeiten, sind heute immer öfter über die Welt verteilt oder finden sich spontan zusammen (z.B. an einem Unfallort). Sie können sich also nicht auf die Existenz einer lokalen Infrastruktur verlassen. Ihr kleinster gemeinsamer Nenner ist das Internet - via LAN und Router oder GPRS. Wenn solche Teams computergestützt zusammenkommen wollen, dann muss das also online, d.h. über das Internet geschehen können, ohne dass Firewalls sie unbebührlich behindern.  <strong>Collaboration</strong>: Miteinander statt gegeneinander. Team statt Hierarchie. Das hat inzwischen auch der Letzte begriffen. Dennoch ist Zusammenarbeit nicht gleich Zusammenarbeit. Und auch Collaboration Tools sind nicht alle gleich. Das Thema Collaboration ist nicht neu, aber die bisher breit verfügbaren Kollaborationswerkzeuge jenseits von rundem Tisch, Whiteboard und Chat bieten noch nicht, worum es bei SROC geht. Email, die Änderungsverfolgung in MS Word oder document sharing mit MS SharePoint dienen alle der Kollaboration - aber die findet sequenziell, asynchron statt. Das ist auch wichtig, doch eben nicht genug. Asynchrone Kollaboration verschenkt Chancen, um mit der steigenden Komplexität der (Arbeits)Welt kräftesparend umzugehen. Denn asynchrone Kollaboration verhindert durch die zeitversetzte Interaktion das Entstehen von Synergieeffekten zwischen den eigentlich zusammenarbeitenden Individuen. Ungeplante Kommunikation als Quelle und Träger von Neuem und hilfreicher Redundanz gibt es bei asynchroner Kollaboration kaum. Die Vorteile der Virtualisierung werden dadurch zum Teil wieder zunichte gemacht.</li>
+</ul>
+<p>Wie gesagt, nicht dass es bisher keine ausdrücklichen Kollaborationsanwendungen gegeben hätte. Email ist das beste Beispiel für asynchrone Kollaboration, Chat das beste Beispiel für real-time Kollaboration. Napster, Gnutella &amp; Co allerdings weniger, auch wenn sie serverlos und online sind. Es geht dort einfach nicht um echte Zusammenarbeit an großen oder kleinen Projekten. Auch Subversion und Sourceforge sind natürlich Kollaborationswerkzeuge - allerdings serverbasierte. Und Groove... ja, auch ein Kollaborationswerkzeug, aber nicht für die real-time Kollaboration.</p>
+<p><strong>Ich glaube, dass SROC das "nächste große Ding" sein wird in der Softwarewelt. Die Menschen wollen zusammenarbeiten und sie wollen und müssen es öfter in Echtzeit tun, weil sie sonst ineffizient arbeiten.</strong> Nicht in Echtzeit zu kommunizieren, ist öfter als mal denkt, wie Sand im Getriebe. Aber Menschen wollen für eine Zusammenarbeit in Echtzeit nicht immer auch persönlich zusammenkommen müssen. Oder sie wollen, auch wenn sie zusammen sind, sich bei ihrer Arbeit durch ein Werkzeug unterstützen lassen.</p>
+<p>OLTP ist gut, wenn ich bei Amazon bestelle. Batch ist gut, wenn ich Videos über Nacht komprimieren will. SROC ist gut, wenn ich mehr oder weniger ad hoc mit anderen zügig und kreativ ein Problem lösen will. <strong>SROC-Anwendungen sind daher ureigenst Anwendungen einer Wissensgesellschaft.</strong> Wiki und Chat sind nett... aber nur der Anfang.</p>
+<p>Denn Wiki und Chat brauchen große Server oder sind dank Firewalls schwer zu programmieren. SROC-Anwendungen brauchen aber keine solchen Server mehr... und werden dank ISB viel leichter zu programmieren sein.</p>
+<p>So glaube ich also, dass die wahren Killeranwendungen für BizTalk Services oder das größere Projekt Oslo nicht die nächste Runde von SOA-Services sind. Die werden sie auch nutzen. Klar. Aber viel spannender ist es, mit diesen Technologien etwas ganz neues zu machen. Und SROC-Anwendungen sind soetwas Neues. Heute gibt es sie nur vereinzelt, aber morgen könnte ihre Zahl explodieren, weil es soviel einfacher wird, ihre Instanzen zu vernetzen.</p>
+<p>PS: Allerdings ist eine einfachere Vernetzung durch Firewalls hindurch nur ein erster, notwendiger Schritt. Ein nächster muss sein, die Zusammenarbeit in Echtzeit an dem Gemeinsamen zu vereinfachen. Wie hält eine Wolke von Instanzen einer SROC-Anwendungen, wie halten diese Kollaborateure einen gemeinsamen Zustand? Dazu mehr in einem späteren Posting... Hilfe ist auch hierzu unterwegs.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

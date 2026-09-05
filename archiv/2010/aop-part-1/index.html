@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aspect Oriented Programming made easy with Event-Based Components – Part I — ralfw.de Archiv</title>
+<meta name="description" content="AOP still is pretty much a pain when living according to &quot;traditional&quot; object orientation. You need fancy tools or you need to do some advanced code slinging. With Event-Based Comp">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/aop-part-1/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Aspect Oriented Programming made easy with Event-Based Components – Part I — ralfw.de Archiv">
+<meta property="og:description" content="AOP still is pretty much a pain when living according to &quot;traditional&quot; object orientation. You need fancy tools or you need to do some advanced code slinging. With Event-Based Comp">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/aop-part-1/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>Aspect Oriented Programming made easy with Event-Based Components – Part I</h1>
+    <div class="doc-meta"><span>4. Aug. 2010</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2010/08/04/aspect-oriented-programming-made-easy-with-event-based-components-ndash-part.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/aop-part-1/</code></span></div>
+    <div class="art"><p>AOP still is pretty much a pain when living according to "traditional" object orientation. You need fancy tools or you need to do some advanced code slinging. With Event-Based Components, though, introducing aspects is a piece of cake. Actual code is freed from tackling special concerns. Rather concerns become a matter of architecture. But see for yourself. The scenario for today is file processing.</p>
+<p>I want an application which indexes .TXT files.</p>
+<p>The program should crawl a directory hierarchy, extract words from files, and write an index file of this format:</p>
+<pre><code>word
+  filename
+  filename
+  filename
+  …
+
+word
+  filename
+  …
+</code></pre>
+<p>All words should get indexed except stop words (which could be recognized according to some rules or a predefined list).</p>
+<p>The application can be a console app to which the path to the root folder is given, and the name of the index file to create. Usage could look like this:</p>
+<pre><code>indexer c:\documents c:\documents\index.inx
+</code></pre>
+<h2>Initial design without AOP</h2>
+<p>Let me start with a simple design without any frills. Just a straightforward synchronous and sequential application. It consists of just a single feature, i.e. a cause-effect-relationship linking a trigger to a result. Here the trigger is starting the application, and the result is the index file. So a single feature process will do.</p>
+<p>That´s a high level view of the program. Note how the data flows out from Compile files: it´s not only that the activity spits out the names of the .TXT files it finds in the directory tree, but also it passes on the name of the index file to create. I could have split this information from the input tuple before the activity, but I chose not to do so, to keep the level of abstraction homogeneous.</p>
+<p>Ok, not for some more detail. I sure would not want to start implementation with just this design in my hands.</p>
+<p>Extract words first reads all words from each file, then it filters out the stop words and passes on just relevant words to be indexed.</p>
+<p>Build index receives all remaining words and compiles them into an index which then is passed on to be written to a file.</p>
+<p>Note how Compile words produces two outputs: some index statistics as well as the index itself. And Write index to file does not produce an output at all, but just a side effect: the index file. But this is not done before the index is ready and the index filename has arrived. The Join activity ensures that processing only flows into Write index to file if both data items are present.</p>
+<p>The above design seems to be fine – or is it? I thought so until I started implementing it. Then I realized that Read words actually mixes two concerns: domain logic and resource access. It gets passed in a filename, reads the file contents and (!) splits them into words. That´s not clean code according to the Separation of Concerns principle. So I refined the design on the fly by making Read words a composite activity aggregating two atomic activities.</p>
+<p>Now, the beauty of EBCs lies in that this refinement is possible at any time. Nothing changes for the surrounding of an activity. The activity´s sole interface does not need to be changed.</p>
+<p>After this change the Visual Studio solution for this design then looks like this:</p>
+<p>Let me highlight a couple of interesting points from top to bottom:</p>
+<ul>
+<li>I put the IndexStats class into a project folder called DataModel since, well, it constitues the data model of the application. Or at least a part of it. The other parts are just standard data types, so they don´t show up in the project. I like to separate the two main dimensions – the data model and the process model – by putting them at least in their own folders.</li>
+<li>Then I lumped together all composite activities of the process model in one folder. They represent the concern of "wiring up activities". If a designer tool was available they probably would be generated. Since they have a special structure and are so simple in their code, I usually isolate them from the real workhorses, the atomic activities.</li>
+<li>See how I located the Read words activity beneath Extract words? I like to do that to mirror the design where Read words is nested within Extract words.</li>
+<li>Why didn´t I do so with all activities? Because atomic activities usually will not be defined in the same project with composite activities. Just out of convenience and due to the small size of this scenario I co-located them.</li>
+<li>Which brings me to the other project folders which each is supposed to stand for a component. In later articles I´ll talk more about what I mean by components, but for know view them as aggregations of classes belonging closer together than others. As you can see, there are two components for resource access and two for domain logic. I deem index building as very different from writing an index to a file which in turn is very different from extracting words from a text etc.</li>
+</ul>
+<p>Have a look at the complete code in the repository. The current version is located in the SyncTextfileIndexer branch. It´s not a fancy implementation, but it does a reasonable job. Word extraction, for example, is done by splitting a line at spaces; and stop words are all words with &lt;= 3 characters. For what I want to write about in this posting, though, that´s not important. The application just needs to work at all. Data has to flow through the feature process correctly. Which brings me to a question so far neglected: the data flow protocol.</p>
+<h2>Data flow protocol vs IEnumerable&lt;&gt;</h2>
+<p>Think about it: Build index in the end writes the index to a file. But when is that supposed to happen? After the last file has been processed by Compile words. Correct. But how does Compile words know that it is called for the last time for the directory tree to process? The interface of Compile words looks like this:</p>
+<pre><code class="language-csharp">public class Compile_words
+{
+    …
+    public void In_Process(Tuple&lt;string, string[]&gt; input)
+    {
+        …
+    }
+
+    public event Action&lt;IndexStats&gt; Out_Statistics;
+    public event Action&lt;Index&gt; Out_IndexCompiled;
+}
+</code></pre>
+<p>How can In_Process() determine, if the input tuple is the final one and the index build should be passed on to the next processing stage via Out_IndexCompiled?</p>
+<p>This is only possible if the flow of data to Compile words follows a protocol. This need not be a sophisticated one, but there needs to be a protocol. In this case it looks like this:</p>
+<pre><code>{ Tuple&lt;string, string[]&gt; } null
+</code></pre>
+<p>Compile words adds words to the index until it encounters a null as input. That´s the "end of data" signal, and Compile words emits the index. (Yeah, I know, using a null value is not cool, but I want to keep the solution simple and not introduce additional data flows or option values.)</p>
+<p>But this moves the question only one processing stage back: How does the activity before Compile words know when to send the null value? Well, Filter words knows that from a null input it receives itself. The same is true for Split lines into words and Read text lines etc. up to Crawl directory tree.</p>
+<p>For this protocol to work, the first activity in the feature process has to signal when it´s finished. So Crawl directory tree sends a null after the last text file found to signify "end of data".</p>
+<p>As you can see in the code, that´s working pretty well. Check out this exsample:</p>
+<pre><code class="language-csharp">public class Filter_words
+{
+    public void In_Process(Tuple&lt;string, string[]&gt; input)
+    {
+        if (input == null)
+            this.Out_FilteredWords(null);
+        else
+        {
+            var filteredWords = input.Item2.Where(word =&gt; word.Length &gt; 3);
+            this.Out_FilteredWords(new Tuple&lt;string, string[]&gt;(input.Item1, filteredWords.ToArray()));
+        }
+    }
+
+    public event Action&lt;Tuple&lt;string, string[]&gt;&gt; Out_FilteredWords;
+}
+</code></pre>
+<p>Sure, I could have done it differently. I could have passed on batches. Crawl directory tree could compile all text filenames into a list and send them all together to the next processing stage. Read text lines then could read all lines from all files, and pass them on as a whole. And so on. This would even be pretty easy using IEnumerable&lt;&gt;. Check out how different that looks in code. I set up a branch for this approach in the repository. Here´s Filter words again:</p>
+<pre><code class="language-csharp">public class Filter_words
+{
+    public void In_Process(IEnumerable&lt;Tuple&lt;string, string[]&gt;&gt; input)
+    {
+        var filteredWordsInFiles = input.Select(wordsInFile =&gt;
+        {
+            var filteredWords = wordsInFile.Item2.Where(word =&gt; word.Length &gt; 3);
+            return new Tuple&lt;string, string[]&gt;(wordsInFile.Item1,
+                                               filteredWords.ToArray());
+
+        });
+        this.Out_FilteredWords(filteredWordsInFiles);
+    }
+
+    public event Action&lt;IEnumerable&lt;Tuple&lt;string, string[]&gt;&gt;&gt; Out_FilteredWords;
+}
+</code></pre>
+<p>From the point of view of the design drawings there isn´t much of a difference. The activities are still connected in the same way. The data is flowing like before.</p>
+<p>Codewise, though, you might find one way or the other easier to understand. I´m kind of undecided. Maybe I like the IEnumerable variant a little better – but I´m not sure how that will scale… Because, you know, this posting is about Aspect Oriented Programming. And one of the aspects I want to introduce is asynchronous processing.</p>
+<p>But we´ll see… I guess I´ll move forward both approaches. That way we don´t need to speculate but get hard evidence.</p>
+<p>Since the posting has become already quite long let me close for today. The base line for showing how easy AOP is with EBC is set. We have a working application. Next time I´ll show you how to introduce aspects like logging, exception handling, and validation. And after that we´ll move on into the realm of asynchronicity.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

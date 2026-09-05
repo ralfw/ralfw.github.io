@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TDD im Flow – Teil 3 — ralfw.de Archiv</title>
+<meta name="description" content="Ich muss die Entnahme aus den Queues nach Round Robbin einschränken. Es darf nur entnommen werden, wenn eine Queue nicht gerade blockiert wird. Die Blockierung beginnt, wenn ein Wo">
+<link rel="canonical" href="https://ralfw.de/archiv/2012/tdd-im-flow-teil-3/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="TDD im Flow – Teil 3 — ralfw.de Archiv">
+<meta property="og:description" content="Ich muss die Entnahme aus den Queues nach Round Robbin einschränken. Es darf nur entnommen werden, wenn eine Queue nicht gerade blockiert wird. Die Blockierung beginnt, wenn ein Wo">
+<meta property="og:url" content="https://ralfw.de/archiv/2012/tdd-im-flow-teil-3/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>TDD im Flow – Teil 3</h1>
+    <div class="doc-meta"><span>30. Jan. 2012</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2012/01/tdd-im-flow-teil-3.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2012/tdd-im-flow-teil-3/</code></span></div>
+    <div class="art"><p>Was bisher geschah:</p>
+<ul>
+<li><a rel="noopener" href="http://ralfw.blogspot.com/2012/01/tdd-im-flow-teil-1.html">TDD im Flow – Teil 1</a>  <a rel="noopener" href="http://ralfw.blogspot.com/2012/01/tdd-im-flow-teil-2.html">TDD im Flow – Teil 2</a></li>
+</ul>
+<h4>Test #4: Blockierte Entnahme</h4>
+<p>Nun geht es an den Kern meines Abstrakten Datentyps: die Sequentialisierung.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e83b50fe7649654c.png" /></p>
+<p>Ich muss die Entnahme aus den Queues nach Round Robbin einschränken. Es darf nur entnommen werden, wenn eine Queue nicht gerade blockiert wird. Die Blockierung beginnt, wenn ein Worker aus einer unblockierten Queue entnimmt – und wird automatisch aufgehoben, wenn er wieder nach Arbeit fragt.</p>
+<p>Anders als im Datenmodell entworfen, implementiere ich die Sperren für Queues in einem Dictionary. Die Einträge darin sind die Flags des Datenmodells. Ich finde es jedoch besser, sie von der Liste der Queues zu trennen. Die Blockade der Entnahme ist ein anderer Aspekt als die Entnahme nach Round Robbin. Beide durch Verwaltung in unterschiedlichen Datenstrukturen zu trennen, scheint mir konsequente Anwendung des SRP.</p>
+<p>Falls sich etwas an der Blockadestrategie ändert, muss ich nicht die Datenstruktur für die Entnahme anfassen. Es ist auch nur <em>TryDequeue()</em> betroffen.</p>
+<p>internal class NotifyingMultiQueue
+{
+    …
+    readonly Dictionary _readLocks =
+        new Dictionary(); </p>
+<p>…
+    public bool TryDequeue(string workerId, out T message)
+    {
+        message = default(T);</p>
+<p>var namedQueue = _queues[0];
+        _queues.RemoveAt(0);
+        _queues.Add(namedQueue);</p>
+<p>if (_readLocks.ContainsKey(namedQueue.Key) &amp;&amp;
+            _readLocks[namedQueue.Key] != workerId)
+            return false;</p>
+<p>message = namedQueue.Value.Dequeue();
+        _readLocks[namedQueue.Key] = workerId;</p>
+<p>return true;
+    }
+    …</p>
+<p>Diese Implementation erreicht das Ziel natürlich noch nicht ganz. Sie dient nur der Erfüllung eines Tests, ohne die vorherigen zu brechen.</p>
+<p>Bevor ich aber den nächsten Test beschreibe: Haben Sie meine TDD Sünde entdeckt?</p>
+<p>Ich habe mehr Code geschrieben, als für den Test nötig ist. Die Prüfung, ob der “arbeitsuchende” Worker derjenige ist, der eine Queue bisher blockiert hat, kommt nicht zum Tragen. Dafür müsste ich einen weiteren Test schreiben. Aber das ist nicht nötig, weil der nächste Test dafür sorgen wird, dass diese Prüfung gar nicht mehr nötig ist.</p>
+<p>Warum habe ich dann aber <em>_readLocks[namedQueue.Key] != workerId</em> geschrieben? Weil es mir in dem Moment cool vorkam, an diese Feinheit gedacht zu haben. Da hab ich mich von der Idee davontragen lassen… Erst später beim nächsten Test ist mir die Überflüssigkeit der Bedingung aufgefallen.</p>
+<p>Ich hatte sie aber nach erfolgreichem Test eingecheckt. Deshalb zeige ich sie Ihnen hier auch. So kann es halt kommen, auch wenn man sich bemüht. Mit Pair Programming wäre das vielleicht nicht passiert. Am Ende ists aber auch kein Beinbruch. Mir ist es ja aufgefallen. Wichtig ist, daraus zu lernen. Nobody is perfect – but everybody should strive for improvement. Oder so ähnlich ;-)</p>
+<h4>Test #5: Blockierte Queue wieder freigeben</h4>
+<p>Bisher wurde eine Queue bei Entnahme nur gesperrt. Jetzt muss sie wieder entsperrt werden. Das geschieht, wenn der Worker, der sie gesperrt hat, wieder frei ist. Der ADT bemerkt, wann ein Worker seine Arbeit an einer Nachricht beendet hat daran, dass der Worker wieder um eine Nachricht bittet:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9de6757710cd59fc.png" /></p>
+<p>Beim ersten Aufruf von <em>TryDequeue()</em> sperrt w1 die Queue q1. Bei zweiten Aufruf sperrt er q2 – und gibt damit implizit q1 wieder frei, so dass w2 daraus entnehmen kann.</p>
+<p>In der Implementation erreiche ich das, indem ich einfach bei Aufruf immer eine eventuell durch den anfragenden Worker gesetzte Sperre lösche:</p>
+<p>internal class NotifyingMultiQueue
+{
+    …
+    public bool TryDequeue(string workerId, out T message)
+    {
+        message = default(T);</p>
+<p>if (_readLocks.ContainsValue(workerId))
+            _readLocks.Remove(
+                 _readLocks.Where(kvp =&gt; kvp.Value == workerId)
+                           .Select(kvp =&gt; kvp.Key)
+                           .First());</p>
+<p>var namedQueue = _queues[0];
+        _queues.RemoveAt(0);
+        _queues.Add(namedQueue);</p>
+<p>if (_readLocks.ContainsKey(namedQueue.Key))
+            return false;</p>
+<p>message = namedQueue.Value.Dequeue();
+        _readLocks[namedQueue.Key] = workerId;</p>
+<p>return true;
+    }
+    …</p>
+<p>Damit entfällt dann auch die Prüfung, ob eine Sperre durch den aktuellen Worker gesetzt worden ist. Der Fall kann nicht mehr eintreten.</p>
+<p>Leider ist das Löschen eines <em>Dictionary</em>-Eintrags über den Wert statt dem Key nicht so leicht. Ich muss erst den Key (Queue-Name) aus dem Wert (Worker-ID) ermitteln. Die Linq-Query liest sich etwas umständlich.</p>
+<p>Alternativ hätte ich ein zweites <em>Dictionary</em> aufsetzen können, in dem die Worker-ID als Key steht und über den Queue-Namen auf _<em>readLocks</em> zeigt. Aber das würde zusätzlichen Pflegeaufwand bedeuten. So scheint mir der hier eingeschlagene Weg KISS-konform.</p>
+<h4>Test #6: Blockierte Queue überspringen</h4>
+<p>Es ist merkwürdig, aber bisher bin ich ohne eine Schleife bei der Entnahme ausgekommen. Wäre ich nicht nach TDD vorgegangen, hätte ich die wahrscheinlich schon gleich am Anfang eingebaut – und die Lösung damit komplexer gemacht.</p>
+<p>Mit TDD habe ich dagegen einige Schwierigkeiten schon aus dem Weg geräumt. Anweisungssequenzen sind leichter zu verstehen und zu testen als Schleifen.</p>
+<p>Jetzt hilft es aber nichts mehr. Eine Schleife muss sein, wenn blockierte Queues übersprungen werden sollen. Es müssen bei <em>TryDequeue()-</em>Aufruf potenziell ja mehrere Queues geprüft werden.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/bfa629f89a4f7eae.png" /></p>
+<p>TDD besteht aus 3 Phasen: roter Test, grüner Test und Refactoring. Bisher habe ich die letzte Phase übersprungen. Es gab nicht viel zu refaktorisieren. Jetzt wird es mir aber zuviel, was da alles in <em>TryDequeue()</em> passiert. Und auch <em>KeyValuePair</em> ist mir zu wenig aussagekräftig; mehr Domänensprache darf sein.</p>
+<p>Zur Befriedigung des neuen Tests füge ich deshalb nicht nur Code hinzu, sondern ziehe auch Code raus in eigene Methoden. Das Listing unterscheidet Änderungen im Rahmen des Refactoring und Änderungen zur Erfüllung der neuen Anforderungen.</p>
+<p>internal class NotifyingMultiQueue
+{
+    readonly List _queues =
+        new List();
+    readonly Dictionary _readLocks =
+        new Dictionary();</p>
+<p>class NamedQueue
+    {
+        public string Name;
+        public Queue Queue;
+    }</p>
+<p>public void Enqueue(T message, string queueName)
+    {
+        var queue = _queues.Where(nq =&gt; nq.Name == queueName)
+                           .Select(nq =&gt; nq.Queue)
+                           .FirstOrDefault();
+        if (queue == null)
+        {
+            queue = new Queue();
+            _queues.Add(new NamedQueue{Name=queueName, Queue=queue});
+        }
+        queue.Enqueue(message);
+    }</p>
+<p>public bool TryDequeue(string workerId, out T message)
+    {
+        message = default(T);</p>
+<p>Free_queue_locked_for_worker(workerId);</p>
+<p>NamedQueue namedQueue = null;
+        for (var i = 0; i &lt; _queues.Count(); i++)
+        {
+            namedQueue = Get_next_queue();
+            if (Queue_not_locked(namedQueue)) break;
+            namedQueue = null;
+        }
+        if (namedQueue == null) return false;</p>
+<p>message = namedQueue.Queue.Dequeue();
+        Lock_queue_for_worker(workerId, namedQueue);
+        return true;
+    }
+    …</p>
+<p>Hier zeigt es sich jetzt, dass TDD letztlich kein Verfahren ist, das zu Unit Tests führt. <em>TryDequeue()</em> ruft jetzt andere Methoden auf, d.h. es integriert. Noch sind diese Methoden einfach und wurden 1:1 aus Code, der eben noch in <em>TryDequeue()</em> stand erzeugt. Bei der Weiterentwicklung des ADT kann es aber jederzeit passieren, dass Änderungen an diesen Methoden nötig werden. Und dann stellt sich die Frage, wie diese Änderungen getestet werden.</p>
+<p>Klar, ich kann dafür dann gezielte Tests schreiben. Doch beim Refactoring mit ReSharper sind die “Hilfsmethoden” automatisch als <em>private</em> deklariert worden. Es kostet dann schon einige Überwindung, die auf <em>internal</em> zu setzen und als Units für sich zu testen. Deshalb wird in den meisten Fällen weiter durch das Interface getestet, d.h. mit Integrationstests gearbeitet. Die testen dann natürlich auch immer noch alles andere mit. Vorteil: Black Box Tests sind unabhängig von interner Struktur. Nachteil: Black Box Tests können aufwändig werden, wenn für Kleinigkeiten das Drumherum mit getestet werden muss. Das wird besonders auffallend, sobald Attrappen ins Spiel kommen. Dazu kommt, dass bei Integrationstests eine Fehlerquelle nicht so leicht lokalisiert werden kann.</p>
+<h3>Fazit</h3>
+<p>Mit diesem Artikel wollte ich Ihnen zeigen, dass ein expliziter Entwurf von Software mittels Flow-Design nicht bedeutet, alles über Bord zu werfen, was Ihnen lieb und teuer geworden ist: Ich finde, der Abstrakte Datentyp <em>NotifyingMultiQueue</em> ist ein solider Vertreter der Objektorientierung. Und seine Entwicklung ist eine solide Anwendung von TDD.</p>
+<p>Darüber hinaus wollte ich Ihnen an einem realen Beispiel zeigen, wie TDD funktionieren kann: mit expliziter Testplanung, in kleinen Schritten. Nicht perfekt, aber good enough.</p>
+<p>Schließlich haben Sie gesehen, dass selbst ich als Verfechter von Nachdenken vor dem Codieren nicht dogmatisch bin ;-) Wenn die Codierungsrealität es nahelegt, dann kann ich von meinem Entwurf auch abweichen. Erkenntnisse sind jederzeit willkommen.</p>
+<p>Wenn Sie mögen, verfolgen Sie meine TDD-Fortschritte auch im Code. Hier die relevanten Changesets (insb. 43..50) im Mercurial Repository <a rel="noopener" href="http://npantarhei.codeplex.com/">npantarhei.codeplex.com</a>.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c845161639ecfcf2.png" /></p>
+<p>Und nun kommen Sie mit TDD und FD.</p>
+<p><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY"></a><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY">Spendieren Sie mir doch einen Kaffee, wenn Ihnen dieser Artikel gefallen hat...</a></p>
+<h2>Kommentare</h2>
+<p><strong>Frank</strong> (2012-01-31):</p>
+<p>Komisch, dass bisher überhaupt noch keine Kommentare gekommen sind. Ich finde, hier gibt es besonders viel zu sagen. Doch der Reihe nach.</p>
+<p>Der Artikel heißt "TDD im Flow." Anwenden tust du TDD aber auf einen Baustein, von dem du selbst sagst "dazu fällt mir [...] gerade kein sinniger Flow ein" und "der Abstrakte Datentyp NotifyingMultiQueue ist ein solider Vertreter der Objektorientierung". Du hast also TDD auf eine rein objektorientierte Komponente angewendet und gerade nicht auf Flow Design. "Pragmatisches TTD" (einer Sequentialize-Komponente) o.ä. wäre wohl ein passender Titel gewesen. Das aber nur am Rande, denn mich interessiert die Komponente selbst viel mehr als Flow Design und/oder TTD.</p>
+<p>"Meine Lösungsidee für die Datenstruktur sieht erst einmal so aus"</p>
+<p>Grundsätzlich habe ich nichts dagegen, sich zuerst eine Datenstruktur auszudenken. Die ist in vielen Fällen sogar wichtiger als der Algorithmus. Nur hättest du spätestens bei der Erstellung der Test stutzig werden sollen. Warum bekommt man bei Test 3, also dem mehrfachen TryDequeue mit genau einem Worker, die Elemente nicht in der Reihenfolge, in der sie eingequeued worden? Das ist doch, was man als unbedarfter Benutzer ohne Kenntnis der Implementierung erwarten würde. Du hast die Tests so geschrieben, dass sie zu der angestrebten Implementierung (zumindest zur Datenstruktur) passen. Insofern finde ich dein Beispiel ziemlich in die Hose gegangen. Das ist gerade nicht TTD. Pragmatismus hin oder her. "Pragmatische Tests" o.ä. wäre wohl ein passender Titel gewesen. :-)</p>
+<p>Was man braucht, sind eine gemeinsame Queues und je eine pro Worker, also nicht (direkt) pro Port. Alle Aufträge kommen erstmal in die gemeinsame Queue. Kommt jetzt der erste Worker w1, holt er sich den ersten anstehenden Auftrag aus der gemeinsamen Queue. Sagen wir, der Auftrag hat den Port p1. Das vermerken wir bei dem Worker w1. Der zweite Worker schaut nun wieder in die gemeinsame Queue. Hat der Auftrag einen anderen Port, also keinen, der schon von einem anderer Worker belegt ist, schnappt er sich den Auftrag. Hat der Auftrag einen in Benutzung befindlichen Port, packt er den Auftrag in die Queue des betreffenden Workers. Das gleiche macht er für alle Aufträge in der gemeinsamen Queue, solange bis er einen Auftrag gefunden hat, dessen Port nicht in Benutzung ist, oder die gemeinsame Queue leer ist. Ein Worker, der nach einem beendeten Auftrag wiederkommt, schaut zuerst in seine eigene Queue. Wenn dort ein Auftrag enthalten ist, nimmt er sich diesen. Wenn nicht, setzt er den zuletzt benutzen Port auf unbesetzt. Dann geht er auf die gemeinsame Queue, in der eben beschriebenen Weise. Das ist natürlich nur einen grobe Beschreibung. Ich hoffe, dass das Prinzip trotzdem klar geworden ist. Um schnell die passende Queue zum Worker bzw. zum Port zu finden, kann man zwei Dictionaries verwenden.</p>
+<p>Im Ergebnis warten nur die Aufträge, die warten müssen. Und auch die nur so lange wie unbedingt nötig. Kein Auftrag wird von anderen unnötig überholt. Alles wird - wenn möglich - in der Reihenfolge des Einqueuens abgearbeitet.</p>
+<hr />
+<p><strong>Frank</strong> (2012-01-31):</p>
+<p>...</p>
+<p>Aber selbst wenn du am Round Robin festhalten willst, ist deine Implementierung nicht korrekt, zumindest, wenn man davon ausgeht, dass Enqueue zu beliebigen Zeitpunkten von beliebigen Threads aufgerufen werden kann. Zum Beispiel könnten zwei Threads Enqueue für die gleiche noch nicht existierende Queue gleichzeitig aufrufen. Dann kann es passieren, dass beide Thread zu dem Ergebnis kommen, dass die Queue noch nicht existiert und beide in den queue == null Block hineinlaufen und beide die Queue (also doppelt) hinzufügen. Aber selbst für unterschiedliche Queuenamen kann es passieren, dass zwei Threads gleichzeitig das nicht threadsichere Queue.Add aufrufen. Peng! Auch TryDeqeue glänzt durch die Abwesenheit von Synchronisierung. Zum Beispiel kann es passieren, dass sich der Wert von _queues.Count() während der Ausführung ändert und dadurch evtl. nicht alle Queues geprüft werden, z.B. wenn gegen Ende der Schleife die neue Queue an einer Stelle kurz vor der von Get_next_queue() gelieferten Queue eingefügt wurde. Es kann also an verschiedenen Stellen knallen. Und ich gehe davon aus, dass es noch weitere Situationen gibt, die zu Fehlern führen.</p>
+<p>Daran sieht man sehr schön, dass man Korrektheit von nebenläufigen Programmen nur sehr schwer durch Testen sicherstellen kann. Insofern ist die Komponente ein schlechtes Beispiel für Tests im allgemeinen und für TDD im speziellen. "Vom Scheitern des pragmatischen Testens" o.ä. wäre wohl ein passender Titel gewesen. :-)</p>
+<p>Nochmal zur der leeren Queue: Statt TryDequeue + Wait (int milliseconds) würde ich ein Dequeue vorziehen, das einfach solange wartet, bis ein ausführbarer Auftrag ansteht. Warum soll der Worker ein TryDequeue probieren, sich dann eine zufällige Zeit schlafen legen, um es auf gut Glück nochmal zu probieren? Da ist es doch besser, wenn Dequeue automatisch exakt in dem Moment zurückkehrt, wenn ein ausführbarer Auftrag ansteht.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-01-31):</p>
+<p>@Frank: Tut mir leid, wenn ich anscheinend meine Intention nicht klar gemacht habe. Mir ging es nicht darum "Pragmatisches TDD" zu zeigen, sondern TDD innerhalb (d.h. "im") eines ansonsten durch FD entstandenen Entwurfs.</p>
+<p>Auch ging es mir nicht darum, einen API oder eine Implementation zu entwickeln, die alle Leser glücklich macht und elegant ist. Nein, mir ging es im Grunde gar nicht um den resultierenden Code, sondern um das Vorgehen.</p>
+<p>Wenn du also meine Datenstruktur kritisierst, dann kritisierst du am Punkt vorbei. Natürlich kann man das Problem anders lösen. Mach das gern. Ich habe es so gelöst - aber auf eine Weise, auf einem Weg, den ich offengelegt habe.</p>
+<p>Sollte der Weg dir nicht gefallen, wenn du also meinst, der sei so gar nicht TDDlike, dann wäre das angebrachte Kritik.</p>
+<p>Wenn du sagst, dass meine Tests in die Hose gegangen seien, dann geht das in die aus meiner Sicht richtige Richtung. Da sprichst du TDD an.</p>
+<p>Sind sie aber in die Hose gegangen? Nein, ich folge deiner Kritik nicht. Ich habe sie nämlich nicht der (entworfenen innneren) Datenstruktur angelehnt, sondern dem API und der Semantik des ADT, um den es hier geht.</p>
+<p>Dass in den Tests "Worker" und "Queues" auftauchen, hat nichts mit der internen Datenstruktur zu tun, sondern mit dem Problem, das ich lösen musste. Und die Reihenfolge der Tests hat auch nichts mit der internen Datenstruktur zu tun, sondern spiegelt mein Bemühen wider, in kleinen Schritten von einfach nach komplizierter fortzuschreiten.</p>
+<p>Wenn du nun ausführlich beschreibst, "was man braucht", dann ist eine interessant zu lesen - aber betrifft den Ansatz des Artikels nicht. Deine Lösung ist nicht besser als meine. Sie ist nur eben deine Lösung - auf die ich auch gar nicht näher eingehen will, ob sie wirklich irgendetwas vereinfacht. Allemal sehe ich nicht, dass noch TDDmäßigeres Vorgehen notwendig zu deiner Lösung geführt hätte. (Das wäre übrigens eine berechtigte Kritik, die du allerdings nicht angebracht hast.)</p>
+<p>Wenn du dir die Mühe gemacht hättest, ins Repo zu schauen, dann hättest du auch gesehen, dass meine Lösung sehr wohl korrekt ist. Deine pauschale Kritik an fehlender Threadsicherheit ist unberechtigt, da sie annimmt, meine Artikel hätten alle Tests und die vollständige Implementation gezeigt. Das habe ich aber nicht behauptet - allerdings das Gegenteil auch nicht deutlich hervorgehoben. Warum? Weil es mir darum ja nicht ging. Die Demonstration des Vorgehens brauchte keine Vollständigkeit. Im Repo wirst du sehen, dass alle Methoden mit Locks gesichert sind. (Auch das mag nicht optimal sein - macht aber nichts. Es war ganz einfach gemacht und hat den gewünschten Effekt. Wenn das am Ende zu langsam sein sollte, optimiere ich. Alles andere wäre Premature Optimization.)</p>
+<p>Bottom line: Ich sehe nicht, das hier großartig etwas in die Hose gegangen ist.</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-02-01):</p>
+<p>Why not just use ConcurrentQueue / ConcurrentDictionary instead of implementing own locking?</p>
+<hr />
+<p><strong>Frank</strong> (2012-02-01):</p>
+<p>"Sollte der Weg dir nicht gefallen, wenn du also meinst, der sei so gar nicht TDDlike, dann wäre das angebrachte Kritik."</p>
+<p>Das habe ich durchaus gesagt:</p>
+<p>"Nur hättest du spätestens bei der Erstellung der Test stutzig werden sollen. Warum bekommt man bei Test 3, also dem mehrfachen TryDequeue mit genau einem Worker, die Elemente nicht in der Reihenfolge, in der sie eingequeued worden? Das ist doch, was man als unbedarfter Benutzer ohne Kenntnis der Implementierung erwarten würde. Du hast die Tests so geschrieben, dass sie zu der angestrebten Implementierung (zumindest zur Datenstruktur) passen. Insofern finde ich dein Beispiel ziemlich in die Hose gegangen."</p>
+<p>Mit Beispiel habe ich Beispiel für TDD gemeint. Mit anderen Worten: nach TDD wäre m.E. tatsächlich etwas anderes herausgekommen.</p>
+<p>Ok, die Behauptung, dass man eine gemeinsame Queue <em>braucht</em>, war unbedacht und ging an der Sache vorbei. Ich habe jedoch dran fest, dass es eine übliche und wichtige Forderung ist, dass die Aufträge beim Dequeue - so weit möglich - in der Reihenfolge geliefert werden, in der die eingequeued wurden. Im Grunde ist das die Definition von Queue: First-In-First-Out. Überholen sollten sich Aufträge nur da, wo es aufgrund der Sequentialisierungsanforderungen unausweichlich ist.</p>
+<p>Soweit ich das überblicke, stellt mein Vorschlag das sicher. Ob nun meine Idee für eine Datenstruktur und mein Vorschlag für eine Implementierung am Ende herausgekommen wäre oder eine andere Lösung mit den gleichen Eigenschaften der Schnittstelle, ist tatsächlich unerheblich. Da gebe ich dir Recht.</p>
+<p>"Und die Reihenfolge der Tests hat auch nichts mit der internen Datenstruktur zu tun"</p>
+<p>Die Reihenfolge der Tests vielleicht nicht, aber die Reihenfolge der Rückgabewerte spiegeln die Datenstruktur bzw. ihre Eigenschaften wieder. Wie ist es sonst zu erklären, dass (a, q1) (b,q1) (x,q2) (y,q2) bei der Entnahme durch einen einzigen Worker in der Reihenfolge a, x, b, y herausgegeben werden (sollen). Das würde doch niemand ohne Kenntnis der Datenstruktur oder der Implementierung erwarten. Da es hier nur einen Worker gibt, wird eh alles sequentiell ausgeführt. Es gibt also keine Anforderung, die die Änderung der Reihenfolge bedingt oder begründet. Die Queue sollte sich daher rein FIFO verhalten.</p>
+<p>"Deine Lösung ist nicht besser als meine."</p>
+<p>Doch, ich denke, sie ist objektiv besser. Auf Ebene der Schnittstelle. Aus den genannten Gründen.</p>
+<p>Ob deine Lösung in deinem Kontext ausreichend ist und ihren Zweck erfüllt, steht auf einem anderen Blatt.</p>
+<p>"Wenn du dir die Mühe gemacht hättest, ins Repo zu schauen, ..."</p>
+<p>Um Mühe geht es doch hier nicht. Ich beziehe mich auf den Artikel. Und der sagt, dass der am Ende gezeigte Code (ohne Locks) alle Tests erfolgreich durchlaufen hat. Ich gehe davon aus, dass das tatsächlich so war. Da der Code fehlerhaft ist, ist gezeigt, dass die Tests nicht ausreichend waren, um alle vorhandenen Fehler aufzudecken. Ich bleibe also dabei, dass Testen bei nebenläufigen Komponenten noch viel weniger geeignet ist, um Fehler aufzudecken, als das in sequentiellem Code der Fall ist.</p>
+<hr />
+<p><strong>Frank</strong> (2012-02-01):</p>
+<p>"Ich sehe nicht, das hier großartig etwas in die Hose gegangen ist."</p>
+<p>Nochmal zusammengefasst:</p>
+<ul>
+<li>Das TDD wird auf eine objektorientierte Komponente angewendet, die man zwar in FD verwenden kann, genauso wie man sie in jeder anderen Programmart verwenden kann, die also nichts speziell mit FD zu tun hat. Der im Titel hergestellte Bezug zwischen TDD und FD ist also nicht oder nur marginal vorhanden.</li>
+<li>Der pragmatische Ansatz, mit einer Datenstrukturidee zu beginnen, hat zu einer Schnittstelle mit objektiv schlechteren Eigenschaften geführt, als er durch reines TDD entstanden wäre.</li>
+<li>Die Tests waren (bei weitem) nicht ausreichend, um Fehler im nebenläufigen Code zu finden. Der Code, der am Ende des Artikels steht, ist wegen fehlender Synchronisation fehlerhaft. Die Tests haben das nicht aufgedeckt.</li>
+</ul>
+<p>Mag sein, dass meine Kritik recht unverblümt formuliert war. Konstruktiv war sie trotz allem gemeint. In dem Sinne, dass ich gleichzeitig eine Anregung gegeben habe, wie man eine bessere Komponente erstellen kann. Besser zum einen Hinsichtlich der Schnittstelle (also inbesondere bezüglich der Reihenfolge, in der die Aufträge bei DeQueue geliefert werden), also auch hinsichtlich der Vermeidung von unnötige Wait-Operationen (blockierendes Dequeue statt TryDequeue+Wait). Ich würde mich freuen, wenn du das aufgreifst.</p>
+<p>Um die Kritik jetzt auch noch konstruktiv hinsichtlich der Sicherstellung der Korrektheit von nebenläufigen Komponenten zu machen, empfehle ich den Code nicht nur zu testen, sondern vor allem einer sehr kritischen und ausdauernden Analyse zu unterziehen. Stichwort: böswillige Schreibtischtests; böswillig in dem Sinne, dass man die (gedanklichen) Thread-Wechsel immer an die Stellen legt, wo sie potenziell den größten Schaden anrichten.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-02-01):</p>
+<p>@Anonym: A threadsafe queue does not help much to get rid of the locks, since I need to make access to more than one data structure threadsafe.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-02-01):</p>
+<p>@Frank: Mit TDD kommt raus, was zu den Tests passt. Wenn ich meine Tests also in einer für dich unpassenden Weise formuliere, dann kann auch nur für dich Unpassendes herauskommen.</p>
+<p>Die Diskussion, ob der ADT die Semantik haben sollte, die ich ihm gegeben habe oder eine andere, ist also eine andere Diskussion als die, ob ich bei meiner Idee von einer Semantik das "falsche" Ergebnis erzielt habe.</p>
+<p>"Warum bekommt man bei Test 3, also dem mehrfachen TryDequeue mit genau einem Worker, die Elemente nicht in der Reihenfolge, in der sie eingequeued worden?"</p>
+<p>Weil das die Semantik ist, die ich für angemessen halte. Ganz einfach. Für mich steht Round Robin höher als exakte Reihenfolge des Enqueue. Wie gesagt: Darüber lässt sich streiten - nur das hat nichts mit TDD zu tun. TDD zwingt mich nicht in eine semantische Richtung. Ich benutze vielmehr TDD, um in eine semantische Richtung zu gehen.</p>
+<p>"die Reihenfolge der Rückgabewerte spiegeln die Datenstruktur bzw. ihre Eigenschaften wieder."</p>
+<p>Nein, die Reihenfolge der Rückgabewerte spiegelt die angepeilte Semantik wider - der auch eine bestimmte Datenstruktur dient.</p>
+<p>"Da der Code fehlerhaft ist, ist gezeigt, dass die Tests nicht ausreichend waren, um alle vorhandenen Fehler aufzudecken."</p>
+<p>Und in welcher Hinsicht ist der Code fehlerhaft? Weil er nicht deiner Semantik folgt? Die ist ja aber kein Maßstab. Nicht weil es deine Semantik ist, sondern weil es nicht die ist, die sich in den Tests widerspiegelt. Fehlerhaft ist der Code nur, wenn er meine Tests nicht erfüllt. Oder wenn er zwar meine Tests erfüllt, die aber nicht ausreichend sind, um meine Vorstellung von der Semantik zu beschreiben.</p>
+<p>"Das TDD wird auf eine objektorientierte Komponente angewendet, die man zwar in FD verwenden kann, genauso wie man sie in jeder anderen Programmart verwenden kann, die also nichts speziell mit FD zu tun hat."</p>
+<p>Genau! Denn ich wollte zeigen, dass FD einen wechsel zu TDD nicht ausschließt. Also TDD im (!) FD oder zusätzlich zu FD.</p>
+<p>"Der pragmatische Ansatz, mit einer Datenstrukturidee zu beginnen, hat zu einer Schnittstelle mit objektiv schlechteren Eigenschaften geführt, als er durch reines TDD entstanden wäre."</p>
+<p>Das ist falsch. Am Anfang steht die Beschreibung der Semantik. Erst dann entwickle ich eine Idee für eine Datenstruktur. Und ein API entsteht nie durch TDD. Der erste Test, den ich hinschreibe, muss eine Idee von einem API haben, sonst könnte ich ihn nicht hinschreiben.</p>
+<p>"Die Tests waren (bei weitem) nicht ausreichend, um Fehler im nebenläufigen Code zu finden. Der Code, der am Ende des Artikels steht, ist wegen fehlender Synchronisation fehlerhaft. Die Tests haben das nicht aufgedeckt."</p>
+<p>Sorry, auch das ist falsch. Es wäre nur richtig, wenn ich den Anspruch gehabt hätte, alle Tests im Artikel zu beschreiben. Wie gesagt: Wenn du mir ankreidest dass ich nicht ausdrücklich am Ende gesagt habe, es gäbe noch mehr Tests und Code, dann nehme ich die Kritik an. Hätte ich besser machen können.</p>
+<hr />
+<p><strong>Frank</strong> (2012-02-01):</p>
+<p>"ich wollte zeigen, dass FD einen wechsel zu TDD nicht ausschließt."</p>
+<p>Gezeigt hast du das allerdings nicht. Dass man dass im FD auch objektorientierte Komponenten als Blätter einsetzen kann, war schon vorher klar. Dass man objektorientierte Komponenten per TDD erstellen kann, erst recht. Und wem das nicht klar war, dem hast du nur gezeigt, dass FD einen Wechsel zu OOP nicht ausschließt und dass OOP TDD nicht ausschließt. Der ganz überwiegende Teil des Artikel behandelt jedenfalls nur die Anwendung von TDD auf eine objektorientierte Komponente.</p>
+<p>"Für mich steht Round Robin höher als exakte Reihenfolge des Enqueue."</p>
+<p>Ich kann mir nicht helfen. Das kommt mir wie ein Ausflucht vor. Wobei ich zugeben musst, dass du die Klasse Notifying<em>Multi</em>Queue genannt hast. Selbstverständlich kann man unterschiedlicher Meinung sein, welche Semantik man haben möchte. Nur finde ich persönlich wirklich schwer nachvollziehbar, dass (a, q1) (b,q1) (x,q2) (y,q2) bei der Entnahme durch einen einzigen Worker in der Reihenfolge a, x, b, y herausgegeben werden (sollen). Das wäre mir nicht nur nie in den Sinn gekommen, sondern ich sehe darin auch keinen Vorteil.</p>
+<p>"Und in welcher Hinsicht ist der Code fehlerhaft?"</p>
+<p>In der Hinsicht, dass er - so wie er in dem Artikel steht - nicht thread-safe ist.</p>
+<p>" 'Die Tests waren (bei weitem) nicht ausreichend, um Fehler im nebenläufigen Code zu finden.'
+Sorry, auch das ist falsch. "</p>
+<p>Ich behaupte, auch mit weiteren Tests wäre es dir schwergefallen, in dem Code ohne lock die dann vorhanden Fehler zu finden. Mir kommt es deshalb mehr auf die Aussage an, dass Tests alleine bei nebenläufigen Komponenten weniger als die halbe Miete sind.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-02-01):</p>
+<p>@Frank: Tut mir leid, dass du nicht sehen kannst, dass es ersten unterschiedliche Semantiken geben kann, jenachdem, wie der gewünschte Effekt aussehen soll.</p>
+<p>Und dass du dann nicht anerkennen kannst, dass Code, der eine andere als deine implementiert, deshalb nicht falsch ist.</p>
+<p>Was die Threadsafety angeht: Natürlich testen die gezeigten Tests die nicht. Das habe ich auch nicht behauptet - aber auch nicht deutlich hervorgehoben, dass die Threadsafety-Aspekte noch nicht berücksichtigt werden sollten.</p>
+<p>Es tut mir leid, dass du nicht sehen kannst, dass es mir nicht um eine bestimmte Implementation geht, sondern um einen Weg. Und dann auch noch einen Weg innerhalb von TDD.</p>
+<p>Ich denke, nun sollten wir unsere Diskussion aber ruhen lassen. An dem Punkt der unterschiedlichen Semantik kommen wir nicht weiter.</p>
+<p>Danke für deinen Gedanken.</p>
+<hr />
+<p><strong>Frank</strong> (2012-02-02):</p>
+<p>Ich muss doch noch einmal antworten, weil du mir - sicher nicht in böser Absicht - gleich drei Punkte unterstellt, die nicht stimmen.</p>
+<p>"Tut mir leid, dass du nicht sehen kannst, dass es ersten unterschiedliche Semantiken geben kann, jenachdem, wie der gewünschte Effekt aussehen soll."</p>
+<p>Doch, das sehe ich. Sicher!</p>
+<p>Ich sehe nur nicht, warum du diese Semantik willst und welche Vorteile du siehst. Du schreibst "Kein Port darf bevorzugt werden". Gut, was das genau bedeutet, hängt natürlich davon ab, was genau man unter "bevorzugen" versteht. Folgende Situation: Drei Ports, zwei Worker. Für die ersten beiden Ports stehen schon ja 100 Aufträge in der Queue (bzw. in den Queues). Ganz zum Schluss kommt ein Auftrag für Port 3. Das Round Robin würde maximal noch je eine Anfrage für die ersten beiden Ports bearbeiten und spätestens dann die von Port 3. Obwohl ganz viele Anfragen, die alle bearbeitet werden könnten, vorher eingestellt wurden. Das nenne ich bevorzugen. Obwohl sich Port 3 erst ganz, ganz hinten angestellt hat, wird er ohne Not vorgezogen.</p>
+<p>Natürlich kann es unterschiedliche Semantiken geben, je nachdem, was man will, nur warum willst du die Round-Robin-Semantik? In meinen Augen werden gerade dadurch Ports bevorzugt, für die es wenige Aufträge gibt, gegenüber welchen, für die es viele Aufträge gibt.</p>
+<p>Bei meinem Vorschlag würde ein Auftrag für Port 3 möglicherweise auch von ganz hinten vorgezogen, aber nur dann, wenn ein Worker frei ist, der wegen der Sequentialisierungsanforderungen momentan keinen der Aufträge davor bearbeiten kann. Das würde bezogen auf das Szenario allerdings nur eintreten, wenn es so geändert wird, dass es mindestens drei Worker gibt. Dann würde aber Port 3 nicht bevorzugt, denn der dritte Worker kann eh keine der anderen wartenden Aufträge vor dem für Port 3 bearbeiten.</p>
+<p>"Und dass du dann nicht anerkennen kannst, dass Code, der eine andere als deine implementiert, deshalb nicht falsch ist."</p>
+<p>Das habe ich nie behauptet.</p>
+<p>Im Gegenteil: Ich habe mit der Muttermilch (ok: Professorenmilch :-) eingesogen, dass ein Programm oder eine Komponente dann korrekt ist, wenn sie der Spezifikation genügt. Ich habe nur für einen andere Semantik geworben. Die unbedachte Behauptung, dass man "meine" Semantik braucht, habe auf deinen Hinweis sofort zurückgezogen.</p>
+<p>Von Fehlern habe ich nur im Zusammengang mit den echten Fehlern bezüglich der Thread-Sicherheit gesprochen. Also da, wo dein Code deiner Spezifikation nicht entspricht. An keiner anderen Stelle. Du kannst gerne den Text durchsuchen. :-)</p>
+<p>"Es tut mir leid, dass du nicht sehen kannst, dass es mir nicht um eine bestimmte Implementation geht, sondern um einen Weg. Und dann auch noch einen Weg innerhalb von TDD."</p>
+<p>Doch, auch das habe ich gesehen.</p>
+<p>Zwar habe ich für eine andere Semantik geworben, doch das ist ja nicht unangebracht, nur weil das nicht im Mittelpunkt des Artikels stand. Du willst diese Komponente doch real einsetzen. Da sollten dir Feedback willkommen sein. Auch wenn es am Ende vielleicht nur dazu dient, dich darin zu bestärken, dass die Komponente genau das tut, was du möchtest.</p>
+<p>Außerdem habe ich ja nicht nur über die Semantik gesprochen, sondern bin auch auf andere Punkte eingegangen, die im Mittelpunkt des Artikels stehen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-02-02):</p>
+<p>@Frank: Also gut, wenn es denn sein soll: nochmal und hoffentlich abschließend Semantik.</p>
+<p>Dein Szenario greife ich auf. Du beschreibst ja korrekt meine Vorstellung der Semantik. Deine Urteil: bevorzugend.</p>
+<p>Mein Urteil hingegen: gleichstellend :-)</p>
+<p>Genau, ich empfinde meine Semantik als wünschenswert, weil sie eben nicht den Unterschied macht, den du für richtig hälst. Meine Semantik behandelt alle Ports gleich. Sie bevorzugt keinen Port nach dem Nachrichtenaufkommen.</p>
+<p>Wir haben einfach unterschiedliche Prioritäten: für dich ist die Abarbeitung von Nachrichten wichtig, für mich ist die Bedienung von Ports wichtig.</p>
+<p>Warum ziehe ich die Port-Sichtweise vor? Ports sind wie "Kunden" (K<em>) in einem Geschäft. Das Geschäft bietet unterschiedliche Leistungen (L</em>) an mit einer begrenzten Zahl von Ressourcen (R*).</p>
+<p>Dein Modell behandelt alle Leistungen und Kunden gleich. Sobald eine Ressource frei wird, widmet sie sich dem nächsten Kunden in der einen Schlange. Das hört sich erstmal gerecht an. (Dass pro Leistung nur ein Kunden "in Arbeit" sein kann, ist im Augenblick ein Detail.)</p>
+<p>Was aber, wenn die Leistungen unterschiedlich lange brauchen? Dann muss jmd, der eigentlich nur gaaanz kurz eine Sache erledigt bekommen will, gaaanz lange warten. Er kann an den anderen nicht vorbeiziehen.</p>
+<p>Das mag irgendwie gerecht sein - aber in jedem Supermarkt sehe ich, dass Menschen sich anders verhalten. Da werden Kunden mit nur einer Milch in der Hand von den anderen mit vollen Einkaufskörben vor ihnen in der Schlange vorbeigelassen. Oder es gibt sogar Expresskassen.</p>
+<p>Warum? Weil das den Durchfluss erhöht.</p>
+<p>Niemand empfindet das als ungerecht.</p>
+<p>In der Programmierung kann ein solcher Unterschied z.B. zwischen normalen Nachrichten und Fehlern bestehen. Warum soll eine Fehlernachricht (oder eine andere mit hoher Prio) darauf warten, dass Tausende andere erst verarbeitet werden, die vorher eingetroffen sind?</p>
+<p>Mein Modell berücksichtigt das. Ohne den Zwang mit expliziten Prioritäten zu jonglieren, gibt es reihum jedem Port Aufmerksamkeit. An Ports im "Hauptfluss" werden da natürlich viele Nachrichten eingehen, an Fehlerports wenige. Solange keine Fehler anliegen, widmen sich die Threads den Nachrichten im "Hauptfluss". Wenn aber mal ein Fehler eintrifft, wird der bald behandelt.</p>
+<p>Mein Modell erzwingt den Fokuswechsel nach jeder Nachricht. Dein Modell sorgt hingegen dafür, dass Ports mit hoher Nachrichtenzahl bevorzugt behandelt werden. Die können die Threads für andere Aufgaben blockieren. Wenn Windows nach deinem Modell arbeiten würde, hättest du nicht viel Spaß dran.</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-02-02):</p>
+<p>Es heißt "Round Robin", mit einem "b". Vielleicht solltest Du nicht soviel Tony lesen, es gibt da eh' Besseres als diesen ... ach, egal.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

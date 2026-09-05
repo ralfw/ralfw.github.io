@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gesunde Anämie — ralfw.de Archiv</title>
+<meta name="description" content="Immer wieder gibt es Uneinigkeit darüber, wie zustandsbehaftete Domänenklassen mit Funktionalität ausgestattet werden sollen. Ist es eine Tugend, ein Kundenobjekt nach seiner Bonit">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/gesunde-anamie/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Gesunde Anämie — ralfw.de Archiv">
+<meta property="og:description" content="Immer wieder gibt es Uneinigkeit darüber, wie zustandsbehaftete Domänenklassen mit Funktionalität ausgestattet werden sollen. Ist es eine Tugend, ein Kundenobjekt nach seiner Bonit">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/gesunde-anamie/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Gesunde Anämie</h1>
+    <div class="doc-meta"><span>10. Dez. 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/12/gesunde-anamie.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/gesunde-anamie/</code></span></div>
+    <div class="art"><p>Immer wieder gibt es Uneinigkeit darüber, wie zustandsbehaftete Domänenklassen mit Funktionalität ausgestattet werden sollen. Ist es eine Tugend, ein Kundenobjekt nach seiner Bonität befragen zu können? Die vorherrschende Meinung sieht das wohl so. Und wo sie zustandsbehaftete Domänenklassen auf die Datenhaltung reduziert sieht, spricht sie von einem <a rel="noopener" href="http://en.wikipedia.org/wiki/Anemic_Domain_Model">anämischen Domänenmodell</a>. Gestern bei einem TDD-Training und auch heute beim <a rel="noopener" href="http://archnet.mixxt.de/">Architecture Open Space</a> gab es dazu wieder einige Diskussion.</p>
+<p>Aber warum wird denn überhaupt dazu soviel noch diskutiert? Ist es denn nicht klar, was richtig ist? Hat die Objektorientierung nicht schon seit Jahrzehnten eine gute Antwort gefunden? Anscheinend nicht. Es gibt immer noch oder schon wieder zwei Lager. Die einen bemühen sich, Domänenmodelle reich zu machen; da bekommt der Kunde seine Bonitätsprüfungsfunktion. Die anderen sehen das als kontraproduktiv an und argumentieren, Geschäftsregeln und Datenstrukturen seien auseinander zu halten. Ich gehörer letzterer Fraktion an, wie ich in <a rel="noopener" href="http://ralfw.blogspot.com/2010/08/das-domanobjektmodell-anders-gedacht.html">früheren Blogartikeln</a> schon klar gemacht habe.</p>
+<p>Leider kann ich jedoch mit meinen Argumentationsversuchen nicht immer so leicht punkten, wie ich es mir wünsche. Deshalb bin ich immer auf der Suche nach neuen Gesichtspunkten, die meine Position stützen und erklären helfen – oder, ja, von mir aus auch einfach begreifbar widerlegen.</p>
+<p>Heute nun habe ich wieder einen solchen Gesichtspunkt entdeckt. Und hätte der Architecture Open Space nicht auch sonst schon wegen des Community Erlebnisses Spaß gemacht, dann wäre er deshalb lohnenswert gewesen. Hier meine Erkenntnis:</p>
+<p><strong>Anämische Domänenmodelle sind eine Tugend, weil sie entkoppeln.</strong></p>
+<p>Ha! Wer hätte das gedacht? Wieder ist die Antwort auf hartnäckige Fragen “Entkopplung”. Abhängigkeiten, also Kopplung, ist einfach eines der Grundübel der Softwareentwicklung.</p>
+<p>Meine Argumentation:</p>
+<p>Abhängigkeiten <a rel="noopener" href="http://ralfw.blogspot.com/2010/09/abhangigkeiten-bewusster-wahrnehmen.html">jeder Art</a> behindern die Evolvierbarkeit. Sie sind deshalb zu vermeiden oder zumindest zu minimieren.</p>
+<p>Wenn eine Funktionseinheit A von vielen anderen Funktionseinheiten abhängig ist – U1, U2, U3, … –, d.h. eine hohe efferente Kopplung hat, dann ist das Risiko groß, dass A sich ändern muss, weil irgendwo bei U1, U2, U3 usw. eine Änderung vorgenommen wurde.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/b8be8aff943cba73.png" /></p>
+<p>Wenn andererseits eine Funktionseinheit U von vielen abhängigen Funktionseinheiten A1, A2, A3 usw. gebraucht wird, d.h. eine hohe afferente Kopplung hat, dann ist das Risiko groß, dass eine Änderung an U sich auf alle A* auswirkt.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/3ecd97f5783bce9a.png" /></p>
+<p>Wir können es also drehen und wenden, wie wir wollen, eine große Anzahl von Abhängigkeiten koppelt eng, weil die Abhängigkeitslinien Wege für die Ausbreitung von “Veränderungsschockwellen” sind.</p>
+<p>Nun ist es natürlich unzweifelhaft, dass Abhängigkeiten nötig sind. Softwaresysteme wären keine Systeme, wenn sie nur Haufen unverbundener Funktionseinheiten wären. Also ist die Frage, wie können wir den potenziellen Schaden von Abhängigkeiten in Grenzen halten?</p>
+<ul>
+<li>Die Kopplung sollte so gering wie möglich und so stark wie nötig sein. Bewusstheit beim Aufbau von Abhängigkeiten ist also gefragt.</li>
+<li>
+<p>Je größer die Kopplung, desto einfacher sollten die gekoppelten Funktionseinheiten sein. Kopplung und Kompliziertheit sollten umgekehrt proportional sein.
+Einfachheit lässt sich herstellen durch:</p>
+</li>
+<li>
+<p>fokussieren der Verantwortlichkeit (Single Responsibility Principle)</p>
+</li>
+<li>verbergen von Details (Encapsulation)</li>
+</ul>
+<p>Die zweite Regel verdient besondere Aufmerksamkeit. Schauen wir uns an, welche “Verhältnisse” sich ergeben, jenachdem ob die gekoppelten Funktionseinheiten einfach oder kompliziert sind:</p>
+<pre><code>**Efferente Kopplung** U* einfach U* kompliziert  A einfach überschaubar überschaubar  A kompliziert kompliziert komplex
+</code></pre>
+<p>Eine hohe efferente Kopplung ist unkritisch, wenn die abhängige Funktionseinheit einfach ist. Dann können sogar die unabhängiggen Funktionseinheiten kompliziert sein, denn falls Änderungen an ihnen “durchschlagen”, muss nur Einfaches angepasst werden - wenn überhaupt; was zu tun ist, ist dann überschaubar.</p>
+<p>Ist die abhängige Funktionseinheit jedoch kompliziert, dann werden die Verhältnisse komplex. Denn dann ist nur schwer abschätzbar, was überhaupt als Anpassung zu tun ist, falls die Unabhängigen sich ändern.</p>
+<p>Etwas schlimmer sieht es sogar noch bei der afferenten Kopplung aus:</p>
+<pre><code>**Afferente Kopplung** U einfach U kompliziert  A* einfach überschaubar komplex  A* kompliziert kompliziert komplex
+</code></pre>
+<p>Hier sind die Verhältnisse immer komplex, wenn die unabhängige Funktionseinheit kompliziert ist. Änderungen wirken sich ja potenziell auf viele andere Funktionseinheiten aus. Das ist schwer abzuschätzen.</p>
+<p>Jetzt die Übersetzung auf die Modellierung:</p>
+<ul>
+<li>Event-based Components (EBC) packen das Thema Kopplung/Abhängigkeiten bei den Hörnern, indem sie Funktionseinheiten im Sinne der Funktionalität statisch und dynamisch unabhängig voneinander machen. Logische Kopplung existiert zwar weiterhin, aber zumindest müssen Bauteile sich nicht mehr untereinander kennen. Das ist ein guter Schritt voran bei der Entkopplung. Unmittelbar ist das daran zu erkennen, dass Sie zum automatisierten Testen von EBC-Bauteilen keine Mock-Frameworks brauchen.</li>
+<li>EBC entschärfen die efferente Kopplung, indem sie Abhängigkeiten auf die Verdrahtung beschränken. Nur Platinen sind abhängig von anderen Funktionseinheiten. Das mögen dann auch viele sein – doch das macht nichts, weil Platinen denkbar einfach sind. Ihr einziger Zweck ist die Verdrahtung mit trivialem Code. Die Verhältnisse sind überschaubar, auch wenn die verdrahteten Funktionseinheiten kompliziert sind (s. rechte obere Tabellenzelle bei der efferenten Kopplung).</li>
+<li>EBC geben Domänendatenmodellen einen klaren Platz in der Modellierung: als Typen für die Daten, die zwischen EBC-Funktionseinheiten fließen.</li>
+</ul>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/5e31535163c9eed5.png" /></p>
+<p>Das bedeutet jedoch, dass viele Funktionseinheiten von ihnen abhängig sind. Im Bild müssen A, B, C und D den Domänenobjektmodelltyp d kennen. Die afferente Kopplung von d ist also hoch.
+Das bedeutet – und das ist meine heutige Erkenntnis auf dem Architecture Open Space –, dass d nicht kompliziert sein darf.</p>
+<p>Domänendatenobjekte haben per definitionem eine hohe afferente Kopplung. <em>Das</em> ist für mich der wesentliche Grund, warum sie so einfach wie möglich gehalten werden sollten. Prinzip schlägt Objektorientierung, möchte ich sagen. Es ist mir also egal, ob ein Domänenobjektmodell als anämisch angesehen wird oder nicht. Objektorientierung ist ein Tool. Mit diesem Tool sollte ich nicht gegen fundamentale Prinzipien – hier: Abhängigkeiten erzeugen Komplexität; Entkopplung reduziert Komplexität – verstoßen, auch wenn eine bestimmte Benutzung des Tools noch so toolgemäß aussehen mag.</p>
+<p>Wo hohe Abhängigkeiten von zwischen Objekten bestehen, da muss auf die Kompliziertheit der Beteiligten sehr genau geachtet werden. Mit EBC sind wir da auf einem sehr guten Weg, würde ich sagen. Aber nun weiß ich auch, warum es nicht schlimm ist, wenn EBC irgendwie gegen die heilige Kuh “reichhaltiges Domänenobjektmodell” verstößt, weil Domänenobjektmodelle, die auf Drähten fließen, immer irgendwie blutleer wirken. Auch das ist nämlich eine Tugend, weil ihre Datentypen so weitreichend gekannt werden. Anämie kann also auch mal gesund sein, wie hier zu sehen ist :-)</p>
+<h4>Objektorientiertes Nachspiel</h4>
+<p>Mir ist jetzt auch klarer, wo Chancen und Grenzen der Objektorientierung liegen. Gegenüber der prozeduralen Programmierung bietet Objektorientierung Kapselung.</p>
+<p>Wo früher ein Record/struct nur Daten gehalten hat und die Funktionalität, die auf diesen Daten auch nur das Einfachste tun sollte, davon getrennt war, hat Objektorientierung Daten und Funktionalität zusammengezogen und unter einer “kleineren” Oberfläche verborgen. Die afferente Kopplung sinkt damit, weil U (s. zweite Abbildung oben) einfacher wird. Das ist gut so. Danke, Objektorientierung! Da liegt die Chance für uns mit der Objektorientierung.</p>
+<p>Die Grenze der Objektorientierung ist jedoch erreicht, wenn ihre Möglichkeit zur Zusammenfassung von Daten und Funktionalität darüber hinaus gedehnt werden. Die Objektorientierung hat angefangen mit dem Begriff des ADT (Abstrakter Datentyp), d.h. einem “Objektmodell”, das Zustand hat und auf sich auch operieren kann. Beispiele dafür sind Stack, Baum oder Priority Queue usw. Gern auch ein “anämisches Objektmodell” mit Funktionen, die nicht über sich selbst hinausgreifen und keinen Zweck jenseits des “Zustandsorganisation” haben, der Konsistenzhaltung.</p>
+<p>Wenn nun Objektorientierung über den ADT hinausgeht und ein reichhaltiges Domänenobjektmodell kreiert, dann mag die Kapselung immer noch ordentlich sein, auch wenn sie schwieriger wird. Vor allem aber wird der “Single Purpose” auf die Probe gestellt und die Kompliziertheit steigt schnell an.</p>
+<p>Und genau das ist es, wo dann die Werte der Objektorientierung durch höhere Werte überstimmt werden. Wenn Objektorientierung die Entkopplung gefährdet, dann hat sie ihre Grenze erreicht. Das sehe ich beim reichhaltigen Domänenobjektmodellen. Sie überspannen den objektorientierten Bogen. Sie erzeugen – im allerbesten Willen – ungünstig hohe afferente Kopplung.</p>
+<p>Objektorientierung ist nur ein Tool. Wer professionell Software entwickeln will, muss ihre Werte abwägen gegen andere. EBC tut das mit den bisherigen Übersetzungsvorschlägen für Modelle, würde ich sagen. Objektorientierung wird genutzt – solange der hohe Wert der Evolvierbarkeit repräsentiert durch das Prinzip “lose Kopplung, hohe Kohäsion” nicht kompromittiert wird.</p>
+<h2>Kommentare</h2>
+<p><strong>Laurin Stoll</strong> (2010-12-11):</p>
+<p>Ja, das klingt doch wirklich gut und einleuchtend.</p>
+<p>1) Wo Abhängigkeiten existierten dürfen die beteiligten nicht kompliziert sein.
+2) Von der Domänenklasse ist so gut wie alles afferent abhängig, d.h. sie darf nicht kompliziert sein.</p>
+<p>Klingt völlig logisch, aber sehr gut herausgehoben - danke Ralf! :-)</p>
+<hr />
+<p><strong>Carsten</strong> (2010-12-13):</p>
+<p>Objektorientierung führt Funktionalität und Daten zusammen. Dass dies zu einer Kopplung von Funktionalität und Daten führt, scheint mir ganz offensichtlich zu sein.</p>
+<p>Und so ganz willst Du ja nun auch nicht davon weg, denn sie bietet ja Kapselung. Aber wenn sie Entkoppelung gefährde, dann sei die Grenze erreicht. Ein Domainobjektmodell sei hinreichend konkret um entkoppelt zu werden.</p>
+<p>Ich verstehe das nicht. Mir ist das zu kompliziert. Danke, aber ich kaufe keine EBCs.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-12-13):</p>
+<p>@Carsten: Wenn du dir ein wenig mehr Zeit nimmst, meinen Beitrag zu lesen, dann siehst du vielleicht, dass ich nichts gegen die Kopplung von Daten und Funktionalität per se habe.</p>
+<p>Diese Kopplung ist nur kein Selbstzweck und immer in höchstem Maße anzustreben.</p>
+<p>Ich habe lediglich ein Kriterium aus meiner Sicht genannt, was hilft, die Waage zu halten zwischen der wünschenswerten Zusammenlegung von Daten und Funktionen und der Trennung für Evolvierbarkeit auf der anderen Seiten. Lose Kopplung, hohe Kohäsion - so lautet eines der ältesten Prinzipien der SWentwicklung.</p>
+<p>Wenn dir das immer noch zu kompliziert ist, dann ist es ok. Lass gut sein. Und EBC musst du nicht kaufen. Gar nichts musst du kaufen. Kannst einfach weiter machen wie immer.</p>
+<hr />
+<p><strong>Johannes</strong> (2010-12-22):</p>
+<p>Wie schon vorher erwähnt, besteht immer eine gewisse Schwierigkeit die Balance zwischen Kapselung, Entkopplung und hoher Kohäsion zu halten. Für mich bieten EBC als auch DDD Vorteile:</p>
+<ul>
+<li>EBC mit der klaren Entkopplung</li>
+<li>DDD mit der Ubiqutuous Language und klaren einfachen Patterns</li>
+<li>Beides mit einer Form von Kapselung</li>
+</ul>
+<p>Für mich stellt sich nicht die Frage was ich anwende, sondern auf welchem "Level" ich was anwende. So könnte man sich doch eine EBC vorstellen die intern ein Domain-Model benutzt. Was denkt ihr?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-12-22):</p>
+<p>@Johannes: Ein Flow-based Model benutzt natürlich ein Domänenmodell. Aber ein anämisches. Aus den hier dargestellten Gründen.</p>
+<p>Darüber hinaus kann ein Flow-based Model aber auch ein Domänenmodell sein! DDD lässt es offen, was eine Entität ist. Die rich domain models von Jimmy Nielsson &amp; Co sind nur eine mögliche Interpretation. Mit Flow-based Models kann man aber auch anders interpretieren.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

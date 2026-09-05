@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software fraktal - Funktionale Abhängigkeit entschärfen — ralfw.de Archiv</title>
+<meta name="description" content="Wir kommen nicht wirklich raus aus der funktionalen Abhängigkeit. Was aber können wir dann gegen ihre Probleme tun?">
+<link rel="canonical" href="https://ralfw.de/archiv/2013/software-fraktal-funktionale/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software fraktal - Funktionale Abhängigkeit entschärfen — ralfw.de Archiv">
+<meta property="og:description" content="Wir kommen nicht wirklich raus aus der funktionalen Abhängigkeit. Was aber können wir dann gegen ihre Probleme tun?">
+<meta property="og:url" content="https://ralfw.de/archiv/2013/software-fraktal-funktionale/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Software fraktal - Funktionale Abhängigkeit entschärfen</h1>
+    <div class="doc-meta"><span>28. April 2013</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2013/04/software-fraktal-funktionale.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2013/software-fraktal-funktionale/</code></span></div>
+    <div class="art"><p>Wir kommen nicht wirklich raus aus der funktionalen Abhängigkeit. Was aber können wir dann gegen ihre Probleme tun?</p>
+<p><a rel="noopener" href="http://blog.ralfw.de/2013/04/raus-aus-der-funktionalen-abhangigkeit.html">Neulich habe ich gezeigt</a>, wie Sie funktionale Abhängigkeiten auflösen. Dabei bleibe ich auch. Funktionseinheiten - Methode oder Klasse - sollten für ihre Spezifikationen selbst verantwortlich sein. Soweit möglich. Doch damit wird das Problem der funktionalen Abhängigkeit nur eine Ebene höher geschoben.</p>
+<p>Vorher:</p>
+<p>int c() {</p>
+<p>...  // Vorbereitung</p>
+<p>var y = s(x);</p>
+<p>... // Nachbereitung</p>
+<p>}</p>
+<p>Nachher:</p>
+<p>var x = c_vorbereitung();</p>
+<p>var y = s(x);</p>
+<p>return c_nachbereitung(y);</p>
+<p>Wo c() vorher funktional von s() abhängig war, da ist das, was c() ausgemacht hat nachher auf c_vorbereitung() und c_nachbereitung() verteilt - und nicht mehr von s() abhängig.</p>
+<p>In Bezug c() ist das gut. Aber nun ist der Code, der nachher die drei Methoden aufruft funktional von ihnen abhängig. Denn in Wirklichkeit sieht das ja so aus:</p>
+<p>Vollständiges Nachher:</p>
+<p>int i() {</p>
+<p>var x = c_vorbereitung();</p>
+<p>var y = s(x);</p>
+<p>return c_nachbereitung(y);</p>
+<p>}</p>
+<p>Die neue Methode i() hat den schwarzen Peter funktionale Abhängigkeit zugeschoben bekommen.</p>
+<p>Oder?</p>
+<p>Ich denke, wir sollten genau hinschauen, bevor wir die Situation als unverändert beurteilen.</p>
+<h3></h3>
+<p>Operationen</p>
+<p>Ich möchte für die weitere Diskussion den Begriff <em>Operation</em> einführen. Eine Operation ist eine Funktion, die Logik enthält. Das bedeutet, sie enthält Kontrollstrukturen (if, for, while usw.) und/oder Ausdrücke (+, *, &amp;&amp; usw.).</p>
+<p>Die Funktion</p>
+<p>int Add(int a, int b) { return a+b; }</p>
+<p>ist nach dieser Definition eine Operation. Die obige Funktion i() hingegen nicht. Sie enthält keine Kontrollstrukturen und auch keine Ausdrücke; sie besteht lediglich aus Funktionsaufrufen und Zuweisungen [1].</p>
+<h3></h3>
+<p>Operationenhierarchien</p>
+<p>Normalerweise findet die Verarbeitung in Operationenhierarchien statt. Es gibt tiefe funktionale Abhängigkeitsbäume und in jedem Knoten (Funktion) befindet sich Logik.</p>
+<p>void s(int a) {</p>
+<p>var n = ... a ...;</p>
+<p>var l = t(n);</p>
+<p>foreach(var e in l) { ... }</p>
+<p>}</p>
+<p>List*t(int n) {</p>
+<p>var l = new List();</p>
+<p>for(int i=0; istring <strong>Erste_Seite_aufblättern</strong>() {</p>
+<p>var ersteSeite = <strong>Erste_Seite_laden</strong>();</p>
+<p>return <strong>Seite_formatieren</strong>(ersteSeite);</p>
+<p>}</p>
+<p>Seite <strong>Erste_Seite_laden</strong>() {</p>
+<p>var dateiname = <strong>Dateiname_von_Kommandozeile_holen</strong>(); </p>
+<p>var alleDatenzeilen = <strong>Zeilen_lesen</strong>(dateiname);</p>
+<p>return new Seite {</p>
+<p>Überschrift = <strong>Überschrift_extrahieren</strong>(alleDatenzeilen),</p>
+<p>Datenzeilen = <strong>Zeilen_der_ersten_Seite_selektieren</strong>(alleDatenzeilen)</p>
+<p>};</p>
+<p>}</p>
+<p>Aus eins mach zwei. Das kann jedes Refactoring-Tool, das etwas auf sich hält.</p>
+<p>Dadurch steigt zwar die Tiefe der Funktionshierarchie, doch das macht nichts. Jede Ebene für sich ist ja leicht verständlich. Sie brauchen nicht mal ein Werkzeug, das Ihnen Abhängigkeitsbäume zeichnet, da die Ihnen ja deutlich vor Augen stehen und nicht in "Logikrauschen" verborgen sind.</p>
+<p>Auch die syntaktische (Problem #4) und semantische Kopplung (Problem #5) verlieren an Gewicht. Da Integrationen selbst keine Logik enthalten, haben Änderungen in Syntax oder Semantik keinen Einfluss auf die Integration selbst. Syntaktische Änderungen können durch Typinferenz womöglich verschluckt werden. Und wenn nicht, dann hilft wahrscheinlich ein kleiner Einschub zwischen den aufzurufenden Funktionen wie <a rel="noopener" href="http://blog.ralfw.de/2013/04/raus-aus-der-funktionalen-abhangigkeit.html">hier</a> gezeigt.</p>
+<p>Integrationen sind zwar grundsätzlich gerade an die Semantik der Funktionen gekoppelt, von denen sie abhängen. Sie sollen ja aus ganz konkreten Teilverantwortlichkeiten eine neue Summenverantwortlichkeit herstellen. Doch diese Kopplung ist loser, weil die nicht an eigener Logik hängt.</p>
+<p>Soweit die Milderung der Probleme #1..#5 funktionaler Abhängigkeit durch das IOSP. Aber was ist mit den Problemen #A..#C der Operationenhierarchien?</p>
+<p><strong>ad Problem #A</strong>: Einzelne Integrationen können zwar wachsen, doch tendenziell tun sie das viel weniger als Operationen (s.o.).</p>
+<p>Integrationshierarchien können auch wachsen und tun das durch Refaktorisierungen womöglich sogar mehr als Operationshierarchien. Doch das ist nicht schlimm. Jede Ebene ist einfach zu verstehen. Logik ist nicht vertikal und horizontal verschmiert. Sie steckt allein in den Blättern, den Operationen.</p>
+<p><strong>ad Problem #B</strong>: Integrationen haben von Hause aus eine sehr niedrige zyklomatische Komplexität. Es gibt nur wenige Pfade durch sie. Die kann man sehr einfach testen. Oft reicht ein einziger Test. Oder Sie lassen eine Integration auch mal ganz ohne Test.</p>
+<p>Das meine ich ernst. Da Integrationen so leicht zu verstehen sind, kann ihre Korrektheit auch mal nur durch einen Code Review geprüft werden. Die Korrektheit besteht ja nur darin, dass eine Integration von den richtigen Funktionen abhängt und zweitens diese Funktionen in passender Weise für den Zweck der Integration "verdrahtet" sind. Ob das der Fall ist, ergibt sich oft durch Augenschein.</p>
+<p>Allerdings sollten Sie automatisierte Tests der Integrationen auf oberster Ebene haben. Die prüfen den Gesamtzusammenhang. Solange der korrekt ist, sind auch darunter liegende Integrationen korrekt.</p>
+<p>Und Sie decken natürlich Operationen mit automatisierten Tests ordentlich ab. Dort spielt die Musik der Logik, das ist nicht einfach zu verstehen, also müssen Tests helfen.</p>
+<p>Mein Gefühl ist, dass das Testen von Funktionshierarchien, die dem IOSP folgen, deutlich einfacher ist. Allemal, da die Operationen ja nicht mehr voneinander abhängig sind. Sie sind durch das <em><a rel="noopener" href="http://blog.ralfw.de/2013/04/raus-aus-der-funktionalen-abhangigkeit.html">Principle of Mutual Oblivion</a></em> (PoMO) entkoppelt.</p>
+<p><strong>ad Problem #C</strong>: Nicht zuletzt ist das Testen einfacher, weil der Bedarf an Einsätzen eines Mock Frameworks deutlich sinkt. Ich zum Beispiel benutze schon lange gar keinen mehr.</p>
+<p>Attrappen sind hier und da noch nötig. Doch dann schnitze ich sie mir kurz für den konkreten Fall selbst. Wissen über einen Mock Framework vorzuhalten oder gar deren Entwicklung zu verfolgen, wäre viel umständlicher.</p>
+<p>Warum sind Attrappen viel seltener nötig? Weil die vielen Tests von Operationen keine mehr brauchen. Sie sind ja in Bezug auf die Domäne ohne funktionale Abhängigkeit. Und weil Tests von Integrationen seltener sind.</p>
+<h3></h3>
+<p>Skalieren mit dem IOSP</p>
+<p>Dass Sie Ihre Software nur mit einer Hierarchie von Integrationen realisieren können, an denen unten wie Weihnachtsbaumkugeln Operationen baumeln, glaube ich auch nicht. Aber ich denke, dies sollte die Grundstruktur sein:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/5e884640d6282797.jpeg" /></p>
+<p>Operationen sind die Black Boxes an der Basis funktionaler Abhängigkeitshierarchie. Nur dort sollte sich Logik befinden. Hier gilt es ausführlich zu testen. Diese "Büchsen" wollen Sie so selten wie möglich öffnen. Besser ist es, auf einer Integrationsebene darüber simple Veränderungen anzubringen und neue "Büchsen" unten hinzuzufügen.</p>
+<p>Für die ganze Struktur gilt das IOSP, für jeden Knoten darin das PoMO.</p>
+<p>Wenn diese Grundstruktur jedoch wachsen soll, dann reicht es nicht, an der Basis in die Breite zu gehen und bei der Integration in die Höhe. Ich denke, dann muss Schachtelung dazukommen.</p>
+<p>Black Boxes sind nur aus einem bestimmten Blickwinkel oder aus einer gewissen Entfernung undurchsichtig und quasi von beliebiger Struktur. Wenn eine Operation wächst, dann sollten Sie das ebenfalls nach dem IOSP tun.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2f2cc69eb115bda5.jpeg" /></p>
+<p>Software ist also von ähnlich fraktaler Struktur wie diese quadratischen <a rel="noopener" href="http://de.wikipedia.org/wiki/Koch-Kurve">Koch-Kurven</a>:</p>
+<p><img loading="lazy" alt="Bild nicht mehr verfügbar" src="/assets/_shared/placeholder-missing-image.svg" /></p>
+<p><em>(Bild nicht mehr verfügbar – ursprüngliche Quelle offline. Archiviert im Wayback Machine: http://web.archive.org/web/20160911014639/http://olli.informatik.uni-oldenburg.de/lily/LP/pics/koch_alle.GIF – bei Bedarf manuell nachladen.)</em></p>
+<h3></h3>
+<p>Fazit</p>
+<p>IOSP + PoMO sind für mich eine ganz pragmatisches Paar, um Software verständlich, testbar und evolvierbar zu halten.</p>
+<p>Sie mögen einwänden, das ließe sich doch auch mir SRP und SLA und OCP (<em>Open-Closed Principle</em>) erreichen - und da haben Sie wohl recht. Nur passiert das nicht. SOLID allein reicht nicht. Deshalb finde ich es sinnvoll, daraus diese zwei Prinzipien zu destillieren. Oder diese simplen Regeln, wenn Sie wollen:</p>
+<ul>
+<li>
+<p>Teile Funktionen klar in Operationen und Integrationen:</p>
+</li>
+<li>
+<p>Halte Funktionen, die Logik enthalten, frei von funktionalen Abhängigkeiten (Operationen).</p>
+</li>
+<li>
+<p>Sammle funktionale Abhängigkeiten in Funktionen ohne Logik (Integration).</p>
+</li>
+</ul>
+<p>Wenn Sie Ihren Code so aufbauen, dann fühlt sich das zunächst natürlich ganz anders an als bisher. Sie werden Widerstand spüren. Und schon vorher werden Sie wahrscheinlich daran zweifeln, ob das alles überhaupt nötig sei.</p>
+<p>Keine Sorge, das kenne ich alles. Ich bin selbst durch diese Zweifel gegangen. Ich kann Sie davon mit Argumenten auch nicht völlig befreien. Sie müssen das ausprobieren. Nehmen Sie sich eine Aufgabe vor, deren Code Sie einfach mal nach der Regel versuchen zu strukturieren. Eine <a rel="noopener" href="http://clean-code-advisors.com/ressourcen/application-katas">Application Kata</a> hat da gerade die richtige Größe [3].</p>
+<p>Ebenfalls kann ich Ihr Schmerzempfinden nicht sensibilisieren. Wenn Sie heute darunter stöhnen, dass Ihre Codebasis schwer wartbar sei, aber keinen Schmerz empfinden, wenn Sie nur mit SOLID und TDD bewaffnet daran herumwerkeln, dann ist das halt so. Dann werden Sie in IOSP+PoMO als Extremformen von SPR, SLA und OCP keine Perspektive zur Besserung sehen. Aber vielleicht lesen Sie dann mal Watzlawicks <a rel="noopener" href="http://www.amazon.de/Vom-Schlechten-Guten-Hekates-L%C3%B6sungen/dp/3492243177">"Vom Schlechten des Guten"</a> :-)</p>
+<p>Ich jedenfalls arbeite seit einigen Jahren zunehmend und heute nur noch so. Mein Leben ist dadurch glücklicher geworden :-) Ich kann meinen Code auch noch nach Monaten verstehen. Änderungen fallen mir leichter. Mit Mock Frameworks muss ich mich nicht mehr rumschlagen.</p>
+<p>Versuchen Sie es doch einfach auch mal. Nur so als Experiment. Und dann sagen Sie mir, wie es Ihnen damit gegangen ist.</p>
+<h4></h4>
+<p>Endnoten</p>
+<p>[1] Zuweisungen sind keine Ausdrücke, da nichts zu einem neuen Ergebnis kombiniert wird. Auf der linken Seite steht derselbe Wert wir auf der rechten Seite. Ohne weitere Modifikation durch Ausdrücke können Variablennutzungen durch Funktionsaufrufe ersetzt werden. i() könnte auch so aussehen:</p>
+<p>int i() {</p>
+<p>return c_nachbereitung(s(c_vorbereitung()));</p>
+<p>}</p>
+<p>Die Variablen in i() sind nur eine Lesehilfe oder könnten bei mehrfacher Nutzung der Performance dienen.</p>
+<p>[2] Ich weiß, das soll nicht sein. Und wenn man das <em>Single Responsibility Principle</em> (SRP) beachtet, dann werden einzelne Operationen auch nicht so groß.</p>
+<p>Das stimmt. Aber erstens: Beachten Sie das SRP konsequent? Und zweitens: Sehen Sie, was kleine Operationen für eine Folge haben? Sie lassen die Operationenhierarchie weiter wachsen. Die einzelnen Operationen sind zwar kleiner, doch dafür ist die Hierarchie breiter und tiefer.</p>
+<p>[3] Wenn Sie bei solcher Übung auf Schwierigkeiten stoßen, Fallunterscheidungen in Operationen auszulagern, ohne die funktional abhängig zu machen, dann ist das selbstverständlich. Aber vertrauen Sie mir: auch das ist ein lösbares technisches Problem.</p>
+<p>An dieser Stelle will ich nicht näher darauf eingehen. Doch als Stichwort sei <a rel="noopener" href="http://de.wikipedia.org/wiki/Continuation-passing_style">Continuation Passing Style</a> (CPS) genannt.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2013-04-29):</p>
+<p>Sagen wir mal, ich habe auf der untersten Ebene Operationen, und auf der Ebene darüber integrierende Funktionen wie z.B. "Erste_Seite_aufblättern()". Und was passiert jetzt auf der nächsthöheren Operations-Ebene darüber, die diese Funktion "Erste_Seite_aufblättern()" wieder innerhalb von Kontrollogik verwenden will? Die Funktion, die das aufruft, enthält dann doch Kontrolllogik <strong>und</strong> ist gleichzeitig funktional abhängig von "Erste_Seite_aufblättern". Oder stellst du dir das so vor, dass eine solche Operation alle anderen Funktionen, die sie aufrufen möchte, als Parameter erhält?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-04-29):</p>
+<p>Du hast eine Schicht Operationen. Fein. Dazu könnte Dateiname_von_Kommandozeile_holen() gehören.</p>
+<p>Du hast darüber eine Integration wie Erste_Seite_laden().</p>
+<p>Und du hast darüber eine Integration wie Erste_Seite_aufblättern().</p>
+<p>Und nun? Du kannst beliebig so nach oben weitermachen, z.B.</p>
+<p>void Start() {
+  var text = Erste_Seite_aufblättern();
+  Seitentext_anzeigen(text);
+}</p>
+<p>Es gibt in Integrationen keine Kontrollstrukturen. Das ist ihre Definition. Wenn du irgendwo welche einbaust oberhalb einer Integration, dann schaffst du eine Operation. Damit widersprichst du dem IOSP.</p>
+<p>Das hat nichts mit DI oder so zu tun. IoC/DI ist nur ein Mechanismus, um funktionale Abhängigkeiten bereitzustellen.</p>
+<p>Integrationen haben funktionale Abhängigkeiten. Das ist ihr Zweck. Da kann man also irgendwie injizieren, wenn man mag.</p>
+<p>Aber vielleicht hast du noch ein Missverständnis. Einen Aspekt habe ich nicht so hervorgehoben:</p>
+<p>Operationen können von Integrationen auf jeder Ebene benutzt werden. Nur sind sie dann eben in der Hierarchie ein Blatt, eine Black Box:</p>
+<p>void I1() {
+  I11();
+  O1();
+  I12();
+}</p>
+<p>void I11() {
+  I111();
+  O2();
+  I112();
+}</p>
+<p>void I111() {
+  I1111();
+  O3();
+  I1112();
+}</p>
+<p>void I1111() {
+  O4();
+  O5();
+}</p>
+<p>...</p>
+<p>Du siehst, auf jeder Ebene werden Operation O*() aufgerufen. Das ist völlig ok.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-04-29):</p>
+<p>Wie kommunizieren verschiedene Operationen miteinander?</p>
+<p>Beispiel:
+Dateiname_von_Kommandozeile_holen(), Datei_laden(dateiname) und Datei_lesen(datei) sind Operationen.</p>
+<p>Situation: Es existiert keine Datei mit dem angegebenen Namen!</p>
+<p>=&gt; Datei_laden(name_einer_fehlenden_datei) gibt null zurück.</p>
+<p>Wer fängt diesen "Fehler" auf?
+Die darüber liegende Integration darf ja nicht einfach auf null prüfen?!</p>
+<p>Erste_Seite_laden() { // Integration
+  dn = Dateiname_von_Kommandozeile_holen();
+  datei = Datei_laden(dn);</p>
+<p>return lese_Daten(datei);
+  }</p>
+<p>Es ist doch nicht die Aufgabe von Datei_laden bei Erfolglosigkeit eine Fehlermeldung zu generieren.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-04-30):</p>
+<p>Ich sehe mal davon ab, dass eine Methode wie Datei_laden() nie null als Ergebnis zurückliefern sollte.</p>
+<p>Entweder, das Fehlen einer Datei ist ausgeschlossen - außer es passiert dann doch mal. Dann kommt es zu eine Exception und die sollte das Programm beenden. (Allerdings aufgefangen durch einen globalen Exception Handler.) Das ist kein Fall, der uns hier interessieren muss.</p>
+<p>Oder das Fehlen der Datei ist ein erwartbarer Fall. Dann muss dafür Vorkehrung getroffen werden. Es gibt dann zwei Pfade durch Erste_Seite_laden(). Wie kann man das machen?</p>
+<p>Die Lösung liegt in Continuations:</p>
+<p>void Zeilen_lesen(string dateiname, Action zeilen, Action dateiNichtGefunden) {...}</p>
+<p>Hier der Code von Erste_Seite_laden() dazu: https://gist.github.com/ralfw/5486673#file-gistfile1-cs</p>
+<p>So zu denken und zu arbeiten ist ungewöhnlich - aber es lohnt sich. (Leider macht es C# schwieriger als nötig. Mit F# geht das einfacher.)</p>
+<p>(Was Datei_nicht_gefunden() tut, sei mal dahingestellt. Da wird in diesem Falle ein Fehler geworfen nach Ausgabe in eine Log-Datei oder so ;-) Aber es hätte auch ein Fehlerbehandler in Erste_Seite_laden() hineingereicht werden können.)</p>
+<hr />
+<p><strong>Jürgen</strong> (2013-04-30):</p>
+<p>Deine Einleitung trifft genau das, was ich gemeint hatte. (neue Fkt. i, abhängig von c_vor.., c_nach.., s).</p>
+<p>Finde den Ansatz sehr interessant und werde mal einige Dojos ausprobiren, aber:</p>
+<p>Seite Erste_Seite_laden() {
+  var dateiname = Dateiname_von_Kommandozeile_holen();
+  var alleDatenzeilen = Zeilen_lesen(dateiname);
+  return new Seite {
+    Überschrift = Überschrift_extrahieren(alleDatenzeilen),
+    Datenzeilen = Zeilen_der_ersten_Seite_selektieren(alleDatenzeilen)
+  };
+}</p>
+<p>Was ist mit der "new Seite", haben wir hier nicht wieder das Problem #1. "Böse", d.h. wir brauchen hier IoC und DI - genau wie am Anfang.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-04-30):</p>
+<p>Ok, meine Eingangsfrage hat sich geklärt. Insofern finde ich, dass  dein "Fraktal"-Vergleich aber nicht so ganz stimmt - die Selbstähnlichkeit eines Fraktals suggeriert meiner Meinung nach doch eher, dass "Integrationen" auf einem höheren Abstraktionslevel selber als atomar gelten und dort wieder als Bestandteil von Funktionen Verwendung finden können. Und geht nicht genau dieses wichtige Konstruktionsprinzip hier "über Bord"? Ich meine: was als "atomar" gilt, und was nicht, ist doch ein Stück weit willkürlich, oder sollte doch zumindest von dem Abstraktionslevel abhängen, auf dem man sich gerade befindet.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-04-30):</p>
+<p>Hallo Ralf,
+Danke für das Code-Beispiel (https://gist.github.com/ralfw/5486673#file-gistfile1-cs
+)</p>
+<p>Derart (IoC) arbeite ich auch seit einiger Zeit, aber mit JavaScript...wie du schon sagtest, geht das mit C# nur sehr umständlich :-(</p>
+<p>Das machst sogar richtig "Spaß", da ich mich für funktionales Programmieren begeistern kann.</p>
+<p>Aber innerhalb "richtiger" (imperativer) Programmierung bin ich mir unsicher, ob es wirklich das ist, was ich möchte. Ich mag LINQ, ich mag Delegaten/Funktionsparameter und ich wünsche mir einen Pipelining-Operator in C#, aber das gesamte Programm so zu strukturieren ist ... hm ... ungewohnt?, oder unpraktisch?</p>
+<p>Ich führe dieses Prinzip mal zu Ende:</p>
+<p>Seite Erste_Seite_laden(action) {
+  Seite seite;
+  Dateiname_von_Kommandozeile_holen((dateiname) =&gt; {
+ Zeilen_lesen(dateiname,
+  zeilen =&gt; {
+   Überschrift = "";
+   Datenzeilen = "";</p>
+<p>Überschrift_extrahieren((ü) =&gt; { Überschrift = ü; });
+   Zeilen_der_ersten_Seite_selektieren((z) =&gt; { Datenzeilen = z; });</p>
+<p>action(new Seite {
+    Überschrift  = Überschrift;
+    Datenzeilen = Datenzeilen;
+    });
+   },
+  () =&gt; Datei_nicht_gefunden()
+  );
+ });
+  }</p>
+<p>Vorteile, die ich sehe:
+- Erinnert stark an Async/Await =&gt; Parallelität (hier: nur asynchrones Bearbeiten) sollte sich sehr leicht umsetzten lassen (allgemein ein Vorteil von funktionaler Programmierung)
+- Sieht funktional aus</p>
+<p>Nachteile:
+- Quellcode wächst in die Breite (horizontal)
+- Sollte das Programm wirklich mit Dateiname_von_Kommandozeile_holen beginnen??? Ist DAS wirklich aussagekräftig? In meinen Augen verkörpert Dateiname_von_Kommandozeile_holen dadurch die oberste Abstraktionsebene. Das kann nicht gewollt sein.</p>
+<p>Fragen:
+- Ist der Kontrollfluss besser lesbar?</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-04-30):</p>
+<p>Damit man den Code etwas besser lesen kann:</p>
+<p>Seite Erste_Seite_laden(action) {
+....Seite seite;
+....Dateiname_von_Kommandozeile_holen((dateiname) =&gt; {
+........Zeilen_lesen(dateiname,
+........zeilen =&gt; {
+............Überschrift = "";
+............Datenzeilen = "";</p>
+<p>............Überschrift_extrahieren((ü) =&gt; { Überschrift = ü; });
+............Zeilen_der_ersten_Seite_selektieren((z) =&gt; { Datenzeilen = z; });</p>
+<p>................action(new Seite {
+....................Überschrift  = Überschrift;
+....................Datenzeilen = Datenzeilen;
+....................});
+............},
+............() =&gt; Datei_nicht_gefunden()
+............);
+........});
+....}</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-04-30):</p>
+<p>@Jürgen: new Seite ist nicht böse. Das ist eine Abhängigkeit von Daten. Die darf sein. Die muss sein. Irgendwann muss irgendwer mal ein konkretes Wort aussprechen und nicht immer nur Indirektionen bemühen.</p>
+<p>Außerdem ist der Gebrauch von Seite hier trivial. Da gibt es nichts zu mocken.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-04-30):</p>
+<p>@Anonym: Breitenwachstum? Das ist eine Frage der Formatierung.</p>
+<p>Ich finde Schachtelungen in jedem Fall schlechter zu lesen.</p>
+<p>Natürlich muss die Funktion mit Dateiname_von_Kommandozeile_holen() beginnen. Das ist der erste Schritt, der getan werden muss.</p>
+<p>Dass die Methode wichtiger erscheint, liegt ja nur daran, dass du da sofort mit Continuation arbeitest. Das ist nicht nötig. Sind ja kein Selbstzweck.</p>
+<p>Aber auch wenn du mit Cont. arbeitest, kommt es dann auf die Formatierung an. Hier meine Version deines Codes: https://gist.github.com/ralfw/707512ea1f8f8c5e9ec2#file-gistfile1-cs</p>
+<p>Im Detail mögen Continuations den Fluss manchmal etwas vernebeln. Aber mit Übung und Formatierung nimmt man diese Hürde in C#. Der Vorteil der besseren Evolvierbarkeit durch Entkopplung wiegt den kleinen Nachteil auf. (Und kurze Integrationen tun ihr Übriges.)</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-05-01):</p>
+<p>Etwas, das noch nicht detailliert aufgezeigt wurde, ist die Behandlung des Falles, wenn die Datei nicht existiert.</p>
+<p>Zeilen_lesen(string dateiname, Action mach_etwas, Action dateiNichtGefunden) {...}</p>
+<p>In den Tiefen von Zeilen_lesen muss es zu einer Fall-Unterscheidung kommen:
+if (Datei_existiert(dateiname) mach_etwas(...);
+else dateiNichtGefunden(...);</p>
+<p>Diesen Code stecken wir in eine Funktion Datei_lesen. Diese Funktion ist aufgrund der Bedingung keine Integration, aber aufgrund der Funktionsaufrufe auch kein Blatt (und damit keine Operation).
+Oder zählen die Funktionsaufrufe hier nicht, da sie von "oben kommen"/durchgereicht wurden?</p>
+<hr />
+<p><strong>Ralf Peine</strong> (2013-05-01):</p>
+<p>Ich denke das mal weiter:</p>
+<p>Eine typische Integrator-Methode sieht ja z.B. dann so aus:</p>
+<p>int integrator_methode(int input)
+{
+...norm_i next_i = to_norm_i(input);
+...
+...// Codeblock 1
+...f1_input input_f1 = convert_to_f1_input(next_i);
+...f1_output output_f1 = f1(input_f1);
+...next_i = convert_to_norm_i(output_f1);
+...
+...// Codeblock 2
+...f2_input input_f2 = convert_to_f2_input(next_i);
+...f2_output output_f2 = f2(input_f2);
+...next_i = convert_to_norm_i(output_f2);
+...
+...// Weitere Codeblöcke
+...
+...// Codeblock n
+...fn_input input_fn = convert_to_fn_input(next_i);
+...fn_output output_fn = fn(input_fn);
+...next_i = convert_to_norm_i(output_fn);
+...
+...int result = to_int(next_i);
+...return result;
+}</p>
+<p>Wenn man jetzt die Codeblöcke in eine anonyme Funktion lambda_n umwandelt,
+erhält man folgende Struktur:</p>
+<p>int integrator_methode(int input)
+{
+...norm_i next_i = to_norm_i(input);
+...
+...next_i = lambda_1(next_i);
+...next_i = lambda_2(next_i);
+...
+...
+...
+...next_i = lambda_n(next_i);
+...
+...int result = to_int(next_i);
+...return result;
+}</p>
+<p>Schreibt man die lambda_i in ein Array, erhält man folgendes</p>
+<p>int integrator_methode(int input)
+{
+...norm_i next_i = to_norm_i(input);
+...
+...for (int i=1..n) {
+......next_i = array<a href="next_i">i</a>;
+...}
+...
+...int result = to_int(next_i);
+...return result;
+}</p>
+<p>Wenn man das Array jetzt noch von außen übergibt,
+dann erhält man generativen Code.</p>
+<p>int integrator_methode(int input, Array array)
+{
+...norm_i next_i = to_norm_i(input);
+...
+...for (int i=1..n) {
+......next_i = array<a href="next_i">i</a>;
+...}
+...
+...int result = to_int(next_i);
+...return result;
+}</p>
+<p>Jetzt können der Entwickler per Code und sogar der Anwender per GUI
+bestimmen, welche Aktionen, sprich lambda_i durchgeführt werden
+sollen.</p>
+<p>Das ist besonders interessant für die Massendatenverarbeitung, falls
+z.B. integrator_methode(...) 100.000 mal oder öfter aufgerufen werden
+soll.</p>
+<p>Beispiel: Ausgabe von Daten in Tabellenform.</p>
+<p>Eine ASCII-Text-Tabelle kann nur die Optionen -align und -width für
+eine Spalte implementieren, Färbung, Fonts, Fettschrift usw. nicht.
+Dann enthält der Array im ASCII-Format nur lamba_align() und
+lambda_width(), im HTML-Format alle und im LaTex-Format bei
+Schwarz-Weiss-Druck alle bis auf lambda_farbe().</p>
+<p>In Klassen gedacht, würde man für ASCII lamda_farbe(), lambda_font()
+und lambda_fett() leer implementieren und jeweils 1.000.000 (1 Mio)
+mal aufrufen, bei einer Tabelle mit 100.000 Zeilen und 10 Spalten.
+Das sind 3 Mio überflüssige lamda_calls inkl. Hin- und
+Rückkonvertierung.</p>
+<p>Gerade in Perl sind Methoden-Calls sehr teuer, was die Laufzeit
+angeht. Daher gehe ich da noch einen Schritt weiter, und erzeuge statt
+Lambdas einen Perl-Code-String $code_string, den ich mit eval
+($code_string) als Perl-Code implementiere und verwende die daraus
+resultierende anonyme Funktion (nicht Methode, daher schneller!) als
+integrator_methode(i);</p>
+<p>Jetzt hat mein Programm also ein eigenes Code-Stück geschrieben,
+compiliert und 100.000 Mal aufgerufen.</p>
+<p>Und das gibt es auch schon zum Download unter:
+http://www.jupiter-programs.de/prj_public/erg/index.htm</p>
+<p>Das ist noch die alte Version, die neuere Variante mit verbesserter
+API ist fast fertig. Das Schreiben dieses Blogs hat mich ein wenig
+davon abgehalten, weiter daran zu arbeiten.</p>
+<p>Ralf Peine</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-05-01):</p>
+<p>@Anonym: In einer Operation darf eine Continuation aufgerufen werden. Das ist im Grunde dasselbe, wie ein Funktionsergebnis zurückgeben.</p>
+<p>int Berechnen(...) {...}</p>
+<p>oder</p>
+<p>void Berechnen(..., Action ergebnis) {...}</p>
+<p>das ist egal.</p>
+<p>Entscheidend ist, dass der Delegat eine Action&lt;...&gt; ist. Dann kann er nämlich kein Dienstleistung für Berechnen() darstellen.</p>
+<p>Und der Name des Delegat-Parameters sollte deutlich machen, dass unbekannt ist, wie es weitergeht. Der Delegat steht für einen Event.</p>
+<p>Falsch:</p>
+<p>void Berechnen(..., Action tueEtwasGanzKonkretes) {...}</p>
+<p>Richtig:</p>
+<p>void Berechnen(..., Action ergebnis) {...}</p>
+<p>Die Benennung soll so sein, dass das, was mit einem Ergebnis passiert, "anonym" ist. Die Methode selbst weiß nicht, was folgt. Sie erwartet auch nichts zurück.</p>
+<p>Nachteil von Continuations: Der Aufruf einer solchen Methode wird umständlicher.</p>
+<p>Vorteil: Mit einer Cont. kann man mehr als ein Ergebnis zurückliefern; es lassen sich ganz simpel Datenströme herstellen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-05-01):</p>
+<p>@Ralf: Ein solches Muster, wie du es beschreibst, habe ich noch nicht gesehen. Du hast da irgendwie eine Schleife serialisiert, weil du die Kontrollstruktur vermeiden willst.</p>
+<p>Aber so arbeitet man nicht. Jedenfalls habe ich in mehreren Jahren dazu noch keine Not gehabt.</p>
+<p>Schleifen müssen gar nicht vermieden werden. In Operationen dürfen sie ja stehen. Man geht nur anders mit ihnen um.</p>
+<p>Wenn du ein weniger abstraktes Beispiel nennst, kann ich dir das gern mal in IOSP/PoMO Code umwandeln. Unter dem, was du da geschrieben hast mit den ganzen Konvertierungen, kann ich mir nichts vorstellen. Nimm mal etwas aus deiner Praxis, was für mich auch noch verständlich ist ;-)</p>
+<hr />
+<p><strong>Ralf Peine</strong> (2013-05-01):</p>
+<p>Das kommt davon, wenn man in Beispielen zu abstrakt wird. Nehmen wir
+einmal an, die Integrative Methode erwartet als Input einen double
+Wert und liefert wieder einen double zurück. Und zwischen den
+einzelnen Operationen wird der Wert immer als double weitergereicht.</p>
+<p>double running_value;</p>
+<p>// Block 1
+// Block 2
+.......
+// Block j: Wurzel aus reeller Zahl berechnen
+...complex complexe_zahl = convert_to_complex(running_value);
+...complex ergebnis = quadrat_wurzel(complexe_zahl);
+...running_value = convert_to_double(ergebnis);</p>
+<p>// --- Erläuterung ----
+// Block j</p>
+<p>// Dieser Block berechnet die Wurzel</p>
+<p>// Da die Wurzel-Funktion komplexe Zahlen als input erwartet,
+// muss also voher die reelle Zahl z in eine komplexe Zahl c + di
+// umgewandelt werden.</p>
+<p>...complex complexe_zahl = convert_to_complex(running_value);</p>
+<p>// Jetzt die Aktion durchführen, also die Quadrat-Wurzel aus der Zahl
+// ziehen, das geht für komplexe Zahlen bekanntlich immer</p>
+<p>...complex ergebnis = quadrat_wurzel(complexe_zahl);</p>
+<p>// Und dann das Ergebnis wieder in eine reelle Zahl umwandeln.
+// Hier stellt sich die Frage, was passiert,
+// wenn der imaginäre Anteil di != 0 ist?
+// - Man kann ihn unter den Tisch fallen lassen,
+// - oder den Betrag der Zahl liefern
+// - oder eine Exception werfen.
+// Was passiert, entscheidet in dieser Implementierung
+// allein convert_to_double()</p>
+<p>...running_value = convert_to_double(ergebnis);</p>
+<p>Am Ende ist der Wert wieder im running_value als double gespeichert,
+und der nächste Block kann starten,
+der als Input wieder einen double erwartet.</p>
+<p>Dadurch kann man die Blöcke in beliebiger Reihenfolge durchführen oder
+einzelne weglassen. Und das zum Start oder sogar zur Laufzeit beliebig
+konfigurieren.</p>
+<p>Das ist nur eine weitere Möglichkeit, mit Operationen umzugehen.
+Aber natürlich nicht die einzige.</p>
+<p>Benötigt man dieses hohe Maß an Flexibilität nicht, kann man
+den Code natürlich einfach wie in den vorigen Beispielen hinschreiben
+und eventuell überflüssige Konvertierungen weglassen.</p>
+<p>Aber um z.B. Workflows vom Kunden konfigurierbar zu implementieren,
+wäre das eine Lösung, weil die Bausteine ja - technisch - beliebig
+kombiniert werden könnten.</p>
+<p>Auch wenn das nicht automatisch zu sinnvollem Code führt ;-)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-05-01):</p>
+<p>@Ralf: Nun haben wir aneinander vorbeigeredet. Ich hatte den Gedanken hinter deinem generischen Code schon verstanden - nur ist das eben kein typisches Muster.</p>
+<p>Ich würde z.B. eher nicht die 3 Funktionsaufrufe in Block j so in die integrierende Funktion schreiben. Stattdessen würde ich sie in eine eigene Funktion wegklappen.</p>
+<p>Und auch den Punkt mit der dynamischen Konfiguration sehe ich gemischt. Vom technischen Standpunkt aus ne coole Sache. Aber wer daran zuerst denkt, der ist schon beim Framework basteln, wenn das konkrete Problem nicht klar ist. "Könnte man ja brauchen..."</p>
+<p>Davon halte ich nicht soviel. Da kommt man schnell auf YAGNI.</p>
+<p>Damit will ich nicht sagen, dass eine solche Strukturierung von Software keine Hilfe gebrauchen könnte. Aus dem Grunde habe ich schon vor längerer Zeit die Flow Runtime gebastelt: https://github.com/ralfw/NPantaRhei</p>
+<p>Mit der kann man Integrationen mit beliebiger Tiefe in einer DSL formulieren. Die muss man gar nicht mehr in C# oder so codieren. Nur noch Operationen sind zu schreiben.</p>
+<p>Das funktioniert nett und bietet hübsche Möglichkeiten. Nur am Ende bin selbst ich davon wieder abgekommen. Braucht man einfach nicht. Oder zu selten. Ein bisschen Disziplin beim Codieren mit der vorgestellten Regel reicht. Damit kommt man weit, ohne noch lange etwas basteln oder lernen zu müssen.</p>
+<p>Es geht um direkte Lesbarkeit und Evolvierbarkeit. Da stören zusätzliche Frameworks und Indirektionen manchmal.</p>
+<hr />
+<p><strong>pvblivs</strong> (2013-05-01):</p>
+<p>Empfinde ich als gutes Paradigma, Integration und Operation zu trennen.</p>
+<p>Danke, werde es ausprobieren! :-)</p>
+<hr />
+<p><strong>Ralf Peine</strong> (2013-05-01):</p>
+<p>Ja klar, normalerweise ist das oversized. Aber für mein Report-Framework genau das richtige. Und wenn die Performance das Generieren von Perl-Code nicht notwendig machen würde, dann würde ich das auch immer direkt auskodieren, genau wegen der Lesbarkeit. Und Compile-Fehler sind im generierten Code schwer auszumachen.</p>
+<p>Und die Hin- und Zurückkonvertierung hatte ich ja im ersten Beispiel in die Lambdas "verpackt".</p>
+<p>Mir ging es hier mehr darum die Möglichkeit aufzuzeigen, alle statischen Entscheidungen (die nicht vom verarbeiteten Wert oder Zwischenergebnissen abhängen) vorher <strong>einmal</strong> durchzuführen und nicht im Ablauf <strong>über 100.000</strong> Mal.</p>
+<hr />
+<p><strong>Mirko Wagner</strong> (2013-05-02):</p>
+<p>Hallo zusammen,</p>
+<p>auch mir gefällt vor allem die Regel, Operationen von Integrationen zu trennen. Die zugrundeliegende Idee ist sicherlich schon früher in anderen Prinzipien (zumindest ansatzweise) formuliert worden. Z.B. wurde ja schon immer gefordert, innerhalb einer Methode nur Tätigkeiten "der gleichen technischen Ebene" durchzuführen.</p>
+<p>Was ich aber irgendwie nicht wirklich verstehe: Wie addressiert denn diese strikte Trennung vor allem die Probleme der topologischen, syntaktischen und semantischen Kopplung?</p>
+<p>Gerade die semantische Kopplung bereitet mir Kopfzerbrechen. Wenn sich an der Semantik von s() etwas ändert, so muss sich doch zwangsläufig auch die Vorbereitung - also c_vorbereitung - ändern?! Und das obwohl diese Methode nicht einmal etwas von s() weiß. Ich habe den Eindruck, als ob sich wieder mal nur etwas verschoben hat.</p>
+<p>Hmmm ...</p>
+<p>Vielen Dank und viele Grüße
+Mirko</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-05-02):</p>
+<p>Was mir daran bislang nicht gefällt ist, dass Funktionen, die als Integrationen entstanden sind, und Operationen nicht austauschen lassen. Eine "Integration" könnte doch beispielsweise auf einem höheren Abstraktionsniveau wieder eine Operation sein. Oder eine Operation , die z.B. in Form einer Framework-Funktion daher kommt, von mir durch eine äquivalente Funktion ausgetauscht werden, die ich selber aber als Integration mehrerer anderer Funktionen gebaut habe. Diese Austauschbarkeit geht mir hier verloren.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-05-02):</p>
+<p>@Mirko: Das Prinzip <em>Single Level of Abstraction</em> (SLA) hat schon ansatzweise gewollt, was IOSP will. Aber letztlich hat es keine so große Aufmerksamkeit gefunden, wie es verdient hätte. Denn wirklich konsequent verstanden, ist es eigentlich das IOSP :-) Denn solange noch irgendwo</p>
+<p>if(prüfe_bedingung()) ...</p>
+<p>steht, ist da nicht nur ein level of abstraction im Spiel.</p>
+<p>Semantische Kopplung: Wenn da steht...</p>
+<p>var x = c_vorbereitung();
+var y = s(x);
+var z = c_nachbereitung(y);</p>
+<p>dann ist der Kontrakt zwischen s() und den anderen beiden Funktionen klar. Die Signaturen bringen ihn auf den Punkt.</p>
+<p>Wenn da aber steht...</p>
+<p>...
+var x = ...
+...
+x = ...
+...
+var y = s(x);
+...
+var z = ...
+...
+z = ... y ...
+...</p>
+<p>dann ist nicht so klar, wie der Kontrakt aussieht. Ja, irgendwie sieht man, dass es um x geht, das an s() übergeben wird. Aber wie kommt x zustande? Was passiert mit y? Was ist das Ergebnis der Nachbereitung?</p>
+<p>Wenn sich s() ändert, dann muss man grübeln, ob und wo in Vor- und Nachbereitung eingreifen.</p>
+<p>Das ist alles viel, viel klarer in einer reinen IOSP Methode. Da kann man im Zweifelsfall gleich sehen, dass man in keiner anderen Methode eingreifen muss, sondern stattdessen etwas zwischen die Aufrufe des Existierenden schiebt:</p>
+<p>var x = c_vorbereitung();
+var x = c_nachbessern(x);
+var y = s(x);</p>
+<p>Dito zwischen s() und Nachbereitung.</p>
+<p>Wenn ich das hier so sage, ist das natürlich recht theoretisch. Man muss das einfach mal ausprobieren. Das ist übrigens gelebtes OCP. Die Operationen werden damit recht unempfindlich (closed for modification) für Veränderungen. Aber die Integrationen sind offen (open for extension). Da einen Einschub zu machen, ist trivial.</p>
+<p>Das sieht anders aus als das tolle Strategy Pattern zu benutzen. Aber wir wollen ja nicht in pattern mania sterben, sondern was auf die Straße kriegen.</p>
+<p>Für eine strategy muss man eine Codeeinheit auch speziell öffnen. Die muss man vorhersehen. Das ist schnell mal premature optimization. Aber eine Integration ist vom Zweck her offen für extensions.</p>
+<hr />
+<p><strong>pvblivs</strong> (2013-05-02):</p>
+<p>Ich habe noch eine Frage, Ralf. Betrachte mal bitte:</p>
+<p>Betrag berechneSteuer(Betrag b) {
+    def betragInEuro = betragInEuro(b)
+    def steuerInEuro = steuer(betragInEuro)
+    return steuerInEuro
+}</p>
+<p>und:</p>
+<p>Betrag berechneSteuer(Betrag b) {
+    def betragInEuro = betragInEuro(b)
+    def steuerInEuro = steuer(betragInEuro, STEUERSATZ)
+    return steuerInEuro
+}</p>
+<p>und:</p>
+<p>Betrag berechneSteuer(Betrag b) {
+    def betragInEuro = betragInEuro(b)
+    def steuerInEuro = betragInEuro.anteil( STEUERSATZ_FAKTOR)
+    return steuerInEuro
+}</p>
+<p>und:</p>
+<p>Betrag berechneSteuer(Betrag b, Faktor steuersatz) {
+    def betragInEuro = betragInEuro(b)
+    def steuerInEuro = betragInEuro.anteil( steuersatz)
+    return steuerInEuro
+}</p>
+<p>und:</p>
+<p>Betrag berechneSteuer(Betrag b, Faktor steuersatz) {
+    def betragInEuro = betragInEuro(b)
+    def steuerInEuro = b.value() * steuersatz.value()
+    return steuerInEuro
+}</p>
+<p>und:</p>
+<p>Betrag berechneSteuer(Betrag b, Faktor steuersatz) {
+    def betragInEuro = betragInEuro(b)
+    def steuerInEuro = b * steuersatz // überladen
+    return steuerInEuro
+}</p>
+<p>Konkret interessiert mich: Wo würdest Du die Grenze ziehen? Was ist noch integrativ und was nicht.</p>
+<p>Hintergrund ist, dass ich heute eine philosophische Diskussion mit einem Kollegen darüber hatte, dass ja Betrag.anteil auch nur eine funktionale Abhängigkeit ist. Jetzt könnte man argumentieren, dass auch * nur eine funktionale Abhängigkeit ist.</p>
+<p>Meine Frage zielt darauf ab, dass auch bei solchen Prinzipien wie dem IOSP natürlich die Grenzen fließend sind. Was ist für Dich Kriterium: Gute, sprechende Namen?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-05-02):</p>
+<p>In einer Integration ist eine funktionale Abhängigkeit erlaubt.</p>
+<p>Nun kannst du sagen, Kontrollstrukturen und Operatoren sind auch nur Funktionen.</p>
+<p>Haha. Natürlich. Aber es geht nicht um den Mechanismus, sondern den Inhalt. "Funktionale Abhängigkeit" ist die Kombination aus Mechanismus (Funktion) und Semantik. Und damit ist selbstentwickelte Semantik gemeint.</p>
+<p>Operationen kapseln die Nutzung von nicht selbst entwickelter Semantik. Das sind Kontrollstrukturen und Operatoren und API-Aufrufe aller Art.</p>
+<p>Damit haben sie soviel zu tun, dass sie sich darauf konzentrieren sollen. Sie fassen solche domänenneutralen Funktionen zusammen im Sinne einer konkreten Domäne. Sie geben ihnen eine Bedeutung in Bezug auf die Anforderungen an eine konkrete Software. Das ist der Job von Operationen. Manchmal steht in denen deshalb nur 1 Zeile, z.B.</p>
+<p>string[] Alle_Datensätzen_laden(string dateiname) {
+..return File.ReadAllLines(dateiname);
+}</p>
+<p>Das ist eine Operation, die einen API-Aufruf durchschleift, um ihn in die Anwendungsdomäne zu heben. Sie kapselt die Details des Ladens von Datensätzen. Heute ist das eine Zeile, morgen könnten das aber auch viele Zeilen sein.</p>
+<p>Integrationen verbinden nun Operationen und andere Integration zu größeren "Domänen. Bei Integrationen bewegt man sich also schon in der Domäne. Die Operation stellt erst Domänensemantik aus neutralen "Materialien" her.</p>
+<p>Ich freu mich, dass du gefragt hast. So konnte ich diesen Aspekt hier nochmal herausarbeiten. Ich denke, der ist wichtig.</p>
+<p>Operationen "schöpfen" Domänenvokabular. Integrationen "veredeln" Domänenvokabular :-)</p>
+<hr />
+<p><strong>pvblivs</strong> (2013-05-02):</p>
+<p>Operationen schöpfen / bilden Domänenvokabular, Integrationen veredeln. Finde ich ein gutes, klares Bild. Eine bessere und konkretere Abgrenzung als 'funktionale Abhängigkeit'.</p>
+<hr />
+<p><strong>(anonym)</strong> (2014-12-11):</p>
+<p>Hallo,</p>
+<p>ich habe mir die Artikel durchgelesen und versucht das ganze umzusetzen. Im Beispiel unten ein Ausschnitt.</p>
+<p>Wäre das so korrekt?</p>
+<p>Vorher:
+public void Enque(T t)
+{
+    var node = new Node(t);
+    if (firstNode == null)
+        firstNode = lastNode = node;
+    else
+        lastNode = lastNode.next =     node;
+    count += 1;
+}</p>
+<p>Nachher:
+ public void Enque(T t)
+        {
+            CheckFirstNodeExists(t, x =&gt; InsertLastNode(x), x =&gt; InsertFirstNode(x));
+            RaiseElementCounter(1);
+        }</p>
+<pre><code>    private void CheckFirstNodeExists(T value, Action OnExist, Action OnNotExist)
+    {
+        if (firstNode != null)
+            OnExist(value);
+        else
+            OnNotExist(value);
+    }
+
+    private void InsertLastNode(T t)
+    {
+        lastNode = lastNode.next = new Node(t);
+    }
+
+    private void InsertFirstNode(T t)
+    {
+        firstNode = lastNode = new Node(t);
+    }
+
+    private void RaiseElementCounter(int value)
+    {
+        count += 1;
+    }
+</code></pre>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

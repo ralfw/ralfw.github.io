@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rekursive Produktivität — ralfw.de Archiv</title>
+<meta name="description" content="Das drängendste Problem der Softwareentwicklung heute scheint mir Unzuverlässigkeit. Darin unterscheidet sie sich nicht von der Deutschen Bahn. Nicht Performance oder Skalierbarkei">
+<link rel="canonical" href="https://ralfw.de/archiv/2014/rekursive-produktivitat/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Rekursive Produktivität — ralfw.de Archiv">
+<meta property="og:description" content="Das drängendste Problem der Softwareentwicklung heute scheint mir Unzuverlässigkeit. Darin unterscheidet sie sich nicht von der Deutschen Bahn. Nicht Performance oder Skalierbarkei">
+<meta property="og:url" content="https://ralfw.de/archiv/2014/rekursive-produktivitat/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Rekursive Produktivität</h1>
+    <div class="doc-meta"><span>13. Jan. 2014</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2014/01/rekursive-produktivitat.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2014/rekursive-produktivitat/</code></span></div>
+    <div class="art"><p>Das drängendste Problem der Softwareentwicklung heute scheint mir Unzuverlässigkeit. Darin unterscheidet sie sich nicht von der Deutschen Bahn. Nicht Performance oder Skalierbarkeit oder Sicherheit oder Usability oder ein Mangel an Kunststücken sind das Problem. Allermeistens kann Technologie das, was gebraucht wird, um die nicht-funktionalen Anforderungen zu erfüllen. Das war vor 20-30 Jahren noch anders.</p>
+<p>Nein, heute hapert es bei der Lieferung. Sie ist unzuverlässig, weil wir knietief im Brownfield waten. Sie ist unzuverlässig, weil der Herstellungsprozess unsystematisch ist. Es mangelt an Evolvierbarkeit und Produktionseffizienz.</p>
+<p>Auch wenn ich mich viel und gern mit Evolvierbarkeit beschäftige, glaube ich jedoch, dass die Produktionseffizienz zuerst angegangen werden muss. Denn ohne ein systematisches Vorgehen gibt es auch keine Verlässlichkeit für Maßnahmen zur Erhöhung der Evolvierbarkeit.</p>
+<p>Und wie die Produktionseffizienz steigern? Klar, mit der Einführung von Agilität! Leider ist das aber nicht so einfach. Teams und Unternehmen können nicht einfach einen Schalter umlegen und schon wird agil gearbeitet. Bei aller Einsicht und gutem Willen der Organisationen ist das auch sehr verständlich: Wie soll denn eine solche Veränderung verlässlich durchgeführt werden, wenn Verlässlichkeit das Grundproblem ist?</p>
+<p>Die Einführung agiler Vorgehensweise versandet bzw. scheitert so oft, weil es an einem Meta-Prozess fehlt. Wer das Lernen verlernt hat, der hat es schwer, ein lernendes Vorgehen zu erlernen. Ist doch klar.</p>
+<p>Zumindest in Scrum steckt zwar etwas von dieser Meta-Ebene: die Retrospektive. Doch die kommt mir dort wie ein Anhängsel vor. Andere Aspekte sind klarer formuliert. Und vor allem ist die Retrospektive in dem Prozess, der eingeführt werden soll, und nicht vor oder über ihm. Scrum kommt ohne Bootstrap.</p>
+<p>Aber nicht nur auf der Meta-Ebene fehlt mir etwas. Am anderen Ende hapert es auch: bei der Verlässlichkeit jedes einzelnen. Die ganz persönliche Zuverlässigkeit ist oft mangelhaft. Joel Spolsky hat empfohlen, nach Bewerber nach zwei Kriterien auszuwählen: <a rel="noopener" href="http://www.joelonsoftware.com/articles/fog0000000073.html">smart + gets things done</a>. Mir scheint, das zweite Kriterium wird nur selten angewandt.</p>
+<p>Bitte verstehen Sie mich recht: Überall wird fleißig, fleißig gearbeitet. Man bemüht sich redlich wegzuschaffen, was da täglich an Aufgaben auf den Schreibtisch schneit. Alle legen sich ins Zeug. An Einsatzfreude (bis zur Selbstaufgabe) habe ich es ganz selten mangeln sehen. Doch guter Wille allein führt ganz offensichtlich nicht zu Verlässlichkeit. Im Kleinen fehlt mithin die Grundlage für erfolgreiche Veränderungen.</p>
+<p>Über die Gründe für diese Misere will ich hier nicht lange spekulieren. Vielmehr möchte ich mir Gedanken machen, wie sich daran etwas ändern ließe. Meine derzeitige Vorstellung: Wir müssen die Softwareentwicklung weiter von romantischen Vorstellungen befreien. Wir müssen genauer hinsehen. Wir müssen eine Bild dafür entwickeln, wie Softwareherstellung ganz fundamental als Prozess funktioniert.</p>
+<p>Aber nun genug der Vorrede. Hier mein Ansatzpunkt:</p>
+<h3>Der Prozessor</h3>
+<p>Ich glaube, wir müssen uns leidenschaftslos als Prozessoren verstehen. Wir alle sind Informations- bzw. Materialprozessoren. Ständig, nicht nur bei der Arbeit. Aber auf die will ich mich hier konzentrieren.</p>
+<p>Jeder Beteiligte an der Softwareherstellung ist dazu da, Input in Output zu verwandeln:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/12a2ffd2a36adda0.png" /></p>
+<p>Anforderungen sollen in Code übersetzt werden. Die Kollegin bittet um Hilfe mit ein paar Screenshots. Der Vertrieb ruft an und möchte Auskunft über den Stand der Entwicklung. Tausenderlei Dinge sind zu erledigen. Aufgaben prasseln aus allen Richtungen auf uns ein.</p>
+<p>Und das geht jedem so. Sie und ich sind nicht allein. Wir sind vielmehr in einem Netz von Aufgabenflüssen aufgehängt.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/57de9eecb2662eec.png" /></p>
+<p>Manche Aufgaben fließen von außen in dieses Netzwerk ein. Andere entstehen erst im Netzwerk während der Erledigung solcher Aufgaben. Insofern entstehen manche Aufgaben auch in uns für uns.</p>
+<p>So ist das: Wir sind “nur” Prozessoren in einem Netzwerk. Aber waren wir das nicht immer schon? Klar. Doch etwas hat sich verändert: Früher war das Netzwerk nicht so engmaschig. Früher waren wir getrennter von einander, weil es an Kommunikationswegen mangelte.</p>
+<p>Heute ist jeder jederzeit erreichbar. Technisch ist das möglich. Und zusätzlich will heute auch noch jeder jederzeit erreichbar sein – oder muss. Das bedeutet, die Zahl der Einflüsse im wahrsten Sinn des Wortes, d.h. dessen, was wann in uns einfließen kann, ist explodiert.</p>
+<p>Demgegenüber hat sich jedoch eines nicht verändert: Wie wir grundsätzlich funktionieren. Wir sind dieselben geblieben. Wir können immer noch nur eine Sache zur Zeit erledigen. Uns sind keine Prozessorkerne zugewachsen. Unsere Aufmerksamkeit ist begrenzt in Breite und Dauer. Auch wenn wir Prozessoren sind, sind wir doch keine Maschinen.</p>
+<p>Wir können zwischen verschiedenen Aufgaben nicht so schnell Umschalten wie eine CPU. Je häufiger wir umschalten, desto größer der Umschaltaufwand. Und je häufiger wir umschalten, desto geringer die Qualität unserer Transformationen.</p>
+<p>Ich denke, das wissen sie aus eigener Erfahrung.</p>
+<h3>Systematische Transformation</h3>
+<p>Wie nun angesichts dieser Begrenzungen transformieren? Das ist ganz einfach und hat sich in den letzten 5.000 Jahren wohl nicht verändert: konzentriert eins nach dem anderen.</p>
+<p>Kein Strampeln und Schreien ändert daran etwas. So funktionieren wir einfach. Das ist eine Gesetzmäßigkeit wie die Gravitation oder der zweite Hauptsatz der Thermodynamik. Wir müssen uns damit arrangieren. All unsere Arbeit muss sich danach ausrichten.</p>
+<p>Es ist so einfach – und doch so schwierig. Ich weiß. Jeden Tag ringe ich ja auch damit. Seit ich mich aber bemühe, die Situation systematischer zu betrachten, gelingt es mir immer besser. Früher ist der Mensch ja auch nicht geflogen – aber seit er sich systematisch mit den Naturgesetzen auseinandersetzt, haben wir es in dieser Hinsicht weit gebracht, würde ich sagen. So glaube ich daran, dann es auch unsere Produktivität beflügelt, wenn wir uns systematischer damit befassen.</p>
+<p>Also: Als Prozessor können wir uns nur mit 1 Aufgabe zur Zeit befassen. Das ist die aktuelle Aufgabe. Darüber hinaus gibt es aber noch eine ganze Reihe weiterer Aufgaben, die auf unsere Aufmerksamkeit warten, um erledigt zu werden. Ständig kommen darüber hinaus neue hinzu. Und alle haben eine unterschiedliche Priorität und womöglich unbekannte Größe.</p>
+<p>Ob wir uns überlastet fühlen oder nicht, hängt u.a. davon ab, ob Aufgaben schneller einfließen als Transformationsergebnisse ausfließen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f93d1bce4de0d367.png" /></p>
+<p>Die minimale Systematik besteht nun darin, denke ich, unsere Begrenzungen zu honorieren und nicht bei Eintreffen einer neuen Aufgabe die Bearbeitung der aktuellen zu unterbrechen.</p>
+<p>Ja, das meine ich so: Lassen Sie sich nicht mehr unterbrechen!</p>
+<p><a rel="noopener" href="http://msutoday.msu.edu/news/2013/brief-interruptions-spawn-errors/">Unterbrechungen sind das Grundübel heutiger Unproduktivität</a> von “Knowledgeworkern”. Je mehr Teams ich sehe, je genauer ich auf meine eigene Arbeitsweise achte, desto klarer wird mir das.</p>
+<p>Das Ziel muss lauten:</p>
+<p><strong>Zero Interrupts! Zero Notifications!</strong></p>
+<p>Was kann denn wichtiger sein, als dass Sie die aktuelle Aufgabe zuende führen?</p>
+<p>Sie mögen einwenden, dass immer etwas Wichtigeres auf Sie zuströmen könnte. Denn was, wenn der Kunde nicht mit Ihrer Software arbeiten kann, wenn dort ein Fehler jede Minute viel Geld kostet? Sie haben Recht, dann muss sofort gehandelt werden. Aber: Müssen wirklich Sie handeln – oder gibt es dafür nicht vielmehr einen “Notfallprozessor”? Und wie oft tritt dieser Fall ein? Einmal im Monat? Dann müssen wir nicht darüber reden, denn mir geht es um das übliche Tagesgeschäft. Wir sollten uns nicht durch Sonderfälle davon abhalten lassen, für den Normalfall eine Systematik zu finden. Wenn wir die haben, dann können wir innerhalb derer auch Sonderfälle abarbeiten.</p>
+<p>Wenn es nun keine Unterbrechungen – externe und selbst erzeugte – mehr gibt, hat das zweierlei zur Folge:</p>
+<ul>
+<li>Wir brauchen einen Puffer (aka Warteschlange), in die neue Aufgaben einfließen, während wir noch mit der aktuellen beschäftigt sind.</li>
+<li>Wir brauchen einen Mechanismus, um in Balance zu bleiben. Wir sind ja nicht allein, sondern brauchen andere, wie sie uns brauchen. Wir dürfen uns also nicht isolieren. Eine gewisse “responsiveness” ist nötig.</li>
+</ul>
+<p>Der Puffer entkoppelt uns von anderen Prozessoren. In ihn schieben (push) die (oder wir selbst) Aufgaben hinein. Das stört uns aber gar nicht oder nicht sehr in unserer Konzentration. Wir arbeiten unsere aktuelle Aufgabe ruhig ab. Erst wenn wir damit fertig sind, entnehmen wir unserem Puffer eine neue (pull).</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/09aaf2d2cba80800.png" /></p>
+<p>Das Ergebnis unserer Transformation schieben wir natürlich in den Puffer eines anderen Prozessors. Das mag der sein, von dem wir eine Aufgabe bekommen haben, oder ein anderer.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c2cf6ec3539fea1a.png" /></p>
+<p>Das sieht doch schon ordentlicher aus, oder? Das Netzwerk ist zwar nicht weniger verwoben – wir werden aber nicht mehr von den fließenden Aufgaben überflutet. Sie laufen jetzt in das Auffangbecken unserer Puffer.</p>
+<p>Manchmal gibt es dabei “Aufgabenkaskaden” im Rahmen von offiziellen Prozessen, z.B. dem Softwareentwicklungsprozess der vom Kundenwunsch bis zum Release reicht. Manchmal geht es aber auch nur um informelle Dialoge zwischen zwei Prozessoren, sozusagen ad hoc Microprozesse.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f2ef0d0b120e50c3.png" /></p>
+<p>Wie nun die Aufgaben im Puffer priorisiert werden, lasse ich hier mal dahingestellt. In jedem Fall steht die jeweils dringlichste Aufgabe deutlich sichtbar darin. Ihr widmen wir uns, wenn wir wieder Zeit haben.</p>
+<p>Und wann haben wir wieder Zeit? Eigentlich erst, wenn wir die aktuelle Aufgabe fertiggestellt haben. Wenn das jedoch Stunden, Tage, Wochen dauern sollte… dann dürfen wir nicht so lange von der Bildfläche verschwinden. Außerdem können wir womöglich gar nicht so lange konzentriert an einer Aufgabe arbeiten. Unsere Aufmerksamkeitsspanne ist begrenzt. Oder wir müssen auf Input warten, ohne den wir nicht weiterarbeiten können.</p>
+<p>Es ergeben sich also aus unseren eigenen Begrenzungen bzw. aus den Aufgaben selbst durchaus Unterbrechungspunkte, gegen die wir nichts tun können. <a rel="noopener" href="http://blog.bufferapp.com/optimal-work-time-how-long-should-we-work-every-day-the-science-of-mental-strength">Die Konzentrationsfähigkeit scheint mir z.B. bei 30-45 Minuten und bei 90-120 Minuten natürliche Grenzen zu haben.</a> Warum das nicht nutzen, um in Kontakt zu bleiben mit unserer Umwelt? Wir können ganz regelmäßig und damit verlässlich unseren Puffer durchsehen, ob etwas Dringenderes als die aktuelle Aufgabe unserer Aufmerksamkeit bedarf. Richten Sie es daher am besten so ein, dass Sie nur 1 Puffer haben. Dann gewinnen Sie am schnellsten Überblick über die wartenden Aufgaben.</p>
+<p>Unvermeidliche Unterbrechungen können wir nutzen, um für andere direkt (synchron) ansprechbar zu bleiben. Ein Kollege, der sie gestern noch mit einer längeren Problemklärung unterbrochen hat, ist morgen sehr wahrscheinlich bereit, auf Ihre nächste “Sprechzeit” zu warten. Denn die ist im Mittel nur vielleicht 20 oder 60 Minuten entfernt. So lange können die allermeisten Themen warten.</p>
+<p>Denken Sie daran: Zero Interruptions!</p>
+<p>Dasselbe gilt auch für Emails, Chat (Skype, Whatsapp), Twitter, Facebook, Newsgroups, RSS-Feeds und was der Social Media mehr sind. Das alles kann eine Stunde oder gar länger warten. Ihre Aufgabe ist die konzentrierte, weil schnellstmögliche und bestmögliche Abarbeitung von Aufgabe, nicht die Verarbeitung von Notifikationen. Aufnahme und Einordnung neuer Aufgaben darf nur einen Bruchteil Ihrer Zeit verzehren.</p>
+<p>Deshalb denken Sie auch daran: Zero Notifications!</p>
+<p>Ziehen Sie sich Informationen/Aufgaben, wenn Sie bereit dafür sind. Das gilt für elektronische wie menschliche Quellen.</p>
+<p>Was nun, wenn Sie eine Aufgabe noch nicht abgeschlossen haben, aber eine andere höhere Priorität hat? Dann können Sie nach einem natürlichen bzw. unvermeidlichen Unterbrechungspunkt die Aufgabe wechseln. Seien Sie sich allerdings bewusst, dass Sie damit ein Stück unverlässlich gegenüber der nun unterbrochenen Aufgabe werden. Sie sollten deshalb die Zahl der Aufgaben “on hold” begrenzen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/aae19899ebadc6b9.png" /></p>
+<p>Haben Sie nie mehr als vielleicht 2 oder vielleicht 3 Aufgaben in Arbeit, d.h. begonnen (aus dem Puffer entnommen), aber noch nicht abgeschlossen. Das könnte eine sehr kleine für zwischendurch sein (ein Anruf), eine, an der sie danach aktiv weiterarbeiten, und eine, bei der Sie auf einen Input zur Weiterarbeit warten müssen.</p>
+<p>Tun Sie sich diesen Gefallen der Work-in-Progress Limitierung. Sie werden entspannter arbeiten, sie werden verlässlicher liefern. Ihre Kollegen werden es Ihnen also auch danken – früher oder später.</p>
+<p>Gleichfalls sollten Sie die Zahl der Aufgaben in Ihrem Puffer begrenzen. Von außen ist nämlich nicht immer einfach zu unterscheiden, ob Sie schon mit einer Aufgabe angefangen haben oder ob sie noch unbearbeitet im Puffer liegt. Für andere Prozessoren gilt eine Aufgabe als übergeben, wenn Sie im Puffer liegt.</p>
+<p>Wenn Sie jedoch den Puffer begrenzen, dann können von anderen Prozessoren keine Aufgaben mehr darin abgelegt werden. Bzw. Sie können keine mehr annehmen und dort ablegen. Sie machen dann dicht – und üben sog. <em><a rel="noopener" href="http://en.wikipedia.org/wiki/Back_pressure#Back_pressure_in_information_technology">back pressure</a></em> aus. Aufgaben können aus anderen Prozessoren nicht mehr zu ihnen weiter-/abfließen und müssen dort on hold gehen. Damit steigt deren WIP usw.</p>
+<p>Das hört sich negativ an – aber für wen? Für Sie? Für den anderen Prozessor? Für das Gesamtsystem oder den Kunden?</p>
+<p>Tatsächlich ist das jedoch kein Bug, sondern ein Feature solcher Systematik. Anders kann das Gesamtsystem – Team, Abteilung, Unternehmen – nämlich nur schwer bemerken, wann Überlastung eintritt. Solange Sie zu Unterbrechungen Ja sagen, solange Sie grenzenlos Aufgaben annehmen, scheint alles zu klappen – nur dass es zu mysteriösen Unzuverlässigkeiten und Qualitätsmängeln kommt. Und das, wo doch alle unter Hochdruck mit bestem Willen arbeiten.</p>
+<p>Was ich hier empfehle, ist nichts anderes als so etwas wie <a rel="noopener" href="http://www.amazon.de/Personal-Kanban-Mapping-Work-Navigating-ebook/dp/B004R1Q642">Personal Kanban</a> + <a rel="noopener" href="http://pomodorotechnique.com/">Pomodoro Technique</a>. Werden Sie zum preemptive multitasking Prozessor mit WIP Limit :-)</p>
+<p>Ja, ohne ein gewisses Maß an Multitasking geht es nicht. Damit meine ich nicht, dass Sie während des Einparkens telefonieren und simsen sollen ;-) Das funktioniert nicht. Aber 2-3 verschiedene Aufgaben, zwischen denen wir im Verlaufe eines Tages springen, halten wir schon aus. Ohne geht es auch nicht, sondern isolieren wir uns zu stark von anderen. Und ich denke sogar, eine gewisse Vielfalt ist sogar bekömmlich. Ein Anruf zwischendurch macht auch mal den Kopf frei vom Bug Fixing. Eine Präsentation kann davon profitieren, zwischendurch mal eine technische Frage zu beantworten. Usw.</p>
+<p>Hier ein Ausschnitt aus meinem Personal Kanban Brett bei <a rel="noopener" href="http://leankit.com">leankit.com</a>:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/625ed2816526f6db.png" /></p>
+<p>Links die Spalte für meinen Puffer. In der Mitte eine Aufgabe in Arbeit und eine kontinuierliche “Hintergrundaufgabe”, die mich jeden Tag ein paar Minuten kostet. Rechts das, was ich schon erledigt habe. Das blende ich jedoch meistens aus. Was interessieren mich meine Aufgaben von gestern? ;-)</p>
+<p>An der aktuellen Aufgabe arbeite ich konzentriert: ununterbrochen, unnotifiziert. Zumindest, bis ich merke, dass meine Konzentration sinkt oder meine Pausenzeit erreicht ist. Dann wechsle ich mit meiner Aufmerksamkeit. Vielleicht schaue ich für ein paar Minuten Emails durch und trage neue Aufgaben in meinen Puffer ein. Vielleicht lese ich einen Artikel oder gehe Essen. Anschließend weiter mit meiner einen aktuellen Aufgabe.</p>
+<p>So kriege ich wirklich was gebacken. Für mich und andere zufriedenstellend und verlässlich. Das Brett ist ein Fokussierungswerkzeug für mich. Gegenüber anderen ist es aber auch ein Rechtfertigungswerkzeug. Wenn ich nämlich dieses Brett mit seinem Füllstand von Puffer (linke Spalte) und Prozessor (mittlere Spalte oben) zeige, dann wird anderen schnell begreifbar, dass auch ich nur begrenzte Kapazität habe. Neue Aufgaben können also nicht einfach sofort begonnen werden. Manchmal sind sogar schon gepufferte Aufgaben zu entfernen zugunsten neuer – ein Preis, den ein Auftraggeber zu zahlen bereit sein muss.</p>
+<p>Aber ich will mich hier auch nicht in Details des Umgangs mit so einem “Zeitmanagementbrett” ergehen. Mir war es erst einmal wichtig, Ihnen die Grundpfeiler für mehr persönliche Abarbeitungsverlässlichkeit vorzustellen. Jetzt möchte ich lieber das ganze skalieren…</p>
+<h3>Das Team als Multiprozessor</h3>
+<p>Was für uns alle persönlich gilt, gilt auch für ein Team: es ist ein Prozessor, der Input in Output transformieren soll.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a753f2295395a598.png" /></p>
+<p>Insofern gilt für das Team dasselbe wie für Sie: es braucht einen Puffer und Limits. Sonst kann es nicht verlässlich arbeiten. Sonst kann es dem Gesamtsystem nicht anzeigen, wenn es überlastet ist.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/137d3c450763d29f.png" /></p>
+<p>Organisationen sind also rekursiv. Als Ganzes, in Teilen und auf Ebene des einzelnen Mitarbeiters geht es um Prozessoren, die besser arbeiten, wenn man sie nicht unterbricht. Unzuverlässigkeit kann sich auf jeder Ebene einstellen – und tut das regelmäßig. Deshalb ist eine systematische Betrachtung so wichtig. Verlässlichkeit ist kein Zufall und nichts Softes, Zwischenmenschliches. Sie ergibt sich nicht aus gutem Willen. Ich würde sogar sagen: guter Wille ist oft ihr Gegner. Denn guter Wille (im Verein mit seiner dunklen Schwester Angst) ist begrenzungslos – bis eine physische Grenze erreicht ist.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e19b32b2ff9479fe.png" /></p>
+<p>Team und Unternehmen als Prozessoren sind nicht atomar. Das heißt, es können grundsätzlich Aufgaben parallel verarbeitet werden. Es treten mithin Prozesse deutlich in den Blick, d.h. die Transformation über mehrere Schritte hinweg. <a rel="noopener" href="http://www.amazon.de/Radikal-f%C3%BChren-Reinhard-K-Sprenger-ebook/dp/B0093UKC38">Dafür werden Unternehmen ja auch gegründet</a>: um etwas in Zusammenarbeit mit niedrigeren (Transaktions)Kosten als ein Markt herzustellen.</p>
+<p>Der Hauptprozess der Softwareentwicklung sieht dabei so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/dc9cd5156be95c0b.png" /></p>
+<p>Wobei jeder Produktionsschritt mit einem oder mehreren “Mitarbeiterprozessoren” besetzt sein kann, die dann wieder in gleicher Weise mit Puffer und WIP-Limit organisiert sind.</p>
+<p>Jetzt verstehen Sie vielleicht besser, warum ich glaube, dass es sehr schwer ist, verlässlich ein neues Vorgehensmodell oder sonst eine Veränderung einzuführen. Solange nämlich nicht dieses Grundorganisationsprinzip verstanden ist, ist jegliche Maßnahme auf den Zufall angewiesen. Verlässlichkeit existiert ja nicht einmal auf der untersten Ebene. Wie soll sie da auf höheren Ebenen entstehen?</p>
+<p>Zum Glück gelten auf jeder Ebene dieselben Gesetzmäßigkeiten. Es muss also nur einmal für alle Ebenen diese Systematik verstanden werden.</p>
+<p>Der Rest ist dann Feinheit :-) Nein, leider nicht. Dann beginnt erst die Arbeit. Nämlich die an der Justierung der Puffer und Limits. Aber das ist eine Geschichte für ein anderes Mal :-) Darüber gibt es viel Literatur. Stichworte sind Theory of Constraints, Lean Production/Development, Kanban, Queueingtheorie usw.</p>
+<p>Allen liegt jedoch derselbe Gedanke zugrunde: Dass wir alle auf vielen Ebenen in vernetzten Prozessen arbeiten. Und dass wir deshalb diese Prozesse möglichst sichtbar machen sollten. Denn sonst haben wir es schwer, sie zu verbessern.</p>
+<h2>Kommentare</h2>
+<p><strong>Patrick Koglin</strong> (2014-01-14):</p>
+<p>Hi Ralf,</p>
+<p>ich habe die Einleitung gelesen. Den Rest noch nicht, ich ahne worum es geht.</p>
+<p>Möchtest du darüber diskutieren?</p>
+<p>Gruß
+Patrick</p>
+<hr />
+<p><strong>(anonym)</strong> (2014-01-14):</p>
+<p>Vollste Zustimmung.</p>
+<p>Und nun die Gretchenfrage: Wie bringe ich das dem Kunden bei, der wie Rumpelstilzchen immer am Telefon tobt (und das ist jetzt keine stilistische Übertreibung), weil SEIN AKTUELLES Problem das aller-allerwichtigste auf der ganzen Welt ist? Klar, ich lasse ihn erst mal gepflegt auflaufen, je lauter er brüllt.</p>
+<p>Dann ruft Rumpi aber sofort die GF an. Und wenn die nun nicht hinter'm Entwickler, PL oder ScrumMaster oder wem auch immer steht und kein Vertrauen in die eigene Truppe hat, sind alle guten Vorsätze schnell vergessen und es werden Task-Forces rekrutiert zur Lösung des Problems, oder auch einfach ein paar simple Anschisse verteilt.</p>
+<p>Wohlgemerkt, alles nur, um ein Problem zu lösen, welches im Kontext betrachtet, eigentlich gar nicht soo wahnsinnig wichtig und dringend war.</p>
+<p>Fazit: Der Fisch riecht vom Kopf, und einige deiner Blogpostings und Artikel werden von der eigentlichen Zielgruppe vermutlich gar nicht gelesen.</p>
+<p>Wie können wir das ändern?</p>
+<hr />
+<p><strong>(anonym)</strong> (2014-01-14):</p>
+<p>Ach so, noch was. Wer den Text verstanden hat, hat auch gleichzeitig das Architekturprinzip von Messaging-Systemen und -Lösungen verstanden. Das ist doch auch mal hübsch, oder? Zwei Fliegen mit einer Klappe, sozusagen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2014-01-15):</p>
+<p>Find ich gut, dass du gleich gesehen hast, dass da auch was für Softwarearchitektur drin steckt. Der Flow lauert überall :-)</p>
+<p>Wie bringst du es den entscheidenden Leuten bei, dass es so (besser) funktioniert? Was soll ich sagen... es kommt darauf an, ob du es mit Erwachsenen, Dreijährigen oder Fundamentalisten zu tun hast.</p>
+<p>Bei Fundamentalisten kündigst du am besten. Mit denen kannst du nicht reden.</p>
+<p>Bei Dreijährigen kannst du es mit "einfach tun" probieren. Fang bei dir an: sei klar, hart, aber verbindlich und höflich. Dann wird man über die Zeit deine Verlässlichkeit schätzen lernen. Und dann färbt das (hoffentlich) ab (Beobachtungslernen).</p>
+<p>Bei Erwachsenen kannst du es mit Erklärungen versuchen; Appell an den Verstand. Und nichts muss ja für alle und für ewig entschieden werden. Warum nicht ein begrenztes Experiment machen?</p>
+<p>Am Ende wollen alle dasselbe: Vertrauen und Verlässlichkeit. Wer keinen Plan hat, wie das entsteht, ist panisch und drückt immer nur, um seinen eigenen Arsch zu retten. Etwas Nachdenken sollte da aber helfen - hoffe ich.</p>
+<hr />
+<p><strong>(anonym)</strong> (2014-01-21):</p>
+<p>Man muss schon lernen das Telefon mal klingeln zu lassen, den Messanger aus zu schalten und das E-Mail Programm nur dann aufzurufen, wenn man sich mit Mails beschäftigen muss. Auch ein Handy geht ganz aus, nicht nur im Vibriermodus.</p>
+<p>Ich führe regelmäßig Code Katas durch. Ich beginne immer mit:</p>
+<ul>
+<li>Email schließen</li>
+<li>Messanger schließen</li>
+<li>Projekt anlegen ...</li>
+</ul>
+<p>Das schult.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

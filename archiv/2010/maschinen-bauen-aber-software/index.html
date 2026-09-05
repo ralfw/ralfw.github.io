@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maschinen bauen, aber Software verschärfen — ralfw.de Archiv</title>
+<meta name="description" content="Softwareentwicklung kann man nicht schätzen? Die Frage und meine verneinende Antwort haben einige Diskussion ausgelöst. Das verstehe ich gut. Nicht anders hatte ich es erwartet. Gl">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/maschinen-bauen-aber-software/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Maschinen bauen, aber Software verschärfen — ralfw.de Archiv">
+<meta property="og:description" content="Softwareentwicklung kann man nicht schätzen? Die Frage und meine verneinende Antwort haben einige Diskussion ausgelöst. Das verstehe ich gut. Nicht anders hatte ich es erwartet. Gl">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/maschinen-bauen-aber-software/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Maschinen bauen, aber Software verschärfen</h1>
+    <div class="doc-meta"><span>11. Dez. 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/12/maschinen-bauen-aber-software.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/maschinen-bauen-aber-software/</code></span></div>
+    <div class="art"><p>Softwareentwicklung kann man nicht schätzen? <a rel="noopener" href="http://ralfw.blogspot.com/2010/12/widerspruch-gegen-das-schatzen.html">Die Frage und meine verneinende Antwort</a> haben einige Diskussion ausgelöst. Das verstehe ich gut. Nicht anders hatte ich es erwartet. Glaubenssätze, auch wenn sie wieder und wieder zu Schmerzen führen, werden ungern aufgegeben. Davon weiß die Psychotherapie ein Lied zu singen.</p>
+<p>Und um einen Glaubenssatz handelt es sich, denn die ganze Branche ist seit 50 Jahren unfähig, Schätzungen mit einer Fehlermarge von vielleicht 5-10% verlässlich abzugeben. Oder selbst wenn das möglich wäre, ist sie zumindest unfähig, diese Kunst systematisch in der Ausbildung zu vermitteln. Oder habe ich etwas übersehen?</p>
+<p>Hier will ich allerdings dieses Fass nicht nochmal aufmachen. Vielmehr geht es mir um eine Prämisse dieser und anderer Diskussion um Software. Ich glaube nämlich, dass so manche Diskussion in die falsche Richtung geht und so manche Argumentation zu falschen Schlüssen kommt, weil der Ausgangspunkt falsch ist.</p>
+<p>Ich glaube, dass wir in vielerlei Hinsicht nicht weiterkommen, wenn wir uns nicht nochmal fragen, was denn “die Natur” von Software ist. Wie ist sie eigentlich so ganz fundamental?</p>
+<h5>Frust mit Maschinen</h5>
+<p>Das vorherrschende Bild scheint mir das einer Maschine. Software wird als Maschine angesehen, die man vor allem produzieren muss. Der Entwurf der Maschine ist für den Laien vor allem die Anforderungserhebung. Danach müssen diese Anforderungen nur noch produziert, d.h. in Code übersetzt werden. Eine Tätigkeit, die dem Bau eines Hauses oder der Fertigung eines Motors entspricht – so meint man weithin.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e2e0e380fbd5e09c.png" /></p>
+<p>Deshalb wird auch immer wieder nach Schätzungen gefragt. Produktionsaufwände lassen sich nämlich sehr gut schätzen.</p>
+<p>Und deshalb wird auch immer wieder sehnsüchtig nur eines erwartet: die Ablieferung der kompletten Software. Die herrschende Vorstellung ist, mit Software kann man erst etwas anfangen, wenn sie komplett realisiert ist. (Dem widersprechen auch nicht die üblichen, Monate oder gar Jahre auseinander liegenden Meilensteine in vielen Projekten.)</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/3043a222efcbe23c.png" /></p>
+<p>Und aus der Vorstellung einer Maschine oder eines Gebäudes resultiert ebenfalls, dass Software bottom-up zu produzieren ist: erst das Chassis/Fundament, dann das, was darauf aufsetzt usw. Das Schichtenmodell ist dafür eine weit verbreitete Blaupause. Immer wieder bekomme ich als Berater deshalb auch Anfragen, ob ich nicht vor Aufnahme der Entwicklung einer Anwendung mal einen Blick auf das Anwendungsframework werfen könne. Das zu realisieren war ja nötig, damit man die Anwendung überhaupt beginnen kann. Ein Framework ist damit dem Stahlrahmen eines Hochhauses gleichgesetzt. Ohne den kann man nicht anfangen, die Wände hochzuziehen.</p>
+<p>Drei Probleme, dreimal eine Maschinenanalogie als Ursache:</p>
+<ul>
+<li>Problem 1 – Planabweichung: Schätzungen liegen immer wieder weit neben der Realität.  Problem 2 – Zielabweichung: Der Kunde ist eigentlich nur mit dem Ganzen zufrieden und wird daher erst spät mit der Umsetzung seiner Anforderungen konfrontiert. Das führt zu großen Differenzen zwischen Wunsch und Realität.  Problem 3 – Mangelnde Kommunikation: Budget wird in Frameworks und Infrastruktur verbrannt, die man für grundlegend und unverzichtbar hält, ohne dass der Kunde in der Zeit Nutzen erhält.</li>
+</ul>
+<p>Weil die allgemeine Vorstellung ist, Software würde produziert, mache im Wesentlichen nur als Ganzes Sinn und müsse auch aus Schichten von Querschnitten aufgebaut werden, frustrieren wir immer wieder uns und unsere Kunden.</p>
+<p>Das behaupte ich mal, denn ich glaube, mit einer anderen Vorstellung von Software, verschwinden diese Probleme. Software wird nicht gebaut. Oder wenn, dann ist das eine kurze Sache, die man einem Buildscript überträgt. Softwareproduktion ist quasi kostenlos. Aber Softwareentwicklung, d.h. die Planung dessen, was gebaut werden soll, die kostet kaum schätzbaren Aufwand.</p>
+<h5>Spaß mit Bildern</h5>
+<p>Wie könnte eine weniger frustrierende Vorstellung von Software aussehen? Ich glaube, mit einem einer 3D CGI-Grafik kommen wir weiter.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/cc5ae02329676ae9.png" /></p>
+<p>Die Umsetzung der Gesamtanforderungen können wir dann als komplett gerendertes 3D-Modell ansehen. Jedes Detail ist brilliant gerechnet.</p>
+<p>Doch das ist erst ganz am Ende der Fall. Vorher existiert auch schon das Gesamtbild, aber in gröberer Form: Drahtmodell, Drahtmodell mit wenigen Flächen, grob gerendertes Modell mit Flächen, feiner gerendertes Modell usw.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/bb4da7b0e42f9429.png" /></p>
+<p>Der Trick bei Software ist, dass sie nicht wie eine Maschine bottom-up entwickelt werden muss. Wir können sie langsam scharf werden lassen, wie können sie immer feiner rendern, wie können ihr immer mehr Details hinzufügen. Aber vom ersten Moment an kann sie als Ganzes, d.h. als benutzbares Werkzeug existieren.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/edde237fc03ba8bc.png" /></p>
+<p>Software ist insofern eher fraktal. Dazu ein <a rel="noopener" href="http://www.miqel.com/fractals_math_patterns/visual-math-natural-fractals.html">Zitat</a> über den hier abgebildeten Farn:</p>
+<blockquote>
+<p><em>After a few dozen repetitions or ITERATIONS the shape we would recognize as a Perfect Fern appears from the abstract world […]. How and Why can this be?</em></p>
+</blockquote>
+<p>Ja, wie kann das sein? Es liegt daran, dass Software eben soft ist. Sie unterliegt nicht der Physik. Für das Feature “Ruhe Schlafstätte” muss ein Haus ein Schlafzimmer haben, dafür muss es ein Dach und Wände haben, dafür muss es ein Fundament haben. Wände können einfach nicht schweben ;-)  Bei Software ist das anders. Für die Funktionalität “Zahlungseingänge buchen” muss die Fakturasoftware kein komplettes Data Access Layer haben und kein vollständiges UI und keine umfassende Security und schon gar kein lückenloses Datenmodell – in Bezug auf den Gesamtzweck.  Software kann Feature-by-Feature schrittweise ausgeprägt werden in Längsschnitten. Und sie kann bei jedem Schritt überall eine Kleinigkeit hinzufügen. Etwas mehr UI-Detail, etwas mehr Funktionalität bei Data Access, ein wenig mehr Leistung in der Validation usw. usf.  Minimale Funktionalität im Backend kann sozusagen schon ein riesiges Frontend tragen, weil es keine physikalischen Gesetze gibt. Unvollständiges kann Vollständigem dienen. Lückenhaftes kann jederzeit nachträglich verspachtelt werden. Grobes kann jederzeit verfeinert werden.  Software können wir schrittweise wie den obigen Farn vollständiger, lebensechter, anforderungsnäher “rechnen”. Im ersten dünnen Längsschnitt – Feature Slice – ist ihre grundsätzliche Form schon zu erkennen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/0c22aa66302a1f0f.png" /></p>
+<p>Mit dem kann der Kunde dann noch nicht soviel anfangen. Zugegeben. Doch er bekommt schon einen Eindruck. Und wir als Entwickler auch. Das ist wie mit dem modernen Film. Da verlässt sich ein Regisseur wie Stephen Spielberg auf die <a rel="noopener" href="http://www.youtube.com/watch?v=aP89X0_I3TM">pre-visualization</a>:   Damit meine ich jetzt aber keinen Prototypen, sondern eben einen lauffähigen Längsschnitt, eine Teilfunktionalität. Sie stellt die Anwendung “durch alle Schichten” schon dar – nur eben noch unvollständig.  Bei einem Auto oder einem Mixer oder einem Drucker wäre das nicht zu machen. Wie auch?  Oder anders: Bei Maschinen findet diese schrittweise “Verschärfung” über Modelle statt. Die Sukzession der Modelle bietet von Anfang an Funktionalität – aber nicht all das, was ein Kunde von heute erwartet. Ein Ford Model-T konnte Personen motorgetrieben befördern, hatte aber keine Sicherheitsgurte und schon gar kein ABS.   Über die Zeit “verschärfen” sich Maschinen also auch. Ein Modell einer Maschine jedoch muss eben in ganz-oder-gar-nicht Manier entwickelt und gebaut werden. Das ist bei Software anders. Das macht Software fundamental anders als Maschinen.</p>
+<h5>Bilder mit Konsequenzen</h5>
+<p>Die “Bildhaftigkeit” von Software hat nun Konsequenzen, die wir nicht ignorieren sollten. Sie helfen die obigen Probleme lösen:</p>
+<ul>
+<li>Konsequenz 1 – “Planlosigkeit”: Software wird eben nicht produziert, sondern entwickelt. Damit ist sie der Möglichkeit der maschinenbaulichen Dreifaltigkeit Fixpreis-Fixscope-Fixzeit beraubt. Entwicklung ist inhaltlich nicht zeitlich planbar so wie Produktion. So ist das mit kreativen Prozessen. Wer Software in Auftrag gibt, muss das verstehen, um nicht unglücklich daran zu werden.  Konsequenz 2 – Verschärfung: Software bietet nicht erst Nutzen, wenn sie 100% geliefert ist. Im Gegenteil! Wer sie erst sieht, wenn sie “voll gerendert” ist, der erlebt sehr wahrscheinlich sein blaues Wunder. Software muss wegen ihrer Kompliziertheit und Komplexität schrittweise verschärft werden – und sie kann es. Das ist das Schöne. Warum sollte man sie dann auf etwas Maschinenhaftes reduzieren? Nehmen wir doch Software endlich ernst und entwickeln sie in dünnen Längsschnitten. Agile Vorgehensmodelle haben das auch schon vorgeschlagen – aber aus meiner Sicht nehmen sie das noch nicht ernst genug. Und die Objektorientierung steht und da im Weg. Sie kommt aus dem Maschinenbauzeitalter. Für “development as rendering” ist OOP nicht wirklich geeignet. Andere Ansätze müssen her. EBC scheint mir da ein Weg zu mehr Kongruenz der Modellierung mit der Natur der Software.  Konsequenz 3 – Längsschnitte: Man höre endlich auf, in Schichten zu denken und zu entwickeln. Das ist nicht nötig; Software braucht kein Fundament oder Rahmenwerk. Das Geld des Kunden sollte nicht auf Wochen oder Monate versenkt werden in Programmierung, die ihm nichts bringt. Nutzen muss vom ersten Tag an her. Längsschnitte statt Querschnitte tun not. Aber dafür braucht es eine andere Entwicklungskultur. Denken und Teamorganisation müssen sich ändern, um Längsschnitte zu sehen und hochperformant zu realisieren.</li>
+</ul>
+<p>In Summe glaube ich, dass wir noch gar nicht abschätzen können, wie anders und besser Softwareentwicklung sein kann, wenn wir endlich das überkommene Denken über Software aufgeben. Maschinen als Bild und von-Neumann-Denke waren lange erfolgreich – werden aber zunehmend ein Klotz am Entwicklerbein. Sie stehen uns im Wege dabei, dem Kunden schnell Nutzen zu liefern für sein Geld. Und sie stehen uns im Wege bei der Ausreizung moderner Prozessoren.</p>
+<p>Verabschieden wir uns davon. Schreiben wir endlich schärfer und schärfer werdende Software. Jeden Tag.</p>
+<h2>Kommentare</h2>
+<p><strong>Claus Polanka</strong> (2010-12-11):</p>
+<p>Hi Ralf,</p>
+<p>wunderbarer Beitrag. Ich habe mir zufällig heute bevor ich Deinen Beitrag gelesen habe, folgendes Interview mit Jez Humble angesehen: http://www.infoq.com/interviews/jez-humble-continuous-del</p>
+<p>Er ist der Autor von dem erst vor kurzem erschienenen Buch "Continuous Delivery" und jetzt wollte ich Dich einmal fragen, ob dieses Buch in Deinem Sinne ist (vorausgesetzt Du hast schon vielleicht einen Blick riskiert, falls nicht würde ich es Dir gerne empfehlen).</p>
+<p>In dem Interview spricht Jez von sehr ähnlichen Dingen die Du in Deinem Beitrag angesprochen hast. Z.B., dass es extrem wichtig ist, den Kunden, am besten vom ersten Tag an, mit funktionierender Software zu versorgen um so schnell wie möglich Feedback zu erhalten.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-12-12):</p>
+<p>@Claus: Klar, Continuous Delivery (CD) ist wichtig - und möglich! Das habe ich in meinem anderen Blogartikel mit dem Traum ja betont.</p>
+<p>Ich würde sogar sagen, ohne CD hat es ein Team schwer, CCD einzuführen. Denn ohne CD bleibt immer zumindest ein Rest der Frage übrig, "Wofür eigentlich X?" Und für X kannst du SRP oder TDD oder Modellierung usw. einsetzen.</p>
+<hr />
+<p><strong>Carsten</strong> (2010-12-13):</p>
+<p>Was soll denn das?</p>
+<p>Gipfelt Deine Artikelserie nun in dem Aufruf: „Schätzt nicht, schreibt lieber jeden Tag schärfer werdende Software!“?</p>
+<p>Geht’s noch?</p>
+<p>Wenn mich jemand fragt, was es kostet Excel neu zu entwickeln, dann sag ich: „150 Millionen Euro“. Wenn mir jemand die Kohle überweist, lege ich heute Abend noch los. Und Ralph stell ich als Chefentwickler ein.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-12-13):</p>
+<p>@Carsten: Wenn du einen konstruktiven Beitrag leisten willst, versuch es nochmal. Und wenn du dann noch genau liest und meinen Namen richtig schreibst, dann freu ich mich besonders.</p>
+<p>Oder anders: Ich bemühe mich, meine Gedanken hier sachlich und konstruktiv vorzutragen. Diese Mühe hätte ich gern zumindest mit konstruktiven Kommentaren honoriert. Wer das nicht über sich bringt, der möge auf einen Kommentar verzichten.</p>
+<hr />
+<p><strong>Blog: Robert-M</strong> (2010-12-13):</p>
+<p>Ein großartiger Artikel! (Wobei ich schon finde, dass einige OOP Interpretationen eine Stück für Stück Annäherung und Schärfung beinhalten und leben.)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-12-14):</p>
+<p>@Robert: Freut mich, dass dir der Artikel gefällt. Aber mit OOP oder FP oder Prozeduraler Programmierung usw. hat das für mich nichts zu tun. Das gilt genauso für Assembler.</p>
+<p>Mir geht es um die grundlegende Natur von Software, die mit ihrer Immaterialität beginnt. Wir bauen Software, als bestünde sie aus Metall, Stein usw., halt Materialien. Das ist aber nur einer überkommenen Gewohnheit geschuldet. Die zu überwinden, müssen wir lernen.</p>
+<hr />
+<p><strong>Blog: Robert-M</strong> (2010-12-14):</p>
+<p>Hallo Ralf, ich hatte mich eigentlich nur auf die 2. Konsequenz bezogen: "Für “development as rendering” ist OOP nicht wirklich geeignet." Auch wenn ich gerade das Flow Based Programming Buch lese, F# schon (länger) neben dem Schreibtisch liegt und ich auch EBCs sehr nützlich finde, sehe ich mich schon eher in der OOP Welt verwurzelt, die sich durch externe Einflüsse verändert, immer vielfältiger wird und auch einige nicht OOP Sichten bekommt.</p>
+<p>Das Verschärfungsmodell sehe ich auch als Technologie unabhängig, so wie Agile oder Wasserfall.</p>
+<hr />
+<p><strong>Unknown</strong> (2010-12-14):</p>
+<p>Hi Ralf,</p>
+<p>ich sehe den Ansatz des Verschärfens sehr ähnlich, verstehe aber nicht, warum das ganze unvereinbar mit dem Schichtenmodell sein soll.</p>
+<p>Auch dieses Modell ist doch nur eine Form des Aufteilens der Applikation in verschiedene Teilbereiche die sich untereinander über definierte Schnittstellen unterhalten. Auch diese Form der Aufteilung ist der "Verschärfung" nicht abträglich.
+Die Regeln der Schichtung dienen für mich hauptsächlich dazu den Fluss der Information, sowie und den Ort der Implementierung zu definieren. Das erleichtert in vielen Fällen Entscheidungen und führt (Wenn man sich daran hält :) ) zu verständlicherem Code.</p>
+<p>Aber was hindert mich daran, diese Implementation zu Beginn je Schicht klein zu halten und später zu verfeinern ?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-12-14):</p>
+<p>@F.Gamper: Zum Schichtenmodell lässt sich einiges sagen - leider nicht viel Gutes. Aber darum geht es hier auch nicht.</p>
+<p>Schichten sind ein Implementationsdetail, wenn du denn in ihnen denken willst.</p>
+<p>Der Artikel beschreibt hingegen ein big picture, eine grundsätzliche Sicht auf Software. "Verschärfen" ist daher zum Schichtenmodell orthogonal. Du kannst versuchen, mit Schichten zu verschärfen oder ohne. Egal.</p>
+<hr />
+<p><strong>Blog: Robert-M</strong> (2010-12-14):</p>
+<p>Hi Ralf, F.Gamper</p>
+<p>obwohl das natürlich nichts mit dem Artikel zu tun hat u. ich Ralf vor meinem geistigen Ohr auch ein bisschen aufstöhnen höre :-), eine kurze Überlegung zum Schichtenmodell:</p>
+<p>Wenn wir heute von Viewmodell, Datenmodell, Domänenmodell sprechen, dann sind diese in Schichten verortet. Anzustreben oder gar einzufordern, dass das der View nicht mit der Datenschicht spricht, ist erst mal nichts Schlechtes und entspricht dem Schichtenmodell. Das ganze muss ja nicht einmal physisch getrennt werden, eine logische Trennung reicht ja. Der Quelltext für KundenAnleger kann im gleichen Ordner liegen, wie der der Quelltext für einen KundenPersistierer. Nur sollte der KundenPersistierer nicht mit dem KundenAnleger sprechen. Etwas das auch in nicht OOP Modellen einen berechtigten Platz hat. Wobei natürlich auch jemand daher kommen könnte und OOP ohne Schichtenmodell nutzen kann, denn Schichtenmodelle sind immer nur ein Architekturmuster, nicht das einzige.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-12-14):</p>
+<p>@Robert: Du kennst mich schon: natürlich stöhne ich auf beim Schichtenmodell.</p>
+<p>Der Grund ist ganz simpel: Es ist überfrachtet und gehört deshalb für 5 Jahre auf die Reservebank; man sollte es nicht einsetzen im Spiel. Jeder Einsatz sorgt nämlich für Missverständnisse.</p>
+<p>Darüber hinaus ist das Schichtenmodell verwurzelt in Abhängigkeitsdenke. Und die ist komplett kontraproduktiv. Damit kannste nix modellieren, was einer versteht.</p>
+<p>Vergiss Schichten. Wenn du irgendwas zusammenfassen willst, nenn es anders. "Gruppe von Funktionseinheiten" oder sonstwie. Aber nicht Schicht. Bitte :-)</p>
+<hr />
+<p><strong>Unknown</strong> (2010-12-15):</p>
+<p>Hallo Ralf,</p>
+<p>dein Artikel ist die logische Konsequenz aus CCD und EBC. Oder andersrum: Um Software immer mehr detailreicher "zu rendern" hilft CCD und EBC ungemein.</p>
+<p>Leider sind die alten Verhaltensmuster so tief verankert, dass ein loslassen richtig Schmerzen bereitet. Das gilt für den Architekten, den Entwickler und leider auch den Kunden (intern wie extern!). Denn der ist gewohnt sich in seiner trügerischen Sicherheit aus Kosten/Scope und Zeit zu wiegen, um ja kein Risiko einzugehen. Da Überzeugung zu leisten ist echte Pionierarbeit. Und spätestens wenn ein zweiter Dienstleister ihm ein Angebot unterbreitet, in dem er "garantiert" die heilige Dreifaltigkeit + Qualität (natürlich!) zu liefern, ist es schnell aus.</p>
+<p>Noch. Denn ich denke die Zeiten werden sich ändern, und fürs Umdenken ist höchste Zeit in der Softwareentwicklung.</p>
+<p>Für alle OOP und Schichtenmodellliebhaber kann ich nur sagen: Probiert es doch einfach mal aus. Es funktioniert. Natürlich sollte man mit einem kleinen Projekt starten, und natürlich gibt es zig Detailfragen, und natürlich sind die ersten Projekte Zeitintensiver. Aber ehrlich: Neue Vorgehensweisen brauchen Zeit um verinnerlicht zu werden, aber irgendwann gehen sie genauso in Fleisch und Blut über wie das ewige Denken in OOP und Schichten...</p>
+<hr />
+<p><strong>Robert</strong> (2010-12-19):</p>
+<p>Hi Ralf,</p>
+<p>ich finde deinen Artikel super. Er trifft mitten ins Schwarze. Aus meiner Sicht kann Softwareentwicklung nur so funktionieren. Leider ist es in unserer Branche noch weit verbreitet, sich nach Auftragserteilung schnell in seinen „Elfenbeinturm“ zurück zu ziehen und erst wieder am Ende der Entwicklung von sich hören zu lassen (überspitzt gesagt). Ich predige bei mir in der Softwareentwicklung, dass der beständige Austausch mit dem Kunden das Ah-Oh in der Entwicklung ist oder mit den Kochrezepten gesprochen – das Salz in der Suppe.</p>
+<p>Nur muss man seinem Kunden klar machen, dass wenn er eine maßgeschneiderte Software erhalten will, er auch an sich maß nehmen lassen muss. Das geht nur mit seiner aktiven Unterstützung. Ich habe bei mir die Erfahrung gemacht, dass das meinen Kunden sehr viel Spaß macht und für ihn eine deutliche Transparenz in den Entwicklungsprozess bringt.</p>
+<p>Weiter so Ralf, ich bin schon auf deinen nächsten Blogeintrag gespannt.</p>
+<hr />
+<p><strong>Janek Fellien</strong> (2010-12-20):</p>
+<p>Hallo Ralf,</p>
+<p>sehr schöner Artikel, mit einem mikroskopisch kleinen Fehler, den ich mal versuche darzustellen.</p>
+<p>Du beschreibst, dass der Produktionsprozess bei der Herstellung von Produkten nicht mit der Herstellung von Applikationen vergleichbar ist, weil Software schrittweise verbessert werden muss, um zum Ergebnis zu kommen und Produkte nach der Montage quasi fertig vom Band fallen. Habe ich das richtig verstanden? Wenn ja, dann meine ich, dass das nicht ganz richtig ist.</p>
+<p>Ein einfaches Beispiel, anwendbar auf viele komplexe Produkte:</p>
+<p>Der <em>aktuelle</em> 4-Takt-Ottomotor ist das Ergebnis einer <em>Entwicklungsevolution</em> der letzten (schätzungsweise) 120 Jahre. Während dieser Evolution sind viele Wege ausprobiert worden, Sound, Verbrauch, Leistung und viele andere Aspekte zu optimieren.
+Der Motor ist also ein aktueller Stand eines Ergebnisses der schrittweisen "Verschärfung" oder besser, "Verbesserung" (http://de.wikipedia.org/wiki/Kaizen). Er ist evolutionär den Gegebenheiten angepasst und verbessert worden. Während dieser Anpassung sind viele Modelle verworfen oder nicht weiterentwickelt worden(Sterling-, Wankel- und Holzvergasermotor, Dampfmaschine und auch !!! Dieselmotor!!!)</p>
+<p>Ich will also sagen, dass ich keinen grossen Unterschied zwischen "Verschärfung" und "Verbesserung/Bauen" sehe. Der Prozess ist ein bisschen  anders, aber das Anliegen und die Umsetzung sind absolut deckungsgleich.</p>
+<p>~Janek</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-12-20):</p>
+<p>@Jan: Ich habe ja gesagt, dass ich die Evolution bei Maschinen anders sehe. Die geschieht - wie du es auch beschreibst - in Modellen.</p>
+<p>Bei Software gibt es natürlich auch Modelle: Word Star, WorfPerfect, Word - das sind Modelle von Textverarbeitungsprogrammen. Die bauen aufeinander auf.</p>
+<p>So auch die Modelle der Autoindustrie (oder Motorenindustrie). Jedes Modell ist eine Verbesserung gegenüber vorhergehenden Modelle desselben oder anderer Hersteller.</p>
+<p>Ein Modell jedoch ist starr. Ein Smart ist ein Smart ist ein Smart. Fertig. Daran lässt sich noch ein bisschen rumschrauben. Aber viel ist das nicht. Wer eine tolle Erkenntnis hat, wie man Kleinstwagen noch besser machen kann... der entwickelt ein neues Modell.</p>
+<p>Bei Software hingegen ist das anders. Nach Auslieferung wird da nicht nur ein bisschen rumgeschraubt. Es wird regelmäßig und absehbar massiv gepimpt!</p>
+<p>Ein Golf kann auch gepimpt werden - aber das ist die Ausnahme und dafür brauchts echte Spezialisten.</p>
+<p>Softwarepimping ist nicht die Ausnahme. Und muss auch nicht, weil es Soft-Ware ist und nicht Hard-Ware. Das (!) ist der Unterschied.</p>
+<hr />
+<p><strong>Janek Fellien</strong> (2010-12-20):</p>
+<p>@Ralf: Ah Ok, dann hatte ich es tatsächlich ein wenig (mikroskopisch) falsch verstanden ;-)</p>
+<p>So macht deine Aussage auch für mich Sinn.</p>
+<p>Frohe Weihnachten</p>
+<p>~Janek</p>
+<hr />
+<p><strong>Jörg Dieber</strong> (2011-02-24):</p>
+<p>Hallo Ralf,</p>
+<p>wirklich ein guter Beitrag. Es kranken wirklich viele Firmen an diesem Thema. Ich kann Killerphrasen wie 'wir machen das für bessere Planbarkeit' oder 'Time-to-Market' ist uns wichtig schon gar nicht mehr hören. Je mehr Zeit man in die Abschätzung steckt, desto mehr Zeit ist für das eigentliche Projekt verloren. Da man damit die Schlüsselpositionen eines Projekts blockiert und nebenbei auch Nerven kostet, führt das eher zu einem späteren Liefertermin oder zu einem Produkt mit weniger Features.
+Man kann das am Ende aber mit allen beteiligten aufarbeiten... meist erste Frage des Projektmanager: 'Warum sind wir mit den abgeschätzten Aufwenden nicht rechtzeitig in vollen Umfang fertig geworden'... nach dem Motto: Da sieht jemand den Wald vor lauter Bäumen nicht.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Introduction to the Flow Execution Engine NPantaRhei — ralfw.de Archiv</title>
+<meta name="description" content="What I call data flow processing – or flow design (FD) - I´ve defined here and described here for example. (Although this might look like Flow-Based Programming (FBP) it´s just rel">
+<link rel="canonical" href="https://ralfw.de/archiv/2012/introduction-to-npantarhei/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Introduction to the Flow Execution Engine NPantaRhei — ralfw.de Archiv">
+<meta property="og:description" content="What I call data flow processing – or flow design (FD) - I´ve defined here and described here for example. (Although this might look like Flow-Based Programming (FBP) it´s just rel">
+<meta property="og:url" content="https://ralfw.de/archiv/2012/introduction-to-npantarhei/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>Introduction to the Flow Execution Engine NPantaRhei</h1>
+    <div class="doc-meta"><span>27. April 2012</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2012/04/27/introduction-to-the-flow-execution-engine-npantarhei.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2012/introduction-to-npantarhei/</code></span></div>
+    <div class="art"><p>How can data processing flows be implemented in an easy manner?</p>
+<p>What I call data flow processing – or flow design (FD) - I´ve defined here and described here for example. (Although this might look like Flow-Based Programming (FBP) it´s just related. FBP is all about concurrent programming, but FD starts much simpler with synchronous sequential programming.)</p>
+<p>And how such flows can be translated into a modern OO language like C# is described here.</p>
+<p>Such translation is pretty conventional, although it might look strange. Event-Based Components (EBC) are executed directly. They are written in a 3GL imperative way.</p>
+<p>This has several drawbacks:</p>
+<ul>
+<li>Execution cannot be controlled. Once started it just runs unto its end.</li>
+<li>Although EBC code can be generated from some FD notation it´s imperative and not easy to reverse model. To get the model behind the code is hard at least for the untrained eye.</li>
+<li>It´s not so easy to switch from sync sequential processing to async or parallel processing.</li>
+</ul>
+<p>Due to these and other drawbacks I decided to switch flow execution from direct execution to managed execution. That´s what the Flow Execution Engine is about. It interprets a flow definition thereby allowing for much more dynamic and fine grained control over the execution. Here´s how it works…</p>
+<h2>Example Flow</h2>
+<p>Let me use an example as the guiding rail for my tour through the Flow Execution Engine. The problem to solve: compile all .txt files in a directory tree and count their words. The FD model for this could look like this:</p>
+<ol>
+<li>The first operation finds all the files in a given dir tree defined by a path.</li>
+<li>The file names are passed to the second operation which processes each file by counting its words.</li>
+<li>The word count for each file is passed to the totalling operation which outputs the total number of words in all files found plus the number of files processed.</li>
+</ol>
+<p>The initial path is passed into the flow via the .in input port. The result can be retrieved from the output port .out.</p>
+<p>All operation are feeded through implicit input ports; their output ports are also implicit. No names for their input/output ports are yet necessary, because there is only one of them on each operation.</p>
+<h2>Encoding the Model</h2>
+<p>With EBC such a model would be translated into C# code like this:</p>
+<pre><code class="language-csharp">var ff = new Find_files();
+var cw = new Count_words();
+var tot = new Total();
+
+ff.Result += cw.Process;
+cw.Result += tot.Process;
+tot.Result += result =&gt; {…};
+</code></pre>
+<p>Each operation would become a class with a method (Process()) as input port and an event (Result) as output port. Both, flow as well as operations would be described using the same 3GL.</p>
+<p>The flow execution engine uses a different approach. Since it executes flows in a managed way it needs a flow definition it can understand. The simplest form of such a definition is a list of streams between operations, for example:</p>
+<pre><code>.in, Find Files
+Find Files, Count Words
+Count Words, Total
+Total, .out
+</code></pre>
+<p>A stream is what connects operations, the arrow in the above diagram. It´s described by an output port as its source and an input port as its sink. Since input/output ports are implicit for such simple operations as above only their names are used in the stream table. Which port is meant is obvious from the position of the operation: input ports are referenced if an operation is noted in the right column, output ports are referenced in the left column.</p>
+<p>To initialize the execution engine with a list of streams like this is easy:</p>
+<pre><code class="language-csharp">using (var fr = new FlowRuntime())
+{
+    fr.AddStream(&quot;.in&quot;, &quot;Find files&quot;);
+    fr.AddStream(&quot;Find files&quot;, &quot;Count words&quot;);
+    fr.AddStream(&quot;Count words&quot;, &quot;Total&quot;);
+    fr.AddStream(&quot;Total&quot;, &quot;.out&quot;);
+    …
+</code></pre>
+<h2>Implementing Operations</h2>
+<p>The flow execution engine makes implementing operations easier than EBC. No classes are required anymore. Operations are functions or methods, if you like. This is trivial as long as there is one input port and no or just one output port on an operation. The implementations for the example operations can look like this:</p>
+<pre><code class="language-csharp">static IEnumerable Find_Files(string path)
+{
+    …
+    return …;
+}
+
+static IEnumerable Count_Words(IEnumerable filenames)
+{
+    …
+    return …
+}
+
+static Tuple&lt;int,int&gt; Total(IEnumerable wordCounts)
+{
+    return new Tuple&lt;int, int&gt;(wordCounts.Count(), wordCounts.Sum());
+}
+</code></pre>
+<p>Registration of the operations is done through a special container which wraps each function in an IOperation:</p>
+<pre><code class="language-csharp">var foc = new FlowOperationContainer()
+    .AddFunc&lt;string, IEnumerable&gt;(&quot;Find files&quot;, Find_files)
+    .AddFunc&lt;IEnumerable, IEnumerable&gt;(&quot;Count words&quot;, Count_words)
+    .AddFunc&lt;IEnumerable, Tuple&lt;int, int&gt;&gt;(&quot;Total&quot;, Total);
+fr.AddOperations(foc.Operations);
+</code></pre>
+<p>IOperation is the interface all operations need to implement:</p>
+<pre><code class="language-csharp">public interface IOperation {
+    string Name {get;}
+    OperationAdapter Implementation {get;}
+}
+
+public delegate void OperationAdapter(IMessage input, 
+                                      Action outputContinuation, 
+                                      Action unhandledException);
+</code></pre>
+<p>This way the flow execution engine is independent of how you specifically implement your operations. The flow operation container serves as the adapter between your implementation and the engine. For the most common way of implementing operations – functions, simple methods – the container readily provides registrations methods.</p>
+<p>If you want more flexibility, though, you can provide IOperation implementations yourself. The abstract class AOperation makes this easy, e.g.</p>
+<pre><code class="language-csharp">class Total : AOperation
+{
+    public Total(string name) : base(name) {}
+
+    protected override void Process(IMessage input,
+                                    Action continueWith,
+                                    Action unhandledException)
+    {
+        var wordCounts = (IEnumerable)input.Data;
+        var result = new Tuple&lt;int, int&gt;(wordCounts.Count(), wordCounts.Sum());
+        continueWith(new Message(base.Name, result));
+    }
+}
+</code></pre>
+<p>Such an operation then is registered directly with the flow execution engine:</p>
+<pre><code class="language-csharp">fr.AddOperation(new Total(&quot;Total&quot;));
+</code></pre>
+<h2>Executing a Flow</h2>
+<p>One the flow is defined and all operations registered, executing it is straightforward:</p>
+<pre><code class="language-csharp">fr.Start();
+
+fr.Process(new Message(&quot;.in&quot;, &quot;c:/&quot;));
+
+Tuple&lt;int, int&gt; result = null;
+fr.WaitForResult(5000, _ =&gt; result = (Tuple&lt;int, int&gt;)_.Data);
+
+Console.WriteLine(&quot;{0} words in {1} files&quot;, result.Item2, result.Item1);
+</code></pre>
+<ul>
+<li>Start the flow execution engine by calling Start(). It runs on its own thread in the background. That means a flow is always executed in parallel to whatever else your programm is doing. However, this does not mean, the flow operations itself are run concurrently with regard to each other. They still are executed sequentially.</li>
+<li>Send messages to the flow hosted by the engine using Process(). Messages are tuples consisting of some data and a source port.</li>
+<li>Collect any results from the Result event by assigning an event handler or wait for them like above by calling WaitForResult().</li>
+</ul>
+<h2>How does this work?</h2>
+<p>The flow execution engine takes the message sent to it via Process() and puts it in a queue.</p>
+<p>The main engine thread runs in a loop taking the next message from this queue. This happens on its own thread.</p>
+<p>It looks at the message port (source) and looks it up in the list of streams. For the initial ".in" it finds "Find Files" as the sink.</p>
+<p>The message then is sent to each sink port. That means a task is created which combines the message with the sink operation.</p>
+<p>Then the operation is executed by calling it with the message as parameter.</p>
+<p>Whatever the operation produces as a result it wraps up in an output message assigned to an output/source port of the operation.</p>
+<p>These output messages are enqueued to be picked up by the execution engine main loop.</p>
+<p>Messages flowing to sink ports starting with a "." (like ".out") are sent to the execution engine´s environment. They can be picked up from the Result event. Please note they arrive on a different thread than the caller´s. To make it easier to use the execution engine in synchronous programming use WaitForResult() to pick up messages on the same thread which called Process().</p>
+<h2>Summary</h2>
+<p>So much for a first introduction to the basics of the flow execution engine. You can download the sources of it from github: https://github.com/ralfw/NPantaRhei.</p>
+<p>But wait, there´s more! In future articles I´m going to show you how to switch from sync to async and parallel execution of flow operations. And how to handle execeptions occuring during execution.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

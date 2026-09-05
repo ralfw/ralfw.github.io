@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bausteine für die Softwareevolution — ralfw.de Archiv</title>
+<meta name="description" content="Wenn wir Software naturnah entwickeln wollen, also als evolvierbares System, wie sollte sie denn dann aufgebaut sein? In meinem vorherigen Artikel habe ich mir Gedanken über eher o">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/bausteine-fur-die-softwareevolution/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bausteine für die Softwareevolution — ralfw.de Archiv">
+<meta property="og:description" content="Wenn wir Software naturnah entwickeln wollen, also als evolvierbares System, wie sollte sie denn dann aufgebaut sein? In meinem vorherigen Artikel habe ich mir Gedanken über eher o">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/bausteine-fur-die-softwareevolution/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Bausteine für die Softwareevolution</h1>
+    <div class="doc-meta"><span>6. Sept. 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/09/bausteine-fur-die-softwareevolution.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/bausteine-fur-die-softwareevolution/</code></span></div>
+    <div class="art"><p>Wenn wir Software naturnah entwickeln wollen, also als evolvierbares System, wie sollte sie denn dann aufgebaut sein? In meinem <a rel="noopener" href="http://ralfw.blogspot.com/2011/09/voraussetzungen-fur-sich-entwickelnde.html">vorherigen Artikel</a> habe ich mir Gedanken über eher organisatorische Voraussetzungen für naturnahe Entwicklung gemacht. Diesmal will ich die technische Seite angehen. Oder besser: wieder angehen, denn vor Jahren schon hatte ich in diese Richtung spekuliert [1]. Damals waren meine Idee eher im Konzeptionellen verblieben - heute habe ich eine Vorstellung von ihrer Implementation.</p>
+<h4>Voraussetzung Selbstähnlichkeit</h4>
+<p>Ich glaube immer noch, dass Software nur wirklich gut evolvieren kann, wenn ihre Struktur selbstähnlich ist. Das heißt erstens, dass es in Software mehrere Ebenen gibt. Und zweitens bedeutet es, dass der grundlegende Aufbau aller Ebenen gleich ist.</p>
+<p>Ich möchte diese Ebenen jedoch nicht Schicht/Layer nennen. Der Begriff ist überladen und deutet deshalb in die falsche Richtung. Stattdessen wähle ich Stratum; damit lehne ich mich an <a rel="noopener" href="http://www.amazon.de/Structure-Interpretation-Computer-Electrical-Engineering/dp/0262510871">Abelson/Sussman</a> an, die von Stratified Design sprechen.</p>
+<p>Selbstähnlichkeit hat den Vorteil, dass Erfahrungen und Denken nicht ebenenspezifisch sind. Man kann auf einer beliebigen Ebene beginnen und sich sowohl nach oben wie nach unten vorarbeiten, ohne einen konzeptionellen Bruch zu erleiden.</p>
+<p>Methoden sind etwas ganz anderes als Klassen, die wiederum etwas anderes sind als Assemblies, die wiederum ganz anders sind als Prozesse. Wenn wir mit diese Mitteln Software in unserem mentalen Modell repräsentieren, dann ist das kompliziert, weil immer wieder anders.</p>
+<p>Eine Reduktion auf Klassen allein jedoch ist nicht möglich, da Klassen konzeptionell nichts enthalten außer Methoden. Klassen sind nicht schachtelbar. Sie sind dafür gedacht, Zustand und Funktionalität zusammenzufassen. Das war´s. [2]</p>
+<p>Selbstähnlichkeit ist für mich die Voraussetzung, dass Systeme sich entwickeln können. Sie können in der Breite wachsen (innerhalb einer Ebene) oder sie können nach oben wachsen (Abstraktion, Aggregation) oder sie können nach unten wachsen (Verfeinerung, Spezialisierung).</p>
+<h4>Voraussetzung Unabhängigkeit</h4>
+<p>Dann glaube ich, dass die Bausteine in den Strata einer Software, unabhängig von einander sein sollten. Abhängigkeiten – statische wie dynamische – sind der Anfang allen Unwartbarkeitsübels. Dependency Injection zum Zwecke der Bereitstellung von Dienstleistungen ist keine Lösung, sondern perpetuiert das fundamentale Problem.</p>
+<p>In der Natur finden sich keine Dienstleistungsabhängigkeiten in der Form, wie sie in Software allerorten existieren. Keinem Organismus wird eine Abhängigkeit injiziert. (Nur Parasiten injizieren sich – wir denken an <a rel="noopener" href="http://de.wikipedia.org/wiki/Sacculina">Sacculina</a>, <a rel="noopener" href="http://de.wikipedia.org/wiki/Juwelwespe">Juwelwespe</a> oder Ridley Scotts <a rel="noopener" href="http://de.wikipedia.org/wiki/Alien_%E2%80%93_Das_unheimliche_Wesen_aus_einer_fremden_Welt">Alien</a>.) Organismen brauchen einander, aber nicht in Form von “Referenzen” oder “Handles”. Sie sind vielmehr auf ihre jeweils autonom hergestellten “Outputs” angewiesen. Das ist gelebte Entkopplung.</p>
+<p>Dasselbe gilt für den Maschinenbau oder die Elektrotechnik. Einem Motor wird kein Benzintank injiziert, auch wenn er ohne den Treibstoff nicht arbeiten kann. Benzintank und Motor werden lediglich verbunden; es gibt Berührungspunkte, aber keine Abhängigkeiten.</p>
+<p>Allemal gibt es keine so breiten Abhängigkeiten wie die durch Interfaces üblicherweise eingegangenen. Ein Motor ist nicht von einem Chassis oder einen kompletten Restauto abhängig. Er hat verschiedene Input-Kanäle, die nur irgendwie gespeist werden müssen. In einem Motorprüfstand wird deutlich, dass das auch ganz anders als mit einem Auto geschehen kann. Dasselbe gilt für einen menschlichen Körper, der ganz ohne Herz und Lunge auskommen kann, wenn an die Gefäße eine Herz-Lungen-Maschine angeschlossen ist.</p>
+<p>Abhängigkeiten machen Systeme starr. Evolvierbarkeit setzt daher maximale Unabhängigkeit voraus.</p>
+<h4>Voraussetzung Nachrichtenorientierung</h4>
+<p>Die Verbindung zwischen Lebewesen ist immer “nachrichtenorientiert”. Wichtiger ist aber die Nachrichtenorientierung. “Daten” fließen unidirektional von einem Lebewesen zu einem anderen, gezielt oder diffus. Folgt man dem Konstruktivismus, dann ist die Welt (und damit andere Lebewesen) gar nicht direkt erfahrbar. Wir haben lediglich eine begrenzte Wahrnehmungsbreite und empfangen Signale. Die Ausgangspunkte dieser Signale selbst haben wir nie in der Hand. Wir konstruieren sie uns aus den Signalen.</p>
+<p>Wenn das für die Evolution der Natur so zentral ist, dann scheint es mir vorteilhaft für Software, die ebenfalls hochgradig evolvieren muss. Ihre Bausteine sollten ebenfalls nur über Nachrichten kommunizieren. Das heißt, es gibt kein Call/Response, sondern nur unidirektional fließende Datenpakete. (Inwiefern die Referenzen auf den Zustand von Bausteinen enthalten können/dürfen, lasse ich hier mal dahingestellt.)</p>
+<p>Softwarebausteine verstehen bestimmte Nachrichten, die sie von der Umwelt empfangen. Und sie senden eine bestimmte Menge von Nachrichten an ihre Umwelt. Sendung und Empfang sind in der Natur asynchron. Zwischen Softwarebausteinen würde ich Asynchronizität jedoch nicht zwingend voraussetzen.</p>
+<h4>Die Form evolvierbarer Software</h4>
+<p>Wenn ich diese Voraussetzungen zu einer Form für Softwarebausteine zusammenfasse, dann kommt das folgende Bild heraus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/dc319eb06eab5d14.png" /></p>
+<p>Ich könnte diesen Softwarebaustein “Objekt” nennen, da er zustandsbehaftet ist und über Nachrichten kommuniziert. Aber “Objekt” ist so belastet, dass ich zumindest heute auf einen neutralen Begriff ausweichen möchte. Ich nenne ihn deshalb <a rel="noopener" href="http://de.wikipedia.org/wiki/Holon">“Holon”</a>. Das passt zur Selbstähnlichkeit; Holons sind “Dinger”, die gleichzeitig Teil und Ganzes sind.</p>
+<p>Jedes Holon nimmt die Umgebung durch einen “Kanal” wahr und sendet über einen weiteren “Kanal” Signale an seine Umgebung, die dann andere Holons wahrnehmen können. Wahrnehmungen (Input) verarbeitet das Holon zu Zustand und/oder Signalen (Output).</p>
+<p>Natürlich kann jedes Holon nur eine bestimmte Menge von Signalen verarbeiten und erzeugen. Signale bzw. Nachrichten bestehen daher nicht nur aus Daten, sondern haben auch noch einen Typ oder eine Bedeutung. Die Zahl 42 mag einmal die Bedeutung einer Antwort auf die ultimative Frage haben und einmal schlicht das Alter einer Person sein.</p>
+<p>Aus Holons lassen sich nun Verarbeitungsstrukturen auf mehreren Ebenen (Strata) bilden:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/877e4ca239e3c306.png" /></p>
+<p>Meine These ist, dass Software viel besser evolvierbar wird, wenn wir sie aus Holons aufgebaut denken. Die scheinen merkwürdig eingeschränkt gegenüber unseren heutigen OOP-Objekten. Ich behaupte aber mal, dass einen eventuelle Einschränkung mehr als kompensiert wird durch das, was wir bekommen. Und das wir nur bekommen, was wir wollen – viel mehr Evolvierbarkeit –, wenn wir uns einschränken.</p>
+<p>Wir denken mit Holons nicht mehr über Abhängigkeitsverhaue nach. Wir haben einen ganz regelmäßigen Aufbau von Software von der kleinsten Codeeinheit bis zur größten. Wir können ganz natürlich Stratified Design betreiben. Und wir bekommen Bausteine, die sich von Hause aus für asynchrone/parallel Verarbeitung eignen.</p>
+<p>Klar, das bedeutet, wir müssen unsere Denkstrukturen ändern und Gewohntes über Bord werfen. Der in Aussicht gestellte Gewinn scheint mir jedoch groß genug, um es damit zu probieren. Und so schwer ist es ja auch nicht, es auszuprobieren. Hier das universelle Interface für Holons:</p>
+<p>interface IHolon {
+  void Process(IHolonMessage input, Action output);
+}</p>
+<p>Im Grunde reicht sogar ein Delegat, um jeden Baustein in jedem Stratum zu beschreiben:</p>
+<p>delegate void Holon(IHolonMessage input, Action output);</p>
+<p>Und die Nachrichten, die zwischen den Holons fließen, sind auch ganz einfach:</p>
+<p>interface IHolonMessage {
+    string Type {get;};
+    object Data {get;};
+}</p>
+<p>Kaum zu glauben, aber ich denke, dass mit solch einfachen Mitteln sich grundsätzlich alle Softwarelösungen ausdrücken lassen. [3] Diese einfachen Mittel stellen für mich das Rückgrat evolvierbarer Software dar.</p>
+<p>PS: Wenn in der Softwareentwicklung Eleganz wirklich einen hohen Stellenwert hat, dann wage ich mal keck zu hoffen, dass eine Softwarestruktur dieser Art doch einigen Appeal hat. Ich zumindest finde sie in ihrer Einfachheit elegant.</p>
+<p>PPS: Ich weiß, die Holons sehen aus wie Funktionseinheiten des Flow-Designs. Natürlich gibt es da auch einen Zusammenhang. An dieser Stelle überlege ich jedoch grundlegender. Deshalb haben Holons auch nur einen Eingang und einen Ausgang.</p>
+<p><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY"></a><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY">Spendieren Sie mir doch einen Kaffee, wenn Ihnen dieser Artikel gefallen hat...</a></p>
+<h4>Fußnoten</h4>
+<p>[1] s. ältere Artikel in der Rubrik <a rel="noopener" href="http://ralfw.blogspot.com/search/label/Software%20als%20System">“Software als System”</a> in diesem Blog, insbesondere <a rel="noopener" href="http://ralfw.blogspot.com/2007/03/software-als-system-v-was-ist-ein.html">diesen</a> und <a rel="noopener" href="http://ralfw.blogspot.com/2007/03/software-als-system-x-von-der-struktur.html">diesen</a> Artikel.</p>
+<p>[2] Das heißt nicht, Objekte seien nutzlos für evolvierbare Software. Nein, ich denke, wir müssen keine neue Programmiersprache erfinden, sondern die vorhandenen nur besser einsetzen.</p>
+<p>[3] Natürlich meine ich damit nicht, dass Software bis hinunter zu Ausdrücken aus Holons aufgebaut werden sollte. Mir geht es um das Herunterbrechen von Funktionalität bis zu einer Granularität, dass man begründet zuversichtlich sein kann, ein Blatt-Holon mit wenigen Zeilen konventionellen Codes umsetzen zu können.</p>
+<h2>Kommentare</h2>
+<p><strong>Markus</strong> (2011-09-06):</p>
+<blockquote>
+<p>void Process(IHolonMessage msg, Action msg)</p>
+</blockquote>
+<p>Das geht so aber nicht ;-)</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-09-07):</p>
+<p>Ich denke das Schichten zu eindimensional sind. Ich finde eine Teil - Ganzes Beziehung (in Anlehnung an das Kompositum Entwurfsmuster) als strukturelle Beziehung zwischen Stratum und Holon interessant. Daduch werden unterschiedliche Abstraktionsbenen erzeugt. Also z.B. Zellen bilden Organe, Organe bilden Organismen, Organismen bilden Gesellschaften oder Bauteile bilden Platinen, Platinen bilden Systeme. Innerhalb jedes Stratums kann in einer eigenen Sprache kommuniziert werden. Also die Zellen besitzen Funktionalität und stehen im Verbund mit den anderen Zellen des Organs. Diese Zellverbund realisiert die Funktionsweise des Organs. Wenn jetzt aber Organe miteinander "kommunizieren" werden diese nicht mit den Zellen des anderen Organs kommunizieren sonder nur mit der Organfunktionalität (im Prinzip eine Art "Fassade").</p>
+<p>Bei einer Kommunikation über Botschaften ist natürlich die Definition der Botschaften und des Protokolls wichtig. Aus meiner Arbeit kenne ich den CAN - Bus als eine allgemeine Kommunikationsschnittstelle.
+(Der CAN Bus ist ein Broadcast System. Jeder Teilnehmer, kann Botschaften Senden und jeder Teilnehmer erhält auch alle Botschaften. Nun liegt es an jedem Teilnehmer selber auf welche Botschaften er "hört"
+und wie er sie dann weiter verarbeitet). Eines der wichtigsten Teilaufgaben bei der Entwicklung eines solchen Kommunikationsverbundes liegt in der Definition der Kommunikationsmatrix (K-Matrix). Sie enthält welche Teilnehmer welche Botschaften sendet und welcher Teilnehmer auf welche Botschaften angewiesen ist
+und wie die Struktur(Protokoll) der Botschaften ist und in welchem zyklus der Nachrichtenaustausch erfolgt. Die Entwicklung der einzelnen Steuergerät erfolgt dann sehr unabhängig voneinander meist sogar durch unterschiedliche Firmen. Ich denke schon dass die Abhängigkeit in der Entwicklung reduziert wird aber der Entwicklungsfokus muss auf die ausgetauschten Botschaften gelegt werden. Eine Ähnliche Architektur habe ich schon mal in einem Programm gesehen, als schwierig empfand ich dieses Programm mit den heutigen mitteln zu debuggen.</p>
+<p>Gruß Thomas</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-09-07):</p>
+<p>@Thomas: Hört sich gut an. Ich sehe das auch so mit der Hierarchie (genauer: Holarchie). Aus Organellen werden Zellen, aus Zellen Organe, aus Organen Lebewesen, aus Lebewesen Organisationen/Gesellschaften.</p>
+<p>Die Ebenen der Holarchie bezeichne ich mit Stratum.</p>
+<p>Dann findet Kommunikation vordringlich zwischen Holons im selben Stratum statt: Organe mit Organen, Zellen mit Zellen usw. Zumindest konzeptionell. In realita kommunizieren natürlich immer nur die Holons im untersten Stratum miteinander, die Blätter des Holarchiebaums. Woanders findet ja nichts statt :-)</p>
+<p>Einen Bus sehe ich allerdings nicht durchgängig als das beste Kommunikationsmedium an. Wenn es konkrete Verarbeitungssequenzen gibt, dann verschwimmen die in der K-Matrix. Das finde ich nicht gut. Eine Matrix bzw. das Abonnieren von Nachrichten ist aus meiner Sicht deshalb eher etwas für entferntere und flexiblere Verbindungen zwischen Holons; da, wo die Kopplung besonders lose sein soll. "Im Nahbereich" ziehe ich konkrete Flows vor.</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-09-08):</p>
+<p>Hallo Ralf,
+jetzt stellen sich mir meherer Fragen, damit ich dich besser verstehen kann würde ich mich freuen wenn du diese beantworten könntest. Wie du geschrieben hast "In realita kommunizieren natürlich immer nur die Holons im untersten Stratum miteinander, die Blätter des Holarchiebaums. Woanders findet ja nichts statt" Wie kann ich mir die Aufgabe der Strata vorstellen?
+Einfach nur als Teil - Ganzes Hirarchie und als Gruppierung von Funktionalität? Im Endeffekt als Grundlage um die gruppierte Funktionalität in anderen Projekte wieder zu verwenden? Um die Übersicht die ich auf dem Papier erzeuge im Quellcode wiederzufinden?
+Und meine 2. Frage ist
+Wie funktioniert die Transformation der Funktionalität auf eine abstraktere Ebene? Ich wähle mal ein schlechtes Beispiel. Zellen filter Nährstoofe und Sauerstoff aus dem Blut und bilden Energie. Das Herz welches aus Zellen aufgebaut ist pumpt das Blut.
+Die Zellfunktion ist "aus Nährstoffen und Sauerstoff Energie zu bilden"
+Die Organfunktion ist "mit Energie das Blut zu pumpen"
+Liegt die Transformation dann in der Ausgetauschten Nachricht (DTO)? Ich baue mir eine Nachricht,villeicht auch schön nach OOD Ansatz.
+z.B. Nachricht 1 =&gt; Blut besteht aus Nährstoffen und Sauerstoff. Nachricht 2 =&gt; Energie. Dadurch können die Zellen etwas
+damit Anfangen, sie verarbeiten die Information Nährstoffe und Sauerstoff zu Energie und mit dem DTO Blut kann die höhere Strata
+etwas anfangen, sie pumpt Blut? (aber wo liegt die Funktion "Blut pumpen")
+Ist es so angedacht oder denke ich damit noch in eine andere Richtung ?</p>
+<p>Gruß Thomas</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-09-08):</p>
+<p>@Thomas: Strata haben keine Aufgabe. Es nur Abstraktionsebenen. In einem Stratum (auf einer Ebene) liegen einfach Funktionseinheiten mit einem gewissen ähnlichen Abstraktionsgrad.</p>
+<p>Tun tun nur Funktionseinheiten auf der untersten Ebene, die Blätter. Keine Funktionseinheit auf anderer Ebene fängt irgendwas mit Daten an.</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-09-08):</p>
+<p>In Wahrheit ist das Prinzip uralt: Eingabe -&gt; Verarbeitung -&gt; Ausgabe. Kurz EVA. Kennt jeder Gymnasiast ... naja, zumindest sollte er das :-)</p>
+<hr />
+<p><strong>JensG</strong> (2011-09-08):</p>
+<p>PS: Das macht es natürlich nicht unsympathischer. Ich wollte das nur mal (völlig wertungsfrei) einwerfen. Nicht daß uns noch über den ganzen Holons und Strati der Blick für den wesentlichen Kern der Sache verlorengeht.</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-09-22):</p>
+<p>Hallo Ralf,</p>
+<p>aus welchem Grund wählst Du im IHolonMessage-Interface einen string als Datentyp für den Nachrichtentyp?
+Wo/wie werden die vercshiedenen Nachrichtentypen verwaltet? Hast Du dafür auch einen Vorschlag (-&gt; mit Sicherheit hast Du den)?</p>
+<p>Ich würd mich freuen, wenn Du Deine Ausführungen dazu noch ein wenig erweiterst und vielleicht ein kleines Beispiel bringen könntest.</p>
+<p>Gruß
+Mirko Schneider</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-09-22):</p>
+<p>@Mirko: Der string ist eine ganz allgemeingültige Möglichkeit, einen Nachrichtentypen zu beschreiben, d.h. den Nachrichtendaten Semantik zu geben. In den string kannst du ein Wort reinschreiben oder eine URI. Wie du magst.</p>
+<p>Die Typen verwalten? Dazu habe ich keinen Vorschlag. Was immer angemessen ist. In Excel? Oder in einer Datenbank? Kommt auf die Anwendung an. Aber erstmal nicht so groß denken. Von unten rantasten. Ausprobieren. Nicht schon am Anfang jedes Detail kennen und gelöst haben wollen. Spielerisch entwickeln.</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-09-23):</p>
+<p>Moin Ralf,</p>
+<p>da muss ich doch glatt ein wenig schmunzeln - also, hmm, mir ist schon klar, wofür ein string benutzt werden kann, und das das "eine allgemeingültige Möglichkeit, einen Nachrichtentyp zu beschreiben" ist ;-).</p>
+<p>Ich hatte meine Frage unklar formuliert. Was die Verwaltung der Nachrichtentypen angeht, wollte ich auf folgendes abzielen...</p>
+<p>Jeder Nachrichtenempfänger muss bei Erhalt einer Nachricht den Nachrichtentypen auswerten, um einen entsprechenden Cast auf die übermittelten Daten ausführen zu können. Diese werden ja schließlich als object übergeben.</p>
+<p>Nun ist's recht unschön (gelinde ausgedrückt) den übermittelten Typ mit hartcodierten Strings zu vergleichen, so dass es sich natürlich anbietet, die Begriffe für die Nachrichten zumindest in einer Klasse als Konstanten zu hinterlegen, sprich in einer Klasse zu verwalten.</p>
+<p>Jedes Holon der Anwendung benutzt vermutlich nur einen eben für dieses Holon relevanten Satz der Konstanten in der Klasse.
+Macht es Sinn ein Holon mit der Möglichkeit auszustatten, Nachrichten zu senden, deren Kontext gar nicht zum Holon passt (denn es hat ja Zugriff auf alle Nachrichtentypen)?</p>
+<p>"Aber erstmal nicht so groß denken. Von unten rantasten. Ausprobieren. Nicht schon am Anfang jedes Detail kennen und gelöst haben wollen. Spielerisch entwickeln."</p>
+<p>Beeindruckend - da triffst Du genau den Nerv - das ist regelmäßig mein größter Stolperstein.
+Drum Folge ich jetzt Deinem Appell und spiele damit rum ;-)</p>
+<p>Gruß
+Mirko Schneider</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-09-23):</p>
+<p>@Mirko: Die Auswertung des Typs muss nicht unbedingt die Funktionseinheit selbst machen. Das ist eher eine Frage der Infrastruktur, die drumrum sitzt.</p>
+<p>Ich habe nur die aus meiner Sicht kleinstmögliche und allgemeingültigste Form von Flow Funktionseinheiten beschrieben.</p>
+<p>Damit will ich nicht behaupten, dass eine Implementation für dich nicht so einfach aussehen kann wie:</p>
+<p>string[] Laden_Zeilen_aus_Datei(string dateiname) {...}</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

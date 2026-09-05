@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Code als Fabrik – Event-Based Components weitergedacht — ralfw.de Archiv</title>
+<meta name="description" content="Ein Gedanke, der mich gerade nicht loslassen will ist, dass Code eigentlich eine Fabrik ist. Seit EVA wissen wir es eigentlich: “Eingaben verarbeiten zu Ausgaben” ist die Aufgabe v">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/code-als-fabrik-event-based-components/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Code als Fabrik – Event-Based Components weitergedacht — ralfw.de Archiv">
+<meta property="og:description" content="Ein Gedanke, der mich gerade nicht loslassen will ist, dass Code eigentlich eine Fabrik ist. Seit EVA wissen wir es eigentlich: “Eingaben verarbeiten zu Ausgaben” ist die Aufgabe v">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/code-als-fabrik-event-based-components/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Code als Fabrik – Event-Based Components weitergedacht</h1>
+    <div class="doc-meta"><span>15. Juli 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/07/code-als-fabrik-event-based-components.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/code-als-fabrik-event-based-components/</code></span></div>
+    <div class="art"><p>Ein Gedanke, der mich gerade nicht loslassen will ist, dass Code eigentlich eine Fabrik ist. Seit EVA wissen wir es eigentlich: “Eingaben verarbeiten zu Ausgaben” ist die Aufgabe von Code. Im Laufe der Objektorientierung scheint mir das jedoch in Vergessenheit geraten zu sein.</p>
+<p>Statt um einen Fluss von Datenquelle zu Datensenke geht es der OOP um Zustand. Kochtopf statt Durchlauferhitzer. Und das hörte sich irgendwie auch plausibel an, da die Welt doch aus Objekte zu bestehen scheint. Vom Atom bis zum Galaxienhaufen alles Objekte mit einem Zustand. Oder?</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/814f2e15ad313f3b.png" /></p>
+<p>Eine Zeit lang und für einige Anwendungsszenarien hat dieses Denken funktioniert. Ziel dieser Programmierung ist es, gesunde Klassen mit roten Bäckchen zu entwerfen. Klassen mit wenig Funktionalität auf ihrem Zustand gelten als kränklich, als <a rel="noopener" href="http://martinfowler.com/bliki/AnemicDomainModel.html">anämisch</a>.</p>
+<p>Doch mir kommen immer mehr Zweifel, ob das der beste Modellierungsansatz für Problemlösungen mit Software ist.</p>
+<p>Nicht, dass ich OOP verwerfen wollte. Nein, nein. Ich mag OOP-Sprachen wir C# sehr. Keine Frage. Alles wunderbar. Ihre Möglichkeiten möchte ich nicht missen. Selbst Vererbung kann nützlich sein. Zurück zu prozeduralen Sprachen möchte ich nicht.</p>
+<p>Doch ich möchte von diesen Möglichkeiten nicht auch noch eine bestimmte Modellierung aufgezwungen bekommen. In gewisser Weise ist das natürlich unvermeidbar. Ob man mit Stahl, Stein oder Holz eine Brücke baut, macht auch einen Unterschied für die grundsätzliche Bauweise. “Form follows Material”, würde ich mal sagen. Bei Software möchte ich mich jedoch weniger eingeschränkt fühlen.</p>
+<p>Und so mache ich mich mal frei von der Objektorientierung und der von-Neumann-Maschine. Das ist nicht leicht, auch mir Sitzt die prozedurale und objektorientierte Prägung im Stammhirn. Aber wenn ich mich recke, meine ich ein Bild von jenseits des Tellerrandes erhaschen zu können.</p>
+<p>Nach meinen bisherigen Experimenten mit <a rel="noopener" href="http://ralfw.blogspot.com/search/label/Event-based%20Components">Event-Based Components</a> (EBC) habe ich mich deshalb in der letzten Woche nochmal auf die Zehenspitzen gestellt. Im <a rel="noopener" href="http://www.prodevcollege.de/ccd-praktikum.html">CCD Praktikum</a> habe ich EBC bewusst in neuer Weise eingesetzt. Ich wollte ausprobieren, wie es sich anfühlt, ganz bewusst “unobjektorientiert” zu entwerfen. Selbst die bisherige Sichtweise auf EBC-Komponenten als “Dinger, die etwas tun” haben wir daher aufgegeben. Stattdessen haben wir Software als Fabriken angesehen. Fabriken, deren Produkte Daten sind. Fabriken, die Feature-Wünsche des Kunden erfüllen.</p>
+<h2>Verantwortlichkeiten als Phantasieprodukte</h2>
+<p>Lassen Sie sich doch einmal darauf ein. Vergessen Sie die Objektorientierung für einen Moment. Wenn ich Ihnen nun sage, dass wir einen Taschenrechner programmieren wollen, woran denken Sie bei einem Lösungsansatz als erstes?</p>
+<p>Sie denken an eine Funktionseinheit, die etwas tut. Nennen Sie sie Rechenwerk. Der Anwender gibt zwei Zahlen ein, wählt eine Rechenoperation und das Rechenwerk stellt aus einem Tripel wie (2, 3, +) das Ergebnis 5 her.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a3bcb9eb3bc833cc.png" /></p>
+<p>Jetzt erweitern wir die Aufgaben des Taschenrechners. Er soll Ergebnisse zwischenspeichern können. Welche Funktionseinheit ist dafür verantwortlich? Vielleicht ein Zwischenspeicher? Dann brauchen wir zwei Funktionen darauf: Wir wollen Ergebnisse speichern und auch wieder auslesen können.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/99c10197547ade60.png" /></p>
+<p>Vielleicht wollen wir sie sogar beim Speichern hinzuaddieren (akkumulieren)?</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/76207ebf7a953b77.png" /></p>
+<p>Fühlt sich das für Sie ok an? Wir haben zwar noch nicht von Klassen gesprochen, aber Sie denken natürlich reflexartig, dass Rechenwerk und Zwischenspeicher als Klassen implementiert werden können.</p>
+<p>Dass dies schon kleine EBC-Schaltpläne waren, ist Ihnen nicht so sehr ins Auge gestochen. Aber woran liegt das? Ich glaube, das liegt daran, dass die Kästchen mit Substantiven bezeichnet sind. Sie heißen Rechenwerk und Zwischenspeicher. Es sind Verantwortliche, es sind Arbeiter, nun, es sind Objekte.</p>
+<p>Jetzt festhalten:</p>
+<p>Mein Gefühl ist, dass wir damit schon zu kompliziert denken.</p>
+<p>Wenn die Aufgabe lautet: “Entwerfe ein Programm, dass addiert und Zwischenergebnisse zwischenspeichern und akkumulieren kann”, dann ist es ein recht großer mentaler Aufwand, aus der Anforderungen Verantwortliche, Arbeiter, Objekte abzuleiten. In der Anforderung steckt kein Rechenwerk drin. Auch kein Zwischenspeicher ist darin beschrieben. Wir phantasieren sie nur reflexartig hinein. Weil wir so OOP-trainiert sind. Denn einer muss die Aufgaben ja am Ende übernehmen, oder? Einer muss addieren, einer muss zwischenspeichern. Na, dann nennen wir den doch Addierer oder allgemeiner Rechenwerk und Zwischenspeicher. Liegt das nicht auf der Hand?</p>
+<p>In diesem Fall ist das sehr naheliegend, weil die Anforderungen trivial sind. Wenn es aber komplizierter wird… was dann? Sind unsere Reflexe dann auch verlässlich im Sinne evolvierbarer Strukturen?</p>
+<p>Ich glaube, unsere Reflexe sind umso kontraproduktiver, je unbekannter die Problemdomäne ist. Verantwortliche lassen sich schlecht durch Analyse finden. Stattdessen sollten Objekte/Klassen als Abstraktionen durch Synthese entstehen. Klassen und Komponenten sind Orte der Verantwortlichkeit, die etwas zusammenfassen. Was das jedoch ist, das (!) muss erstmal ermittelt werden. Damit sollte der Entwurf beginnen.</p>
+<p>Solange wir also durch die Objektorientierung getrieben sind, Verantwortliche zu finden, weil wir nur mit Klassen Aufhänger für Methoden haben, solange produzieren wir leichtfertig Phantasiegebilde. Wir wollen dann den zweiten Schritt vor dem ersten tun.</p>
+<h2>Am Anfang steht der Prozess</h2>
+<p>Bisher haben noch keine Klassen gesehen, sondern nur erahnt. Jetzt nehme ich Ihnen aber auch noch die Verantwortlichen weg. Denken Sie nicht mehr in Substantiven. Fragen Sie nicht mehr “Wer soll das tun?”</p>
+<p>Machen Sie sich leer von jeglicher OOP und sehen Sie nur die Anforderungen. Anforderungen können sich nur um die Problemdomäne drehen. In ihnen kann per definitionem nichts über die Lösungsdomäne, d.h. den Programmcode stehen. Darüber kann und soll sich ein Kunde keine Gedanken machen.</p>
+<p>Ich halte es daher für einen ungeheuren Aufwand, aus Anforderungen irgendeinen im Code Verantwortlichen ableiten zu wollen. Anforderungen können nur über Daten und Prozesse sprechen. Es geht nicht anders. Selbst wenn in den Anforderungen ein Verantwortlicher (in der realen Welt) vorkommt, kann das ja nicht automatisch bedeuten, dass der auch im Code 1:1 so repräsentiert werden sollte. Das (!) ist vielmehr die große, kontraproduktive Suggestion der Objektorientierung.</p>
+<p>Versuchen wir es daher einmal anders. Nehmen wir die Anforderungen genau so, wie sie formuliert sind und übersetzen sie in ein Modell. Es ergibt sich:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/429fcd04e3d18499.png" /></p>
+<p>Es setzt die Anforderungen sehr viel einfacher, direkter um. Wir haben nichts hinzugedichtet. Kein Rechenwerk mussten wir ersinnen, keinen Zwischenspeicher. Wir haben lediglich die Prozesse in den Anforderungen aufgedeckt und modelliert.</p>
+<p>Ja, ich nenne das Addieren und zwischenspeichern mal Prozess. Denn es geht immer um eine Tätigkeit. Es wird etwas verarbeitet. Mal sind es Daten, mal nur ein Signal wie beim Auslesen. Mal ist das Ergebnis ein Output, mal eine Zustandsänderung. Wessen Zustand geändert wird? Keine Ahnung. Das ist erstmal nicht wichtig. Der Zustandsbehaftete steht in den Anforerungen nicht drin. Und selbst wenn… ob wir gut daran täten, die Vorstellung des Kunden zu übernehmen, steht auf einem ganz anderen Blatt.</p>
+<p>Ich behaupte nicht, dass wir Hinweise auf Verantwortliche im Code ausschlagen oder bewusst ignoieren sollten. Ich möchte nur zur Vorsicht mahnen, sie gutgläubig zu übernehmen. Wenn wir bei unserer Modellierung selbst auf sie kommen, dann ist es gut. Ansonsten auch.</p>
+<p>Und diese Modellierung beginnt eben nicht mit der Suche nach Verantwortlichen, sondern mit einer Modellierung von Produktions- und Transformationsprozessen. Immer wenn der Anwender einen Knopf drückt, einen Menüpunkt aufruft, ein Zeichen in ein Feld eingibt, kurz: Immer wenn der Anwender einen Event auslöst, kann potenziell ein kurzer oder langer, ein kleiner oder großer Prozess ablaufen.</p>
+<p>Mit Prozess meine ich hier schlicht eine Reihe von Verarbeitungsschritten. Erst wird das eine getan, dann das andere, dann noch etwas usw.</p>
+<p>Aus dieser Perspektive besteht Software zunächst einmal aus einer großen Anzahl von Prozessen. Die werden getriggert durch Events im Frontend – sei das eine Benutzerinteraktion oder eine Nachricht von einer anderen Software auf einem Kommunikationskanal.</p>
+<p>Software ist also eine Fabrik mit vielen Prozessen, die jeder für ein anderes Produkt stehen. Ein Tastendruck stößt die Produktion einer Summe an, ein Mausklick stößt die Transformation einer Zahl in einen Speicherzustand an usw. Nennen wir das einmal Feature-Prozesse, weil sie Feature der Anforderungen realisieren:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/92b5bb0f8d99fff8.png" /></p>
+<p>Auf die Struktur der Prozesse möchte ich hier noch nicht näher eingehen. Aber soviel sei gesagt: Natürlich lassen sie sich schachteln. Eine Tätigkeit wie Akkumulieren ist nur auf einer gewissen Abstraktionsebene eine einzige Tätigkeit. Wir können in sie hineinzoomen. Sie könnte z.B. so aussehen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/241afe532cf1125d.png" /></p>
+<p>Ha! Was erkennen wir? Akkumulieren ist eine Tätigkeit, die sich durch andere Tätigkeiten, die wir schon modelliert haben, ausdrücken lässt. Wiederverwendung winkt! Und das, obwohl wir immer noch nicht an Objekte oder Verantwortliche gedacht haben. Wir haben nur Tätigkeiten, Verben, Prozessschritte im Blick. Wir kümmern uns nur um Verarbeitung und Transformation, d.h. um das Was, nicht um das Wo oder Wer.</p>
+<p>Dafür ist ein Umdenken nötig. Wir müssen aufhören, reflexhaft über rotbäckige Verantwortliche zu phantasieren. Doch mir scheint, das lohnt sich. Wenn wir an den Anfang unserer Modellierung eine ganz schlichte featureorientierte Modellierung von Prozessen setzen, die selbstverständlich Durchstiche im Sinne eines Schichtenmodells darstellen, dann müssen wir weniger Energie aufwenden.</p>
+<p>Damit meine ich nicht, dass wir in Flowcharts programmieren sollen. Die obigen Diagramme sehen auch nicht so aus, würde ich sagen. Auch Windows Workflows (WF) sehe ich noch nicht als Realisierungstechnologie. BPMN-Diagramme oder UML Aktivitätsdiagramme liegen da schon näher. Aber so ganz sicher bin ich mir noch nicht, wohin es führt, Software ganz konsequent als Fabrik bestehend aus vielen Prozesse anzusehen.</p>
+<p>Aber vielleicht fällt uns zusammen ja etwas ein. Lassen Sie diese Gedanken erstmal auf sich wirken: Tätigkeiten statt Täter, Prozessschritte statt Verantwortliche. Der Unterschied mag ihnen akademisch erscheinen – ich glaube aber, dass er fundamental ist.</p>
+<p>Beim nächsten Mal holen ich Sie dann aus der “objektfreien” Welt zurück. Denn es hilft ja nichts, die Verben der Prozesse müssen ja mit Mitteln von C# umgesetzt werden.</p>
+<h2>Kommentare</h2>
+<p><strong>tboerner</strong> (2010-07-16):</p>
+<p>Hi Ralf,</p>
+<p>interessanter Ansatz. Objektorientierung kam ja deshalb ins Spiel, weil wir Menschen wohl gut in den Einheiten "Objekt" denken können. Damit sah es so aus, dass wir Programme eher dem menschlichen Denkansatz strukturieren konnten.</p>
+<p>Der funktionale Ansatz, der deinen Überlegungen sehr nahe liegt, ist ein alter. Ich erinnere nur an Turbo Pascal, QBasic et al.
+Das heißt aber nicht, dass es ein schlechter ist (siehe neue Trends mit F#).
+In der Post-OOP-Ära müssen wir lernen, beide Paradigmen so einzusetzen, wie sie am besten zur menschlichen Denke passen.
+Manchmal ist halt die Datenflussdenke (wandle String in Utf8-String um) adäquater und manchmal die Objektdenke (Ein Auto hat eine Farbe).</p>
+<p>Tilman</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-07-16):</p>
+<p>@Tilman: OOP als Implementationstool soll definitiv bleiben. Ich möchte Modelle damit in Code ausdrücken können.</p>
+<p>Und so ganz grundsätzlich hast du natürlich Recht, dass irgendwo "Datenflussdenke" (oder "Prozessdenke") am besten ist - und woanders "Objektdenke".</p>
+<p>Ich frage mich nur, wann.</p>
+<p>Derzeit verläuft die Linie für mich so:</p>
+<p>-Anforderungen beschreiben Prozesse.
+-Prozesse sind Sequenzen von Tätigkeiten und werden vor allem durch Verben beschrieben.
+-Die Tätigkeiten arbeiten auf Daten.</p>
+<p>Daten finden einen natürlichen und direkten Ausdruck in Objekten. Keine Frage. OOP kommt also zum Einsatz, um die Materialien zu beschreiben, die in Prozessen verarbeitet werden. Klassendiagramme sind vordringlich also Datenmodelle.</p>
+<p>Damit sind wir nicht zurück bei der prozeduralen Programmierung. Klassen usw. bleiben ja erhalten. Ich will Datenmodelle auch mit Funktionalität ausstatten können.</p>
+<p>Über den Unterschied in der Sichtweise zw. Prozess- und Objektdenke werd ich mal ein Blogposting schreiben.</p>
+<p>Aber einstweilen kannst du ja vielleicht mal sagen, wann denn welcher Ansatz adäquat ist. Die sagst ja, man müsse unterscheiden. Also gilt es Unterscheidungskriterien zu finden. Und bis die auf dem Tisch liegen, ist eine Entscheidung für OOP leider nur eine Gefühlsentscheidung.</p>
+<p>Auf der anderen Seite ich meine Entscheidung für Prozessdenke eine Prinzipentscheidung :-) Denn ich sage: Prinzipiell sollten Prozesse am Anfang stehen, weil wir nur sie wirklich leicht aus Anforderungen ableiten können.</p>
+<p>Achtung: Ich sage "am Anfang stehen". Das bedeutet, nach den Prozessen geht es weiter. Dazu mehr in einem nächten Artikel.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Janek Fellien</strong> (2010-07-16):</p>
+<p>Hallo Ralf,</p>
+<p>spannendes Thema, guter Ansatz, aber ich habe es ein wenig knirschen gehört. Das liegt aber nicht daran, dass ich OOP "geschädigt" bin, sondern weil ich (echte) Fabriken bauen kann.</p>
+<p>Du beschreibst ein Vorgehen un Begriffe, die seit hunderten von Jahren im Stammhirn der Menschen verankert sind. Doch kein OOPler würde auf den Gedanken kommen und Baugewerk oder Produktentwicklung mit Softwareentwicklung zu vergleichen (sorry, es gibt Ausnahmen).</p>
+<p>Die Aussage "Anforderungen beschreiben Prozesse, Prozesses sind Sequenzen von Tätigkeiten" ist im Grunde die Beschreibung eines Produktherstellungsprozesses.
+Im Fabrikenbau reden wir vom Fertigungsfluss und Verfahren.</p>
+<p>Wenn ich vom Knirschen spreche, meine ich also die Verwandschaft deines Ansatzes mit der Realität in der Produktherstellung, deren Beziehung die Softwareentwicklung nicht herstellen möchte, weil immer noch der  Wir sind doch was besseres  - Gedanke noch immer das Denken bestimmt.</p>
+<p>Ich hoffe inständig, dass dieses Denken eines Tages durchbrochen werden kann. Wer weis, vielleicht hat das Fundament ja jetzt den ersten Haarriss bekommen.</p>
+<p>Jan</p>
+<hr />
+<p><strong>Janek Fellien</strong> (2010-07-16):</p>
+<p>Hmmm... Ich bin nochmal in mich gegangen und stellte fest, dass OOP implizit Software als Fabrik behandelt.</p>
+<p>Wenn ich eine Komponente mit ihren Funktionen formuliere, beschreibe ich eigentlich einen Fertigungsprozess mit seinen Arbeitsschritten. Ich habe bei meiner Softwarekomponente nur nicht die Reihenfolge der Arbeitsschritte festgelegt, aber da kommt ja EBC in Spiel.</p>
+<p>Könnte es also sein, dass die Entwicklerwelt mit einem "Pfff, was will Ralf denn, wir entwickeln doch schon längst Softwarefabriken." reagieren?</p>
+<p>Jan</p>
+<hr />
+<p><strong>Michael</strong> (2010-07-17):</p>
+<p>Interessanter Ansatz, finde auch ich. Obwohl schon einige Entwickler Status und Ablauf trennen, wenn auch nicht mit EBC. Ich habe darüber in einen <a rel="noopener" href="http://code-review.spaces.live.com/blog/cns!38B5890726688176!269.entry">Beitrag</a> mitgedacht.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

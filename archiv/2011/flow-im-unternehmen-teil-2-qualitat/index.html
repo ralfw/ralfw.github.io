@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flow im Unternehmen – Teil 2 – Qualität — ralfw.de Archiv</title>
+<meta name="description" content="Wenn die Softwareentwicklung besser werden soll, dann ist nicht jede Veränderung von gleichem Wert. Das liegt auf der Hand. Doch welche Veränderungen sind anderen vorzuziehen? Soll">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/flow-im-unternehmen-teil-2-qualitat/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Flow im Unternehmen – Teil 2 – Qualität — ralfw.de Archiv">
+<meta property="og:description" content="Wenn die Softwareentwicklung besser werden soll, dann ist nicht jede Veränderung von gleichem Wert. Das liegt auf der Hand. Doch welche Veränderungen sind anderen vorzuziehen? Soll">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/flow-im-unternehmen-teil-2-qualitat/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Flow im Unternehmen – Teil 2 – Qualität</h1>
+    <div class="doc-meta"><span>24. März 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/03/flow-im-unternehmen-teil-2-qualitat.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/flow-im-unternehmen-teil-2-qualitat/</code></span></div>
+    <div class="art"><p>Wenn die Softwareentwicklung besser werden soll, dann ist nicht jede Veränderung von gleichem Wert. Das liegt auf der Hand. Doch welche Veränderungen sind anderen vorzuziehen? Sollte ein weiterer Entwickler eingestellt werden? Oder besser auf TFS umstellen? Oder zur WCF-Schulung gehen?</p>
+<p>Solche Fragen sollten nicht aus dem Bauch heraus entschieden werden. Es braucht vielmehr ein Rahmenwerk, in dem Sie Scrum, TFS, WCF, CCD als Werkzeuge einordnen können. Und dieses Rahmenwerk sollte mit Werten ausgestattet sein, für die Sie fragen können, ob eine Veränderung sie unterstützt oder behindert. Und darüber braucht es dann noch ein Ziel für das Ganze.</p>
+<p>In meinem <a rel="noopener" href="http://ralfw.blogspot.com/2011/03/flow-orientation-furs-unternehmen-teil.html">vorherigen Artikel</a> habe ich angefangen, ein solches Rahmenwerk zu skizzieren. Es basiert auf der <a rel="noopener" href="http://de.wikipedia.org/wiki/Theory_of_Constraints">Theory of Constraints (TOC)</a>. Der grundsätzliche Gedanke dahinter: Sie können die Softwareentwicklung als einen Produktionsprozess ansehen, der aus irgendwelchem “Material” Software herstellt, für die am Ende Kunden Geld bezahlen.</p>
+<p>Geld mit Software zu verdienen heute und (!) in der Zukunft, ist mithin das Ziel der Softwareentwicklung bzw. einer größeren Organisation um sie herum. Und nur, wenn eine Veränderung dazu führt, dass heute mehr Geld verdient oder das Geldverdienen in der Zukunft gesichert wird, dann ist sie für diese Organisation lohnend.</p>
+<p>Also nochmal die Frage: Lohnt es sich, den WCF-Kurs zu machen? Bringt die Einführung von TFS etwas? Sollten alle Entwickler nach CCD-Prinzipien und Praktiken arbeiten?</p>
+<p>Die Antwort gibt nie der Anbieter, sondern immer nur der Softwareproduktionsprozess. Dafür muss der natürlich bewusst sein.</p>
+<h3>Engpass intern oder extern?</h3>
+<p>Bisher habe ich nur die offensichtlichen Produktionsschritte einer Softwareentwicklung genannt:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/20398dfceb614b2e.png" /></p>
+<p>Software wird geschrieben und dann verkauft. Das sieht nicht nach viel aus, doch auch die Formulierung dieses kleinen Prozesses bringt schon etwas. Denn mit der TOC auf ihn geblickt können wir fragen: Wo liegt der Engpass?</p>
+<p>In jeder Sequenz von Prozessschritten gibt es einen Engpass, d.h. einen Schritt mit kleinster Kapazität.</p>
+<p>Wieviele Einheiten kann ein Prozessschritt pro Zeiteinheit verarbeiten, aufnehmen, “verdauen”? Das ist seine Kapazität K. Gegenüber dem vorgeschalteten Schritt erscheint die Kapazität dann als Bedarf. Bedarf, weil Kapazität natürlich ausgeschöpft sein will.</p>
+<p>Optimal ist die Lage, wenn die Kapazitäten aller Prozessschritte gleich sind und jeder Schritt einen Ausstoß A hat, der dem Bedarf des folgenden entspricht: Ai = Ki+1.</p>
+<p>So ist es jedoch im Grunde nie. Die Kapazitäten von Prozessschritten sind erstens unterschiedlich und zweitens entspricht der Ausstoß nicht immer dem Bedarf. Wie im vorherigen Artikel erklärt, kann der Ausstoß des Gesamtprozesses dann höchstens so groß sein, wie der maximale Ausstoß des Engpasses, d.h. des Schrittes mit der kleinsten Kapazität in Bezug auf die zu produzierenden “Packerl”.</p>
+<p>Überlegen Sie einmal, wo bei Ihnen im Unternehmen der Engpass ist. Bisher sind am Produktionsprozess nur 2 Produzenten und 2 Konsumenten beteiligt:</p>
+<ul>
+<li>Softwareentwicklung: Produzent  Vertrieb: Produzent + Konsument (Prosument? ;-)  Markt: Konsument</li>
+</ul>
+<p>Welcher hat die geringste Kapazität?</p>
+<ul>
+<li>Kann der Vertrieb pro Zeiteinheit den Markt mit “Packerln” befriedigen? Oder dreht der Vertrieb Däumchen? Mein Gefühl ist, dass es kaum einen Vertrieb gibt, der sagt, der Markt wolle seine Software nicht. Wenn es eine Klage gibt, dann die, dass man nicht genug verkaufe, weil es der Software noch an etwas fehle. Es gibt also Bedarf, der nicht befriedigt werden kann. Das bedeutet, der Markt ist nicht der Engpass.  Wie ist es aber mit dem Vertrieb selbst? Er könnte selbst der Engpass sein. Dann gäbe es Bedarf und die Software wäre dem auch angemessen, alle vom Markt nachgefragten Features sind enthalten. Dennoch sind die Verkäufe schleppend. Das kann leicht bei einem Startups der Fall sein: Da haben existiert schon eine von Enthusiasten geschriebene Software, es gibt einen Markt – nur ist die Software noch unbekannt.  Bei etablierten Firmen scheint es jedoch am häufigsten, dass weder Markt, noch Vertrieb der Engpass sind – sondern die Softwareentwicklung. Der Markt hat Bedarf, der Vertrieb würde gern verkaufen, er sitzt auf einer Liste von Interessenten. Der Software fehlen aber immer wieder entscheidende Features, die Softwareentwicklung zu langsam für den Vertrieb produziert.
+Beispiel: Die Softwareentwicklung stellt alle 3 Monate ein neues Release her. Daraus kann der Vertrieb jeden Monat 10 “Packerl” schnüren und verkaufen. Wenn allerdings noch Feature A und B enthalten wären, dann könnten 12 “Packerl” geschnürt und verkauft werden. Das ist aber frühestens in weiteren 3 Monaten der Fall. Also ist die Softwareentwicklung der Engpass. Und das so lange, bis sie Release mit einer Frequenz ausstößt, dass es für den Vertrieb keinen Unterschied mehr macht. (Eine solche Softwareabteilung habe ich aber in 13 Jahren Beratungspraxis noch nicht gesehen.)</li>
+</ul>
+<p>Sie sehen: Schon mit einem solch einfachen Diagramm lassen sich interessante Erkenntnisse gewinnen. Liegt der notwendig existierende Engpass in Ihrem Unternehmen oder außerhalb im Markt? Müssen Sie intern etwas tun, damit mehr Geld verdient wird – oder ist es Ihnen quasi aus der Hand genommen, weil die Gründe für schlechten Verdienst extern sind?</p>
+<blockquote>
+<p>Hm… gibt es überhaupt einen externen Engpass? Kann der Markt der Engpass sein? Oder ist dann nicht auch intern etwas im Argen und man produziert die falsche Software? Ja, ich denke, so ist es wohl. So wie es kein schlechtes Wetter, sondern nur unangemessene Bekleidung gibt, so gibt es auch keinen Engpass im Markt, sondern nur Produkte, die am Bedarf vorbeigehen. Aber darauf will ich an dieser Stelle nicht näher eingehen. Als Softwareentwickler vertrauen wir mal darauf, dass unsere Auftraggeber wissen, warum sie wollen, was sie wollen, und dass das auch bedarfsgerecht ist. Der Gedanke, dass es eigentlich keinen externen Engpass gibt, ist jedoch insofern nützlich, als dass er die Unterscheidung zweier Arten von Engpässen motiviert. Denn offensichtlich können Grundsatzentscheidungen (“Wir produzieren eine Software mit diesen und jenen Features.” (die den Markt leider nicht interessieren) oder “Wir hauen lieber schnell neue Releases raus, als dass wir auf Evolvierbarkeit achten.”) Einfluss auf den “Pakerl”-Absatz haben – die dann als Engpass im Markt wahrgenommen werden. In der Literatur gibt es daher nicht nur den Begriff Produktionsengpass (production constraint), sondern auch Grundsatzengpass (policy constraint). Bei ersterem geht es um die Ressource mit ihrer Kapazität, bei letzterem um die Steuerung der Ressource. Wenn eine Ressource eigentlich mehr könnte, aber durch einen Grundsatz behindert wird, die Kapazität auszuschöpfen, dann liegt ein Grundsatzengpass vor.</p>
+</blockquote>
+<h3>Prozessverfeinerung</h3>
+<p>Wenn schon eine einfache Vorstellung einem Softwareproduktionsprozess hilft, dann hilft eine differenziertere bestimmt noch mehr. Wie könnte also eine Verfeinerung des bisherigen Bildes aussehen, ohne an Allgemeingültigkeit zu verlieren? Ich denke, die Softwareentwicklung sollte nicht mehr so autonom produzieren; denn woher bekommt sie bisher den Anstoß für die Herstellung ihrer Releases?</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e04318a242566cd7.png" /></p>
+<p>Ich denke, es geht los bei einer Marktanalyse. Irgendwer sammelt am Markt die unerfüllten Wünsche der Zielgruppe. Die werden gesichtet, gefiltert, verdichtet und zu Vorschlägen für Features gebündelt. Typische Marktanalysten sind Vertriebler, Supporter oder auch der Geschäftsführer.</p>
+<blockquote>
+<p>Mir geht es nicht darum, wer konkret als Person nin einem Unternehmen die und anderes tut. Ich spreche hier über Produktionsschritte oder Rollen. Irgendwer muss halt den Markt analysieren oder die Software entwickeln. Ob das verschiedene Personen oder dieselben tun, ist zunächst einmal egal.</p>
+</blockquote>
+<p>Diese Vorschläge sind für die Softwareentwicklung meist zu schwammig. Deshalb nimmt sich ihrer eine Anforderungsdefinition an, die sie filtert, formalisiert und priorisiert. Scrum weist diese Aufgabe dem ProductOwner zu. Oft spielen Vertrieb oder Marketing oder Geschäftsführung auch diese Rolle.</p>
+<p>Die Softwareentwicklung transformiert die Anforderungen dann in Releases, die der Vertrieb an den Markt bringt. Der Markt steht mithin am Anfang und am Ende der Softwareproduktion. Er äußert Wünsche, die das Softwareunternehmen mit “Packerln” befriedigt. Nur wenn der “Packerl”-Inhalt den Wünschen entspricht, ist auf Verkauf zu rechnen.</p>
+<p>Hört sich das plausibel an? Ich hoffe. Diese Prozessschritte scheinen mir minimal und konsensfähig. Auch wenn sie in einem Unternehmen nicht explizit besetzt sein sollten, gibt es sie doch immer in mehr oder weniger sichtbarer Form. Und nur das ist hier wichtig. Selbst in einem 1-Personen-Unternehmen, wo alles von einem getan wird, geht es nicht ohne. Da mögen Marktanalyse und Anforderungsdefinition zusammenfalle – stattfinden tun jedoch beide.</p>
+<p>Und wo ist die Geschäftsführung, das Management? Was ist mit der Buchhaltung? Mir geht es nur um den Softwareproduktionsprozess. Die Buchhaltung ist dafür irrelevant; sie spielt eine parasitäre Rolle im Unternehmen, da in ihr keine Wertschöpfung erfolgt. Sie hat höchstens eine Relevanz durch ihren Einfluss auf das Management. Denn das hat qua Grundsatzentscheidungen Einfluss auf alle Rollen; das ist schließlich ihr tradioneller Job. Im Diagramm würde ich das durch eine Abhängigkeitsbeziehung kennzeichnen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/59781d94d6954ec6.png" /></p>
+<p>Wo Abhängigkeiten existieren, da droht natürlich die Gefahr von Grundsatzengpässen. Sie können wie Einschnürungen auf den abhängigen Produktionsschritt wirken. Organigramme, die darstellen, wer wem welche Ansagen machen kann, haben also ihren Wert. Sie können helfen, Grundsatzengpässe aufzudecken.</p>
+<p>Wie sieht es nun mit den Engpässen im verfeinerten Diagramm aus?</p>
+<ul>
+<li>Jetzt ist klarer, warum die Softwareentwicklung ein Engpass sein kann: Sie setzt Anforderungen, die in die hineinfließen einfach nicht schnell genug in Releases um, die der Vertrieb dann absetzen kann. Kommt Ihnen das bekannt vor? Symptom ist ein langes Backlog, für dessen Einträge nicht klar ist, ob und wann sie jemals umgesetzt werden – obwohl sie ja verdichtete und formalisierte Wünsche des Marktes darstellen, d.h. greifbares Potenzial für Umsatz.  Dass die Anforderungsdefinition ein Engpass ist, habe ich noch nicht gesehen. Ich kenne nur Softwareunternehmungen, die schnelle Anforderungen produzieren, als die Softwareentwicklung in Code transformieren kann.  Dasselbe gilt für die Marktanalyse; auch hier habe ich noch kein Projekt gesehen, dass darunter gelitten hätte, dass der Markt nicht mehr Wünsche pro Zeiteinheit gehabt hätte, als umgesetzt werden konnten.</li>
+</ul>
+<p>Marktanalyse und Anforderungsdefinition scheinen also kein Problem zu sein. Die Softwareentwicklung ist und bleibt der Engpass. Als hätten Sie das nicht irgendwie schon vorher gewusst ;-)</p>
+<p>Dennoch finde ich es wichtig, diese beiden Schritte eingeführt zu haben. Denn wie Sie dem vorherigen Artikel entnehmen können, kann ein System nur optimal funktionieren, wenn man die Optimierung auf dem Ganzen ausführt und nicht nur auf Teilen. Grundsatz #3 ist zu beachten: Downstream Bedarf bestimmt upstream Produktion in allen Teilen eines Prozesses.</p>
+<p>Die Softwareentwicklung folgt Anforderungsdefinition und Marktanalyse, liegt also downstream. Das heißt, sie hat nach Grundsatz #3 Einfluss auf beide. Nur wie?</p>
+<h3>Ausbeutung mit Qualität</h3>
+<p>Bevor der Einfluss der Softwareentwicklung auf vorgelagerte Prozessschritte klar wird und der Produktionsprozess noch weiter verfeinert werden kann, wieder ein Ausflug ins Grundsätzliche der Theory of Constraints.</p>
+<p>Am Ende meines vorherigen Artikels habe ich die Schritte zur Optimierung eines Systems auf sein Ziel hin genannt:</p>
+<ul>
+<li>Engpass identifizieren  Engpass ausreizen (Grundsatz #5)  Nicht-Engpass Prozessschritte am Engpass ausrichten (Grundsatz #3)  Enpass erweitern (Grundsatz #5)  Zurück zu 1.</li>
+</ul>
+<p>Schritt 3 ist darin sozusagen der sichtbar “systemische” Schritt. Er widerspricht dem landläufigen Gedanken lokaler Optimierung. Denn hier kann es zum Abbau lokaler Optima führen, um ein Gesamtoptimum zu erzielen. Prozesschritte dürfen sich also nicht autistisch in sich kehren, sondern sollen das Ganze im Blick behalten – insbesondere ihr Verhältnis zum Engpass.</p>
+<p>Vorher geht es jedoch darum, den Engpass bestmöglich auszunutzen. Das bedeutet, dass man ihn auf das fokussiert, was er leisten soll im Sinne des Ziels. Alles, womit sich der Engpass beschäftigen muss, das nicht der Produktion hochwertigen Ausstoßes dient, ist zu vermeiden. Engpässe sollten also von jeder Ablenkung freigehalten werden.</p>
+<p>Eine häufige und ganz allgemeine Ablenkung ist nun Wiederbearbeitung (rework). Wenn ein Engpass schlechte Qualität ausstößt, kommt die irgendwann zu ihm zurück. Der Engpass muss seinen früheren Ausstoß dann nachbearbeiten. Das kostet Zeit, die ihm für die Produktion neuen Ausstoßes fehlt.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/8a114914e3657be9.png" /></p>
+<p>Ob mangelnde Qualität der Engpass-Ausstoßes direkt zu ihm zurückkommt oder dazu führt, dass vorgelagerte Prozessschritte auch kompensieren müssen, ist egal. Am Ende muss insbesondere der Engpass Zeit aufwenden für etwas eigentlich Erledigtes, statt etwas Neues zu produzieren.</p>
+<p>Sie kennen das sicher: Sie haben viel zu tun, takten Ihre Aufgaben eng, um rechtzeitig mit allem fertig zu werden – Sie haben keine Zeit zu verschwenden! – und dann bekommen Sie das Feedback, dass Sie das Dokument, das Sie gestern abgegeben haben, nochmal überarbeiten müssen, weil es Qualitätsmängel enthält. Das passt Ihnen natürlich gar nicht in den Kram, weil sie keinen Spielraum haben; Sie können es sich nicht erlauben, etwas, das schon fertig war, nochmal anzufassen. Genauso ist es mit dem Engpass in einem Prozess. Der hat keinen Spielraum, der muss an der Kapazitätsgrenze performen, weil er alle anderen ja schon aufhält. Der kann sich also nicht erlauben, einen Fehler zu machen, um dadurch selbstverschuldet früher oder später nachbessern zu müssen. Nachbesserungen verdienen einfach kein Geld.</p>
+<p>Selbst wenn der Engpass jedoch an sich fehlerfrei Input in Output transformiert, kann er mit Nachbesserungen belastet werden. Es gilt ja: Garbage in, garbage out. Wenn also der Input in den Engpass schon mangelhaft ist, kann der Engpass es nicht besser machen. Wenn die Qualität des Ausstoßes des vorgeschalteten Prozessschrittes suboptimal ist, dann wird der Engpass sogar womöglich doppelt unnütz belastet. Er befasst sich mit dem mangelhaften Input, bemerkt das aber nicht selbst, sondern transformiert ihn nach bestem Wissen und Gewissen – und dann verweigert ein nachgeschalteter Schritt die Weiterverarbeitung. Das führt dann zu einem erneuten Anlauf bei einem vorgeschalteten Schritt, so dass der Engpass erneut mit der Sache befasst ist.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/92ef3cc633d2d5e7.png" /></p>
+<p>Es ist also darauf zu achten, dass der Engpass nur mit Topqualität beliefert wird und selbst nur Topqualität ausstößt. Alles andere führt zu Wiederbearbeitungen, die den Engpass vom Wesentlichen ablenken.</p>
+<p>Wenn Nicht-Engpass Prozessschritte mit solchem “Wiederkäuen” belastet werden, mag das nicht so schlimm sein. Sie haben wegen des Engpasses wahrscheinlich Überkapazitäten und können sich (gelegentliche) Nachbesserungen leisten. Der Engpass hat diesen Luxus nicht.</p>
+<p>Und schließlich kann der Engpass zu Wiederbearbeitungen gezwungen werden, wenn seine Topqualität von downstream Prozessschritten zerstört wird. Als Pizzabäcker mögen Sie perfekt sein – wenn dann aber der Kellner die Pizza fallen lässt, war Ihre Arbeit umsonst. Sie müssen die Pizza nochmal backen, was andere Gäste auf Ihre Bestellungen ungeplant warten lässt.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9112c689db6512d7.png" /></p>
+<p><strong>Es ist also darauf zu achten, dass der Engpass nur mit Topqualität beliefert wird, selbst nur Topqualität ausstößt und downstream diese Topqualität nicht verlorengeht, so dass Nachbesserungen durch den Engpass fließen.</strong></p>
+<p>Den Engpass ausreizen bedeutet natürlich, dass er selbst wie geschmiert funktioniert. Darüber hinaus zwingt ein Engpass aber auch zum Blick auf Qualität. Sobald mangelnde Qualität upstream, downstream oder durch ihn selbst produziert zu Nachbesserungen führt, die durch den Engpass laufen, ist das im Widerspruch zur Forderung von Schritt 2 der Systemoptimierung.</p>
+<p>Qualität ist kein Selbstzweck. Irgendwie haben Entscheider also doch Recht, wenn sie Entwickler skeptisch beäugen, die mit einem absoluten Qualitätsbewusstsein an der Entwicklung “rumschrauben” wollen.</p>
+<p>Mit der Theory of Constraints bekommen Entscheider wie Entwickler allerdings ein Denkmodell an die Hand, das sie beurteilen lässt, wo qualitätssteigernde Maßnahmen Sinn ergeben. Eine simple Frage reicht aus: “Führt die Qualitätssteigerung zu einer Entlastung des Engpasses?” oder “Kann der Engpass sich anschließend mehr auf die Produktion von Neuem konzentrieren?”</p>
+<p>Wenn diese Frage mit Ja beantwortet werden kann, dann sollte die Maßnahme ernsthaft in Betracht gezogen werden.</p>
+<p>Umgekehrt kann natürlich auch nach lohnenden Veränderungsansatzpunkten gesucht werden. Ist ein Engpass bekannt, dann kann man fragen, wie die Qualität seines Ausstoßes erhöht werden kann, wie der Ausstoß des vorgelagerten Schrittes verbessert werden kann oder wie nachgelagerte Schritte die Qualität halten können.</p>
+<p>Die Systemoptimierung fragt also zuerst nach dem Engpass, dann danach, wie der überhaupt zu voller Kapazität gebracht werden kann – und anschließend kommt die Qualität in den Blick. <strong>Im Kern der TOC schlägt ein Herz für hohe Qualität – weil Qualität sich im wahrsten Sinne des Wortes auszahlt.</strong>Und damit ist das hohe Qualitätsempfinden der meisten Entwickler an den Sinn fürs Geld ihrer Entscheider angebunden. <strong>Entwickeridealismus und Entscheiderpragmatismus stehen nicht so im Widerspruch, wie es oberflächlich den Anschein hat.</strong> Mit einem passenden und gemeinsamen Referenzsystem kommen Geld und Qualität überein.</p>
+<h3>Qualität im Softwareproduktionsprozess</h3>
+<p>Nach diesem Ausflug in die TOC-Grundlagen stellt sich natürlich umso mehr die Frage, wo Qualität im Softwareproduktionsprozess eine Rolle spielt. Bisher ist sie noch nicht explizit sichtbar. Ich schlage vor, zwei weitere Produktionsschritte ins Bild einzuführen, die mit Qualität zu tun haben:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/987b7e3c86f70329.png" /></p>
+<p>Da ist zum einen der Support. Der befasst sich mit schlechter Qualität. Die Kundschaft meldet sich beim Support mit Problemen, die vom Support entweder selbst aufgeklärt werden können – oder als Issues weitergeleitet werden an die Softwareentwicklung. Solche Issues sind Abweichungen von der Anwendererwartung jeder Art, Bugs natürlich eingeschlossen.</p>
+<p>Dadurch steht die Softwareentwicklung von zwei Seiten unter Produktionsdruck. Die Anforderungsdefinition schiebt ihr zu, was umgesetzt werden muss, um am Markt “Packerl” abzusetzen. Und der Support schiebt ihr Nachbesserungen zu. Der Support im Bild ist somit ein deutlich sichtbarer Ausdruck dessen, dass die Softwareentwicklung ganz verlässlich immer wieder Engpass ist. Solange Support nötig ist, der mit der Softwareentwicklung verbunden ist, stimmt also mit der Qualität der “Packerl” irgendetwas nicht.</p>
+<p>Der Support ist in vielen Unternehmen wie eine Notbremse, die die Entwicklung jederzeit anhalten kann, um ein kundenlebenswichtiges Problem zu lösen. Das behindert die Softwareentwicklung dann doppelt, weil sie nicht nur eine Nachbesserung vornehmen muss, sondern auch aus ihrem Arbeitsfluss gerissen wird. Ein ruhiger, konzentrierter Arbeitsfluss ist aber wichtig, wenn die Softwareentwicklung als hochkreative Tätigkeit ihre Kapazität ausreizen können soll.</p>
+<p>Support-Issues kommen aber natürlich nicht von ungefähr. Sie sind nur das Symptom für Qualitätsmängel in der Produktion von “Packerln”. Deshalb ist eine explizite Qualitätssicherung gerade im Engpass als Gegenmaßnahme selbstverständlich. Sie entspricht der Erkenntnis der TOC, dass der Engpass von sich aus höchste Qualität liefern sollte, um Nachbesserungen zu vermeiden.</p>
+<p>Damit aber nicht genug! Qualität spielt lt. TOC auch noch an anderen Stellen eine Rolle. Auf hoher Abstraktionsebene ist die Softwareentwicklung der Engpass, d.h. Input und Output müssen hohe Qualität haben. Bei näherer Betrachtung ist dann jedoch die Programmierung innerhalb der Softwareentwicklung der wahre Engpass. Auch dort muss also schon die explizit Qualität in den Blick genommen werden.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/0a04831edc394b04.png" /></p>
+<p>Die Qualitätshebelpunkte im Einzelnen:</p>
+<ul>
+<li>
+<p><strong>Anforderungsdefinition</strong>: Können Anforderungen überhaupt von mangelhafter Qualität sein? Natürlich. Denn “mangelhafte Qualität” bedeutet, dass am Engpass Nachbesserungen nötig sind bzw. es kein Geld einbringt, sie umzusetzen. Der Engpass hat dann weniger Zeit für neue, lukrative Anforderunge. Mangelhafte Anforderungen sind mithin solche…   …die unnötig sind (Stichwort YAGNI). Vorschläge sind nicht einfach in Anforderungen zu transformieren, sondern auf ihre Relevanz zu prüfen. Die Anforderungsdefinition muss ein Gespür dafür haben, was wichtig, was nötig, was nice-to-have ist. Priorisierung ist das Zauberwort. Und auch ablehnen darf die Anforderungsdefinition. Nicht jeder Räusper des Marktes muss umgesetzt werden.  …die unklar sind. Anforderungen müssen in Form und Granularität so formuliert sein, dass bei der Softwareentwicklung möglichst wenige Zweifel existieren, was gemeint ist. Anforderungen sollten schon gar nicht Formulierungen wie “irgendwie” oder “Das sollen die Entwickler entscheiden, die haben doch Erfahrung” enthalten.
+Markstein für Klarheit sind in jedem Fall Akzeptanzkriterien, d.h. Paare von Eingaben mit erwartetem Verhalten. Ohne eine Liste solcher Paare sollte die Softwareentwicklung nicht mit der Implementierung beginnen. Sie kann dann nämlich nicht für sich feststellen, ob die Qualität ihrer Arbeit hoch ist. Das aber ist die Voraussetzung dafür, als Prozessschritt mit anderen zusammenzuarbeiten. Qualität ist ja nicht subjektiv von jedem Prozessschritt selbst zu bestimmen, sondern hat auch etwas mit den Folgeschritten zu tun.</p>
+</li>
+<li>
+<p><strong>Support</strong>: Was vom Support kommt, ist immer eine Störung für die Softwareentwicklung. Deshalb sollte der Support besonders sensibel sein, Issues mit geringer Frequenz und hoher Qualität zu produzieren. Mangelhaft sind Issues, wenn…   …sie unklar sind und der Entwickler nicht genau weiß, was zu tun ist. Wie kann er das Problem reproduzieren? Wer hat es gemeldet (für Nachfragen)? Alles was die Bearbeitung eines Issue verlängert, ist zu vermeiden.  …im Grunde vom Support selbst geklärt werden könnten. Das sollte für alle Issues gelten, die keine Bugs sind. Was ein Anwender für einen Fehler hält, mag nur eine falsch verstandene Anforderung sein. Deshalb sollte der Support auch eigentlich gar nicht mit dem Engpass Softwareentwicklung direkt verbunden sein. Das obige Bild stellt also nur die häufige de facto Prozesskette dar, nicht eine wünschenswerte. Wünschenswert ist vielmehr, dass die Softwareentwicklung von der Außenwelt abgeschirmt ist. Nur dann kann ein ruhiger Fluss zur maximalen Ausnutzung des Engpasses entstehen. Hier der angepasste Produktionsfluss:</p>
+</li>
+</ul>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/71067440bb031307.png" /></p>
+<p>Die Verbindung des Support mit der Anforderungsdefinition macht nicht nur zur Entkopplung der Entwicklung Sinn, sondern passt auch dazu, dass über den Support immer wieder (potenzielle) Verbesserungsvorschläge hereinkommen. Die landen nach der obigen Prozessstruktur nun ebenfalls bei der Anforderungsdefinition, also da, wo sie hingehören.</p>
+<ul>
+<li>
+<p><strong>Programmierung</strong>: Die Programmierung ist die zentrale Transformationsstelle. Sie ist das Herz des Unternehmens. Hier werden Anforderungen in Code gegossen; hier entstehen Softwarelösungen. Und leider ist die Programmierung auch der ewige Engpass. Das hat unabhängig von suboptimaler Anforderungsqualität mit vielen Faktoren zu tun, z.B. Komplexität der Materie Softwareentwicklung an sich, heterogene Ausbildung, mangelnde Plattformkenntnis, suboptimale Teamkommunikation oder schließlich auch Grundsatzengpässe aller Art.
+Den Engpass Programmierung maximal produktiv zu halten, ist also oberstes Gebot eines Softwareunternehmens. Alles andere ist Geldverschwendung. Das bedeutet aber auch, dass Produktivität unter Verzicht auf Qualität immer ein Phyrrussieg ist. Immer. Schlechte Qualität kommt immer zurück in Form von Nachbesserungen und verstopft den Engpass Programmierung. Das gilt für Bugs wie für fehlende Usability. Die Programmierung muss deshalb sehr sensibel sein für die Qualität ihrer eigenen Arbeit. Weniger als top Qualität (nach bestem Wissen und Gewissen der Programmierer) ist also zuwenig.   Automatisierte Tests (insb. zur Vermeidung von Regressionsfehlern) sind also ein Muss für den Engpass Programmierung. Nur so kann die Kapazität mittel- bis langfristig für Neues eingesetzt werden, statt für Nachbesserungen.  Reviews am Ende der Programmierung sind ebenfalls ein unverzichtbares Mittel, um vor Übergabe des Codes nochmal die Qualität zu checken. Alles was die Programmierung verlässt und später wiederkommt bereitet ungeplanten Mehraufwand, der von der eigentlichen Arbeit ablenkt.  Ähnlich verhält es sich mit der Usability. Wird auf die kein Wert gelegt, fällt Zusatzaufwand für die Anwenderdokumentation an und Issues vom Support tauchen früher oder später als Sand im Getriebe auf.  Sensibilität ist aber auch gegenüber den Anforderungen angebracht. Was klar ist, sollte pünktlich erfüllt werden. Was unklar ist, sollte vor Arbeitsaufnahme geklärt oder abgelehnt werden. Hier ist das größte Risiko, dass die Programmierung sich überschätzt. “Das kriegen wie schon irgendwie hin…” oder “Unsere Erfahrung sagt, dass der Kunde es bestimmt so und so haben will…” sind Symptome dafür.</p>
+</li>
+<li>
+<p><strong>Qualitätssicherung</strong>: Hohe Qualität als Output der Softwareentwicklung ist so wichtig, dass der Programmierung ihre Prüfung nicht allein überlassen werden kann. Grundsatzengpässe, die auf die Programmierung wirken und simple psychologische Mechanismen machen es wahrscheinlich, dass selbst sorgfältig testenden Programmierern Qualitätsmängel durch die Lappen gehen. Also ist eine explizite nachgeschaltete Qualitätssicherung wichtig, die ausdrücklich die Kunden-/Anwenderbrille auf hat. Spätestens hier sind die Akzeptanzkriterien aus den Anforderungen zu überprüfen. Sie macht aus dem, was die Programmierung für ein Release hält (Release Candidate) wirklich ein Release, das der Vertrieb zu einem “Packerl” schnüren kann.</p>
+</li>
+</ul>
+<h3>Zwischenfazit</h3>
+<p>Die Grundstuktur eines Softwareproduktionsprozesses ist nicht kompliziert. Dennoch ist sie wertvoll im Verein mit der Theory of Constraints. Denn selbst an der simplen Struktur lässt sich schon ablesen, wo Investitionen lohnen und wichtig sind.</p>
+<p>Testautomatisierung ist keine spinnerte Idee, sondern eine Maßnahme, um den Engpass Programmierung auszureizen. Dasselbe gilt für Versionskontrolle, automatisierten Buildprozess und andere Bausteine von <a rel="noopener" href="http://www.clean-code-developer.de/">Clean Code Developer</a>. Sie alle zielen darauf ab, Programmierer zu entlasten, um den Kopf frei für das Wesentliche zu bekommen.</p>
+<p>Ob ein Release von Hand oder mit einem Werkzeug hergestellt wird, interessiert den Kunden nicht. Da hat der Entscheider recht. Unrecht hat er aber, wenn er meint, deshalb sollte auf solch neumodischen Kram verzichtet werden. Denn was den Kunden interessiert, das ist die Zeit, die der Engpass Programmierung in die Herstellung neuer (!) Features steckt. Und die sinkt, wann immer Nachbesserungen oder manuelle Tätigkeiten nötig sind.</p>
+<p>Insofern liegt der Wert in automatisierten Tests (Unit Tests, Integrationstests) nicht darin, dass sie bei der Erstentwicklung eines Feature laufen. Bei der Erstentwicklung sind manuelle Tests womöglich schneller. Automatisierte Tests entfalten Ihren Wert vor allem als Regressionstests. Sie werden nämlich immer vor Release ausgeführt. Das ist mit manuellen Tests nicht möglich. Automatisierte Tests sind ewige Sicherungsseile für die Qualität. Die beschränkt sich mit ihnen nicht darauf, was für ein Release an manuellen Tests möglich ist – denn das wird im Verhältnis zur Gesamtfunktionalität immer weniger –, sondern deckt die Gesamtfunktionalität ab. Ob ein Programmierer nun überblickt, das er durch eine Veränderung “alte” Funktionalität nicht beeinflusst hat oder nicht, ist mit automatisierten Regressionstests unerheblich. Das ist ultimativ entlastend für die Programmierung.</p>
+<p>Eine Begründung von CCD durch die Theory of Constraints? Das ist ein schönes Zwischenergebnis, finde ich.</p>
+<p>Beim nächsten Mal geht es weiter mit einer Detaillierung der Programmierung.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/96a065b980159166.gif" /></p>
+<h2>Kommentare</h2>
+<p><strong>Mike Bild</strong> (2011-03-24):</p>
+<p>Hallo Ralf, du schreibst: "Dass die Anforderungsdefinition ein Engpass ist, habe ich noch nicht gesehen. Ich kenne nur Softwareunternehmungen, die schnelle Anforderungen produzieren, als die Softwareentwicklung in Code transformieren kann."</p>
+<p>Diese Erfahrung kann ich so nicht teilen. Meine Erlebnisse zeigen eher unzureichende, unüberlegte und ungenaue Anforderungen mit dem na wir probieren das mal so und schauen dann mal Charakter.</p>
+<p>Im späteren relativierst du ein bisschen und schreibst unter Qualitätshebelpunkte - "Können Anforderungen überhaupt von mangelhafter Qualität sein? Natürlich. Denn ...".</p>
+<p>Ja können sie! Meiner Meinung ist das der Regelfall und hier liegt IMHO der Hund begraben. Schlechte Marktanalyse, schlechte Anforderungsanalyse und ungenaue Anforderungserfassung mit Auftragserteilung per Zuruf, fehlende Abnahmekriterien, manuelle Qualitätssicherung und viel Politik - Die Kette ist, aus meiner Perspektive, schier endlos. Da sag ich, nicht die Entwicklung, nicht die Produktion ist der Engpass, sondern die Produktionsumgebung ist der Engpass. In der Softwareentwicklung ist viel geschehen - CI, agile Teams, bessere IDEs, viele gute APIs - genügend Hebelpunkte zur Steuerung der Produktion wie ich finde. Da frag ich ketzerisch - Was macht das Umfeld des Produktionsprozess? Wie und Wer kann konkrete Anforderungen, Features und Task mit Periodisierung nach Geschäftswert und technischem Aufwand erfassen die dann (sinnvollerweise) zu einem konkret geplanten Release mit hoher innerer und äußerer Qualität führen? Hier, so scheint mir derzeitig, liegen die größeren ungelösten Herausforderungen als in der flüssig programmierten Software.
+-Mike</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-03-24):</p>
+<p>@Mike: Engpass sein und schlechte Qualität ausstoßen, sind zwei verschiedene Sachen.</p>
+<p>Natürlich können Anforderungen schlecht sein. Das macht dann ein Problem für nachfolgende Schritte. Habe ich ja erklärt.</p>
+<p>Aber deshalb ist die Anforderungsdefinition noch lange kein Engpass. Das wird sie erst, wenn sie langsamer (gute) Anforderungen produziert, als die Entwicklung umsetzen kann.</p>
+<p>Wenn die Umsetzung einer guten Anforderung 10 Kalendertage und 30 Personentage dauert - wie lange hat dann die Definition dieser Anforderung gebraucht? Auch 30 Personentage? Kaum. Deshalb ist die Anforderungsdefinition selten der Engpass, selbst wenn sie die Qualität ihres Output noch steigern muss.</p>
+<p>Engpass ist Flaschenhals. Engpass ist da, wo es sich staut, wo mehr vorne ankommt, als pro Zeitheit verarbeitet werden kann - auf das Gesamtsystem bezogen.</p>
+<p>Nur weil etwas heute lange dauert und morgen für mehr Qualität länger, heißt das auch nicht, dass ein Engpass entsteht. Das wäre Denken in lokalen Optimierungen.</p>
+<p>Meine Sicht ist: Der Markt kann täglich ein neues Release vertragen. Der Vertrieb auch. Die freuen sich über neue Features jederzeit ein Loch in den Bauch.</p>
+<p>Auch die Anforderungsdefinition kann zur Not jeden Tag mit einer qualitativ hochwertigen Anforderung aufwarten.</p>
+<p>Aber die Programmierung kann diese Inkremente nicht komplett in einem Tag umsetzen (oder nur selten). Deshalb ist sie der Engpass.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2011-03-24):</p>
+<p>"Engpass sein und schlechte Qualität ausstoßen, sind zwei verschiedene Sachen."</p>
+<p>Das sind sie aus meiner Sicht nicht. Schon hier werden Qualität und Leistungsfähigkeit aller nachfolgenden Prozessschritte beschrieben. Natürlich kann ich, wie sehr häufig von mir erlebt, eine Anforderung an das System ala "Ich hätte gern die Eierlegendewollmilchsau" beschreiben. Meist gelingt es den Verantwortlichen nicht, tiefer in die Anforderung einzusteigen. Diese werden oft erst im Entwicklungsprozess aufgelöst, da wo produziert wird, da wo auf einmal fragen wie "Wie soll das genau funktionieren?" entstehen. Jetzt erst entsteht eine Auseinandersetzung mit einem Konzept und einer Lösung durch Rückkopplung durch vorgeschaltete Entwicklungsprozessschritte. Der Fluss der Produktion ist unterbrochen. Was macht die Produktion jetzt? - Genau - etwas anderes, vielleicht ein bisschen davon und ein bisschen davon? Oder die Produktion erklärt ein bisschen der Anforderung wo das Problem liegt und stellt mal gleich eine Lösung zusammen? Ist das Aufgabe der Produktion? Zu viel Beschäftigungstherapie und Vermischung von Verantwortlichkeiten wie ich finde.</p>
+<p>"Meine Sicht ist: Der Markt kann täglich ein neues Release vertragen. Der Vertrieb auch. Die freuen sich über neue Features jederzeit ein Loch in den Bauch."</p>
+<p>Das denke ich auch, nur dazu muss wieder mal der Input stimmen.</p>
+<p>"Auch die Anforderungsdefinition kann zur Not jeden Tag mit einer qualitativ hochwertigen Anforderung aufwarten."</p>
+<p>Das muss sie, denn sonst kann nicht produziert werden.</p>
+<p>"Aber die Programmierung kann diese Inkremente nicht komplett in einem Tag umsetzen (oder nur selten). Deshalb ist sie der Engpass."</p>
+<p>Ich behaupte das kann sie, wenn der Input stimmt und richtig dimensioniert ist.</p>
+<p>Mein derzeitiges Fazit: Der Engpass oder auch Flaschenhals ist die Anforderungsbeschreibung und der darin enthaltene letzte Schritt vor der Produktion die Anforderungszerlegung (Slicing) und Periodisierung in Feature-Task und nicht die Produktion. Wäre ersteres konstruktiv und qualitativ hochwertig, würde der Gesamtprozess nicht nach Trail and Error Konzept organisiert, wäre meiner Meinung nach die Produktion sicher auch effizienter.</p>
+<p>-Mike</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-03-24):</p>
+<p>@Mike:
+genau so ist es. Wenn die "Programiererherde" auf Grund der Anforderungen 30 Tage in die falsche Richtung rennt und die nachgeschaltete QS das erst nach Fertigstellung erkennt ...</p>
+<p>Immer wieder wird die Bedeutung von korrekten Anforderungen hervorgehoben z.Bsp.</p>
+<p>http://www.anecon.com/downloads/Widerstand_gegen_Testen.pdf
+(Folie 8)</p>
+<p>Es gibt natuerlich Dinge (z.Bsp. GUIs), da ist eine sehr detaillierte Anforderung kontraproduktiv.</p>
+<p>Max</p>
+<hr />
+<p><strong>Mike Bild</strong> (2011-03-24):</p>
+<p>@Max: Sicher! Nichts gegen die berechtigte Agilität und Forschung. Z.B. bei der Usability einer UI. Ich bin ein großer Freund der Kreativität in der Softwareentwicklung. Doch das ist KEINE Produktion. Das gehört da nicht rein!</p>
+<p>Eine Anforderung wie "Wie wollen über Google Maps Karten in unsere Anwendung anzeigen, um den Besuchern eine bessere Vorstellung vom Standort und der Lage zu geben." ist keine für die Produktion. Hier sollte sich jemand, undzwar im Vorfeld, mit der API und den Datenformaten auseinander setzen. Sollte das klarer und evtl. in einer Demo gespiked sein, können die Erkenntnisse in Form von Feature-Task in die Produktion einfließen. Das ist allerdings Forschung, eben keine Produktion.
+-Mike</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-03-24):</p>
+<p>@Mike: Wir sollten die Begriffe wirklich trennen.</p>
+<p>Engpass ist Engpass. Das hat mit Kapazität zu tun.</p>
+<p>Qualität ist Qualität. Das hat nicht mit Kapazität zu tun. Qualität kann einer produzieren mit viel oder wenig Kapazität in Bezug auf den Marktbedarf.</p>
+<p>Wir können natürlich darüber diskutieren, ob die Anforderungsdefinition der Engpass ist.</p>
+<p>Aber dann musst du zeigen, dass die Anforderungsdefinition pro Zeiteinheit zu weniger Releases beitragen kann als die Programmierung.</p>
+<p>Qualität der Anforderung bezieht sich natürlich auch immer auf das Machbare. Nur weil ich schreibe, dass Anforderungen hohe Qualität haben müssen, heißt das nicht, dass man über eine Anforderung (User Story?) fünf Jahre brüten sollte.</p>
+<p>Gerade weil in der Softwareentwicklung die Anforderungsqualität nicht notwendig steigt mit der Länge der Zeit, die man in sie investiert, sehe ich die Anforderungsdefinition im Diagramm nicht als Engpass.</p>
+<p>Es geht ja auch nicht um 1 dickes Buch das bei ihr rauspurzelt.</p>
+<p>Auf der anderen Seite sehe ich nicht, dass die Anforderungsdefinition, die eben keinen Entwickler beschäftigt, sich Gedanken über eine Realisierungsdauer machen sollte.</p>
+<p>Aus der Anforderungsdefinition kommt relativ grobes Zeugs. Zeugs, das ganz sicher nicht geschätzt ist. Also wird die Entwicklung manche Anforderung in 1 Tag und manche in 10 Tagen vollständig umsetzen. Vielleicht werden manche Anforderungen auch gar nicht vollständig umgesetzt, weil nach 80% alle zufrieden sind.</p>
+<p>Du darfst auch die Anforderungsdefinition nicht mit der Anforderungsanalyse verwechseln. Die habe ich noch gar nicht im Prozess verortet. Aber die gibt es. Bei der Analyse kommen die Entwickler ins Spiel. Und da wird dann auch kleingehackt. Tageshappen find ich gut.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2011-03-24):</p>
+<p>Anmerkung
+@Ralf:
+"Sensibilität ist aber auch gegenüber den Anforderungen angebracht. Was klar ist, sollte pünktlich erfüllt werden. Was unklar ist, sollte vor Arbeitsaufnahme geklärt oder abgelehnt werden. Hier ist das größte Risiko, dass die Programmierung sich überschätzt. “Das kriegen wie schon irgendwie hin…” oder “Unsere Erfahrung sagt, dass der Kunde es bestimmt so und so haben will…” sind Symptome dafür."</p>
+<p>Der Lösungsansatz "Was unklar ist, sollte vor Arbeitsaufnahme geklärt oder abgelehnt werden" beschreibt ziemlich genau was ich meine. Führt zur Unterbrechung und damit zur vermeintlich schlechten Effizienz der Produktion.</p>
+<p>Nun, dieses Vorgehen finde ich OK und es beschreibt ein bisschen Agilität durch Rückkopplung und Iterationen. Nur dann darf Produktion nicht mit dem Maßstäben der Produktion gemessen werden. Sondern eher der einer Forschungs- und Entwicklungsabteilung. Hier ist der Ausstoß ungewiss und nicht kontinuierlich. Ungenau messbar.</p>
+<p>Sollte Programmierung rückkoppeln müssen, da Anforderungen unklar sind, muss sie unabhängiger vom Geld- und Produktionsfluss sein.</p>
+<p>-Mike</p>
+<hr />
+<p><strong>Mike Bild</strong> (2011-03-24):</p>
+<p>@Ralf: "Du darfst auch die Anforderungsdefinition nicht mit der Anforderungsanalyse verwechseln."</p>
+<p>Trennung ist fast immer gut ;-).</p>
+<p>Sind für mich aber zwei Disziplinen mit hoher Kohärenz. Wer unzureichend analysiert erhält schlechtere Definitionen. Folgt wer gut analysiert erhält bessere, teilbare, schätzbare Definitionen. Folgt flüssigere Umsetzung.</p>
+<p>Führt micht zur Gegenthese ;-) - Wer gut analysierte, fachlich verifizierte, geteilte und automare, schätzbare, automatisch testbare, schriftlich fixierte Definitionen in gemeinsamer UL im Bounded Context macht, trägt in gleicher Zeitheit zu weniger Release bei. Salopp - Jemand der das alles nur hinreichend gut macht, braucht aus meiner sicht länger als der geneigte Programmierer mit der tatsächlichen Umsetzung.</p>
+<p>-Mike</p>
+<p>Offtopic: Vielleicht auch der Grund zur falsch verstandenen Agilität und der Trail and Error Softwareproduktionsorganisation.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-03-24):</p>
+<p>@Mike: Es geht in den Diagrammen um den wesentlichen (!) Datenfluss. Welche Stationen/Produktionsschritte gibt es grundsätzlich? Welche Transformationen finden statt.</p>
+<p>Im Restaurant ist der wesentliche "Datenfluss" vom Einkauf über die Küche zum Kellner zum Gast.</p>
+<p>Das bedeutet aber nicht, dass die Beteiligten nicht zwischendurch miteinander reden. Der Gast kann sich beim Kellner erkundigen, wie lange es noch dauert und der fragt die Küche. Würde ich das in einem Produktionsfluss darstellen? Nein. Höchstens, wenn diese Kommunikation signifikant ist, weil sie Kellner oder Küche belastet. Zuerst würde ich aber wohl einen Grundsatzengpass notieren, der die Kapazität von Kellner und Küche reduziert, weil er solche Rückfragen erlaubt.</p>
+<p>Dass Softwareentwicklung nicht wie Brötchenbacken funktioniert, weiß ich auch. Das ändert aber nichts an der Tatsache, dass Dinge erst getan werden können, wenn ihre Voraussetzungen erfüllt sind. Und es ändert auch nichts daran, dass das Endprodukt durch Transformationen entsteht.</p>
+<p>Also gibt es notwendig Prozessschritte (Transformationen) und zweitens eine Anordnung in einer Sequenz (wg der Voraussetzungen).</p>
+<p>Ich halte es für den Moment auch für unwesentlich, in diesen Produktionsprozess Schleifen für Iterationen einzuzeichnen. Dass innerhalb der Anforderungsdefinition ein Ping-Pong-Spiel stattfindet, ist auch unwesentlich.</p>
+<p>Es geht nicht um das Wie. Es geht darum, dass Anforderungen da sein müssen, weil sonst die Entwicklung nicht beginnen kann. Und die Programmierung muss hohe Qualität liefern, weil sonst am Ende der Kunde unzufrieden ist und vorne wieder Anforderungen zur Nachbesserung reinkommen.</p>
+<p>Die wichtigste Schleife ist außen um den Prozess herum. Das wird auch deutlich daran, dass Markt am Anfang und am Ende stehen.</p>
+<p>Und weil das Ganze mit den Anforderungen so knifflig ist, dürfen Releases (bzw. "Packerl") nicht im Jahresabstand produziert werden, sondern am besten täglich.</p>
+<p>Dazu ist aber nicht auch täglich eine neue Anforderung nötig.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-03-24):</p>
+<p>@Mike: Wir verstricken uns in Missverständnisse. Ich habe den 3. Teil noch nicht geschrieben. Anforderungsanalyse steht für mich an anderer Stelle: nach der Definition und in der Programmierung.</p>
+<p>Ich würd sagen: Sitz noch ein Weilchen still, bis der 3. Teil das ganze Bild zeigt :-)</p>
+<hr />
+<p><strong>Mike Bild</strong> (2011-03-24):</p>
+<p>FLOW - da gehe ich voll mit.</p>
+<p>Aufgestoßen ist mir eben nur dass Zitat in meinem ersten Kommentar. Das höre ich so häufig und ich bin eben aus genannten Gründen nicht der gleichen Meinung. Hier muss sich viel mehr um die Programmierung herum bewegen, statt mit dem Finger zu zeigen und zu sagen "Was dauert hier so lange? Wir brauchen Output."</p>
+<p>-Mike</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-03-24):</p>
+<p>@Mike: Bin ja ganz bei dir: Nur auf die Programmierung zu zeigen und zu fordern, "Macht dasselbe wie immer nur schneller", das bringt nix.</p>
+<p>Mit der TOC können wir nun angesichts eines Prozesses sagen, warum das nichts bringt: weil dadurch schlechte Qualität entsteht, die schon allein durch Nachbesserung den Engpass verstopft. (Da müssen wir mit technical debt nicht mal anfangen. Ist auch so schlimm genug.)</p>
+<p>Und wir können sagen, wo was verbessert werden muss:</p>
+<ol>
+<li>Qualität im Engpass (Programmierung) erhöhehm.</li>
+<li>Input für Engpass in der Qualität erhöhen.</li>
+</ol>
+<p>Und wenn der Input (Anforderungen) in der Qualität nicht steigen kann, nur weil man länger drüber nachdenkt, dann muss man so schnell wie möglich die auch nach Nachdenken immer noch suboptimalen/fragwürdigen Anforderungen in etwas transformieren, das der Kunde beurteilen kann. Damit sind wir bei häufigen Releases.</p>
+<p>Dadurch ändert sich aber das Prozessdiagramm nicht. (Oder vielleicht doch ein wenig ;-) Aber nicht dadurch, dass eine Schleife eingebaut wird. Stay tuned...)</p>
+<hr />
+<p><strong>Mike Bild</strong> (2011-03-24):</p>
+<p>Boarding completed. Dufte!</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

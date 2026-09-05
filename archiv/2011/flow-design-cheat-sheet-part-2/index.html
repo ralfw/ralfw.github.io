@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flow-Design Cheat Sheet – Part II, Translation — ralfw.de Archiv</title>
+<meta name="description" content="In my previous post I summarized the notation for Flow-Design (FD) diagrams. Now is the time to show you how to translate those diagrams into code. Hopefully you feel how different">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/flow-design-cheat-sheet-part-2/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Flow-Design Cheat Sheet – Part II, Translation — ralfw.de Archiv">
+<meta property="og:description" content="In my previous post I summarized the notation for Flow-Design (FD) diagrams. Now is the time to show you how to translate those diagrams into code. Hopefully you feel how different">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/flow-design-cheat-sheet-part-2/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>Flow-Design Cheat Sheet – Part II, Translation</h1>
+    <div class="doc-meta"><span>20. März 2011</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2011/03/20/flow-design-cheat-sheet-ndash-part-ii-translation.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/flow-design-cheat-sheet-part-2/</code></span></div>
+    <div class="art"><p>In my previous post I summarized the notation for Flow-Design (FD) diagrams. Now is the time to show you how to translate those diagrams into code. Hopefully you feel how different this is from UML. UML leaves you alone with your sequence diagram or component diagram or activity diagram. They leave it to you how to translate your elaborate design into code. Or maybe UML thinks it´s so easy no further explanations are needed? I don´t know. I just know that, as soon as people stop designing with UML and start coding, things end up to be very different from the design. And that´s bad. That degrades graphical designs to just time waste on paper (or some designer). I even believe that´s the reason why most programmers view textual source code as the only and single source of truth. Design and code usually do not match.</p>
+<p>FD is trying to change that. It wants to make true design a first class method in every developers toolchest. For that the first prerequisite is to be able to easily translate any design into code. Mechanically, without thinking. Even a compiler could do it :-) (More of that in some other article.)</p>
+<h2>Translating to Methods</h2>
+<p>The first translation I want to show you is for small designs. When you start using FD you should translate your diagrams like this.</p>
+<p>Functional units become methods. That´s it. An input-pin becomes a method parameter, an output-pin becomes a return value.</p>
+<p>The above is a part. But a board can be translated likewise and calls the nested FUs in order.</p>
+<p>In any case be sure to keep the board method clear of any and all business logic. It should not contain any control structures like if, switch, or a loop. Boards do just one thing: calling nested functional units in proper sequence.</p>
+<p>What about multiple input-pins? Try to avoid them. Replace them with a join returning a tuple.</p>
+<p>What about multiple output-pins? Try to avoid them. Or return a tuple. Or use out-parameters.</p>
+<p>But as I said, this simple translation is for simple designs only.</p>
+<p>Splits and joins are easily done with method translation.</p>
+<p>All pretty straightforward, isn´t it.</p>
+<p>But what about wires, named pins, entry points, explicit dependencies? I suggest you don´t use this kind of translation when your designs need these features.</p>
+<p>Translating to methods is for small scale designs like you might do once you´re working on the implementation of a part of a larger design. Or maybe for a code kata you´re doing in your local coding dojo. Instead of doing TDD try doing FD and translate your design into methods. You´ll see that way it´s much easier to work collaboratively on designs, remember them more easily, keep them clean, and lessen the need for refactoring.</p>
+<h2>Translating to Events</h2>
+<p>Translating FD diagrams to methods does not scale well. To reap all the benefits of FD you should therefore translate designs to Event-Based Components (EBC) as they were called originally. However this term is now deprecated, since the translation does not produce components in the sense of binary units of code. Nevertheless events enter the stage to hook together functional units.</p>
+<h3>Functional units</h3>
+<p>The favored translation results in a class for every functional unit with a method for every input-pin, and an event for every output-pin.</p>
+<p>The default names for input-pins and output-pins are Process() and Result. You might find that strange since you´re thinking of classes as "things" with many responsibilities. In FD, though, classes can be very small with just one responsibility. And this responsibility is an action.</p>
+<p>It´s not unusual to have a functional unit called "Read lines from text file" which then is translated into a class; why then should the class have a methode called ReadLinesFromTextFile()? Process() is sufficient.</p>
+<p>If a functional unit has more than a single input-/output-pin the methods/events surely must have different names which are denoted by pin names.</p>
+<p>Boards and parts do not differ in their basic translation. Both become classes (or interfaces, if you like). However, parts you implement yourself in some creative way. They are the workhorses. They contain the domain logic. Boards on the other hand could be generated – or are implemented by you without much thinking. Leave aside any creativity when implementing boards.</p>
+<p>Boards do not contain (much) code in the input-pin methods. What they are doing happens in the constructor. Their sole purpose is to connect the functional units nested within them. Thats why input-pins are just delegating the work to be done. And that´s why all nested FUs are injected into a board using ctor injection.</p>
+<p>With FD dependencies are (primarily) used to express nesting, i.e. different levels of abstraction. So a board is dependent on its nested functional units.</p>
+<p>Within a flow, however, functional units do not (!) depend on one another. FU A does not depend on FU B or vice versa. Also X is independent of any other FUs preceding or following it. That makes testing extremely easy (see below).</p>
+<h3>Wiring</h3>
+<p>Wires in their simplest form are just event handler assignments.</p>
+<p>This also makes it easy to translate split/fork.</p>
+<p>Board input-/output-pins are treated a bit differently, though. That´s because they are connected to the same kind of pins, input to input, output to output.</p>
+<h3>Join</h3>
+<p>A join unfortunately is not that simple. You should create a small standard part to accomplish the task – or you use the join class from the ebclang project at CodePlex. ebclang is an effort to provide tools to help with Flow-Design. And ebcpatterns is a sub-project collecting implementations of parts to solve recurring problems.</p>
+<p>Here is how you´d translate a join using the Join<T0, T1> class from ebcpatterns.</p>
+<h3>Sets of data items</h3>
+<p>Events can of course fire any number of times. So there is no need to distinguish between one output packet for an input packet and several output packets. Take as an example a functional unit splitting text lines into words.</p>
+<p>One word or many… that does not make a difference for the translation of the output-pin to event Action.</p>
+<p>But there is a difficulty for any receiver of the output packets. Which word is the last word in a line? If several lines are processed and if it makes a difference to which line a word belongs, then a receiver has no way of associating a word with a line. The only way would be to send a special End-of-Line word as the last word of every line.</p>
+<p>Fortunately there is another way of designing this. Just make it clear that output packets consist of several entries.</p>
+<p>The star after the typename signifies the packet to be a list of data items. And a list is most simply represented by an IEmumerable&lt;&gt;.</p>
+<p>Please note: This also works if the list contains millions of entries. Just don´t create an array and pass it along, but use an iterator (yield return) instead.</p>
+<h3>Explicit dependencies</h3>
+<p>Explicit dependencies are translated in a very explicit way. Instead of injecting them into the ctor an interface is used.</p>
+<p>This has to advantages:</p>
+<ul>
+<li>Injection does not interfere with any other part of the implementation. It does not force a ctor or an additional parameter to the ctor, it does not require a base class.</li>
+<li>Injection is independent of object creation; injection can take place at any time during start-up of a Flow-Oriented application.</li>
+</ul>
+<h3>Entry Point</h3>
+<p>The entry point attribute is likewise translated to the implementation of an interface.</p>
+<h3>Configurable</h3>
+<p>Also making a part configurable is translated to the implementation of an interface.</p>
+<h2>Testing</h2>
+<p>Testing of functional units is easy.</p>
+<p>With board you just do integration tests. Check only if the wiring is correct. Every path through a flow needs to be tested only once. Once you start using tools to generate boards these integration tests are not needed anymore.</p>
+<p>With parts do unit tests as usual. Note that you don´t need a mock framework for that anymore because there are no dependencies between parts. Just pay attention to how to check the output.</p>
+<p>You need to assign any relevant output event handlers before you call an input-pin method of the part. And don´t do the assert in the event handler because the test would go green even if the handler is not called.</p>
+<h2>Hosting – Putting it all together</h2>
+<p>Hosting the code created by this translation usually follows a pattern. It runs through a couple of phases:</p>
+<ol>
+<li>Build: Create all instances of functional units</li>
+<li>Bind: Wire-up the FUs by connecting output- to input-pins</li>
+<li>Inject: Inject explicit dependencies on all FUs implementing IDependsOn</li>
+<li>Configure: Pass the command line args to all parts implementing IConfigurable</li>
+<li>Run: Call the Run() method with the command line args on the sole part implementing IEntryPoint</li>
+</ol>
+<p>Build and Bind are put in a sequence to distinguish them; in reality, though, they are intertwined since binding happends also in ctors of boards upon creation.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

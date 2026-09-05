@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nullonade – Monade statt Null — ralfw.de Archiv</title>
+<meta name="description" content="In der Diskussion um Null als Rückgabewert gab es ein Codeschnippsel, mit dem Thomas Bandt zeigen wollte, dass der TryGetUserById(…)-Vorschlag nicht zwangsläufig zu intuitivem Code">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/nullonade-monade-statt-null/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Nullonade – Monade statt Null — ralfw.de Archiv">
+<meta property="og:description" content="In der Diskussion um Null als Rückgabewert gab es ein Codeschnippsel, mit dem Thomas Bandt zeigen wollte, dass der TryGetUserById(…)-Vorschlag nicht zwangsläufig zu intuitivem Code">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/nullonade-monade-statt-null/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Nullonade – Monade statt Null</h1>
+    <div class="doc-meta"><span>3. Mai 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/05/nullonade-monade-statt-null.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/nullonade-monade-statt-null/</code></span></div>
+    <div class="art"><p>In der Diskussion um Null als Rückgabewert gab es ein <a rel="noopener" href="http://blog.thomasbandt.de/39/2333/de/blog/null-verstaendnis.html#Comment6058">Codeschnippsel</a>, mit dem Thomas Bandt zeigen wollte, dass der TryGetUserById(…)-Vorschlag nicht zwangsläufig zu intuitivem Code führt. Ich formuliere das Beispiel hier mal etwas knapper:</p>
+<p>User tmpUser;
+bool isAuth = repo.TryGetUserById("987", out tmpUser) &amp;&amp;
+              sec.CheckUser("somepassword", tmpUser);</p>
+<p>Als Problem sieht Thomas – durchaus zurecht – die Abhängigkeit von CheckUser() von einem Seiteneffekt. Die globale Variable tmpUser muss vor Aufruf gesetzt sein, was innerhalb des logischen Ausdrucks nicht ganz so offensichtlich ist.</p>
+<p>Etwas deutlicher wäre die Abhängigkeit der Reihenfolge beider Methodenaufrufe, wenn der Ausdruck traditioneller als Schachtelung formuliert wäre:</p>
+<p>bool isAuth;
+User tmpUser;
+if (repo.TryGetUserById("987", out tmpUser))
+    isAuth = sec.CheckUser("somepassword", tmpUser);
+else
+    isAuth = false;</p>
+<p>Doch eigentlich sind Schachtelungen ja “böse” ;-) Sie erhöhen die (zyklomatische) Komplexität des Codes. Also vielleicht lieber so:</p>
+<p>User tmpUser;
+bool isAuth = repo.TryGetUserById("987", out tmpUser);
+isAuth = isAuth &amp;&amp; sec.CheckUser("somepassword", tmpUser);</p>
+<p>Das mag besser lesbar sein – doch das Grundproblem ist eigentlich nicht gelöst. Das besteht in der Abhängigkeit selbst, also letztlich in der zu beiden Methoden globalen Variablen tmpUser. Die ist nötig, weil Thomas keine Exception werfen möchte, falls es den angeforderten User nicht gibt. Wäre das anders, könnte er nämlich auch ohne diese Variable formulieren:</p>
+<p>bool isAuth = sec.CheckUser(“somepassword”,
+                            repo.GetUserById(“987”));</p>
+<p>Das ist zwar wieder geschachtelter Code, doch irgendwie sind wir sowas ja gewohnt ;-)</p>
+<h2>Get into the flow</h2>
+<p>So richtig cool finde ich das aber alles noch nicht. Deshalb schlage ich mal eine weitere Alternative vor. Wäre es nicht am allerschönsten, wenn wir es so schreiben könnten:</p>
+<p>var isAuth = repo.GetUserById(“987”) |&gt; sec.CheckUser(“somepassword”);</p>
+<p>Das ist natürlich Pseudocode. Aber schön wärs, oder? GetUserById() würde immer noch keine Exception werfen und trotzdem (!) würde das Ganze immer funktionieren.</p>
+<p>In F# geht das. Da gibt es so einen Pipe-Operator |&gt; und noch etwas anderes, das nötig ist, einen Option-Typ. Aber in C# sitzen wir erstmal auf dem Trockenen :-(</p>
+<p>Zum Glück können wir daran etwas tun. Wir können mit etwas Vorarbeit auch in C# so einen “Flow” von Anweisungen schreiben. Hier meine C#-Version:</p>
+<p>bool isAuth = repo.GetUserById("987")
+                  .Continue(user =&gt; sec.CheckUser("somepassword", user))
+                  .WithDefault(false);</p>
+<p>Liest sich doch gar nicht schlecht, oder? Es soll ein User geladen werden und danach soll geprüft werden, ob der User ein bestimmtes Passwort hat. Ist das so, dann ist das Ergebnis true, ansonsten false.</p>
+<p>Die Sequenz der Verarbeitungsschritte in unserem Kopf findet sich im Code wieder – ohne dass wir eine temporäre Variable bräuchten. Naja, nicht ganz: denn der user-Parameter der Lambda-Funktion ist eine solche temporäre Variable. Doch die ist nicht global, sondern lokal. Es gibt also keine schwer zu überblickenden Abhängigkeiten.</p>
+<h2>Optionen als Zwischenwerte</h2>
+<p>Möglich ist so eine Formulierung, wenn als Resultat von GetUserById() kein User (oder gar Null), sondern ein sog. Option-Wert zurückgeliefert wird. Den gibt es in F# gratis; für C# können wir ihn so bauen:</p>
+<p>public class Option
+{
+    public Option()
+    {
+        this.IsSome = false;
+    }</p>
+<p>public Option(T some)
+    {
+        this.Some = some;
+        this.IsSome = true;
+    }</p>
+<p>public T Some { get; private set; }</p>
+<p>public bool IsSome { get; private set; }
+    public bool IsNone { get { return !IsSome; } }</p>
+<p>…
+}</p>
+<p>Der Trick an Optionswerten ist, dass es immer eine Instanz gibt. Es geht also nicht um Objekt oder Null, sondern um Options-Objekt gefüllt oder nicht gefüllt. Wenn es gefüllt ist, dann liefert IsSome true, wenn nicht, dann liefert IsSome false bzw. IsNone true. Zugriff auf den Wert gibt die Some-Property.</p>
+<p>var optInt = new Option(42);
+Console.WriteLine(“{0}, {1}”, optInt.IsSome, optInt.Some);</p>
+<p>gibt aus:</p>
+<p>true, 42</p>
+<p>Mit so einem Typen kann GetUserById() nun umformuliert werden zu:</p>
+<p>Option GetUserById(string id) {…}</p>
+<p>Die Methode liefert immer ein Option-Objekt zurück und die Umgebung muss prüfen, ob etwas drin steckt oder nicht:</p>
+<p>var optUser = repo.GetUserById(“987”);
+if (optUser.IsSome)
+    …</p>
+<p>Das ist fast so wie eine Prüfung auf Null – aber besser. Denn mit einem Option-Objekt kann man immer weiterarbeiten.</p>
+<h2>Logik verstecken in einer Monade</h2>
+<p>Das Ziel ist immer noch der “Flow”, d.h. globale Variablen und Prüflogik auf unerwünschte Ergebnisse zu verstecken. Weil nun immer ein Option-Objekt vorliegt, können wir darauf immer eine Methode aufrufen</p>
+<p>public class Option
+{
+    …</p>
+<p>public IEnumerable&gt; <strong>Continue</strong>(Func processor)
+    {
+        return new[] {this}.Continue(processor);
+    }
+}</p>
+<p>und auch noch Erweiterungsmethoden in Anschlag bringen</p>
+<p>public static class OptionExtensions
+{
+    public static IEnumerable&gt; Continue(
+                                     this IEnumerable&gt; values,
+                                     Func processor)
+    {
+        return values.Where(v =&gt; v.IsSome)
+                     .Select(v =&gt; new Option(processor(v.Some)));
+    }</p>
+<p>public static TInput <strong>WithDefault</strong>(
+                                     this IEnumerable&gt; values,
+                                     TInput defaultInCaseOfNone)
+    {
+        return (values.FirstOrDefault() ??
+                     new Option(defaultInCaseOfNone)).Some;
+    }
+}</p>
+<p>Ich denke, damit habe ich eine <a rel="noopener" href="http://ralfw.blogspot.com/2009/12/linksammlung-zum-thema-monads-oop-2010.html">Monade</a> definiert, d.h. ein “Dings”, mit dem sich quasi unsichtbar ein Kontext um mehrere Anweisungen wickeln lassen kann.</p>
+<p>Dass ich dafür auf IEnumerable&lt;&gt; zurückgegriffen habe, ist lediglich meiner Faulheit geschuldet ;-) (Mit IEnumerable&lt;&gt; kriegen ist nämlich die Verkettung geschenkt, weil der Typ selbst schon eine Monade ist.) Ebenso die Methode Continue() der Option-Klasse. Hätte ich mir mehr Mühe gegeben, hätte ich statt IEnumerable&lt;&gt; eine spezielle Monadenklasse gebastelt. Das wäre sauberer gewesen.</p>
+<p>Für den Punkt, den ich hier rüberbringen wollte, geht es aber auch so, würd ich sagen. Ich möchte einfach einen weiteren Weg aufzeigen, ohne Null leben zu können – und dadurch lesbaren Code zu bekommen. Die Verkettung könnte noch weiter gehen, falls mehr “Transformationsschritte” nötig wären, die immer wieder Output erzeugen, der Input für den nächsten sind. Die Leistung der Monade besteht darin, die Schritte abzubrechen, falls kein Ergebnis geliefert wird (der frühere Null-Fall). Die verbirgt die Logik der Prüfung, ob ein Zwischenergebnis vorliegt und es noch weitergehen soll.</p>
+<p>Die C#-Mittel bleiben dabei immer etwas hinter denen von F# zurück. Doch mir scheint “das Denken in Option-Werten” durchaus den einen oder anderen Versuch wert. Wie gesagt, mit etwas mehr einmalig aufgewandter Zeit, ist das auch noch eleganter ;-)</p>
+<h2>Kommentare</h2>
+<p><strong>Mike Bild</strong> (2010-05-03):</p>
+<p>Wie hier (http://www.gmbsg.com/null-toleranz/) kommentiert, finde ich deinen beschriebenen Ansatz deiner "Nullonade" :-) als hervorragende Überleitung zur Problemlösung der NULL-Diskussion. Sehr cool! Danke! Das gesamte Posting und die Kommentare über alle Blogs hat Referenzcharakter für die Probleme der Softwareentwicklung. Zu NULL nur noch soviel - 2 Heuristiken zu NULL (Keine Null zurückgeben, Keine Null übergeben) wurden im übrigen auch schon im Buch das jeder kennen sollte - Clean Code - Robert C. Martin, wie ich finde, genügend beleuchtet. Die Diskussion finde ich deshalb ja auch so prägend. Na dann, vielen Dank nochmal dafür.</p>
+<hr />
+<p><strong>Björn Rochel</strong> (2010-05-03):</p>
+<p>Option.bind lässt grüßen ;-)</p>
+<p>Ist schon interessant, wie funktionale Programmierung die Perspektive verändert, oder?. Noch vor ein paar Wochen hätte ich das nie gedacht, aber seitdem ich mich intensiv mit F# befasse, stoße ich immer wieder auf Dinge, die ich als "gegeben" angenommen habe und es tatsächlich nicht sind. Null vs. Discriminated Unions ist ein gutes Beispiel hierfür. Immer wieder interessant zu sehen, wie andere Sprachen solche Probleme idiomatisch lösen. Das Buch "Real World Functional Programming" zeigt übrigens etwas Ähnliches in C# und F# side-by-side.</p>
+<p>Danke noch mal für den Anstoß F# genauer anzusehen ;-)</p>
+<hr />
+<p><strong>Mike Bild</strong> (2010-05-03):</p>
+<p>@Björn: Ja das stimmt, sehr prägend. Ich versuche jedoch, meiner zu wackligen Beziehung zu F# geschuldet, weiterhin funktionale Pattern und F# Sprachfeatures nach C# zu transportieren. Hier bin ich mit F# codierten Funktionseinheiten in meinem Team zu einsam. :-( Sei es drum... mit funktionalen Pattern finden wir für einige, sagen wir mal unschöne, Problemchen einfach sehr elegante allgemeine Lösungen. Zum Buch passt auch noch sehr gut http://blogs.msdn.com/wesdyer/archive/2008/01/11/the-marvels-of-monads.aspx</p>
+<p>-Mike</p>
+<hr />
+<p><strong>Rainer Hilmer</strong> (2010-05-05):</p>
+<p>Hallo Ralf,
+ich verstehe deine Option Klasse nicht. Je nachdem ob die interne Funktionalität von GetUserById einen User erhält oder nicht (null), eine Prüfung auf null machen. Ist das interne Ergebnis ein legitimes User-Objekt, wird eine Option-Instanz über den parametrisierten Konstruktor gebildet. Ist das Ergebnis null, muß der parameterlose Konstruktor benutzt werden. Wenn ich das so richtig verstanden habe, wäre das nur eine Verlagerung der null-Prüfung. Wo ist dann der Nutzen?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-05-05):</p>
+<p>@Rainer: Klar, irgendeiner muss eine Entscheidung darüber treffen, was passieren soll. Immer.</p>
+<p>Bei Rückgabe von Null sind es aber unabsehbar viele Stellen im Code, die zwangsläufig entscheiden müssen. Müssen!</p>
+<p>Bei Rückgabe einer Option muss eine Entscheidung aber nur einmal getroffen werden. Alles andere kann - wie die Monade zeigt - außerhalb des Anwendungscodes in Infrastruktur laufen.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Andreas Graf</strong> (2010-05-07):</p>
+<p>Der Argumentation zu zyklomatischer Komplexität kann ich nicht folgen. Die ersten drei Beispiele sind IMHO von gleicher zyklomatischer Komplexität.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-05-07):</p>
+<p>@Andreas: Mit Monaden werden oft Fallunterscheidungen im Anwendungscode überflüssig. Dadurch sinkt die zykl. Komplexität.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Sebastian Jancke</strong> (2010-05-09):</p>
+<p>Hallo Ralf,</p>
+<p>ich musste doch sehr schmunzeln, über die Diskussion und nun deinen Nullonade ;-) Scala hat genauso ein Teil: "Option". Dies kam vor ca. einem Monat in einer Diskussion "hoch" und hat mich und Kollegen zum kritischen Nachdenken über die Verwendung von "null" geführt. Fazit: Meist drücken wir mir "null" ein optionales Ergebnis, einen optionalen Wert aus. Tun wir dies mit "null" ist das un-explizit. Wir vergeben eine Chance für ein explizites, klar lesbares, Konzept.</p>
+<p>Darum habe ich vor 2 Wochen den Typ "Option" mit dem konkreten Ausprägungen "Vorhanden" und "Nichts" ins Projekt eingefügt. Darum gibts dann noch eine schöne kleine DSL zur sehr lesbaren Konstruktion. Eine Vorhandene Option lässt sich natürlich nicht mit dem Wert "null" erzeugen ;-)</p>
+<p>Als Effekt sieht man bei Konstruktion, Verwendung und in Signaturen was wirklich optional ist.</p>
+<p>Eigentlich fehlt könnte dieses Konzept "Standard" in .NET Framework und JDK werden...</p>
+<p>Grüße,
+Sebastian</p>
+<hr />
+<p><strong>Andreas</strong> (2010-09-22):</p>
+<p>Hallo,</p>
+<p>hat jemand ein volles Beispiel zum ansehen?
+Vielleicht könnte er es bitte hier posten.</p>
+<p>Danke Andreas</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

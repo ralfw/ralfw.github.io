@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software als System VI - Komplexität revisited — ralfw.de Archiv</title>
+<meta name="description" content="In meinem letzten Posting habe ich das Thema Komplexität nochmal aufgegriffen. Sie ergibt sich aus der Anzahl der Verbindungen in einem System, der Anzahl der verbundenen Strukturb">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/software-als-system-vi-komplexitt/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software als System VI - Komplexität revisited — ralfw.de Archiv">
+<meta property="og:description" content="In meinem letzten Posting habe ich das Thema Komplexität nochmal aufgegriffen. Sie ergibt sich aus der Anzahl der Verbindungen in einem System, der Anzahl der verbundenen Strukturb">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/software-als-system-vi-komplexitt/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Software als System VI - Komplexität revisited</h1>
+    <div class="doc-meta"><span>6. März 2007</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2007/03/software-als-system-vi-komplexitt.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/software-als-system-vi-komplexitt/</code></span></div>
+    <div class="art"><p>In <a rel="noopener" href="http://ralfw.blogspot.com/2007/03/software-als-system-v-was-ist-ein.html">meinem letzten Posting</a> habe ich das Thema Komplexität nochmal aufgegriffen. Sie ergibt sich aus der Anzahl der Verbindungen in einem System, der Anzahl der verbundenen Strukturbestandteile - hier: Swolons - und der Stärke der Kopplung entlang der Verbindungen.</p>
+<p>Ein Softwaresystem mit vielen Swolons, die nur wenig verbunden sind (z.B. in Form einer Kette) und deren Kopplung gering ist, ist nicht komplex. Ein Softwaresystem, mit weniger Swolons, die aber eng vernetzt sind und deren Kopplung hoch ist, ist viel komplexer.</p>
+<p>Komplexität ist insofern ein anderes Wort für Vorhersehbarkeit. Es geht um die Vorhersehbarkeit der Veränderung des Gesamtzustands eines Systems, der sich zunächst aus der Summe der Einzelzustände der Systembestandteile ergibt. (Ob ein System mehr als die Summe seiner Teile ist, d.h. neue Qualitäten entwickelt, die sich nicht direkt aus den Teilen ableiten lassen, soll an dieser Stelle außer acht gelassen werden.)</p>
+<p>Ein Softwaresystem, dessen Zustand sich in recht einfach zu verfolgender Weise verändert, wenn man an seiner Oberfläche eine Operation anstößt, ist also nicht komplex - kann aber sehr kompliziert sein. (Wo Kompliziertheit in Komplexität umschlägt, ist sicherlich auch eine Diskussion wert, soll an dieser Stelle jedoch auch außer acht gelassen werden.)</p>
+<p>Nachdem ich über Zustände und Kopplung und Komplexität geschrieben hatte, ist mir allerdings erst später aufgefallen, dass zwei Zeitpunkte zu unterscheiden sind. Der sofort naheliegende Zeitpunkt ist die Laufzeit einer Software. Wenn ich Zustand schreibe, dann meine ich doch eigentlich den Zustand eines Objektes oder anderen Laufzeitartefaktes, oder? In dem Zusammenhang ist Zustand einfach zu verstehen.</p>
+<p>Vor der Laufzeit liegt allerdings die Entwicklungszeit. Wenn man im Allgemeinen von Komplexität spricht, meint man gewöhnlich sie, würde ich sagen. Worauf bezieht sich in der Entwicklungszeit dann aber der Begriff Zustand? Dann existieren ja noch keine Objekte, sondern nur ihre Klassen.</p>
+<p>Komplexität und Zustand gehören aber sowohl zur Entwicklungs- wie zur Laufzeit zusammen. Meine bisherige Erklärung war nicht falsch, sondern nur missverständlich, weil sie beides nicht explizit getrennt hat.</p>
+<p>Der Zustand der Entwicklungszeit-Swolons - welche das auch sein mögen; darüber muss ich noch schreiben; Klassen gehören aber sicherlich dazu - bezieht sich auf ihren Code. Daten bilden den Laufzeitzustand, Code den Entwicklungszeitzustand. Verbindungen zwischen Entwicklungszeit-Swolons bestehen immer da, wo sie voneinander abhängig sind. Meist sind das auch die späteren Pfade, entlang derer Operationen laufen, z.B. Klasse A ist von Klasse B zur Entwicklungszeit abhängig, weil zur Laufzeit Objekte von A Operationen auf Objekten von B aufrufen.</p>
+<p>Die Operationen entlang der Verbindungen eines Softwaresystems zur Entwicklungszeit sind dann nicht Datenzustandsänderungen, d.h. Methodenaufrufe. Zur Entwicklungszeit sind die Operationen Codeänderungen. Die Komplexität ist zur Entwicklungszeit davon abhängig, ob Codeänderungen auf einem Swolon Auswirkungen auf den Code in anderen haben.</p>
+<p>Komplexität zur Entwicklungszeit beherrschen heißt also, den Effekt von Änderungen an Code in einem Teil der Swolarchie möglichst lokal zu halten. <a rel="noopener" href="http://www.dotnetpro.de/articles/onlinearticle1703.aspx">Contract-first Design</a> (CFD) ist dafür ein Mittel: Mit CFD werden während der Entwicklungszeit "Mauern" um Codebereiche gezogen, so dass sich Änderungen am Code innerhalb der "Mauern" möglichst nicht über sie hinaus auswirken.</p>
+<p>Ein sicheres Zeichen für (zu) hohe Komplexität in Ihren Softwaresystemen ist die Frage "Wenn ich hier etwas ändere, was hat das für Auswirkungen auf andere Teile des Programms? Kann ich sicher sein, den Gesamteffekt zu überblicken?"</p>
+<p>Also: Ich bleibe bei meiner Definition von Komplexität, die sie in Korrelation zu Verbindungszahl, Swolonzahl und Kopplungsstärke setzt. Und ich differenziere: Zur Entwicklungszeit bestehen die verbundenen Zustände der Swolons aus ihrem Code, zur Laufzeit bestehen sie aus den in ihren Instanzen gehaltenen Daten.</p>
+<p>Daraus ergibt sich übrigens, dass die Laufzeitkomplexität nicht der Entwicklungszeitkomplexität entsprechen muss. Oder? Hm... Ich glaube, ich kann mir zumindest ein zur Entwicklungszeit sehr komplexes Softwaresystem vorstellen - d.h. Codeänderungen haben schwer fassbare Auswirkungen -, das zur Laufzeit eine sehr geringe Komplexität hat. Mir schweben da alte sehr objektorientierte Stammdatenverwaltungsprogramme vor. Was sie tun, ist im grunde total simpel - aber der Code ist so verquarzt, ist so ein Spaghettihaufen, dass er sehr schwer wartbar ist. Der Code ist also (unnötig) komplex im Vergleich zu dem, was zur Laufzeit passiert.</p>
+<p>Und umgekehrt ist es wohl auch möglich, würde ich sagen. Ich kann mir eine wenig komplexe Codebasis vorstellen (Entwicklungszeit), die aber zu einer hohen Laufzeitkomplexität führt. Simulationsszenarien gehören in diesen Bereich.</p>
+<p>Strukturkomplexität und Verhaltenskomplexität sind also zu unterscheiden und können auch für ein Softwaresystem verschieden sein.</p>
+<p>Von statischer und dynamischer Komplexität würde ich übrigens nicht reden. Systeme sind von Natur aus immer dynamisch, denn sie existieren ja nur durch Operationen. Alles andere ist nur ein "Haufen Zeugs" ;-)</p>
+<p>Interessanterweise verläuft die Kopplung im System zur Entwicklungszeit im Vergleich zur Laufzeit wohl in umgekehrter Richtung: Wenn Swolon A von Swolon B abhängig ist - das betrifft die Entwicklungszeit -, es gilt also "A braucht B", dann haben Änderungen am Code von B eher Auswirkungen auf den Code von A. Der Code von A richtet sich als "Kunde" von B eben eher nach dem, wie B sich nach außen präsentiert. Grundsätzlich sind Verbindungen zwischen Swolons zur Entwicklungszeit zwar bidirektional, aber tendenziell würde ich sagen, es "operieren" eher unabhängige Swolons (B) durch Codeänderungen auf abhängigen (A).</p>
+<p>Zur Laufzeit ist es dann eher umgekehrt und klarer. Verbindungen zur Laufzeit sind durch den Code klar in ihrer Richtung definiert. Wenn A von B abhängt, dann laufen die Operationen gewöhnlich von A zu B, d.h. A verändert den Zustand von B. Zur Laufzeit sind die Zustände von B-Instanzen also zunächst abhängig von Zuständen von A. Aufgeweicht wird diese Umkehrung allerdings, wenn wir Rückgabewerte von Operationen einbeziehen. Hm...</p>
+<p>Naja, auf jeden Fall fühle ich mich wohler, da ich das mit den "Zustandszeitpunkten" nun (zumindest für mich) klar bekommen habe.</p>
+<p>PS: Haben Sie übrigens bemerkt, wie einfach das Nachdenken über Software durch den Begriff Swolon wird? Ich kann über Verbindungen, Zustandsänderungen usw. Aussagen machen, ohne immer gleich konkret werden zu müssen. Ich muss mich nicht (so schnell) für Klasse oder Komponente oder Prozess oder sonsteine Artefaktart entscheiden. Ich kann einfach über Einheiten von Funktionalität und Zuständen, den Swolons, reden. Und am Ende solcher Überlegungen kann ich dann schauen, was sich auf konkrete Artefaktarten übertragen lässt oder was zwischen ihnen eben unterschiedlich ist.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

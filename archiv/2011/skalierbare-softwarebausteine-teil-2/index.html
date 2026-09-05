@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skalierbare Softwarebausteine - Teil 2 — ralfw.de Archiv</title>
+<meta name="description" content="In meinem Traum sehen fundamentale Softwarebausteine ganz einfach aus, wie ich im ersten Teil dieser kleinen Artikelserie beschrieben habe:">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/skalierbare-softwarebausteine-teil-2/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Skalierbare Softwarebausteine - Teil 2 — ralfw.de Archiv">
+<meta property="og:description" content="In meinem Traum sehen fundamentale Softwarebausteine ganz einfach aus, wie ich im ersten Teil dieser kleinen Artikelserie beschrieben habe:">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/skalierbare-softwarebausteine-teil-2/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Skalierbare Softwarebausteine - Teil 2</h1>
+    <div class="doc-meta"><span>6. Okt. 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/10/skalierbare-softwarebausteine-teil-2.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/skalierbare-softwarebausteine-teil-2/</code></span></div>
+    <div class="art"><p>In meinem Traum sehen fundamentale Softwarebausteine ganz einfach aus, wie ich <a rel="noopener" href="http://ralfw.blogspot.com/2011/10/skalierbare-softwarebausteine-teil-1.html">im ersten Teil dieser kleinen Artikelserie</a> beschrieben habe:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/5b366e43e5fac0bd.png" /></p>
+<p>Es sind potenziell zustandsbehaftete und potenziell nebenläufige Funktionseinheiten auf beliebig vielen Abstraktionsebenen, die Input-Daten in Output-Daten transformieren. So einfach ist das :-)</p>
+<p>Dabei könnte ich nun stehenbleiben und hübsche Diagramme mit solchen Funktionseinheiten malen. Das würde mir das Nachdenken über Softwarestrukturen schon erleichtern.</p>
+<p>Doch ich will mich nicht in Wolkenkuckucksheim einrichten. Bubbles don´t crash. Der Traum muss also einen Realitätsbezug bekommen. Die konzeptionellen Funktionseinheiten müssen ausführbar sein; irgendwie müssen sie an Code angebunden werden.</p>
+<h3>Die Form einer normalisierten Funktionseinheit</h3>
+<p>Wenn solche traumhaften Flüsse ausführbar sein sollen, stellt sich als erstes Frage, welche Form eine Funktionseinheit in Code haben könnte. Bisher habe ich als Übersetzung Event-based Components favorisiert: Jede Funktionseinheit wird als Klasse implementiert, die für jeden Input-Stream eine Methode anbietet und für jeden Output-Stream einen Event.</p>
+<p>Das finde ich inzwischen zu aufwändig. Es funktioniert ordentlich, doch es macht ziemliche Mühe und schränkt ein. Der Zwang zur Klasse ist in der Community auch immer wieder auf Stirnrunzeln gestoßen.</p>
+<p>Deshalb jetzt ein Vorschlag mit kleinerem Fußabdruck:</p>
+<p>delegate void FunctionalUnit(
+    IMessage input,
+    Action&gt; output);</p>
+<p>interface IMessage {
+    string StreamQualifier { get; }
+    T Data { get; }
+}</p>
+<p>Wie ist das? Deutlich einfacher, oder? Sie können eine Funktionseinheit bauen, wie Sie mögen, solange es einen Adapter gibt, der sie an diesen Delegaten anpasst. Funktionen, Methoden, auch EBC-Klassen sind möglich. Nur ein Beispiel:</p>
+<p>class Program
+{
+    static void Main(string[] args)
+    {
+        FunctionalUnit&gt; fuSplit;
+        fuSplit = (inputMsg, outputCont) =&gt;
+            {
+                var outputData = Split(inputMsg.Data);
+                var outputMsg = new Message&gt;(
+                                           "", outputData);
+                outputCont(outputMsg);
+            };</p>
+<p>fuSplit(new Message("", "a;b"),
+                  (m) =&gt; Console.WriteLine(string.Join("/", m.Data)));
+    }</p>
+<p>static IEnumerable <strong>Split</strong>(string config)
+    {
+        return config.Split(';');
+    }
+}</p>
+<p>Die Implementation der Funktionseinheit ist eine Funktion. Um die herum wickelt <em>Main()</em> einen Adapter, der den Input an FunctionalUnit übersetzt in das Funktionsargument und ihren Rückgabewert in den Aufruf des Continuation-Delegaten.</p>
+<p>Dasselbe ist möglich mit einer Methode oder mit einer EBC-Klasse. Sollte es dabei um mehrere Input- und/oder Output-Streams gehen, kann der <em>StreamQualifier</em> von <em>IMessage&lt;&gt;</em> zur Unterscheidung herangezogen werden.</p>
+<p><strong>An dieser Stelle nehmen Sie bitte vor allem die Botschaft mit: Sie können Funktionseinheiten implementieren, wie Sie mögen.</strong></p>
+<p>Es gibt keinen Vorzug mehr für Klassen. Einzig, Ihre Implementation muss sich an den Delegaten adaptieren lassen. Das geht aber zumindest für statische und Instanz-Methoden/Funktionen und für EBC-Klassen.</p>
+<h3>Die Beschreibung von Flüssen</h3>
+<p>Dass Funktionseinheiten jede Form haben können, wird Sie etwas aufatmen gelassen haben. So ganz entfinstert wird Ihre Miene allerdings noch nicht sein, weil der Preis für die Freiheit der Form ein höherer Koordinationsaufwand zu sein scheint. Es müssen ja nun Adapter für Funktionseinheiten zusammengesteht werden, damit es zu einem Fluss kommt.</p>
+<p>Das ist richtig. Deshalb wird nun die Frage nach einer Beschreibung von Flüssen drängender. Bisher konnte sie recht simpel in C# als Event-Event-Handler Zuweisungen von EBC-Funktionseinheiten übersetzt werden. Das geht nun nicht mehr so einfach. Eine DSL wäre zur Unterstützung schön; aus der könnte womöglich der ganze Adapter-Code und das Koordinieren von Funktionseinheiten generiert werden.</p>
+<p>Ja, das könnte man. Aber ich möchte etwas anderes vorschlagen.</p>
+<p>Aber erst einmal: Wie könnten Flüsse beschrieben werden? Sie könnten grafisch notiert werden. Dafür ist aber ein recht aufwändiger Designer nötig. Oder sie könnten textuell notiert werden. Ich halte letzteres für ohnehin nötig, selbst wenn es einen Designer gäbe.</p>
+<p>ebc.xml (ebclang.codeplex.com) ist ein Versuch gewesen, Flüsse textuell zu beschreiben. Dazu gibt es auch einen Visualizer und einen Compiler. Aber XML scheint mir zu umständlich. Da steckt viel Rauschen drin.</p>
+<p>Dann habe ich mit einer DSL experimentiert, die ich ebc.txt genannt habe. Die Transformation einer Konfigurationszeichenkette der Form “a=1;b=2” in ein Dictionary ließe sich damit so beschreiben:</p>
+<p>ToDictionary {
+  this.in –(string)-&gt; (Split)
+          –(string<em>)-&gt; (Map)
+          –(KeyValuePair</em>)–&gt; (Build)
+          –(Dictionary)-&gt; this.out
+}</p>
+<p>Das ist doch lesbar, oder? Ich benutze diese Notation jedenfalls recht gern, um mal kurz in einer Email oder einem Diskussionsgruppenbeitrag einen Flow zu beschreiben.</p>
+<p>Allerdings ist auch diese Notation noch recht länglich, finde ich. Für die Menschen-Mensch-Kommunikation ist sie ok. Doch auch sie enthält noch Rauschen.</p>
+<p>Deshalb komme ich auf ebc.xml zurück, nur ohne XML. Die einfachste, maschinenlesbare Form der Beschreibung eines Flow ist eine Tabelle:</p>
+<p>ToDictionary
+this.in, Split
+Split, Map
+Map, Build
+Build, this.out</p>
+<p>Die erste Zeile bezeichnet die koordinierende Funktionseinheit, alle weiteren Zeilen verbinden Output mit Input.</p>
+<p>Dass hier keine Typen mehr für Input/Output angegeben sind, ist nicht weiter schlimm. Entweder man rüstet das nach</p>
+<p>…
+this.in, Split: string
+Split, Map: IEnumerable
+…</p>
+<p>oder man überlässt die Prüfung auf Passgenauigkeit einer Übersetzungs- oder Laufzeitinstanz. Letzteres finde ich völlig ausreichend.</p>
+<p>Mit solchen “Verbindungstabellen” lassen sich nun trefflich auch tiefe Fluss-Hierarchien beschreiben:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/751bc37091447422.png" /></p>
+<p>Jedes Komposit wird durch eine Tabelle beschrieben:</p>
+<p>R
+R, T
+T.a, W
+T.b, V
+W, S.c
+V, S.d
+S, R</p>
+<p>W
+W, X
+X, Y
+Y, W</p>
+<p>V
+V, Z
+Z, Y
+Y, V</p>
+<p>Wo Input- bzw. Output-Streams implizit bestimmbar sind, da müssen sie nicht angegeben werden, z.B. bei</p>
+<p>R
+R, T
+…</p>
+<p>Hier ist klar, dass R sich auf das Komposit bezieht und deshalb auf der linken Seite des Tupels ein Input-Stream gemeint ist. Rechts steht nicht das Komposit selbst, sondern eine enthaltene Funktionseinheit. Deren Input-Stream ist gefragt; doch da sie nur einen hat, muss der nicht näher benannt werden.</p>
+<p>Wenn mehrere Input-/Output-Streams vorhanden sind, ist allerdings eine Qualifizierung nötig wie bei:</p>
+<p>…
+W, S.c
+…</p>
+<p>Solche Tabellen sind recht bequem hinzuschreiben. Das hat schon ebc.xml gezeigt. Als einfachste Notationsform mögen sie deshalb genügen. Minimal sind sie jedoch nicht.</p>
+<p>Die Arbeitspferde einer hierarchischen Struktur sind die Blätter. Hier: S, T, X, Y, Z. Die Komposite bilden nur Kontexte, in denen sie zu “Kooperativen” zusammengefügt sind. Da die keine weitere eigene Aufgabe haben, können sie spätestens zur Laufzeit wegfallen als eigenständige Funktionseinheiten.</p>
+<p>Das obige System kann auch in nur einer Tabelle so beschrieben werden:</p>
+<p>/R, /R/T
+/R/T.a, /R/W/X
+/R/W/X, /R/W/Y
+/R/W/Y, /R/S.c
+/R/S, /R
+/R/T.b, /R/V/Z
+/R/V/Z, /R/V/Y
+/R/V/Y, /R/S.d</p>
+<p>Hier sind alle Blatt-Funktionseinheiten qualifiziert durch einen Pfad, der beschreibt, in welcher Schachtelung von Kompositen sie stecken. Damit lassen sich auch Y in W und Y in V unterscheiden.</p>
+<p>Die Daten von T.a gehen nun direkt nach W/X, statt zuerst an W und dann an X.</p>
+<p><strong>An dieser Stelle halten Sie bitte wieder einen Moment inne und lassen Sie die Botschaft einsinken: Die Struktur beliebig komplexer Software lässt sich durch eine einzige Tabelle beschreiben.</strong></p>
+<p>Egal wieviele Ebenen, wieviele Komposite und Blätter: Ein solches System können Sie immer abbilden auf eine simple Tabelle der Output-Input-Beziehungen.</p>
+<p>Damit meine ich nicht, dass Kontrollanweisungen wie if oder while überflüssig werden bzw. auch irgendwie über eine Tabelle verknüpft werden sollen. Die stecken ja in den Blättern der Holarchie und sind unsichtbar. Implementationsdetails. Mir geht es nur um die Funktionseinheiten der beschriebenen Form. Wie groß Sie die auf unterster Ebene machen, ist Ihre Sache. Je mehr Sie in Blättern verstecken, desto weniger profitieren Sie vom hiesigen Ansatz.</p>
+<h3>Höhepunkt: Flüsse zur Laufzeit</h3>
+<p>Und nun zum eigentlichen Punkt, den ich mit dem vorherigen und diesem Artikel machen will. Der Höhepunkt meines Traums ist eine Runtime Engine für Flüsse. Denn die wird sehr einfach möglich durch diese einfachste Beschreibung von Flüssen.</p>
+<p>Ich bin der Meinung, dass wir Flüsse nicht mehr übersetzen sollten. Wir sollten sie auch nicht mehr von Hand “verstöpseln”. Stattdessen sollten wir sie ganz, ganz simpel über eine Tabelle beschreiben, die Blätter (Operationen) benennen – und eine Runtime Engine “interpretiert” dann die “Flusstabelle”.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/90aaeb3d0c5f83cb.png" /></p>
+<p>Wie aus Ihren Funktionen, Methoden, EBC-Klassen Operationen werden, ist ein anderer Belang. Der finde ich gerade nicht so spannend. Dafür kann ein Container geschrieben werden, bei dem Sie Ihre Implementationen registrieren können und der sie hin <em>FunctionalUnit</em>-Adapter wickelt. Er könnte Operationen aus Assemblies sogar eigenständig sammeln.</p>
+<p>Dito ist die Herkunft der einen, das ganze System beschreibenden Tabelle für mich zweitrangig. Die kann aus mehreren Tabellen generiert worden sein. Oder sie kann aus einer ebc.txt DSL übersetzt worden sein. Auch das ist eine Funktionalität, die sich kapseln lässt.</p>
+<p>Nein, zentral ist für mich die Runtime Engine zur Interpretation von Flows. Da spielt die Musik. Und jetzt festhalten:</p>
+<ul>
+<li>Die Runtime ist der zentrale Ort, an dem der Fluss (oder die Hierarchie der Flüsse) belauscht werden kann. Die Runtime leitet Output an Input weiter. Sie hat also jede Nachricht ausdrücklich in der Hand. Ihr können wir unsere Wünsche äußern, welche Nachrichten wir abgreifen wollen. Vielleicht wollen wir sie nur protokollieren, vielleicht wollen wir sie aber auch manipulieren. Alles ist möglich durch den zentralen Eingriffspunkt Runtime. Stellen Sie sich eine Logging vor, das sie zur Laufzeit mit Pfaden einschalten können: “log /<em>/T.</em>”, d.h. logge alle Nachrichten, deren StreamQualifier dem Pattern entspricht.</li>
+<li>Die Runtime ist der zentrale Ort, an dem alle Flüsse in ihrer Geschwindigkeit kontrolliert werden können. Wenn wir wollen, können wir sie komplett anhalten – und dann wieder starten. Oder wir verlangsamen sie nur, um den Fluss vielleicht grafisch visualisiert mitverfolgen zu können.</li>
+<li>Die Runtime ist der zentrale Ort, an dem wir Performancedaten messen lassen können. Was sind die Durchflusszeiten, wie groß sind die Nachrichten in Strom /R/S.c durchschnittlich usw.</li>
+<li>Wenn die Runtime Output an Input “von Hand” zustellt, dann kann sie diese Übertragung selektiv aussetzen, während wir eine Operation zur Laufzeit ersetzen.</li>
+<li>Oder wir können der Runtime zur Laufzeit eine Änderung des Flusses mitteilen. Der ist ja nur eine Tabelle, die wir aktualisieren können.</li>
+<li>Und schließlich bekommt die Runtime jede Exception mit. Wenn wir wollen, stellen wir in der Runtime ein, was mit Exceptions passieren soll, die bei der Verarbeitung ganz bestimmter Streams auftreten.</li>
+<li>Ach, bevor ich es vergesse: Natürlich ist die Runtime auch die Instanz, von der wir uns wünschen können, ob Funktionseinheiten synchron, async+sequenziell oder parallel ausgeführt werden sollen.</li>
+</ul>
+<p>Sie sehen, ich träume von großen Vorteilen, wenn wir beginnen, Software als Hierarchie von Datenfluss-Funktionseinheiten zu betrachten.</p>
+<p>Technisch ist das alles grundsätzlich möglich. Ich habe es in einem Spike schon ausprobiert. Hier und da lauern sicherlich noch Teufelchen im Detail. Aber wenn wir das Ergebnis für wünschenswert halten, dann werden wir Wege finden, es vom Traum zur Realität werden zu lassen.</p>
+<p>Mit diesen beiden Postings wollte ich dazu meine Gedanken ein wenig ordnen. Ein Codeplex-Projekt für Implementation einer Runtime ist schon aufgesetzt. Jetzt muss ich nur noch die Zeit finden, sie schrittweise auch zu implementieren. Vielleicht machte ich daraus eine <a rel="noopener" href="http://clean-code-advisors.com/ressourcen/application-katas">Application Kata</a> mit vielen Iterationen. Dann können andere parallel und auf anderen Plattformen es auch angehen.</p>
+<p>Einstweilen lassen Sie mich wissen, ob Sie mitträumen oder es sich für Sie wie ein Albtraum anhört…</p>
+<p><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY"></a><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY">Spendieren Sie mir doch einen Kaffee, wenn Ihnen dieser Artikel gefallen hat...</a></p>
+<h2>Kommentare</h2>
+<p><strong>zommi</strong> (2011-10-06):</p>
+<p>Hallo Ralf,</p>
+<p>so dreht sich der Wind :)
+Im mycsharp-Forum hatte wir mal eine Diskussion, in der du meinem Ruf nach einer Runtime widersprachst: "Dass EBC erstmal eine richtige Laufzeitumgebung brauchen würden, sehe ich jedoch nicht. Die Praxis zeigt das Gegenteil. Ich habe noch keine solche Umgebung vermisst."</p>
+<p>Und nun sehnst du dich danach. ;) Gefaellt mir :)</p>
+<hr />
+<p><strong>zommi</strong> (2011-10-06):</p>
+<p>Aber ich moechte auch noch etwas loswerden: Mit der Trennung von "Struktur" und "Funktionseinheit" erhaelt man zwei Konzepte. Man programmiert die minimalsten Funktionseinheiten in imperativer Weise aus, waehrend alles groessere man nach dem Tabellen-Konzept zusammensteckt.</p>
+<p>Bei OOP ist das "einheitlicher", da ich das Innere von groesseren Objekten (also deren Methoden) genauso als Abfolge von Nachrichten an andere, kleinere Objekte darstelle, wie ich das Verhalten von minimalen Objekten als Abfolge von Nachrichten an "primitive" Datentypen beschreibe.</p>
+<p>Bei dem Flow-Konzept wechselt man hier hingegen zu einer deklarativen Beschreibung des Aufbaus groesserer Funktionseinheiten.</p>
+<p>An dieser Stelle ergibt sich aber noch keine Wertung! Vielleicht ist es sogar gut, diese Art von Trennung zu haben. Denn zum Verknuepfen von bestehenden Komponenten kann ich rein deklarativ denken. Das erleichtert es eventuell. Und es muessen ja auch nicht die selben Personen sein, die in beiden welten agieren. Ich zitiere auch hier nochmal aus dem Flow Based Programming Book von Morrison</p>
+<p><em>[...] in FBP application development there are two distinct roles: the component builder and the component user or application designer. The component builder decides the specification of a component, which must also include constraints on the format of incoming data [...] and the format of output [...] The specification should not describe the internal logic of the component, although attributes sometimes "leak" from internal to external (restrictions on use are usually of this type). The application designer builds applications using already existing components, or, where satisfactory ones do not exist, s/he will specify a new component, and then see about getting it built. Component designers and users may of course be the same people, but there are two very different types of skill involved. [...]</em></p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-10-06):</p>
+<p>@zommi: Eine Runtime ist auch nicht zwingend nötig. EBC funktioniert. Man hat dabei den Flow in der Hand. Das ist gut zum Lernen, Erfahrungen sammeln. Zu früh abstrahieren, kann zu Problemen führen. Das zeigen die vielen Frameworks die gebaut wurden und nun riesigen Wartungsaufwand verursachen, statt das Problem erstmal konkret gelöst zu haben.</p>
+<p>EBC ist eine konkrete Lösung für Flows.</p>
+<p>Und die Runtime ist nach gesammelter Erfahrung nun die Verallgemeinerung.</p>
+<p>Vor einigen Monaten hatte ich einfach auch noch nicht die Verallgemeinerung mit der einen Tabelle gesehen. Deshalb schien mir eine Runtime auch zu kompliziert. Der Binder als Quasiruntime, den es schon ganz früh gab, hat es nicht gebracht als reine Technologie ohne weitere Abstraktion. Und ein Mini-Bus, den es bei ebclang schon lange gibt, auch nicht.</p>
+<p>Naja, nun schaun mer mal...</p>
+<p>Ich halte die Trennung, die du hervorhebst, für gut: hier "Struktur", dort Operationen. Strukturbeschreibung mit DSL/Tabelle, Operationsbeschreibung mit 3GL.</p>
+<p>Das finde ich gut, weil damit ganz natürlich eine wichtige Separation of Concerns stattfindet.</p>
+<p>OOP macht das einheitlicher. Hört sich erstmal gut an - bis dann diese Einheitlichkeit dazu führt, dass Logik auf allen Hierarchiebenen auftaucht. Das geschieht, weil alle Ebenen mit dem gleichen Konzept und den selben Mitteln angegangen werden.</p>
+<p>Ob man nun "Struktur" und Operationen von verschiedenen Leuten entwickeln lässt, lasse ich mal dahingestellt. Ich glaube eher nicht, dass das nötig ist. Es sind zwei Arbeitsmodi. Ok. Aber personelle Trennung scheint mir nicht so wichtig, da qua Notation die Modi deutlich unterschieden werden. Die Praktik bzw. sogar das Tool sorgt dafür, das man ein wichtiges Prinzip beachtet: SoC. Das muss nicht durch personelle Trennung noch unterstrichen werden.</p>
+<hr />
+<p><strong>JensG</strong> (2011-10-06):</p>
+<p>Software rein deklarativ bauen ... meine Meinung dazu? <strong>Perfect - I like it!</strong></p>
+<p>Mehr fällt mir dazu echt nicht ein :-). Hatte ich eigentlich schon "Intentional Programming" erwähnt?</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-10-07):</p>
+<p>Geht das nicht wesentlich einfacher mit prozeduralen oder funktionalen Programmiersprachen? Mir kommen dafür objekorientierte Sprachen "missbraucht" vor.</p>
+<hr />
+<p><strong>Rainer</strong> (2011-10-07):</p>
+<p>Hallo Ralf,</p>
+<p>nur um sicher zu gehen, dass ich den Traum richtig verstehe:</p>
+<ul>
+<li>Wir entwickeln Software „wieder“ funktionsorientiert.</li>
+<li>Wir planen unsere Software nach dem Prinzip :
+erst mache ich das, dann jenes, dann…</li>
+<li>Jeder Arbeitschritt ( Funktionsbaustein ) hat genau einen Input und einen Output</li>
+<li>Ein Output kann Input für mehrere Funktionsbausteine sein</li>
+</ul>
+<p>Ich träume mal weiter bzw beschreibe meine „Instanz“ dieses Traumes….</p>
+<p>Möglicher Ansatz:
+Host für 1..n FBs (Funktionsbausteine) ist eine Komponente mit entsprechendem Interface:</p>
+<p>public interface IFBComponent
+{
+        IEnumerable Operations { get; }
+}
+(IOperation entspricht Deiner Definition im Artikel)</p>
+<p>Da ich – derzeit – Klassen noch nicht aufgeben will, würde ich eine solche Komponente als Klasse entwerfen, die das Interface IFBComponent implementiert.</p>
+<p>Runtime:
+- Meine Komponenten würde ich bei der Runtime „Registrieren“
+- Meinen „Software-Plan“ registriere ich ebenfalls als „Tabelle“ entsprechend Deinem Artikel</p>
+<p>Dann:
+- Runtime.Analyze ()
+- Runtime.Start</p>
+<p>Habe ich den Traum richtig verstanden?
+Wenn ja, dann finde ich ihn sehr interessant und würde gerne daran/darin weiter träumen ;-)</p>
+<hr />
+<p><strong>RichardW</strong> (2011-10-07):</p>
+<p>Hallo Ralf,</p>
+<p>mir hat schon dein EBC Konzept gefallen, dein aktueller Traum scheint mir eine evolutionäre Weiterentwicklung zu sein.</p>
+<p>Einen Einwand muss ich aber loswerden, Stichwort Wartung.</p>
+<p>Ich stelle mir vor, das ein solches Programm "irgendwann" von irgend einem Programmierer gewartet werden muss, dem das Konzept fremd/neu ist.</p>
+<p>Im besten Fall wird es für den Auftraggeber teuer, da die Einarbeitungszeit länger dauern wird.
+Ist das Konzept erst verstanden, kann es seine Vorteile ausspielen, es könnte eine Ersparnis eintreten.</p>
+<p>Die Abhängigkeit des Kunden von einem sehr kleinen Kreis von Entwicklern scheint mir problematisch oder auch gewünscht zu sein.</p>
+<p>Wie gesagt, mir gefällt da Konzept aber kann es sich auch breit durchsetzen?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-10-07):</p>
+<p>@Anonym: Was meinst du mit "das", das einfacher sein soll mit C oder F#?</p>
+<p>Die Übersetzung eines Flow in Code ist nebensächlich. Wenn du das mit F# besser machst als mit C#, dann mach es. Niemand wird deshalb aber auf C# verzichten, der heute damit seine Anwendungen schreibt. Deshalb muss es mit C# (oder Java oder C++) auch irgendwie gehen.</p>
+<p>@RichardW: Fortran war irgendwann neu und es stand die Frage im Raum, wer das mal warten soll, wo doch alle nur Assembler können. Dito C++. Alles ist irgendwann neu und nur eine Minderheit kann damit flüssig umgehen. (Um das abzumildern haben sich Java und C# nicht getraut, von der grundsätzlichen C-Syntax abzuweichen.)</p>
+<p>Ich halte aber einen Fluss für viiiiel verständlicher als ein Klassendiagramm mit Vererbung, Aggregation, Komposition usw. Jmd einen Fluss zu erklären, ist einfach. Dann kann er daran Veränderungen vornehmen. Allemal, da ja neue Operationen jede Form haben können: Funktion, Methode, Klasse.</p>
+<p>@Rainer: Deine "Instanz" darf aussehen wie du magst. Wenn du ihr eine Liste von FunctionalUnit oder IOperation mitgeben willst, dann mach das. Nötig ist das nicht. Ein Container kann sehr einfach auch eine "normale" Klasse genauso wie eine EBC-Klasse in IOperation-Adapter wickeln. Ein bisschen Reflection macht es möglich.</p>
+<hr />
+<p><strong>Lennart</strong> (2011-10-07):</p>
+<p>Hallo Ralf,</p>
+<p>von den EBCs war ich schon sehr begeistert. Die Verdrahtung der einzelnen Komponenten fand ich aber bisher immer ein wenig unübersichtlich, daher kann ich deiner Idee die einzelnen Funktionseinheiten von einer Runtime zur Laufzeit verdrahten zu lassen viel abgewinnen.
+Eine Frage zu dem FunctionalUnit-Delegaten habe ich aber noch, nämlich wie ich damit eine Funktionseinheit bauen kann, die zwei Ausgänge hat, wo einer einen String und der Andere z.B. einen Integer ausgibt.</p>
+<p>Grüße Lennart</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-10-07):</p>
+<p>@Lennart: Du hast recht, dass mit dem streng typisierten Delegaten nur 1 Input und 1 Output Strom möglich sind. Da hab ich nicht aufgepasst, weil ich mich zur strengen Typisierung hab hinreißen lassen. Wollte mir nicht schon wieder Performancegejammere oder Untypisierungsgeklage anhören :-)</p>
+<p>Eigentlich ist IMessage untypisiert:</p>
+<p>interface IMessage {
+  string StreamQualifier {get;}
+  object Data {get;}
+}</p>
+<p>und damit auch die Funktionseinheit:</p>
+<p>delegate void FunctionalUnit(IMessage input, Action outputCont);</p>
+<p>Dann können Nachrichten mit ganz unterschiedlichem Data-Typ rein/rausgehen. Welcher erwartet wird, bestimmt der StreamQualifier. Aber eine harte Prüfung durch den Compiler findet nicht statt.</p>
+<p>Das macht aber nicht viel, finde ich. Wir in anderen locker typisierten Sprachen sichern autom. Tests, dass dadurch kein Problem entsteht.</p>
+<hr />
+<p><strong>McZ</strong> (2011-10-07):</p>
+<p>Dieser Artikel geht mittelbar auf das Hauptproblem ein, welches ich mit EBC habe: es ist unhandlich und einfach schwer zu lesen.</p>
+<p>Ferner misfällt mir, wie EBC Asynchronizität und Paralletität handhabt. Asynchron erzeugte Werte aka Futures sollten doch mit Task(T) abgedeckt werden!? D.h. der Outputtyp bestimmt, ob eine Funktionseinheit asynchron/parallel oder synchron ausgeführt werden soll.</p>
+<p>Ich übersetze Flow-Design generell nur mit Extension-Methods. Das kommt einer Tabelle sehr nahe: eine Zeile Code, die ich durch Umbruch in Tabellenform bringen kann. Ich empfinde dies als natürlicher und organisationstechnisch einfacher zu handhaben. Außerdem versteht jeder den Code.</p>
+<p>Code dynamisch zu generieren ist damit auch möglich. Es gibt dazu ein paar generische Extensions. Man benötigt im einfachsten Fall ein IEnumerable(String) von Extension-Namen, löst das Ganze in ein IEnumerable(GenerationInfo) auf und generiert mit einer einfachen Iteration per Reflection.Emit oder CodeDOM Code zur Laufzeit. Optional können AOP-Wegpunkte dynamisch oder explizit hineingeneriert werden.</p>
+<p>Der Nachteil ist, dass man programmatisch den Flow nicht rekonsturieren und ggf. ändern kann. EBC kann dies dank seiner Zusammenstecklogik, der Vorteil wird aber nicht genutzt, da auf Platinenebene Schluss ist. Die Frage ist, ob nicht gerade die Metadaten des Flows ein Aspekt sind.</p>
+<p>Die Idee einer Runtime sieht dann irgendwie danach aus, als ob hier ein Sammlungspunkt für Aspekte gebildet werden soll.</p>
+<p>Ich habe das Gefühl, mit einer Runtime nähert sich Flow Design immer weiter der Workflow Foundation an. Ich sehe da auch durchaus verwandte Probleme; z.B., Verarbeitung von Eingaben innerhalb des Softwareprozesses, Beendigung und Neustart des Softwareprozesses an einem gewissen Punkt.</p>
+<p>Wenn dem so ist, frage ich mich, ob hier a) eine bestehende Funktionalität erneut implementiert wird oder b) schlicht über das Ziel hinausgeschossen wird.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-10-07):</p>
+<p>@McZ: Dass EBC anders ist als normaler Code, ist unzweifelhaft. Dass EBC deshalb schwerer und unhandlicher ist, sehen verschiedene Leute verschieden. 1000 Zeilen normalen Code in einer Methode finde ich sehr schwer und undhandlich - der ist aber normal mit normalem Code. In EBC habe ich soetwas noch nie gehabt.</p>
+<p>Aber EBC ist auch nur ein Form, wie Flows implementiert werden können. Wenn du es anders machst und damit zufrieden(er) bist, dann ist das doch wunderbar. Zeig uns, wie du es machst, in einer der EBC Diskussionsgruppen.</p>
+<p>Eine Flow-Runtime ist natürlich einerseits ähnlich zur WF-Runtime. Ob damit etwas erneut entwickelt wird, was es schon gibt, kannst du dir aber selbst beantworten:</p>
+<p>Ist ein Flow-Design dasselbe wie ein Workflow?</p>
+<p>Wenn ja, dann solltest du gleich mit der WF arbeiten. Wenn nein, dann ist eine Flow-Runtime nicht dasselbe wie die WF-Runtime.</p>
+<p>Und selbst wenn die Überschneidung größer sein sollte, heißt das nicht, dass nicht eine alternative Implementation Sinn machte. Es gibt ja auch mehrere ORM oder Servicebusse usw. Die WF hat ihre Eigenheiten (im Guten wie im Schlechten); da ist noch nicht das Ende der Fahnenstange erreicht, würde ich sagen.</p>
+<p>Aber aus meiner Sicht haben Flow-Designs und Workflows nur wenig mit einander zu tun. Und deshalb ist eine Flow-Runtime gerechtfertigt.</p>
+<hr />
+<p><strong>RichardW</strong> (2011-10-07):</p>
+<p>@Ralf
+Dein Argument Fortran sei auch mal neu gewesen halte ich nicht für ganz zutreffend.
+Dein Konzept der EBCs, Flussorientierung, skalierbare Softwarebausteine ( nenn es wie Du willst) ist ein Neuansatz, ähnlich wie das OOP zu Spaghetticode-Zeiten war.
+Das OO Konzept wurde dann zwar verschieden implememtiert, aber die Gemeinsamkeiten waren grösser als die Unterschiede.</p>
+<p>Ich halte große Stücke auf dich als innovativen Querdenker und Entwickler, aber einige noch so begeisterte Gurus und Innovationstreiber können sich nicht mit der Kraft von z.B. Microsoft, AT&amp;T usw. messen wenn es darum geht eine BREITE Akzeptanz neuer Konzepte durchzusetzen. CA ist z.B. mit OO grandios gescheitert obwohl viele Clipperprogrammierer gierig auf OO waren.</p>
+<p>Das Problem ist nicht das Konzept (LIKE!) sondern die Trägheit der (Programmierer)Masse.
+In der Regel werden Sachen abgelehnt die man nicht versteht oder mentale Flexibilität erfordern. Wenn keine Super-Deluxe Entwicklungsumgebung bereit steht wird doch großflächig die Nase gerümpft.</p>
+<hr />
+<p><strong>Stefan Cullmann</strong> (2011-10-07):</p>
+<p>Hallo Ralf,
+zwei Anmerkungen zur Tabelle:</p>
+<ul>
+<li>
+<p>Du führst als erstes normalisierte Funktionseinheiten ein, um dann aber in deiner Tabelle noch mehrere Ausgänge zu erlauben, Beispiel: /R/W/Y, /R/S.c</p>
+</li>
+<li>
+<p>/R/W/X bedeutet beispielsweise die FU X im Komposit W in der Komponente R. Brauchen wir diese Struktur überhaupt noch? Ist /R/W/ nicht schon Rauschen, bildet es nicht künstlich einen weiteren Namespace?
+Sehr wahrscheinlich ist doch die FU X sowieso schon R.W.X. Wenn wir zudem die FUs direkt verbinden, welchen Sinn machen dann noch Komposite?</p>
+</li>
+</ul>
+<p>Und was passier mit SharedState und Abhängigkeiten zu Adaptern, die bei EBC noch mit IDependsOn aufgelöst wurden?</p>
+<hr />
+<p><strong>Harald Reisinger</strong> (2011-10-07):</p>
+<p>Also mit Extension-Methoden lässt sich der Flow im Code auch schon schreiben...</p>
+<p>input
+  .Process(data =&gt; fuSplit(data))
+  .Process(data =&gt; fuAdd(data))
+  .Finally(output);</p>
+<p>... nur die Deklarationen der Funktionseinheiten sehen ziemlich furchtbar aus. :)</p>
+<p>Leider kann man hier keine spitzen Klammer reinschreiben aber es sind dann Funcs vom Typ IMessage of string nach Typ IMessage of IEnumerable of string - und dahinter noch ein Lambda :)</p>
+<p>Zugegeben, im echten Code sieht das vielleicht nicht so wild aus wie hier bei mir, mit den ganzen konstrierten Zeugs.</p>
+<p>Aber jedenfalls ein Konzept, welches mir gut gefällt. Die Messages können ja so gut wie alles enthalten, daher sind da ja meiner Meinung nach auch Tasks of T und andere Schweinereien abbildbar.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-10-07):</p>
+<p>@RichardW: Wenn du das Konzept magst, was interessiert dich dann die träge Masse. Tu doch einfach, was du für richtig hälst. Wenn die anderen das nicht raffen, dann ist es deren Problem ;-)</p>
+<p>Wir reden ja hier über nichts, was Berge an Tools bräuchte. Flow-Design kannst du aus dem Stand jetzt tun. Du musst auf nichts warten - was nicht heißt, dass nicht die eine oder andere Hilfe/Weiterentwicklung nett wäre. Wo Entwickler keine Probleme haben, große Infratruktur wie O/R Mapper reihenweise selbst zu basteln, da solltest du auch kein Problem haben, die noch etwas zu FD/EBC dazu zu stricken, falls du es brauchst ;-)</p>
+<p>Ich warte nicht darauf, dass FD/EBC von irgendwem spezielles geadelt wird. Oder dass eine große Masse damit arbeitet. Ich arbeite damit, ich empfinde es als vorteilhaft, ich sage es weiter, andere finden es dann auch vorteilhaft. Mehr brauche ich nicht. Wenn FD/EBC irgendwann mal durchstartet (oder was besseres von woanders um die Ecke kommt), dann ist das schön. Aber darauf muss ich nicht warten.</p>
+<p>@Stefan: Die normalisierten Funktionseinheiten sind ein Implementierungsdetail. Dass in der einen Tabelle mehrere Streams pro Funktionseinheit stehen, geht dadurch auch nicht weg. Die "Pfade" sind vielmehr StreamQualifier, die in Messages stehen. Das beschreibe ich ein andermal.</p>
+<p>Was ist mit Abhängigkeiten? Die sind für mich im Augenblick unterhalb des Radars. Eine Runtime hat damit nichts zu tun. Der werden die IOperation Funktionseinheiten reingereicht. Wie die gebaut wurden, ist der Runtime egal. Wenn du da eine Abhängigkeit brauchst... dann musst du zusehen, wie du sie reinkriegst :-)</p>
+<p>Aber das wird ja nun auch einfacher. Es gibt keine Platinenklassen mehr, deren Sub-Funktionseinheiten per Ctor reingereicht werden. Die vormaligen Platinen stecken ja in der Tabelle. Also kannst du eine EBC-Operation bauen, die einen Ctor hat, über den was reingereicht wird.</p>
+<p>@Harry: Ja, kannst du alles so hinschreiben. Ich freue mich, wenn du eine für dich griffigere Schreibweise für Verdrahtungen gefunden hast.</p>
+<p>Nur mit dem, was ich hier erträume, wird solcher Code überflüssig. Es wird eben nichts mehr mit C# Code verdrahtet. Es gibt keine Platinen mehr, wo Events mit Event-Handlern zusammengesteckt werden - oder eben irgendwie anders.</p>
+<p>Der Flow wird durch die eine Tabelle beschrieben. Du sollst in Zukunft mit C# nur noch Operationen/Blätter implementieren. Und zwar wie du magst. Es muss nur einen Adapter zu FunctionalUnit geben.</p>
+<hr />
+<p><strong>ssl</strong> (2011-10-07):</p>
+<p>Hallo,</p>
+<p>ich finde diesen Ansatz sehr interessant! Vorallem, wenn man die funktionalen Anforderungen der Software in Anwendungsfällen beschreibt. Der “Verfeinerungsbaum” aus dem ersten Teil ist, meiner Meinung nach, im Prinzip nichts anderes, als eine immer feinere Beschreibung von Anwendungsfällen und den daraus abgeleiteten Aktivitätsdiagrammen. In der klassischen OO-Entwicklung hat man an dieser Stelle einen Bruch, denn das Entwickeln von Klassen passt nicht mehr so ganz in dieses Schema -- es ist etwas anderes, aufgezwungenes (?). Das hier vorgestelle Konzept stellt einen fließenden Übergang zwischen den funktionalen Anforderungen und dem Code her. In der Steuertabelle sollten sich die Szenarien aus den Anwendungsfallbeschreibungen relativ leicht wieder erkennen lassen. Der Idealfall wäre natürlich, wenn man aus einer Art Szenarienbeschreibung gleich die Steuertabelle erzeugen könnte.</p>
+<p>Folgende Punkte sehe ich jedoch noch:</p>
+<p>1) Das "Split" aus dem obigem Beispiel passt wirklich nur an diese eine Stelle und ist nicht unbedingt universell einsetzbar. Für ein Split nach "," oder "." müsste jedes mal eine neue Funktion geschrieben und getestet werden. Die Steuertabelle sollte daher auch Parameter in einem gewissen Rahmen unterstützen. Damit könnte man sich auch eine Art Funktionsbibliothek vorstellen, die grundlegende Bausteine anbietet, die man ineinander stöpseln kann, ohne sie jedes mal neu zu schreiben. Es wären auch übergeordnete Kontrollstrukturen im gewissen Rahmen denkbar (zb. Loop(5) --&gt; führt dann 5x den folgenden Teil aus)</p>
+<p>2) Teil 1 "Zustand": In den ganzen Beispielen werden nur relativ einfache Funktionen gezeigt. Die ganzen Funktionen hantieren nur mit einfachen Daten. Ich behaupte jetzt mal ganz frech, dass in einer realen Anwendung hinter dem "shared state" aus dem ersten Teil teilweise recht komplexe Datenstrukturen stecken können. Auch wenn man die Strukturen sehr stark partitioniert, sind dennoch gewisse Verknüpfungen in den Daten gewollt, so dass zwangsläufig wieder größere Objektstrukturen entstehen. An dieser Stelle sehe ich wieder die Testbarkeit eingeschränkt, vorallem, wenn die Daten aus irgendeiner Art Datenbank kommen. Ich glaube, dass in dieser Konstellation die einzelnen Funktionen wieder unübersichtlich werden könnten und in diesem Punkt die Vorteile im Vergleich zu REOO aufgeweicht wären. Der Ansatz sollte daher auch eine Lösung für komplexeren shared state bieten.</p>
+<p>Grüße,
+Stefan</p>
+<hr />
+<p><strong>zommi</strong> (2011-10-07):</p>
+<p>Hi,</p>
+<p>ich finde die Tabelle gut, aber haesslich!
+anscheinend sind sich alle halbwegs einig, dass eine Trennung prinzipiell gut ist. Nur wird gerade diskutiert, wie die Komposition der Komponenten formuliert wird.</p>
+<p>Ich lese gerade das <a href="martinfowler.com/dsl.html">Buch von Fowler ueber DSLs</a>, weshalb ich die Diskussion mal durch die DSL-Brille betrachte und die obigen Kommentare aufgreife:</p>
+<p>Harry sagt: <em>"Also mit Extension-Methoden lässt sich der Flow im Code auch schon schreiben..."</em>
+Das ist nichts anderes als eine <em>interne DSL</em>.</p>
+<p>McZ sieht das aehnlich:
+<em>"Ich übersetze Flow-Design generell nur mit Extension-Methods. Das kommt einer Tabelle sehr nahe: [...] Ich empfinde dies als natürlicher und organisationstechnisch einfacher zu handhaben. Außerdem versteht jeder den Code."</em></p>
+<p>Ein klassisches Argument gegen <em>externe DSLs</em>: da interne DSLs ja "nur" huebsche Libraries sind, kann man sie komfortabel aus dem normalen Code heraus aufrufen. Kein Parser, kein Interpreter, kein Compiler, keine extra Sprache. Aber immer daran denken: die Verwendung einer API zu verstehen ist auch nicht einfacher, als eine kleine DSL zu erlernen.</p>
+<p>Ralf kontert mit seinem Status Quo:
+<em>"Der Flow wird durch die eine Tabelle beschrieben."</em></p>
+<p>Ich selbst finde die Tabelle nicht besonders lesbar, aber dazu gleich mehr. Ralf hat natuerlich auch schon, wie er schreibt "[...] mit einer DSL experimentiert". Fuer mich ist diese DSL aber auch nicht wirklich lesbarer. Zu viel Minus, Punkte, Klammern, geschweifte Klammern, spitze Klammern, ... wie Ralf selbst zugibt, zu viel Rauschen.</p>
+<p>Ok, Ralfs erste Versuche (XML und erste DSL) waren noch nicht wirklich schoen und lesbar, haben also die Vorteile einer externen DSL noch nicht ausspielen koennen. Aber warum dann der Schritt komplett weg vom Menschenlesbaren??? Ralf schreibt selber: <em>"Die einfachste, maschinenlesbare Form der Beschreibung eines Flow ist eine Tabelle".</em>
+Mag sein, aber wen interessiert <em>maschinen</em>lesbar in Zeiten von DSLs, Parsergeneratoren etc? Es sollte <em>menschen</em>lesbar sein!</p>
+<p>Im letzten Post fordert ssl:
+<em>"In der Steuertabelle sollten sich die Szenarien aus den Anwendungsfallbeschreibungen relativ leicht wieder erkennen lassen. Der Idealfall wäre natürlich, wenn man aus einer Art Szenarienbeschreibung gleich die Steuertabelle erzeugen könnte."</em>
+Warum erzeugen? Diese DSL sollte die Anwendungsfallbeschreibungen (was auch immer das konkret ist) ganz natuerlich abbilden! Nichts mit automatisch erzeugen. Es sollte ein und das selbe sein.
+Wenn man diese maschinenlesbare Zwischendarstellung erst computer-generiert nur um sie danach wieder einzulesen, ist es nicht mehr als ein Zwischenschritt der Zeit kostet.
+Einen Mehrwert erhaelt man erst, wenn man dem DSL-Programm direkt den Aufbau der Anwendung ansehen und verstehen kann!</p>
+<p>Natuerlich koennte diese DSL auch grafisch sein. So wie der EBC-Builder oder der WCF-Builder wohl die Flussgraphen visualisiert und editierbar macht.</p>
+<p>Aber ich finde, man sollte den Weg mit einer eigenen Syntax und Sprache fuer den Aufbau weiter verfolgen und nicht auf Tabellen oder wieder XML zurueckfallen.</p>
+<p>Beste Gruesse
+  zommi</p>
+<hr />
+<p><strong>Michael</strong> (2011-10-08):</p>
+<p>Grundsätzlich erstmal ein like. Functional Units sind ein erwarteter weil folgerichtiger Schritt im Flow Design. Egal ob EBC, Functional Units oder Extensions, noch sind es nur Patterns, denke ich. Teilweise auch ein Programmiermodell, darüber kann man lange diskutieren.
+Kritisch sehe ich bei Functional Units die Unterstützung von nur einem Eingang und einem Ausgang. Das macht schon einfache Funktionen wie join, and, or, .. unnötig kompliziert (oder gibt es hier schon eine Trumpfkarte). Dies mit dem StreamQualifier abzudecken halte ich nicht für eine gute Lösung, da so die Functional Unit Wissen über die Verdrahtung erhalten muss.
+Die Verdahtung in einer Tabelle abzudecken ist vorstellbar. Aber dann vielleicht doch eher mit graphhml. Das wäre zum einen schon lesbar in der Rohform, zum anderen kann die Tabelle grafisch angezeigt und zudem bearbeitet werden. Damit hätten wir endlich den Editor für die Verdrahtung.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-10-08):</p>
+<p>Vorweg: Sehr cool, dass hier so eine Diskussion in Gang gekommen ist. FD/EBC ist ja nun so neu auch nicht mehr. Da hätte ich nicht gedacht, dass es nach meinen beiden Postings hier so leidenschaftlich wird ;-)</p>
+<p>@ssl: Find ich schön gesagt, "fließende[r] Übergang zwischen den funktionalen Anforderungen und dem Code". So sehe ich das auch.</p>
+<p>Dass Operationen parametrisiert werden können, kommt immer mal wieder als Idee auf. Trotz der bisherigen Config-Phase wäre das wohl wünschenswert.</p>
+<p>Ich würde sagen, das ist dann Sache einer DSL. Um die ging es mir ja aber eben hier nicht. Ich wollte die minimale Beschreibung eines hierarchischen Flows zeigen. Die halte ich für recht elegant: einfach eine Tabelle. Darauf lässt sich dann einiges setzen.</p>
+<p>Natürlich können komplizierte Daten das Netzwerk durchströmen. Und natürlich können Operationen von komplizierten Daten abhängig sein. Da gibt es kein praktisches Limit.</p>
+<p>Wo Abhängigkeit von Zustand vorhanden ist, da muss der beim Test einer Operation natürlich injiziert werden. Das ist misslich, aber nichts besonderes. Besser "ein bisschen Zustand" injizieren, als auch noch Berge an Attrappen.</p>
+<p>Alles in allem sollten Abhängigkeiten von Daten dazu führen, die Daten so einfach wie nur möglich zu gestalten. D.h. tendenziell eher keine Funktionalität auf Daten.</p>
+<p>@Michael: Funktionseinheiten können beliebig viele logische Inputs/Outputs haben. Die Normalisierung reduziert sie lediglich physisch. Der Grund: Dann sehen alle Operationen gleich aus (s. Delegate-Typ) und können einheitlich von einer Runtime behandelt werden.</p>
+<p>Ein Join ist damit sogar einfacher entwickelt als mit bisherigen EBCs. Der müsste eigentlich nur parametrisiert werden mit der Anzahl der Eingänge.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-10-08):</p>
+<p>@zommi: Interne DSL oder externe DSL? Ich denke, wir sollten zunächst nicht dazwischen unterscheiden, sondern uns fragen, ob wir direkte Ausführung oder Interpretation von Flows haben wollen.</p>
+<p>Der bisherige EBC-Ansatz hat Flows direkt ausgeführt. Die externe DSL ebc.xml ändert daran nichts.</p>
+<p>Die hier erwähnten anderen Ansätze von internen DSLs führen Flows ebenfalls direkt aus.</p>
+<p>Das funktioniert - hat aus meiner Sicht aber einige Nachteile. Wir bekommen damit nämlich all das nicht, was ich an Vorteilen einer Runtime am Ende des obigen Artikels aufgeführt habe.</p>
+<p>Ich zumindest möchte das aber haben. Denn damit geht FD über die übliche Programmierung hinaus. Eine FD Runtime wäre eine weitere Schicht über der CLR, die schon eine Schicht über nativem Code ist.</p>
+<p>Die CLR mögen wir für diese Abstraktion. Die bringt uns GC und Reflection und Security und JIT Compilation.</p>
+<p>Nun finde ich es an der Zeit, eine weitere Schicht drüber zu legen, um noch mehr Eingriffsmöglichkeiten zu bekommen. Große Programme, parallele Programme, langlaufende Programme brauchen das. Logging und Tracing und Perf Counter sind heute schon so oft im Spiel, dass sie als wiederkehrende Belange in eine Runtime wandern sollten. "hot swap" von Operationen oder Änderungen am Flow fände ich sehr interessant für langlaufende Systeme. Auf dafür ist eine Runtime nötig, würde ich sagen.</p>
+<p>Wir haben soviel Prozessorpower, dass wir uns eine weitere Abstraktionsschicht (in den meisten Fällen) leisten können. Manche fahren heute noch gern Oldtimer - das ist ein schönes Hobby ;-) Aber die meisten Leute ziehen die Bequemlichkeit eines modernen Autos mit all seinen elektronischen Schichten vor. So sehe ich es auch bei der Programmierung. Wir sind reif für eine weitere Schicht - dir eine direkte Ausführung nicht oder nur mit viel mehr Aufwand böte.</p>
+<p>Wenn wir uns in der Frage einig werden sollten und "Ja zu einer FD Runtime" sagen, dann stellt sich die Frage nach interner oder externer DSL anders.</p>
+<p>Die Frage ist dann nämlich orthogonal. Wer will, macht eine externe DSL, wer will macht eine interne. Solange die Runtime damit angesteuert wird, ist das egal.</p>
+<p>Die Steuertabelle ist für mich nicht das Ende der Fahnenstange. Sie ist eher die Basis, der kleinste gemeinsame Nenner zur Beschreibung eines Flows. Darauf kann man alles mögliche setzen. Woher die kommt... keine Ahnung. Man kann sie direkt aus einem Flow-Design Diagramm ableiten oder man lässt sie aus einer anderen Sprache generieren. Egal.</p>
+<p>Viel wichtiger auch als die eine oder andere Art an DSL ist für mich auch das grundlegende Merkmal der Composability. Eine Software darf nicht eine zentrale Beschreibung ihres Flows erfordern. Der muss vielmehr zur Laufzeit aus vielen Teil-Flows zusammengesetzt werden können.</p>
+<p>Jeder, der in einem Projekt Code schreibt, soll jederzeit die Möglichkeit haben, für eine Aufgabe einen Flow zu definieren und dann Operationen zu implementieren. Und all diese Flows müssen am Ende automatisch zu einem großen zusammengewoben werden.</p>
+<hr />
+<p><strong>Otto Berger</strong> (2011-10-08):</p>
+<p>Hallo Ralf,
+es war schön die Geburt der EBC mitzuerleben und jetzt wie Du sie erfolgreich großziehst. Ich verfolge gerne Deinen Blog. Glückwunsch und weiter so.</p>
+<hr />
+<p><strong>McZ</strong> (2011-10-09):</p>
+<p>@RalfW
+"1000 Zeilen normalen Code in einer Methode finde ich sehr schwer und undhandlich - der ist aber normal mit normalem Code."</p>
+<p>Ich habe gerade mal nachgesehen: die längste Extension-Method ist 76 Zeilen lang; das ist diejenige, die IL-Code per Reflection.Emit erzeugt, die OpCodes sind halt recht umfangeich. Klar, das ist eine allgemeine Extension. Genauso klar ist, dass die mal refaktoriert gehört.</p>
+<p>Die nächstlängste hat 32 Zeilen und führt ein GroupBy durch. Die Methode gibt es nur, umabwärtskompatibel zu .NET 2 zu sein. Allgemeine Extension, die Coderichtlinie setzt 30 Zeilen als Limit, also ein Grenzfall.</p>
+<p>Die längste domänenspezifische Extension ist 16 Zeilen lang, und dies ist eine Funktion, die parallel Lager- und Umsatzbuchungen feuert und noch einige OLAP-Sauereien anstösst. Jede dieser Funktionen steckt in einer unbekannten Dll, die werden über einen Microkernel aufgerufen. Dazu gibt es natürlich auch eine Extension.</p>
+<p>Natürlich kann ich Extensions mit 1000 Zeilen Code schreiben. Ich kann auch eine EBC-Komponente mit 1000 Zeilen Code schreiben.</p>
+<p>Der konkrete Fall ToDictionary wäre durch folgenden Code gelöst:</p>
+<p>“a=1;b=2”.Split(";").Split("=").ToDictionary</p>
+<p>Das erste Split ist String.Split, das zweite eine Extension für IEnumerable(String), ToDictionary ist eine Extension für multidimensionale IEnumerables.</p>
+<p>Ausdrucksstark, einfach zu lesen, 11 Zeilen Code, welche alle bereits inkl. Testabdeckung und Doku vorhanden sind. Tendenziell würde ich sagen, dass nach jedem Split eine Validierung erfolgen sollte.</p>
+<p>Der WF-Hinweis war kein Vorwurf. Forschung ist immer sinnvoll, und sei es nur um bestehende Konzepte zu validieren.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-10-09):</p>
+<p>@McZ: Die 1000 Zeilen bezogen sich nicht auf deinen Code. Du hast EBC-Code als unhandlich kritisiert. Damit hast du nur Platinencode meinen können.</p>
+<p>Die passende Gegenüberstellung ist dann nicht dein Code, sondern der, den EBC ersetzen wollen. Das ist "normaler" Code. Auf den habe ich mich bezogen.</p>
+<p>Platinencode ist sauber einem Concern zugehörig. Das ist normaler Code selten.</p>
+<p>Platinencode mag nicht so schnell zu lesen sein mit seinen Eventhandlerzuweisungen - aber er ist sehr, sehr einfach.</p>
+<p>Normaler Code mag einfacher zu verstehen sein, so ganz grundsätzlich. Aber eben deshalb und wg der fehlenden sauberen Belangtrennung, ist er es dann doch nicht. Er wuchert aus. Mühsam muss dann über Prinzipien ("Leute, schreibt kleine Methoden! Lasst eure Klassen nicht so wachsen!") ermahnt werden, verständlicher zu werden. Ergo: Normaler Code ist noch schwerer und unhandlicher als EBC-Platinencode.</p>
+<p>Mehr habe ich nicht gesagt.</p>
+<p>Und nochmal: Wenn du FD Diagramme nicht nach EBC, sondern in Extension Methods übersetzen willst, ist doch alles wunderbar. Stell uns deinen Ansatz in den EBC-Diskussionsgruppen vor.</p>
+<p>Mir geht es hier aber um etwas ganz anderes: Die Abschaffung von Verdrahtungscode. Ich will ihn weder so noch anders in C# schreiben. Da halte ich für zu wenig leistungsfähig. Die Gründe habe ich im Artikel genannt.</p>
+<p>Ich habe lange mit Fluent Interfaces experimentiert für Flows. (CCR Flows sind nur ein Beispiel.) Und am Ende bin ich jetzt für mich zu der Erkenntnis gekommen: direkte Codierung und Ausführung von Flows schafft zuwenig.</p>
+<hr />
+<p><strong>McZ</strong> (2011-10-10):</p>
+<p>Soweit ich beide Artikel jetzt verinnerlicht habe, fehlt mir im zweiten Artikel noch etwas.</p>
+<p>Der erste Artikel benutzt das Bild der Holarchie. Konsequent angewendet müsste das gleichförmige Beschreiben der Software mit Hilfe von Holons und Ausführung auf einer Runtime bedeuten, dass sämtliche Aktivitäten und Kompositionen zu einer hierarchischen Applikations-Komposition zusammenaggregiert werden können.</p>
+<p>Ist das korrekt, oder wo siehst du die Bruchstellen?</p>
+<p>Wenn es korrekt ist, frage ich mich umso mehr, ob ohne Designtime-Prüfung so ein System beherrschbar bleibt. Mal ganz abgesehen davon, was das z.B. für zustandslose Applikationen oder große, modulare Applikationen bedeutet, möchte ich mir gar nicht ausmalen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-10-10):</p>
+<p>@McZ: Ja, genau: Software ist eine Holarchie. Deren "Mittelholons" sind Flow-Komposite, ihre Blätter sind Operationen. (Man könnte es noch weiter treiben bis auf Anweisungsebene, aber das ist impraktikabel.)</p>
+<p>Auf jeder Ebene sehen die Holons gleich aus: es sind Funktionseinheiten mit mehreren Zuflüssen und mehreren Abflüssen.</p>
+<p>Codiert kann die Holarchie werden durch die "Steuertabelle".</p>
+<p>Geht es ohne Designtimeprüfung? Das geht genauso wie bei Sprachen mit laxer Typisierung heute, würde ich sagen.</p>
+<p>Aber wer es nicht will, der kann ja noch Typinformation an die Streams dranschreiben.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-10-10):</p>
+<p>Jetzt gibts die Runtime zum Selbstbau: Ich habe eine Beschreibung für eine Runtime als App Kata formuliert und hier veröffentlicht, http://clean-code-advisors.com/ressourcen/application-katas</p>
+<p>Enjoy!</p>
+<hr />
+<p><strong>McZ</strong> (2011-10-11):</p>
+<p>"Auf jeder Ebene sehen die Holons gleich aus: es sind Funktionseinheiten mit mehreren Zuflüssen und mehreren Abflüssen."</p>
+<p>Mehrere Zuflüsse passen aber nicht zur Darstellung einer Software als Baum.</p>
+<p>Es handelt sich dann um eine Polyhierarchie. Die zu diesem Argument gehörige Zeichnung in Teil 1 stimmt für den dargestellten Prozess nicht. Ein äquivalenter gerichteter Graph müsste zwangsläufig aussehen wie die Prozessdarstellung.</p>
+<p>Die Flow-Runtime ist meines Erachtens ein Interpreter, welcher ein tabellarisches Skript ausführt. Dieses tabellarische Skript muss zuerst aus einem semantischen Modell abgeleitet werden.</p>
+<p>Ziehen wir dazu doch mal CAD/CAM als Beispiel heran.</p>
+<p>CAD entwirft eine Funktionseinheit in Form eines semantischen Modells. Dieses Modell beschreibt vollständig funktional, inklusive der Anschlüsse und interner Interdependenzen. Standardisierte, bereits entwickelte Komponenten werden per Zeichnungsverweis hineingenommen. Meines Erachtens ist dies die Aufgabe, die FD erfüllt oder erfüllen sollte.</p>
+<p>CAM übersetzt dieses semantische Modell in Code für diverse CNC-Maschinen. Hier geht es lediglich darum, das semantische Modell in ein exaktes funktionales Abbild zu überführen. Dies wären EBC oder meine Extensions oder auch die Flow-Runtime.</p>
+<p>Die Flow-Runtime muss also ein exaktes funktionales Abbild abarbeiten können, und gem. deines Vorschlages muss dieses Abbild komplett via String beschreibbar sein.</p>
+<p>So was haben wir vor zwei Jahren selbst versucht, Motiv war eine Prozess-Scripting-Anforderung. Wir haben das dann als Zweierteam implementiert. Nur spaßeshalber habe ich entscheidende Bestandteile als Extension-Methods zum Typ CodeDOM.CodeCompileUnit extrahiert, um entsprechenden Vergleichscode zu generieren. Irgendwann hatte ich 5 Extensions, welche dem Interpreter funktional ebenbürtig waren, aber nur 3% des Codeumfangs besaßen.</p>
+<p>Heute betreue ich eine Bibliothek von 57 leichtgewichtigen Extensions, die Scripting, Aspekte, Paralellität inkl. Komposition, DI, Kontroll-Flow, Json- bzw. XML-Serialisierung und zig andere Sauereien funktional abdecken. Jede dieser Methoden bekommt per Unit-Test den Stempel 'threadsicher'. Per Codevervollständigung hat jeder Entwickler im Team diese Grund-Funktionseinheiten typsicher verfügbar. Klassen sind nur noch reine Nachrichtentypen. Domänenspezifisch bauen wir den Code mit Hilfe von FD-Modellen exakt gleich auf, wobei wir uns beim Flow-Design an unseren Grund-Funktionseinheiten orientieren.</p>
+<p>Ich möchte nicht, dass meine Kommentare hier so rüberkommen als ob ich deine Lösung verteufeln möchte. Weit gefehlt. Mein Versuch von vor zwei Jahren zeigt ja, das hier ein Bedürfnis existiert. Ich habe nur dass Gefühl, als ob dies die Neuauflage unserer eigenen eierlegenden Wollmilchsau-Runtime wird.</p>
+<p>Ich lasse mich da aber gern eines Besseren belehren.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-10-11):</p>
+<p>@McZ: Du sitzt einem Missverständnis auf. Der Baum beschreibt die Abhängigkeiten, nicht den Flow. Beim Baum geht es nur um die Schachtelung bei der Nutzung von Funktionseinheiten.</p>
+<p>Wenn Funktionseinheit X dabei in A und K "verdrahtet" wird, dann mag das eine Polyhierarchie sein. Aber das hat dann immer noch nichts mit den Input/Output Streams zu tun.</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-10-12):</p>
+<p>Hallo Ralf,</p>
+<p>vielen Dank für Deinen Artikel!
+Ich werde ihn wohl nocheinmal etwas gründlicher durchlesen müssen,
+um ihn wirklich zu verstehen. :-)</p>
+<p>Aber zwei Dinge fallen mir schonmal daran auf:</p>
+<p>Als erstes verstehe ich nicht, warum eigentlich immer alles entweder
+zur Compilezeit hart verdrahtet, oder aber zur Laufzeit mit zu später Prüfung
+und zusätzlichem Overhead geschieht?</p>
+<p>Mir wäre eine dritte Konfigurationszeit zu der dann die Verdrahtung
+und die Typprüfung gemacht werden kann sehr wichtig.
+Dann steht zur Laufzeit auch die volle Performance
+(z.B. für Smartphones) zur Verfügung.</p>
+<p>Diese Konfiguration kann dann ja auch gerne zur Laufzeit des Gesamtsystems
+nochmal geändert werden.
+Ich stelle mir hierfür minimale "Apps" vor, die jeweils vom UI bis zur DB
+gehen können und eine neue Konfiguration bekommen können.
+Das wäre für mich dann eine neue Version der App.</p>
+<p>Als zweites wäre für mich eine schöne DSL auf Dauer sehr wichtig.
+Ich stelle mir das naiver Weise ähnlich, wie bei einem Wiki vor,
+wo man simplen Text eingibt und etwas schönes/grafisches hinten rauskommt.</p>
+<p>Das unterstützt ein flüssiges arbeiten und man kann
+auch Teile kopieren, rumschicken, ...</p>
+<p>Ich arbeite zur Zeit an einem Spike in Java, in den der erste Punkt bereits einfließt.
+Ich hoffe bald mehr zu meinen eigenen Überlegungen sagen zu können.</p>
+<p>Viele Grüße</p>
+<p>Ole</p>
+<hr />
+<p><strong>Johannes</strong> (2011-10-14):</p>
+<p>Hallo Ralf,</p>
+<p>schon einmal hier hereingeschaut?</p>
+<p>http://jpaulmorrison.com/fbp/#CsharpFBP</p>
+<p>Gruß</p>
+<p>Johannes</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-10-14):</p>
+<p>@Johannes: Klar, Flow Based Programming kenn ich. Aber auch wenn ich da Überschneidungen zu FD sehe, reicht mir nicht, was dort gemacht wird.</p>
+<p>Erstens ist FBP nur async. Zweitens ist FBP nicht wirklich an mehreren Abstraktionsebenen interessiert. Drittens ist FBP sehr in speziellen Implementationen gefangen, die schon recht betagt sind.</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-11-10):</p>
+<p>Hi Ralf,</p>
+<p>super Artikel. Wird es noch einen weiteren Teil geben?</p>
+<p>Frage: Wie würden die Signaturen des Delegates aussehen wenn ich mehrere Inputs oder Outputs habe? Das zu sehende Delegate entspricht der IMap verdrahtung korrekt ?</p>
+<p>Wie würden ein IJoin oder ein ISplit Draht als Delegate aussehen ? Ist mir noch nicht ganz klar</p>
+<p>mfg stefc</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-11-10):</p>
+<p>@Stefc: Es gibt immer mal wieder Artikel zum Thema.</p>
+<p>Ganz praktisch ist es auch hier: npantarhei.codeplex.com - dort implementiere ich die im artikel besprochene idee schon.</p>
+<p>mehr als vielleicht zwei ausgänge würde ich mit einer methode nicht implementieren, glaub ich. mehr als ein eingang geht nicht. flexibler sind EBC klassen.</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-11-11):</p>
+<p>Hallo Ralf,</p>
+<p>habe mal versucht die Fakultät mit dem Pattern rekursiv zu berechnen. Funktioniert klasse, hier das Code Snippet :</p>
+<p>delegate void Activity(IMessage input, Action&gt; output);</p>
+<p>// Fakultät
+   Activity fFakultät = null;
+   fFakultät = (input, output) =&gt;
+    {
+     int n= input.Data;
+     if(n == 0)
+      output(new Message(1));
+     else
+     {
+      fFakultät(new Message(n - 1), x =&gt; output(new Message(n * x.Data)));
+     }
+    };</p>
+<p>// Call
+   fFakultät(new Message(5), x =&gt; Console.WriteLine(x.Data));</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-12-30):</p>
+<p>Hallo Ralf,</p>
+<p>ich finde deine Artikel zum FD interessant und auch die anschließende Diskussion habe ich mit großem Interesse gelesen. Was mich jedoch noch umtreibt, ist deine Antwort auf den Kommentar von Johannes zum Thema FBP. Die von Dir angemerkten drei Kritikpunkte finde ich persönlich -- sind keine!</p>
+<ol>
+<li>
+<p>ein asynchrones System kann auch <strong>immer</strong> Synchron arbeiten. Umgekehrt ist dies nicht der Fall.</p>
+</li>
+<li>
+<p>Wieso ist FBP nicht an mehreren Abstraktionsebenen interessiert. Diesen Punkt verstehe ich überhaupt nicht. FBP ist ein Konzept und in Kapitel 7 schreibt Morrison in seinem Buch über FBP über "Composite Components".</p>
+</li>
+<li>
+<p>Was hat FBP mit speziellen Implementierungen zu tun. FBP ist ein Konzept. Realisierungen gibt es für verschiedene Sprachen und dies nicht nur für betagte, wie Du schreibst.</p>
+</li>
+</ol>
+<p>Könntest Du die Unterschiede, welche Du zwischen FD und FBP siehst, etwas genau spezifizieren und klar darstellen, wo FD wirklich anders ist. Bisher sehe ich FD eher als neuen Namen für FBP, wobei selbst die Namen tautologische Züge zeigen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-12-30):</p>
+<p>@Anonym: ad 1: Auch wenn ein async System sync betrieben werden kann, ist die grundsätzliche Denke anders, wenn man nur async denkt. Es geht mir nicht so sehr um den Betrieb, sondern den Anspruch bei FBP. Da geht es einfach nicht ohne async. Das ist eine Hürde, die viele Entwickler erstmal nicht nehmen wollen/können. Deshalb finde ich es wichtig, im Denken und im Gespräch erstmal bei sync zu beginnen. Das passiert bei der FBP Community nicht.</p>
+<p>ad 2: Morrison hat "Composites" beschrieben - aber in den Diskussionen, die ich mit ihm hatte, hat er darauf nie wirklich Bezug genommen. Es gibt sie - aber sie spielen irgendwie keine wesentliche Rolle. Bei FD sind sie jedoch zentrale Abstraktionsmittel. Um diesen Unterschied geht es mir.</p>
+<p>ad 3: Ich habe geschrieben, dass die Implementation betagt sind, nicht die Sprachen, für die sie existieren.</p>
+<p>FBP ist erstmal ein Konzept. Dann gibt es mehrere Implementationen und sogar einen Designer. Hört sich eigentlich gut an. Nur leider ist das Konzept eben erstens rein async - das macht es für mich untauglich für eine simple Einführung. Und dann ist die Diskussion darum leider, hm, recht "eingestaubt", was wohl auch am Alter von Mr. Paul Morrison liegt.</p>
+<p>Insofern sehe ich natürlich Berührungspunkte, aber darüber hinaus leider derzeit keinen Vorteil in mehr Kontakt. Das mag sich ändern, wenn denn mal die FD Execution Engine am Start ist... Schaun mer mal, was 2012 so bringt.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

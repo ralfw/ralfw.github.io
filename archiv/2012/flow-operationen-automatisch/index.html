@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flow Operationen automatisch registrieren — ralfw.de Archiv</title>
+<meta name="description" content="Flow Designs zu implementieren, ist nun einen ganzen Schritt einfacher geworden. Endlich habe ich nämlich Zeit gefunden, die Flow Runtime mit etwas mehr &quot;Intelligenz&quot; zu versehen.">
+<link rel="canonical" href="https://ralfw.de/archiv/2012/flow-operationen-automatisch/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Flow Operationen automatisch registrieren — ralfw.de Archiv">
+<meta property="og:description" content="Flow Designs zu implementieren, ist nun einen ganzen Schritt einfacher geworden. Endlich habe ich nämlich Zeit gefunden, die Flow Runtime mit etwas mehr &quot;Intelligenz&quot; zu versehen.">
+<meta property="og:url" content="https://ralfw.de/archiv/2012/flow-operationen-automatisch/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Flow Operationen automatisch registrieren</h1>
+    <div class="doc-meta"><span>14. Okt. 2012</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2012/10/flow-operationen-automatisch.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2012/flow-operationen-automatisch/</code></span></div>
+    <div class="art"><p>Flow Designs zu implementieren, ist nun einen ganzen Schritt einfacher geworden. Endlich habe ich nämlich Zeit gefunden, die Flow Runtime mit etwas mehr "Intelligenz" zu versehen.</p>
+<p>Bisher bestand die Implementation eines Flow Designs aus drei Teilen:</p>
+<ul>
+<li>
+<p>Flow</p>
+</li>
+<li>
+<p>Operationen</p>
+</li>
+<li>
+<p>Bindung</p>
+</li>
+</ul>
+<p>Als Beispiel für einen Flow hier der für die Umformatierung einer Datei in ganz einfacher Weise. Ihre Zeilen sollen auf eine neue maximale Länge gebracht werden:</p>
+<p>/
+.run, Zeilen_lesen
+Zeilen_lesen, Umbrechen
+Umbrechen, Zeilen_schreiben</p>
+<p>Die Operationen sind Methoden, die wohl ganz angemessen auf zwei Klassen verteilt werden können:</p>
+<p>class Textdatei {
+  private string _dateiname;</p>
+<p>public string[] Zeilen_lesen(string dateiname) {…}</p>
+<p>public void Zeilen_schreiben(string[] zeilen) {…}
+} </p>
+<p>class Formatierung {
+  public static string[] Umbrechen(string[] zeilen) {…}
+} </p>
+<p>Gebunden werden die Operationen an den Flow über die Konfiguration der Flow Runtime:</p>
+<p>var td = new Textdatei();</p>
+<p>var config = new FlowRuntimeConfiguration()
+                   .AddStreamsFrom("umbrechen.root.flow", Assembly.GetExecutingAssembly())</p>
+<p>.AddFunc("Zeilen_lesen", td.Zeilen_lesen)
+                   .AddAction("Zeilen_schreiben", td.Zeilen_schreiben)
+                   .AddFunc("Umbrechen", Formatierung.Umbrechen);</p>
+<p>using(var fr = new FlowRuntime(config)) {
+  fr.Process(".run", args[0]);
+  fr.WaitForResult();
+}</p>
+<p>Das funktioniert wunderbar. Doch es ist bei der Konfiguration umständlich. Die stellt nämlich auch einen Widerspruch zu DRY dar. In ihr werden ja Dinge wiederholt, die anderswo schon stehen. Vor allem ist es aber mühsam, in der Konfiguration die Signaturen der Operationsmethoden anzugeben. Das macht die dynamische Natur der kleinen Flow DSL quasi nutzlos.</p>
+<p>Damit ist nun Schluss!</p>
+<p>Jetzt ist die Konfiguration viel, viel einfacher. Sie schrumpft im Grunde auf zwei Zeilen Code, die sich im Verlauf der Evolution einer Anwendung kaum mehr ändern müssen:</p>
+<p>var config = new FlowRuntimeConfiguration()
+                   .AddStreamsFrom("umbrechen.root.flow", Assembly.GetExecutingAssembly())
+                   <strong>.AddOperations(new AssemblyCrawler(Assembly.GetExecutingAssembly()));</strong></p>
+<p>Eine Zeile liest den Flow, eine weitere Zeile lädt alle Operationen.</p>
+<p>Der <em>AssemblyCrawler</em> durchläuft alle Typen der ihm übergebenen Assemblies und schaut, ob die Operationsmethoden definieren. Wenn ja, registriert er sie automatisch. Berücksichtigt werden Klassen, die mit einem von drei Attributen markiert sind:</p>
+<p><strong>[InstanceOperations]</strong>
+class Textdatei { … }</p>
+<p><strong>[StaticOperations]</strong>class Formatierung { … }</p>
+<p>Klassen, die mit <em>[StaticOperations]</em>gekennzeichnet sind, werden auf statische Methoden überprüft, Klassen, die mit <em>[InstanceOperations]</em>markiert sind, werden zuerst instanziert, um dann auf Instanzmethoden überprüft zu werden. Und schließlich gibt es noch <em>[EventBasedComponent]</em>, um Instanzen zu registrieren, die Output über Events hinausgeben.</p>
+<p>Relevant als Operationen sind in jedem Fall nur Methoden, die den Signaturen entsprechen, die auch über <em>AddAction&lt;&gt;()</em> und <em>AddFunc&lt;&gt;()</em>registriert werden können. Einen Unterschied gibt es dabei jedoch: Output-Ports, die über Continuations definiert sind, haben nicht mehr die Namen ".out0" und ".out1", sondern die der Continuation-Parameter.</p>
+<p>Der Crawler macht die Registrierung aller Operationen in den übergebenen Assemblies sehr einfach. Wer jedoch etwas mehr Kontrolle haben möchte, kann mit Attributen markierte Klassen auch von Hand registrieren:</p>
+<p>var config = new FlowRuntimeConfiguration()
+                   .AddStreamsFrom("umbrechen.root.flow", Assembly.GetExecutingAssembly())
+<strong>.AddInstanceOperations(new Textdatei())</strong><strong><em>*</em>*.AddStaticOperations(typeof(Formatierung));</strong></p>
+<p>Ich habe jetzt einige Tage mit dieser Form der einfachen Konfiguration gearbeitet… und möchte sie nicht mehr missen. Jetzt endlich kann ich mich wirklich auf Flow und Operationen konzentrieren. Jetzt endlich löst die Flow Runtime ihr Versprechen ein, simpler und gleichzeitig leistungsfähiger als EBC-Verdrahtung zu sein.</p>
+<p>Hier geht's zum Download der aktuellen <a rel="noopener" href="https://github.com/ralfw/NPantaRhei">Flow Runtime NPantaRhei</a>.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

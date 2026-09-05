@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nested Messaging - Flows on Different Levels of Abstraction — ralfw.de Archiv</title>
+<meta name="description" content="Building large object oriented systems requires us to be able to think/visualize them on different levels of abstraction. Whatever we want to describe – data or functionality – we ">
+<link rel="canonical" href="https://ralfw.de/archiv/2013/nested-messaging/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Nested Messaging - Flows on Different Levels of Abstraction — ralfw.de Archiv">
+<meta property="og:description" content="Building large object oriented systems requires us to be able to think/visualize them on different levels of abstraction. Whatever we want to describe – data or functionality – we ">
+<meta property="og:url" content="https://ralfw.de/archiv/2013/nested-messaging/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>Nested Messaging - Flows on Different Levels of Abstraction</h1>
+    <div class="doc-meta"><span>19. Aug. 2013</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2013/08/19/nested-messaging---flows-on-different-levels-of-abstraction.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2013/nested-messaging/</code></span></div>
+    <div class="art"><p>Building large object oriented systems requires us to be able to think/visualize them on different levels of abstraction. Whatever we want to describe – data or functionality – we want to describe in more or less detail. That´s also true if we want to switch our OO approach to messaging.</p>
+<p>Enter nesting.</p>
+<p>If flows describe networks of objects communicating through messaging, then we need to be able to nest flows. And in fact that´s what I´ve done all along. Take this flow from my previous posting for example:</p>
+<p>That´s a single flow on a certain level of abstraction – but in reality it´s already nested. It´s nested in an encapsulating, yet invisible flow consisting of only one functional unit:</p>
+<p><em>(Diagram not captured)</em></p>
+<p>The rules for such nesting are simple:</p>
+<ul>
+<li>each input to a parent functional unit must connect to at least one input of one of its children</li>
+<li>each output from a parent functional unit must be connected to at least one output of its children</li>
+</ul>
+<p>Now we can build messaging hierarchies of arbitrary depth. We can design them top-down or bottom-up. We can refactor them: If at some point you think there is too much detail, you can do an "extract flow" and create a child flow to replace a part of some flow. Or you do it the other way around and do an "inline flow".</p>
+<p>So much for the easy part of it. Conceptually nesting is simple. The hard part is in implementing such nested flows. No, not because there are any technical difficulties. It´s just hard to stay true to yet another principle. I call it the Integration Operation Segregation Principle (IOSP).</p>
+<p>Let me explain it using the above example. Here´s how one could implement the top-level flow knowing of its structure:</p>
+<pre><code class="language-csharp">void process(T data) {
+    if (validate(data)
+        save(data);
+    else
+        report_validation_error(&quot;...&quot;);
+}
+</code></pre>
+<p>That might be straightforward to common OO lore – but it´s an invitation to brownfield disaster.</p>
+<p>What´s the problem, you might ask. Well, what this implementation does is smearing logic all over the place. There is logic in save and in report_validation_error and in validate. But also there is logic in process. According to the SLA principle there is no validation condition in process, but still there is logic in it. It´s the control structure.</p>
+<p>Any if, while, for, repeat, switch statement represents logic like an expression. In fact control structures and expressions are the very definition of program logic. They are the atoms software is made from.</p>
+<p>Logic in and of itself of course is not the problem. But how logic is distributed across a code base can be. Because what makes it so hard to change a growing code base are not only physical dependencies (like process knowing about save), but logical depdencies between pieces of scattered logic. Several principles are trying to persuade us to keep logic (responsibility, concern) close together (high cohesion): DRY, SRP, SoC, SLA, ISP, LSP. But it´s hard to follow principles. Principles are no rules.</p>
+<p>But what can we do about the detrimental undue distribution of logic? It starts so small, like above – but then it grows and spreads. It´s like metastasizing cancer. And in the end software dies because all energy is sucked up by keeping all the proliferation consistent. Nothing new can be added because the implications are incalculable.</p>
+<p>So here´s my take on this problem: Structure messaging based logic according to the IOSP. The very concrete rule is: Subroutines are either integrations or operations. Operations contain logic, integrations not. Integration means aggregating operations and other integrations into a larger whole.</p>
+<p>The above implementation of process does not follow this rule. The control structure must be pushed down into an operation, for example like this:</p>
+<pre><code class="language-csharp">void process(T data) {
+    validate(data, save, report_validation_error);
+}
+
+void validate(T data, Action onValid, Action onInvalid) {
+    if (...)
+        onValid(data);
+    else
+        onInvalid(&quot;...&quot;);
+}
+</code></pre>
+<p>Not the sole purpose of process is to "wire up" validate, save, and report_validation_error into a sequence of processing steps (flow) according to its own purpose. It´s ok for process to be dependent on those subroutines. That´s what process is for, that´s its integration task. But it´s not ok for validate to know of save or report_validation_error. That would violate the Principle of Mutual Oblivion (PoMO) described in my previous article.</p>
+<p>I know, the temptation is huge to put logic into functional units on all levels of abstraction when implementing a flow. But don´t! Keep any non-leaf nodes in a messaging hierarchy clean of logic. Logic must only reside in leaf nodes.</p>
+<p>Interestingly, adheres not only to the PoMO, but also to the ISOP. Here´s some code he sent me via email:</p>
+<pre><code class="language-csharp">var partMessage = new PartUploadMessage;
+
+var validationPipeline = new Task
+    .Register(Validate.PreValidate)
+    ...
+    .Register(Validate.PostValidate);
+
+var loadPipeline = new Task
+    .Register(ExcelFile.PreSpreadsheetLoad)
+    ...
+    .Register(ExcelFile.PostSpreadsheetLoad);
+
+var importPipeline = new Task
+    .Register(loadPipeline.Execute)
+    .Register(validationPipeline.Execute);
+
+importPipeline.Execute(partMessage);
+</code></pre>
+<p>The point is, his integrating functional units are pipelines. And they are generic. So there is no domain logic in them. Logic is only in the subroutines registered with pipelines, e.h. Validate.PreValidate.</p>
+<p>This suggests, flows or integration should not be defined in the same language as operations. Using a DSL without any features for logic is easy to come up with, easy to implement, and greatly helps holding up the IOSP. Here is an example I have implemented myself a while ago:</p>
+<pre><code>process:
+.in, validate
+validate.onValid, save
+validate.onInvalid, report_validation_error
+</code></pre>
+<p>But take this just as an outlook. No DSL is needed to code clean IOSP messaging hierarchies. It just takes a little discipline to follow the its simple rule. Very straightforward, I´d say.</p>
+<p>This does not make dependencies go away, but they are much more ordered and focused. That way we can get a better handle on large systems.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

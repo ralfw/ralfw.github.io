@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prinzip der gegenseitigen Nichtbeachtung — ralfw.de Archiv</title>
+<meta name="description" content="Mehrschichtigkeit ist immer noch tief in den Köpfen verankert. Und wenn nicht in den Köpfen, dann im Code. Übel daran ist nicht nur, dass Mehrschichtigkeit viele Fragen weder beant">
+<link rel="canonical" href="https://ralfw.de/archiv/2012/prinzip-der-gegenseitigen-nichtbeachtung/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Prinzip der gegenseitigen Nichtbeachtung — ralfw.de Archiv">
+<meta property="og:description" content="Mehrschichtigkeit ist immer noch tief in den Köpfen verankert. Und wenn nicht in den Köpfen, dann im Code. Übel daran ist nicht nur, dass Mehrschichtigkeit viele Fragen weder beant">
+<meta property="og:url" content="https://ralfw.de/archiv/2012/prinzip-der-gegenseitigen-nichtbeachtung/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Prinzip der gegenseitigen Nichtbeachtung</h1>
+    <div class="doc-meta"><span>31. Dez. 2012</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2012/12/prinzip-der-gegenseitigen-nichtbeachtung.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2012/prinzip-der-gegenseitigen-nichtbeachtung/</code></span></div>
+    <div class="art"><p>Mehrschichtigkeit ist immer noch tief in den Köpfen verankert. Und wenn nicht in den Köpfen, dann im Code. Übel daran ist nicht nur, dass Mehrschichtigkeit viele Fragen weder beantwortet noch stellt, sondern dass damit Abhängigkeiten geschaffen werden. Code der einen Schicht hängt irgendwie von Code der anderen ab. Die eine Schicht braucht die andere.</p>
+<p>Aber welche Schicht sollte welche brauchen? Darüber hat Jens Schauder in einem <a rel="noopener" href="http://blog.schauderhaft.de/2012/12/30/dependencies-in-a-three-tiered-application/">Blogartikel</a> nachgedacht. Den habe ich gelesen – und dann habe ich gestutzt. Jens erkennt zurecht Abhängigkeiten als Problem – doch dann sieht er eine Lösung nur darin, dass er sie umdreht. Aus dem üblichen</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/1e40493de76187bb.png" /></p>
+<p>wird bei ihm nur</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/cf73511c4037b244.png" /></p>
+<p>Die Domäne soll Interfaces definieren, die UI/Persistence dann nutzen bzw. implementieren [1].</p>
+<p>Das empfinde ich als keinen großen Schritt nach vorne. Klar, irgendwie wird jetzt die Domäne etwas mehr betont. Das ist nicht schlecht. Aber das grundsätzliche Problem der Abhängigkeiten wird nicht angegangen.</p>
+<p>Was ist dieses grundsätzliche Problem der Abhängigkeiten? Naja, dass das Abhängige das Unabhängige braucht, um etwas leisten zu können. Wer vom Alkohol abhängig ist, der ist nicht arbeitsfähig ohne. Und wo ein UI abhängig ist von der Domain, da kann das UI nichts tun, solange es keine Domain-Schicht in der Hand hat.</p>
+<p>Auch das hochgelobte Prinzip IoC macht da keinen großen Unterschied. Aus statischen Abhängigkeiten werden damit nur dynamische. Zur Laufzeit – also auch bei Tests – muss die Abhängigkeit erfüllt werden. Attrappen sind insofern weniger Lösung als Problem, dito DI-Container. Beide kaschieren die fundamental starre Verbindung, die Abhängigkeit selbst.</p>
+<p>Ich sehe dafür auch keine Entsprechung in der sonstigen Technik. Wenn ich UI+Domain+Persistence mal zusammen als Application bezeichne, dann könnte die Analogie doch ein Motor sein, oder?</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/da609722a285571c.png" /></p>
+<p>Eine Application besteht aus Teilen, ein Motor auch. Nur im Zusammenspiel aller Teile ergibt sich die gewünschte Funktion des Ganzen.</p>
+<p>Jetzt aber der Unterschied, der entscheidende:</p>
+<p>In der Application braucht und kennt UI die Domain, und bei Jens braucht und kennt Persistence ebenfalls Domain. UI wie Persistence sind unvollständig ohne Domain. Oder allgemeiner: das Abhängige ist unvollständig ohne das Unabhängige.</p>
+<p>Im Motor hingegen… da weiß eine Zündkerze nichts vom Zylinder. Ein Zylinder weiß nichts von einer Zündkerze. Die Kurbelwelle weiß nichts von Kolben und umgekehrt.</p>
+<p><strong>In der materiellen Technik gibt es keine Abhängigkeiten wie in der Software.</strong></p>
+<p>In der materiellen Technik gibt es nur Teile, die für sich genommen eine Form und eine Funktionsweise haben. Sie folgen dem, was ich mal</p>
+<blockquote>
+<p><strong>Das Prinzip der gegenseitigen Nichtbeachtung</strong>(principle of mutual oblivion (PoMO))</p>
+</blockquote>
+<p>nennen will.</p>
+<p>Eine Zündkerze beachtet kein anderes Teil. Ein Kolben, eine Kurbelwelle, ein Keilriemen auch nicht. Alle sind für sich geformt und ausgeprägt.</p>
+<p>Dass man sie zusammenfassen kann zu etwas Größerem: klar. Dieses Größere definiert einen Kontext und fordert, dass die Teile zusammenpassen. Es ist die Existenzberechtigung für die Teile. Ohne das Größere müssten wir gar nicht drüber reden.</p>
+<p>Aber das große Ganze kann eben in unterschiedlicher Weise seine Teile formen. Es kann das wie beim Motor tun. Das bedeutet, die Teile beachten einander nicht – sondern dienen dem Ganzen, das sie integriert.</p>
+<p>Oder das Ganze kann es tun wie in der Software üblich. Das bedeutet, es macht die Teile abhängig von einander.</p>
+<p>Konkret steckt diese Abhängigkeit in zwei unheiligen Verbindungen:</p>
+<ul>
+<li>Es wird Input mit Output verbunden: Request/Response ist der vorherrschende Kommunikationsstil zwischen den Softwareteilen.</li>
+<li>Es werden mehrere Funktionalitäten im selben Interfaces zusammengefasst.</li>
+</ul>
+<p>Die erste unheilige Verbindung macht den Übergang von synchroner zu asynchroner und damit zu verteilter Kommunikation schwierig. Außerdem führt sie zu einem unbeschränktem Wachstum von Methoden.</p>
+<p>Die zweite unheilige Verbindung macht die Umkonfiguration von Funktionalität schwierig – trotz allem ISP- und IoC-Aufwand, den man treiben mag.</p>
+<p>Beim PoMO hingegen ist das alles kein Thema mehr. Denn beim PoMO gibt es keine Abhängigkeiten mehr zwischen “Kooperationspartnern”. Funktionseinheiten kennen einander nicht mehr. “Dienstleister” UI kennt keinen “Dienstleiste” Domain oder umgekehrt, dito “Dienstleister” Persistence.</p>
+<p>Wenn die Anwendungsarchitektur dem PoMO folgt, dann sieht sie zunächst so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/27fc4cca30ab6389.png" /></p>
+<p>Welch Wonne! Keine Abhängigkeiten, kein Testattrappendrama!</p>
+<p>Aber natürlich sind die “Schichten” jetzt gänzlich unverbunden. Da entsteht noch keine Gesamtfunktionalität im Sinne der Application.</p>
+<p>Dafür tut nun die Application etwas. Und das tut sie ganz offiziell. In der Abhängigkeitsarchitektur war das nicht so offensichtlich. Aber bei PoMO geht es nun nicht mehr anders. Insofern führt PoMO zu einer fundamentalen Separation of Concerns:</p>
+<p>UI, Domain und Persistence gehören zum Concern (Aspekt) “Operation”. Und die Application vertritt den Aspekt “Integration”. Die Application verbindet die Teile so, dass sie zusammen etwas sinniges tun. Diese Verbindung könnte so aussehen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/aa904ffc7c139444.png" /></p>
+<p>Grün integriert, schwarz operiert. Teile wissen nichts davon, ob und wie sie verbunden sind. Und die integrierende Funktionalität weiß nichts davon, wie die Teile funktionieren. Sie ist ausschließlich von deren Form abhängig.</p>
+<p>Und genau das macht den Unterschied aus zwischen einer PoMO-Architektur und dem Üblichen: Bei den üblichen Abhängigkeiten ist der Abhängige nicht nur von der Form des Unabhängigen abhängig, also dass zum Beispiel B eine Funktion mit einer Signatur wie <em>Func</em> implementiert. Nein, A ist auch vom Namen der Funktion abhängig und damit von ihrer Semantik, dem, was sie leistet.</p>
+<p>Das klingt ganz natürlich. Aber es ist eine Last. Das ist eine doppelte Abhängigkeit: eine von Form und Inhalt. Und dann obendrein noch die Abhängigkeit davon, dass diese Funktion auf einem bestimmten Interface implementiert ist und auch noch, dass sie ein Ergebnis zurückliefert. Puh… das sind ganz schön viele Abhängigkeiten, oder?</p>
+<p>Bei PoMO jedoch, da kennt ein A kein B. Und es gibt keine Rückgabewerte; Daten fließen unidirektional. Und ob Methoden von der einen oder einer anderen Funktionseinheit angeboten werden, ist der integrierenden Funktionalität egal. Sie bringt “Angebote” einer Funktionseinheit mit “Nachfragen” anderer zusammen. Das ist alles.</p>
+<p>Integration interessiert sich somit nur für Semantik. Das muss sie ja auch, denn sie definiert ein höheres Abstraktionsniveau.</p>
+<p>PoMO löst damit mehrere Probleme von Abhängigkeiten. Manche dadurch, dass Abhängigkeiten abgeschafft werden. Manche dadurch, dass Abhängigkeiten fokussiert werden im Sinne von SoC und SRP.</p>
+<p>Das scheint mir <em>the way to go</em>, um mal raus aus dem Mehrschichtigkeitssumpf zu kommen.</p>
+<h4>Fußnoten</h4>
+<p>[1] Am Anfang seines Artikels stellt Jens die Frage, was denn Teams überhaupt mit einem Pfeil “–&gt;” in einem Diagramm meinen. Ob da immer Klarheit herrsche? Das kenne ich auch: Es wird bildlich entworfen, Kästchen, Kreise, Pfeile, Linien werden gemalt… Aber was bedeuten die? Zwei Entwickler, drei Meinungen ;-)</p>
+<p>Für mich gibt es zwei zentrale Symbole für Beziehungen zwischen Funktionseinheiten:</p>
+<ul>
+<li>Pfeil, A –&gt; B</li>
+<li>Lolli, A –* B</li>
+</ul>
+<p>Der Lolli bezeichnet eine Abhängigkeitsbeziehung: A ist abhängig von B, d.h. A braucht B in irgendeiner Weise. A hat zur Laufzeit ein B in der Hand.</p>
+<p>In den meisten UML-Diagrammen und auch bei Jens steht für diese Art der Beziehung allerdings der Pfeil. Der ist mir dafür aber verschwendet, weil bei ihm gar nicht recht klar wird, was die Pfeilspitze aussagt. Ein Pfeil ist anders als eine Linie asymmetrisch. Das ist schon passend zur Abhängigkeit. Abhängiges und Unabhängiges haben unterschiedliche Rollen. Doch die Pfeilspitze trägt für mich dabei zuviel Gewicht. Sie ist verschwendet bei einer simplen Asymmetrie.</p>
+<p>Bei einem Datenfluss hingegen kommt die Pfeilspitze viel besser zum Einsatz. Da zeigt sie deutlich die Flussrichtung. Das entspricht ihrer üblichen Bedeutung von “Bewegungsrichtung”. In Diagramme stehen Pfeile für mich also dort, wo Daten fließen, z.B. von Funktionseinheit A zu Funktionseinheit B.</p>
+<p>Solcher Datenfluss ist auch asymmetrisch; Datenproduzent und Datenkonsument haben unterschiedliche Rollen. Und Datenfluss ist unidirektional.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2012-12-31):</p>
+<p>Und wie würde beispielhaft die Application, UI, etc. aussehen? In Code?</p>
+<hr />
+<p><strong>Dominik Schmid</strong> (2012-12-31):</p>
+<p>Also ich sehe das so:</p>
+<p>Abhängigkeiten sind grundsätzlich nichts Schlechtes sondern ein Funktion (statisch typisierter) Sprachen, anhand derer ein Compiler helfen kann, die Korrektheit eines Programmes zu überprüfen. It's not a bug, it's a feature!</p>
+<p>Wer dieses Feature nicht will oder zu brauchen glaubt, kann Abhängigkeiten mit verschiedenen Mitteln wie IoC, Duck Typing, dynamischen Sprachen bis hin zu Events graduell abschwächen oder gar ganz auflösen. Nichts davon ist aber per se besser als das andere. Auf Abhängigkeiten zu verzichten hat seinen Preis (keine Korrektheitsüberprüfung, Mehraufwand der Entkoppelung, mehr Tests, etc.). Man tauscht also lediglich eine Art von Problemen gegen eine andere ein. Wie immer in solchen Fällen gilt es, Vor- und Nachteile verschiedener Lösungen im konkreten Fall jeweils gegeneinander abzuwägen.</p>
+<p>Abhängigkeiten gibt es in allen Bereichen - auch in gegenständlichen Dingen. Das kann jeder bestätigen, der schon mal versucht hat, einen IKEA-Schrank ohne den passenden Imbusschlüssel zusammenzubauen. Eine Schraube ist ein Interface, eine Brustwarze ist ein Interface, ein Lenkrad ist ein Interface, das mit bestimmten Erwartungen verknüpft ist, welche Objekte wie damit interagieren sollen. Welche konkreten Objekte das sind, und wie sie ihre Aufgabe erfüllen, ist dabei egal. Das ist dann eben ein Detail der Implementierung.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-01-01):</p>
+<p>Mit dem Argument, alles hätte ja seine Vor- und Nachteile, kommen wir nicht recht weiter. Damit kann ich das Rauchen und Narcolepsie auch "schönreden".</p>
+<p>Wir müssen genauer hinschauen. Und da kann ich nur sehen: die Abhängigkeiten, die auch mal Vorteile haben können, führen sehr, sehr oft zu Nachteilen, nämlich schwer wartbaren Systemen.</p>
+<p>Am schlimmsten sind natürlich logische Abhängigkeiten, vor denen kein Compiler schützt - und die wir weitgehend auch nicht wegbekommen. Aber bald darauf folgen dann "Dienstleistungsabhängigkeiten" wie die beschriebenen.</p>
+<p>Das Problem mit diesen Abhängigkeiten geht nicht weg mit statischer Typisierung oder ohne.</p>
+<p>Code, bei dem erstens "Dienstleistungsabhängigkeiten" existieren und zweitens Logik über diese Dienstleistungshierarchien hinweg auf allen Ebenen verteilt ist, ist fragil. Änderungen auf einer Ebene setzen sich entlang der Abhängigkeiten leicht nach oben und unten fort.</p>
+<p>"Ohne Sprunganweisungen kommt man nicht aus" ist genauso wahr wie "ohne Abhängigkeiten geht es nicht." Und trotzdem scheint die Softwareentwicklung davon profitiert zu haben, Sprunganweisungen zurückgedrängt zu haben. Selbst in C# gibt es noch ein goto - nur benutzt es keiner.</p>
+<p>Ein goto hat Vor- und Nachteile. Da muss man abwägen. Aber diese Abwägung fällt sooft gegen das goto aus, dass wir sie im Grunde nicht mehr treffen. Wir leben wunderbar ohne.</p>
+<p>Und ich treffe auch keine Abwägung mehr bei Abhängigkeiten. Ich lebe wunderbar ohne. Jedenfalls ohne Dienstleistungsabhängigkeiten wie sie bei der Mehrschichtigkeit vorherrschen. Solch ein Leben ist also mindestens mal möglich :-) Und hier versuche ich zu vermitteln, dass es sogar wünschenswert ist.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-01-01):</p>
+<p>Interessante Gedanken Herr Westphal, zeigen Sie in Ihrem nächsten Beitrag auch ein praktisches Beispiel dieser Architektur?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-01-01):</p>
+<p>@Anonyme: Wenn jetzt schon zwei nach einer Umsetzung in Code fragen, dann muss ich wohl ein Beispiel geben.</p>
+<p>Kommt in den nächsten Tagen. Stay tuned ;-)</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-01-02):</p>
+<p>Hallo, auch ich interessiere mich für die Implementierung, dann sich wir schon zu dritt.</p>
+<p>Ich denke, die Abhängigkeitsfreiheit bekommt man im technischen Sinne hin, aber logisch kann man die Trennung nicht aufbrechen.</p>
+<p>Technisch kann man auf Schnittstellen (C# interfaces) verzichten, wenn man sich Delegates bedient.
+Der Diensterbringer bietet die Methode void Foo(Bar bar, Baz baz) an, das entspricht der Action<Bar, Baz>
+Der Aufrufer weiß lediglich, dass er einen Dienst mit der Signatur entsprechend Action<Bar, Baz> aufrufen will.
+Mit diesem Gedanken kann man beide Partner verdrahten, ohne dass dazu ein C#-interface erforderlich ist.
+Aber die DTOs Bar und Baz müssen beide Partner kennen.
+Davon kann man sich auch trennen, wenn man generische Datenstrukturen (z.B. Dictionary) verwendet. Dann hat man beide Partner vollkommen entkoppelt, hingegen bleibt die logische Abhängigkeit bestehen. Das Aufbrechen von fachlichen Zusammenhängen ist im konkreten Anwendungsfall vielleicht unmöglich.
+Ich befürworte sogar, keine generischen Datenstrukturen zu verwenden und stattdessen konkrete DTOs zu verwenden - das hilft dem Entwickler (-&gt; IntelliSense). Versionkompabilitäten im Falle von DTO-Änderungen sind mit entsprechender Vorsicht zu behandeln. Vielleicht sollte man das verbieten (einmal veröffentlichte DTOs gelten ewig) und Änderungen nur durch Mutation (Kopie+Änderung) umsetzen. Das mag DRY verletzen, doppelter Code entstehen, aber vielleicht ist der Preis bezahlbar (Bar V1.1, Bar V1.2, Bar V2.0, Bar V2.1). Die älteren DTOs verwinden von selbst aus dem System, weil sie keine mehr nutzt.</p>
+<p>Viel wichtiger halte ich die grundlegenede Diskussion über Abhängigkeiten (Schichtenarchitekturen sind ein verbreiterer Spezialfall), also man hat zwei unabhängige Funktionseinheiten (oder Komponenten) und möchte diese miteinander verknüpfen. Die Diskussion kann man aber an einer Schichtenarchitektur führen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-01-02):</p>
+<p>An dieser Stelle nur soviel: Es reicht eben nicht, Interfaces durch eine Strauß an Delegaten zu ersetzen.</p>
+<p>Es kommt darüber hinaus darauf an, was mit Foo(Bar, Baz) bedacht ist. Und solange das eine Dienstleistung ist, ist es auch meiner Sicht noch keine "Nichtbeachtung". Dann interessiert sich A noch konkret dafür, dass B eben den Service Foo() anbietet.</p>
+<p>Genau das soll aber eben nicht sein. A interessiert überhaupt nicht, was mit seinen Produkten passiert.</p>
+<p>Dass es logische Abhängigkeiten immer geben wird, ist klar. Sobald es zwei Funktionseinheiten in einer Software gibt, sind die irgendwie logisch abhängig.</p>
+<p>Und auch Abhängigkeiten von gemeinsamen Daten gehen nicht weg. Aber die sind nicht so schlimm, solange es eben nur Daten sind.</p>
+<p>Die große Last der Unwartbarkeit entsteht durch funktionale Kopplung.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-01-02):</p>
+<p>Ja, so meinte ich es.</p>
+<p>A "produziert" das Tupel (Bar,Baz) und die Infrastruktur (Application) weiß (per Konfiguration), dass sich B für (Bar,Baz) interessiert (bietet den Service Foo an), daher routet die Infrastruktur das Tupel (Bar,Baz) von A an B weiter.</p>
+<p>In diesem Szenario sind A und B relativ eng gekoppelt - unabhängig davon wie der Verteilungskontext aussieht: in-process oder distributed und ebenfalls unabhängig davon, wie der zeitliche Zusammenhang (on-the-fly oder batch) zwischen beiden aussieht.
+Die Abhängigkeit ist dadurch definiert, dass beide Bar und Baz kennen und interpretieren können (und weitere lustige Interna daraus ableiten). Beide Einheiten A und B gehören entweder zur gleichen Domäne oder haben Adapter zwecks Mapping integriert (aber dann würde ich eher von A-&gt;M-&gt;B, mit M = Mapper) sprechen.</p>
+<p>Ist das die funktionale Kopplung?</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-01-02):</p>
+<p>Ralf,</p>
+<p>ich bin sehr gespannt, wie Du die Kurbelwelle eines VW in den Motor eines Opels integrierst :-)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-01-02):</p>
+<p>@Anonym#1: Aber es geht doch nicht darum, jedes Teil in jedem Kontext benutzen zu können.</p>
+<p>Der Trick ist aber: wenn einer meint, mit der Kurbelwelle eines Opels arbeiten zu können, dann kann er das. Davon merkt die Opelkurbelwelle nichts. Sie ist selbst von nichts abhängig. Sie braucht keine Dienstleistung. Sie definiert sich rein selbst.</p>
+<p>@Anonym#2: Ich sehe das nicht als enge Kopplung von A und B beide von Datentyp T abhängig sind.</p>
+<p>Das ist so, wie ein Motor Diesel braucht und eine Raffinerie Diesel herstellt. Wunderbar. Aber der Motor braucht keine Raffineriedienstleistung und die Raffinerie keine Motordienstleistung.</p>
+<p>Sie sind aus meiner Sicht eben nicht funktional gekoppelt. Aber sie teilen etwas, klar. Es gibt eine "Materialkontrakt": der eine ist Produzent, der andere Konsument.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-01-02):</p>
+<p>Immer diese (blöden) Analogien.
+Eine Kurbelwelle wird in keine Labor from Scratch - einfach so entworfen. Nein, Form (Maßen, Toleranzen) und Güte (Kräfte, Ausdehnung, Materialeigenschaften) sind sehr genau spezifiziert (bspw. Testreihen, Nullserien). Eine Kurbelwelle in irgendeiner Lagerhaltung weiss sehr wohl nichts davon, ob sie jetzt eingebaut ist oder nicht (eine tolle Erkenntnis, Material ist dumm).
+<em>ich lasse jetzt die Polemik</em>
+Nein, die Kurbelwelle ist (hoffentlich durch nachgewiesene Qualitätsmaßnahmen) "jederzeit" in der Lage gemäß ihrer Spezifikation eingesetzt zu werden. Man kann sie auch abseits der Spezifikation einsetzen (vielleicht als Hebel), aber deren Auswirkungen (Verbiegung) mag sie für immer als unbrauchbar deklarieren. Tja, soetwas hat man bei Software nicht.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-01-02):</p>
+<blockquote>
+<p>... enge Kopplung von A und B beide von Datentyp T</p>
+</blockquote>
+<p>Die "Enge" mag relativ sein und Bedarf sicherlich einer genaueren Definition.</p>
+<p>Tatsache ich aber, dass A und B nicht von irgendeinem T, sondern von einem ganz konkreten T in der Version Vx.y.z abhängen.</p>
+<p>In der Version V1.0 enthält das T vielleicht nur string Location, in der Version V2.0 gibt es Location in dieser Form nicht mehr, sondern ist eine Schnittstelle oder eine Attributsammelung.</p>
+<p>Software ist für mich Modellbildung. Modelle sind nur eine sehr eingeschränkte Sicht der Wirklichkeit. Zwei Funktionseinheiten müssen sich jetzt auf diegleiche Modellbildung "einigen" (Attribute, Kardinalitäten) und zwar unabhängig wieviel die jeweiligen Einheiten an Daten benötigen.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-01-02):</p>
+<p>(irgendwie erinnert mich das an die Diskussion um DCI ein paar Blogs vorher)</p>
+<p>Ein Zusammenhang sollte schon existieren; ansonsten driftet das Ganze in die Beliebigkeit ab und ich habe irgendwas total generisches, was ich nur wieder konfigurieren, mit einem Aufwand, der größer ist, als das mehr oder minder hartcodierte.</p>
+<p>Um den Begriff DCI, oder besser die Architektur-Idee von Coplien und Bjørnvig, wieder ins Spiel zu bringen, stimme ich RalfW schon zu, dass das, was sich verändern kann, lose gekoppelt sein sollte, während die Einzelteile, die das System ausmachen, ein entsprechende Kopplung brauchen.</p>
+<p>Die grünen Pfeile liefern den Kitt für das System, der aber auch wieder entfernbar sein sollte, wenn sich der Kunde überlegt, dass er einen Zusammenhang anders haben möchte (nicht dass er so etwas jemals tun würde...).</p>
+<p>Bezüglich Modelle: Es ist unsere Aufgabe im Rahmen des Software-Engineering sich darüber Gedanken zu machen, was ist fest und was nicht... fast wie im Leben eine Ingenieurs ;)</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-01-02):</p>
+<p>@stmon:
+Kannst Du die URL posten? Dann verkürzt sich die Diskussion durch Redunanzvermeidung.</p>
+<blockquote>
+<p>..dass das, was sich verändern kann, lose gekoppelt sein sollte
+Das ist z.B. eine Strategy - DCI geht darüber hinaus. Sollbruchstellen für Variantionspunkte wollte ich nicht ausgeschliessen.</p>
+<p>...Die grünen Pfeile liefern den Kitt für das System
+Genau. Nur reicht das Bild und deren Beschreibung allein nicht aus. Es scheint, als ob schwarze Linien "böse" sind, die grünen Pfeile (das Kitt) offenbar als gut erachtet wird. In der Zeichnung war ein Zusammenhang erkennbar: der grüne Rahmen der Application schliesst die schwarzen Boxen UI, Persistence und Domain ein.
+Das deutet auf eine Abhängigkeit (=Import von Symbolen) und/oder gar eine Schnittstelle hin - leider wurde das nur vage beschrieben und bisher hat die Diskussion auch noch nicht wirklich für Eindeutigkeit gesorgt.</p>
+</blockquote>
+<p>Dieses gilt und galt es zu schärfen... warten wir einmal die Implementierung von Ralf ab.</p>
+<p>Offenbar wird die "Abhängigkeit von Daten" - genauer einer Datenstruktur (DTO) - als weniger böse angesehen, als die zu einem Interface.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-01-02):</p>
+<p>@Anonym... der nach meinem Post :)</p>
+<p>http://blog.ralfw.de/2012/10/gesucht-dreckige-realitat.html</p>
+<blockquote>
+<p>DCI...</p>
+</blockquote>
+<p>Jep... DCI geht von der Idee natürlich weiter, aber mir ging es an dieser Stelle ein bisschen mehr um die Trennung "What The System Is" und "What The System Does" und um die Umsetzung (wobei ich das Beispiel in "Lean Architecture" eher als akademisch empfand)</p>
+<blockquote>
+<p>Dieses gilt und galt es zu schärfen... warten wir einmal die Implementierung von Ralf ab.</p>
+</blockquote>
+<p>Nu' machen Sie mal hin, Herr Westphal ;)</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-01-02):</p>
+<p>@stmon: Danke für die Links (das Buch ist schon gelesen).</p>
+<p>@Herr Westphal: Bitte keine Übereile.</p>
+<p>Ich danke den Herren für die bisherige Diskussion.</p>
+<hr />
+<p><strong>Patrick Koglin</strong> (2013-01-08):</p>
+<p>Ein gelungener Artikel, vielen Dank. Er beschreibt ein fundamentale Problem, das ich schon lange in einigen Köpfen wahrgenommen habe.</p>
+<p>Zum Kommentar von Dominik Schmid.
+Wenn ich lese das Abhängigkeiten nichts schlimmes sind dann behaupte ich das Sie den Testdriven-Ansatz noch nicht erprobt haben oder leben.</p>
+<p>Erst beim Versuch eine hohe Code Coverage durch Unit-Tests und TDD zu erreichen wird man bemerken wie pervers Abhängigkeiten sind.</p>
+<hr />
+<p><strong>Robin Gerdes</strong> (2013-01-08):</p>
+<p>Hallo Herr Westphal,</p>
+<p>ein interessanter Artikel. Bei einer Implementierung eines solchen Ansatzes, würden sich die einzelnen Komponenten (UI, Domäne, Persistenz) dann an die Integration koppeln? Wäre die Integration ein Mediator zwischen den Komponenten?</p>
+<p>Viele Grüße</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-01-08):</p>
+<p>@Robin: In der Integration kommen die Teile zusammen. Insofern ist die Integration abhängig :-( Aber das ist weniger schlimm als das, was wir heute haben, wenn die Aspekte munter durcheinander fliegen.</p>
+<p>Die Integration tut ja nur eines: integrieren. That´s it. Also ist die nur von der Semantik der zu integrierenden Teile abhängig - allerdings nur indirekt. Denn sie selbst braucht deren Semantik ja nicht. Sie steckt nur Semantiken zusammen.</p>
+<p>Die Kopplung zwischen Integration und Teilen ist mithin trotz Abhängigkeit relativ klein.</p>
+<hr />
+<p><strong>Jens Schauder</strong> (2013-01-12):</p>
+<p>Hi Ralf,
+da hast du meinen Artikel wohl ein bischen falsch verstanden.</p>
+<p>Es ging mir mit nichten darum Abhängigkeiten umzudrehen, sondern nur um zu klären, in welche Richtung sie gehen. Ich halte die von mir beschriebene für die Richtige und Normale, die vielen aber nicht klar zu sein scheint.</p>
+<p>Zu der Behauptung es ginge ohne Abhängigkeiten ... nun, dass der Vergleich mit dem Motor mehr als hinkt wurde ja schon in verschieenen Kommentaren genannt. Natürlich gibt es Abhängigkeiten.</p>
+<p>Ich denke diese Abhängigkeiten sollten möglichst einfach sein. Ein M8 Gewinde ist besser also so mancher Spezialstecker von Diagnose Geräten. Eine Funktion besser als ein Interface mit 20 Methoden.</p>
+<p>Mir scheint deine Argumentation darauf hinaus zu laufen die Interfaces so weit zu vereinfachen, dass sie alle glecih aussehen. Alle Ansätze die ich bisher dazu gesehen haben versteckten die Abhängigkeiten bestenfalls. Und eine versteckte Abhängigkeit, ist noch schlimmer als eine offensichtliche.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-01-12):</p>
+<p>@Jens: Nein, es geht mir nicht darum, alles gleich aussehen zu lassen.</p>
+<p>Aber es geht mir schon darum, mit den Abhängigkeiten, die du gezeichnet hast, aufzuräumen. Denn du hast Dienstleistungsabhängigkeiten gezeichnet. Layer X benutzt Funktionalität von Layer Y. Die BL ruft das DL. Oder auch andersherum.</p>
+<p>Mir ist die Richtung der Abhängigkeit und auch eine Invertierung egal. Ob ein Layer X sich von einer Klasse y in Layer Y direkt abhängig macht oder nur von einer "Abstraktion" (sprich Interface), ist mir einerlei. Beides ist dasselbe Problem - solange eben Layer X eine Dienstleistung beansprucht.</p>
+<p>Dazu habe ich in anderen Postings hier und Kommentaren mittlerweile hinreichend erklärt, worin ich den für viele vielleicht feinen, aber für mich gravierenden Unterschied sehe.</p>
+<p>Es geht nicht ohne jegliche Abhängigkeit. Klaro. Aber es geht ohne den Verhau, der überall ständig produziert wird. Und der hat nichts mit der Richtung zu tun, in die die Abhängigkeitspfeile zeigen.</p>
+<p>Code wird schlicht unübersichtlich und schwer zu warten, wenn Integration und Operation als Aspekte nicht getrennt werden. Und Code in einer Methode wird lang und länger und klebrig, wenn Dienstleistungen beauftragt, statt einfach nur "Daten zur gefälligen Weiterverarbeitung" zu veröffentlichen.</p>
+<p>Damit will ich Funktionen nicht abschaffen - aber ich empfehle, sie viel bewusster einzusetzen, eben nur in Integrationen.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-02-03):</p>
+<p>@Ralf: Das klingt zu einfach, als dass es bislang noch keinem eingefallen wäre. Ohne Codebeispiel dreht sich die Diskussion hier meiner Meinung nach im Kreis...</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-02-03):</p>
+<p>Codebeispiele habe ich nun inzwischen zur Genüge gebracht, glaube ich.</p>
+<p>Jeder ist auch herzlich eingeladen, es selbst auszuprobieren. Das ist ja technisch alles nicht schwierig.</p>
+<ol>
+<li>Integration Operation Separation Principle (IOSP)
+Eine Methode integriert entweder oder sie operiert. Wenn sie integriert, dann enthält sie keine Kontrollstrukturen und keine Ausdrücke. Zuweisungen und Objekterzeugungen sind aber erlaubt.</li>
+</ol>
+<p>In einer Aufrufhierarchie sollten soviele Ebenen wie möglich integrieren.</p>
+<ol start="2">
+<li>Principle of Mutual Oblivion (PoMO)
+Klassen bzw. Methoden rufen keine Dienstleister mehr auf. Stattdessen informieren sie ihre Umwelt über Ereignisse/Ergebnisse.</li>
+</ol>
+<p>Diese "selbstbezogenen" Funktionseinheiten werden von integrierenden zu Größerem "verdrahtet".</p>
+<p>Ist das noch keinem eingefallen? Doch. PoMO ist zum Beispiel bei Unix immer dann am Werk, wenn auf der Kommandozeile mit Pipes gearbeitet wird.</p>
+<p>Nur scheint mir, dass es niemand bisher so knapp als Prinzip formuliert hat, das unabhängig von irgendwelchem Hype ist.</p>
+<p>Das IOSP hingegen scheint mir tatsächlich neu. Aber warum auch nicht? Kann jedem passieren, mal ein Prinzip zu erfinden ;-)</p>
+<hr />
+<p><strong>martinprange</strong> (2013-03-31):</p>
+<p>Not rocket science - so etwas implementiert eine Datenflussmaschine vermöge eines Eventbusses oder auch ein ESB (Enterprise service bus, java) seit Jahren, oder fehlt da etwas an Funktionalitaet?
+Gruss
+  Martin Prange</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-03-31):</p>
+<p>@Martin: Wer spricht von rocket science?</p>
+<p>Aber auch wenn es keine rocket science ist, kann es noch einfacher werden. Warum sollte ich dafür einen ESB einsetzen?</p>
+<p>Es geht mir darum, dass, was woanders schon funktioniert, verständlicher und nutzbarer für viel mehr Entwickler zu machen.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

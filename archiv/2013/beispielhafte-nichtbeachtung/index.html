@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beispielhafte Nichtbeachtung — ralfw.de Archiv</title>
+<meta name="description" content="Wie könnte eine Anwendung aussehen, die dem Prinzip der gegenseitigen Nichtbeachtung folgt? Ich versuche das mal anhand eines simplen Szenarios im Kontrast zu einer mehrschichtigen">
+<link rel="canonical" href="https://ralfw.de/archiv/2013/beispielhafte-nichtbeachtung/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Beispielhafte Nichtbeachtung — ralfw.de Archiv">
+<meta property="og:description" content="Wie könnte eine Anwendung aussehen, die dem Prinzip der gegenseitigen Nichtbeachtung folgt? Ich versuche das mal anhand eines simplen Szenarios im Kontrast zu einer mehrschichtigen">
+<meta property="og:url" content="https://ralfw.de/archiv/2013/beispielhafte-nichtbeachtung/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Beispielhafte Nichtbeachtung</h1>
+    <div class="doc-meta"><span>3. Jan. 2013</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2013/01/beispielhafte-nichtbeachtung.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2013/beispielhafte-nichtbeachtung/</code></span></div>
+    <div class="art"><p>Wie könnte eine Anwendung aussehen, die dem <a rel="noopener" href="http://blog.ralfw.de/2012/12/prinzip-der-gegenseitigen-nichtbeachtung.html">Prinzip der gegenseitigen Nichtbeachtung</a> folgt? Ich versuche das mal anhand eines simplen Szenarios im Kontrast zu einer mehrschichtigen Anwendung darzustellen.</p>
+<h3>Das Beispielszenario</h3>
+<p>Eine Anwendung soll den Index aller Worte in Dokumenten aufbauen. Die Dokumente sind Textdateien (Endung auf .txt) unterhalb eines Wurzelverzeichnisses. Und Worte sind Zeichenketten ohne Leerzeichen, d.h. sie werden durch Leerzeichen von einander getrennt.</p>
+<p>Die Anwendung wird mit dem Wurzelverzeichnis gestartet, z.B.</p>
+<p>wordindex f:\docs</p>
+<p>und liefert den Index in folgender Form auf dem Standard-Output ab:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f964884b3a11a4f2.png" /></p>
+<p>Zu jedem Wort gelistet in alphabetischer Reihenfolge werden die Dateinamen der Dokumente gelistet, in denen es vorkommt.</p>
+<p>Das ist alles natürlich keine große Sache. Aber ich denke, es gibt genug her, um zwei Ansätze zu vergleichen. Der Code für beide liegt <a rel="noopener" href="https://github.com/ralfw/WordIndex-ArchitectureComparison">in einem github Repository</a>. Wer ihn also komplett sehen möchte, ist herzlich eingeladen.</p>
+<h3>Ansatz #1: Mehrschichtige Anwendung</h3>
+<p>Bei der mehrschichtigen Variante will ich mich hier gar nicht lange mit Entwurfsschritten aufhalten. Ist doch durch das Muster “Mehrschichtige Architektur” schon alles vorgegeben, oder?</p>
+<p>Da gibt es ein Frontend – das hier zugegebenermaßen dünn ausfällt –, da gibt es Domänenlogik und dann gibt es noch Datenzugriff. Alles simpel, aber vorhanden.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/3bc192a8fb8bdd46.png" /></p>
+<p>Für jede Schicht mache ich eine Komponente auf, d.h. es gibt einen separaten Kontrakt und eine binäre Implementation (Assembly). In Visual Studio drücke ich das durch mehrere Projekte aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9aaa478329171497.png" /></p>
+<p>Es gibt also drei Projekte – je eines für jede Schicht – und dazu noch eines für die Kontrakte und eines für den Programmstart und den Zusammenbau des Ganzen zur Laufzeit.</p>
+<p>Die Interfaces (funktionale Kontrakte) sind simpel. Woher die kommen, lasse ich mal außen vor. Hier fallen sie vom Himmel :-)</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/33d7a77c85855e37.png" /></p>
+<p>Dass ich mich für die Schichten für Interfaces entschieden habe, sollte keine Fragen aufwerfen. Aber bei den Daten… Warum ein Interface für den Index?</p>
+<p>Ich erwarte, dass der Index selbst noch wieder eine gewisse Funktionalität enthält. Die will ich aber zum Zeitpunkt der Kontraktlegung nicht festschreiben müssen. Was weiß ich, wie die Domäne die Indizierung implementiert? Sie kann Funktionalität zwischen Indexer und Index verteilen, wie sie mag.</p>
+<p>Indem ich also den Index auch nur als Interface in den Kontrakte angebe, sind die Kontrakte schnell geschrieben und die parallele Entwicklung an allen Schichtenkomponenten kann losgehen.</p>
+<p>Das mag für manche neu sein – aber am Ende ist das ein alter Hut. Eben Komponentenorientierung.</p>
+<h4>Abhängigkeiten</h4>
+<p>Die aus meiner Sicht unseligen Abhängigkeiten bestehen nun zwischen den Implementation der funktionalen Kontrakte. Zur Compilezeit sind sie von Interfaces abhängig, zur Laufzeit von deren Implementationen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/74ae3d8d821369dd.png" /></p>
+<p>Wenn ich <em>Console</em> testen will, muss ich eine <em>IIndexer</em>-Attrappe haben. Und wenn ich den <em>Indexer</em> testen will, muss ich eine Attrappe für <em>IDocuments</em> haben. So ist das halt. Hört sich ganz normal an, oder? Quasi unvermeidbar. Dafür gibt es ja schließlich Mock-Frameworks.</p>
+<p>Bei Programmstart werden die Implementationen dann zusammengesteckt. Das passiert über Dependency Injection:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2f3c59bc1ea179e7.png" /></p>
+<p>Auch normal. Dass ich hier keinen DI-Container benutze, ist vernachlässigbar.</p>
+<p>Das funktioniert alles tadellos. Aspekte sind erkannt (Schichten) und für produktive Entwicklung und Wiederverwendung in Komponenten herausgelöst. Über Interfaces wird entkoppelt. Funktionale Abhängigkeiten sind sauber ausgerichtet von oben nach unten. Jede Schicht ruft nur die unmittelbar darunter liegende.</p>
+<p>Das funktioniert tadellos. Wer mag, probiert es mit dem Code im Repo aus.</p>
+<h4>Gedanken zum Entwurf</h4>
+<p>Oben wollte ich noch nichts zum Thema Entwurf sagen. Und auch jetzt möchte ich nicht den Entwurf nachholen. Aber eines Kommentares kann ich mich nicht enthalten:</p>
+<p>Als ich die Anwendung entworfen habe, habe ich mich schwer getan. Nicht sehr schwer natürlich. Ist ja alles total triviales Zeugs. Doch ich habe gemerkt, dass ich einen Moment geschwommen bin.</p>
+<p>Die Schichten zu finden, war nicht schwer. Die sind ja durch das Muster vorgegeben und für das Szenario auch klar erkennbar. Aber wie dann die Interfaces genau aussehen sollten… dazu fiel mir erstmal nichts ein.</p>
+<p><em>IIndexer</em> war simpel. Da geht es zentral um die Zweck der Anwendung. Also bin ich gleich auf die obige Definition verfallen. Ich habe einfach Wünsch-dir-was gespielt :-)</p>
+<p>Aber wie sollte <em>IConsole</em> aussehen? Vor allem aber: Wie sollte <em>IDocuments</em> aussehen? Was würde ein Indexer von <em>IDocuments</em> wollen?</p>
+<p>Bei diesem Entwurfsansatz habe ich mich da sehr gehemmt gefühlt. Ich hätte eigentlich mit TDD loslegen müssen zu implementieren, um dabei schrittweise herauszufinden, was ich von <em>IDocuments</em> brauche.</p>
+<p>Das habe ich mir angesichts des einfachen Beispiels dann aber gespart und habe einfach mal getippt ;-) Wie sich herausstellte, lag ich da nicht falsch.</p>
+<p>In Summe ist mein Eindruck also, dass mir der Ansatz der Mehrschichtigkeit zwar im gaaanz Groben irgendwie hilft – nur dann wird es schnell schwierig. Ich werde nicht geleitet bei der Verfeinerung (Wie sehen die Schichten denn konkret aus?). Und die Abhängigkeiten machen dann bei der Implementation keinen Spaß: Entweder muss ich bei Tests Attrappen einsetzen oder ich muss von unten nach oben entwickeln. Beides macht keine Laune.</p>
+<h3>Ansatz #2: Nichtbeachtende Anwendung</h3>
+<p>Jetzt gilt es. Wie sieht eine Anwendung aus, die nicht mehrschichtig ist? Wie kann das Problem mit den funktionalen Abhängigkeiten vermieden werden? Im Repo finden Sie dazu auch einen Vorschlag, die Solution <em>obliviouswordindex</em>:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2ef705cbfb9d663f.png" /></p>
+<p>Von Grundaufbau her sieht sie gar nicht so anders aus. Es gibt wieder drei Projekte für die Aspekte Frontend, Domäne und Persistenz. Warum auch nicht? Es sind Aspekte, die es lohnt, deutlich separat zu implementieren.</p>
+<p>Und es gibt wieder ein “Hauptprogramm” und ein Projekt für das, was den Aspekten gemein ist: Daten.</p>
+<p>Die Beziehungen zwischen diesen Teilen sehen allerdings anders aus!</p>
+<p>Zunächst einmal ist zu bemerken, dass es keine funktionalen Kontrakte gibt. Interfaces für die Aspekte sind unnötig. Es gibt zwischen ihnen ja keine funktionalen Abhängigkeiten. Das Frontend kennt keine Domäne und die Domäne weiß nichts von Persistenz.</p>
+<p>Die Implementationen liegen funktional “nichtbeachtend” nebeneinander:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/3b58dd3453114d27.png" /></p>
+<p>Es gibt lediglich gemeinsame Erwartungen an Daten. Und das ist ja auch völlig ok. Daten sind vergleichsweise “ungefährlich”, wenn sie keine großartige Funktionalität enthalten. Dann können sich Änderungen an Logik nicht so leicht fortpflanzen.</p>
+<p>Daten stehen für die unvermeidliche logische Kopplung. Aber nur weil es die gibt, ja, geben muss, heißt das ja nicht, dass darüber hinaus auch noch funktional gekoppelt werden muss.</p>
+<p>Das Hauptprogramm ist wieder von allen Implementationen abhängig, weil es sie irgendwie zusammenstecken muss. Aber das ist auch sein einziger Job: die Integration.</p>
+<p>Die Komponenten implementieren hingegen Operationen, d.h. Logik.</p>
+<p>Das ist die Basis der Architektur des Prinzips der gegenseitigen Nichtbeachtung: die Trennung der Aspekte Integration und Operation. Diese Aspekte gibt es immer. Sie sind domänenunabhängig. Auch das ist anders als bei der Mehrschichtigkeit. Die trennt ebenfalls Aspekte – allerdings sind das inhaltliche.</p>
+<p>Vielleicht ist es gar nicht so schlecht, das mal wie folgt gegenüber zu stellen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/0ee5496e9b11120f.png" /></p>
+<p>Soweit die Grundarchitektur. Da gibt es auch immer noch Abhängigkeiten bei der “Nichtbeachtung”. Sowas, sowas ;-)</p>
+<p>Dennoch ist die rein praktische Erfahrung, dass es simpler ist, die Operationsschicht mit den nicht funktional abhängigen Operationen zu implementieren. Es sind schlicht keine Attrappen nötig.</p>
+<h4>Entwurf</h4>
+<p>Wie komme ich nun zu diesen Operationen? Das geht über einen schrittweisen Entwurf. Ich muss dafür keinen Test schreiben, sondern einfach das Problem verstehen und einen Lösungsansatz formulieren können.</p>
+<p>Es ist im Grunde wie die Erarbeitung einer Sprache. Es geht um Sätze und Worte. Die Operationen entsprechen den Worten, sie sind das Grundvokabular für Sätze. Größeres kann ich dann aus diesem Vokabular und schon gebildeten Sätzen zusammenbauen.</p>
+<p>Beim Entwurf für das Beispielszenario könnte das so aussehen: Am Anfang stelle ich mich ganz dumm. Ich weiß nur, dass ich Input von der Kommandozeile bekomme und dass der Index auf dem Standard-Output rauskommen soll. Dazwischen passiert “es” dann irgendwie:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/3c1ae6cb75b78a30.png" /></p>
+<p>Bei der Ausgabe bin ich mir sicher, dass ich die nicht weiter verfeinern will. Eine <em>IIndex</em>-Datenstruktur letztlich in einen Text zu serialisieren, ist eine Sache von wenigen Zeilen.</p>
+<p>Und wie ist es mit der Dokumentenverarbeitung? Da spielt jetzt die Musik. Die einfach so ohne weitere Verfeinerung zu implementieren, wäre mir zuviel. Kann man machen – muss man aber nicht ;-)</p>
+<p>Also zoome ich mal rein und denke mir die Verarbeitung wie folgt:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/747eec71c9358b41.png" /></p>
+<p>Zuerst werden Dokumente geladen – eines nach dem anderen. Und mit jedem wird der Index erweitert. Aus <em>Load docs</em> fließen also einzelne Dokumente an <em>Build index.</em></p>
+<p>Jetzt wieder die Frage: so lassen oder weiter verfeinern? Jede dieser Funktionseinheiten wäre schon wieder einfacher zu implementieren. Vor allem, weil sie ja auch für sich, also nichtbeachtend realisiert würden. Ich könnte eine Methode <em>Load_docs()</em> entwickeln, die nichts mit einer Methode <em>Build_index()</em> zu tun hätte – und umgekehrt. Das war bei der Mehrschichtigkeit anders.</p>
+<p>Aber ich finde die Funktionalität immer noch zu grob. Also verfeinere ich weiter. Dokumente laden, erfolgt in drei Schritten:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c6574b904d1f0697.png" /></p>
+<p>Zuerst einmal muss ich den Wurzelpfad aus der Kommandozeile herausfischen, dann suche ich alle überhaupt relevanten Dokumente, also die .txt-Dateien, und schließlich lade ich für jeden Dateinamen den Dateiinhalt.</p>
+<p>Bitte beachten Sie, wie aus 1 Input-Wert, dem Wurzelpfad, n Output-Werte, die Dateinamen werden.</p>
+<p>Anschließend wird zu jedem Dateinamen aber wieder nur 1 Dokument produziert.</p>
+<p><em>Document</em> wie <em>IIndex</em> sind im “Datenkontrakt” definiert, da sie relevant zwischen Aspekten sind. Andere Datentypen gibt es nicht auf globaler Ebene; innerhalb von Aspekten benutze ich gern dynamische Typen.</p>
+<p>Mit den Funktionseinheiten auf dieser Zoomebene bin ich jetzt zufrieden. Eine weitere Zerlegung ist nicht nötig; ich bin bei den Operationen angekommen.</p>
+<p>Aber der Indexbau muss noch näher betrachtet werden. Auch dort sehe ich eine Schrittfolge vom Dokument bis zum Index:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c9fa123df5fd24ca.png" /></p>
+<p>Zuerst wird jedes Dokument in seine Worte zerlegt, die ich Funde (occurrence) nenne. Das sind Tupel bestehend aus Wort und Dateiname. Wie angedeutet, definiere ich dafür aber keinen eigenen Typ. Das wäre Overkill. Alle Operationen gehören ja zum Aspekt Domäne. Da kann man sich untereinander so gut kennen, dass man sich auf die Struktur dynamischer Typen verlassen kann.</p>
+<p>Der Filterschritt unterdrückt Worte mit weniger als 3 Zeichen. Und bei der Registrierung wird der Fund dem Index hinzugefügt.</p>
+<p>Wenn es keine Funde mehr gibt, fließt am Ende der Index hinaus.</p>
+<p>Angezeigt wird das Ende eines Stromes durch eine fließende Null. <em>find docs</em> schließt damit den Strom der Dateinamen ab, <em>load doc</em> fährt damit fort nach dem letzten Dokument usw. Das ist ein probates Mittel für die stromorientierte Verbindung von Operationen. Letztlich macht es Rx auch so – allerdings über einen eigenen Event, der das Ende eines Stromes anzeigt. Ein Endesignal muss aber sein. Insofern unterscheiden sich Ströme von Listen (zu denen auch <em>IEnumerable</em> gehört).</p>
+<p>Ich hoffe, mit dieser schrittweisen Verfeinerung habe ich niemandes Phantasie strapaziert. Dass so ein Indexaufbau funktioniert, sollte auf der Hand liegen.</p>
+<p>Wie weit ich verfeinere, hängt von meinem Vorstellungsvermögen ab. Diese drei Zerlegungsebenen finde ich einfach naheliegend. Aber Sie können das Problem natürlich auch anders angehen. Entscheidend ist nicht, wie Sie konkret zerlegen, sondern dass sie es überhaupt tun. Damit unterscheiden Sie nämlich Integration und Operationen.</p>
+<p>Die Operationen <em>get root path</em>, <em>output index</em>, <em>parse doc</em> usw. stellen jetzt das Grundvokabular dar. Das sind alles black boxes. Wie die implementiert werden, ist egal für die Integration. Alle sind aber unabhängig von einander. Sie definieren sehr kompakte Leistungen, wenn man ihnen passenden Input liefert.</p>
+<p>Mit diesem Grundvokabular habe ich “Sätze” gebildet, z.B. <em>Load docs</em>. Die liegen auf einem höheren Abstraktionsniveau. Die Zerlegungsebenen sind insofern keine Schichten, sondern Strata im Sinne von Sussmans &amp; Abelsons <a rel="noopener" href="http://www.amazon.de/Structure-Interpretation-Computer-Electrical-Engineering/dp/0262510871">“Structure and Interpretation of Computer Programs”</a>.</p>
+<p>Das kann man von <em>IConsole</em> oder <em>IIndexer</em> bei der mehrschichtigen Architektur nicht sagen. Die Domain ist nicht soetwas wie die Persistence auf höherer Abstraktionsebene, sondern etwas anderes. Eine solche Zerlegung hilft deshalb nur wenig bei der Problemlösung.</p>
+<p>Eine schrittweise Verfeinerung wie hier vorgenommen jedoch, die hilft. Es geht auf jeder Ebene nämlich um das Ganze – nur eben mit immer feingranularerem Vokabular.</p>
+<h4>Implementation</h4>
+<p>So viele Bildchen, wann kommt denn endlich Code? Bubbles don´t crash, heißt es doch. Bisher wurde nur geredet und nichts substanzielles geschafft – oder?</p>
+<p>Weit gefehlt. Alles, was Sie bisher an Bubbles verbunden mit Pfeilen gesehen haben, ist schon Code. Hier der Beweis:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/60eccd56511e8753.png" /></p>
+<p>Das sind die “Blubberdiagramme” übersetzt in eine texttuelle Notation (DSL). Die hätte ich auch gleich hinschreiben können – aber Bilder sind übersichtlicher, lassen sich schneller auf einem Blatt notieren im kreativen Prozess und machen es einfacher, einen Entwurf anderen zu erklären.</p>
+<p>Aber keine Angst, die hübschen Bildchen sind nicht weg, nur weil ich sie in Text übersetzt habe. Sie lassen sich jederzeit aus dem Text generieren:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/b0905d5e41b70373.png" /></p>
+<p>Das funktioniert sogar nicht nur in der Entwicklungsumgebung, sondern auch auf dem Binärcode. Falls mal also nur eine .EXE vorliegt, kann der hier eingesetzte Visualizer auch aus ihr diese Integrationen lesen und in Bilder rückübersetzen. Aber das nur am Rande.</p>
+<p>Wichtig ist, dass ich rüberbringe, dass die Diagramme nicht nur eine optionale Nettigkeit sind, sondern Code darstellen. Sie entwerfen und Implementieren letztlich gleichzeitig. Entwurf ist damit keine verschwendete Zeit. Sie tun etwas für Ihr Problemverständnis, Sie tun damit etwas für eine saubere Lösungsstruktur – und nun haben Sie auch schon einen wichtigen Teil der Lösung codiert: die Integration.</p>
+<p>Die nun noch nötige Implementation der Operationen ist aber auch nicht schwierig. Dafür benutze ich jetzt auch eine 3GL, z.B. C#. Damit können Operationen in Methoden übersetzt werden oder ganze Klassen. Wie es mir von Fall zu Fall am besten passt.</p>
+<p>Beispiel <em>TextfileDocuments</em>: Die Operationen <em>find docs</em> und <em>load doc</em> lassen sich schön in statische Methoden übersetzen. Warum auch nicht? Ein Interface ist ja nicht mehr nötig. Zustand gibt es auch nicht. Also spricht nichts gegen statische Methoden:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c9abd7c918e67c50.png" /></p>
+<p>Da <em>load doc</em> bei jedem Aufruf, also für jeden Dateinamen, ein Dokument erzeugt, ist eine Funktion angebracht. Anders bei <em>find docs</em>. Für 1 Wurzelpfad werden n Dateinamen erzeugt. Da ich die nicht als Liste mit einem Mal zur Weiterverarbeitung leiten möchte, sondern die Dokument für Dokument einzeln stattfinden soll, implementiere ich die Operation als Prozedur mit Continuation für die Dateinamen.</p>
+<p>Dass Operationen leichter zu testen sind, zeigt bei diesem Aspekt jedoch noch nicht so sehr. Auch in der mehrschichtigen Anwendung war diese Funktionalität unabhängig.</p>
+<p>Anders ist das bei der Domäne. Die ist in der mehrschichtigen Architektur abhängig von der Persistenz. Jetzt aber nicht mehr:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/68a221fd447d34e8.png" /></p>
+<p>Hier habe ich mich für Instanz-Operationen entschieden, weil die Domäne einen Zustand hat: den Index. Der wird ja langsam aufgebaut (s. <em>Register_occurrence()</em>).</p>
+<p>Keine der Operationen kennt nun aber eine Persistenzoperation. Es gibt keine Request/Response-Kommunikation, sondern nur message passing. Klingt für mich übrigens total objektorientiert ;-)</p>
+<p>Beachten Sie, wie ich hier dynamische Typen einsetze. Die Operationen vertrauen darauf, dass ihr Input eine passende Struktur hat. Von wo der kommt und wohin ihr Output geht… das wissen sie jedoch nicht. Deshalb sind die einfach zu testen.</p>
+<p>Die Abwesenheit von Request/Response lässt Methoden auch tendenziell kleiner sein. Denn wenn Sie merken, dass Sie in einer Operation etwas brauchen, dann müssen Sie sie im Grunde beenden, einen Output erzeugen – und eine andere Operation aufmachen, in die das, was Sie brauchen, als Input einfließt. Aus dem üblichen</p>
+<p>void f() {
+  // vorher
+  string r = g(42);
+  // nachher
+}</p>
+<p>würde</p>
+<p>void f_vorher(Action continueWith) {
+  // vorher
+  continueWith(42);
+}</p>
+<p>void f_nachher(string r) {
+  // nachher
+}</p>
+<p>Wenn Sie das so sehen, wirkt es natürlich irgendwie umständlich und künstlich. Aber mit ein bisschen Übung, verliert sich diese mentale Reibung. Dann ist das eine ganz natürliche Denkweise; dann können Sie nicht mehr anders. Oder besser: dann wollen Sie nicht mehr anders – müssen jedoch manchmal.</p>
+<p>Aber solches Vorgehen ist natürlich kein Zwang. Sie können beim Design entscheiden, bis zu welcher Granularitätsebene Sie so denken wollen – und wann Sie damit aufhören. Wenn Sie durch Entwurf auf Ihre Operationen gekommen sind, dann können Sie sich in deren Implementation auch austoben. Da ist quasi wieder alles erlaubt.</p>
+<p>Dennoch sollten Sie die Integration-Operation-Trennung (und den Verzicht auf Request/Response) immer im Hinterkopf behalten. Sie sind es, die zu den kleineren Methoden führen. Eine Methode integriert entweder oder sie operiert. Und wenn sie integriert, dann sind darin keine Kontrollstrukturen und keine Ausdrücke erlaubt. Wie lang kann dann eine Methode noch werden? ;-)</p>
+<p>Deshalb ist es auch nicht schwer, eine textuelle oder grafische DSL für die Integration wie oben gezeigt zu realisieren. In der Integration passiert einfach nichts. Keine Logik. Nur “Zusammenstecken”.</p>
+<h4>Komposition</h4>
+<p>Da gibt es nun eine Integration notiert in einer obskuren DLS. Und es fliegen eine Menge Operationen im Raum herum. Wie kommt beides zusammen zu einer lauffähigen Anwendung, wie sieht der Kompositionsschritt bei diesem Ansatz aus.</p>
+<p>Der ist ganz einfach. Dependency Injection gibt es ja nicht. Allerdings müssen die Integrationsbeschreibung und die Operationen bei einer Runtime registriert werden. (Das ist aber nur eine Möglichkeit, wenn Sie sich eben für die DSL entscheiden. Sie können diese Art der Strukturierung auch anders umsetzen.)</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/89ba8edf3314d559.png" /></p>
+<p>Die Konfiguration der Runtime sucht sich die Operationen aus den angegebenen Assemblies selbst heraus; sie sind ja mit einem Attribut versehen.</p>
+<p>Und dann geht es auch schon los. Der Einfachheit halber und weil nicht mehr gebraucht wird, schalte ich die Runtime zur Verarbeitung der Datenfluss-Integration auf synchrone Verarbeitung. Mit den Kommandozeilenargumenten geschickt an den Port <em>.run</em> beginnt die erste Operation ihre Arbeit.</p>
+<h3>Zusammenschau</h3>
+<p>Den Unterschied in den zwei Ansätzen sehen Sie hoffentlich:</p>
+<p>Erstens: Bei der Mehrschichtigkeit verteilt sich Logik (Kontrollstrukturen und Ausdrücke) über alle Ebenen. Das ist in diesem Beispiel noch gar nicht so deutlich geworden, weil die Schichten so dünn sind. Aber in größeren Szenarien gibt es ja auch innerhalb Schichten Abhängigkeitshierarchien.</p>
+<p>Solch verschmierte Logik macht es schwer, schnell und einfach und präzise den Ort zu finden, wo man für eine Verhaltensänderung eingreifen muss.</p>
+<p>Und wenn man ihn gefunden hat, dann ist der Test nicht so leicht, weil es in Abhängigkeitshierarchien eigentlich keine Unit Tests gibt, sondern immer nur Integrationstests. Denn wenn Funktionseinheit A von B abhängt und ich für den Test von A eine Attrappe_B brauche, dann teste ich nicht nur, ob in A die richtigen Entscheidungen getroffen werden, sondern auch noch, ob B erwartungsgemäß aufgerufen wird. Ein korrekter Umgang mit B oder gar auch noch mit C und D stellt jedoch eine Integrationsleistung dar: Logik in A wird mit Logik in B und C und D zu etwas größerem Integriert.</p>
+<p>Zweitens: Zumindest für mich ist es schwer, Abhängigkeitshierarchien zu entwerfen. Wenn sie einmal da sind, dann kann ich sie malen. Aber wie komme ich dahin? Und vor allem, wie komme ich in agiler Weise dahin? Wenn Agilität bedeutet, in Inkrementen zu denken, wie kann ich solche Hierarchien in Inkrementen wachsen lassen? Und bleiben dann diese Inkremente sichtbar?</p>
+<p>Das alles finde ich schwierig, schwierig. Nicht, dass ich nicht selbst lange Jahre so versucht hätte zu entwickeln. Das habe ich wahrlich. Letztlich ist das jedoch im Vergleich zu dem, wie einfach es mir heute fällt, alles ein Krampf gewesen. Den sehe ich auch regelmäßig, wenn Teams versuchen, solche Beispiele im Rahmen von Assessments zu lösen. Das ist dann für mich ein ganz praktischer Beweis dafür, dass in den Köpfen eine Menge Konzepte herumschwirren, wie das mit dem Entwurf gehen könnte und sollte… Nur kommt dann kein Gummi auf die Straße. Aus “Mehrschichtige Architektur, MVC und Entwurfsmuster plus SOLID” resultiert kein systematisches Vorgehen, das erstens zu verständlichen und evolvierbaren Strukturen führt, die zweitens dann auch noch im Team effizient implementiert werden können. Leider, leider ist das so.</p>
+<p>Deshalb erlaube ich mir, ernsthafte Zweifel anzumelden, dass das mit der Mehrschichtigkeit großen Wert hat. Nicht zuletzt deshalb, weil wir das ja nun auch schon mehr als ein Jahrzehnt probieren und die Softwaresysteme immer noch nach kurzer Zeit unwartbar werden.</p>
+<p>Klar, es gibt Fortschritte. IoC und DI-Container und Mock-Frameworks haben etwas gebracht. Heute wird schon mehr entkoppelt als früher. Aber “mehr” bedeutet noch nicht gleich “genug”. Ich sehe da noch deutlichen <em>room for improvement</em>.</p>
+<p>Zwei Beispiele dafür sind die strikte Trennung von Integration und Operation, also ein <em>Integration Operation Separation Principle (IOSP)</em> ;-), sowie das <em>Principle of Mutual Oblivion</em> (PoMO). (Ein bisschen Englisch zwischendurch darf schon mal sein ;-)</p>
+<p>Dass Schritte über das Gewohnte hinaus dann erstmal mühsam sind, ist halt so. So ist es immer. Auch von prozeduraler zu objektorientierter Denke war der Übergang mühsam. Oder von Objektorientierung zur Funktionalen Programmierung. Bei Veränderungen knirscht es – was ja aber nicht bedeutet, dass es hinterher nicht besser sein kann. Wenn ich heute 20 Liegestützt kann und mal 25 oder 30 mache, dann tut das auch weh. Aber wenn ich es morgen und übermorgen usw. wieder tue, dann geht der Schmerz vorbei; ich werde kräftiger. Und in einem Monat kann ich 50 Liegestütz. Eine vorher ungeahnte Menge ist möglich, weil ich mich durch Müh und Plage durchgebissen habe.</p>
+<p>So ist es mit vielen anderen Fähigkeiten auch, körperlichen wie geistigen. Ob man diesen Weg geht, ist natürlich eine Frage der persönlichen Ökonomie. Lohnt es sich, den Veränderungsschmerz auszuhalten? Das muss letztlich jeder für sich entscheiden. Wer schon 20 Liegestützt kann, mag abwinken. Kraft für mehr braucht er nicht. Und aus dem Alter, wo er Mädels beeindrucken wollte, ist er auch raus ;-) Aber wer sich noch schwer tut beim Entwurf von Software, wer noch vor einem unwartbaren Codeverhau sitzt… kann der sich leisten, Veränderungsschmerz zu vermeiden, der auf dem Weg zu einer anderen Denke entstehen würde?</p>
+<p>Naja, ist vielleicht eine Frage für ein längeres Gespräch bei einem Kaltgetränk.</p>
+<h4>Abhängigkeiten im close-up</h4>
+<p>An dieser Stelle abschließend noch ein Wort zum Thema Abhängigkeiten, das für mich schon im vorhergehenden Artikel so wichtig war. Dabei sehe ich ja einen großen Unterschied, der Ihnen vielleicht nicht so groß erscheint. Deshalb nochmal durch die Lupe darauf geschaut:</p>
+<p>Was ist der Unterschied zwischen</p>
+<p>string[] Split(string text) {…}</p>
+<p>und</p>
+<p>void Split(string text, Action parts) {…}</p>
+<p>Keiner. Beide Methoden zerlegen einen Text in irgendwelche Teile, z.B. Worte oder Zeilen. Beide Methoden liefern diese Teile in Form eines Array ab.</p>
+<p>Dass die erste Methode ihr Ergebnis über den Rückgabewert meldet und die zweite über einen Delegaten, ist im Grunde nur syntactic sugar für den Aufrufer.</p>
+<p>…
+var parts = Split(“…”);
+…</p>
+<p>vs</p>
+<p>…
+string[] parts = null;
+Split(“…”, _ =&gt; parts = _);
+…</p>
+<p>Der marginale Unterschied ist jedoch nur oberflächlich. Darunter lauert ein viel größerer. Der besteht nämlich in der Flexibilität der prozeduralen Variante mit dem Delegaten. Dort kann man sich nämlich entscheiden, ob jedes Teil einzeln oder alle Teile zusammen abgeliefert werden. Man kann wählen, ob man eine Liste oder einen Stream produziert. Die Prozedur kann sogar entscheiden, gar kein Ergebnis zu liefern; dann ruft sie den Delegaten einfach nicht auf.</p>
+<p>void Split(string text, Action parts) {…}
+void Split_to_stream(string text, Action part) {…}</p>
+<p>Bei der Funktion hingegen gibt es immer ein Ergebnis und nur eines.</p>
+<p>Aus meiner Sicht ist es damit schwerer, den Schritt von synchroner zu asynchroner Verarbeitung zu machen. Der Delegatenaufruf stellt ein Ereignis dar und kann leicht asynchron oder gar für jeden Teil parallel verarbeitet werden:</p>
+<p>Split_to_stream(“…”, part =&gt; new Task(()=&gt;Process(part)).Start());</p>
+<p>Das ist für mich der erste Nachteil unserer Fixierung auf Request/Response-Kommunikation. Die hat uns das Leben schon vor 15 Jahren schwer gemacht, als wir versucht haben, objektorientierte Denke einfach so auf verteilte Systeme auszudehnen. Und nun sorgt sie wieder für Reibung. Diesmal beim Übergang zu Mehrkernprozessoren.</p>
+<p>Den Ort eines Requests zwangsweise gleichzusetzen mit dem Ort für die Bearbeitung eines Response, ist schlicht eine enge Kopplung. Aber nicht nur für den, der den Request bearbeitet.</p>
+<p>Das Problem setzt sich fort beim Aufrufer. Wo ist der Unterschied zwischen</p>
+<p>void f() {
+  …
+  var parts = Split(text);
+  …
+}</p>
+<p>und</p>
+<p>void f(Func Split) {
+  …
+  var parts = Split(text);
+  …
+}</p>
+<p>Wieder gibt es keinen grundlegenden Unterschied. Die Methode <em>f()</em> benutzt eine Dienstleistung zur Zerteilung von Zeichenketten. Dass die im zweiten Fall als Delegat hineingereicht wird, sozusagen parameter injection, ändert daran nichts. Das ist nur eine Variante von dependency injection, die mal ohne Interface auskommt und nicht auf Klassenebene arbeitet.</p>
+<p>In meinem Sinne ist dadurch noch nichts erreicht in puncto Abhängigkeitsreduktion. <em>f()</em> ist in beiden Fällen abhängig:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/4f4128876cec3d74.png" /></p>
+<p>Um<em>f()</em> allein zu testen, muss eine Attrappe her. Und dann testet man eben nicht nur die Funktionsweise der Logik in <em>f()</em>, sondern auch noch, ob <em>Split()</em> korrekt benutzt wird. Das ist aber ein anderer Aspekt, nämlich der der Integration: spielt ureigene <em>f()</em>-Logik korrekt zusammen mit <em>Split()</em>-Logik?</p>
+<p>Das klingt subtil, geradezu wie Haarspalterei. Aber je länger ich mich damit beschäftige, desto größer scheinen mir die negativen Auswirkungen der Vernachlässigung dieser Feinheit.</p>
+<p>Der Trick ist einfach, dass <em>f()</em> von einer Semantik abhängig ist, nicht nur von einer Form. Die Ursache dafür ist in diesem Fall der Request/Response-Aufruf.</p>
+<p>Jetzt dieses kleine Szenario etwas anders:</p>
+<p>void f_produce_text(Action Text_produced) {
+  …
+  Text_produced(text);
+}</p>
+<p>void f_process_text_parts(string[] parts) {
+  …
+}</p>
+<p>Sehen Sie den Unterschied jetzt? <em>f_produce_text()</em> ist unabhängig von einer Semantik des Delegaten. Es wird immer noch eine Methode injiziert, aber die tut nichts für den Aufrufer. Sie nimmt nur etwas entgegen und transportiert es weiter. Das macht die “Nichtbeachtung” aus.</p>
+<p>Beide Methoden können nun ohne Attrappen getestet werden. Beide Methoden tun jetzt auch nur eines: sie implementieren Logik, d.h. sie stellen Operationen dar.</p>
+<p>Natürlich muss dann irgendwo alles zusammenkommen. Das geschieht bei der Integration:</p>
+<p>void f(Func&gt; Split) {
+  f_produce_text(t =&gt;
+    Split(t ,
+      f_process_text_parts));
+}</p>
+<p>Die Integration ist nun abhängig von konkreter Semantik. Sie stellt selbst Semantik her und braucht dafür Sub-Semantiken. Aber sie enthält keine Logik. Deshalb ist der Test einer Integration einfach. Der kann sich nämlich darauf konzentrieren festzustellen, ob die Subsemantiken korrekt “verdrahtet” sind. Das ist alles. Im Falle von <em>f()</em> ist dafür nur ein Test nötig.</p>
+<p>Dass eine Integration abhängig ist von weiteren Integrationen bzw. Operationen, ist unvermeidbar. Aber das ist nicht mehr so schlimm, weil in ihr eben keine Logik steckt. Deshalb ist es ja auch möglich, Integrationen wie oben gezeigt in einer trivialen DSL zu notieren.</p>
+<p>Die <em>f()</em>-Integration würde damit notiert so aussehen:</p>
+<p>f
+f_produce_text, split
+split, f_process_text_parts</p>
+<p>Also: Ein Test von Integrationen ist einfach, auch wenn dafür Attrappen nötig sind/sein sollten, weil nur wenige Tests gebraucht werden. Meist reicht einer. Und der kann auch noch auf recht hoher Abstraktionsebene angesiedelt sein.</p>
+<p>Und ein Test von Operationen ist einfach, weil die Operationen keine funktionalen Abhängigkeiten haben, d.h. sie kennen keine Semantik von Konsumenten ihrer Daten. Attrappen sind nicht für ihre Tests nötig.</p>
+<h4>Fazit</h4>
+<p>Ich kann nicht mehr anders denken als im Sinne von IOSP und PoMO. Alles andere kommt mir zäh und umständlich und im Ergebnis wenig flexibel vor. Aber das ist einfach meine Erfahrung nach 3 Jahren konstanter Übung.</p>
+<p>Ganz praktisch drückt sich das übrigens darin aus, dass ich keine Mock-Frameworks mehr benutze. Wo ich früher noch mit Rhino Mocks o.ä. rumgehüsert habe, da kann ich mich jetzt entspannen. Falls mal eine Attrappe nötig ist, schreibe ich die in ein paar Zeilen selbst. So bin auch ich weniger abhängig – von Tools.</p>
+<p>Dass ich Sie nun überzeugt habe, das Lager der Mehrschichtigkeit bzw. der “Abhängigkeitsdenke” zu verlassen, glaube ich nicht. Aber ich habe Ihnen hoffentlich einen Impuls gegeben, Ihre OO- und Architekturwelt ein bisschen anders zu sehen. Das Übliche ist nicht alles. Es geht auch anders. Und nicht nur die Funktionale Programmierung hat etwas zu bieten.</p>
+<p>Vielleicht, ganz vielleicht versuchen Sie ja aber einmal – wenn die Kollegen Sie nicht sehen –, die beiden Prinzipien IOSP und PoMO an einem Beispiel wie dem obigen selbst anzuwenden. Machen Sie Ihr persönliches Coding Dojo mit einer Application Kata. Das Wortindex-Szenario könnten Sie wiederholen oder erweitern (Stoppwortliste, Zeilennummern der Worte je Dokument, Dokumentenindizierung als Service in der Cloud). Oder Sie nehmen sich ein anderes Szenario vor. Bei den <a rel="noopener" href="http://clean-code-advisors.de/">Clean Code Advisors</a> finden Sie weitere <a rel="noopener" href="http://clean-code-advisors.com/ressourcen/application-katas">Application Katas</a>.</p>
+<p>Falls Sie Fragen haben, melden Sie sich einfach per Email – oder diskutieren Sie mit in der <a rel="noopener" href="https://groups.google.com/group/event-based-components/">Google Group</a> oder <a rel="noopener" href="https://www.xing.com/net/ebcfd">XING-Gruppe</a> zum Thema Flow-Design/Event-Based Components.</p>
+<h2>Kommentare</h2>
+<p><strong>Stelzi79</strong> (2013-01-03):</p>
+<p>Ja das war jetzt ein ausführlicher und für meinen Geschmack schon zu lange Ausführung wie man diese "Abschaffung von Abhängigkeiten" implementiert. Im Grunde kann man ja die ganzen Überlegungen in einem einzigen Satz zusammenfassen:</p>
+<p>Mache keine Abhängigkeiten um eine Programmierart oder Struktur durch zu setzen sonder mache Abhängigkeiten nur um logische Abhängigkeiten von Daten und Funktionsweisen der Anwendung abzubilden.</p>
+<p>Meiner Meinung nach schließt sich der Kreis der akademischen Bearbeitung von Programmierproblemen. Zuerst muss man alle möglichen Abstraktionsmöglichkeiten (ja auch Designpattern gehören zu dieser Kategorie) finden um eine möglichst generische Wiederverwendbarkeit und Konformität zu schaffen um dann erkennen zu müssen das die zu höchst abstraktierten Programmier-Paradigmen nur dazu geführt haben, dass man nur schwer zu durchschauende Abhängigkeitsmonster erschaffen hat, die man auch nicht mehr effektiv testen kann.</p>
+<p>Zumindest ist jetzt klar, dass man in diesem zu tiefst technischen und praktischen Gebiet der Programmierung, keine geistesnwissenschaftliche Bearbeitung von "Problemen" braucht!</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-01-03):</p>
+<p>@Wolfgang. Hm... das finde ich interessant, diese Reduktion erstmal auf logische Abhängigkeiten.</p>
+<p>Jede Funktionseinheit hat mindestens eine logische Abhängigkeit oder vielleicht allgemeiner: ist logisch gekoppelt an ihre Umwelt.</p>
+<p>Solche logische Kopplung muss natürlich irgendwie vermittelt werden. Sie beeinflusst die Funktionseinheit - sonst wär ja keine Kopplung da.</p>
+<p>Mir scheint der natürlich Ausdruck logischer Kopplung sind Daten. Daten sind die Leiter von Kopplung. Nur wo Daten ausgetauscht werden, kann auch Kopplung entstehen.</p>
+<p>Darum kommen wir nicht herum. Das ist sogar der Zweck von Software.</p>
+<p>Wenn wir Glück haben, lassen sich einige Aspekte der Kopplung aber überführen in weniger schlimme Formen. Rein logische Kopplung ist ja nicht schön, weil sie zur Entwicklungszeit nicht prüfbar ist.</p>
+<p>Wenn void f(string t) in t sortierte Kunden in Form von CSV-Daten erwartet, dann lässt sich nichts vom Compiler überprüfen.</p>
+<p>Wenn die Methode jedoch so aussieht: void f(Kunde[] kunden) - dann kann der Compiler Zusicherungen machen und wir bekommen auch noch Intellisense. Vormals rein logische Kopplung ist zum Teil in physische Umgewandelt worden.</p>
+<p>Aber das geht natürlich auch nur ein gewisses Stück. Eine Queue statt einer List ist dafür auch ein Beispiel.</p>
+<p>Und wie ist es, wenn nun diese in den Daten steckende Kopplung über die Herstellung von ADTs hinausgeht?</p>
+<p>Mein Gefühl ist, dass die Kopplung an Dienstleistungen, also die Beschaffung und Verarbeitung von Daten, übers Ziel hinausschießt.</p>
+<p>Wenn eine Funktionseinheit (Operation) Daten bekommt, in denen nur soviel logische Kopplung steckt wie nötig und soviel physische wie möglich, und wenn diese Funktionseinheit dann etwas produziert, für das das selbe gilt, dann haben wir erreicht, was wir erreichen können.</p>
+<p>Das Zusammenschalten von Funktionseinheiten zu Größerem ist dann eine ganz andere Sache (Integration). Da ist die Kopplung vor allem logisch; das bisschen an expliziter Signatur ist vernachlässigbar. Die Musik spielt in den Funktionseinheiten, die integriert wird. Was die aber tun, ist nicht formal überprüfbar. Also muss der Integrator an die Bezeichnungen der Integrierten glauben.</p>
+<p>Da es sich hier um logische Abhängigkeit handelt, sollte damit in so einfacher Weise wie möglich umgegangen werden. Das, so glaube ich, drückt die DSL aus, die ich verwendet habe. Das, so glaube ich, steckt hinter der Herausarbeitung des Aspekts Integration.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-01-03):</p>
+<p>Hallo Herr Westphal,</p>
+<p>well done! Grossartig!</p>
+<p>Mein Wissen rund um EBC, FD war eher gering; die Vorahnung der letzen Tage und studieren einiger Blog-Artikel steigerte die Neugier, die vollends erfüllt wurde.</p>
+<p>Die Diskussion der Abhängigkeiten, die saubere Trennung zwischen Operationen und Integration - Volltreffer. Das gibt nochmals Schub und Motivation in die Thematik und die skizzierte Lösung tiefer einzusteigen. Die DSL ist geöhnungsbedürftig aber gelungen - einfach pur.</p>
+<p>RX, Observables waren Handwerkszeug, aber auch ein bisschen ungeliebt - wegen der 1-Argument-Begrenzung (die ich natürlich selbst auf N-Argumente aufbohren könnte), aber eigentlich war das immer noch nicht das Salz in der Suppe. Ich war eher auf Actions und Funcs aus, ich kann fast nicht mehr ohne.</p>
+<p>Aktuell favorisiere ich Actions. Actions sind die Eingangspins und ebenso auch die Ausgangspins (analog EBC, aber nicht 1-arg). Da man Funcs auf Actions abbilden kann, erhalte ich in C# Funktionen mit mehreren Rückgabewerten (und keine "künstlicher" Zwang zu 1-Argument-Schnittstellen).</p>
+<p>public void Foo(Bar, Baz) {..}
+= Action<Bar, Baz></p>
+<p>ist der Eingang und der Ausgang ist z.B.</p>
+<p>Action<X,Y,Z></p>
+<p>in Pseudocode:</p>
+<p>(X,Y,Z) = Foo(Bar, Baz)</p>
+<p>-&gt; mehrfache Rückgabewerte :-)</p>
+<p>oder auch so:</p>
+<p>Action<Bar, Baz, Action\<X,Y,Z>></p>
+<p>Viel, viel Potential. Schön, dass man in D auch Kollegen findet, die das Potential erkennen und es mit diesem Artikel übererfüllen und eine neue Tür aufstossen.</p>
+<p>Ich war schon in der täglichen, angestaubten Patterns-Welt und DI (gähn) schon ein wenig verzweifelt, erkennt denn keine die Dinge rund um z.B. Eric Meijer und den Möglichkeiten von C#? Aber nun ein neuer Lichtblick mit einer neuen Geschmacksrichtung.</p>
+<p>Immutablility (Muticores), Events, Flows, Continuations, Futures bieten ganz neues Potential, wenngleich Clojures auch gefährlich sind. Eric nennt die 4 (äh 5 Effekte), ja, das Leben macht doch noch Spass - die Java-Leute sind sicher neidisch.</p>
+<p>Welche Schnittstelle ist eigentlich am einfachsten zu implementieren?
+1) die gar nicht existiert :-)
+2) interface IFoo{ void Foo(); }</p>
+<p>Zu 1) Hi, hi.
+Zu 2) Könnte zu wenig sein, hier scheint sich Kontext / Seiteneffekte zu verbergen.</p>
+<p>"interface segregation principle" schreit förmlich nach schmalen Schnittstellen - idealerweise umfassen sie nur eine Methode =&gt; Action / Func
+Und was sieht man jeden Tag? Breite unsinnige Interfaces, die bei der Implementierung auch noch Zustand verlangen :-(</p>
+<p>Composable functions sind noch ein Stück weg, aber bald ist Eisschmelze und der Fluss gewinnt an Kraft.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-01-03):</p>
+<p>@Anonym: Danke für den enthusiastischen Kommentar :-) Der gibt mir auch Energie, dran zu bleiben am Thema.</p>
+<p>Zu Methoden mit 1 oder n Parametern: Es gibt nur einen Grund, warum ich 0-1 Parameter favorisiere: Mit dieser Einschränkung ist es leicht möglich, Infrastruktur wie die Flow Runtime zu bauen.</p>
+<p>Ansonsten unterscheiden sich</p>
+<p>void f(int a, string b)</p>
+<p>und</p>
+<p>void f(Tuple ab)</p>
+<p>nicht von einander. Beides ist für mich grundsätzlich ok, wenn man Datenflüsse aufbauen will.</p>
+<p>Aber - wie gesagt - ich finde es vorteilhaft, wenn ich generische Operationen für Flüsse definieren kann, weil ich weiß, dass es immer nur max. 1 Parameter gibt.</p>
+<p>Vielleicht gebe ich das ja aber auch mal auf? ;-) Denn auch wenn in der Flow Runtime Daten in IMessage Objekte verpackt fließen, könnten sie am Empfangsort auch entpackt werden in mehrere Input-Parameter.</p>
+<p>Bisher war mir das jedoch zu aufwändig zu implementieren. Und ich empfinde keine wirkliche Einschränkung durch Methoden mit nur 1 Parameter.</p>
+<hr />
+<p><strong>thomas</strong> (2013-01-04):</p>
+<p>Hallo,
+das Thema EBC und Flowdesign verfolge ich nun bereits eine ganze Weile, und verwende EBC auch sehr gerne.</p>
+<p>Im Bereich der Programmierung gehöre ich wohl eher zu den sogenannten "Quereinsteigern" (obwohl ich dieses Wort eher nicht mag).</p>
+<p>Und das scheint auch mein Problem zu sein. Mir wird das ganze schon fasst zu akademisch, zu theoretisch.</p>
+<p>Bei der ursprünglichen EBC, aufgebaut aus Klassen mit Eingangsmethode und Action Events als Ausgängen war alles überschaubar. Der Vergleich zu Bauteilen der Elektronik passte und machte das benutzen einfach.</p>
+<p>Warum muss man eine eigene Flow Runtime, DSL usw. haben? Warum eine ständige neue Iteration zum selben Grundproblem?</p>
+<p>Für macht es die Sache nur unnötig kompliziert. Mit einfachen EBC kommt jeder zurecht, solange er z.B. C# grundlegend versteht.</p>
+<p>Bringt es nicht mehr, wenn man sagt: EBC - So das ist es! So wird es gemacht!</p>
+<p>Als nächstes: So benutzt man EBC um Consolen und Dienste zu erstellen. (Wer schreibt heute noch Consolen?)</p>
+<p>Dann: So baut man daraus GUI mit WPF oder, oder, oder.</p>
+<p>So entstünde eine Art Blueprint an das sich alle halten können und vor allem alle verstehen. Das ist für mich der große und spektakuläre Fortschritt beim Thema EBC.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-01-04):</p>
+<p>@thomass: Schade, Thomas, dass du noch nicht die Vorteile der Flow Runtime gegenüber reinen EBCs.</p>
+<p>Und schade, dass du missverstehst, du müsstest irgendetwas tun. Musst du aber nicht. Du kannst doch weitermachen wie bisher. Wenn dir EBC genügen, ist doch alles gut. Das gilt genauso für alle die OOP machen oder sonstwas. Wer kein Problem hat, der macht weiter wie bisher.</p>
+<p>Allerdings könnte solches Weitermachen Vorteile verschenken. Neulich habe ich ja schon geschrieben, wie der heutige Erfolg der Feind des Besseren ist. Aber da muss jeder für sich wissen, ob er besser werden will.</p>
+<p>Wie könntest du mit der Flow Runtime besser werden?</p>
+<ol>
+<li>
+<p>Du sparst dir Verdrahtungscode für EBC. Statt dafür Klassenhierarchien aufzubauen, also C# Code zu schreiben, schreibst du die Flows in der Flow Runtime DSL runter. Das ist kürzer, übersichtlicher und kann vom Visualizer auch noch in ein Diagramm verwandelt werden.</p>
+</li>
+<li>
+<p>Du sparst dir für den Verdrahtungscode die Dependency Injection.</p>
+</li>
+<li>
+<p>Du musst eben nicht für jede Operation eine Klasse schreiben, sondern kannst Prozeduren und Funktionen benutzen. Das spart einigen Aufwand.</p>
+</li>
+<li>
+<p>Du kannst mit der Flow Runtime schon länger auch EBC Operationen in Flows nutzen. Die Runtime verdrahtet automatisch.</p>
+</li>
+<li>
+<p>Mit der Runtime kannst du Flows deklarativ async und parallel machen.</p>
+</li>
+<li>
+<p>Mit der Runtime bekommst du Exception Handling mittels Causalities. D.h. wenn in einem Flow - auch einem asynchronen - irgendwo eine Ausnahme auftritt, dann wird die gefangen und kann in einem eigenen Flow verarbeitet werden.</p>
+</li>
+<li>
+<p>Mit der Flow Runtime bekommst du - wie neulich in einem Beitrag beschrieben - sehr einfache Verteilung.</p>
+</li>
+</ol>
+<p>Aber wenn dir das nicht genug ist oder du die Flow Runtime als überkandidelt empfindest, dann mach weiter mit EBC. Das ist kein Problem. Nur, bitte, verlange nicht von allen anderen auch, dort stehenzubleiben. Das wäre schade. Denn dann hätten wir uns ja auch nicht von C# 1.0 zu C# 5.0 entwickelt. Dann hättest du keine Lambda Ausdrücke und kein Linq. Wäre auch schade, oder?</p>
+<p>Und was das Console Szenario angeht: Das ist eben einfach hier darzustellen. Keine Infrastrukturkenntnisse nötig. Wenn du aber über EBC in Zusammenhang mit anderen Technologien sprechen möchtest, poste doch etwas in der Google oder XING Gruppe dazu.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-01-04):</p>
+<p>@thomass: Noch eins zu "So macht man das mit EBC": Wenn du meine Beiträge und die von Stefan Lieser in der dotnetpro verfolgst, dann siehst du eine Menge von Anregungen von "so macht man das" mit Flow Design - und inzwischen auch mit der Flow Runtime.</p>
+<p>Die Szenarien, die er und ich beschreiben, sind weit gefächert. Zu MVP kannst du da zum Beispiel lesen. Oder zu Verteilung.</p>
+<p>Und ansonsten: EBC/FD muss man auch nicht überbewerten. Wie man ein Domänenmodell macht, hat damit erstmal nichts zu tun. Oder ob und wie du mit einem ORM umgehst, hat damit auch nichts zu tun.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-01-04):</p>
+<p>@thomas:
+schau dir das einmal an https://github.com/Vanaheimr/Balder</p>
+<p>oder was dieser Herr zu sagen hat
+http://www.infoq.com/interviews/meijer-big-data</p>
+<p>oder das hier http://channel9.msdn.com/Shows/Going+Deep/Stephen-Toub-Inside-TPL-Dataflow</p>
+<p>Ich finde es gibt interssante Herren (und viele mehr, inkl. ralfw), Themen, Ansätze und Lösungen und manchmal verbreiten Menschen Ideen und Hintergrundinformationen. Die Software steht nie still - vielleicht der aktuelle Kontext. Blogs lesen, Ausprobieren, Code lesen, versuchen am Ball zu bleiben und zu lernen - neugierig bleiben und Spass haben.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-01-06):</p>
+<p>Ah... now I get the picture :)</p>
+<p>Muss ja fast behaupten, dass ich so etwas ähnliches schon gemacht habe, allerdings ist mir der Ansatz mit den Flows noch etwas unbekannt.</p>
+<p>Das "Verdrahten" hatte ich regulär per Code gelöst, aber die Einzelteile ebenfalls relativ entkoppelt erstellt.</p>
+<p>Super, jetzt darf ich mal wieder was lernen ;)</p>
+<p>"Pánta chorei kaì oudèn ménei" (Wikipedia sei Dank)</p>
+<p><em>Thumbs up</em></p>
+<hr />
+<p><strong>(anonym)</strong> (2013-04-05):</p>
+<p>Hat sich schon einmal jemand FlowDesign im Kontext von Go (golang) angeschaut? Leider bin ich sowohl bei Go als auch FD erst am Anfang des Lernweges aber sehe hier fiel nutzbares 'out of the box'
+E.g. kennt Go multiple Rueckgabewerte, functions als values, die demnach auch fliessen koennen und die einfachen channels fuer den Datenfluss. Ich werde mich gerne einmal daransetzen und vielleicht klinkt sich ja jemand ein.
+p.s.: ich habe verstanden, dass FD cross-3GL ist aber vielleicht ist Go ja besonders gut geeignet und da 'neu' auch noch nicht so dogmatisiert wie z.B. Java in my opinion.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-04-05):</p>
+<p>@Harald: Ich hab neulich auch mal in Go reingeschaut. Sah ganz ordentlich aus ;-) FD geht damit. Das sehe ich auch so.</p>
+<p>Und mit Ruby und JavaScript ebenfalls :-)</p>
+<p>Java tut sich allerdings schwer. Functions sind da keine first class citizens. Ist halt zu alt die Sprache :-)</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-04-09):</p>
+<p>ich glaube ich setze mich heute Abend daran, vielleicht auch in Form eines blogs, meine Versuche Go und FD zu kombinieren zu dokumentieren. Vielleicht ergibt sich daraus ja eine weiterfuehrende, interessante Diskussion. Wird zwar etwas schmerzhaft, da ich auf dem irischen Land nur eine 1MB Leitung habe aber was tut man nicht alles fuer die Leidenschaften :-) der Anfang wird zwar Go lastiger um darin eine Basis zu schaffen aber ich denke bereits da koennen sich Kommentare zu FD ergeben.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

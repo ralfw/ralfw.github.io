@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Code cleaning – aber wann? [endlich-clean.net] — ralfw.de Archiv</title>
+<meta name="description" content="Neulich habe ich ein hübsches Scrum-Buch gelesen: Scrum mit User Stories. Darin gibt es eine “Definition of Done”. Die beschreibt, wann ein User Story (Anforderung) eigentlich vom ">
+<link rel="canonical" href="https://ralfw.de/archiv/2009/code-cleaning-aber-wann-endlich/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Code cleaning – aber wann? [endlich-clean.net] — ralfw.de Archiv">
+<meta property="og:description" content="Neulich habe ich ein hübsches Scrum-Buch gelesen: Scrum mit User Stories. Darin gibt es eine “Definition of Done”. Die beschreibt, wann ein User Story (Anforderung) eigentlich vom ">
+<meta property="og:url" content="https://ralfw.de/archiv/2009/code-cleaning-aber-wann-endlich/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Code cleaning – aber wann? [endlich-clean.net]</h1>
+    <div class="doc-meta"><span>22. Aug. 2009</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2009/08/code-cleaning-aber-wann-endlich.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2009/code-cleaning-aber-wann-endlich/</code></span></div>
+    <div class="art"><p><a rel="noopener" href="http://www.amazon.de/Scrum-User-Stories-Ralf-Wirdemann/dp/3446416560/ralfwestphalh-21"></a> Neulich habe ich ein hübsches Scrum-Buch gelesen: <a rel="noopener" href="http://www.amazon.de/Scrum-User-Stories-Ralf-Wirdemann/dp/3446416560/ralfwestphalh-21">Scrum mit User Stories</a>. Darin gibt es eine “Definition of Done”. Die beschreibt, wann ein User Story (Anforderung) eigentlich vom Team als fertig anzusehen ist. Denn erst wenn sie fertig ist, kann das Team mit der nächsten in einem Sprint weitermachen.</p>
+<p>Ein Kritierium für “Done” ist darin: “<em>Die User Story führt zu keinem Anstieg der ‘Technischen Schuld’”.</em>Das hört sich gut an. Da hab ich bei der Lektüre sofort zustimmend genickt. An anderer Stelle ist es so formuliert: <em>“[Nicht] refaktorisierte User Stories [sind] nicht fertig.”</em></p>
+<p>Dass zu fertig die Refaktorisierung gehört, steckt auch im TDD-Vorgehen <a rel="noopener" href="http://jamesshore.com/Blog/Red-Green-Refactor.html">red-green-refactor</a> drin.</p>
+<p>Also ist alles klar, oder? Fertig bedeutet refaktorisiert. Ein Entwickler fühlt sich nicht wohl, bevor der Code nicht sauber gemacht ist. Erst dann gibt er ihn guten Gewissens an die nächste Phase im Softwareproduktionsprozess weiter. Das ist Clean Code Development.</p>
+<p><a rel="noopener" href="http://www.clean-code-developer.de"></a></p>
+<p>Oder vielleicht doch nicht? Heute sind mir nämlich Zweifel gekommen.</p>
+<p>Nein, ich zweifle nicht am Wert von Clean Code. Refaktorisierung ist ne gute Sache. Aber wann? Sollten sie am Ende einer Implementierungsphase stehen? Nein!</p>
+<p><strong>Es ist ein Missverständnis, mit Refactoring eine Implementation abschließen zu wollen.</strong> Ich glaube, wenn man einen kleinen Moment drüber nachdenkt, dann ist das auch ganz einsichtig. Refaktorisierter Code ist ein Feature von Software. Er steht im Grunde auf derselben Stufe mit Funktionalität oder Performance. Nur fordert dieses Feature nicht der Anwender, sondern das Entwicklerteam.</p>
+<p>Refaktorisierung unterliegt damit genauso den Prinzipien YAGNI, KISS und Beware of Premature Optimization!</p>
+<p>Wenn ein Entwickler auf dem Zettel hat, die Multiplikation für einen Taschenrechner zu implementieren, dann ist seine Arbeit fertig, wenn er die Multiplikation korrekt aus Sicht des Kunden implementiert hat. Wenn er darüber hinaus jedoch auch noch nach dieser getanen Arbeit refaktorisiert, dann halte ich das für eine vorzeitige Optimierung. Niemand weiß, ob der refaktorisierte Zustand der Anwendung irgendwann mal nützlich wird. Vielleicht fällt dem Kunden ein, dass er die Multiplikation nicht braucht und alles per Addition rechnet. Dann ist der Refaktorisierungsaufwand vergebens gewesen.</p>
+<p><strong>Ein refaktorisierter Zustand ist daher genau wie jedes andere Feature erst dann herzustellen, wenn wirklich klar ist, dass es gebraucht wird.</strong> Das bedeutet, die Arbeit an der inneren Qualität findet vor (!) der Arbeit an der äußeren Qualität statt. Das wird auch klar, wenn wir den TDD-Prozess verlängern und etwas anderes notieren:</p>
+<ul>
+<li>red-green<ul>
+<li>refactor-red-green</li>
+<li>refactor-red-green</li>
+<li>refactor-read-green</li>
+<li>…</li>
+</ul>
+</li>
+</ul>
+<p>Refactor steht in der kurzen Phase “red-green-refactor” nur am Ende, weil impliziert wird, dass es danach weitergeht. Insofern finden während der Implementation eines äußeren Features natürlich immer auch Refaktorisierungen statt.</p>
+<p>Ich halte es jedoch für sehr bedenkenswert, am Ende (!) nicht ruhen zu wollen, bevor nicht “alles” so richtig sauber ist. <strong>Stattdessen sollte der Entwicklungsprozess vorsehen, dass zu Beginn (!) der Arbeit an äußerer Qualität zuerst die nötige innere Qualität hergestellt wird. Und zwar nur die wirklich nötige innere Qualität!</strong></p>
+<p><strong>Ohne ein Maß kann Refaktorisierung genauso zur Sucht werden wie Performanceoptimierung.</strong> Wenn also Performanceoptimierung nur stattfinden soll mit konkreter Zielvorgabe (“Die Suche nach einem Kunden darf höchstens 1 Sekunde dauern.”), dann soll auch Refaktorisierung nur mit konkreter Zielvorgabe stattfinden.</p>
+<p>In Ermangelung quantifizierbarer Refaktorisierungsziele ist deshalb die Zielvorgabe einer Refaktorisierung eine innere Qualität, die die Implementation des nächsten Kundenfeatures leicht macht. Was dafür nötig ist, ist allerdings erst klar, wenn die Arbeit an diesem Kundenfeature beginnt.</p>
+<p>Ich denke daher, die Arbeit an einer User Story sollte so definiert sein:</p>
+<ul>
+<li>Plane Implementation der User Story bzw. einer Task innerhalb der User Story<ul>
+<li><strong>Refaktorisiere vorhanden Code vor Beginn der Implementation nach Bedarf</strong></li>
+<li>Implementiere mittels refactor-red-green</li>
+<li>Liefere User Story bzw. Task aus</li>
+</ul>
+</li>
+</ul>
+<p>Am Ende des letzten kleinen refactor-red-green-Schrittes bleibt dann zwar etwas <a rel="noopener" href="http://en.wikipedia.org/wiki/Technical_debt">technical debt</a> übrigen, aber das macht nichts. Solange keine weitere Anforderung existiert (oder genauer: keine weitere User Story/Task begonnen wurde), wüsste ja niemand, welchem Zweck eine weitere Refaktorisierug dienen sollte.</p>
+<p>Die ursprüngliche “Defintion of Done” ist damit sogar fast erfüllt. Zwar ist der Code nicht ohne “Technische Schuld”, aber die ist verschmerzbar klein, nein, sogar unvermeidbar, wenn Sie nicht in Bezug auf CCD in die YAGNI-Falle tappen wollen.</p>
+<p>Nur so ist sichergestellt, dass die CCD-Bausteine konsequent, d.h. selbstbezüglich angewandt werden. CCD-Bausteine sind kein Selbstzweck und müssen mit Augenmaß angewandt werden.</p>
+<h2>Kommentare</h2>
+<p><strong>Andreas Heil</strong> (2009-08-22):</p>
+<p>Das Problem, dass Du hier ansprichst ist ein typisches Problem, dass in der Natur der Software-Entwickler liegt. Entwickler lieben es Code zu schreiben, denn das ist es was sie beherrschen, das ist das was ihnen Spaß macht. Dadurch wird auch allzu gerne das KISS Prinzip verletzt. Der Software-Entwickler schreibt komplizierten Code weil er es beherrscht und weil es ihm Spaß macht. Und wer erst einmal Spaß am Refactoring gefunden hat wird es einsetzen, weil er es beherrscht und weil es ihm Spaß macht. Augenmaß ist hier sicherlich ein wichtiger Aspekt, aber auch die Fähigkeit zuzugeben wann „genug“ ist.</p>
+<hr />
+<p><strong>nsteenbock</strong> (2009-08-23):</p>
+<p>Hm,
+also mit diesem Standpunkt "Refactoring vor Implementierung" kann ich irgendwie nicht recht warm werden.</p>
+<p>Dazu müsste man ja schon ein paar Annahmen machen:
+1. Das Refactoring des bestehenden Codes dauert auch nach x Monaten genauso lange wie direkt nach dessen Implementierung.
+2. Bestenfalls ist immer derselbe Entwickler am gleichen Code beschäftigt(fremden Code zu refaktorieren ist sicherlich weniger einfach als den eigenen).
+3. Beim Kunden treten keine Fehler auf. Spätestens dann profitiere ich direkt vom "verfrühten Refactoring".</p>
+<p>Klar, wenn man mit einer Codebasis arbeitet, die schon 90% clean ist und die Stories mit TDD entwickelt, mag das verschieben des Refactorings funktionieren bzw. nicht ganz so tragisch sein. Es aber pauschal vor die Implementierung zu setzen halte ich für keine gute Idee.</p>
+<p>Sicherlich muss man nicht direkt arichtektionische Refactorings vornehmen, um erweiterbar zu machen, was nie erweitert wird. Aber ein mindestmass an innerer Qualität sollte m.E. nach beim Verlassen der Baustelle schon hergestellt werden.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-08-23):</p>
+<p>@nsteenbock: Dass du beim "Pre-factoring" ;-) ein schlechtes Gefühl hast, verstehe ich. Es ist ein ungewohnter Gedanke. Aber ich glaube, am Ende bist du gar nicht weit davon entfernt.</p>
+<p>Zu deinen Punkten:</p>
+<ol>
+<li>
+<p>Refactoring dauert natürlich nicht immer gleich lang. Aber gerade deshalb sollte eben nur soviel refaktorisiert werden, wie nötig. Wieviel das ist, ist nur unmittelbar vor (!) einer Implementation klar. Nach einer Impl. fehlt der Maßstab und es droht Refaktorisierung bis zur Perfektion. Denn wann ist man denn wirklich fertig?</p>
+</li>
+<li>
+<p>Refaktorisierungen profitieren davon, wenn sie eben nicht vom Urheber des riechenden Codes durchgeführt werden. Denn wenn der Mühe hat, sich einzuarbeiten, dann ist es gerade angezeigt zu refaktorisieren. Auch hier weiß dieser Entwickler aber erst bei anstehender Aufgabe, wieviel da wirklich nötig ist.</p>
+</li>
+<li>
+<p>Eine Refaktorisierung behebt keine Fehler. Insofern profitiert man "beim Kunden" davon nicht.</p>
+</li>
+</ol>
+<p>Unit Tests einbauen während der Implementation, ist kein Refactoring.</p>
+<p>Insbesondere bei Brownfield-Anwendungen ist es doch sonnenklar, dass eine Refaktorisierung vor (!) weiterer Entwicklung von Features stattfinden muss.</p>
+<p>Auch bei der von mir vorgeschlagenen Schrittfolge mit Refaktorisierungen vor (!) der Implementierung steht am Ende kein verquarztes System. Bitte schau nochmal genau hin: Vor der Impl. wird refaktorisiert, was nötig ist, um sie leicht beginnen zu können. Dann wird aber auch während (!) der Impl immer wieder refaktorisiert: refactor-red-green...</p>
+<p>Am Ende kommt also ein System raus, bei dem quasi nur ein relativ kleines Abschlussrefactoring fehlt. Aber das halte ich gerade für wichtig, weil diese kleine Refaktorisierung nicht durch eine folgende Impl. ausbalanciert ist. Sie droht daher nicht klein zu bleiben, sondern sich zu einem Rundumschlag auszuweiten.</p>
+<p>Deshalb Refaktorisierung vor die Implementation stellen.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Thomas Vidic</strong> (2009-08-23):</p>
+<p>Hallo,</p>
+<p>zur Zeit versuche ich das folgende:
+... - refactor red green refactor - refactor red green refactor - ..., wobei das "refactor" vor dem "red" den nächsten Test bzw den Einbau des nächsten Features erleichern soll, wärend das "refactor" nach dem "green" die eben verursachte Unordnung aufräumen soll.</p>
+<p>Dabei ist aber zu beachten, dass ich ziemlich viel Fake-it, Hacks usw. benutze, um möglichst schnell auf "green" zu kommen und dabei eine ganze Menge duplizierter Code entsteht... Die beiden "refactor"-Phasen scheinen also eine unterschiedliche Qualität zu haben. Aber richtig zu Ende reflektiert habe ich mein Vorgehen noch nicht, werde daher dein YAGNI für Refactorings mal im Kopf behalten... :-)</p>
+<p>Grüße,
+Thomas</p>
+<hr />
+<p><strong>nsteenbock</strong> (2009-08-23):</p>
+<p>@Ralf</p>
+<p><strong><em>3. Eine Refaktorisierung behebt keine Fehler. Insofern profitiert man "beim Kunden" davon nicht.</em></strong></p>
+<p>Natürlich behebt man durch Refaktorieren keine Fehler. Man kann jedoch durch gut strukturierten Code die Zeit zum Auffinden und Beheben der Fehler teilweise drastisch reduzieren.</p>
+<p><strong><em>Insbesondere bei Brownfield-Anwendungen ist es doch sonnenklar, dass eine Refaktorisierung vor (!) weiterer Entwicklung von Features stattfinden muss.</em></strong></p>
+<p>Richtig. Wenn ich ein neues Feature implementiere, sehe ich mir zuerst den bestehenden Code an. Bei einer Methode mit beispielsweise 200 Zeilen versuche ich erst einmal einzelne Blöcke zu bilden und daraus Methoden zu extrahieren.
+An dem Punkt habe ich durch ganz einfache Refaktorierung meist eine Methode, die nahzu 1:1 einem Struktogramm oder PAP gleicht und aus 4 oder 5 Methodenaufrufen besteht.
+Mit etwas Glück greift mein neueres Feature schon in dieser obersten Methode und ich muss nicht gleich jede der neuen Methode bis ins kleinste weiter zu refaktorieren - oder würdest Du bzw. man das an diesem Punkt sowieso machen?</p>
+<p>Jetzt stehe ich da und habe vor meiner Implementierung ein Methode quasi "struktogrammisiert", fehlende Funktionalitäten ergänzt und lasse u.U. etwas zurück, was sich wieder nur halb zu einem Struktogramm umsetzen lässt.</p>
+<p>Vielleicht verdeutlicht das ein wenig mein Problem mit "kein Refactoring nach dem letzten Grün".</p>
+<p>Man muss denke ich auch wieder ein wenig zwischen den verschiedenen Arten von Refactorings unterscheiden.</p>
+<p>Grüsse,</p>
+<p>Nils</p>
+<p>P.S.: Thomas Ansatz geht da schon mehr in eine mir angenehme Richtung :)</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

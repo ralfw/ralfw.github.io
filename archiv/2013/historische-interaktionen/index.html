@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Historische Interaktionen — ralfw.de Archiv</title>
+<meta name="description" content="Die erste Frage bei der Überführung von Anforderungen in Code sollte den Interaktionen gelten: Welche Interaktionen braucht ein Softwaresystem? Das bedeutet, welche technischen Ere">
+<link rel="canonical" href="https://ralfw.de/archiv/2013/historische-interaktionen/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Historische Interaktionen — ralfw.de Archiv">
+<meta property="og:description" content="Die erste Frage bei der Überführung von Anforderungen in Code sollte den Interaktionen gelten: Welche Interaktionen braucht ein Softwaresystem? Das bedeutet, welche technischen Ere">
+<meta property="og:url" content="https://ralfw.de/archiv/2013/historische-interaktionen/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Historische Interaktionen</h1>
+    <div class="doc-meta"><span>24. Juli 2013</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2013/07/historische-interaktionen.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2013/historische-interaktionen/</code></span></div>
+    <div class="art"><p>Die erste Frage bei der Überführung von Anforderungen in Code sollte den Interaktionen gelten: Welche Interaktionen braucht ein Softwaresystem? Das bedeutet, welche technischen Ereignisse [1] sind domänenrelevant und müssen verarbeitet werden?</p>
+<p>Im einfachsten Fall bedeutet das, hinter jedem Menüpunkt und jeder Schaltfläche steht eine Interaktion. Löst der Anwender sie aus, soll im Softwaresystem etwas passieren.</p>
+<p>Für mich beginnt die Softwareentwicklung also mit einer Diskussion über die Schnittstellen des Softwaresystems zur Umwelt. Dort finden Interaktionen mit Benutzern statt - seien das Menschen, andere Software oder Maschinen. Von dort treibe ich den Softwareentwurf nach innen weiter: outside-in design. Denn alle Strukturen im Softwaresystem müssen einem Bedarf in der Umwelt dienen, der über eine Schnittstelle vermittelt wird.</p>
+<p>Wie der Entwurf nach Fund einer Interaktion dann bis zum Code fortschreiten kann, will ich hier nicht thematisieren. Von mir aus kann man das streng mit Test-Driven Design versuchen.</p>
+<p>Entscheidend ist vielmehr, dass Interaktionen einen idealen Ansatzpunkt für jegliches weiteres Vorgehen bieten. Jede Interaktion kann nämlich als Funktion codiert werden [2].</p>
+<p>Beispiel Benutzeranmeldung: Die Benutzeranmeldung erfolgt über einen Dialog, in dem der Anwender seinen Benutzernamen und ein Passwort einträgt. Dann drückt er die Schaltfläche “Anmelden”, um die Authentifizierung und Autorisierung anzustoßen.</p>
+<p>Die Schaltfläche steht für die Interaktion “Anmelden”. Und die Interaktion kann als Funktion <em>bool Anmelden(string benutzername, string passwort)</em> realisiert werden.</p>
+<p>Alternativ könnte die Interaktion durch einen Menüpunkt oder einen Tastatur-Shortcut ausgelöst werden. Das technische Ereignis ist letztlich unwichtig. Wichtig ist, was daraufhin passiert, das Verhalten des Softwaresystems. Und das kann komplett in einer Funktion gekapselt werden. Immer.</p>
+<p>Soweit der Blick mit unbewaffnetem Auge.</p>
+<h3>Interaktionen unterscheiden</h3>
+<p>Jetzt aber die Lupe zur Hand genommen. Da zeigen sich nämlich Unterschiede in den Interaktionen bzw. Interaktionsfunktionen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/0b3f334b3941fc17.png" /></p>
+<p><strong>Reinheitsgrad</strong>: Ich denke, es lohnt sich die Unterscheidung zwischen <em>reinen</em> und <em>unreinen</em> Interaktionen. Reine Interaktionen arbeiten nur auf Daten, die ihnen übergeben werden. Beispiel: Wenn ich in einem Dialog einen Text eingeben kann, der auf Knopfdruck umgekehrt wird, damit ich sehen kann, ob ein Palindrom vorliegt, dann steht dahinter eine reine Interaktionsfunktion. Der oben skizzierte Anmeldedialog hingegen stößt eine unreine Interaktionsfunktion an. Mit Benutzername und Passwort allein kann nicht authentifiziert werden; dazu ist mindestens noch ein Verzeichnis von Benutzern nötig.</p>
+<p><strong>Verhaftungsgrad</strong>: Unreine Interaktionen zerfallen für mich darüber hinaus noch in solche, die <em>zeitlich verhaftet</em> sind - und solche, die quasi <em>nur im Moment leben</em>.</p>
+<p>Zeitlich verhaftete Interaktionen benötigen für ihre Arbeit ein Gedächtnis. Ihnen ist die Vergangenheit wichtig - zumindest in Form eines akkumulierten Zustands. Man könnte auch sagen, sie seien historisch determiniert. Denn ihr Verhalten hängt nicht nur vom aktuellen Input ab, sondern von vorherigem Verhalten des Softwaresystems.</p>
+<p>Der Anmeldedialog ist dafür ein Beispiel. Ob er einen Benutzer erfolgreich authentifiziert oder nicht, hängt davon ab, welche Veränderungen vorher am Benutzerverzeichnis vorgenommen worden sind.</p>
+<p>Anders ist das bei Interaktionen, die zwar auch nicht nur auf ihrem Input arbeiten, sondern weitere Ressourcen brauchen. Doch da ist deren Geschichte nicht wichtig. Sie wird nicht in die Verarbeitung mit einbezogen.</p>
+<p>Das ist zum Beispiel der Fall, wenn eine Interaktion etwas druckt oder Input mit der aktuellen Systemzeit vergleicht.</p>
+<p><strong>Zugriffsart</strong>: Unreine Interaktionen, die nur im Moment leben, können auf ihre Ressourcen <em>lesend</em> oder <em>schreibend</em> zugreifen. Sie interessieren sich nicht für die Vergangenheit, also dürfen sie Zustand auch einfach verändern. An der Ressource ist anschließend nicht abzulesen, in welchem Zustand sie vorher war.</p>
+<p>Aber wie ist das bei unreinen verhafteten Interaktionen?</p>
+<p>Ich glaube, hier sollten wir umdenken. Bisher ist dort auch lesender und schreibender Zugriff erlaubt - ohne dass vorherige Zustände erhalten blieben.</p>
+<p>Aus Effizienzgründen war das bisher so. Wir konnten nicht anders oder haben das zumindest geglaubt. Doch es hat immer schon der Natur dieser Interaktionen widersprochen.</p>
+<p>Das haben wir schmerzvoll erfahren, wenn wir Mühe hatten undo/redo zu implementieren oder Daten mit Geltungsdauern zu verwalten oder historische Daten zu pflegen oder wir uns mit der Versionierung von Datenstrukturen herumschlagen mussten.</p>
+<p>Wenn wir nun aber mal von eingefahrenen Mustern Abstand nehmen, dann können wir mit solchen Interaktionen natürlicher umgehen. Das bedeutet für mich, dass bei “historischen Interaktionen” nur <em>lesender</em> und <em>anfügender</em> Zugriff erlaubt sind. Es gibt keinen schreibenden im Sinne von verändernden Zugriff. Denn der würde ja die Geschichte umschreiben.</p>
+<p>Die Geschichte, das ist die Liste der Veränderungen, die zum aktuellen Stand der Daten geführt hat. Ja, ich glaube, die sollte unangetastet bleiben. Wir können davon nur profitieren.</p>
+<h3>Fazit</h3>
+<p>Nicht jede Interaktion ist zeitlich verhaftet. Wir tun also gut daran, genauer hinzuschauen. Die Unterscheidung zwischen Interaktionsfunktionen mit und ohne Seiteneffekt finde ich jedoch zu einfach. Denn Seiteneffekte können sehr unterschiedlich sein.</p>
+<p>Die Ausgabe auf einem Drucker ist etwas anderes, als die Fortschreibung von Unternehmensdaten in einer Datenbank. Event Sourcing scheint mir in dieser Hinsicht ein sehr probates Mittel, um Klarheit zu schaffen.</p>
+<p>Interaktionen, die mit Zustand zu tun haben, der sich über die Lebenszeit eines Softwaresystems durch das Softwaresystem entwickelt, sollten sich dafür ein Gedächtnis bewahren. Das ist für mich der neue Default.</p>
+<p>Und damit dieser Default nicht über Gebühr verstört, sollte klar sein, wo er gilt. Das sind nur die “historischen Interaktionen”. Alle anderen - auch wenn sie Seiteneffekte haben - können weiter wie bisher gehandhabt werden.</p>
+<p>PS: Natürlich können unreine Interaktionen auch gemischter Art sein: Sie können aus Wiedergabe und Seiteneffekt oder aus Lookup und Aufzeichnung bestehen usw.</p>
+<p>In jedem Fall sollten diese Aspekte aber in eigenen Funktionen gekapselt sein. Das Integration Operation Segregation Principle (IOSP) gilt auch hier.</p>
+<h4>Endnoten</h4>
+<p>[1] Technische Ereignisse sind Tastendrücke, Mausklicks/-bewegungen oder Notifikationen von Timern oder Geräten.</p>
+<p>[2] Die Schnittstelle zwischen Umwelt und Domäne nehme ich von dieser Funktion aus. Die Interaktionsfunktion kümmert sich nicht darum, woher ihre Input-Daten kommen und was mit ihren Output-Daten gemacht wird. Sie kennt die Schnittstelle nicht, über die sie aufgerufen wird. Das kann ein WPF-Dialog oder ein Webservice sein.</p>
+<p>Es ist also nicht Sache einer Interaktionsfunktion, sich Daten aus Eingabefeldern des UI zu beschaffen oder Ergebisse im UI, über das sie aufgerufen wurde, anzuzeigen.</p>
+<h2>Kommentare</h2>
+<p><strong>Mike Bild</strong> (2013-07-24):</p>
+<p>Rein/Unrein, Resource/Historie, Reinheitsgrad, Verhaftungsgrad, Zugriffsart... mal machen - mal nicht. Warum so kompliziert? Warum sofort Kompromisse?</p>
+<p>Gerade Early-Stage ist es IMHO doch schwer zu entscheiden. Heute ist es nur ein Klick (System-Interaction) morgen ist es ein Business-Value wie "most user interested product item -&gt; recommendation to other users"</p>
+<p>Wer wieder einmal die "Performanz-Angst-Mütze" trägt... Einfach mehrere "kleine" Event-Sources / Stores anlegen. Partitioning / Sharding und Joining sind auch bei Event-Streams möglich und sinnvoll ;).</p>
+<p>Und hier auch mal die Frage - Wie viele Events werden den in einer Source erzeugt? 100 - 1000 - 10000? Wie lange dauert eine In-Memory Iteration durch 10.000 Events? Wie schnell ist der Projektion- / MapReduce- Algorithmus? Macht eine "Vorberechnung" mit Ergebnis in einen anderen Event-Stream Sinn?</p>
+<p>Ja Event-Streams / Sources / Stores sind der "default" in Early Stage! Nach besserem Verständnis der Domäne machen Verbesserungen und Optimierung hin zu "Struktur" - in ein relationales oder auch OO Modell - absolut Sinn.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-07-24):</p>
+<p>Wenn ein Klick keinen Business Value hat, dann sollte er nicht behandelt werden.</p>
+<p>Aber nicht hinter jedem Klick hängt gleich alles. Darum geht es mir.</p>
+<p>Implementierung ist möglich ohne Klassen.
+Implementierung ist auch möglich ohne universelles Datenschema.</p>
+<p>Aber Implementierung ist nicht möglich, wenn ich nicht weiß, was getan werden soll.</p>
+<p>Was aber getan werden soll, das ist durchaus unterschiedlich. Darum geht es mir. Ein bisschen Blick dafür entwickeln, dass eben nicht "alles" gleich mit Event Sourcing zu tun hat bzw. haben muss.</p>
+<p>Und mir geht es auch darum, den mystischen "Seiteneffekt" zu entzaubern. Da ist eben nicht alles gleich. Auf einen Drucker ausgeben - ja, das ist ein Seiteneffekt. Aber aus einer Lookup-Tabelle einlesen, das ist keiner. Nur weil also Daten über Input hinaus im Spiel sind, gibt es nicht unbedingt Seiteneffekte.</p>
+<p>Und dann ist Zustand eben auch nochmal etwas anderes. Also die Daten, die sich über die Zeit wandeln.</p>
+<p>Ein differenzierter Blick ist von Vorteil. Was nix zu tun hat mit BDUF. Auch Event Sourcing ist kein Ersatz für Nachdenken.</p>
+<p>Und warum du aus meinem Artikel Performance-Angst herausliest, verstehe ich nicht. Ich habe die bestimmt nicht.</p>
+<p>Wenn ich mir nun noch ein bisschen Mühe gebe, dann höre ich bei dir aber ein ganz anderes Argument heraus. Das lautet: "Man muss nicht zwischen Inputs/Interaktionen unterscheiden. Events gibt es immer."</p>
+<p>Da wäre ich dann auch dabei. Nur darum ging es mir hier nicht. Eins nach dem anderen. Erstmal den Zustand, der heute in Datenbanken verklumpt liegt, in ein Datengranulat verwandeln.</p>
+<p>Und im zweiten Schritt, orthogonal dazu, dann überlegen, ob nicht alles, was überhaupt "auf ein Softwaresystem einprasselt" gleich in einen Event Store kann.</p>
+<p>Dann wären Schnittstellen von der Logik durch einen Event Store generell entkoppelt. Dann gäbe es nicht nur eine Liste interner Events/Zustandsänderungen/Differenzen, sondern auch eine Liste externer.</p>
+<p>Letztlich bräuchte es sogar keine andere, da alle internen Events aus externen hervorgehen. Insofern ist der übliche Event Store sogar schon eine Optimierung :-), wenn man aus ihm Aggregate "aufbläst".</p>
+<p>But I´m getting carried away... ;-)</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-07-24):</p>
+<p>Klaro - differenziert betrachtet ist nicht jede System-Umwelt-Interaktion "würdig" für die Aufzeichnung in einen Event-Store. Sicher sollte hier und da unterschieden werden. Einen Event in einen "internen" Event-Aggregator zu "schicken" macht Sinn. Hier entscheide ich Event-Store oder nicht. Note: In Node.JS gibt es einen schönen Ansatz des Event-Emitter für "externe" also I/O Events.</p>
+<p>"Performance-Angst" hatte ich frei als häufige Entscheidung "... nicht alles gleich mit..." Event-Sourcing interpretiert. Die Performanz-Keule ist halt ein gern verwendetes Argument. :-/ Richtig - Du hast in deinem Artikel nichts davon erwähnt. Gut so - Danke!</p>
+<p>Wie auch immer ...</p>
+<p>"Man muss nicht zwischen Inputs/Interaktionen unterscheiden. Events gibt es immer."</p>
+<p>Ja genau! Vor allem dort wo wir "externe" Kommunikation (I/O), heißt UI, DB, Files, ... finden. Das ist IMHO für "don't block - be ever responsive" besonders wichtig. "Blocking &amp; I/O" das ist der Engpass! Dagegen ist 10.000 In-Memory Events zu verarbeiten meist weniger ein Problem. Klar - auch das ist immer abhängig vom Use-Case. Häufig - so objektiv wie möglich betrachtet - jedoch auch nicht ;).</p>
+<p>"... internen Events aus externen hervorgehen ... " &amp; "... Event Store sogar schon eine Optimierung :-), wenn man aus ihm Aggregate "aufbläst"..."</p>
+<p>Ja - der Event-Store ist eine Optimierung. Mit dem Zweck, möglichen Zustand nach bestimmten Regeln zu projizieren. Da möchte jemand "getBLABLA" machen ;). Event-Streams per se kennen das "Damals" / die Historie nicht. Ja das machen erst Event-Stores möglich. Und wenn ich mehrere Event-Stores für interne, externe, Teufel noch was wichtige Events benötige gibt es auch dafür die Option. Ich arbeite z.B. prinzipiell mit mehreren Event-Stores. Und häufig erzeugen meine Projektionen wieder neue Events für andere Event-Stores. So ist ein inkrementelles "aufbauen" (SEDA) von Zustand mit wenig Latenz möglich. Okay - vielleicht auch zu viel an dieser Stelle ;).</p>
+<p>Events Schritt für Schritt erläutert - okay da komm ich mit ;).</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Das Intuitive Datenmodell I — ralfw.de Archiv</title>
+<meta name="description" content="Ich möchte ein neues Datenmodell vorschlagen. Eines, das sich radikal von denen unterscheidet, die Sie täglich in der Softwareentwicklung einsetzen.">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/das-intuitive-datenmodell-i-motivation/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Das Intuitive Datenmodell I — ralfw.de Archiv">
+<meta property="og:description" content="Ich möchte ein neues Datenmodell vorschlagen. Eines, das sich radikal von denen unterscheidet, die Sie täglich in der Softwareentwicklung einsetzen.">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/das-intuitive-datenmodell-i-motivation/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Das Intuitive Datenmodell I</h1>
+    <div class="doc-meta"><span>28. Jan. 2007</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2007/01/das-intuitive-datenmodell-i-motivation.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/das-intuitive-datenmodell-i-motivation/</code></span></div>
+    <div class="art"><p>Ich möchte ein neues Datenmodell vorschlagen. Eines, das sich radikal von denen unterscheidet, die Sie täglich in der Softwareentwicklung einsetzen.</p>
+<p>Ich möchte ein Datenmodell vorschlagen, dass nur noch Werte kennt und keine Referenzen mehr zwischen diesen Werte. Diese konzeptionelle Reduktion macht es ohne Verlust an breiter Einsetzbarkeit in vielen Fällen einfacher zu handhaben als andere Datenmodelle, eröffnet darüber hinaus aber auch ganz neue Perspektiven auf den Umgang mit Daten.</p>
+<p><strong>Motivation</strong>
+Sie haben das Objektorientierte Datenmodell verinnerlicht, denken täglich in den Bahnen des Relationalen Datenmodells, jonglieren mit XML und haben bestimmt auch von anderen (persistenten) Datenmodellen [1,2] gehört wie dem Hierarchischen oder gar dem Assoziativen Datenmodell.</p>
+<p>Diese Datenmodelle haben natürlich alle ihre Berechtigung. Jedes versucht auf seine Weise das Problem zu lösen, Datenzusammenhänge der realen Welt für Software bearbeitbar zu machen. Und das leisten sie grundsätzlich auch.</p>
+<p>Sind die existierenden Datenmodelle deshalb aber perfekt? Könnte die Datenmodellierung nicht für manche oder gar viele Fälle einfacher oder flexibler sein? Ich glaube, ja. Ich glaube, wir sind schon so sehr gerade in die Mainstream-Datenmodelle eingetaucht, dass wir den Schmerz, den sie uns manchmal bereiten, nicht mehr spüren. Sie sind ja auch zumindest so leistungsfähig, dass wir am Ende irgendwie alle Datenmodellierungsprobleme lösen. War das dann allerdings so einfach, wie es hätte sein können?</p>
+<p>Gewöhnlich beantworten Sie diese Frage von einem Standpunkt innerhalb der Menge der existierenden Datenmodelle. Sie überlegen, ob Sie ein Datenschema mit den vorhandenen Mitteln, den Konzepten des gewählten Datenmodells, auch wirklich gut entworfen haben – oder ob vielleicht ein anderes der verfügbaren Datenmodelle etwas geeigneter gewesen wäre.</p>
+<p>Eine verständliche Haltung und die allermeiste Zeit können wir uns auch keine andere leisten. Wir müssen mit den Werkzeugen leben, die wir haben.</p>
+<p>Wenn die Antworten dann aber immer wieder schwer fallen, wenn sie immer wieder lauten, „Ja, ich habe es so gut gemacht, wie es das Datenmodell erlaubt, aber irgendwie ist das Ergebnis trotzdem unbefriedigend“, dann kann es Zeit sein, den Standpunkt zu wechseln und über den Tellerrand zu schauen.</p>
+<p>Solche Antworten sind es nun, die mich angetrieben haben, über die existierenden Datenmodelle hinaus zu denken. Trotz oder wegen aller Vertrautheit mit der Objektorientierung, RDBMS und XML bin ich immer wieder in Situationen geraten, wo ich diese Datenmodelle als umständlich oder beschränkend empfunden habe. Der Grund: sie leiden alle am selben Problem.</p>
+<p><strong>Die Container-Referenz-Dichotomy als Grundproblem</strong>Die existierenden Datenmodelle [1,2] basieren alle auf einer grundlegenden Dichotomie, der zwischen Containern und Referenzen. Sie sind die wiederkehrenden, fundamentalen Konzepte aller Datenmodelle.</p>
+<p>Egal, ob Sie objektorientiert oder relation modellieren, Sie müssen sich immer wieder dieselbe Frage stellen: Fasse ich diese und jene Daten zusammen in einen Container oder soll ich sie lieber auf verschiedene Container aufteilen und dann die Container einander referenzieren lassen?</p>
+<p>Sind die Container Objekte oder Datensätze? Heißen die Referenzen Objektvariable oder Fremdschlüssel? Das sind Feinheiten. Ihre Frage ist trotzdem dieselbe. Und sie ist nicht leicht zu beantworten, denn eine Entscheidung hat weitreichende Folgen:
+- Ob Daten zusammen im selben Container liegen oder nur über Referenzen verbunden sind, hat Einfluss auf die Form des Codes zur Speicherung und zur Abfrage. Das hat wiederum Auswirkung auf die Performance.</p>
+<ul>
+<li>Ob Daten heute zusammen mit anderen in einem Container liegen oder für sich allein, hat Auswirkungen darauf, wie Sie morgen Bezug auf sie nehmen können. Um Daten in neue Zusammenhänge stellen zu können, müssen sie auf den Punkt referenzierbar sein; das sind sie aber nur, wenn sie allein in einem Container stehen. Ihre Entscheidungen für Container und Referenzen haben also Auswirkungen auf die Flexibilität Ihres Datenmodells.</li>
+</ul>
+<p>Zur immer wieder zu fällenden Entscheidung zwischen Container und Referenz tritt eine Beschränkung der Schachtelung von Containern. Sie können Daten in Felder/Spalten stecken, die dann zu Klassen/Tabellen zusammenfassen… und das war´s. Sollten Daten in der Realität jedoch in tieferen Hierarchien stecken, dann müssen Sie sie „flachklopfen“, um sie mit den existierenden Datenmodellen abzubilden. Nur XML macht hier eine Ausnahme, hat aber nicht den Stellenwert als Datenmodell, den Objektorientiertes oder Relationales haben.</p>
+<p>Bei aller Liebe zu den Mainstream-Datenmodellen empfinde ich sie also zunehmend als beschränkend und umständlich. Sie sind leistungsfähig und etabliert… aber für bestimmte Anwendungsfälle scheinen sie mir inzwischen unzeitgemäß:</p>
+<ul>
+<li>Für eine Softwarewelt, in dem immer mehr flexibel und dynamisch passieren soll – die dynamischen Sprachen wie Ruby oder Python sind dafür nur ein Beisiel –, sind ihre Schemata zu starr.
+Für eine Softwarewelt, in der immer mehr ad hoc entwickelt werden soll, weil keine Zeit für lange Planung ist, sind ihre Schemata zu schwer zu entwerfen. Entscheidungen über Datennormalisierung können nur von Fachleuten getroffen werden; der Poweruser ist überfordert.
+Für eine Softwarewelt, in der es immer mehr gilt, „Wissen“ aus schon Vorhandenem zu heben (Datamining), bieten existierende Datenmodelle zuwenig Hilfe bei der Vermeidung oder Auflösung von Dateninseln.</li>
+</ul>
+<p>Soweit die Probleme mit heutigen Datenmodellen aus meiner Sicht. Verstehen Sie, warum ich mich motiviert gefühlt habe, nach einer Alternative bzw. Ergänzung zu suchen? Gefunden habe ich dann schließlich einen Ansatz, den ich das Intuitive Datenmodell nennen möchte.</p>
+<p>Davon mehr im nächsten Artikel dieser Serie.</p>
+<p><strong>Ressourcen</strong>
+[1] UnixSpace, Database Models, <a rel="noopener" href="http://unixspace.com/context/databases.html">http://unixspace.com/context/databases.html</a>
+[2] Mike Prestwood, An Introduction to Object Orientation, <a rel="noopener" href="http://www.prestwood.com/ASPSuite/KB/document_view.asp?qid=100137">http://www.prestwood.com/ASPSuite/KB/document_view.asp?qid=100137</a></p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2007-02-11):</p>
+<p>Folgert nicht die Dualität Container-Referenz aus der beschränkten Kapazität jeglichen Containers?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2007-02-11):</p>
+<p>Warum sollte die Kapazität eines Containers beschränkt sein? Abgesehen mal von irgendeiner physischen Grenze (z.B. Hauptspeicher, Plattenplatz) sind Container nicht per se in ihrer Kapazität beschränkt, wie man an Dateien als Container sehen kann. In einer Datei kann 1 Byte oder ein Terabyte stehen.</p>
+<p>Die Container-Referenz-Dichotomie ist vielmehr ein Resultat der Art von Speicher, mit der wir groß geworden sind. Der erste Speicher, mit dem wir zu tun haben, ist der Hauptspeicher. Und er ist unterteilt in kleinste adressierbare Einheiten, die Bytes.</p>
+<p>Ein Byte ist daher der kleinste referenzierbare Container. (Interessanterweise kann er aber nicht mal selbst eine ganze Referenz enthalten.) Ein Byte ist daher auch der einzige physische Container.</p>
+<p>Alle anderen Container sind logisch, künstlich, willkürlich aufgebaut aus Mengen von Bytes.</p>
+<p>Da sich nun aber der Inhalt eines solchen physischen Containers nicht gleichzeitig in meheren Container aufhalten kann, müssen Container mit Referenzen verbunden werden, wenn mehrere dieselben Inhalte enthalten sollen.</p>
+<p>In den üblichen Speichermodellen haben eben Daten keine Identität, sondern nur die Plätze für Daten. Das (!) ist der Grund für die Container-Referenz-Dichotomie.</p>
+<p>-Ralf</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

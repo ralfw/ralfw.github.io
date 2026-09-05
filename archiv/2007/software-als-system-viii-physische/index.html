@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software als System VIII - Physische Strukturierung — ralfw.de Archiv</title>
+<meta name="description" content="Physische Swolons kann man &quot;sehen und anfassen&quot;. Es sind die Artefakte, mit denen Sie täglich umgehen: Klassen, Assemblies usw. Physische Swolon sind das Ergebnis der Implementatio">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/software-als-system-viii-physische/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software als System VIII - Physische Strukturierung — ralfw.de Archiv">
+<meta property="og:description" content="Physische Swolons kann man &quot;sehen und anfassen&quot;. Es sind die Artefakte, mit denen Sie täglich umgehen: Klassen, Assemblies usw. Physische Swolon sind das Ergebnis der Implementatio">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/software-als-system-viii-physische/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Software als System VIII - Physische Strukturierung</h1>
+    <div class="doc-meta"><span>11. März 2007</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2007/03/software-als-system-viii-physische.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/software-als-system-viii-physische/</code></span></div>
+    <div class="art"><p>Physische Swolons  kann man "sehen und anfassen". Es sind die Artefakte, mit denen Sie täglich umgehen: Klassen, Assemblies usw. Physische Swolon sind das Ergebnis der Implementation von logischen Swolons. Im Gegensatz zu den Modulen ist die Hierarchie der physischen Swolons jedoch vorgegeben. Entwicklungs- und Betriebssystemplattform definieren sie:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a5a59a89c5253b0d.png" /></p>
+<p>Die Hierarchie der physischen Swolons ist wie die der Module durch eine Enthalten-Beziehung definiert: physische Swolons auf einer höheren Ebene enthalten ein oder mehrere physische Swolons der nächst niederen Ebene. In einem Prozess existieren eine oder mehrere AppDomains; in eine AppDomain sind eine oder mehrere Komponenten geladen. Eine Komponente besteht aus einer oder mehreren Assemblies. In einer Assembly sind einer oder mehrere Typen definiert. Ein Typ enthält eine oder mehrere Methoden.</p>
+<p>Eine Modulhierarchie kann beliebig tief sein. Eine physische Hierarchie muss jedoch eine wirklich kleinste, unteilbare Einheit als Blatt haben. Das sind für mich Methoden. Sie sind die elementaren physischen Swolons. Alles beginnt bei ihnen als ersten Trägern von Funktionalität.</p>
+<p>Einzelne Anweisungen sind für mich keine Swolons, weil sie nicht zu Systemen verbunden werden können. Eine Anweisung kann immer nur zwischen zwei anderen stehen. Methoden können jedoch von beliebig vielen anderen genutzt werden. Sie sind echte Einheiten der Wiederbenutzung.</p>
+<p>Das größe physische Swolon ist für mich derzeit ein Prozess. Er ist eine auf Betriebssystemebene klar identifizierbare Codeeinheit.</p>
+<p>Zwischen Prozess und Methode ist die physische Swolarchie aufgespannt. Jede Ebene sieht dabei jedoch anders aus. Waren Module auf allen Ebenen der logischen Hierarchie grundsätzlich gleich, so sind physische Swolons auf allen Ebenen grundsätzlich unterschiedlich:</p>
+<p><strong>Methoden</strong> sind zur Laufzeit nach außen hin reine Funktionalitätsträger und enthalten selbst keinen Zustand, der einen Aufruf überdauert. (Von den früheren statischen Variablen in Methoden bei VB sehe ich an dieser Stelle einmal ab. Es gibt sie aus gutem Grund nicht mehr.)</p>
+<p><strong>Typen</strong> (oder weniger allgemein: Klassen) sind heute die wesentlichen Träger von Funktionalität und Zustand. Ihre Felder enthalten den Zustand, ihre Methoden definieren ihre Funktionalität. Wenn von physischen Swolons die Rede ist, dann allermeistens von ihnen.</p>
+<p><strong>Assemblies</strong> fassen Typen zu größeren Funktionseinheiten zusammen und sind die erste Ebene, auf physische Swolons als binäre Black Boxes betrachtet werden können. Innerhalb eines Prozesses ist eine Assembly ein Singleton; ihre Typen können jedoch grundsätzlich beliebig oft instanziert werden. Assemblies können - anders als Typen und Methoden - Teil mehrerer übergeordneter physischer Swolons sein.</p>
+<p><strong>Komponenten</strong> sind für mich die zentralen Bausteine für Software. Sind sind ebenfalls binäre Black Boxes und bestehen aus mindestens einer, gelegentlich aber auch aus mehreren Assemblies. Die Komponenten einer Software zu identifizieren ist für mich erstes Ziel der Modellierung. Zu ihnen wird noch einiges zu sagen sein. Wenn Komponenten aus mehreren Assemblies bestehen sollten, dann plädiere ich für ihre Zusammenfassung zu einer neuen Komponentenassembly.</p>
+<p>Falls die Zahl der Komponenten einer Software unhandlich groß ist, können sie zu <strong>Superkomponenten</strong> zusammengefasst werden. Das sind für mich Vereinigungen von mehreren Komponentenassemblies zu einer wiederum größeren Superkomponenteassembly. Dieselbe Komponente kann in mehreren Superkomponenten vorkommen. Komponenten sind für mich unverzichtbare Bauteile von Software, Superkomponenten jedoch sind eine optionale Ebene in der physischen Swolarchie. Allerdings sind sie die einzigen physischen Swolons, die rekursiv definiert sind: Superkomponenten können nicht nur Komponenten, sondern auch andere Superkomponenten enthalten. (Es ließe sich argumentieren, dass Superkomponenten dann überflüssig sind, weil doch auch Komponenten rekursiv definiert werden könnten. Im Augenblick scheint mir die Trennung von Superkomponente und Komponente jedoch vorteilhaft, weil Komponenten für mich die zentralen physischen Bausteine von Software sind. Diese ihre Funktion würde ich ungern durch Rekursivität verwässern.)</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/161dd057401ef201.jpg" /></p>
+<p>Ob am Ende eine Komponente, zu der mehrere Assemblies gehören, oder eine Superkomponente bestehend aus mehreren Komponenten wirklich durch nur eine Assembly repräsentiert wird oder nicht, ist mir allerdings weniger wichtig als die Identifikation ihrer physischen Funktionseinheiten. Eine (Super)Komponente bestehend aus mehreren Assemblies kann von mir aus auch durch ein Verzeichnis oder eine ZIP-Datei physisch klar erkennbar von anderen separiert sein.</p>
+<p>Dass Managed Code immer in einer <strong>AppDomain</strong> abläuft, ist für ihn meist unwichtig. Es gibt jedoch Fälle, in denen Komponenten bewusst auf mehrere AppDomains verteilt werden (z.B. Hauptprogramm und Plug-Ins). AppDomains sollten daher in der physischen Swolarchie sichtbar sein. Auch wenn ein Prozess nur die default AppDomain enthält, so ist sie es doch, in die die Komponentenassemblies geladen werden. Aber auch im Hinblick auf die Kommunikation auf dieser physischen Swolarchieebene ist eine Unterscheidung von den darunterliegenden Ebenen wichtig. Doch dazu später mehr.</p>
+<p>Die oberste Ebene der Swolarchie bildet schließlich der <strong>Prozess</strong>, in dem eine oder mehrere AppDomains liegen. Er spannt den physikalischen Addressraum auf, die AppDomains teilen ihn in logische Unteradressräume auf, über die die CLR wacht. Ein Prozess wird durch eine ausführbare EXE gestartet, die ich den <em>Host</em> nennen. Ob der Host durch Sie geschrieben wird oder schon existiert, ist unerheblich. Wichtig ist, dass ein Prozess einen Ort definiert, an dem kleinere physische Swolons zusammengeführt und ausgeführt werden.</p>
+<p>Prozess und AppDomain sind binäre physische Swolons, die eigentlich erst zur Laufzeit existieren. Dennoch sollten sie geplant werden, d.h. zur Entwicklungszeit modellierbar sein. Superkomponente, Komponente und Assembly sind binäre physische Swolons und für mich die wesentlichen Black-Box-Bausteine für Software. Typen und Methoden sind die White-Box-Bausteine und die, über die am meisten diskutiert wird. So wichtig sie natürlich sind, ich halte die Aufmerksamkeit, die sie während der Modellierung bekommen, für unangemessen groß. Oder umgekehrt: Ich denke, die über ihnen liegenden Ebenen der physischen Swolarchie erhalten bisher zuwenig Aufmerksamkeit. Das möchte ich durch diese Darstellung ändern. Denn zusätzliche Ebenen helfen, besser mit der Komplexität von Software umzugehen und machen es einfacher, die Verbindungen zwischen Swolons zu planen. Außerdem sind die über den Typen liegenden physischen Swolons wichtig für das Deployment und das Laufzeitverhalten einer Software.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

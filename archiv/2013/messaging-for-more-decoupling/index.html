@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Messaging for More Decoupling — ralfw.de Archiv</title>
+<meta name="description" content="Object orientation true to its inventors original intent uses messaging for communication between objects. That means, data is flowing one-way during each &quot;communication act&quot;.">
+<link rel="canonical" href="https://ralfw.de/archiv/2013/messaging-for-more-decoupling/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Messaging for More Decoupling — ralfw.de Archiv">
+<meta property="og:description" content="Object orientation true to its inventors original intent uses messaging for communication between objects. That means, data is flowing one-way during each &quot;communication act&quot;.">
+<meta property="og:url" content="https://ralfw.de/archiv/2013/messaging-for-more-decoupling/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>Messaging for More Decoupling</h1>
+    <div class="doc-meta"><span>19. Aug. 2013</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2013/08/19/messaging-for-more-decoupling.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2013/messaging-for-more-decoupling/</code></span></div>
+    <div class="art"><p>Object orientation true to its inventors original intent uses messaging for communication between objects. That means, data is flowing one-way during each "communication act".</p>
+<p>It´s easy to depict – but what actually does it mean? Does it mean, each functional unit (a, b, c) calls the next like this?</p>
+<pre><code class="language-csharp">int doA() {
+    var x = ...;
+    doB(x);
+}
+
+int doB(int x) {
+    var y = ...x...;
+    doC(y);
+}
+</code></pre>
+<p>Could be, at least technically. Formally this would be messaging (with no data, but just a signal flowing between processing steps).</p>
+<p>But I understand messaging differently. To me we need to decouple communicating parties even more. Not only should we get rid of the coupling between request and response, but also between the responsibilities of sender and receiver.</p>
+<p>This might be subtle, but think about what <code>doA()</code> does: it processes some data (…) and then requests a particular service by calling <code>doB()</code>. <code>doA()</code> thus not only knows how to do its own A-stuff, but also what comes next: some B-stuff. The same for <code>doB()</code>.</p>
+<p>The link between the processing steps is part of the processing steps. That, I think, is wrong. It´s too much coupling. It´s too many responsibilities for a functional unit.</p>
+<p>Interestingly this coupling is asymmetric: Each functional unit knows about the purpose of the next one – but is oblivious to who called it. Strange, isn´t it?</p>
+<p>That´s different with functions. Another translation of the above flow could be this:</p>
+<pre><code class="language-csharp">var x = doA();
+var y = doB(x);
+doC(y);
+</code></pre>
+<p>The functions neither know, who called them, nor what´s going to happen next. They don´t know each other. They are completely independent. I call that "mutual oblivion" (MO). And I think, that´s how messaging flows should be implemented. Their arrows mean, senders don´t know about receivers. And receivers don´t know about senders.</p>
+<p>When using functions like shown the implementation naturally follows the Principle of Mutual Oblivion (PoMO). But what if functions are not the right tool for the job? That can be the case if functional units have more than one input or several outputs. Take this flow for example:</p>
+<p>A function can return only one result. But here the processing is supposed to flow in one of two directions after validation. Of course, the obvious solution would be:</p>
+<pre><code class="language-csharp">void validate(T data) {
+    if (...)
+        save(data);
+    else
+        report_validation_error(&quot;...&quot;);
+}
+</code></pre>
+<p>But that´s violating the PoMO. <code>validate()</code> would be hard wired to the next processing steps.</p>
+<p>And that wouldn´t change, even if those steps were injected as continuations:</p>
+<pre><code class="language-csharp">void validate(T data, Action save, Action report_validation_error) {
+    if (...)
+        save(data);
+    else
+        report_validation_error(&quot;...&quot;);
+}
+</code></pre>
+<p>No, to follow the PoMO requires a change of attitude. It´s not about technical detail, but semantics and responsibility. <code>validate()</code> still knows too much. It´s not context independent like a function. (That´s what FP programmers like so much about functions. If used right, they are easily composable. A function does not know about its usage context.)</p>
+<p>To truly decouple functional units for messaging, they need to focus on their own responsibilities. That means, processing input and producing output. For <code>validate()</code> that could look like this:</p>
+<pre><code class="language-csharp">void validate(T data, Action onValid, Action onInvalid) {
+    if (...)
+        onValid(data);
+    else
+        onInvalid(&quot;...&quot;);
+}
+</code></pre>
+<p>You might think changing the continuation parameter names is a small thing. And technically it is. But it goes a long way to decouple <code>validate()</code> from any other functional units in whatever flow.</p>
+<p>Now the procedure focusses on validation. It knows nothing about happens before and after. <code>onValid</code> makes no assumptions about what the next processing step might be if the data is valid. Instead of calling services events are fired. Here the difference lies in the parameter naming. But when switching to classes the language feature changes.</p>
+<p>Here´s a traditional implementation of a validation service class:</p>
+<pre><code class="language-csharp">class Validator {
+    IRepository _repo;
+    ILogger _log;
+
+    public Validator(IRepository repo, ILogger _log) {
+        _repo = repo;
+        _log = log;
+    }
+
+    public void Validate(T data) {
+        if (...)
+            _repo.Save(data);
+        else
+            _log.Report_error(&quot;...&quot;);
+    }
+}
+</code></pre>
+<p>That´s SOLID, isn´t it? But it´s not object oriented in the original sense, I argue. Because it violates the PoMO, which – to me – is at the heart of messaging like one-way communication. Maybe I should extend my definition of messaging to underline this:</p>
+<p>Messaging is one-way communication by transporting data (message) from a sender to a receiver – and both are oblivious of each other.</p>
+<p>Fortunately it´s easy to change the class so that it conforms to the PoMO:</p>
+<pre><code class="language-csharp">class Validator {
+    public void Validate(T data) {
+        if (...)
+            OnValid(data);
+        else
+            OnInvalid(&quot;...&quot;);
+    }
+
+    public event Action OnValid;
+    public event Action OnInvalid;
+}
+</code></pre>
+<p>Not only is this a reduction in LOC, it´s also more decoupled than the IoC version. Technically functionality still gets injected. But semantically it´s different. And that´s the point.[1]</p>
+<p>Events defined in that way are a feature of C#. But you can do the same in Ruby or JavaScript and other languages. Think function pointer or observer pattern.</p>
+<p>Bottom line: If you want to try out messaging, then be sure to keep the functional units decoupled. Sending messages alone does not do the job. Senders and receivers should not even know about one another.</p>
+<hr />
+<p><em>Endnotes: [1] Interestingly the switch from service injection to events also leads to a technical decoupling. As long as services are injected using interfaces there is a topological dependency between client and service. The client not only is dependent on some functionality (e.g. Save()), but also on where this functionality is located in the environment (e.g. IRepository). That means, should services get shuffled around because someone applies the ISP, dependent services need to change. That to me looks like a violation of the SRP, where each functional unit should only have one reason to change. When using events, injection works on single functions instead of set of functions. That means the dependent functional unit does not know about its environment´s topology. It does not care on which interfaces these functions are implemented. It´s not affected, if they move around.</em></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

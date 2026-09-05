@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software als System IX - Komponenten als Nahtstelle zwischen logischer und physischer Struktur — ralfw.de Archiv</title>
+<meta name="description" content="Bei der Modellierung von Software finde ich es ganz wichtig, immer die Verbindung von Modell zur Realität im Blick zu behalten. Denn dass reine Modelle nach Beginn der Implementier">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/software-als-system-ix-komponenten-als/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software als System IX - Komponenten als Nahtstelle zwischen logischer und physischer Struktur — ralfw.de Archiv">
+<meta property="og:description" content="Bei der Modellierung von Software finde ich es ganz wichtig, immer die Verbindung von Modell zur Realität im Blick zu behalten. Denn dass reine Modelle nach Beginn der Implementier">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/software-als-system-ix-komponenten-als/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Software als System IX - Komponenten als Nahtstelle zwischen logischer und physischer Struktur</h1>
+    <div class="doc-meta"><span>12. März 2007</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2007/03/software-als-system-ix-komponenten-als.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/software-als-system-ix-komponenten-als/</code></span></div>
+    <div class="art"><p>Bei der Modellierung von Software finde ich es ganz wichtig, immer die Verbindung von Modell zur Realität im Blick zu behalten. Denn dass reine Modelle nach Beginn der Implementierung kaum das Papier wert sind, auf dem sie ausgedruckt worden, ist ja schon lange bekannt.</p>
+<p>Wie kann nun aber ohne MDA-"Gedöns" ;-) eine Nähe von Modell zu Code hergestellt und auch erhalten werden? Ich meine, die Voraussetzung dafür ist eine Verzahnung von logischer und physicher Swolarchie. Das geschieht am besten auf der Blattebene der Modulhierarchie. Module, die Blätter sind, sollten einem physischen Swolon gleichgesetzt werden.</p>
+<p>Darüber hinaus sollte dieses physische Swolon jedoch relativ stabil sein, so dass Typen eigentlich ausgeschlossen sind. Für mich findet daher der Übergang von logischer zu phyischer Swolarchie auf Komponentenebene statt. Aus welchen Komponenten eine Software besteht, unterliegt viel seltener Änderungen als die Menge ihrer Klassen. Eine logische Planung gerät deshalb weniger schnell aus dem Tritt mit der Coderealität, wenn sie nicht versucht, zu detailliert zu sein.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/15881090530b54d0.png" /></p>
+<p>Das Blatt-Modul der Modulhierarchie ist also hybrid. Es ist sowohl ein Modul wie auch eine Komponente. Unter ihm setzt sich die Hierarchie jedoch nur mit physischen Swolons fort. Über ihm kann die Modulhierarchie beliebig viele Ebenen haben; aber auf der physischen Seite reicht sie natürlich nur bis zum Prozess hoch.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/ab022c31e5e9ef69.png" /></p>
+<p>Hybride können selbstverständlich auf der logischen Seite wie jedes andere Modul Teil mehrere Module sein. Und sie können auf der physischen Seite Teil mehrerer Superkomponenten, AppDomains oder Prozesse sein. Die Modellierung mit Swolons unterstützt also den Wiederverwendungsgedanken.</p>
+<p>Aus welchen/wievielen Assemblies, Typen und Methoden ein Hybride besteht, ist für die Modellierung transparent. Sie sollte, so meine ich, bei den Hybriden enden. Auch diese Entscheidung ist ein Mittel, um den Trend zur Entfernung von Modell und Coderealität zu unterdrücken. Hybriden sind Black Boxes für die logische Modellierung und auch für die physische Implementierung. Damit sind sie die entscheidenden Swolons, mit denen Wiederverwendung erreicht werden kann.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e633322200f55679.png" /></p>
+<p>Die Entscheidung über die Details eines Hybriden, über seine internet physische Struktur, sollte nicht bei der Modellierung liegen, um sich zum einen nicht in Details zu verzetteln, zum anderen aber auch, um Verantwortung und Flexibilität dorthin zu delegieren, wo die Entscheidungen aufgrund des Tagesgeschäfts gemacht werden: zu den Entwicklern. Komponentenentwickler werden so zu autonomen organisatorischen Einheiten aufgewertet. Aufgabe der Modellierung ist es, ihnen einen Rahmen zu stecken, innerhalb dessen sie ziemlich freie Entscheidungen treffen können, ohne Gefahr zu laufen, andere Teile des Systems in Mitleidenschaft zu ziehen.</p>
+<p>Software als System verleugnet die Objektorientierung also nicht, sondern verschiebt nur den Fokus auf Komponenten, wenn es um die Planung der Implementierung geht. Objekte/Typen spielen innerhalb von Komponenten weiterhin eine große Rolle. Und der Funktionalität-Daten-Dualismus ist eine zentrale Eigenschaft aller Swolons. Zur Modellierung von Software eignen sich Objekte/Typen jedoch nicht. Sie sind einerseits als physische Swolons zu klein, die Modellierung wäre zu feingranular. Andererseits sind sie auch zu konkret, um nützlich für eine logische Modellierung zu sein, denn Typen lassen sich nicht flexibel genug schachteln.</p>
+<p>Sind logisches und physisches Modell nur über Blatt-Module bzw. Komponenten verzahnt? Zunächst einmal ja. Aber es steht natürlich einer Korrespondenz von darüber liegenden Modulen mit physischen Swolons nichts im Wege. Ein Modul einem Prozess entsprechen zu lassen, ist natürlich erlaubt. Als mehr als eine lose Korrespondenz würde ich solch eine Beziehung allerdings nicht bezeichnen. Ein direktes Mapping von logischem auf physisches Swolon sehe ich nur bei Blatt-Modulen auf Komponenten.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

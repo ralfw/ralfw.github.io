@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hört, hört! - Komponentenorientierung einmal anders — ralfw.de Archiv</title>
+<meta name="description" content="Es ist ja kein Geheimnis, dass ich ein großer Freund der Komponentenorientierung bin ;-) Aber sooft ich auch darüber spreche oder schreibe, es bleibt schwierig, Komponentenorientie">
+<link rel="canonical" href="https://ralfw.de/archiv/2008/hrt-hrt-komponentenorientierung-einmal/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hört, hört! - Komponentenorientierung einmal anders — ralfw.de Archiv">
+<meta property="og:description" content="Es ist ja kein Geheimnis, dass ich ein großer Freund der Komponentenorientierung bin ;-) Aber sooft ich auch darüber spreche oder schreibe, es bleibt schwierig, Komponentenorientie">
+<meta property="og:url" content="https://ralfw.de/archiv/2008/hrt-hrt-komponentenorientierung-einmal/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Hört, hört! - Komponentenorientierung einmal anders</h1>
+    <div class="doc-meta"><span>27. Feb. 2008</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2008/02/hrt-hrt-komponentenorientierung-einmal.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2008/hrt-hrt-komponentenorientierung-einmal/</code></span></div>
+    <div class="art"><p>Es ist ja kein Geheimnis, dass ich ein großer Freund der Komponentenorientierung bin ;-) Aber sooft ich auch darüber spreche oder schreibe, es bleibt schwierig, Komponentenorientierung schnell begreifbar zu machen. Erklärungen am Flipchart sind trotz aller Mühe mit Verbildlichungen immer noch abstrakt. Wenn dann Code ins Spiel kommt, ist Komponentenorientierung zwar deutlich konkreter - aber es dauert halt, bis der Code geschrieben oder in seinen Zusammenhängen erklärt ist. Wie also das Verständnis von Komponentenorientierung beschleunigen?</p>
+<p>Mit Musik! Denn schon Johannes Heesters wusste: <a rel="noopener" href="http://www.superlyrics.de/315428/songtext/a/a.html">"Mit Musik geht es am besten!"</a> Aber nicht nur die Verzauberung schöner Fraun, sondern auch die Komponentenorientierung. Und das geht so:</p>
+<p>Ja, ich habe keine Kosten und Mühen und Peinlichkeiten gescheut, diese didaktisch hoffentlich sehr wertvolle Demonstration von Komponentenorientierung zu produzieren :-) Mein Dank gilt dabei vor allem meiner Tochter Verena, die mir nicht die Flötentöne, sondern die Geigentöne beigebracht hat. Denn ich bin des Geigens nicht mächtig, wie man unschwer erahnen kann, oder?</p>
+<h2>Was hat das mit Komponentenorientierung zu tun?</h2>
+<p>Meine Darbietung des Stückes "Bell Ringers" besteht aus Komponenten. Jede Note darin ist eine Komponente. Ich habe das Stück ja nicht gespielt (schon gar nicht vom Blatt), sondern Note für Note einzeln aufgenommen. Hier die Produktionsschritte:</p>
+<ul>
+<li>Anforderungen: Der Notentext war meine Anforderung. Ziel war, das Stück am Ende komplett zu gehör zu bringen.  Analyse: Aus den Anforderungen habe ich die Komponenten abgeleitet. Ich habe alle verschiedenen Noten extrahiert. Wenn das Stück vielleicht aus 40 Noten unterschiedlicher Tonhöhe und Dauer besteht, dann sind es aber nur vielleicht 8 verschiedenne Tonhöhen gewesen.  Implementation: Jede Komponente habe ich einzeln implementiert. Für jede der verschiedenen Tonhöhen habe ich mit von Verena zeigen lassen, wie man sie auf der Geige spielt. (Bei einer haben wir uns aber, glaube ich, vertan. Naja, macht nix ;-) Dann habe ich die Kamera angeschaltet und nur genau diesen einen Ton gespielt. Unterschiedliche Notenlängen habe ich dabei nicht unterschieden. Ich habe einfach den Ton lang genug gespielt, so dass ich später dieselbe Aufnahme für achtel, viertel oder auch halbe Noten benutzen konnte.  Integration: Schließlich habe ich die Komponenten zum großen Ganzen zusammengefügt. Im Videoschnittprogramm habe ich die 8 Videoschnippsel mit je einem Ton so aneinandergereiht, wie es der Notentext vorsieht. Jede Note kommt darin mehrfach vor, also habe ich sogar Komponenten wiederverwendet. Und es gibt sogar ganzen Notensequenzen, die sich wiederholen, also habe ich Gruppen von Komponenten (Superkomponenten oder Composite Components) auch wiederverwendet.</li>
+</ul>
+<p>Der Aufbau des Gesamtstücks aus Komponenten ist natürlich unschwer zu sehen. Aber das soll auch so sein. Die "Experience" ist damit eine andere als bei einer Einspielung in einem Stück. Macht das etwas? Das hängt vom Anspruch ab.</p>
+<p>Wer ein Musikstück "aus einem Guss" haben will, also höchsten Kunstgenuss, der muss sich einen Experten suchen, der es spielen kann. Und dieser Experte hat viel Zeit und Mühe investiert, sein Instrument zu lernen. Und das Einspielen bzw. Üben hat dann auch nochmal einige Zeit gebraucht. Was auf der Bühne so leicht aussieht, ist harte und langwierige Arbeit. Deshalb müssen Künstler auch das Einstudierte öfter spielen, weil sich sonst der Aufwand nicht gelohnt hat.</p>
+<p>Also: Genuss aus einem Guss hat die höchste Qualität - braucht aber ein großes Budget und viel Geduld.</p>
+<h2>Vorteile der Komponentenorientierung</h2>
+<p>Ich habe nun keine Jahre beim Geigeüben verbracht. Ich habe auch keine Zeit ins Einstudieren des Stückes investiert. Ich habe stattdessen das Stück analysiert und dann die Komponenten in ausreichender Qualität implementiert und integriert. Fertig. Das Ergebnis ist zwar nicht aus einem Guss - aber immer noch gut genug und vor allem flexibel!</p>
+<p>Erstens habe ich also viel weniger Zeit aufgewandt für ein immer noch passables Ergebnis. Ich hätte sogar die einzelnen Noten von verschiedenen Laien gleichzeitig (!) einspielen lassen können. Jede einzelne hätte dann von einem Musiker separat auf ihre Qualität geprüft werden können. Nur die besten Einzelnoten/Komponenten wären am Ende ins Ganze eingegangen. (So geschieht es auch bei Profieinspielungen im Studio. Man glaube nicht, dass das, was man auf einer CD hört, einfach so im Studio nach viel Üben "runtergespielt" wurde. Es besteht aus vielen für sich genommen perfekten Schnippseln.)</p>
+<p>Und zweitens hat das Ergebnis nun eine Struktur, die ich auch verändern kann. Da überhaupt einzelne Komponenten vorhanden sind - die Videoschnippsel mit den einzelnen Tönen -, kann ich jede getrennt von den anderen modifizieren. Ich kann sie austauschen, in der Länge verändern, umarrangieren oder woanders wiederverwenden.</p>
+<p>Genau das ist es nun, was Komponentenorientierung in der Softwareentwicklung will: Statt "Genuss aus einem Guss" (Monolith) lieber eine flexiblere, schneller zu produzierende und leichter zu testende Struktur aus integrierten Einzelkomponenten.</p>
+<p>Verstehen Sie jetzt? ;-)</p>
+<p>PS: Diese Analogie für die komponentenorientierte Softwareentwicklung hinkt nur in einer Hinsicht: Beim Musikstück sieht/hört man einen Unterschied zu einer Einspielung "in einem Rutsch". Bei einer komponentenorientierten Anwendung hingegen ist äußerlichen kein Unterschied zu einer monolithischen zu bemerken.</p>
+<p>PPS: Um ehrlich zu sein, hatte ich bei der Produktion des Videos keinen Gedanken an Komponentenorientierung verschwendet. Wie im Vorspann zu lesen, wollte ich einfach eine Hommage an <a rel="noopener" href="http://en.wikipedia.org/wiki/Lasse_Gjertsen">Lasse Gjertsen</a> bringen. Sein Video bei YouTube finde ich einfach klasse.</p>
+<p>Dann bin ich aber heute morgen zufällig nach längerer Zeit über mein Video gestolpert und bei einem Gespräch darüber mit meiner Freundin kam mir der Gedanke: Hey, das ist ja komponentenorientiert. Würde mich also freuen, wenn auf diese zufällige Weise aus einem Spaß jetzt etwas Nützliches würde.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2008-02-27):</p>
+<p><em>lach</em> sehr geil. Anschaulich und lustig.</p>
+<hr />
+<p><strong>(anonym)</strong> (2008-02-28):</p>
+<p>SUUUPER!! Wie Geil iss das denn? so verstehts auch der letzte Depp :-)</p>
+<hr />
+<p><strong>(anonym)</strong> (2008-02-28):</p>
+<p>Hey Ralf, echt cool.
+Ich hätte da noch einen. Ich habe da dann vor kurzem komponentenorientierte Präsentationstechnik angewendet. Eine Demo von 60 Min. auf nur 10 Min. reduzieren, das geht nur dank Komponentenorientierung.
+Gucks du hier: http://www.artiso.com/ProBlog/ct.ashx?id=944da1ef-2f47-4857-824e-bd30586abd58&amp;url=http%3a%2f%2fwww.artiso.com%2fdownloads%2fartisoWebCastTeil1.wmv</p>
+<p>Gruß
+Thomas</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2008-02-28):</p>
+<p>@Thomas: Hm... abgesehen davon, dass Film im Gegensatz zu Theater eigentlich immer recht komponentenorientiert ist, sehe ich bei dir keine speziellen Komponenten. Natürlich hast du die Bildschirmaufnahmen und die Kommentare aus dem Off und die "Spielszene" getrennt aufgenommen. Aber das macht man ja immer so.</p>
+<p>Der Grund dafür, dass ich mein Musikvideo (und nicht eine dotnet.tv Folge) als Beispiel für Komponentenorientierung beschrieben habe ist, da dabei etwas entsteht, das man gewöhnlich eben als Ganzes, als ein durchgespieltes Stück erwartet. Aber das Ganze ist eben nicht als Ganzes eingespielt, sondern (gewollt sichtbar) aus kleinen Teilen zusammengesetzt. Dieser Anspruch auf Ganzheit im Gegensatz zur Produktion: der macht das Musikvideo zu einer Analogie für Komponentenorientierung.</p>
+<p>Aber dein Video zu euer TFS-Extension finde ich gut gelungen. Jetzt hab ich die doch endlich mal gesehen ;-)</p>
+<p>-Ralf</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

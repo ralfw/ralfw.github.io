@@ -1,0 +1,834 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Functions considered harmful — ralfw.de Archiv</title>
+<meta name="description" content="Bisher habe ich die &quot;traditionelle&quot; konzeptionelle Objektorientierung als eine der Ursachen für die heutigen Probleme mit der Wartbarkeit von Software gesehen. Inzwischen regt sich">
+<link rel="canonical" href="https://ralfw.de/archiv/2012/functions-considered-harmful/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Functions considered harmful — ralfw.de Archiv">
+<meta property="og:description" content="Bisher habe ich die &quot;traditionelle&quot; konzeptionelle Objektorientierung als eine der Ursachen für die heutigen Probleme mit der Wartbarkeit von Software gesehen. Inzwischen regt sich">
+<meta property="og:url" content="https://ralfw.de/archiv/2012/functions-considered-harmful/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Functions considered harmful</h1>
+    <div class="doc-meta"><span>9. Jan. 2012</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2012/01/functions-considered-harmful.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2012/functions-considered-harmful/</code></span></div>
+    <div class="art"><p>Bisher habe ich die "traditionelle" konzeptionelle Objektorientierung als eine der Ursachen für die heutigen Probleme mit der Wartbarkeit von Software gesehen. Inzwischen regt sich jedoch in mir der Verdacht, dass das Wurzelproblem tiefer liegt.</p>
+<p>Womöglich ist die Objektorientierung sogar zu loben, weil sie das irgendwie verstanden hatte und versucht zu helfen. Leider ist das nicht so geglückt, wie man es sich erhoffte. Warum? Weil das Wurzelproblem eben nicht behoben, sondern nur kaschiert wurde. Man hat sich nicht getraut, so tief nach unten zu graben, um es auszureißen.</p>
+<p><strong>Denn das Wurzelproblem scheint mir... der Funktionsaufruf.</strong></p>
+<p>Ja, genau, der gute alte, unscheinbare und für imperative Sprachen so fundamentale Funktionsaufruf.</p>
+<p>Dass wir schreiben können</p>
+<p>y = f(x)</p>
+<p>ist der Keim vieler Wartbarkeitsübel.</p>
+<p>Wie kann das sein?</p>
+<h3>Problem #1: Unbegrenzte Länge</h3>
+<p>Durch Funktionen gibt es keine Grenze für das, was eine Codeeinheit tun kann. <strong>Ungezügeltes Wachstum von Codeeinheiten wird durch Funktionen ermöglicht.</strong> Denn nach einem Funktionsaufruf kann es ja weitergehen im aufrufenden Code.</p>
+<p>Funktionen kombinieren Request und Response. Damit kombinieren sie vorbereitenden Code und nachbereitenden Code im Aufrufer. Und selbstverständlich kann nachbereitender Code gleichzeitig vorbereitender Code für den nächsten Funktionsaufruf sein. <strong>Nach dem Funktionsaufruf ist vor dem Funktionsaufruf.</strong></p>
+<p>Wann sollte also aufrufender Code beendet sein? Wenn er inhaltlich eine Verantwortlichkeit erfüllt. Klar. Aber das ist ein Kriterium, dessen Erfüllung im Auge des Betrachters entsteht. Der eine mag es, Verantwortlichkeiten in höchstens 20 Zeilen zu formulieren, der nächste hat kein Problem, wenn es dafür 100 Zeilen braucht und wieder einem anderen sind auch 10.000 Zeilen recht.</p>
+<p><strong>Durch Funktionsaufrufe gibt es kein Halten in Bezug auf den Umfang des aufrufenden Codes.</strong> Die Existenz von Regeln, die versuchen, diesen Umfang direkt oder indirekt zu begrenzen, ist der beste Beweis dafür.</p>
+<p>Und wie wäre es, wenn es keine Funktionen gäbe? Dann würde eine Codeeinheit immer nur aus soviel Code bestehen wie nötig ist, um einen Request vorzubereiten, der am Ende dann abgeschickt wird. Ohne Funktionen gäbe es keinen Response, den die vorbereitende Codeeinheit nachbereiten könnte, also wäre ihre Aufgabe mit Versand des Request abgeschlossen. Der Response würde von einer anderen Codeeinheit weiterverarbeitet.</p>
+<p>Ohne Funktionen ist es aber natürlich sinnlos, von Request und Response zu sprechen. Einen Request gibt es nur, wenn man auch einen Response erwartet. Clients übergeben Requests an Services, die mit Responses antworten.</p>
+<p><strong>Ohne Funktionen gibt es nur Daten, die produziert und konsumiert werden.</strong> Producer senden Daten an Consumer. Und immer so weiter. Aus Client-Code wie diesem, der sich potenziell unendlich fortsetzt…</p>
+<p>Client:
+  Vorbereitender Code erzeugt X
+  Y= f(X)
+  Nachbereitender Code verarbeitet Y</p>
+<p>wird Producer-Consumer-Code:</p>
+<p>Producer:
+  Vorbereitender Code erzeugt X
+  Versenden von X</p>
+<p>f als Prosumer:
+  X nach Y transformieren
+  Versenden von Y</p>
+<p>Consumer:
+  Nachbereiten von Y</p>
+<p>Sie sehen, der Umfang jeder Codeeinheit ist ganz natürlich sehr begrenzt, wenn es keine Funktionen gibt. Es lässt sich einfach nur wenig tun, bis wieder Arbeit an eine andere Codeeinheit delegiert werden muss.</p>
+<p>Die grenzenlose Kopplung von Vorbereitung und Nachbereitung ist das offensichtliche Problem, zu dem Funktionsaufrufe führen. Sie bläht aufrufende Codeeinheiten auf. Das erschwert schnell die Verständlichkeit und leistet einer Vermischung von Verantwortlichkeiten im Sinne des SRP Vorschub.</p>
+<h3>Problem #2: Unbegrenzte Tiefe</h3>
+<p>Unterhalb des Request/Response-Problems liegt leider noch ein weiteres, noch fundamentaleres. Das wird allerdings erst sichtbar, wenn Software weiter wächst. Es ist das Problem des Aufrufs schlechthin.</p>
+<p>Zur Erinnerung: Aufrufe von Code sind eigentlich als Mittel zur Platzersparnis erfunden worden. Früher war Speicher eben sehr knapp. Da war jedes Mittel recht, um Bytes zu sparen. Also hat man das CALL/RET Maschinenbefehlpaar erfunden. Aus Code wie:</p>
+<p>A
+S
+T
+U
+B
+S
+T
+U
+C
+S
+T
+U
+…</p>
+<p>konnte nun werden:</p>
+<p>A
+CALL F
+B
+CALL F
+C
+CALL F
+…
+F: S
+T
+U
+RET</p>
+<p>6 Anweisungen statt 10. Das ist selbst mit diesem Pseudocode eine Reduktion um 40%.</p>
+<p>Platzersparnis, nicht Wiederverwendbarkeit ist die Motivation hinter Unterprogrammen als Verallgemeinerung von Funktionen. Für Wiederverwendbarkeit wären Macros ausreichend gewesen.</p>
+<p>Wie alles im Leben hat natürlich auch die Platzersparnis ihren Preis. Der besteht in der Trennung von Client-Kontext und Service-Code. Solange im obigen Beispiel STU zwischen A und B textuell steht, ist klar, was die Aufgabe von STU ist. STU steht im Nutzungskontext. Der Entwickler sieht zur Entwicklungszeit, was vorher passiert, was zwischendurch passiert und was nachher passiert.</p>
+<p>Die Einführung des Unterprogramms F zerstört diese verständliche Einheit. Was zwischendurch passiert, steht nun irgendwo. Wer nun liest</p>
+<p>A
+CALL F
+B
+…</p>
+<p>der ist darauf angewiesen, dass F ein ausdrucksstarker Name ist, um zu verstehen, was da passiert. Die vorherige Einheit zur Entwicklungszeit existiert erst wieder zur Laufzeit.</p>
+<p>Das bedeutet: Funktionen machen den Aufrufort schwerer lesbar, weil sie dort Code durch einen Namen ersetzen. So eine Ersetzung ist sehr verlust- bzw. missverständnisgefährdet.</p>
+<p>Und Funktionen machen Code insgesamt schwerer lesbar, weil sie einen natürlichen Zusammenhang wie</p>
+<p>A
+S
+T
+U
+B
+…</p>
+<p>über die Codebasis verteilen. Auch da gibt es ja kein Halten. Die Aufruf-Schachtelung von Funktionen ist beliebig tief. Aus</p>
+<p>A
+S
+T
+U
+B
+…</p>
+<p>wird zuerst</p>
+<p>A
+CALL F
+B
+…
+F: S
+T
+U
+RET</p>
+<p>dann vielleicht</p>
+<p>A
+CALL F
+B
+…
+F: S
+CALL G
+U
+RET
+…
+G: T
+X
+Y
+RET</p>
+<p>und dann vielleicht</p>
+<p>A
+CALL H
+…
+H: CALL F
+B
+RET
+…
+F: S
+CALL G
+U
+RET
+…
+G: T
+X
+Y
+RET</p>
+<p>uns so weiter…</p>
+<p>Zur Laufzeit macht das alles keinen Unterschied. Zur Entwicklungszeit jedoch wird es immer schwieriger zu verstehen, was da eigentlich passiert. Inhaltliche Sequenzen werden aufgelöst. Es entsteht ein Granulat an Unterprogrammen, dessen Aufrufhierarchie zur Laufzeit keine formale Entsprechung zur Entwicklungszeit hat. <strong>Funktionen führen mithin zu einem fundamentalen Impedance Mismatch zwischen Entwicklungszeit und Laufzeit.</strong></p>
+<p>Gut, inzwischen gibt es IDEs, mit denen man die Aufrufhierarchie durchwandern kann. Aber seien wir ehrlich: das ist umständlich. Eine hierarchische Sicht von Funktionsaufrufen ist kein First Class Citizen in den populären IDEs wie eine Projektdateiansicht oder eine Klassenansicht. Und in der Tradition von C gibt es keine geschachtelten Funktionen in C++, Java, C#.</p>
+<p>Die Schachtelung von Funktionsaufrufen ist so tief in unser aller Programmiererstammhirn eingebrannt, dass es nicht einmal eine Metrik dafür gibt. Man macht sich Gedanken über LOC pro Funktion oder die Schachtelungstiefe von Kontrollanweisungen in Funktionen. Die Tiefe der Aufrufhierarchie von Funktionen zur Entwicklungszeit hingegen, scheint niemanden zu interessieren. Dabei ist sie es, die den logischen Zusammenhang von Code auseinanderreißt.</p>
+<p><strong>Aus unbegrenzter Aufrufschachtelung folgt, dass auch die Problemlösung beliebig über die Tiefe der Aufrufhierarchie verteilt werden kann.</strong> Im obigen Beispiel können ja auf jeder Ebene – Aufrufwurzel, H, F oder G – Anteile von “Geschäftslogik” stehen.</p>
+<ul>
+<li>Das bedeutet erstens, es bedarf zusätzlichen Aufwands, um zu entscheiden, auf welcher Ebene Geschäftslogik angesiedelt werden sollte. Das ist aber natürlich Aufwand, der nicht zur Lösung des Problems beiträgt. Also scheut man ihn, wo es geht. Das Ergebnis sind flache Hierarchien mit sehr langen Funktionen (s. Problem #1).</li>
+<li>Das bedeutet zweitens, Funktionen, die nicht Blätter in der Aufrufhierarchie sind, machen zusätzlichen Aufwand beim Testen. Es muss ja nicht nur ihr Beitrag zur Problemlösung überprüft werden, sondern es müssen auch noch die aufgerufenen Funktionen ersetzt werden (Attrappen).</li>
+<li>Und drittens sind Aufrufhierarchien ständig gefährdet, durch Veränderungswellen erschüttert zu werden. Veränderungen breiten sich entlang von Abhängigkeiten aus:
+Wenn C wie Client von S wie Service abhängig ist, dann kann es bei Änderungen an C nötig sein, S nachzuführen. Und falls sich S ändert, kann es nötig sein, C nachzuführen. <strong>Je breiter und tiefer Aufrufhierarchien sind, desto unüberschaubarer die Ausbreitung von Änderungen, die immer irgendwo nötig sind.</strong> Das ist umso schlimmer, da ja diese Hierarchien nur schwer zu übersehen sind. Sie existieren nicht textuell und auch kaum in anderer Ansicht in den IDEs.</li>
+</ul>
+<h3>Fazit</h3>
+<p>Funktionen (oder allgemeiner: Unterprogramme) sind aus meiner Sicht eine der Hauptursachen für die Undurchschaubarkeit von Code. Sie machen seine Ausdehnung in Breite und Tiefe grenzenlos.</p>
+<p>Dagegen helfen dann auch keine Ermahnungen und Metriken. Denn die sind sehr geduldig. Wenn es eng wird, hört man nicht hin und setzt sie aus. Immer mit dem Verweis, dass gerade anderes wichtiger sei – und es ja auch ohne ginge.</p>
+<p>So entstehen unwartbare Codekonvolute einen Funktionsaufruf nach dem anderen.</p>
+<p><em>Dagegen hilft nur, Funktionsaufrufe klaren Auges als Gefahr zu sehen und ihre Nutzung zu rigoros zu begrenzen.</em></p>
+<p>Wir müssen diese Altlast aus den Anfangstagen der Programmierung abwerfen (oder zumindest mit weniger Schädlichem integrieren). Funktionen sind ein Erbe der Nähe zur Mathematik. Das hat uns weit gebracht – aber nun haben wir eine Grenze erreicht, da der Schaden größer als der Nutzen ist.</p>
+<h2>Kommentare</h2>
+<p><strong>CU @ Boeffi .net</strong> (2012-01-09):</p>
+<p>... interessanter POV ...</p>
+<p>verdauend</p>
+<p>cu
+@Boeffi</p>
+<hr />
+<p><strong>Golo Roden</strong> (2012-01-09):</p>
+<p>Hallo Ralf,</p>
+<p>hmmmm ... ist da wirklich die Funktion als solche das Problem, wenn Code ungehindert in Tiefe und Breite wuchert?</p>
+<p>Oder liegt es nicht vielmehr am falschen Umgang mit einem an und für sich nützlichen Werkzeug?</p>
+<p>Viele Grüße,</p>
+<p>Golo</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-01-09):</p>
+<p>@Golo: Liegt es wirklich an der Schusswaffe, wenn in den USA jedes Jahr Tausende zu Tode kommen? Oder ist das nicht vielmehr ein Problem derjenigen, die sie einsetzen?</p>
+<p>Natürlich ist ein problematischer Einsatz eines Mittels zuallererst im Verwender zu suchen. Nur ist dessen Beeinflussung womöglich schwierig. Es mangelt in den USA ja nicht an Einsicht, dass Schusswaffen gefährlich sind :-) Und es mangelt auch nicht an Versuchen, die Besitzer zu beeinflussen. Haftstrafen oder gar Todesstrafe sind davon nur ein Teil.</p>
+<p>Was rauskommt, ist weithin sichtbar: Tote und volle Gefängnisse.</p>
+<p>Und bei der Softwareentwicklung ist auch weithin sichtbar, wenn ein unschuldiges Mittel unbedenklich eingesetzt wird.</p>
+<p>Wie bei den Schusshaffen hilft da irgendwann nur die Verbannung. In Canada ist das mit den Tötungsdelikten schon kein Problem, obwohl die an die USA grenzen und eine ähnliche Kultur pflegen. Auch in Europa ist es kein solches Problem. Auch nicht Australien.</p>
+<p>Weil dort bessere Menschen leben? Nein. Weil einfach der Zugang zu Schusswaffen extrem reglementiert ist.</p>
+<p>Keinen anderen Weg sehe ich bei Funktionen (wie damals beim GOTO). Die Nutzung muss stark reglementiert werden.</p>
+<p>Ein Anfang könnte sein: Funktionsaufrufe sind nur erlaubt, wo kein Einfluss auf einen API besteht und der eben auf Funktionen ausgelegt ist.</p>
+<p>Da kann man eben nichts machen. Wir können nicht warten, bis der .NET Fx mal auf irgendwas anderes umgebaut wurde.</p>
+<p>Versuche mal als Übung, mit dieser Maxime eine Code Kata zu lösen. Das wird dir schwer fallen. Aber das wird dir auch eine ganz neue Perspektive eröffnen.</p>
+<p>Beobachte, wo es dich hintreibt, wenn du keine eigenen Funktionen definieren darfst und doch das SRP einhalten musst :-) Am Ende soll ja nicht nur 1 Codeeinheit mit 10.000 LOC pro Interaktion herauskommen. Also musst du Wege suchen, deinen Code weiterhin in kleine Verantwortlichkeiten zu zerlegen und die irgendwie zu einem größeren Ganzen zu verbinden.</p>
+<p>Happy coding!</p>
+<hr />
+<p><strong>Mario Noack</strong> (2012-01-09):</p>
+<p>Und wie sieht dann die Alternative aus? Code bildet ja Logiken des Kunden ab. Die Wiederverwendung sich wiederholender Teile bedingt für mich die Nutzung von Funktionen oder Objekthierarchien. Beschränke ich beides auf ein Minimum, gehen mir die Ideen aus, wie denn dann eine Empfehlung zu besseren Code lauten könnte?</p>
+<p>Fragende Grüße, Mario</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-01-09):</p>
+<p>@Mario: Ich habe nichts gegen Wiederverwendung bzw. gegen Nutzung von Codeeinheiten in unterschiedlichen Zusammenhängen.</p>
+<p>Code in kleinere Einheiten zu zerlegen, aus einem großen Stück kleine und kleinste zu machen, ist also völlig ok. Nein, es geht gar nicht anders. Denn das SRP muss ja auch ohne Funktionen beachtet werden.</p>
+<p>An dieser Stelle will ich einfach nicht mit einer Lösung ins Haus fallen ;-) Deshalb: Überleg doch einmal selbst, wie du diesen Code</p>
+<p>var x = ...;
+var y = f(x);
+var z = ...y...;</p>
+<p>ohne Funktionsaufruf ausdrücken könntest. Natürlich soll dabei das, was derzeit in f() steckt, nicht plötzlich am Aufrufort stehen.</p>
+<p>Und natürlich kommst du auch nicht drumherum, Code, den du von anderem trennen willst, irgendwie in Methoden zu stecken. Das ist ja auch kein Problem. Dass es f() als herausgezogene Verantwortlichkeit gibt, ist ok.</p>
+<p>Nicht ok ist es, solche Funktionen "ungezügelt" aufzurufen wie im obigen Codestück.</p>
+<p>Mehr möchte ich an dieser Stelle eigentlich nicht erreichen, als dass wir darüber übereinstimmen, dass Funktionsaufrufe sehr schnell zu einem Problem werden.</p>
+<p>Wenn wir dann darin übereinstimmen, können wir überlegen, wie wir dieses Problem angehen.</p>
+<p>Wie schauts also aus: Folgst du meiner Darstellung? Stimmen wir überein?</p>
+<hr />
+<p><strong>Jörg</strong> (2012-01-09):</p>
+<p>Hallo,
+den Gedanken finde ich sehr interessant. Aber Alternativen wollen mir nicht wirklich einfallen. Funktionen dienen der Teilung von Code in "besser denkbare" Einheiten von "Funktionalität". Ich muss mit Horror an mein LISP-Programmierpraktikum vor nahezu 20 Jahren zurückdenken. Liste rein und transformieren ohne wirklich benennbare "Funktionseinheiten" hat die Sache nicht einfacher gemacht; auch wenn der Lisp-Code im Vergleich zum Pascal-Pendant nur etwa ein Drittel so groß war.
+Klar habe ich auch schon mal den Überblick verloren, wie sich die nicht gut benannten Methoden gegnseitig aufrufen. Aber irgendwie sollten "benennbare Portionen Code" miteinander kombinierbar sein. Und ein sequentielle Fluss von einer Einheit zur nächsten führt idR zu vielen Wiederholungen, die sich weder gut lesen noch warten lassen. Aber ich lasse mich gerne überraschen...
+Jörg</p>
+<hr />
+<p><strong>Mario Noack</strong> (2012-01-09):</p>
+<p>Also grundsätzlich stimme ich da schon überein, dass der intensive Umgang mit Funktionen ein Problem werden kann, genauso wie eine übertriebene Auslebung der Objektorientierung. Grundsätzlich mangelt es aber an Ideen, es besser zu machen. Ich sehe auch nicht unbedingt diese beiden Punkte als Übel. Das Problem sitzt vor dem Rechner. Ich sehe es leider oft, dass Code geschrieben wird, der nicht verstanden wird. Halbwissen und die Einstellung "Tut doch" sind für mich gravierender und sorgen am Ende für viel Überarbeitungsnotwendigkeiten. Aber an dieses Problem kommt man leider nicth ran, weil man da oft das Gefühl bekommt, dass man gegen eine Wand redet. Weitere Beispiele sind häufige unsinnige Verwendungen von <em>public static</em> Feldern oder auch die schlichte Nichttestbarkeit des entstandenen Codes.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-01-09):</p>
+<p>@Jörg: Im Moment haben wir keine andere Möglichkeit, als Anweisungen zu Funktionen zusammenzufassen. Das ist auch nicht schlimm. Wir brauchen eine benannte Klammer um Anweisungen.</p>
+<p>So wie Schachtelungen in LISP aber schnell unübersichtlich werden, so werden Aufruf-Schachtelungen von "Codeklammern" (Funktionen) auch schnell unübersichtlich. Man überschaut einfach nicht den Abhängigkeitsbaum.</p>
+<p>Und auch "kombinierbar", d.h. zu Größerem zusammensetzbar müssen diese "Codeklammern" sein. Klar.</p>
+<p>Der Trick ist nun: Dafür benutzen wir heute auch wieder Codeklammern. Und diese Codeklammern haben dann nicht nur diesen einen Zweck (s. Problem #2). Dadurch breitet sich "Logik" vertikal in der Hierarchie aus.</p>
+<p>Jetzt können wir uns entscheiden: Wir verzichten auf Funktionen, um Funktionen zu Größerem zu integrieren. Das können wir machen; technisch geht das. Oder wir sind konsequent, indem wir solche Integratoren auf diesen Zweck reduzieren. Das ist ganz einfach möglich: dafür braucht es nur ein bisschen Disziplin. Damit wäre dem SRP auch Genüge getan.</p>
+<p>Wenn wir besser wartbaren Code haben wollen, müssen wir uns für eines von beidem entscheiden, denke ich.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-01-09):</p>
+<p>@Mario: Wenn das Problem nun schon seit Jahrzehnten vor dem Rechner sitzt, dann sollten wir endlich einsehen, dass "bessere Ausbildung" offensichlich nicht so breit hilft, wie es wünschenswert wäre.</p>
+<p>Die Konsequenz muss dann lauten: andere Werkzeuge, mit denen die Probleme vor dem Rechner einfach nicht mehr soviele Probleme im Rechner herstellen können.</p>
+<p>Wer keine Schusswaffe in die Hand bekommt oder nur eine mit Platzpatronen, der muss daran auch nicht ausgebildet werden.</p>
+<hr />
+<p><strong>JakeJBlues</strong> (2012-01-09):</p>
+<p>Hallo Ralf,</p>
+<p>"Wer keine Schusswaffe in die Hand bekommt oder nur eine mit Platzpatronen, der muss daran auch nicht ausgebildet werden."</p>
+<p>interessanter Ansatz, da Menschen nun einmal sehr kreativ sind....bin ich sehr gespannt, wie lange <strong>"das Problem"</strong> vor dem Rechner braucht, um sich mittels Producer, Prosumer und Consumer "Schusswaffen" und "scharfe Munition" zu bauen ;-)</p>
+<p>Gruß JJR
+P.S.: Ich persönlich glaube --- nicht lange ...</p>
+<hr />
+<p><strong>Jörg</strong> (2012-01-09):</p>
+<p>Hallo noch einmal,
+ich glaube ich habe das immer noch nicht ganz verstanden: Ich stelle mir Code als einen beliebigen Graphen (inklusive Zyklen) vor. Geht es Dir dann darum, daraus einen Baum zu machen (mit eher geringer Tiefe), oder plädierst Du wirklich hart für eine Kette von Aufrufen? Oder habe ich Dich ganz missverstanden?
+Wenn wir künftig nur eine Kette von Funktinseinheiten nacheinander schalten wollen, nehmen wir uns damit nicht die Möglichkeit ein Problem auf unterschiedlichen Abstraktionsebenen zu betrachten? Wird nicht allein die Menge der flachgeklopften, nacheinander geschalteten Funktionseinheiten genauso unübersichtlich wie ein Baum, dessen Ebenen unterschiedliche Abstraktionsebenen des Problems beschreiben? Ich bin noch nicht überzeugt.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-01-09):</p>
+<p>@JJR: Mit jedem Werkzeug kann man auch Unfug anstellen. Das ist klar. Manchmal ist es anderer Unfug als mit anderen Werkzeugen, manchmal schlimmerer oder weniger schlimmer.</p>
+<p>Nur weil das aber so ist, sollten wir doch nicht bei einem Werkzeug bleiben, das konsistent große Probleme macht.</p>
+<p>Wir stoßen einfach an eine gläserne Decke, ist mein Eindruck. "Mehr vom Selben" hilft nun nicht mehr.</p>
+<p>OOP ist insofern nur eine Verfeinerung der prozeduralen Programmierung. Und FP ist ein anderer Ast desselben Stamms.</p>
+<p>Ich finde, es schadet nichts, mal ganz anders zu denken.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-01-09):</p>
+<p>@Jörg: Es geht doch gar nicht um Flachklopfen. Wir brauchen Hierarchien - zumindest zum Denken. Anders können wir nicht abstrahieren.</p>
+<p>Interessant aber doch, dass die heutigen Hierarchien entweder ganz flach sind (niemand benutzt wirklich schachtelte Klassen) oder nur zur Laufzeit existieren. Beides macht das Nachdenken über Software schwer - denn das findet zur Entwicklungszeit statt. Deine Kritik wäre also am vorherrschenden Paradigma gut angebracht.</p>
+<p>Für Hierarchien von Funktionalität (und ich meine echte, zur Entwicklungszeit relevante, sichtbare Hierarchien) brauchen wir aber keine Funktionsaufrufhierarchien. Es reicht, wenn 3GL-Funktionen auf der untersten Ebene solcher Hierarchien codiert sind. Dort müssen sie keine anderen Funktionen aufrufen.</p>
+<p>Die Hierarchieebenen darüber können "irgendwie" aussehen. Wenn du sie im ersten Schritt ebenfalls mit 3GL Funktionen beschreiben willst, kannst du das machen - nur sei dir dann bewusst, was du tust. Vermische nicht die Aspekte. Logik hat dort nichts zu suchen.</p>
+<hr />
+<p><strong>Palin</strong> (2012-01-09):</p>
+<p>An dieser Stelle will ich einfach nicht mit einer Lösung ins Haus fallen ;-) Deshalb: Überleg doch einmal selbst, wie du diesen Code</p>
+<p>var x = ...;
+var y = f(x);
+var z = ...y...;</p>
+<p>ohne Funktionsaufruf ausdrücken könntest. Natürlich soll dabei das, was derzeit in f() steckt, nicht plötzlich am Aufrufort stehen.</p>
+<p>Möglichkeit 1.
+Member Variablen?
+Dann hab ich nur noch.
+x()
+y()
+z()</p>
+<p>Möglichkeit 2.
+IOC
+Statt y = f(x) -&gt; f(y)
+bzw.
+x.y = y
+x.f()
+je nach belieben ;)</p>
+<p>Möglichkeit 3.
+Klassen
+y = x.f()</p>
+<p>Das würde mir so direkt darauf einfallen.</p>
+<p>Ein paar Varianten gibt es sicherlich noch.</p>
+<p>Ich denke hier ist die Frage was ich machen will.</p>
+<p>Und Funktion/Methoden Aufrufe haben ja auch ihren Sinn um Code
+besser Lesbar zu machen.
+z.B. IsEMaliAdresse(BenutzerEingabe) (Ich denk mal denn Aufruf versteht jeder. Und denk Rückgabewert brauch ich auch nicht anzugeben ;))</p>
+<p>Ich denke es kommt auf die Aufgabe an, die man Lösen will. Und dann kramt man in seinen Werkzeugkoffer und schaut ob man dafür das passende Werkzeug (Entwurfsmuster ect.) hat.
+(OK mein Koffer ist noch recht klein, deshalb bin ich ja auch hier im Shop um weiteres Werkzeug zu erwerben. ;) )</p>
+<p>Was die Ausbildung angeht möchte ich als Leidtragender mal erwähnen, das Leute ohne je eine Zeile Code programmiert zu haben ihr Informatik Studium abschließen können und noch viel schlimmer auf Leute in der Ausbildung "gehetzt" werden.</p>
+<p>Was dann zu aussagen führt wie: "Natürlich ist es richtig dass Kunde und Mitarbeiter von Person erben und beide kann ich in einer Liste von Kunden anzeigen da sie ja von Person erben! Es mag ja sein das man dass so nicht programmieren kann aber das Klassen Diagramm so ist Korrekt."</p>
+<p>Gott sei dank hatte ich auch noch einen guten Lehrer der mir z.B. dazu geraten hatte mal in Entwurfsmuster von der GoF rein zuschauen auch wenn es kein Unterrichtsstoff war.</p>
+<p>Auch was die Weiterbildung in Betrieben angeht ist es da bei kleinen und mittelständischen Betrieben auch nicht das Gelbe vom Ei.</p>
+<p>Was dann nun die Schusswaffen angeht, auch in Kanada können die Leute Waffen haben. Es ist halt nur an Auflagen gebunden.</p>
+<p>Aber ich denke dass ist noch nicht einmal der Ausschlag gebende Punkt. Sondern ich denke es ist die Einstellung zu Gewalt und Waffen die Kanada und die USA voneinander unterscheiden.</p>
+<p>Und ich denke auch das es ein Punkt ist, der die Code Qualität prägt.
+In der Ausbildung werden die Falschen Werte vermittelt (Wenn es einfach nur Läuft bekommt man seine 1, Qualität Fehlanzeige ), der Chef schaut auch nicht auf die Inneren Werte des Codes (wie soll er auch er hat ja nicht wirklich Ahnung). Wenn es schnell Fertig ist und läuft ist es in Ordnung.</p>
+<p>Ich denke in der "allgemeinen" Gesellschaft der Entwickler ist es noch nicht angekommen, dass Innere Werte zu besseren Resultaten führen genau so wie in den USA noch nicht angekommen ist, dass es eine schlechte Idee ist wenn jeder Waffen tragen darf.</p>
+<p>Nicht die Waffe ist das Problem, sondern das Verständnis der Gesellschaft im Umgang mit der Waffe.</p>
+<p>Ich finde dass du hier richtig gute Arbeit leistest den Leuten beizubringen wie man mit seiner Waffe (Code) richtig umgeht (z.B. CCD).
+Und darüber Nachzudenken was man macht (sieht man ja auch hier bei den Beiträgen).</p>
+<p>Leider kümmern sich darum eigentlich nur die Leute, die wirklich Interesse haben sich weiter zu Bilden und auch wissen wo/wie sie es können.</p>
+<p>Und die Weiterbildung Fängt nicht da an wo es wirklich wichtig ist. Wie z.B. Ausbildung und Studium.</p>
+<p>In dem Rahmen möchte ich hier noch erwähnen, dass ich noch gute Kontakte zu meinem alten Lehrer habe und und wenn du (oder ein anderer erfahrener Programmierer),mal Lust hast vor einer Klasse von Auszubildenden, dein Wissen weiterzugeben, er würde sich sicherlich Freuen und ich fände es auch als guten Ansatzpunkt. (Der Nachteil für den Vortragenden es gibt sicher kein Geld.) (NRW/Essen)</p>
+<hr />
+<p><strong>Mirko Schneider</strong> (2012-01-10):</p>
+<p>@Palin:
+vollste Zustimmung!</p>
+<p>Gruß
+Mirko Schneider</p>
+<hr />
+<p><strong>JakeJBlues</strong> (2012-01-10):</p>
+<p>Hallo Ralf,</p>
+<p>bin einverstanden, aber ich würde vorschlagen "dem Problem" vor dem Computer zuerst die "mutable Parameter" als Munition wegzunehmen. Ich glaube, dass die meisten "Probleme im Rechner" dadurch entstehen.</p>
+<p>Gruß JJR</p>
+<hr />
+<p><strong>Golo Roden</strong> (2012-01-10):</p>
+<p>Sorry, aber zu sagen, das Problem ist das Werkzeug, kann es doch nicht sein.</p>
+<p>Warum hat denn in DE nicht jeder eine Schusswaffe? Weil es Auflagen gibt, was auch sinnvoll ist.</p>
+<p>Warum fährt man erst Auto, wenn man einen Führerschein hat? Weil der Führerschein eine Auflage ist, die sicherstellen soll, dass ich (halbwegs) fahren kann.</p>
+<p>Warum übe ich erst mal, bevor ich mich alleine mit einem Fallschirm aus dem Fluzgeug stürze? Weil es gefährlich ist, und jeder seriöse Anbieter wissen will, dass Du Erfahrung hast, bevor er Dich leichtfertig rausspringen lässt.</p>
+<p>Es geht immer wieder um Auflagen, wenn die Leute nicht selbst in der Lage sind, sich und ihr Handeln einzuschätzen. Schöner ist natürlich, wenn sie das selbst können, aber im Zweifelsfall muss es eben geregelt werden.</p>
+<p>Dass es nun nicht viele Leute gibt (gemessen an der Bevölkerung), die sich mit einem Fallschirm aus einem Flieger stürzen oder die eine Schusswaffe besitzen, liegt daran, dass das Risiko und die Gefahr den Nutzen für die meisten überwiegt.</p>
+<p>Das ist beim Autofahren anders. Auch wenn das vielleicht nicht vernünftig ist, und verbindliche Sehtests alle paar Jahre hilfreich wären, um Unfälle zu verhindern.</p>
+<p>Worauf will ich hinaus?</p>
+<p>Funktionen sind nicht böse. Funktionen sind nicht gut.
+Funktionen sind Funktionen.</p>
+<p>Böse oder gut ist, was man daraus macht.</p>
+<p>Und ein guter Programmierer kann trotz Funktionen gut lesbare und wartbare Software schreiben. Ein schlechter Programmierer wird auch ohne Funktionen alles versauen können.</p>
+<p>Hier bei den Funktionen anzusetzen, halte ich für grundfalsch.</p>
+<p>Vielleicht haben wir einfach zu viele Programmierer? Die eben mit den Risiken und Gefahren nicht umgehen können, und sich auch noch falsch einschätzen?</p>
+<p>Wenn ich mir die Einstellung vieler 9-to-5-Programmierer angucke, die ihren Kopf nur in der Firma anschalten und ansonsten mit Bildzeitung und Bier glücklich sind, dann muss ich leider sagen: Ja, wir haben zu viele Programmierer.</p>
+<p>Und dagegen hilft nicht, die mächtigen Werkzeuge für die Profis deppentauglich zu machen, sondern die Deppen fernzuhalten.</p>
+<p>Alles andere ist Augenwischerei.</p>
+<p>Und was 99% der Leute endlich mal kapieren müssen: Ein PC ist nicht so einfach zu bedienen wie ein Fernseher, und wird es auch nie sein. Ganz einfach deshalb, weil er naturgemäß weitaus komplexer ist, was seine Möglichkeiten angeht.</p>
+<p>Und wenn ich nicht bereit bin, mich entsprechend damit zu befassen, sollte ich die Finger von lassen.</p>
+<p>Ganz einfach ;-)</p>
+<hr />
+<p><strong>Golo Roden</strong> (2012-01-10):</p>
+<p>PS: "Wir müssen diese Altlast aus den Anfangstagen der Programmierung abwerfen (oder zumindest mit weniger Schädlichem integrieren). Funktionen sind ein Erbe der Nähe zur Mathematik. Das hat uns weit gebracht – aber nun haben wir eine Grenze erreicht, da der Schaden größer als der Nutzen ist."</p>
+<p>Richtig. Aber nicht, weil Funktionen schlecht wären. Sie haben seit mehreren tausend Jahren in der Mathematik bewiesen, dass sie leistungsfähig sein.</p>
+<p>Das Problem ist der Verwender.</p>
+<p>Kein Mensch käme auf die Idee, zu behaupten, in der Mathematik müsste man Funktionen abschaffen, weil Fermats letzter Satz so schwer zu beweisen war ...</p>
+<p>Vielleicht liegt es einfach daran, dass das Problem für die meisten Menschen zu kompliziert ist?</p>
+<hr />
+<p><strong>Golo Roden</strong> (2012-01-10):</p>
+<p>PPS: "Wer keine Schusswaffe in die Hand bekommt oder nur eine mit Platzpatronen, der muss daran auch nicht ausgebildet werden."</p>
+<p>Auch richtig. Wenn der jenige dann damit leben kann, dass er eben die Dinge nicht machen kann, zu denen man üblicherweise eine Schusswaffe braucht.</p>
+<p>Wenn er das dann aber trotzdem machen will, ja dann muss er eben doch ausgebildet werden.</p>
+<p>Geht nicht anders.</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-01-10):</p>
+<p>Hier muss ich Golo Roden zustimmen!</p>
+<p>Das Problem sind nicht die Funktionen, sondern die Komplexität an sich.</p>
+<p>Funktionen dienen ja dazu, große Probleme in kleine Probleme zu zerlegen.</p>
+<p>Ich würde hier eher ein besseres Werkzeug fordern, welches dabei Hilft, den Überblick zu behalten.</p>
+<p>Z.B. finde ich es auch lästig, wenn ich wissen will, was eine Funktion macht und ich nur das "Go to Definition" in der IDE zur Verfügung habe. Da wird man aus dem Kontext gerissen und sucht dann erstmal wieder seinen Ursprung.</p>
+<p>Viel cooler wäre es, wenn man die Funktion an Ort und Stelle mal schnell aufklappen und vielleicht auch gleich modifizieren könnte.</p>
+<p>Wir brauchen bessere Sichten auf den Code, damit man von der Komplexität nicht länger erschlagen  wird. Die Werkzeuge müssen uns mehr unterstützen, damit man die Komplexität besser bewältigen kann.</p>
+<p>Ein Problem haben wir nämlich immer, egal, was für Konstrukte man bevorzugt anwendet: Die Komplexität der Probleme und damit die steigende Anzahl der LOC.</p>
+<p>Wir bräuchten Tools, mit denen man den Code buchstäblich modellieren und betrachten kann, wie es die Situation erfordert. Ich will nicht länger überlegen müssen "In welcher Datei war doch gleich die Funktion XYZ?"</p>
+<p>Ich denke, Ralf spricht in seinem Beitrag das Richtige an, gibt aber dem sinnvollen Konzept, statt der Sicht auf die Dinge, die Schuld.</p>
+<p>mfg</p>
+<p>Christian</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-01-10):</p>
+<p>@JJR: Wie lösen die von dir vorgeschlagenen immutable parameters denn die von mir dargestellten Probleme? Wie begrenzen sie Länge von Methoden bzw. führen zu einer konsequenten Trennung der Aspekte Logik und Integration? Und wie machen immutable params die Laufzeithierarchie zur Entwicklungszeit besser sichtbar?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-01-10):</p>
+<p>@Golo: Leider verstehe ich nicht die Vehemenz, mit der du gegen eine Vereinfachung eines Werkzeugs anrennst. Als sei Werkzeugkompliziertheit eine Tugend.</p>
+<p>Bist du nicht froh über ein iPad im Vergleich zu einer Z3? Nein, nicht wegen der größeren Leistungsfähigkeit, sondern wegen der größeren Einfachheit.</p>
+<p>Bist du nicht froh über Photoshop im Vergleich zu einer eigenen Dunkelkammer? Statt dich lange in die ganzen Gerätschaften und Schritte einer Dunkelkammer einarbeiten zu müssen, kannst du dieselben und bessere Ergebnisse am PC erzielen. Ausbildungsaufwand treiben, um Ergebnisse zu erzielen, ist keine Tugend.</p>
+<p>Bist du nicht froh über ein digitale Camcorder und Final Cut/Premiere? Statt langer Ausbildung zu Kameramann und Schnitttechniker und teurem Equipment kannst du heute daheim Filme von hoher Qualität drehen. Schau dir "Monsters" an: der Film hat 25000 USD gekostet - und sieht aus wie mit einem Millionenbudget gedreht. Das war möglich, weil die Werkzeuge einfacher geworden sind.</p>
+<p>"Kompliziert" ist ein relativer Begriff. Er setzt Werkzeuge untereinander in Beziehung, aber auch zum Gegenstand. Hier interessiert mich vor allem die Beziehung zum Gegenstand.</p>
+<p>Dein Argument ist: Ein Werkzeug ist, wie es ist. Wenn es kompliziert/aufwändig in Bezug auf den Gegenstand erscheint, dann muss man seine Nutzer besser ausbilden.</p>
+<p>Ich hingegen behaupte: Wenn sich ein Werkzeug im Hinblick auf den Gegenstand als kompliziert erweist, dann muss ich darüber nachdenken, wie ich es vereinfache. (Bis das geschafft ist, sollte ich natürlich versuchen, seine Nutzer angemessen auszubilden. Aber das ist - wie gesagt - keine Tugend.)</p>
+<p>Bei dir, Golo, ist das Werkzeug eher statisch. Es ist halt, wie es ist. Das empfinde ich als fatalistische Einstellung. Damit wären wir nicht aus der Höhle rausgekommen. "Wenn du noch ein Problem mit dem Speer hast, dann musst du mehr üben." - so hätte der Höhlenmensch zum anderen gesagt.</p>
+<p>Aber so ist die Weltgeschichte nicht gelaufen. Stattdessen ist aus dem Speer Pfeil und Bogen geworden. Und daraus ist die Armbrust geworden. Und daraus das Gewehr.</p>
+<p>Bei jedem Schritt ist die Leistung gestiegen und der Aufwand, das vormalige Ergebnis zu erzielen, geringer. Die Latte wurde höher gelegt.</p>
+<p>Mit einem Speer eine 10m entfernte Scheibe treffen, kannst du wahrscheinlich nicht. Mit Pfeil und Bogen wird es aber sofort irgendwie gehen. Und mit einem Gewehr bist du aus dem Stand noch besser.</p>
+<p>Warum hätte also irgendwer beim Speer stehenbleiben sollen? Man kann damit eine Scheibe treffen, wenn man lange übt. Aber warum sollte ich üben, wenn es auch einfacher geht? Und verlässlicher obendrein? Das musst du mir mal erklären.</p>
+<hr />
+<p><strong>JakeJBlues</strong> (2012-01-10):</p>
+<p>Hallo Ralf,</p>
+<p>ein Problem in der Wartung von Software (ist mir zumindest immer über den Weg gelaufen), ist dass man einer Methode einen Parameter übergibt, die Funktion jedoch nicht nur den Rückgabewert berechnet, sondern auch noch meinen Parameter "zerhaut" :-( Ich wollte auch nur "Munition" wegnehmen nicht gleich die ganze "Schusswaffe"....</p>
+<p>bzgl. Deiner Anmerkung -&gt;
+"Wenn sich ein Werkzeug im Hinblick auf den Gegenstand als kompliziert erweist, dann muss ich darüber nachdenken, wie ich es vereinfache."</p>
+<p>Ist der Gegenstand in diesem Zusammenhang der "Rechner" die "Software" oder "der User" der programmieren soll?</p>
+<p>Gruß JJR</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-01-10):</p>
+<p>@JJR: Der Gegenstand ist das Ergebnis, d.h. die Erfüllung von Anforderungen mittels Software.</p>
+<p>Assembler hat sich als kompliziert erwiesen, um damit wachsende Anforderungen zu erfüllen. Deshalb wurden Hochsprachen entwickelt.</p>
+<p>Wenn sich nun Funktionen als kompliziert erweisen, um alle Anforderungen - nicht nur die vom Kunden explizierten - zu erfüllen, dann scheint es mir nur konsequent, über eine Verbesserung des Werkzeugs nachzudenken.</p>
+<p>Einstweilen bleibe ich dabei: Wenn Funktionen durch ihre Form (!) es so leicht machen, laaaaange Anweisungsfolgen zu schreiben, die dann auch noch Integration und Logik vermischen, wenn Funktionen darüber hinaus eine Hierarchie aufbauen, die wir zur Entwicklungszeit eher nicht sehen, so dass ein Entwicklungszeit/Laufzeit-Mismatch entsteht... dann ist da deutliches Verbesserungspotenzial.</p>
+<p>Am Ende soll immer noch nützliche Software herauskommen. Aber einfacher hergestellt, mit weniger negativen Nebeneffekten.</p>
+<p>Dass in der Mathematik Funktionen der Hit sind, interessiert mich da grad gar nicht. Die Mathematik löst andere Probleme als der gemeine Softwareentwickler.</p>
+<p>Wenn die Mathematik einen Wert für die breite Masse an Softwareentwicklern darstellen sollte, dann nicht in Form ihrer konkreten Abstraktionen, sondern in ihrer Abstraktheit ganz allgemein. Das lässt dann offen, welche konkreten Abstraktionen wir für die Softwareentwicklung benutzen.</p>
+<hr />
+<p><strong>JakeJBlues</strong> (2012-01-10):</p>
+<p>Hallo Ralf,</p>
+<p>OK, mal angenommen wir machen wirklich nur</p>
+<p>Producer-Prosumer-Consumer</p>
+<p>Innerhalb des "Prosumer"'s was darf ich aufrufen, verwenden.... ?Wenn ich im Prosumer wäre und ein Tripel "Producer-Prosumer-Consumer" in irgendeiner Art aufrufen, verwenden darf, bin ich doch soweit wie vorher, oder sehe ich da was "falsch" ....</p>
+<p>Gruß JJR</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-01-10):</p>
+<p>@JJR: Wir können uns einer Lösung nur in Schritten annähern.</p>
+<p>Heute leben wir in einer funktionendominierten Welt von F# über C# und Java bis Scala, Clojure und Ruby. Funktionen allerorten. Und die Bibliotheken und Runtimes gehören zu diesem Paradigma.</p>
+<p>Deshalb können wir es nicht einfach ganz anders machen. Aber ein bisschen geht schon...</p>
+<p>Schritt 1: Du hast weiterhin einen Aufrufbaum zur Laufzeit. Von mir aus :-) Dann sei so konsequent und trenne Integration von Logik. Logik - d.h. Ausdrücke und Fallunterscheidungen - isolierst du in den Blättern. Und auch nur dort rufst du APIs auf, über die du keine Kontrolle hast (z.B. System.IO).</p>
+<p>Schritt 2: Du hast keinen (relevanten) Aufrufbaum zur Laufzeit mehr für die Ausführung von Logik. Die Blätter werden vor ihrer Ausführung integriert (nicht während).</p>
+<p>Schritt 3: Es gibt keinen 3GL Code mehr zur Integration. 3GL kommt nur noch in Blättern vor.</p>
+<p>Das alles lässt sich mit heutigen Mitteln machen. Da müssen wir keine Großartigkeiten erfinden, um damit mal zu arbeiten - und den Unterschied, die Erleichterung zu empfinden gegenüber den Funktionsverhauen.</p>
+<p>Ist ja nun auch nicht so, dass ich der einzige wäre, der so eine Vision hat. Andere formulieren sie nur anders, weniger "prinzipiell" oder provokant. Ich find es aber wichtig, genau hinzuschauen und auch mal zu verstören :-)</p>
+<hr />
+<p><strong>Golo Roden</strong> (2012-01-10):</p>
+<p>Natürlich ist es legitim, danach zu streben, ein Werkzeug zu vereinfachen. Dagegen sage ich ja gar nichts.</p>
+<p>Aber doch bitte nur da, wo es sinnvoll ist.</p>
+<p>Ein - wenn nicht DAS - Grundprinzip der Informatik ist das EVA-Prinzip: Du gibst irgendwelche Daten ein, sie werden verarbeitet, Du bekommst irgendwas zurück. Ein Programm, dem eine dieser drei Komponenten fehlen, ist bis auf ganz wenige Ausnahmen sinnfrei.</p>
+<p>Und das Spannende an EVA ist nicht das E oder das A, sondern das V: Es geht um die Verarbeitung, um das, was ein Programm macht. Anders gesagt: Um seine Funktion.</p>
+<p>Wie schon mal gesagt: Funktionen haben sich über mehrere Jahrtausende als Mittel der Wahl erwiesen, um mathematische Konstrukte aufzubauen und zu beschreiben. Dass auf einmal hier das Problem liegen soll, kann natürlich sein, ist aber unwahrscheinlich.</p>
+<p>Nun kannst Du argumentieren, dass es früher weniger Probleme damit gab - ja, es gab früher aber auch weniger Nutzer. Vielleicht ist das Problem ja nicht die auf einmal gewonnene Einsicht, dass Funktionen ach so schwierig zu handhaben seien, sondern die gestiegene Benutzerbasis? Weil sich halt erst mal die Experten mit etwas befassen, und danach "das einfache Volk".</p>
+<p>Es gibt Dinge, die lassen sich nicht verbessern. Ich kann keinen schnelleren Sortieralgorithmus finden als die bestehenden, das ist mathematisch bewiesen. Ich brauche auch mindestens so- und soviele Schritte, um das Minimum einer Menge zu finden. Auch das ist bewiesen. Hier zu versuchen, etwas zu verbessern, ist vergebene Liesbesmühe.</p>
+<p>Du hast den Vergleich zu einem Speer und dessen "Nachfolgern" gezogen. Der Vergleich hinkt: Was Du versuchst, ist nicht, das Gewehr an Stelle eines Speers zu finden, sondern den Speer so einfach benutzbar zu machen, dass er mit Überlichtgeschwindigkeit fliegt. Und das geht nicht.</p>
+<p>Du hast Daten als Eingabe.
+Du hast Daten als Ausgabe.</p>
+<p>Das ist gesetzt. Und E muss irgendwie zu A transformiert werden. Genau diese Aufgabe übernimmt die Funktion, die die Verarbeitung darstellt.</p>
+<p>Das heißt, Du hast zwingend (!):</p>
+<p>E -&gt; V -&gt; A</p>
+<p>Ob Du das jetzt so hinschreibst, oder als</p>
+<p>A = V(E)</p>
+<p>oder als</p>
+<p>E::V::A</p>
+<p>oder als</p>
+<p>E + V ===&gt; A</p>
+<p>ist dabei wurscht. Das Konzept der Funktion bleibt erhalten. Das kannst Du nicht auflösen, ohne das EVA-Prinzip zu verletzen. Es geht einfach nicht, egal wie Du es auch drehst und wendest.</p>
+<p>Eine Funktion hat eine Eingabe und eine Ausgabe. Punkt. Und wenn sie void ist, hat sie sozusagen die leere Menge als Ausgabe.</p>
+<p>Das ist in der Mathematik so.
+Das ist in der Informatik so.
+Das ist bei uns Menschen so: Aktion =&gt; Verarbeitung =&gt; Reaktion</p>
+<p>Quasi ein kausaler Zusammenhang.</p>
+<p>Und zu versuchen, daran zu rütteln, ist natürlich vollkommen legitim, aber aussichtslos.
+Deswegen verweigere ich mich nicht prinzipiell dagegen, Werkzeuge einfacher zu machen, aber ich nutze meine Energie lieber auf Dinge, die zielführender sind.</p>
+<p>PS: Etwas zu kritisieren ist leicht. Einen konstruktiven Vorschlag zu bringen, wie man es besser machen könnte, ist schon deutlich schwieriger. Wie sieht - konkret - Dein Vorschlag als Ersatz für Funktionen aus?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-01-10):</p>
+<p>@Golo: Definiere bitte mal "sinnvoll".</p>
+<p>Denn ich halte eine Verbesserung hier für sinnvoll - du aber nicht. Dann nenne bitte ein Kriterium für Sinnenfülle, das so universell und absolut ist, dass es mich quasi zwingt, dir Recht zu geben :-)</p>
+<p>Aber zu EVA: Natürlich geht es immer um EVA. Und dass ich das weiß, solltest du wissen, da du beobachtest, was ich so mache. Also nimm mal an, dass EVA auch weiterhin für mich eine Rolle spielt. Ich werde sie nicht verleugnen.</p>
+<p>Wenn du meinen Artikel genau liest, dann wirst du auch sehen, dass ich EVA nicht erwähnt habe. EVA macht nicht das Problem. EVA ist unumgänglich, also Teil der Lösung. Auch in der Zukunft.</p>
+<p>Ich habe mich gegen Funktionen gewendet. Den Begriff habe ich gewählt, weil er dieses C# Konstrukt beschreibt:</p>
+<p>T f(S x) {...}</p>
+<p>Entscheidend ist dabei nicht der Begriff. Er ist nur Platzhalter für ein Konzept. Das Konzept, was ich für problemerzeugend halte, das ist die Kopplung von Request/Response. Das habe ich mehrfach betont. Und da der Request leer sein kann und auch der Response leer sein kann, geht es noch allgemeiner um die Rückkehr zum Aufrufort nach einer Delegation einer Teilaufgabe an ein Unterprogramm.</p>
+<p>Nochmal in Stichworten:</p>
+<p>Problem #1: Wenn nach Delegation zurückgekehrt wird zum "Auftraggeber", dann gibt es kein Halten, wie umfangreich dieser Auftraggeber werden kann. Im Verbund mit fehlender Beschränkung dessen, was der Auftraggeber sonst noch alles machen kann, akkumuliert sich "Geschäftslogik" dann an einem Ort: beim Auftraggeber.</p>
+<p>Ich denke, das kannst du bezeugen. Lange Methoden sind die Norm. Brownfield Code kommt ja nicht von nix.</p>
+<p>Willst du was dagegen tun, muss du zusätzliche Regeln einführen und deren Einhaltung überwachen. CCD bietet ein solches Regelwerk.</p>
+<p>Auch schön - aber umständlicher, als eine Praktik (oder gar ein Tool) zu haben, die es gar nicht erst dazu kommen lässt.</p>
+<p>Problem #2: Unterprogramme können sich natürlich geschachtelt aufrufen. Bis in beliebige Tiefe. Ohne weitere Einschränkung durch Regeln, gibt es da kein Halten, wo Geschäftslogik zu finden ist. Sie kann überall in der Hierarchie sein. Das ist eines der gravierendsten Probleme; das führt direkt zu Brownfield Code en masse.</p>
+<p>SLA kämpft dagegen. Auch schön. Aber auch dort, wo SLA eingesetzt wird - ja, auch bei Uncle Bob - bleibt es bei einer Vermischung von Logik und Integration. Das ist ein Widerspruch zu SRP.</p>
+<p>Ich liefere hier nun ein Ideal, dessen Einhaltung sehr einfach zu erkennen ist: Wer Funktionen aufruft, muss frei von Geschäftslogik sein. (Wenn denn schon Funktionsaufrufe sein müssen.)</p>
+<p>Ein DI Container ist ja auch frei von Geschäftslogik. Wunderbar. Da machen uns auch die vielen Abhängigkeiten nichts aus.</p>
+<p>Und was das "besser machen" angeht... Da kennst du meine Position :-) Ich kann auch nicht immer was Neues erfinden. Mit meiner steilen These hier habe ich dafür nur eine neue, sehr einfach zu verstehende Begründung nachgeliefert.</p>
+<p>Ausdrücklich formuliert: Flow-Design löst das Problem der gefährlichen Funktionen.</p>
+<p>Ja, so simpel sieht meine kleine Welt aus :-)</p>
+<hr />
+<p><strong>JakeJBlues</strong> (2012-01-10):</p>
+<p>Hallo Ralf,</p>
+<p>ich kann mit Flow-Design genauso viel "Sch..." bauen wie mit anderen Programmierkonzepten :-(</p>
+<p>Wobei wir dann wieder bei der Ausbildung wären.....</p>
+<p>Aber vielleicht gibt es irgendwann ein "Flow-Design"-Tool, welches nicht vom "Problem" vor dem PC abhängig ist, dann kann ich mir in Ruhe einen anderen Job suchen :-)</p>
+<p>Gruß JJR</p>
+<hr />
+<p><strong>Golo Roden</strong> (2012-01-10):</p>
+<p>Die Sinnhaftigkeit ist in diesem Fall rekursiv aufzählbar: Ich kann "sinnvoll" nicht definieren, wohl aber "sinnlos".</p>
+<p>Mal der Versuch einer Definition, die halbwegs formalen Ansprüchen gerecht wird:</p>
+<p>"Sei P ein Problem. Der Versuch, eine Lösung L für das Problem P zu finden, wird genau dann als 'sinnlos' bezeichnet , wenn bekannt ist, dass L nicht existiert."</p>
+<p>Nun stellt sich die Frage, was eine Funktion ist. Du hast bereits eine Definition geliefert, die ich gerne übernehme:</p>
+<p>T f(S x) { ... }</p>
+<p>Annahme: Für S und T gilt, dass sie ohne Beschränkung der Allgemeinheit für jeden beliebigen Typ stehen können.</p>
+<p>Gemäß so ziemlich jeder Sprachdefinition ist auch 'void' ein Typ.</p>
+<p>Demnach sind auch Funktionen, die nichts zurückgeben, Funktionen gemäß dieser Definition.</p>
+<p>Du schreibst:</p>
+<p>"Das Konzept, was ich für problemerzeugend halte, das ist die Kopplung von Request/Response."</p>
+<p>Flow-Design basiert auf der Idee, den Response durch Fluss zu ersetzen. Statt dass eine Funktionseinheit einen Wert zurückgibt, wird der Wert an die nächste Funktionseinheit "weitergereicht".</p>
+<p>Dazu wird, beispielsweise in EBCs, dann auf void-Funktionen und Events zurückgegriffen, auch wenn dies nicht zwingend so sein müsste.</p>
+<p>Was haben wir also?</p>
+<p>Aus</p>
+<p>z = g(f(x))</p>
+<p>haben wir nun ein</p>
+<p>x -&gt; f(x) -&gt; y -&gt; g(y) -&gt; z</p>
+<p>gemacht. Request und Response sind dort aber nach wie vor vorhanden, zumindest konzeptuell. Der einzige Unterschied ist, dass der "Ausgangspfeil" nach rechts zeigt, und nicht nach links.</p>
+<p>Das ist prinzipiell das gleiche wie wenn ich</p>
+<p>y = f(x)
+z = g(y)</p>
+<p>schreibe, also einfach sequenzielle Ausführung der Funktionen - eine Sequenz liegt ja wortmäßig nicht zufällig nahe an einem Fluss ;-).</p>
+<p>Und wenn, um mal auf eine konkrete Implementierung zu sprechen zu kommen, ich EBCs als Beispiel für Flow-Design heranziehe, dann sind Events auch nichts anderes als eine Funktion - nur in einem anderen Sprachkonstrukt "verborgen".</p>
+<p>Und: Flow-Design-Funktionen mit void als Rückgabetyp entsprechen obiger Definition von "Funktion", da void eben auch ein Typ ist.</p>
+<p>Damit vermeidet auch Flow-Design keine Funktionen, benutzt und "maskiert" sie nur anders.</p>
+<p>Der Kern ist der gleiche.</p>
+<p>Fazit: Auch Flow-Design kommt nicht ohne Funktionen aus.</p>
+<p>Und mit meinem Versuch einer Definition von "sinnlos" von oben sind wir damit an dem Punkt, dass feststeht, dass mit Flow-Design kein L für P existiert.</p>
+<p>So interessant Flow-Design auch ist, aber es löst das Problem nicht, ohne Funktionen auszukommen.</p>
+<p>q.e.d. ;-)</p>
+<hr />
+<p><strong>Golo Roden</strong> (2012-01-10):</p>
+<p>JakeJBlues: +1</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-01-10):</p>
+<p>@JJR: Mit jeder Waffe kann man sich in den Fuß schießen. Für jede Waffe braucht man eine Ausbildung.</p>
+<p>Wie ich mit dem Speer-Bogen-Armbrust-Gewehr Beispiel aber zeigen wollte, steigt bei einer Vereinfachung der Werkzeuge das Niveau, auf dem man sich in den Fuß schießt. Und es besteht Hoffnung, dass eben manche tumben Fehler weniger passieren.</p>
+<p>Nochmal: Dass man sich auf ewig irgendwie in den Fuß schießen kann, sollte kein Argument gegen Kritik oder Weiterentwicklung sein. Wir säßen immer noch bei Assembler und Talglampen, wenn wir so dächten.</p>
+<p>Der Übergang von Assembler zu Fortran und dann zu C und zu C++ hat uns - hoffentlich stimmen wir überein - weiter gebracht. Keiner hat gesagt, "Ach, mit so einer Hochsprache kann man immer noch Fehler machen. Lassen wir das sein."</p>
+<p>Ergo: Lass uns nicht darüber sprechen, ob Weiterentwicklung sein sollte. Nehmen wir sie an.</p>
+<p>Die Frage bleibt: Ist Request/Response ein Problem? Meine Antwort habe ich beschrieben. Eine Widerlegung habe ich hier noch nicht recht gesehen.</p>
+<hr />
+<p><strong>Golo Roden</strong> (2012-01-10):</p>
+<p>Request / Response ist kein Problem. Das ganze Web basiert darauf (konzeptuell!), und das funktioniert seit nun knapp 25 Jahren ganz gut ;-)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-01-10):</p>
+<p>@Golo: Du verwechselst Konzept und Implementation.</p>
+<p>Dass</p>
+<p>y = f(x)
+z = g(y)</p>
+<p>einen Fluss darstellt, sehe ich auch so. Diese Übersetzung für FD habe ich ja schon lange beschrieben.</p>
+<p>Deshalb betone ich hier immer wieder: Solange wir auf 3GL festgenagelt sind, kommen wir nicht wirklich aus der "Funktionsnummer" raus.</p>
+<p>Dass in einem Flow Transformationen stattfinden, sehe ich auch so. Nur ist es eben ein Unterschied, ob ich Integration (Verdrahtung) und Logik klar trenne - oder eben nicht.</p>
+<p>Beim Flow ist die Trennung da, im "normalen" 3GL Code eben nicht. Wieder lege ich die Berge an unwartbarem Code als Beweis vor. Die Unwartbarkeit resultiert zu einem großen Teil aus eben dieser Vermischung.</p>
+<p>Wenn wir aus der Vermischung einfach auf anderem Wege herauskommen, ist mir das recht. Ich sehe das jedoch nicht. Deshalb sehe ich einstweilen das Übel weiterhin darin, dass Request an Response gebunden ist und auf jeder Ebene einer Aufrufhierarchie deshalb alles erlaubt ist.</p>
+<p>Wenn du dich mit FD ernsthaft beschäftigt haben solltest, wirst du festgestellt haben, dass der Schlüssel zum Erfolg mit FD darin besteht, dass 3GL eigentlich nur in den Blättern steht. Wenn du sie darüber verwendest, ist das nur deiner Bequemlichkeit ;-) geschuldet. Zumindest ist der Code oberhalb der Blätter trivial, weil frei von Logik. Deshalb schert er mich auch nicht besonders. Da mögen Funktionsaufrufe drin stehen, wenn´s grad noch nicht anders geht. Die tun nicht weh.</p>
+<p>Und wenn du FD nicht konsequent betrieben haben solltest, dann bitte ich dich darum, es so zu versuchen: Baue gern weiter Funktionsaufrufbäume nach belieben. Aber halte alle Ebenen außer der untersten frei von Ausdrücken und Kontrollstrukturen.</p>
+<p>Versuch das einmal, so wie du TDD as if you ment it in einer Code Kata versuchst. Und dann berichte von deinen Erkenntnissen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-01-10):</p>
+<p>@Golo: Ich habe nichts gegen Request/Response. Ich habe nichts gegen WCF. Ich habe nichts gegen Threads. Ich habe nichts gegen Objektreferenzzählung. Ich habe auch nichts gegen Gewehre.</p>
+<p>Nur all das und viel mehr gehört nicht in die Hände jedes Entwicklers. Und wir haben nicht die Ressourcen - wie inzw. offensichtlich sein sollte -, dass wir alle kompetent machen, diese Tools zu benutzen, ohne damit mittelfristig Probleme zu erzeugen.</p>
+<p>Bei Objektreferenzzählung glaubst du mir das doch zumindest, oder? Und ich hoffe, dass du auch bei WCF da mit mir übereinstimmst.</p>
+<p>VB hat zu einem Boom geführt, nicht C++. Warum nur?</p>
+<p>Und auch .NET Remoting hat zu einem Book geführt, nicht DCOM. Warum nur?</p>
+<p>Die Erklärung: Plötzlich waren vormals schwierige Sachen (UI, Memory Management, remote comm.) so einfach, dass damit viel mehr Leute umgehen konnten.</p>
+<p>Und jetzt der Trick: War das immer gut so?</p>
+<p>Ja und nein. Natürlich war es gut, dass da Sachen einfacher wurden.</p>
+<p>Aber es war auf der anderen Seite problematisch, wenn dadurch Fundamentales, Paradigmatisches kaschiert oder außer Acht gelassen wurde.</p>
+<p>Problem bei VB: Durch die große Einfachheit in Bezug auf UI und Objekte gab es kein Halten mehr. Es wurde drauf los programmiert. Wesentliche Paradigmen wie SoC wurden nicht beachtet.</p>
+<p>Sollte deshalb der Fortschritt aber auf dem Niveau von C/C++ und Windows um 1989 stehenbleiben?</p>
+<p>Dito bei .NET Remoting. Verteilung wurde so einfach, dass man vergaß zu lehren, dass darauf zu achten sei, wie das mit der Latenz und Sicherheit usw. war.</p>
+<p>Sollte man deshalb aber auf dem Niveau von C/C++ und Sockets stehenbleiben? Kaum.</p>
+<p>Mit WCF ist man nun übers Ziel hinaus geschossen. Man hat manches korrigiert - dafür aber wieder ein sehr kompliziertes Tool geschaffen. Das macht keine Freude mehr. Es muss wieder einfacher werden - die Empfehlung, mehr zu lernen, geht am Grundproblem vorbei.</p>
+<p>Schließlich das mit Request/Response. Das hat Vorteile gebracht. Es ist in unserem Stammhirn. Aber nun sind wir an einem Punkt, wo wir die Nachteile zu spüren bekommen: schwierig einzudämmende Unwartbarkeit.</p>
+<p>Deshalb bin ich dafür, einen anderen Weg einzuschlagen. Auf dem kann man wieder Fehler machen. Aber hoffentlich auf einem höheren Niveau. So wie mit VB oder .NET Remoting.</p>
+<hr />
+<p><strong>JakeJBlues</strong> (2012-01-10):</p>
+<p>Hallo Ralf,</p>
+<p>bei Deiner Argumentation verwendest Du immer -&gt; Funktionen produzieren "Berge von unwartbarem Code", deshalb keine Funktionen, sondern "FLOW-DESIGN" ....
+Glaubst Du wirklich, dass mit FLOW-DESIGN das "Problem" vor dem Computer massenweise "Wartbaren Code" produziert .....</p>
+<p>oder erscheint er Dir nur "wartbarer", weil man Code-Teile bei "Nicht-Gefallen" leichter eliminieren kann ....</p>
+<p>Ich bin geneigt zu sagen, der "sinnvolle" Umgang mit Flow-Design kann zu wartbarem Code führen, wie auch der sinnvolle Umgang mit Funktionen....</p>
+<p>Wie Golo es schon sagte, "sinnfrei" bleibt "sinnfrei" .....</p>
+<p>Gruß JJR</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-01-10):</p>
+<p>@JJR: Auch mit FD kann man Verhaue produzieren. Auch FD muss man lernen.</p>
+<p>Mit Objekten und Funktionen habe ich mich nun lange redlich bemüht. 30 Jahre mache ich das nun schon. Und in den letzten Jahren noch bewusster.</p>
+<p>Aber bei allem redlichen Bemühen sehe ich nicht, dass es grundsätzlich voran geht. Mit Prinzipien geht es besser als ohne. Nur stoße ich dennoch an eine gläserne Decke. Und ich sehe das auch bei anderen.</p>
+<p>Meine Diagnose: Auch mit CCD sind wir gefangen in einem begrenzenden Weltbild. Vielleicht sollte ich es das der von-Neumann-Maschine nennen? Es ist jedenfalls fundamental, unterhalb unserer normalen Bewusstseinsschwelle.</p>
+<p>Der Fisch sieht nicht das Wasser in dem er schwimmt. Und so merken wir nicht, worin wir dümpeln.</p>
+<p>Wenn wir SOLID nur innerhalb dieses Paradigmas anwenden, kommen wir nicht wirklich raus aus dem Problem. Deshalb habe ich zu xSOLID bei G+ geschrieben. Wir müssen die Prinzipien wirklich, wirklich ernst nehmen und dehnen. Dann haben wir eine Chance, aus der unsichtbaren Eierschale unseres Paradigmas auszubrechen.</p>
+<p>Dabei ist es doch so einfach zu sehen: Ich kann dir ein beliebiges OSS Projekt geben. Und dann frage ich dich, "Wie funktioniert das?" Du wirst mir nicht antworten können. Der Grund: Man kann das nur sehr, sehr schwer aus dem Code herauslesen. (Und ich setze schon voraus, dass du die Problemdomäne verstehst.)</p>
+<p>Das kann doch aber nicht sein. Wir reden doch nicht über eine Pyramide, die tausende Jahre unverändert stehen soll. Wir reden über eine hochvolatile Maschine. Und deren Funktionalität soll man nicht ablesen können, wo man doch ständig daran rumschrauben muss? Die soll nicht einfach zu ändern sein, wo das doch ständig nötig ist?</p>
+<p>Nein, nein, solange das nicht einfacher wird, ist etwas im Argen. Wir nutzen die Paradigmen und Werkzeuge quasi auf dem Niveau von Leuten der 1950er oder 1980er. Da macht auch Intellisense keinen Unterschied. Nur das Zeug, was wir damit bauen, ist um 10erpotenzen komplexer.</p>
+<p>Damit es besser wird, reicht es nicht, wenn wir den Baum an der Krone stutzen. Wir müssen die Axt am Stamm anlegen. Und mit FD haben ich eine Ahnung davon bekommen, dass das etwas nützt.</p>
+<hr />
+<p><strong>Palin</strong> (2012-01-11):</p>
+<p>Ich finde die Tonnen an nicht wartbaren Code liegen zum Größten Teil daran das Prinzipien wie SOLID verletzt wurden.</p>
+<p>Und guten Code kann ich nur bekommen wenn ich mich an Prinzipien wie SOLID, DRY usw halte, dazu gibt es halt noch Entwurfsmuster und TDD.</p>
+<p>Ich denke FD baut auch auf Verständnis diesen Prinzipien und Techniken auf.</p>
+<p>Und mit FD kann ich jetzt natürlich ein weiteres Prinzip einführen was die Leute auch wider nicht kennen, falsch verstehen oder machen was sie Möchten (OK die Ausnahme wird es dann richtig Anwenden, wie es ja mit den jetzigen Prinzipien auch schon läuft).</p>
+<p>Für mich stellt sich hier einfach die Frage, brauche ich noch ein weiteres Prinzip.</p>
+<p>Oder um es mal umgekehrt auszudrücken welche Prinzipien(Techniken) sollte ein Entwickler kennen um "guten" Code zu produzieren?</p>
+<p>Und sollte man dann nicht genau daran arbeiten den Leuten, diese Prinzipien beizubringen?</p>
+<hr />
+<p><strong>Golo Roden</strong> (2012-01-11):</p>
+<p>"Nur all das und viel mehr gehört nicht in die Hände jedes Entwicklers."</p>
+<p>So weit einverstanden.</p>
+<p>"Und wir haben nicht die Ressourcen - wie inzw. offensichtlich sein sollte -, dass wir alle kompetent machen, diese Tools zu benutzen, ohne damit mittelfristig Probleme zu erzeugen."</p>
+<p>Auch einverstanden.</p>
+<p>Aber Du ziehst in meinen Augen den falschen Schluss:</p>
+<p>Denn dass wir nicht alle kompetent machen können, liegt nicht nur an den Ressourcen. Das liegt auch an den "allen".</p>
+<p>Das Problem ist meines Erachtens nicht die Technik, das Problem ist der Mensch.</p>
+<p>Zu viele Entwickler, die sich nicht mit der Thematik beschäftigen WOLLEN. Die heute noch kein yield kennen, die heute noch nicht wissen, was ein Lambdaausdruck ist, die heute noch nicht wissen, was ein Delegate so genau eigentlich ist.</p>
+<p>DESHALB funktioniert es nicht, alle kompetent zu machen: Weil nicht alle dafür geeignet sind.</p>
+<p>Ich versuche auch nicht, filigrane Kunstwerke zu schnitzen, um davon leben zu können, weil mir die Kompetenz dazu fehlt, und ich auch nicht die geeigneten Voraussetzungen dazu mitbringe. Weder habe ich das notwendige Feinmotorik, noch genug Übung mit einem Schnitzmesser. Und ganz davon abgesehen interessiert es mich auch nicht.</p>
+<p>Muss deswegen das Schnitzen vereinfacht und das Messer verbessert werden? Brauchen wir deshalb einen Nachfolger für ein Messer?</p>
+<p>Nein. Ich muss mich damit abfinden, eben nicht filigrane Dinge schnitzen zu können, ob mir das nun passt oder nicht.</p>
+<p>Und genau DAS müsste auch unsere Branche mal kapieren: Dass eben nicht jeder als Entwickler geeignet ist. Damit wäre viel gewonnen, und man bräuchte nicht so viel Zeit und Energie in Dinge zu investieren, die für diejenigen, die die entsprechenden Voraussetzungen mitbringen, kein  oder kaum ein Problem darstellen.</p>
+<p>Just my 2 cents ...</p>
+<hr />
+<p><strong>Golo Roden</strong> (2012-01-11):</p>
+<p>Um es in einem Satz zusammenzufassen:</p>
+<p>Wenn all diejenigen, die keine Leidenschaft für die Softwareentwicklung und keine intrinsische Neugier und Motivation auf Neues mitbringen, die IT-Branche verlassen würden, hätten wir deutlich weniger Probleme.</p>
+<p>Und falls Du mir das nicht glaubst: Erfolgreiche Startups bestehen NUR aus Leuten, die Leidenschaft und Neugier für das mitbringen, was sie machen. Die haben solche Probleme eher selten ...</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-01-11):</p>
+<p>@Golo:
+<em>Und falls Du mir das nicht glaubst: Erfolgreiche Startups bestehen NUR aus Leuten, die Leidenschaft und Neugier für das mitbringen, was sie machen. Die haben solche Probleme eher selten ...</em></p>
+<p>Das liegt auch viel an deren mitgebrachter Unternehmensphilosophie und Offenheit für Neues.
+Ich denke, die Leidenschaft kann sich da auch besser entfalten, weil alle im Selben Boot bzw. auf gleicher Augenhöhe sitzen.</p>
+<p>Ich denke mir, in den meisten Unternehmen kann sich diese Leidenschaft gar nicht entfalten, weil da zu viele BWLer im Weg stehen. ("Kostet zu viel. Dauert zu lang. Wollen kein Risiko eingehen. Hilfe, schon wieder was Neues?! etc.")</p>
+<p>BWLer und Softwareentwickler sind wie Feuer und Wasser. Die passen einfach nicht zusammen. BWLer haben einfach keine Vorstellung davon, was Softwareentwicklung bedeutet. Die wollen nur die fertige Software und setzen die Termine teils auf utopische Werte.</p>
+<p>Bei sowas kann sich meine Leidenschaft leider nicht so entfalten, wie ich es gerne hätte. Also ordnet man sich meist dem BWLer unter und rotzt den Code eben so hin, auch wenn einem innerlich dabei alles weh tut, weil es nicht sauber ist. (Oder man beginnt sauber und wird zur Deadline hin immer schlampiger, weil keine Zeit mehr ist. Da bricht man dann mit den guten Vorsätzen, damit der Termin gehalten werden kann.)</p>
+<p>Ich denke auch, dass dies das eigentliche Problem ist.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-01-11):</p>
+<p>@Palin: Ob du mehr Prinzipien oder sonstwas brauchst, kannst du nicht aus der Zahl der Prinzipien ableiten, die du schon hast. Du musst dir das Ergebnis des Umgangs mit den Prinzipien anschauen.</p>
+<p>Dieses Ergebnis sieht für mich frustrierend aus.</p>
+<p>Die Prinzipien mögen nicht falsch sein - aber ineffizient.</p>
+<p>"Du musst mehr auf SRP und SLA und SoC und LoD usw. achten! Los!"</p>
+<p>Das habe ich lange gepredigt. Mit mäßigem Erfolg.</p>
+<p>Wenn ich aber heute Flow-Design unterrichte... dann geht es viel einfacher. Durch Hinzufügen eines weiteren Konzepts mache ich mir und den Teilnehmern leichter.</p>
+<p>@Golo: "Problem Mensch"... ja, da war es wieder, das Menschenbild. Der Mensch ist das Problem. Der ist unmotiviert, störrisch, beschränkt... Ach, wenn der Mensch nur ein anderer wäre, dann wäre die Welt eine bessere.</p>
+<p>Sicher gibt es auch immer Leute, die schwer von Begriff sind. Die Normalverteilung lauert überall. Aber wie erklärst du es dir, dass heute 10 Jährige Sachen können, die früher Erwachsene nicht konnten? Hat sich der Mensch verändert? Oder liegt es nicht vielmehr an den Unterrichtsmethoden oder den vereinfachten Werkzeugen?</p>
+<p>Wir sollten nicht darauf hoffen, dass die Entwickler schlauer werden. Da wir mehr brauchen als wir haben, ist eher zu befürchten, dass wir in Zukunft mehr haben, die weniger gescheit und motiviert sind. Und trotzdem müssen wir unsere Softwareprobleme lösen. Wie das?</p>
+<p>Wir müssen unsere Konzepte verbessern, auch unsere Tools, ja, auch unsere Ausbildung. Aber bitte wünsch dir doch keine anderen Menschen.</p>
+<p>Technologien, Werkzeuge alles ist für den Menschen da, nicht umgekehrt. Autos sehen heute so aus wie sie aussehen, weil die Menschen nicht alle Automechaniker werden können und wollen, um Auto zu fahren. Herr Daimler hätte sich vielleicht auch lieber andere Autofahrer gewünscht damals...</p>
+<p>Get real: Wenn eine Technologie oder ein Konzept über Jahrzehnte Schwierigkeiten macht, dann ist das kein Problem der Menschen, sondern ein Problem des Konzepts.</p>
+<p>Das war bei RPC bzw. Remote Objects so, das ist bei der "normalen" OOP so, das ist bei Request/Response so :-)</p>
+<hr />
+<p><strong>JakeJBlues</strong> (2012-01-11):</p>
+<p>Hallo Ralf,</p>
+<p>"Das war bei RPC bzw. Remote Objects so, das ist bei der "normalen" OOP so, das ist bei Request/Response so :-)"</p>
+<p>Du hast vergessen zu erwähnen, dass es bei "FD" und jedem anderen Konzept auch so sein wird....</p>
+<p>Aus diesem Grunde kann man zurecht behaupten, dass "Flow-Design considered harmful", wir sollten erst gar nicht anfangen... :-S</p>
+<p>Obwohl ist nicht dieser Meinung bin!</p>
+<p>Gruß JJR
+P.S.: Es wird kein "Konzept" geben, welches von allen Menschen so umgesetzt werden wird, wie sich der Konzeptersteller es sich wünscht ;-) ...</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-01-11):</p>
+<p>@JJR: Du hast völlig recht, dass jedes Konzept, jedes Tool missverstanden und falsch "im Sinne des Erfinders" eingesetzt wird.</p>
+<p>Meine Hoffnung ist allerdings, dass all das mit der Zeit auf immer höherem Niveau geschieht.</p>
+<p>Beispiel: Weil wir heute GC haben, muss über manches, worüber wir vor 10 Jahren uns noch die Köpfe heiß geredet haben, nicht mehr gesprochen werden. Wir können uns auf Wichtigeres konzentrieren.</p>
+<p>Irgendwas ist immmer. Und trotzdem glauben wir an den Fortschritt. Nein, wir fühlen es, dass es Fortschritt gibt.</p>
+<p>Jeden Tag mit dem Auto 90min zu pendeln und dabei im Stau zu stehen, ist doof. Aber jeden Tag 90min draußen an einem Zug zu hängen, wie es in Indien Millionen wohl tun, ist doofer.</p>
+<p>In diesem Sinn: Mir über FD "Verhaue" die Haare zu raufen ist für mich ein wünschenswertes Problem im Vergleich zum Reverse Engineering von Abhängigkeitshierarchien :-)</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-01-20):</p>
+<p>Hallo Ralf!</p>
+<p>Mal wieder viel zu verdauen und spät zur Party gekommen.</p>
+<p>Spontan habe ich das Gefühl, dass wir traditionell im EVA-Prinzip das Hauptaugenmerk und damit den Fokus auf V legen. V ist für meine Begriffe ein Kürzel, welche den Weg "von E zu A" benennt.</p>
+<p>An dieser Stelle gibt es mehrere Probleme:
+- man hat nicht genügend atomare Operationen im Sprachschatz
+- man hat genügend Operationen, findet diese aber nicht, weil Code Completion sie nicht liefert
+- man schreibt eine Spike zum Verständnis einer API, die dann zum Legacy-code ausartet
+- Code von zweifelhafter Wiederverwendbarkeit wird als firmeninterne API über eine API gelegt, um "Einarbeitungsaufwand zu sparen"; wie oft habe ich schon gehört "du kennst dich doch aus, schreib mal eine Standardfunktion, die das Problem  erschlägt, der  braucht das".</p>
+<p>Flow Design ist für meine Begriffe ein Ansatz, eine Beschreibung von V nicht nur verbal sondern auch im Code zu bekommen. Dazu werden atomare AKA SRP Funktionseinheiten AKA Blätter aneinandergereiht, die die Eingabe in Zwischenergebnisse bis hin zum Endergebnis umwandeln. V ist hierbei ein Komposit, so wie jede nicht-atomare Unterfunktion ein Komposit ist.</p>
+<p>Ich implementiere FD bis dato immer mit Extension-Methods. Nehmen wir mal dein Beispiel:</p>
+<p>A
+S
+T
+U
+B
+mit impliziter Eingabe [E] und Ausgabe [A] wird zu</p>
+<p>[V] =&gt; [A] = [E].A.S.T.U.B</p>
+<p>Wenn STU eine einen Standardfall oder eine Kategorie bildet, dann gruppiere ich die einfach als neue Extension, die genauso einfach wieder auffindbar ist.</p>
+<p>[F] =&gt; [A] = [E].S.T.U
+[V] =&gt; [A] = [E].A.F.B</p>
+<p>Wenn ich an einer Stelle T nicht benötige, kann ich immer noch atomar</p>
+<p>[V] =&gt; [A] = [E].A.S.U.B</p>
+<p>verwenden.</p>
+<p>Natürlich: die Blätter-Funktionen sind momentan nur durch Selbstbeschränkung un konsequentes Einhalten von SRP erreichbar. Der Blick auf die Komposite bleibt getrübt, so lange man sich nicht auf eine oder maximal zwei Ebenen beschränkt.</p>
+<p>Aber hier geht es um Wartbarkeit. Eine atomare Funktion zu verstehen ist trivial, einen Komposit zu verstehen ist trivialer. Die atomare Funktion wird darüber hinaus per Unit-Test in ihrer Konsistenz garantiert.</p>
+<p>Für mich ist das bis dato das Maximum an Wartbarkeit. Lasse mich aber gern immer eine Besseren belehren.</p>
+<p>Gruß,</p>
+<p>Markus</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-01-20):</p>
+<p>@Markus: Deinen Ansatz mit den Extension Methods finde ich völlig ok. Ob das Funktionen sind oder nicht, ist nicht so wichtig. Denn du verwendest Methoden hier auf eine Weise, dass deutlich zwischen Operation (Logik) und Integration (Verdrahtung) unterschieden wird.</p>
+<p>Extension Methods sind ein Mittel, um zu vermeiden, dass zwischen zwei Methodenaufrufe Logik schlüpft.</p>
+<hr />
+<p><strong>Frank</strong> (2012-01-22):</p>
+<p>Viele von den Kommentaren wäre uns wohl allen erspart geblieben, wenn der Titel gelautet hätte:</p>
+<p><strong>Nested Function Calls considered harmful</strong></p>
+<p>und/oder</p>
+<p><strong>Mixed-abstraction-level Functions considered harmful</strong></p>
+<p>Du kritisierst ja wohl nicht die Funktionen an sich, sondern einerseits ihre Schachtelung und anderseits die Mischung von Funktionsaufrufen und anderen Anweisungen innerhalb einer Funktion.</p>
+<p>Davon abgesehen, stimme ich dir zwar darin zu, dass man nicht für alles, was man kritisiert, eine Lösung parat haben muss. Gerade in einer großen Community wie der Software-Entwicklungs-Community im Netz, kann es viel effizienter sein, eine kritische These ohne Lösungsansatz aufzustellen und dann zu sammeln, was an Lösungsvorschlägen kommt. Wenn man hunderte Gehirne auf das Problem ansetzt und aus dem Feedback die beste oder die besten Lösungen auswählt, bekommt man im Schnitt bessere Resultate, als wenn man gezwungen ist, sich alleine was auszudenken.</p>
+<p>Allerdings ist es hier ja wohl so, dass du das, was du als Lösung ansiehst, doch schon ganz genau kanntest. Und dass andere sinnvolle Lösungsmöglichkeiten nicht wirklich genannt wurden. Dadurch geht dein Lösungsvorschlag "Flow-Design löst das Problem der gefährlichen Funktionen", den du im Grunde nur in diesem einen Satz in einem der mittleren Kommentare nennst, vollkommen unter. Ich weiß, du hast viele Artikel über Flow Design geschrieben und jeder interessierte kann das jederzeit nachlesen. Trotzdem erscheint es mir sinnvoll, dass du einen zweiten Teil zu diesem Blog-Artikel schreibst, in dem du konkret und im einzelnen aufzeigst, wie in denen Augen Flow-Design die angesprochenen Probleme löst.</p>
+<p>Ich sehe z.B. nicht, wie FD verhindert, was du unter Punkt 2 kritisierst:</p>
+<p>"Inhaltliche Sequenzen werden aufgelöst. Zur Entwicklungszeit jedoch wird es immer schwieriger zu verstehen, was da eigentlich passiert."</p>
+<p>Im Gegenteil scheint mir dein Beispiel</p>
+<p>"Client:
+  Vorbereitender Code erzeugt X
+  Y= f(X)
+  Nachbereitender Code verarbeitet Y</p>
+<p>wird Producer-Consumer-Code:</p>
+<p>Producer:
+  Vorbereitender Code erzeugt X
+  Versenden von X</p>
+<p>f als Prosumer:
+  X nach Y transformieren
+  Versenden von Y</p>
+<p>Consumer:
+  Nachbereiten von Y"</p>
+<p>zu zeigen, dass durch FD alles in extrem kleine Einheiten zerrissen wird. Solche und andere denkbare Fragen könntest du in einem zweiten Teil des Blog-Artikels klären.</p>
+<p>Wobei ich sagen muss, dass ich dir schon bei der Problembeschreibung nicht in allen Punkten zustimme. Du schreibst z.B.</p>
+<p>"Die Einführung des Unterprogramms F zerstört diese verständliche Einheit. Was zwischendurch passiert, steht nun irgendwo. Wer nun liest A; CALL F; B; der ist darauf angewiesen, dass F ein ausdrucksstarker Name ist, um zu verstehen, was da passiert."</p>
+<p>Das sehe ich allerdings weniger als Problem, als vielmehr als Chance. Denn</p>
+<p>A
+BerechneBruttoPreis
+B</p>
+<p>ist wohl einfacher zu verstehen als</p>
+<p>A
+if (kategorie == 0) {
+   preis <em>= 1.07;
+} else {
+   preis </em>= 1.19;
+}
+B</p>
+<p>selbst wenn oder gerade weil man im ersten Fall nicht im Detail weiß, wie der Bruttopreis berechnet wird. Die Abstraktion schärft den Blick für das Wesentliche.</p>
+<hr />
+<p><strong>McZ</strong> (2012-01-23):</p>
+<p>@Frank
+"A
+BerechneBruttoPreis
+B</p>
+<p>ist wohl einfacher zu verstehen als</p>
+<p>A
+if (kategorie == 0) {
+ preis <em>= 1.07;
+} else {
+ preis </em>= 1.19;
+}
+B"</p>
+<p>In diesem Fall ist BerechneBruttoPreis eine Blatt-Funktion und damit ist im konkreten hardcodierten Fall der Einsatz gerechtfertigt. Selbst in FD wäre dies eine Funktionseinheit.</p>
+<p>Im Prinzip benennst du aber bereits durch die Konstanten deine Erweiterungspunkte.</p>
+<p>Was, wenn eine oder beide Konstanten je nach Land unterschieden werden oder gar dynamisch sind? Dann würdest du entweder eine weitere Funktionsebene einfügen, die die voeher konstanten Werte ersetzt, oder gleich MwstSatz als eine gleichberechtigte Eigenschaft führen, die dann in einem separaten Schritt vorher ermittelt wird.</p>
+<p>Der Unterschied ist: in ersterem Fall wird dein Code zu einem Komposit, im zweiten Fall bleibt es ein Blatt, nur die Implementierung ändert sich.</p>
+<p>Hinzu kommt die Prozessebene. Ich muss MwstSatz nur ermitteln, wenn sich das Land in der Adresse des Auftrags ändert. BruttoPreis wird berechnet, wenn sich der NettoPreis oder der MwstSatz ändern. Ich würde also sogar soweit gehen zu sagen, dass dies zwei völlig getrennte Prozesse sind.</p>
+<p>Gruß,</p>
+<p>Markus</p>
+<hr />
+<p><strong>Frank</strong> (2012-01-23):</p>
+<p>@Markus:</p>
+<p>Um Blatt oder nicht, Funktionseinheit oder nicht, Konstante oder nicht, sogar Flow Design oder nicht ging es doch bei meiner Aussage gar nicht. Sondern es ging nur darum, was von beidem verständlicher ist: Code direkt eingesetzt oder Code in Funktion ausgelagert. Ich habe mich auf ein konkretes Zitat von Ralf bezogen.</p>
+<p>Je mehr von dem, was du bezüglich der Implementierung angesprochen hast (Änderung des Mehrwertsteuersatzes, andere Länder) in dieselbe einfließt, je länger und komplexer diese also wird, desto stärker wird mein Argument. Nochmal: Es ging um Gegenargument zu der Aussage von Ralf bezüglich der Verständlichkeit.</p>
+<hr />
+<p><strong>McZ</strong> (2012-01-24):</p>
+<p>@Frank
+"Um Blatt oder nicht, Funktionseinheit oder nicht, Konstante oder nicht, sogar Flow Design oder nicht ging es doch bei meiner Aussage gar nicht. Sondern es ging nur darum, was von beidem verständlicher ist: Code direkt eingesetzt oder Code in Funktion ausgelagert. Ich habe mich auf ein konkretes Zitat von Ralf bezogen."</p>
+<p>Schon verstanden. Wenn du aufmerksam gelesen hast wirst du bemerkt haben, dass ich in deinem dargelegten einfachen Fall das auch für absolut in Ordnung halte. Auf die kaufmännische Korrektheit gehe ich jetzt nicht ein.</p>
+<p>Aber es geht hier um Wartbarkeit in evolvierendem Code. Deshalb habe ich auf eine der offensichtlichen Evolutionsrichtungen der Funktion hingewiesen.</p>
+<p>Ich habe also in meiner Argumentation eine Code-Änderung vorgenommen um zu verdeutlichen, wo die Krux liegt, sollte der Code wachsen.</p>
+<p>"Je mehr von dem, was du bezüglich der Implementierung angesprochen hast (Änderung des Mehrwertsteuersatzes, andere Länder) in dieselbe einfließt, je länger und komplexer diese also wird, desto stärker wird mein Argument."</p>
+<p>Je mehr du dich mit dem, was ich ganz am Ende geschrieben habe, befasst, wirst du merken, dass dein Argument schwächer wird.</p>
+<p>Ein sich verändernder MwstSatz würde per Definition zu einem völlig anderen Zeitpunkt ermittelt als der BruttoPreis. Die Änderung hat einen völlig anderen Trigger.</p>
+<p>Die logischen Prozesse sind:
+1) Änderung Land - Ermittlung
+MwstSatz
+2) Änderung Kategorie - Ermittlung MwstSatz
+3) Änderung MwstSatz - Ermittlung BruttoPreis
+4) Änderung NettoPreis - Ermittlung BruttoPreis
+(usw...)</p>
+<p>(Umgekehrt gelesen ergibt das quasi die Abhängigkeiten der Eigenschaften untereinander.)</p>
+<p>Es gibt also vier separate Prozesse/Flows und zwei atomare Funktionen.</p>
+<p>(1) Ermittle für das Land beide MwstSätze; je nach Kategorie gib - falls vorhanden - den niedrigen, ansonsten den höheren MwstSatz zurück (das Speichern in der Eigenschaft MwstSatz triggert Prozess 2)
+(2) Nehme die Werte MwstSatz und NettoPreis, berechne den Bruttopreis per BP = NP * (1 + MWST / 100) und gib das Ergebnis zurück (das Speichern in der Eigenschaft BruttoPreis triggert wiederum andere Prozesse, z.B. die Rabattberechnung; liegt aber außerhalb des Scope)</p>
+<p>Die Implementierung wird eben nicht komplexer und eben nicht länger, nur anders, man könnte auch sagen kompletter. Beide Funktionen sind gemäß SRP korrekt und einfach testbar.</p>
+<p>Setze ich hier auf eine einzige Funktion die beides erledigt, habe ich tatsächlich eine komplexe Aktion, die noch dazu in 90% der Fälle zuviel tut (denn bei der statistisch häufigeren Änderung des NettoPreises brauche ich den MwstSatz nicht neu zu ermitteln, benötige also keinen Repository-Hit, spare somit Ressourcen).</p>
+<p>Dies zu erkennen ist meines Erachtens essentiell.</p>
+<p>Darauf wollte ich hinaus, weil schon dieses einfache Beispiel zeigt, wie wichtig das Denken in Prozessen aka Flows ist.</p>
+<p>Gruß,</p>
+<p>Markus</p>
+<hr />
+<p><strong>Frank</strong> (2012-01-24):</p>
+<p>@Markus:</p>
+<p>Ich kann es nur noch mal sagen: Darum ging es überhaupt nicht. Statt der Geschichte mit der Mehrwertsteuer hätte ich auch ein beliebiges anders Beispiel verwenden können. Denk dir den Code mit der Mehrwertsteuer weg und Code deiner Wahl hin.</p>
+<p>Auch Ralf war bei dem Punkt, auf den ich mich bezogen habe, überhaupt noch nicht bei Flow Design, sondern nur bei ganz normalen Funktionen. Es geht nur um die Frage: Führt das Auslagen von Code in eine extra Funktion zu mehr oder weniger Verständlichkeit an der Aufrufstelle.</p>
+<p>Ralf hat seine Sichtweise beschrien, ich meine. Jeder Leser kann selbst entscheiden.</p>
+<p>Um Mehrwertsteuer und Evolvierbarkeit ging es überhaupt nicht. Schade, dass du das nicht erkannt hast.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

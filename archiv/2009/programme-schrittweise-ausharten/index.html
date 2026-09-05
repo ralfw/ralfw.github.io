@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Programme schrittweise aushärten — ralfw.de Archiv</title>
+<meta name="description" content="Wieviel strenge Typisierung brauchen wir eigentlich? Wieviel Schema tut unseren Anwendungen eigentlich gut? Je länger ich darüber nachdenke, desto mehr scheint mir, dass strenge Ty">
+<link rel="canonical" href="https://ralfw.de/archiv/2009/programme-schrittweise-ausharten/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Programme schrittweise aushärten — ralfw.de Archiv">
+<meta property="og:description" content="Wieviel strenge Typisierung brauchen wir eigentlich? Wieviel Schema tut unseren Anwendungen eigentlich gut? Je länger ich darüber nachdenke, desto mehr scheint mir, dass strenge Ty">
+<meta property="og:url" content="https://ralfw.de/archiv/2009/programme-schrittweise-ausharten/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Programme schrittweise aushärten</h1>
+    <div class="doc-meta"><span>13. Juli 2009</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2009/07/programme-schrittweise-ausharten.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2009/programme-schrittweise-ausharten/</code></span></div>
+    <div class="art"><p>Wieviel strenge Typisierung brauchen wir eigentlich? Wieviel Schema tut unseren Anwendungen eigentlich gut? Je länger ich darüber nachdenke, desto mehr scheint mir, dass <strong>strenge Typisierung und explizite Schemata überbewertet oder gar kontraproduktiv</strong> sind.</p>
+<p>Wozu brauchen wir eine strenge Typisierung, wozu Schemata? Sie machen effizient. Wenn der Compiler den Typ eines Feldes kennt, kann er maximal schnellen Code für die Zugriffe darauf erzeugen. Und wir brauchen den Code nur zu übersetzen, um zu wissen, ob z.B. eine Zuweisung korrekt ist. Diese Compilation kann sogar im Hintergrund in der IDE stattfinden.</p>
+<p>Bei Datenbankschemata ist es ähnlich. Sie optimieren den Platzverbrauch und die Zugriffsgeschwindigkeit. Und, ja, auch automatische Datenkonsistenz ist ein Gewinn von expliziten Datenbankschemata.</p>
+<p><strong>Strenge Typisierung und Schemata sind Kinder einer Zeit, als Ressourcen noch knapp waren.</strong> Von den 1950er bis Anfang der 1980er  Jahren war Rechenpower teuer, so dass man spätestens nach einem (nächtlichen) Compilerlauf wissen wollte, ob ein Programm korrekt war. Fehlerhafte Probeläufe galt es zu vermeiden. Ebenso war an Speicherplatz zu sparen, was gespart werden konnte. Und jedes Quentchen Performance wollte herausgequetscht sein, um überhaupt annehmbare Laufzeiten zu bekommen.</p>
+<p>Strenge Typisierung und explizite Schemata sind also allzu verständliche Entwicklungen. Doch haben Sie sich vielleicht überlebt? Ich denke, wir müssen sie im Kontext ihrer Geschichte sehen. Die damaligen Bedingungen sind nicht zu vernachlässigen. Sie zu vergessen und einfach Typisierung und Schemata absolut setzen, wäre eine Dogmatisierung.</p>
+<p>Gerade in den letzten 10 Jahren hat sich nun aber einiges getan. Speicherplatz ist für die meisten Anwendungen keine wirklich knappe Ressource mehr, dito die Prozessorpower – die heute allerdings nicht mehr so einfach wie früher wächst; 2, 4 oder 8 mal 2-3 GHz durch mehrere Kerne ist etwas anderes als weiter wachsende Taktfrequenzen.</p>
+<p>Dazu kommt, dass Software immer komplexer wird. Die Anforderungen steigen, die Vielfalt der Geräte steigt, die Technologien werden mächtiger und facettenreicher…</p>
+<p>Das Resultat: <strong>Es ist immer weniger klar zu erkennen, was eine Anwendung genau können soll. Aber die Ressourcen sind nicht mehr wirklich knapp.</strong></p>
+<p>Ich denke, das hört sich nicht mehr danach an, dass wir unheimlich effizient sein müssen, sondern eher flexibel. Flexibel sind von der ersten Codezeile an explizite Klassen und Datenbankschemata aber nicht. Das Gegenteil ist der Fall. <strong>Unsere Fixierung auf Schemata für Daten im Speicher und auf der Platte zwingt uns sehr schnell in ein Korsett, dass Änderungen an Software schwierig macht.</strong></p>
+<p>Deshalb glaube ich, dass wir von den quasi absolut gesetzten Schemata abrücken müssen. Sie haben ihren Zweck, aber wir sollten nicht glauben, dass wir ohne sie nicht können. Wir müssen vielmehr dahin zu kommen, sie gezielt und zweckmäßig, statt zwanghaft einzusetzen. <strong>Explizite, statische Schemata machen Sinn, wo wir genau wissen, wirklich genau!, wie Datenstrukturen aussehen.</strong></p>
+<p><strong>Wo wir das aber nicht wissen, wo noch Unklarheit herrscht, da sollten wir uns noch nicht so festlegen. Da sollten wir schemalos arbeiten.</strong></p>
+<p>In den 1980ern wurde der Begriff vom “Stepwise Refinement” populär. Programme sollten schrittweise detaillierter formuliert werden. Top-down sollte man vorgehen.</p>
+<p>Ich möchte diesem Begriff ein “Stepwise Hardening”, eine schrittweise Aushärtung, hinzufügen. <strong>Wir sollten Programme weich beginnen, mit flexiblen Strukturen – und sie dann und nur dann verhärten, wenn wir sicher sind, dass wir mehr Effizienz brauchen.</strong> Dynamische Sprachen und schemalose Datenbanken scheinen mir da richtige Schritte auf dem Weg zu einer Balance zwischen Effizienz und Flexibilität.</p>
+<p>Heute lassen wir unsere Programme vom ersten Moment an aus hart schematisierten Bausteinen bestehen. Je größer sie werden, desto mehr “harte Brocken” enthalten sie, die sich Änderungen widersetzen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/54bd56adad000d93.png" /></p>
+<p>Aber könnte es nicht auch anders sein? Warum fangen wir nicht weich an? <strong>Warum härten wir nicht schrittweise aus, wo wir im Verlauf der Entwicklung immer sicherer werden, dass sich etwas nicht mehr ändert?</strong> Den Rest lassen wir bis auf Weiteres flexibel, weich:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/382ada92043fc8b5.png" /></p>
+<p>Wie wäre das? Kämen wir nicht schneller voran? Wären wir nicht weniger genervt bei Änderungswünschen? Ich glaube, es lohnt sich, darüber nachzudenken.</p>
+<p>Strenge Typisierung und Schemadenken haben ihren Platz; sie sind zurecht gegen einen allzu laxen Umgang mit Speicherplatz angetreten. Aber nun ist es Zeit, die Synthese einzuleiten. Wir brauchen dringend mehr Flexibilität im Inneren, um unsere Software evolvierbar zu halten.</p>
+<h2>Kommentare</h2>
+<p><strong>Peter Bucher</strong> (2009-07-13):</p>
+<p>Hallo Ralf</p>
+<p>Ein sehr interessanter Gedanke von dir. Auf dem OpenSpace in Ulm gab es auch eine Diskussion darüber, wieviel "Schema" bei Datenbanken sinnvoll und nötig ist.</p>
+<p>Ich finde die schrittweise Annhäherung von weich zu hart, wie du sie beschreien hast, eine gute Idee.</p>
+<p>Man könnte eventuell auch einen Mittelweg finden, damit von beiden Welten (stark vs. weich) Vorteile erhalten bleiben.</p>
+<p>Ich kann mir aber noch nicht vorstellen, wie das in der Praxis aussehen könnte :-).</p>
+<p>Irgendwie ist der Entwickler auch auf gewisse Weise ein Gewohnheitstier und die starke Typisierung und harte Schemas zu fest als totschlagender Vorteile verankert.</p>
+<hr />
+<p><strong>(anonym)</strong> (2009-07-13):</p>
+<p>Hallo!</p>
+<p>Ich denke auch, dass es oft ein "Zuviel" an harten Schemata und ausdefinierten Strukturen gibt. Wir benötigen mehr Werkzeuge, die sich flexibel an die Business-Anforderungen anpassen. Beispielsweise eine adaptive Datenbank, die zumindest in der Entwicklung verwendet und danach "ausgehärtet" wird.</p>
+<p>Allerdings möchte ich auch erwähnen, dass ich den derzeitigen Trend zur "weichen" Programmierung auch etwas beängstigend finde. Script-Sprachen stehen hoch im Kurs und so werden Programme schnell mal runtergeschrieben, ohne sich viel Gedanken über Aufbau und Code-/Objekt-Strukturen zu machen.</p>
+<p>Ich lese in Zeitschriften derzeit wieder oft von "eleganten Sprachen" - und als Bewertung wird herangezogen, wie kurz der Code ist oder wie viel Logik ich in nur eine Zeile Code bekomme. Das halte ich im Enterprise-Umfeld für fatal. Die Literatur spricht von 70-80 % Aufwand für die Wartung gegenüber 20-30 % für die Erstentwicklung. Da ist die Dichte an Logik in einer Zeile gegenüber der Lesbarkeit und Verständlichkeit wirklich zu vernachlässigen.</p>
+<p>Hier kann also etwas mehr "Härte" und "Struktur" durchaus von Vorteil sein.</p>
+<hr />
+<p><strong>Laurin Stoll</strong> (2009-07-14):</p>
+<p>Hallo ralf,</p>
+<p>Sehr spannender Gedanke. In letzter Zeit nerve ich mich sowieso immer öfters. Wie kann es sein, dass wir nun seit doch einiger Zeit Softwareentwicklung, bei jeder Anwendung wieder bei Adam &amp; Evan anfangen...? Datenzugriff, Locking, Caching usw. jedes mal die selbe Leier. Jedes mal neu. Und jede grössere Anwendung fängt quasi schleichend an ihr eigenes Framework zu schreiben. Und meistens (so sehe ich das jetzt z.B. in einer wachsenden CRM Software) unterstützen diese Frameworks dann weiche Schemata. Der User kann Felder verändern, hinzufügen, manipulieren, quasi also schemata ändern. Nur halt das dieses 'weiche Schema' mit einem 'harten Datenbankschema' beschrieben wird - und ein ganzes Rahmenwerk dazu getüftelt werden muss.</p>
+<p>Wieso nicht gleich seitens Datenbank untestützen?</p>
+<p>Nur kommen wir dann nicht auch in die Probelmatiken und Fehleranfälligkeiten die dynamische Sprachen haben?</p>
+<p>Auf jeden Fall finde ich den Gedanken der 'schrittweisen Aushärtung' sehr interessant!</p>
+<hr />
+<p><strong>Laurin Stoll</strong> (2009-07-14):</p>
+<p>Sorry für den Doppelpost - aber dieser Gedanke läuft mir jetzt gerade nach (so ist das im Urlaub hirn ich immer doppelt so viel). Wie könnte sowas schon heute aussehen? Ist ein Tuple Space die Lösung? Oder gibt's noch gar nichts?</p>
+<p>Das wäre spannend zu erfahren :-)</p>
+<hr />
+<p><strong>Lars</strong> (2009-07-14):</p>
+<p>Bis jetzt hatte ich immer den Eindruck, dass du zu den "Software-Ingenieuren" gehörst, die am liebsten schon vor dem Coding einen harten Test hätte ob es "richtig" funktioniert.
+Jetzt von dir zu hören, dass man auch ganz alternativ die Dinge anpacken könnte überrascht mich schon.
+Wahrscheinlich ist es wie beim malen: Die einen wollen ein Zimmer weiß streichen und planen, dass sie bei der Decke anfangen und dann die Wände machen. Die anderen wollen ein kreatives Gemälde, wo jeder Plan kontraproduktiv wäre.
+Und richtig ist beides...es kommt eben auf das Ziel an. Wenn man etwas will, wo man weiß wie es geht, Erfahrungswerte hat und es in erster Linie korrekt funktionieren soll, machen erprobte Strukturen sinn.
+Wenn man jedoch etwas wirklich neues schaffen will, sollte man kein Korsett bei der Arbeit tragen.
+Es gibt nichts schlimmeres als mit alten Regeln/Strukturen an neue Aufgaben heran zu gehen und nach einem halben Jahr fest zu stellen, dass diese Strukturen ineffizient für das Produkt sind und seine Akzeptanz während der Benutzung verhindern.
+Es gibt langweilige ERP-Software, die einfach funktionieren muss und es gibt Projekte wie "MS Surface" bei denen man am besten am Anfang alles auf den Kopf stellt was bekannte Strukturen angeht.
+Auch wenn man XAML seit der aller ersten Code-veröffentlichung über die Zeit verfolgt hat, merkt man, wie sehr es dem Produkt gut getan hat, dass die Strukturen im Fluss waren und sich erst langsam ausgehärtet haben.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-07-14):</p>
+<p>@Lars: Hab ich echt bisher den Eindruck gemacht, der Oberplaner, der BDUF-Afficionado zu sein? Hm... das täte mir leid. Nichts liegt mir ferner. Planung muss sein - angemessen viel. Ansonsten: roll with the ball; beherzt und pragmatisch anfangen; Mut zur Lücke.</p>
+<p>Eigentlich stimme ich deinem Kommentar natürlich zu. Wie so oft auch hier: Es kommt darauf an.</p>
+<p>Dennoch sage ich aber mal provokant nein zu deinen Aussagen. Warum? Weil die schrittweise Aushärtung nichts mit einer Problemdomäne zu tun hat. Du suggerierst, dass sie bei einem ERP-System weniger angezeigt sei als bei MS Surface.</p>
+<p>Genau dieses Denken halte ich aber für kontraproduktiv. Es versucht, aus einem platten Äußeren abzuleiten, wie das innere aussehen sollte. Genau diese Schnellschuss-Übersetzung führt aber immer wieder ins Evolvierungsproblem.</p>
+<p>Der Grund ist ganz einfach: Wer auf das Äußere schaut und etwas vermeintlich Übliches, Bekanntes, Langweiliges sieht (z.B. Faktura, Adressverwaltung, Warenwirtschaft, ERP, Terminkalender und was der Geschäftssoftwarefelder mehr sind), der überschätzt sich leicht und unterschätzt die Individualität des Kunden.</p>
+<p>Ich halte es für besser, das Glas als halbleer anzusehen: mein Kopf ist halbleer, ich weiß fast nichts über die Problemdomäne und die besten Lösungen für sie - ergo starte ich mit einer flüssigen oder allenfalls zähflüssigen Realisierung und warte drauf, dass sich Gebiete herauskristallisieren (sic!), wo die Aushärtung beginnen kann (wenn ich sie denn überhaupt aus Effizienzgründen brauche).</p>
+<p>Wir beginnen heute optimistisch meist mit dem halbvollen Glas. Darin sehe ich das Problem. Mit Hurra ins Schemabehaftete! Weil die Tools es so am besten unterstützen. Weil das die herrschende Lehre ist. Weil man es doch eigentlich auch schon weiß, was der Kunde braucht.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Lars</strong> (2009-07-14):</p>
+<p>@Ralf</p>
+<p>Was die ERP-Software angeht ist mein Blick wohl etwas von der Praxis verstellt (hab das mal n paar Jahre im Projektgeschäft gemacht).
+Man kann den wenigsten Kunden sagen, dass man sein großes Problem konzeptionell ganz anders angehen würde...man jedoch mehr Zeit braucht und nicht sicher ist, dass es dann auch in der Praxis funktioniert.
+Wenn man das macht sieht man förmlich die Leichenblässe im Gesicht der Sachbearbeiter, die nach 30 Jahren etwas neues lernen müssten.
+In der Theorie hast du natürlich recht und der Kunde wäre zu 80% später sogar noch zufriedener gewesen (und beide Seiten wussten es)...aber man kann es eben nicht garantieren, weil man aus den bekannten Strukturen ausbrechen würde. Das gefährdet Jobs und die Frima...genau aus dem Grund kommen die alten konservativen Lösungen immer wieder zum Tragen. Und deswegen ist ERP langweilig.
+Ich habe ja auch nicht geschrieben, dass ERP langweilig sein sollte, sondern nur eine Status-Quo Beschreibung gemacht. :)</p>
+<p>Bei Surface gab es keine so exakten Erwartungen...eine Person die an genau einem Tischende sitzen kann und mit 5 Fingern das Display bedienen könnte, hätten wir auch geschluckt.</p>
+<p>Es ist auch ein Fehler, dass die Menschheit mehrere Sprachen, Steckdosenanschlüsse oder Zeitzonen hat...trotzdem kann es zu noch mehr Problemen führen, wenn man diesen Fehler beseitigen will.</p>
+<hr />
+<p><strong>Rainer</strong> (2009-07-16):</p>
+<p>Hallo Ralf,</p>
+<p>interessante Gedanken. Ich selbst kann jetzt nach 4-5 Wochen praktischer Erfahrung mit Python sagen, das ich viele der "dynamischen" funktionen Liebe! Sie bringen einen Produktivitätsgewinn jenseits von dem, was mit statischer Programmierung möglich ist.</p>
+<p>Dennoch, und gerade was das verwöhnte Visual Studio Tooling angeht, gibts hier große Lücken. Wer VS und R# verwöhnt ist, wird erst einmal einige Zeit zum umdenken und umgewöhnen brauchen. Ich kenne diese Arbeitsweise von Zeiten des VC6 bei dem ich ja nun nich überall IntelliSense usw. hatte.</p>
+<p>Ich denke IronPython oder die neue dynamische Erweiterung von C# wird dem ganzen etwas mehr Schwung geben und genau in die Richtung schlagen. Schön an diesem Szenario ist das verheiraten beider Bestandteile auf der .NET Plattform. Ich hoffe das Model dynamische Programmierung findet Anklang in der "Community".</p>
+<p>Ich persöhnlich bin davon begeistert. Kann jedem Entwickler nur empfehlen, sich auf eine dynamische Sprache einzulassen und es selbst einmal zu probieren. TDD und BDD sind für den gewillten Entwickler auch kein Problem...</p>
+<p>Viel Spaß an alle die es einmal ausprobieren.</p>
+<p>Grüße,
+Rainer</p>
+<hr />
+<p><strong>Mike Hummel</strong> (2009-07-27):</p>
+<p>Hallo,</p>
+<p>ich sehe das ganz anders. Gerade weil die systeme immer grösser werden benötige ich dringend eine typisierung, da dadurch viele fehler nicht in die runtime rutschen können. Gerade mit php ist es viel schwerer grosse projekte zu managen als mit stark typisierten sprachen wie java.</p>
+<p>Auch aus SWE sicht ist eine typisierung sinnvoll. Bevor ich eine methode implementiere mache ich mir gedanken was die methode beinhaltet, was ich dafür benötige etc. Diese daten haben immer einen typ. Deshalb sollte in einer konstruktion auch ein typ für jeden benötigten input angegeben werden. Damit ich oder eine redundante person weiss was er mit diesem datum anfangen kann.</p>
+<p>Das alles gilt natürlich für grosse projekte. Für kleine scripte oder tools stimme ich mit ihnen überein.</p>
+<p>Mit Gruß,
+Mike Hummel</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-07-27):</p>
+<p>@Mike: Ich muss mir korrigieren: Gegen strenge Typisierung habe ich gar nichts! Ein Geburtsdatum soll natürlich als DateTime gehalten werden, der Preis eines Produktes als Decimal usw.</p>
+<p>Aber ich bezweifle, dass wir so früh wie bisher die Kombinationen aus verschiedenen Eigenschaften als Klassen und Tabellen festlegen sollten. Mir geht es also darum, was wir mit Tupeln von streng typisierten Werten machen. Und da bin ich dafür, über Schemalosigkeit nachzudenken.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Georg Wächter</strong> (2010-02-13):</p>
+<p>Schemalose Datenbanken finde ich sehr interessant, meine eigenen Erfahrungen zeigen auf jeden Fall, dass dadurch die Anpassung einer Software für die Zukunft wesentlich leichter gestaltet wird. In dem Punkt sehe ich z.B. die Idee der baumförmigen Content Repositories sehr gut (z.B. JCR - Java Content Repository), da es in der Natur der Bäume liegt, dass sie stets erweiterbar sind. Tabellen sind in dem Punkt wesentlich starrer.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

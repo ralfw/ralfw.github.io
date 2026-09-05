@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Going asynchronous - AOP made easy with Event-Based Components – Part III — ralfw.de Archiv</title>
+<meta name="description" content="Logging, validation, exception handling: that´s easy aspects to insert into an Event-Based Components design as I´ve shown in my previous post. But what about multi-threading? Or b">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/going-asynchronous-aop-part-3/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Going asynchronous - AOP made easy with Event-Based Components – Part III — ralfw.de Archiv">
+<meta property="og:description" content="Logging, validation, exception handling: that´s easy aspects to insert into an Event-Based Components design as I´ve shown in my previous post. But what about multi-threading? Or b">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/going-asynchronous-aop-part-3/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>Going asynchronous - AOP made easy with Event-Based Components – Part III</h1>
+    <div class="doc-meta"><span>8. Aug. 2010</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2010/08/08/going-asynchronous---aop-made-easy-with-event-based-components-ndash.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/going-asynchronous-aop-part-3/</code></span></div>
+    <div class="art"><p>Logging, validation, exception handling: that´s easy aspects to insert into an Event-Based Components design as I´ve shown in my previous post. But what about multi-threading? Or better: parallel and asynchronous processing?</p>
+<p>In this article I want to show you, how you could approach multi-core programming using aspects you insert into an existing EBC architecture.</p>
+<h2>Asynchronous processing</h2>
+<p>Why use multiple threads at all? It´s because you either want to hide latency, or you want to decrease latency, or you want to increase throughput. Hiding latency means you want some client not to wait for a service to finish before it can go on an do other stuff.</p>
+<p>It´s like when you call the pizza delivery service: You order a pizza, then you hang up the phone, and do whatever you like until the pizza is delivered. However long it takes to bake the pizza – you need not freeze during that period. The latency of pizza baking is hidden from you. The pizza service runs asynchronously with regard to its customers.</p>
+<p>How could hidden latency help the file indexing scenario? Well, it could make the whole process asynchronous. So whoever calls the indexer does not need to wait for it to finish. This might no be a pressing issue as long as the indexing is wrapped up in a console application. But what if I made the indexing functionality a library?</p>
+<p>The Indexer.Console project references the Indexer library. The whole indexing functionality is hidden in in class IndexFiles.</p>
+<p>Now any client application can use the indexer like this:</p>
+<pre><code class="language-csharp">var index = new IndexFiles;
+index.Out_Statistics += stats =&gt;
+{
+    System.Console.WriteLine(&quot;Successfully indexed {0} words.&quot;, stats.WordCount);
+};
+
+index.Out_ValidationError += err =&gt;
+{
+    System.Console.WriteLine(&quot;*** Aborted indexing! Validation error: {0}&quot;, err);
+};
+
+index.Out_UnhandledException += ex =&gt;
+{
+    System.Console.WriteLine(&quot;*** Aborted indexing! Unexpected exception: {0}. See log for details.&quot;, ex.Message);
+};
+
+index.In_Process(args[0], args[1]);
+</code></pre>
+<p>And sure a client application would not want to wait for the indexer to finish its work of indexing a whole hard disk with tens of thousands of file. So making the indexing process asynchronous would be a very nice thing to do. But how?</p>
+<p>Well, just put an Asynchronize activity right at the start of the feature process and you´re done:</p>
+<p>Any activities the Asynchronize activity passes data on to are run on a different thread than the one from which the data originated. However, all data passing through Asynchronize is processed on the same thread! That means the data is processed sequentially although in parallel to other code.</p>
+<p>The Asynchronize activity creates a single thread and a queue. Data coming in is queued up and the thread is picking data items from the queue whenever it has become idle. If nothing´s left to do it will wait for a notification that new data has arrived.</p>
+<pre><code class="language-csharp">public class Asynchronize&lt;T&gt;
+{
+    private readonly Thread worker;
+
+    private readonly Queue&lt;T&gt; dataToProcess;
+    private readonly AutoResetEvent dataAvailable;
+
+    public Asynchronize()
+    {
+        this.dataToProcess = new Queue&lt;T&gt;();
+        this.dataAvailable = new AutoResetEvent(false);
+
+        this.worker = new Thread(DispatchDataSequentially) { IsBackground = true };
+        this.worker.Start();
+    }
+
+    private void DispatchDataSequentially()
+    {
+        while (true)
+        {
+            this.dataAvailable.WaitOne();
+
+            T data;
+            while (TryGetDataToDispatch(out data))
+            {
+                this.Out_ProcessSequentially(data);
+            }
+        }
+    }
+
+    private bool TryGetDataToDispatch(out T data)
+    {
+        data = default(T);
+
+        lock (this.dataToProcess)
+        {
+            if (this.dataToProcess.Count == 0) return false;
+
+            data = this.dataToProcess.Dequeue();
+            return true;
+        }
+    }
+
+    public void In_Process(T data)
+    {
+        lock (this.dataToProcess)
+        {
+            this.dataToProcess.Enqueue(data);
+        }
+        this.dataAvailable.Set();
+    }
+
+    public event Action&lt;T&gt; Out_ProcessSequentially;
+}
+</code></pre>
+<p>This way the latency of processing the data is hidden from its source, but at the same time the order of data item processing it retained.</p>
+<p>To plug this aspect in is as easy as plugging in the validation aspect or the exception handling aspect:</p>
+<pre><code class="language-csharp">public IndexFiles()
+{
+    // Build
+    ...
+    var asyncCompileFiles = new Asynchronize&lt;Tuple&lt;string, string&gt;&gt;;
+    ...
+
+    // Bind
+    this.in_Process = _ =&gt; asyncCompileFiles.In_Process(_);
+
+    asyncCompileFiles.Out_ProcessSequentially += handleEx.In_Process;
+    handleEx.Out_Process += compileFiles.In_Process;
+...
+</code></pre>
+<p>The Asynchronize aspect activity passes on the data it receives – but does so on a single different thread. It´s a generic functional unit. Very simple. It does one job.</p>
+<p>If you want more, like exception handling for background processing, then you can combine it with the Handle exception activity into a composite activity.</p>
+<p>EBC activities lend themselves to aggreation. It´s very easy to compose them into activities of higher order. So feel free to start implementing your own pluggable application building blocks.</p>
+<p>So now the whole indexing process is running on a background thread. Client code is free to work on other stuff and will receive notifications upon completion or exceptional situations.</p>
+<p>To exploit a multi-core CPU, though, indexing should happen on more than one thread. By using the Asynchronize activity a second time this can easily be accomplished. With it building the index can be decoupled from Crawling the directory tree and Extracting words.</p>
+<p>See how the stages of the feature process are running on different threads (marked with their own background color). That means they are working in parallel: the initiator can continue while the compiling and extracting is happening. The compiling and extracting can continue while the building is happening.</p>
+<p>Please note: Build index is also working sequentially. So only 3 threads are in use while indexing: initiator thread, compile thread, index builder thread. This ensures maximum speed for both stages on a two core CPU.</p>
+<p>In addition Build index does not have to take precautions against concurrent access to its resource, the index. Only a single thread is working on it. That would have been different if Asynchronize would have just used the ThreadPool to dispatch data to a background thread. Stateful asynchronous operations thus do not inevitably lead to headaches;-)</p>
+<h2>Switching to a data flow protocol</h2>
+<p>In my first posting I mentioned two different possible ways of passing data through the feature process: using a data flow protocol or IEnumerable&lt;&gt;. So far IEnumerable&lt;&gt; was just a perfect choice. The index could be written as soon as the IEnumerable&lt;&gt; passed to Build index was exausted.</p>
+<p>Now that Build index runs on its own thread, though, it´s not possible to pass an IEnumerable&lt;&gt; to it anymore. Each data item has to be delivered separately. Thus I need to switch to a data flow protocol between Extract words and Build index.</p>
+<p>That´s makes Compile words look a little ugly:</p>
+<pre><code class="language-csharp">public class Compile_words
+{
+    private Index index = new Index();
+
+    public void In_Process(Tuple&lt;string, string[]&gt; input)
+    {
+        if (input != null)
+        {
+            Trace.TraceInformation(&quot;Compile words({0}, {1} words) [Thread {2}]&quot;, input.Item1, input.Item2.Length, Thread.CurrentThread.GetHashCode());
+
+            foreach (var word in input.Item2)
+                this.index.Add(word, input.Item1);
+        }
+        else
+        {
+            this.Out_IndexCompiled(this.index);
+            this.Out_Statistics(new IndexStats(this.index.WordCount));
+
+            this.index = new Index();
+        }
+    }
+
+    public event Action&lt;Index&gt; Out_IndexCompiled;
+    public event Action&lt;IndexStats&gt; Out_Statistics;
+}
+</code></pre>
+<p>Nevertheless it´s straightforward, I´d say. Just checking for the terminating null is strange.</p>
+<h2>Parallel processing</h2>
+<p>What if you´ve more than two cores available? What if you not only want to hide latency, but decrease latency? Then not only asynchronous, but parallel processing is your friend.</p>
+<p>This can be as easily introduced into an EBC design. We could, for example, detach Extract words from Compile files so that all files are analyzed in parallel. A Parallelize activitiy is very simple to implement:</p>
+<pre><code class="language-csharp">public class Parallelize&lt;T&gt;
+{
+    public void In_Process(T data)
+    {
+        ThreadPool.QueueUserWorkItem(_ =&gt; this.Out_ProcessInParallel((T)_), data);
+    }
+
+    public event Action&lt;T&gt; Out_ProcessInParallel;
+}
+</code></pre>
+<p>ThreadPool is the only help you need from the .NET framework. Each data item is dispatched for processing on another thread (within the limits of the thread pool). Thus they are all handled in parallel.</p>
+<p>Technically it´s easy to insert the Parallelize aspect activity into the EBC design: just plug it between the two activities.</p>
+<p>But this is not sufficient. It wouldn´t work. Don´t do it just like that!</p>
+<p>The problem with this is, it´s not guaranteed that the terminating null is the last data item output by Extract words. There are potentially many Extract word activities running at the same time. And any one of them could issue a null – even if other ones are still analysing a file.</p>
+<p>To guarantee null is sent on to Build index only after all other data items have been processed by Extract word threads a trick needs to be employed: the feature process needs to count how many "tasks" were send to Extract words:</p>
+<pre><code class="language-csharp">public class CountItemsUntilNullForScatter&lt;T&gt; where T : class
+{
+    private int counter = 0;
+
+    public void In_Count(T item)
+    {
+        if (item == null)
+        {
+            Trace.TraceInformation(&quot;CountUntilNull({0}) [Thread {1}]&quot;, this.counter, Thread.CurrentThread.GetHashCode());
+
+            this.Out_Count(this.counter);
+            this.counter = 0;
+        }
+        else
+        {
+            this.counter++;
+            this.Out_Counted(item);
+        }
+    }
+
+    public event Action&lt;T&gt; Out_Counted;
+    public event Action&lt;int&gt; Out_Count;
+}
+</code></pre>
+<p>…and then count how many results were output by Extract words. Then after as many results left the activity as tasks had entered it the null must be inserted into the data stream:</p>
+<pre><code class="language-csharp">public class InsertNullAfterItemsForGather&lt;T&gt; where T : class
+{
+    private int numberOfItemsToGather;
+    private int count;
+
+    public void In_Process(T item)
+    {
+        this.Out_Gather(item);
+
+        lock (this)
+        {
+            this.count++;
+            IssueNull();
+        }
+    }
+
+    public void In_NumberOfItemsToGather(int numberOfItemsToGather)
+    {
+        lock (this)
+        {
+            this.numberOfItemsToGather = numberOfItemsToGather;
+            IssueNull();
+        }
+    }
+
+    private void IssueNull()
+    {
+        if (this.count &gt;= this.numberOfItemsToGather)
+        {
+            this.Out_Gather(null);
+            this.count = 0;
+        }
+    }
+
+    public event Action&lt;T&gt; Out_Gather;
+}
+</code></pre>
+<p>This is a common pattern and is called scatter-gather. Parallelize scatters work to be done across a number of threads. And a downstream activity gathers the results for further processing – because that´s supposed to be done sequentially, not in parallel.</p>
+<p>The feature process now works as follows:</p>
+<ol>
+<li>A single path is passed to Compile files and is processed asynchronously in some thread T0.</li>
+<li>Compile files outputs n filenames terminated by a null.</li>
+<li>Count data items counts the number of filenames and passes them on to Parallelize.</li>
+<li>Parallelize dispatches processing of those filenames by Extract words to threads T1..Tn (or possibly fewer depending on the thread pool size and the time it takes to process each file).</li>
+<li>Extract words is run n times in parallel and issues n tuples containing the words found in the files. The activity "swallows" the null filename, an no null results are output. This made the Extract words activities a bit simpler.</li>
+<li>Insert null counts the number of results flowing out of Extract words and inserts a null into the data stream after n items. n had been passed to it by Count data items once it determined how many filenames were generated.</li>
+<li>Sequentially processing of the words found is dispatched to thread Tn+1 by Asynchronize. Once Build index encounters the inserted null it write the index to a file.</li>
+</ol>
+<p>If you look at the code of the activities you realize they are free of any multi-threading concerns. That makes them easy to test. Asynchronous/parallel processing is an orthogonal aspect and has been completely wrapped into a couple of standard activities which can be combined with domain activities.</p>
+<p>However asynchronous processing does not come for free. Some changes needed to be made like moving from IEnumerable&lt;&gt; to a data flow protocol. But I´d argue they did not complicate the business logic.</p>
+<p>Sure, async/parallel processing can be more complex. But my feeling is that EBC make it easier to deal with it. With EBC the async/parallel aspect is made visible and very explicit as the above diagrams attest. It´s clearly separate from any domain code. You can reason about the async/parallel processing by walking along graphical feature processes – which then are translated almost mechanically into code.</p>
+<p>Also it´s obvious, where synchronizations between threads need to take place.</p>
+<p>Each dot marks where two running threads meet. At these points you need to think about how to organize access to shared resources. Because data can be passed from one thread to another only via such resources. Which brings me to another isssue…</p>
+<h2>Synchronization with WinForms main thread</h2>
+<p>There is a special kind of resource to which not only access from different threads needs to be synchronized, but which can only be accessed from a special thread: most controls on WinForms forms. Access to them is not thread safe by default. So if data arrives on some other thread it needs to be transfered to the main WinForms thread before it can be displayed.</p>
+<p>This is another aspect and can be solved by plugging an activity between an output and a WinForms input.</p>
+<p>I´ve added another project to the indexer sample solution to implement a WinForms frontend.</p>
+<p>The form is the initiator/data source of the feature process as well as its sink. It´s easy to wire it up to the IndexFiles process (which I´ve adorned with an output for each file found as a progress signal):</p>
+<pre><code class="language-csharp">var dlg = new WinIndex;
+var indexer = new IndexFiles;
+
+dlg.Out_Index += indexer.In_Process;
+
+indexer.Out_FileFoundToIndex += SwitchBackToSyncContext&lt;string&gt;.Wrap(dlg.In_FileFound);
+indexer.Out_Statistics += SwitchBackToSyncContext&lt;IndexStats&gt;.Wrap(dlg.In_IndexStats);
+indexer.Out_ValidationError += SwitchBackToSyncContext&lt;string&gt;.Wrap(dlg.In_ValidationError);
+indexer.Out_UnhandledException += SwitchBackToSyncContext&lt;Exception&gt;.Wrap(dlg.In_Exception);
+</code></pre>
+<p>SwitchBackToSyncContext&lt;&gt;.Wrap creates an aspect activity to be inserted before the one passed to it.</p>
+<pre><code class="language-csharp">public class SwitchBackToSyncContext&lt;T&gt;
+{
+    private readonly SynchronizationContext ctx = SynchronizationContext.Current;
+
+    public SwitchBackToSyncContext() : this(SynchronizationContext.Current) { }
+    internal SwitchBackToSyncContext(SynchronizationContext ctx)
+    {
+        this.ctx = ctx;
+    }
+
+    public void In_Process(T msg)
+    {
+        if (this.ctx != null)
+            this.ctx.Send(this.Out_ContinueInSyncContext, null);
+        else
+            this.Out_ContinueInSyncContext(msg);
+    }
+
+    public event Action&lt;T&gt; Out_ContinueInSyncContext;
+
+    public static Action&lt;T&gt; Wrap(Action&lt;T&gt; continuation)
+    {
+        var switchBack = new SwitchBackToSyncContext&lt;T&gt;();
+        switchBack.Out_ContinueInSyncContext += continuation;
+        return switchBack.In_Process;
+    }
+}
+</code></pre>
+<p>The aspect activity switches execution back to the synchronization context on which it was created (which is the same as the sync ctx of the WinIndex form).</p>
+<p>Check out the code at Google Projects here. It´s the branch leading to the complete async solution including the WinForms frontend.</p>
+<h2>Summary</h2>
+<p>This concludes my introduction to Aspect-Oriented Programming (AOP) with Event-Based Components. I hope I was able to show you, how easy it is to insert aspects into EBC designs. But it´s not only easy to do technically. The resulting design is also easy to understand, because aspects are made explicit.</p>
+<p>No special tooling is required and yet you´re very flexible. Quickly swap in/out aspects without burdening your domain logic.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

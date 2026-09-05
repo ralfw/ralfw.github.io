@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Incremental Architect&#x27;s Napkin - #5 - Design functions for extensibility and readability — ralfw.de Archiv</title>
+<meta name="description" content="The functionality of programs is entered via Entry Points. So what we´re talking about when designing software is a bunch of functions handling the requests represented by and flow">
+<link rel="canonical" href="https://ralfw.de/archiv/2014/the-incremental-architects-napkin-5/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Incremental Architect&#x27;s Napkin - #5 - Design functions for extensibility and readability — ralfw.de Archiv">
+<meta property="og:description" content="The functionality of programs is entered via Entry Points. So what we´re talking about when designing software is a bunch of functions handling the requests represented by and flow">
+<meta property="og:url" content="https://ralfw.de/archiv/2014/the-incremental-architects-napkin-5/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>The Incremental Architect&#x27;s Napkin - #5 - Design functions for extensibility and readability</h1>
+    <div class="doc-meta"><span>24. Aug. 2014</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2014/08/24/the-incremental-architectrsquos-napkin---5---design-functions-for.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2014/the-incremental-architects-napkin-5/</code></span></div>
+    <div class="art"><p>The functionality of programs is entered via Entry Points. So what we´re talking about when designing software is a bunch of functions handling the requests represented by and flowing in through those Entry Points.</p>
+<p>Designing software thus consists of at least three phases:</p>
+<ol>
+<li>Analyzing the requirements to find the Entry Points and their signatures</li>
+<li>Designing the functionality to be executed when those Entry Points get triggered</li>
+<li>Implementing the functionality according to the design aka coding</li>
+</ol>
+<p>I presume, you´re familiar with phase 1 in some way. And I guess you´re proficient in implementing functionality in some programming language.</p>
+<p>But in my experience developers in general are not experienced in going through an explicit phase 2. "Designing functionality? What´s that supposed to mean?" you might already have thought.</p>
+<p>Here´s my definition: To design functionality (or functional design for short) means thinking about… well, functions. You find a solution for what´s supposed to happen when an Entry Point gets triggered in terms of functions. A conceptual solution that is, because those functions only exist in your head (or on paper) during this phase. But you may have guess that, because it´s "design" not "coding".</p>
+<p>And here is, what functional design is not: It´s not about logic. Logic is expressions (e.g. +, -, &amp;&amp; etc.) and control statements (e.g. if, switch, for, while etc.). Also I consider calling external APIs as logic. It´s equally basic. It´s what code needs to do in order to deliver some functionality or quality.</p>
+<p>Logic is what´s doing that needs to be done by software. Transformations are either done through expressions or API-calls. And then there is alternative control flow depending on the result of some expression. Basically it´s just jumps in Assembler, sometimes to go forward (if, switch), sometimes to go backward (for, while, do).</p>
+<p>But calling your own function is not logic. It´s not necessary to produce any outcome. Functionality is not enhanced by adding functions (subroutine calls) to your code. Nor is quality increased by adding functions. No performance gain, no higher scalability etc. through functions.</p>
+<p>Functions are not relevant to functionality. Strange, isn´t it.</p>
+<p>What they are important for is security of investment. By introducing functions into our code we can become more productive (re-use) and can increase evolvability (higher unterstandability, easier to keep code consistent).</p>
+<p>That´s no small feat, however. Evolvable code can hardly be overestimated. That´s why to me functional design is so important. It´s at the core of software development.</p>
+<p>To sum this up: Functional design is on a level of abstraction above (!) logical design or algorithmic design. Functional design is only done until you get to a point where each function is so simple you are very confident you can easily code it.</p>
+<p>Functional design an logical design (which mostly is coding, but can also be done using pseudo code or flow charts) are complementary. Software needs both. If you start coding right away you end up in a tangled mess very quickly. Then you need back out through refactoring. Functional design on the other hand is bloodless without actual code. It´s just a theory with no experiments to prove it.</p>
+<p>But how to do functional design?</p>
+<h2>An example of functional design</h2>
+<p>Let´s assume a program to de-duplicate strings. The user enters a number of strings separated by commas, e.g. a, b, a, c, d, b, e, c, a. And the program is supposed to clear this list of all doubles, e.g. a, b, c, d, e.</p>
+<p>There is only one Entry Point to this program: the user triggers the de-duplication by starting the program with the string list on the command line</p>
+<pre><code>C:\&gt;deduplicate &quot;a, b, a, c, d, b, e, c, a&quot;
+a, b, c, d, e
+</code></pre>
+<p>…or by clicking on a GUI button.</p>
+<p>This leads to the Entry Point function to get called. It´s the program´s main function in case of the batch version or a button click event handler in the GUI version. That´s the physical Entry Point so to speak. It´s inevitable.</p>
+<p>What then happens is a three step process:</p>
+<ol>
+<li>Transform the input data from the user into a request.</li>
+<li>Call the request handler.</li>
+<li>Transform the output of the request handler into a tangible result for the user.</li>
+</ol>
+<p>Or to phrase it a bit more generally:</p>
+<ol>
+<li>Accept input.</li>
+<li>Transform input into output.</li>
+<li>Present output.</li>
+</ol>
+<p>This does not mean any of these steps requires a lot of effort. Maybe it´s just one line of code to accomplish it. Nevertheless it´s a distinct step in doing the processing behind an Entry Point. Call it an aspect or a responsibility - and you will realize it most likely deserves a function of its own to satisfy the Single Responsibility Principle (SRP).</p>
+<p>Interestingly the above list of steps is already functional design. There is no logic, but nevertheless the solution is described - albeit on a higher level of abstraction than you might have done yourself.</p>
+<p>But it´s still on a meta-level. The application to the domain at hand is easy, though:</p>
+<ol>
+<li>Accept string list from command line</li>
+<li>De-duplicate</li>
+<li>Present de-duplicated strings on standard output</li>
+</ol>
+<p>And this concrete list of processing steps can easily be transformed into code:</p>
+<pre><code class="language-csharp">static void Main(string args)
+{
+ var input = Accept_string_list(args);
+ var output = Deduplicate(input);
+ Present_deduplicated_string_list(output);
+}
+</code></pre>
+<p>Instead of a big problem there are three much smaller problems now. If you think each of those is trivial to implement, then go for it. You can stop the functional design at this point.</p>
+<p>But maybe, just maybe, you´re not so sure how to go about with the de-duplication for example. Then just implement what´s easy right now, e.g.</p>
+<pre><code class="language-csharp">private static string Accept_string_list(string args)
+{
+ return args[0];
+}
+
+private static void
+ Present_deduplicated_string_list(
+ string output)
+{
+ var line = string.Join(&quot;, &quot;, output);
+ Console.WriteLine(line);
+}
+</code></pre>
+<p>Accept_string_list contains logic in the form of an API-call. Present_deduplicated_string_list contains logic in the form of an expression and an API-call.</p>
+<p>And then repeat the functional design for the remaining processing step. What´s left is the domain logic: de-duplicating a list of strings. How should that be done?</p>
+<p>Without any logic at our disposal during functional design you´re left with just functions. So which functions could make up the de-duplication? Here´s a suggestion:</p>
+<p>De-duplicate</p>
+<ol>
+<li>Parse the input string into a true list of strings.</li>
+<li>Register each string in a dictionary/map/set. That way duplicates get cast away.</li>
+<li>Transform the data structure into a list of unique strings.</li>
+</ol>
+<p>Processing step 2 obviously was the core of the solution. That´s where real creativity was needed. That´s the core of the domain. But now after this refinement the implementation of each step is easy again:</p>
+<pre><code class="language-csharp">private static string Parse_string_list(string input)
+{
+ return input.Split(',')
+.Select(s =&gt; s.Trim)
+.ToArray;
+}
+
+private static Dictionary&lt;string,object&gt;
+ Compile_unique_strings(string strings)
+{
+ return strings.Aggregate(
+ new Dictionary&lt;string, object&gt;,
+ (agg, s) =&gt; {
+ agg[s] = null;
+ return agg;
+ });
+}
+
+private static string Serialize_unique_strings(
+ Dictionary&lt;string,object&gt; dict)
+{
+ return dict.Keys.ToArray;
+}
+</code></pre>
+<p>With these three additional functions Main now looks like this:</p>
+<pre><code class="language-csharp">static void Main(string args)
+{
+ var input = Accept_string_list(args);
+
+ var strings = Parse_string_list(input);
+ var dict = Compile_unique_strings(strings);
+ var output = Serialize_unique_strings(dict);
+
+ Present_deduplicated_string_list(output);
+}
+</code></pre>
+<p>I think that´s very understandable code: just read it from top to bottom and you know how the solution to the problem works. It´s a mirror image of the initial design:</p>
+<ol>
+<li>Accept string list from command line</li>
+<li>Parse the input string into a true list of strings.</li>
+<li>Register each string in a dictionary/map/set. That way duplicates get cast away.</li>
+<li>Transform the data structure into a list of unique strings.</li>
+<li>Present de-duplicated strings on standard output</li>
+</ol>
+<p>You can even re-generate the design by just looking at the code. Code and functional design thus are always in sync - if you follow some simple rules. But about that later.</p>
+<p>And as a bonus: all the functions making up the process are small - which means easy to understand, too.</p>
+<p>So much for an initial concrete example. Now it´s time for some theory. Because there is method to this madness;-) The above has only scratched the surface.</p>
+<h2>Introducing Flow Design</h2>
+<p>Functional design starts with a given function, the Entry Point. Its goal is to describe the behavior of the program when the Entry Point is triggered using a process, not an algorithm.</p>
+<p>An algorithm consists of logic, a process on the other hand consists just of steps or stages. Each processing step transforms input into output or a side effect. Also it might access resources, e.g. a printer, a database, or just memory. Processing steps thus can rely on state of some sort. This is different from Functional Programming, where functions are supposed to not be stateful and not cause side effects.</p>
+<p>In its simplest form a process can be written as a bullet point list of steps, e.g.</p>
+<ul>
+<li>Get data from user</li>
+<li>Output result to user</li>
+<li>Transform data</li>
+<li>Parse data</li>
+<li>Map result for output</li>
+</ul>
+<p>Such a compilation of steps - possibly on different levels of abstraction - often is the first artifact of functional design. It can be generated by a team in an initial design brainstorming.</p>
+<p>Next comes ordering the steps. What should happen first, what next etc.?</p>
+<ul>
+<li>Get data from user</li>
+<li>Parse data</li>
+<li>Transform data</li>
+<li>Map result for output</li>
+<li>Output result to user</li>
+</ul>
+<p>That´s great for a start into functional design. It´s better than starting to code right away on a given function using TDD.</p>
+<p>Please get me right: TDD is a valuable practice. But it can be unnecessarily hard if the scope of a functionn is too large. But how do you know beforehand without investing some thinking? And how to do this thinking in a systematic fashion?</p>
+<p>My recommendation: For any given function you´re supposed to implement first do a functional design. Then, once you´re confident you know the processing steps - which are pretty small - refine and code them using TDD. You´ll see that´s much, much easier - and leads to cleaner code right away. For more information on this approach I call "Informed TDD" read.</p>
+<p>Thinking before coding is smart. And writing down the solution as a bunch of functions possibly is the simplest thing you can do, I´d say. It´s more according to the KISS (Keep It Simple, Stupid) principle than returning constants or other trivial stuff TDD development often is started with.</p>
+<p>So far so good. A simple ordered list of processing steps will do to start with functional design. As shown in the above example such steps can easily be translated into functions. Moving from design to coding thus is simple.</p>
+<p>However, such a list does not scale. Processing is not always that simple to be captured in a list. And then the list is just text. Again. Like code. That means the design is lacking visuality. Textual representations need more parsing by your brain than visual representations. Plus they are limited in their "dimensionality": text just has one dimension, it´s sequential. Alternatives and parallelism are hard to encode in text.</p>
+<p>In addition the functional design using numbered lists lacks data. It´s not visible what´s the input, output, and state of the processing steps.</p>
+<p>That´s why functional design should be done using a lightweight visual notation. No tool is necessary to draw such designs. Use pen and paper; a flipchart, a whiteboard, or even a napkin is sufficient.</p>
+<h2>Visualizing processes</h2>
+<p>The building block of the functional design notation is a functional unit. I mostly draw it like this:</p>
+<p><em>(Diagram not captured)</em></p>
+<p>Something is done, it´s clear what goes in, it´s clear what comes out, and it´s clear what the processing step requires in terms of state or hardware.</p>
+<p>Whenever input flows into a functional unit it gets processed and output is produced and/or a side effect occurs. Flowing data is the driver of something happening. That´s why I call this approach to functional design Flow Design.</p>
+<p>It´s about data flow instead of control flow. Control flow like in algorithms is of no concern to functional design. Thinking about control flow simply is too low level. Once you start with control flow you easily get bogged down by tons of details.</p>
+<p>That´s what you want to avoid during design. Design is supposed to be quick, broad brush, abstract. It should give overview.</p>
+<p>But what about all the details? As Robert C. Martin rightly said: "Programming is abot detail".</p>
+<p>Detail is a matter of code. Once you start coding the processing steps you designed you can worry about all the detail you want.</p>
+<p>Functional design does not eliminate all the nitty gritty. It just postpones tackling them. To me that´s also an example of the SRP. Function design has the responsibility to come up with a solution to a problem posed by a single function (Entry Point). And later coding has the responsibility to implement the solution down to the last detail (i.e. statement, API-call).</p>
+<p>TDD unfortunately mixes both responsibilities. It´s just coding - and thereby trying to find detailed implementations (green phase) plus getting the design right (refactoring). To me that´s one reason why TDD has failed to deliver on its promise for many developers.</p>
+<p>Using functional units as building blocks of functional design processes can be depicted very easily. Here´s the initial process for the example problem:</p>
+<p><em>(Diagram not captured)</em></p>
+<p>For each processing step draw a functional unit and label it. Choose a verb or an "action phrase" as a label, not a noun. Functional design is about activities, not state or structure.</p>
+<p>Then make the output of an upstream step the input of a downstream step. Finally think about the data that should flow between the functional units.</p>
+<p>Write the data above the arrows connecting the functional units in the direction of the data flow. Enclose the data description in brackets. That way you can clearly see if all flows have already been specified.</p>
+<p>Empty brackets mean "no data is flowing", but nevertheless a signal is sent.</p>
+<p>A name like "list" or "strings" in brackets describes the data content. Use lower case labels for that purpose.</p>
+<p>A name starting with an upper case letter like "String" or "Customer" on the other hand signifies a data type.</p>
+<p>If you like, you also can combine descriptions with data types by separating them with a colon, e.g. (list:string) or (strings:string[]).</p>
+<p>But these are just suggestions from my practice with Flow Design. You can do it differently, if you like. Just be sure to be consistent.</p>
+<p>Flows wired-up in this manner I call one-dimensional (1D). Each functional unit just has one input and/or one output.</p>
+<p>A functional unit without an output is possible. It´s like a black hole sucking up input without producing any output. Instead it produces side effects.</p>
+<p>A functional unit without an input, though, does make much sense. When should it start to work? What´s the trigger? That´s why in the above process even the first processing step has an input.</p>
+<p>If you like, view such 1D-flows as pipelines. Data is flowing through them from left to right. But as you can see, it´s not always the same data. It get´s transformed along its passage: (args) becomes a (list) which is turned into (strings).</p>
+<h2>The Principle of Mutual Oblivion</h2>
+<p>A very characteristic trait of flows put together from function units is: no functional units knows another one. They are all completely independent of each other.</p>
+<p>Functional units don´t know where their input is coming from (or even when it´s gonna arrive). They just specify a range of values they can process. And they promise a certain behavior upon input arriving.</p>
+<p>Also they don´t know where their output is going. They just produce it in their own time independent of other functional units. That means at least conceptually all functional units work in parallel.</p>
+<p>Functional units don´t know their "deployment context". They now nothing about the overall flow they are place in. They are just consuming input from some upstream, and producing output for some downstream.</p>
+<p>That makes functional units very easy to test. At least as long as they don´t depend on state or resources.</p>
+<p>I call this the Principle of Mutual Oblivion (PoMO). Functional units are oblivious of others as well as an overall context/purpose. They are just parts of a whole focused on a single responsibility.</p>
+<p>How the whole is built, how a larger goal is achieved, is of no concern to the single functional units.</p>
+<p>By building software in such a manner, functional design interestingly follows nature. Nature´s building blocks for organisms also follow the PoMO. The cells forming your body do not know each other.</p>
+<p>Take a nerve cell "controlling" a muscle cell for example:</p>
+<p><em>(Diagram not captured)</em></p>
+<p>The nerve cell does not know anything about muscle cells, let alone the specific muscel cell it is "attached to". Likewise the muscle cell does not know anything about nerve cells, let a lone a specific nerve cell "attached to" it. Saying "the nerve cell is controlling the muscle cell" thus only makes sense when viewing both from the outside. "Control" is a concept of the whole, not of its parts. Control is created by wiring-up parts in a certain way.</p>
+<p>Both cells are mutually oblivious. Both just follow a contract. One produces Acetylcholine (ACh) as output, the other consumes ACh as input. Where the ACh is going, where it´s coming from neither cell cares about.</p>
+<p>Million years of evolution have led to this kind of division of labor. And million years of evolution have produced organism designs (DNA) which lead to the production of these different cell types (and many others) and also to their co-location. The result: the overall behavior of an organism.</p>
+<p>How and why this happened in nature is a mystery. For our software, though, it´s clear: functional and quality requirements needs to be fulfilled. So we as developers have to become "intelligent designers" of "software cells" which we put together to form a "software organism" which responds in satisfying ways to triggers from it´s environment.</p>
+<p>My bet is: If nature gets complex organisms working by following the PoMO, who are we to not apply this recipe for success to our much simpler "machines"?</p>
+<p>So my rule is: Wherever there is functionality to be delivered, because there is a clear Entry Point into software, design the functionality like nature would do it. Build it from mutually oblivious functional units.</p>
+<p>That´s what Flow Design is about. In that way it´s even universal, I´d say. Its notation can also be applied to biology:</p>
+<p><em>(Diagram not captured)</em></p>
+<p>Never mind labeling the functional units with nouns. That´s ok in Flow Design. You´ll do that occassionally for functional units on a higher level of abstraction or when their purpose is close to hardware.</p>
+<p>Getting a cockroach to roam your bedroom takes 1,000,000 nerve cells (neurons). Getting the de-duplication program to do its job just takes 5 "software cells" (functional units). Both, though, follow the same basic principle.</p>
+<h2>Translating functional units into code</h2>
+<p>Moving from functional design to code is no rocket science. In fact it´s straightforward. There are two simple rules:</p>
+<ol>
+<li>Translate an input port to a function.</li>
+<li>Translate an output port either to a return statement in that function or to a function pointer visible to that function.</li>
+</ol>
+<p>The simplest translation of a functional unit is a function. That´s what you saw in the above example. Functions are mutually oblivious. That why Functional Programming likes them so much. It makes them composable. Which is the reason, nature works according to the PoMO.</p>
+<p>Let´s be clear about one thing: There is no dependency injection in nature. For all of an organism´s complexity no DI container is used. Behavior is the result of smooth cooperation between mutually oblivious building blocks.</p>
+<p>Functions will often be the adequate translation for the functional units in your designs. But not always. Take for example the case, where a processing step should not always produce an output. Maybe the purpose is to filter input.</p>
+<p>Here the functional unit consumes words and produces words. But it does not pass along every word flowing in. Some words are swallowed.</p>
+<p>Think of a spell checker. It probably should not check acronyms for correctness. There are too many of them. Or words with no more than two letters. Such words are called "stop words".</p>
+<p>In the above picture the optionality of the output is signified by the astrisk outside the brackets. It means: Any number of (word) data items can flow from the functional unit for each input data item. It might be none or one or even more. This I call a stream of data.</p>
+<p>Such behavior cannot be translated into a function where output is generated with return. Because a function always needs to return a value.</p>
+<p>So the output port is translated into a function pointer or continuation which gets passed to the subroutine when called:</p>
+<pre><code class="language-csharp">void filter_stop_words(
+ string word,
+ Action&lt;string&gt; onNoStopWord) {
+ if (...check if not a stop word...)
+ onNoStopWord(word);
+}
+</code></pre>
+<p>If you want to be nitpicky you might call such a function pointer parameter an injection. And technically you´re right. Conceptually, though, it´s not an injection. Because the subroutine is not functionally dependent on the continuation.</p>
+<p>Firstly continuations are procedures, i.e. subroutines without a return type. Remember: Flow Design is about unidirectional data flow.</p>
+<p>Secondly the name of the formal parameter is chosen in a way as to not assume anything about downstream processing steps. onNoStopWord describes a situation (or event) within the functional unit only.</p>
+<p>Translating output ports into function pointers helps keeping functional units mutually oblivious in cases where output is optional or produced asynchronically.</p>
+<p>Either pass the function pointer to the function upon call. Or make it global by putting it on the encompassing class. Then it´s called an event. In C# that´s even an explicit feature.</p>
+<pre><code class="language-csharp">class Filter {
+ public void filter_stop_words(
+ string word) {
+ if (...check if not a stop word...)
+ onNoStopWord(word);
+ }
+
+ public event Action&lt;string&gt; onNoStopWord;
+}
+</code></pre>
+<p>When to use a continuation and when to use an event dependens on how a functional unit is used in flows and how it´s packed together with others into classes. You´ll see examples further down the Flow Design road.</p>
+<h2>Another example of 1D functional design</h2>
+<p>Let´s see Flow Design once more in action using the visual notation. How about the famous? Robert C. Martin has posted a much cited solution including an extensive reasoning behind his TDD approach. So maybe you want to compare it to Flow Design.</p>
+<p>The function signature given is:</p>
+<pre><code class="language-csharp">string WordWrap(string text, int maxLineLength)
+{...}
+</code></pre>
+<p>That´s not an Entry Point since we don´t see an application with an environment and users. Nevertheless it´s a function which is supposed to provide a certain functionality.</p>
+<p>The text passed in has to be reformatted. The input is a single line of arbitrary length consisting of words separated by spaces. The output should consist of one or more lines of a maximum length specified.</p>
+<p>If a word is longer than a the maximum line length it can be split in multiple parts each fitting in a line.</p>
+<h3>Flow Design</h3>
+<p>Let´s start by brainstorming the process to accomplish the feat of reformatting the text. What´s needed?</p>
+<ul>
+<li>Words need to be assembled into lines</li>
+<li>Words need to be extracted from the input text</li>
+<li>The resulting lines need to be assembled into the output text</li>
+<li>Words too long to fit in a line need to be split</li>
+</ul>
+<p>Does sound about right? I guess so. And it shows a kind of priority. Long words are a special case. So maybe there is a hint for an incremental design here. First let´s tackle "average words" (words not longer than a line).</p>
+<p>Here´s the Flow Design for this increment:</p>
+<p><em>(Diagram not captured)</em></p>
+<p>The the first three bullet points turned into functional units with explicit data added.</p>
+<p>As the signature requires a text is transformed into another text. See the input of the first functional unit and the output of the last functional unit.</p>
+<p>In between no text flows, but words and lines. That´s good to see because thereby the domain is clearly represented in the design. The requirements are talking about words and lines and here they are.</p>
+<p>But note the asterisk! It´s not outside the brackets but inside. That means it´s not a stream of words or lines, but lists or sequences. For each text a sequence of words is output. For each sequence of words a sequence of lines is produced.</p>
+<p>The asterisk is used to abstract from the concrete implementation. Like with streams. Whether the list of words gets implemented as an array or an IEnumerable is not important during design. It´s an implementation detail.</p>
+<p>Does any processing step require further refinement? I don´t think so. They all look pretty "atomic" to me. And if not… I can always backtrack and refine a process step using functional design later once I´ve gained more insight into a sub-problem.</p>
+<h3>Implementation</h3>
+<p>The implementation is straightforward as you can imagine. The processing steps can all be translated into functions. Each can be tested easily and separately. Each has a focused responsibility.</p>
+<p>And the process flow becomes just a sequence of function calls:</p>
+<p><em>(Code sample not captured)</em></p>
+<p>Easy to understand. It clearly states how word wrapping works - on a high level of abstraction.</p>
+<p>And it´s easy to evolve as you´ll see.</p>
+<h3>Flow Design - Increment 2</h3>
+<p>So far only texts consisting of "average words" are wrapped correctly. Words not fitting in a line will result in lines too long.</p>
+<p>Wrapping long words is a feature of the requested functionality. Whether it´s there or not makes a difference to the user. To quickly get feedback I decided to first implement a solution without this feature. But now it´s time to add it to deliver the full scope.</p>
+<p>Fortunately Flow Design automatically leads to code following the Open Closed Principle (OCP). It´s easy to extend it - instead of changing well tested code. How´s that possible?</p>
+<p>Flow Design allows for extension of functionality by inserting functional units into the flow. That way existing functional units need not be changed. The data flow arrow between functional units is a natural extension point. No need to resort to the Strategy Pattern. No need to think ahead where extions might need to be made in the future.</p>
+<p>I just "phase in" the remaining processing step:</p>
+<p><em>(Diagram not captured)</em></p>
+<p>Since neither Extract words nor Reformat know of their environment neither needs to be touched due to the "detour". The new processing step accepts the output of the existing upstream step and produces data compatible with the existing downstream step.</p>
+<h3>Implementation - Increment 2</h3>
+<p>A trivial implementation checking the assumption if this works does not do anything to split long words. The input is just passed on:</p>
+<p><em>(Code sample not captured)</em></p>
+<p>Note how clean WordWrap stays. The solution is easy to understand. A developer looking at this code sometime in the future, when a new feature needs to be build in, quickly sees how long words are dealt with.</p>
+<p>Compare this to Robert C. Martin´s solution:</p>
+<p><em>(Code sample not captured)</em></p>
+<p>How does this solution handle long words? Long words are not even part of the domain language present in the code. At least I need considerable time to understand the approach.</p>
+<p>Admittedly the Flow Design solution with the full implementation of long word splitting is longer than Robert C. Martin´s. At least it seems. Because his solution does not cover all the "word wrap situations" the Flow Design solution handles. Some lines would need to be added to be on par, I guess.</p>
+<p>But even then… Is a difference in LOC that important as long as it´s in the same ball park? I value understandability and openness for extension higher than saving on the last line of code. Simplicity is not just less code, it´s also clarity in design.</p>
+<p>But don´t take my word for it. Try Flow Design on larger problems and compare for yourself. What´s the easier, more straightforward way to clean code? And keep in mind: You ain´t seen all yet;-) There´s more to Flow Design than described in this chapter.</p>
+<h2>In closing</h2>
+<p>I hope I was able to give you a impression of functional design that makes you hungry for more. To me it´s an inevitable step in software development. Jumping from requirements to code does not scale. And it leads to dirty code all to quickly.</p>
+<p>Some thought should be invested first. Where there is a clear Entry Point visible, it´s functionality should be designed using data flows. Because with data flows abstraction is possible. For more background on why that´s necessary read my blog article here.</p>
+<p>For now let me point out to you - if you haven´t already noticed - that Flow Design is a general purpose declarative language. It´s "programming by intention" (Shalloway et al.).</p>
+<p>Just write down how you think the solution should work on a high level of abstraction. This breaks down a large problem in smaller problems. And by following the PoMO the solutions to those smaller problems are independent of each other. So they are easy to test. Or you could even think about getting them implemented in parallel by different team members.</p>
+<p>Flow Design not only increases evolvability, but also helps becoming more productive. All team members can participate in functional design. This goes beyon collective code ownership. We´re talking collective design/architecture ownership. Because with Flow Design there is a common visual language to talk about functional design - which is the foundation for all other design activities.</p>
+<p><em>PS: If you like what you read, consider getting my ebook. It´s where I compile all the articles in this series for easier reading.</em></p>
+<hr />
+<p><em>Footnotes: I like the strictness of Function Programming - but I also find it quite hard to live by. And it certainly is not what millions of programmers are used to. Also to me it seems, the real world is full of state and side effects. So why give them such a bad image? That´s why functional design takes a more pragmatic approach. State and side effects are ok for processing steps - but be sure to follow the SRP. Don´t put too much of it into a single processing step. Image taken from www.physioweb.org. My code samples are written in C#. C# sports typed function pointers called delegates. Action is such a function pointer type matching functions with signature void someName(T t). Other languages provide similar ways to work with functions as first class citizens - even Java now in version 8. I trust you find a way to map this detail of my translation to your favorite programming language. I know it works for Java, C++, Ruby, JavaScript, Python, Go. And if you´re using a Functional Programming language it´s of course a no brainer. Taken from his blog post "The Craftsman 62, The Dark Path".</em></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

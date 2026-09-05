@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Klein ist ökonomisch — ralfw.de Archiv</title>
+<meta name="description" content="Es kommt auf die Größe an – zumindest bei der Wartbarkeit (oder besser: Evolvierbarkeit). Über Helge Nowaks Präsentation bin ich auf diesen Text gestoßen und darüber dann auf einen">
+<link rel="canonical" href="https://ralfw.de/archiv/2014/klein-ist-okonomisch/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Klein ist ökonomisch — ralfw.de Archiv">
+<meta property="og:description" content="Es kommt auf die Größe an – zumindest bei der Wartbarkeit (oder besser: Evolvierbarkeit). Über Helge Nowaks Präsentation bin ich auf diesen Text gestoßen und darüber dann auf einen">
+<meta property="og:url" content="https://ralfw.de/archiv/2014/klein-ist-okonomisch/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Klein ist ökonomisch</h1>
+    <div class="doc-meta"><span>3. Juni 2014</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2014/06/klein-ist-okonomisch.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2014/klein-ist-okonomisch/</code></span></div>
+    <div class="art"><p>Es kommt auf die Größe an – zumindest bei der Wartbarkeit (oder besser: Evolvierbarkeit). Über Helge Nowaks <a rel="noopener" href="http://entwicklertag.de/karlsruhe/2014/sites/entwicklertag.de.karlsruhe.2014/files/folien/edit-vortrag/em-und-es-kommt-doch-auf-die-gr-e_0.pdf">Präsentation</a> bin ich auf <a rel="noopener" href="http://www.leanway.no/code-is-the-problem/">diesen Text</a> gestoßen und darüber dann auf einen Video-Vortrag:</p>
+<p><a rel="noopener" href="http://vimeo.com/78634764">Viktigste faktorer for å redusere teknisk gjeld - Dag Sjøberg</a> from <a rel="noopener" href="http://vimeo.com/smidig">Smidigkonferansen</a> on <a rel="noopener" href="https://vimeo.com">Vimeo</a>.</p>
+<p>Keine Angst, Sie müssen nun nicht Ihr Norwegisch abstauben. Ich denke, interessante Einsichten lassen sich auch aus den Vortragsfolien ziehen.</p>
+<p>Vorab aber die Geschichte hinter dem Vortrag: Es wurde ein Experiment zu Wartungskosten für Softwaresysteme gemacht. Dazu wurde dasselbe System bei vier Softwarehäusern in Auftrag gegeben. Anschließend wurden alle vier Systeme gleichermaßen genutzt und also mit realen Daten befüllt. Und dann hat man allen Softwarehäusern einen Änderungsauftrag erteilt.</p>
+<p>Mit dem Experiment sollte herausgefunden werden, welche Merkmale von Software mit guter/schlechter Wartbarkeit korrelieren. Deshalb hat man auch noch Softwarequalitätsexperten befragt, wie sie die Wartbarkeit der Systeme einschätzen.</p>
+<p>Das spannende Ergebnis: Die Experten lagen daneben mit ihren Metriken. Vorhersagekraft hatte allein die Zahl der Codezeilen (Lines of Code, LOC).</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/0ef297fbe79f5488.png" /></p>
+<p>Verblüffend, oder?</p>
+<p>Denn dem stehen diese Vorhersagen gegenüber:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/7c5b2990657eb6f1.png" /></p>
+<p>Systeme B und D sollten die beste Wartbarkeit aufweisen, A und C die schlechteste.</p>
+<p>Nun könnten Sie sagen, der Aufwand für B und D lag nicht soviel über dem von A wie C. Für B mit dem besten Vorhersagewert war nur ca. 50% mehr Aufwand als für A nötig. Für D nur knapp 100% mehr. Das sind doch keine großen Missweisungen wenn man an das Verschätzen bei der Softwareentwicklung im Allgemeinen denkt.</p>
+<p>Gegen diese Interpretation spricht für mich aber zweierlei: Zum einen ist der Vorhersagewert von A der schlechteste und auch noch für sich genommen grottig. Zum anderen steht hinter den schlechteren Wartungsaufwänden bzw. besseren Vorhersagewerten ein deutlich höherer Anfangsaufwand:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/281bf919ed0d19fb.png" /></p>
+<p>Meine Norwegisch-Kenntnisse geben mir ein, hier wird gefragt, ob wirklich mehr Aufwand zu geringeren technischen Schulden (lies: mehr Evolvierbarkeit) geführt hat. Leider muss die Antwort Nein lauten. Die laut Vorhersage besser wartbaren Systeme haben zwar knapp 100% bzw. 250% der Aufwands erfordert, der in den Letztplatzierten gegangen ist. Doch trotzdem hat der sie am Ende deutlich geschlagen.</p>
+<p>Bessere Metrikwerte waren also teuer – und haben es nicht gebracht. Das ist bitter, oder?</p>
+<p>Das am besten wartbare System hat pro Person am wenigsten Zeit in der Entwicklung gekostet und am wenigsten LOC enthalten.</p>
+<p>Ist das eine triviale Aussage? Hm… ich glaube nicht. Denn sonst hätten die Experten ja besser geurteilt.</p>
+<h3>Schlussfolgerungen</h3>
+<p>Ich denke, es lassen sich aus dem Ergebnis einige Schlussfolgerungen für die Praxis ziehen. Wenn weniger LOC bessere Evolvierbarkeit bedeuten, dann müssen wir alles (naja, zumindest vieles) daransetzen, weniger LOC herzustellen. Und das geht so:</p>
+<h4>1. YAGNI</h4>
+<p>Weniger LOC beginnen nicht so sehr beim Entwickler, sondern eher beim Kunden bzw. beim PO. Er sollte noch schärfer darüber nachdenken, was wirklich, wirklich an Features benötigt wird. Und er sollte in noch dünneren Inkrementen codieren lassen, um schneller sagen zu können “Good enough!”. Ich bleibe also dabei, das <em><a rel="noopener" href="http://geekswithblogs.net/theArchitectsNapkin/archive/2013/09/11/spinning-ndash-a-core-practice-for-agile-teams.aspx">Spinning</a></em> eine Kernpraxis jeder Softwareentwicklung sein sollte.</p>
+<p>Code erst gar nicht zu schreiben, ist das beste Mittel, um LOC zu reduzieren.</p>
+<p>Aber das geht natürlich nicht nur den PO etwas an, sondern auch die Entwickler. Gern wird auf Vorrat implementiert, weil man ja soviel Erfahrung hat, was da noch alles kommen mag. Dann wird vorhergesehen und flexibilisiert, was das Zeug hält. Wiederverwendbarkeit ist ganz beliebt als herzustellendes Merkmal – auch wenn niemand weiß, was wie viel wiederverwendet wird.</p>
+<h4>2. KISS</h4>
+<p>Was dann implementiert wird, sollte so einfach wie möglich sein. Da verschwimmt manchmal die Grenze zwischen YAGNI und KISS, aber ich denke, jeder kennt Beispiele, wo etwas kompliziert gelöst wurde, wo es einfacher gegangen wäre. Der Grund: Unkenntnis, vermeintlicher Zeitmangel.</p>
+<p>Auch für Code gilt Pascals (oder Goethes?) Ausspruch: Wenn ich mehr Zeit gehabt hätte, hätte ich mich kürzer gefasst.</p>
+<p>Wie das Experiment zeigt, ist Zeitaufwand gesteckt in weniger LOC aber gut investierte Zeit. Die macht die später unabsehbaren “Wartungsarbeiten” kostengünstiger.</p>
+<p>Natürlich gilt es da eine Balance zu finden. Mancher elegante Einzeiler ist am Ende schwerer zu evolvieren als etwas gesprächigerer Code.</p>
+<h4>3. Knappe Programmiersprache</h4>
+<p>Die LOC-Frage wirft eine zweite, womöglich schon zu den Akten gelegte auf: Welche Programmiersprache sollte benutzt werden, um das Nötige simpel zu codieren?</p>
+<p>Früher ging es um Compiler- und Ausführungsgeschwindigkeiten. Heute ist das nicht mehr so ein großes Thema. Stattdessen sollte es um Knappheit (terseness) gehen. Natürlich Knappheit, die zur Lesbarkeit beiträgt. Das kann man von PERL oder APL eher nicht sagen, aber wohl z.B. von F#.</p>
+<p>Welche Sprache bietet gute Abstraktionen, welche Sprache bemüht sich um “Rauschunterdrückung”? Java hat da heute für mich z.B. eher einen hinteren Platz. C# scheint mir im Mittelfeld. Und wie steht es mit Modernem wie Go, Exlixir, Swift?</p>
+<p>Einerlei. Ich will hier für keine Sprache werben, sondern nur auf ein Mittel zur Reduktion der LOC für mehr Evolvierbarkeit aufmerksam machen. Die Sprachfrage sollte nicht leichtfertig abgetan werden mit dem Verweis aus die Tradition: “Wir haben halt immer schon in X entwickelt.”</p>
+<h4>4. Granulare Abstraktion</h4>
+<p>Eine Programmiersprache bietet mehr oder weniger Abstraktion. Mehr bedeutet gewöhnlich weniger LOC. Noch mehr bedeutet noch weniger LOC – aber ab einem gewissen Punkt geht das auf Kosten der Universalität. Beispiel SQL: damit lassen sich sehr knapp Anweisungen ausdrücken, aber SQL ist nicht <em>computationally complete</em>.</p>
+<p>Durch die Wahl einer 3GL lassen sich die LOC also nur auf ein gewisses Maß reduzieren. Weiter muss es dann mit DSLs (Domain Specific Languages) gehen. Die gibt es nur nicht für alle Problemdomänen. Und es ist nicht zu erwarten, dass sich das grundlegend ändert. Einzelne Teams haben es schon schwer genug, Bibliotheken mit vernünftigen Abstraktionen zu entwickeln, da sind eigene DSLs in weiter Ferne. Sie haben ihren Platz – aber ihr Beitrag zur LOC-Reduktion für den Mainstream wird gering bleiben.</p>
+<p>Wichtiger finde ich es daher, mit den Mitteln der gewählten 3GL eigene Abstraktionen auf unterschiedlichem Niveau zu schaffen. Die Mittel sind Container wie Funktion, Klasse/Modul, Komponente, (micro)Service.</p>
+<p>Mein Annahme ist, dass sich das Versuchsergebnis auf verschiedene Größenordnungen übertragen lässt. Zwei Funktionen, die dasselbe leisten, sind je nach LOC unterschiedlich evolvierbar. Zwei Klassen, die dasselbe leisten, sind je nach LOC unterschiedlich evolvierbar. Usw. usf.</p>
+<p>Kleine Funktionen, kleine Klassen, kleine Komponenten, kleine Services sind also anzustreben. Funktionen mit 3000 LOC, Klassen mit 100.000 LOC, die Abwesenheit von Komponenten und Services… das alles sind Zeichen der Unwartbarkeit.</p>
+<p>Wer Evolvierbarkeit will, der sollte sich also stetig um kleine Container bemühen und um Container auf weiteren Abstraktionsebenen oberhalb von Klassen. Wo es nur Funktion, Klasse, Softwaresystem und das auch noch ohne LOC-Begrenzung gibt, ist der Monolith vorprogrammiert.</p>
+<p>Wie kommen Sie denn aber zu kleinen Funktionen und Klassen? Die Forderung ist ja auch schon älter, ohne dass sie einen spürbaren Effekt gehabt hätte. Manche sagen, Funktionen sollten nur 7 oder 20 Zeilen haben. Andere sagen, sie sollten nicht länger als eine Bildschirmseite sein (aber mit welcher Auflösung).</p>
+<p>Ich glaube, die Forderung nach einem bestimmten max. Zeilenzahl bringt uns nicht weiter. Wir brauchen einen Ansatz des Softwareentwurfs, der ganz natürlich zu kleinen Funktionen und Klassen führt. Die bisherige Objektorientierung leistet das nicht. Wir müssen nachbessern.</p>
+<p>In meiner Codierungspraxis gibt es inzwischen keine Funktion mehr, die länger als 50 Zeilen ist (und mehr als Triviales tut). Nicht, weil ich mich durch StyleCop warnen lasse, sondern weil ich Software mit Flow-Design nur so entwerfen kann, dass alle Funktionen klein sind. Wenn Sie wissen wollen, wie das funktioniert, folgen Sie doch dem “Book in Progress” von Stefan Lieser und mir: <a rel="noopener" href="https://leanpub.com/thearchitectsnapkin-katafuerkata">The Architect´s Napkin Kata für Kata</a>.</p>
+<p>Eine größere Zahl von Funktionen und Klassen braucht dann natürlich wieder Container. Das Softwaresystem als Ganzes ist zu groß. Deshalb gehören für mich Komponenten- und Serviceorientierung ganz natürlich zu den Maßnahmen, die LOC pro Container zu reduzieren. Die einzuführen ist aber natürlich nochmal eine andere Nummer als die LOC-Reduktion bei den schon in Gebrauch befindlichen Containern Funktion und Klasse.</p>
+<p>Aber es lohnt sich, denke ich. Durch Komponenten und Services wird es nicht nur mit LOC besser pro Container, sondern auch mit der Produktionseffizienz. Denn durch die expliziten Kontrakte kann an Komponenten und Services viel besser arbeitsteilig parallel gearbeitet werden. Darüber hinaus bieten Services die Chance, im selben Softwaresystem mehrere Runtimes/3GLs einzusetzen. Plattformneutrale Kontrakte machen es möglich. Ausführlicher dazu in <a rel="noopener" href="https://leanpub.com/thearchitectsnapkin-derschummelzettel">The Architect´s Napkin – Der Schummelzettel</a>.</p>
+<p>Ziel ist in jedem Fall, mit den vielen kleinen Containern ein eigenes Domänenvokabular, gar eigene “Domänensätze” zu formulieren. Mit dem können Sie dann immer neue Geschichten (user stories) “schreiben”.</p>
+<h4>5. Geschichten trennen</h4>
+<p>Container sind ein technisches Granulat. Ich denke, es gibt aber auch aus Sicht von Kunde/Benutzer die Möglichkeit, granularer zu entwickeln, d.h. mehr Funktionseinheiten mit jeweils weniger LOC zu bilden.</p>
+<p>Das Problem beginnt hier wieder beim Kunden. Der will oft “alles unter einem Hut”. Der sucht die “one size fits all” Anwendung. Die wächst und wächst dann und enthält alle LOC.</p>
+<p>Was aber, wenn die Anforderungen nicht durch nur eine Anwendung, sondern durch viele umgesetzt würden. Nicht ein Icon auf dem Desktop, nicht eine URL im Intranet für alles, sondern viele.</p>
+<p>Die Smartphones machen es vor. Statt einem Boliden wie Outlook vertrauen wir uns einem Schwarm aus kleinen Apps für Email, Kalender, Aufgaben, Notizen an. Viele Spezialisten statt ein Generalist. Das sind viele kleine Zweige unabhängiger Evolutionsmöglichkeit.</p>
+<p>Jede App ist auf eine Domäne spezialisiert, erzählt sozusagen eine eigene Geschichte. Warum nicht dasselbe tun mit CRM, ERP, Buchhaltung, Qualitätsmanagement, Vertragsverwaltung usw. usf.? Das gesamte Softwaresystem enthält dann immer noch 100% aller LOC – nur ist es unterteilt in Apps mit jeweils einem Bruchteil der LOCs. Die lassen sich für sich leichter evolvieren.</p>
+<p>Und innerhalb von Apps können Sie weiter Geschichten trennen. Apps müssen keine Monolithen sein, sondern können aus Modulen bestehen.</p>
+<p>Am Ende geht es also nicht um ein Softwaresystem, sondern um einen bunten Strauß ein Modulen in Apps zusammengefasst. Das ist dann nicht eine monolithische Codebasis. Vielmehr gibt es viele schmale Schnitte durch die Anforderungen: Durchstiche. Jeder macht für sich Sinn. Jeder kann getrennt von anderen evolvieren. Änderungsaufträge werden sich meist auf einzelne Module beziehen. Die gesamte Codebasis steht also gar nicht mehr zur Debatte.</p>
+<h3>Fazit</h3>
+<p>Ich denke, das Ergebnis des Experiments bestätigt ein Bauchgefühl, das wir immer hatten. Zeit, dass wir es ernst nehmen. Packen wir die LOC bei den Hörnern und reduzieren, wo wir können.</p>
+<p>Wo der LOC-Haufen schon groß ist, geht es nur mit Refaktorisierungen. Wo immer wir aber neuen Code schreiben, sollten wir uns mit den beschriebenen Mitteln bemühen, die LOC gering zu halten. Prevention over refactoring ;-)</p>
+<p>Kleiner Code, Code mit weniger LOC ist unterm Strich einfach ökonomischer. Das zählt für unsere Kunden.</p>
+<h2>Kommentare</h2>
+<p><strong>Patrick Hesse</strong> (2014-06-05):</p>
+<p>Hallo Ralf,</p>
+<p>ich danke dir erstmal für den Blogeintrag. Der war ziemlich interessant.</p>
+<p>Wenn ich das aber richtig interpretiere hat System A auf die Verwendung oder Bildung von Komponenten verzichtet. Du selbst aber empfiehlst unterschiedliche Abstraktionsebenen wie Funktionen, Klassen, Komponenten und Services zu benutzen. Ich bin da prinzipiell bei dir, muss aber sagen das dies nicht unbedingt zur Vermeidung von LOC führt. Jede Extraschicht, und sei sie noch so dünn, bringt einen gewissen Overhead mit. Der Nutzen dieser Extraschichten ist ja gerade in dem von dir erwähnten Experiment nicht bestätigt wurden.</p>
+<p>Ich finde, wenn man zu sehr auf LOC achtet, dass man dann sehr schnell wieder einen Monolithen baut. Ich glaube auch das das nicht gut wäre, aber Glaube ist eben so eine Sache.</p>
+<p>Wie gesagt, danke für die Anregung.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2014-06-05):</p>
+<p>Ich finde Komponentenorientierung weiterhin wichtig. Allerdings unter einer Bedingung: dass sie nicht zu einer Erhöhung der LOC führt.</p>
+<p>Der Zweck von Komponenten muss sein, zu entkoppeln. Und eben - in Bezug auf das Experiment - Räume mit einer übersichtlicheren Zahl von LOCs zu schaffen.</p>
+<p>Nicht jede Komponente ist also eine gute Komponente :-) Man kann es auch übertreiben.</p>
+<p>Das System im Experiment kann ja nicht sooo groß gewesen sein. Das höchste Angebot lag bei 70.000€, das niedrigste bei 2.500€. Sie haben dann vier aus der Angebotsbandbreite ausgewählt. Und System A lag um die 10.000€. Wie lange kann man dafür arbeiten? Dafür wurden jeweils nur rund 5.000 LOC produziert.</p>
+<p>Wenn an den 5 KLOC dann nur 1 Person (oder 2) gesessen haben... dann sind Komponenten nicht unbedingt zwingend. Sie sind ja kein Selbstzweck und sie dienen vor allem der Produktionseffizienz im Sinne von Arbeitsteilung.</p>
+<p>In Klassen, Komponenten, Services zu differenzieren, erhöht aus meiner Sicht auch nicht die LOC wesentlich. Klar, ein gewisser Overhead ist da. Aber wie groß ist der wirklich? Wieviel Rauschen entsteht dadurch?</p>
+<p>Zwei Funktionen in derselben Klasse vs zwei Klassen? Ich würde sagen, für eine weitere Klasse kommen 3 Zeilen hinzu + 1 eine weitere Zeile pro Instanzierung.</p>
+<p>Zwei Klassen in derselben oder verschiedenen Komponenten? Keine zusätzliche LOC für die Verteilung. Aber ein Interface von n Zeilen im Kontrakt. Ist das ein Problem? Nein, solange keine Interfaceänderungen nötig sind. Und auch dann ist der Zusatzaufwand durch das Interface marginal. Der Hauptaufwand entsteht an den Nutzungsstellen. Die sind aber unabhängig davon, dass es ein Interface gibt und Klassen in verschiedenen Komponenten liegen.</p>
+<p>Insofern: Ich sehe keinen Widerspruch zwischen der Forderung "LOC reduzieren" und bewussterem Umgang mit Containern. Mehr Container tragen weniger LOC auf, als dass sie die LOC in kleinere Happen teilen.</p>
+<hr />
+<p><strong>hahoyer</strong> (2014-06-05):</p>
+<p>Statistisch sagt eine Korrelation ja nichts über Ursache und Wirkung aus. Könnte es vielleicht sein, dass der kurze Code und gute Wartbarkeit eine  gemeinsame Ursache haben? Zum Beispiel könnten unterschiedlich geniale Teams am Werk gewesen sein. Und das macht die ganze schöne Argumentation meiner Meinung nach kaputt.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2014-06-05):</p>
+<p>Klar, nicht unbedingt ein Kausalzusammenhang. Aber ich halte es immer noch für plausibel. Insbesondere wenn ich so den Hang zum overengineering bei Entwicklern sehe. Was da nicht alles vorausgedacht wird... Selbst bei kleinsten Beispielszenarios werden alle möglichen Zukünfte erahnt. Die führen zu mehr LOC, ohne dass heute ein echter Mehrwert entstünde.</p>
+<p>Dagegen setze ich YAGNI und KISS als erste Bastionen. Nicht neu, aber sie bleiben wichtig.</p>
+<p>Kann Team A im Beispiel besonders genial gewesen sein? Kann. Klar. Bei Faktor 10 Unterschied in der "Genialität" von Entwicklern ist das möglich. Aber vielleicht war das Team auch nur besonders klein? Das hilft auch. Oder vielleicht war man dort besonders auf Wert fokussiert und woanders mehr auf Sicherheiten aller Art? Es gab ja auch eine Zehnerpotenz Unterschied in den Kosten - für dieselbe Leistung.</p>
+<p>Bis zum Nachweis dieses oder eines wahren Kausalzusammenhangs halte ich die LOC Heuristik aber in jedem Fall nicht für schädlich.</p>
+<p>Ganz allgemein ist es ohnehin so eine Sache mit der Empirie in der Softwareentwicklungsforschung. Geglaubt wird natürlich an die eigene Erfahrung ;-) Mit der ist auch die Agilität groß geworden.</p>
+<p>Letztlich ist das auch ok. Kühn ein Statement machen (Hypothese) und dann schauen, was passiert. Und so zeigt sich über die Zeit, dass es eben nicht so einfach hinhaut. Das ist auch ne Aussage. Das gilt für XP wie Scrum wie TDD wie Pair Programming.</p>
+<p>Nix davon ist einfach. Nix davon bringt auch mein dogmatischer Befolgung einfach so die gewünschten Früchte. Es bleibt also die Notwendigkeit zur Anpassung.</p>
+<p>So auch bei der Metrik LOC.</p>
+<p>Die ist ein kühnes Statement - und nun schauen wir mal, wohin uns das bringt, wenn wir es (versuchsweise) ernst nehmen. Also lautet die Frage in Zukunft: "Um wieviele LOC konnten wir die Codebasis heute reduzieren?" (Oder "Konnten wir das neue Feature einbauen, ohne netto die LOC zu erhöhen?")</p>
+<p>Mögen die Experimente beginnen.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

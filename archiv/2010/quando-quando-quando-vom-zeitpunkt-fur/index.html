@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quando, quando, quando? Vom Zeitpunkt für automatisierte Tests — ralfw.de Archiv</title>
+<meta name="description" content="Grad lese ich Thomas Bandts öffentliche Gedanken zur Frage, ob und wann TDD denn sinnvoll sei. Die treibt ja viele um. Immer wieder. Und so glaube ich, dass irgendwas an ihr noch n">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/quando-quando-quando-vom-zeitpunkt-fur/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Quando, quando, quando? Vom Zeitpunkt für automatisierte Tests — ralfw.de Archiv">
+<meta property="og:description" content="Grad lese ich Thomas Bandts öffentliche Gedanken zur Frage, ob und wann TDD denn sinnvoll sei. Die treibt ja viele um. Immer wieder. Und so glaube ich, dass irgendwas an ihr noch n">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/quando-quando-quando-vom-zeitpunkt-fur/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Quando, quando, quando? Vom Zeitpunkt für automatisierte Tests</h1>
+    <div class="doc-meta"><span>18. Juli 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/07/quando-quando-quando-vom-zeitpunkt-fur.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/quando-quando-quando-vom-zeitpunkt-fur/</code></span></div>
+    <div class="art"><p>Grad lese ich Thomas Bandts <a rel="noopener" href="http://bit.ly/9u6o7s">öffentliche Gedanken</a> zur Frage, ob und wann TDD denn sinnvoll sei. Die treibt ja viele um. Immer wieder. Und so glaube ich, dass irgendwas an ihr noch nicht stimmt. Irgendwie ist die Perspektive falsch.</p>
+<p>Wenn es in einer Partnerschaft krieselt und sie klagt “Immer bringst du den Müll nicht runter!” worauf er fragt, “Wann soll ich den Müll denn runterbringen? Wenn die Tüte richtig voll ist oder früher?”, dann ist das auch die falsche Frage. Sie nimmt nur ein Symptom in den Blick, nicht das Wurzelproblem. Das könnte nämlich darin bestehen, dass sie sich in ihrem Bemühen um eine schöne Wohnung nicht anerkannt fühlt.</p>
+<p>Also: Was könnte falsch an der Perspektive hinter der ewigen Frage nach “Soll ich eigentlich immer (!) mit TDD arbeiten?” falsch sein?</p>
+<h2>Widerstand gegen die Silberkugel</h2>
+<p>Ich glaube, die Frage ist Ausdruck einer großen Skepsis. Entwickler sind zurecht skeptisch, dass es eine Praktik wie TDD gibt, die “alles” besser machen könnte. Aber insofern ist die Frage auch Ausdruck eines Missverständnisses. TDD will gar nicht “alles” besser machen. Nur manches.</p>
+<p>Die Frage ist damit falsch gestellt, weil sie suggeriert, TDD würde einen Absolutheitsanspruch formulieren. TDD ist “nur” eine Methode, um ein Ziel zu erreichen: korrekten Code mit einer hohen Testabdeckung und gut evolvierbarem Design.</p>
+<p>Evolvierbares Design ist die Voraussetzung für langlebige Software.</p>
+<p>Hohe Testabdeckung ist eine gute Grundlage dafür, dass Bugs sich nicht verkriechen können in ungetesteten Code. Verkriechen ist aber nur möglich bei Code, der entweder nicht trivial ist oder der nur sehr selten ausgeführt wird. Ist beides nicht gegeben, dann stolpert man bei Integrations- oder Akzeptanztests sehr schnell über den Bug. Und sehr wahrscheinlich ist dann auch sofort klar, wo und warum es geknallt hat.</p>
+<p>Beispiele für solchen Code sind Getter/Setter oder Mappings. Die funktionieren entweder -- oder eben nicht.</p>
+<p>Wer also Code schreibt, der nicht evolvierbar sein muss oder der weitgehend aus Trivialitäten besteht… der muss TDD nicht einsetzen. Forms-over-Data Szenarien fallen für mich z.B. in diesen Bereich.</p>
+<h2>Widerstand gegen Veränderung</h2>
+<p>Entwickler widersetzen sich aber nicht nur Silberkugeln, sondern auch Veränderungsansinnen. Und nichts anderes ist TDD. TDD will den Entwickler verändern. Und zwar sehr tiefgreifend. Alte Gewohnheiten sollen abgestreift werden, ja geradezu Gewohnheitsrecht soll aufgegeben werden.</p>
+<p>Bisher war “Softwareentwicklung ist Spaß beim codieren von spannender Funktionalität codieren”, nun soll aber sein “Softwareentwicklung ist nicht nur spannende Funktionalität programmieren, sondern auch langweilige Tests, die das eigene Werk in Frage stellen und langsam machen.” Das ist ein tiefgehender Eingriff. Denn erstens wird dem Entwickler der Spaß an der Programmierung vergellt. Zweitens setzt er ihn noch mehr unter Druck, denn der Chef ist gewohnt, schnell rausgeschossene Funktionalität zu sehen. Mit TDD kann die Feuerfrequenz nur sinken.</p>
+<p>Das Recht auf Spaß und Spannung, das Recht auf Entlastung durch Fokus auf Funktionalität soll mit TDD beschnitten werden. TDD bedeutet also einige Veränderung. Und die macht nie Freude. Deshalb setzt sich der Entwickler zur Wehr wie jeder es tut, dem ungewollte Veränderungen ins Haus stehen.</p>
+<p>Doch auch hier lauern Missverständnisse. Erstens ist das Schreiben von Tests nicht pure Langeweile. Im Gegenteil! Es kann sogar eine größere intellektuelle Herausforderung darstellen, als Funktionalität zu programmieren. Code testbar machen, ist oft keine Kleinigkeit. Wer also was auf sich hält als Entwickler, der sollte mehr Tests schreiben.</p>
+<p>Zweitens verlängern automatisierte Tests die Softwareentwicklung nicht per se. Es kommt vielmehr auf die Perspektive an. Wer nur auf diesen Moment schaut, der sieht natürlich die Zeit dahin rinnen, wenn er nicht nur 3 Zeilen Funktionalität, sondern auch 6 Zeilen Test schreiben muss.</p>
+<p>Diese Perspektive ist jedoch kurzsichtig. Sie folgt dem Gedanken eines Rechnungswesens, das immer nur auf die Kosten stiert. Und dahinter steht die Vorstellung, dass ein optimales Gesamtergebnis erzielt wird, wenn jeder Einzelschritt optimal ist.</p>
+<p>Das stimmt aber nicht. So funktioniert die Welt nicht. Oder nur in besonderen Situationen tut sie das.</p>
+<p>Diese Perspektive verliert schlicht den Gesamtprozess und auch die Zeit im Großen aus dem Blick. Denn nicht nur die Zeit eines Entwicklers ist wichtig. Viel wichtiger ist der Gesamtaufwand an Zeit über längere Zeit.</p>
+<p>Wer nur auf hier und jetzt schaut, kann das nicht sehen. Wirtschaftlichkeit bedeutet nicht, jetzt etwas in einer bestimmten kurzen Zeit zu produzieren, sondern langfristig zu überleben.</p>
+<p>Tests heute beim Entwickeln dienen nun dieser Wirtschaftlichkeit. Denn sie verringern die Wahrscheinlichkeit, dass Bugs in der Zukunft die Arbeit behindern. Das tun sie nämlich in zweierlei Hinsicht: Erstens halten Sie davon ab, Funktionalität zu produzieren. Zweitens stören Sie den Fokus des Teams. Beides ist kontraproduktiv.</p>
+<p>Auf längere Zeit gesehen, sind automatisierte Tests (bzw. TDD) also wirtschaftlicher. Das ergibt sich auch ganz leicht aus einer simplen Rechnung: Nach jeder Veränderungen am Code müssen alle relevanten Tests wiederholt werden, um sicherzustellen, dass nichts kaputtgegangen ist. Das sind umso mehr, je verquarzter Code ist. Damit ist es umso teurer, je mehr manuelle Tests gefahren werden müssen. Die Ausführung von automatischen Tests hingegen kostet nichts.</p>
+<p>Umgekehrt bedeutet das allerdings: Wer sich um längere Zeit nicht scheren muss, der kann auf autom. Tests/TDD verzichten.</p>
+<p>Allerdings würde ich immer hinterfragen wollen, ob einer, der aus dem Grunde TDD von der Hand weist, wirklich eine Ahnung davon hat, was in der Zukunft mit seiner Software passiert. Aus so mancher Software, die für einmaligen Gebrauch gedacht war, ist ja schon eine unternehmenskritische Anwendung geworden.</p>
+<p>Niemand will ja das Brownfield. Das ist, glaube ich, unzweifelhaft. Aber warum ist es dann überall? Warum gibt es solche Massen an unwartbarem Code, dessen Korrektheit niemand beweisen kann. Nach jeder Änderungen hoffen und bangen alle nur, dass nichts vormals Korrektes nun kaputt ist.</p>
+<h2>Widerstand gegen Angriffspunkt</h2>
+<p>Nicht nur gegen Veränderungen und Silberkugeln wehren sich Entwickler mit der kritischen Frage, ob TDD denn wirklich sein müsse. Sie wehren sich auch dagegen, angreifbar zu werden. Sie wehren sich dagegen, sich erklären zu müssen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/80ae694dc7e04b3b.png" /></p>
+<p>Wer bisher keine Tests geschrieben hat und nun damit anfängt und schon deshalb, weil er ein Anfänger ist, länger braucht, der sieht sich Stirnrunzeln ausgesetzt. “Muss das mit diesen neumodischen Tests denn sein?” fragt der Chef?</p>
+<p>Darauf dann selbstbewusst mit “Ja, das muss sein” zu reagieren, fällt vielen schwer. Sie können sich auf keinen Berufsethos zurückziehen. Sie haben keine Branche hinter sich, in der es alle so tun. Die Ausbildung steht nicht hinter ihnen. Sie sind auf sich gestellt. Ihre Überzeugung steht gegen die Weisungsmacht des Chefs, der von Softwareentwicklung allzuoft nichts versteht und Experimente so gar nicht mag.</p>
+<p>Das sind verständlicherweise unschöne Aussichten. Also ist der Reflex die sehr skeptische Frage, ob denn TDD überhaupt etwas brächte.</p>
+<h2>Fazit</h2>
+<p>Natürlich hat die Frage, ob und wann TDD denn sein müsse, eine Sachebene. Die Frage ist sachlich berechtigt. Und die Antwort sollte nicht pauschal sein, sondern differenziert. Entscheidungskriterien sind gefragt.</p>
+<p>Lebensdauer und Kompliziertheit und Art von Code gehören für mich als Aspekte in die Antwort. Nicht für jeden Bau sind statische Berechnungen im selben Umfang nötig. Nicht für jedes Unternehmen ist ein Rechnungswesen im selben Umfang nötig. Deshalb: Nicht für jedes Softwareprojekt sind automatisierte Tests im selben Umfang nötig.</p>
+<p>Kontraproduktiv im Sinne einer differenzierten Antwort finde ich es jedoch, sich über die wahren Beweggründe der Frage nicht klar zu sein. Jeder, der so fragt, prüfe sich da also am besten erstmal selbst. Das ist schwierig – aber wenn man es nicht tut, läuft man immer wieder gegen Wände aus Missverständnissen. Und nichts ist lähmender als Konflikte, deren Ursachen man nicht kennt bzw. verschleiert.</p>
+<p>Ebenfalls kontraproduktiv empfinde ich es, ganz grundsätzlich den Nutzen von automatisierten Tests zu hinterfragen. Das widerspricht aus meiner Sicht der Zivilisationsgeschichte der letzten 1000 Jahre, die ganz klar zeigt, dass Automatisierung wo immer es geht, Vorteile bringt. Menschen ersparen sich langweilige, fehlerträchtige, gefährliche Arbeit, indem sie automatisieren. Warum sollte das nicht auch für Tests gelten?</p>
+<p>Nein, da ist für mich die Grenze erreicht. Wer Testautomatisierung pauschal in Frage stellt, der widerspricht grundlegenden Prinzipien. Und dazu sagten schon die Lateiner: <em>contra principia negantem disputari non potest</em>(Mit dem, der die gemeinsamen Prinzipien leugnet, ist nicht diskutieren.) Den Diskussionsaufwand spare ich mir dann.</p>
+<p>Also: Wenn die Frage sachlich gestellt ist und nicht als Rationalisierung, d.h. als Abwehrmaßnahme dient, wenn ernstlicher Erkenntnisgewinn gewollt ist und die grundsätzliche Möglichkeit der Beiträge von automatisierten Tests/TDD zu Produktionseffizienz, Korrektheit und Evolvierbarkeit anerkannt sind… dann lässt sich auch eine Antwort für jedes Projekt finden. Und die lautet nicht immer “Ja! TDD musst du machen auf Teufel komm raus.”</p>
+<p>Jedes Projekt hat sein Mix an automatisierten Tests wie Akzeptanztests, Integrationstests, Performancetests, Lasttests, Unit Tests. Und ob die nach TDD oder anders geschrieben sind… das ist durchaus auch immer wieder anders.</p>
+<p>Nur eines halte ich für unverbrüchlich: Den Willen zur Automatisierung. Denn alles, was automatisiert getan wird, das ist quasi kostenlos wiederholbar, das ist nachvollziehbar, das ist von keinem bestimmten Teammitglied abhängig, das ist schneller als von Hand getan. Wer wollte diese Vorteile der Automatisierung ausschlagen?</p>
+<h2>Kommentare</h2>
+<p><strong>Lars</strong> (2010-07-18):</p>
+<p>Meine Antriebsfeder Code zu schreiben war immer die Spannung, ob das was man sich ausgedacht hat auch funktionioniert.
+Ich betrachte mich weniger als Ingenieur als denn als Forscher.
+Ich will neue Möglichkeiten ausreizen und Welten entdecken.
+Das passiert auf jedem technischen Gebiet in einem "Brownfield". Nicht ganz "Black", weil man ja immer Bereiche hat, in denen man sich auskennt und die man per TDD entwickeln kann....und nicht ganz "White", weil sich ja herausstellen kann, dass etwas mit dem aktuellen Stand der Technik noch gar nicht geht. Und dafür Tests zu schreiben, wäre ja leicht komisch. Und wirklich rausgeschmissene Zeit.</p>
+<p>Selbst im viel (zu unrecht?) zitierten  Auto-Vergleich ist das ja nicht anders. Niemand erwartet von Auto-Prototypen, dass sie evolvierbar sein sollen.
+Und Software-"Entwicklung" macht für mich nur Sinn, wenn man etwas versucht, was es noch nicht gibt.
+In jedem anderen Fall empfehle ich Software, die eine bestimmte Aufgabe schon löst.
+Das ganze TDD macht für mich nur Sinn für Aufgaben, die man schon kennt und bei denen man nur sicherstellen muss, dass man sich auch richtig Implementiert.</p>
+<p>Mal ganz ehrlich: Ich hätte auch als Kind keinen Bausteinturm gebaut, wenn mir jemand eine Anleitung gegeben hätte, in der genau drin steht wo ich alle Bausteine hinstellen muss, um einem wackelfreien Turm aus 500 Steinen zu bauen. Eine eigene Bauart zu finden, bei der man 200 Steine wackelig aufeinander gestellt bekommt, das Gebäude aber extrem spektakulär aussah, erreicht die Herzen der Menschen viel eher. Und im Wirtschaftleben bedeutet das Geld. Und wenn dann im nächsten Schritt Erfahrung in der Sache und Geld zusammen kommen, kann Version 2.0 des Projekts beweisbar gebaut.
+Und wenn die Idee mist war und/oder man keine Kunden dafür findet, dann hat man viel Geld gespart durch die "dreckige Codierung".</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-07-19):</p>
+<p>@Lars: Leider weiß ich nicht so ganz, was du zum Thema autom. Testen sagen willst. Ziehst du eine Grenze, wann es sinnig ist und wann nicht? Hm...</p>
+<p>Eines lese ich jedoch bei dir heraus: den Verweis aufs Ausprobieren. Den finde ich wichtig. Denn Ausprobieren, um Unsicherheiten bzw. Risiko auszuräumen ist ganz wichtig.</p>
+<p>Ich glaube, dass das zuwenig getan wird. Wissen wir wirklich schon, wie das mit dem Databinding bei WPF geht? Können wir sicher mit dem ORM umgehen, den wir uns für die neue Anwendung vorstellen? Haben wir eine Ahnung davon, wie wir .NET Security Features für die Zugangskontrolle einsetzen können? Wissen wir, wie die Kommunikation mit WCF wirklich skalierbar gemacht werden kann?</p>
+<p>Ich behaupte, in den meisten Projekten gibt es relativ weite Felder von Unsicherheiten - die sich niemand so richtig eingesteht. Dass einer aufsteht in einem Planungstreffen und sagt, "Davon haben wir noch keine Ahnung. Das müssen wir erst ausprobieren.", halte ich für selten.</p>
+<p>Und so sind viele Schätzungen unnötig daneben. Denn hätte man sich mit einem Lösungsansatz mehr vertraut gemacht, hätte man ihn besser einschätzen können.</p>
+<p>Hier sehe ich das Verdienst von XP, Experimente für den Erkenntnisgewinn unter dem Namen "Spike Solution" ins Bewusstsein gebracht zu haben.</p>
+<p>Mit Spikes probiere ich etwas aus, da werde ich zum Forscher. Und Spikes müssen selbstverständlich nicht evolvierbar sein. Natürlich ist da kein TDD nötig.</p>
+<p>Aber Spikes sind eben gezielte und begrenzte Experimente.</p>
+<p>Wenn der Spike vorbei ist und ich Produktivcode sitze, dann sollte ich sorgfältiger vorgehen. Dann ist Schluss mit großen Experimenten. Dann muss das Haus solide sein, das ich baue. Dann muss die Statik stimmen. Also ist dann ein Fundament aus automatisierten Tests wichtig.</p>
+<p>Wenn du also sagen willst: Softwareentwicklung ist Arbeit im Unbekannten - immerhin heißt es ja Software-Entwicklung und nicht Software-Produktion - und erfordere dabei Experimente, die nicht durch ein Testkorsett beschränkt werden sollten, dann bin ich bei dir.</p>
+<p>Allerdings will der Kunde keinen Experimentalcode. Der Kunde will Code, von dem wir sicher sind, dass er so aussehen sollte, weil wir die Technologien und Konzepte beherrschen.</p>
+<p>Prototypen von Autos und Flugzeugen sind auf das Wesentliche reduziert. Wenn die crashen macht es nichts. Aber als Kunde will ich sie nicht nutzen. Das tun nur Dummies und Testpiloten. Letztere bekommen dafür auch gutes Geld, weil sie sich einer erhöhten Gefahr aussetzen.</p>
+<p>Als Kunde will ich kein Dummy sein und mit Bananensoftware keinen Testflug machen. Also will ich, dass der Hersteller nachvollziehbar korrekte Software schreibt.</p>
+<p>Nachvollziehbar sind manuelle Tests aber nicht.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Mike Bild</strong> (2010-07-19):</p>
+<p>@Lars: Wenn Du schreibst das Du es spannend(er) findest Software zu schreiben die es noch nicht gibt, verstehe ich Dein Selbstbild des Forschers statt des Ingenieurs. Das finde ich auch spannend, nur gibt es den viel Software (APIs mal eingeschlossen) die es noch nicht gibt? Software(teile) die es noch nicht gibt, explorativ zu untersuchen und technische Möglichkeiten auszuloten ist gut und muss sicher auch nicht immer test getrieben entwickelt werden. Bei Explotationen geht es ja um erforschen und lernen. Wenn ich dann allerdings erkannt habe, wie ich den Turm aus 500 Steinen baue, reiße ich ihn ein und präsentiere doch lieber eine verifizierte Version des Turms. Nun meine ich, dass wir Entwickler aus der Grundschule heraus zu einer Ingenieurschule wechseln sollten. Exploration gehört damit nur noch zu Lern- und nicht zu Produktionszwecken in ein Projekt. Explorieren können wir mit CodeKatas und Codingdojos. Der Kunde erwartet auch bei Software die es noch nicht gibt ein Maß an Qualität. Wie stellst Du dieses sicher? Vertrauen? Ich versuche Vertrauen mit automatischen Tests zu untermauern. Für mich, für das Entwicklerteam und für den Kunden verifizierbare Qualität zu liefern. Das ist nach einer Hochschulausbildung zum Informatiker nicht zu viel verlangt wie ich meine. Forschung ist, für mich, ein Schritt über das notwendige in der qualitativen Projekt/Produktsoftwareentwicklung hinaus. Und, wird in der Forschung (auch Auto-Prototypen) nicht auch ständig bewiesen?</p>
+<hr />
+<p><strong>Lars</strong> (2010-07-19):</p>
+<p>@Ralf</p>
+<p>Wie du in deinem Beitrag schon richtig geschrieben hast, lohnt es sich gar nicht über die Sinnhaftigkeit von Automatisierung zu diskutieren. Alles was nicht automatisiert wird, wird irgendwann vergessen durch zu führen. Und laut Murphy wissen wir ja, dass es genau an dem Tag, an dem es vergessen wurde gerade besonders wichtig gewesen wäre. ^^
+Also wenn Tests dann automatisierte.</p>
+<p>Aber ich erlebe häufig Kunden, die den "Spike" sofort gekauft haben.
+Vor 2 Jahren hatte ich z.B. ein  Experiment gemacht, welches die optische Auswertung von avi-Dateien betraf. Ich hab dazu ConsoleApplication9 erstellt und mal geguckt wie sowas funktioniert.
+Als ich mit dem Kunden dann zusammengesessen hab um zu erfragen, ob er sich den Output der AVI-Auswertung so vorgestellt hat, gab es folgende (hier vereinfachte) Diskussion:
+Kunde: "Perfekt! Kann ich das Programm mit dem das gemacht wurde haben?"
+Ich: "Nein! das war ein reiner Test"
+Kunde: "Das ist mir egal! Mir ist das richtige Programm sowieso zu teuer. Ich will auch keine Gewährleistung."
+Ich: "Ich habe keine Vorstellung davon, wie das Programm reagiert, wenn z.B. der Dateiname Sonderzeichen beinhaltet, die Datei größer als 2GB ist oder gar eine andere Auflösung hat oder einen anderen Codec. usw."
+Kunde: "Das ist schon ok. Wenn ich weiß, dass die Datei immer F:\a.avi heißen muss, immer exakt die gleichen Medien-Details besitzen muss und die Festplatte ansonsten am besten leer bleiben sollte, dann sorge ich für diese Bedingungen und nehme das Programm so wie es jetzt ist."</p>
+<p>Und so hat es ConsoleApplication9 in den Produktiveinsatz geschafft. Und das schlimmste daran ist in der Nachbetrachtung eigentlich, dass der Kunde recht hatte. Losgelöst von jeglicher Qualitätsdiskussion von Software ist es so die bessere/produktivere Lösung für ihn gewesen. Und ich habe den Kopf frei von dem Projekt, da ich ihm gesagt hab, dass ich dafür bestimmt keine Wartung mache.
+Und wahrscheinlich ist es tatsächlich effizienter bei Projektarbeit billig-wegwerf-Anwendungen zu basteln und von dem Kunden zu verlangen, dass er immer nur GENAU das gleiche machen darf, als eine Anwendung zu schreiben, die alle Eventualitäten bedenkt und dann das 10fache kostet.
+Das ging mir jetzt schon bei mehreren Projekten so...meistens überzeuge ich den Kunden aber davon, dass er Qualität braucht.
+Ich habe also bestimmt nichts gegen Automatisierung, stelle aber die Sinnhaftigkeit von Qualität in vielen Bereichen der Software-Entwicklung immer stärker in Frage. Da diese Qualität in der Regel sehr viel teurer ist als dem Kunden immer die gleichen Rahmenbedingungen ab zu verlangen.
+Natürlich geht die Rechnung nicht in Bereichen auf, wo z.B. das wohl von Menschenleben durch die Software auf dem Spiel steht. Aber das sind ja nicht die häufigsten Fälle.
+Da du deinen Lesern ja auch unter anderem die gedankliche Loslösung von OOP zumutest, will ich auch mal sowas, wahrscheinlich noch sehr viel provokanteres, in den Raum stellen, wie die partielle Loslösung von Qualität. Ich hoffe, dass du jetzt keine hektischen Flecken im Gesicht bekommen hast. :)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-07-19):</p>
+<p>@Lars: Keine Sorge, ich kriege keine hektischen Flecken ;-) Die Frage, wieviel Qualität es denn sein darf/muss, ist berechtigt.</p>
+<p>Warum kann ich bei deinem Beispiel zustimmen, wo du doch keine Tests geschrieben hast? Hm...</p>
+<p>Ich denke, es liegt an der Transparenz. Die macht den Unterschied.</p>
+<p>Wenn ich einem Kunden sage, der Preis ist 10.000 EUR für eine hohe Qualität, d.h. meine Korrektheitsprüfungen sind nachvollziehbar und die Anwendung kann auch nach dem ersten Release weiterentwickelt werden, und der Preis ist 2.000 EUR, wenn all das nicht der Fall ist, dann ist das transparent. Dann kann er sich entscheiden.</p>
+<p>Vor allem aber: Dann kann man ihm hinterher sagen, "Tja, du hast einen Fehler entdeckt, das ist dein Pech. Du wolltest die 2.000 EUR Lösung ohne Qualitätssicherung. Du hast gekauft wie gesehen."</p>
+<p>Wenn sich zwei Erwachsene gegenüber sitzen und offen miteinander sind, dann kann man das so machen. Bei deinem Kunden war das wohl der Fall. Schön.</p>
+<p>Ich bezweifle, dass das aber sonst oft der Fall ist. Erstens haben viele Entwickler nicht die Bandbreite, dass sie so oder anders könnten. Sie können nur so: nämlich ohne autom. Tests etc.</p>
+<p>Zweitens bezweifle ich, dass viele Entwickler so transparent die Lage darstellen können.</p>
+<p>Drittens bezweifle ich, dass viele Kunden wirklich abschätzen können, was sie da entscheiden, wenn sie die billige Lösung nehmen. Sie wissen in vielen Fällen einfach nicht, wie sich ihr Umgang damit entwickelt. Und dann stehen sie da mit 2.000 EUR, denen sie 20.000 EUR nachschmeißen müssen.</p>
+<p>Dass das ihr Problem ist, begreifen sie nicht. Sie zeigen dann ganz schnell auf unsere Branche, die es doch hätte besser wissen müssen.</p>
+<p>Auch aus Schutz davor plädiere ich für ein konservatives Vorgehen, d.h. eines mit tendenziell zu hoher Qualität. Denn: "You never know..." ;-)</p>
+<p>Aber wahrhaft professionell wäre es, ein offenes Gespräch über innere Qualität zu führen. Wollen Sie eine Hundehütte oder einen Wolkenkratzer? Wollen Sie Holz oder Stahl?</p>
+<p>Manches geht dann, z.B. Hundehütte aus Holz oder aus Stahl. Manches nicht, z.B. Wolkenkratzer aus Holz.</p>
+<p>Vor/Nachteile und Mögliches/Unmögliches müssen abgewogen werden.</p>
+<p>Und jenseits des relativ Überschaubaren lauert die Ungewissheit, die sich eigentlich nur bewältigen lässt, wenn man auf sie vorbereitet ist. Dazu gehören autom. Tests und eine vernünftige Architektur.</p>
+<hr />
+<p><strong>Lars</strong> (2010-07-19):</p>
+<p>Uff...das hatte ich ja nicht erwartet. Eigentlich bin ich in diesen Blog-"Beichtstuhl" gegangen um mich verurteilen zu lassen so nach dem Motto: "Qualität oder gar nicht! Lieber einige Aufträge sausen lassen und zusätzlich Hartz4 beantragen, als die neu gewonnene Berufsethik wieder auf zu geben".
+An eine Absolution hatte ich ja kaum zu hoffen gewagt.</p>
+<p>Also kann man deiner Meinung nach auf Qualität verzichten, wenn sich der informierte Kunde aus freien Stücken dagegen entscheidet? Das hilft bei der Ermittlung von Preisen ungemein.
+Kunden wollen ja häufig ein Problem gelöst haben, dessen Lösung 8.000€ kosten würde...sie haben aber nur ein Budget von 1000€ für die Lösung. Und sie wollen die Lösung (wie Thomas Bandt auch geschrieben hatte) möglichst gestern. Und wie es sich trifft, kann man das Problem auch für 1000€ lösen...und sogar viel schneller. Aber eben nur -GENAU DAS- Problem.
+Und in diesem Punkt konvergiert eben leider all zu oft der Wunsch der Kunden mit der technischen Realisierungsmöglichkeit. Und deswegen sieht die Software-Welt in der freien Wildbahn an einigen Orten so "Braun" aus. Und manchmal ist das aus erwähnten Gründen sogar gewollt bzw. akzeptiert.</p>
+<hr />
+<p><strong>Carsten</strong> (2010-07-19):</p>
+<p>Mir fehlt ein Aspekt in der Diskussion: TDD im Sinne einer  „durch Tests getriebenen Entwicklung“ besagt doch, dass zunächst Tests entlang der bekannten Anforderung geschrieben werden und danach konkret entwickelt wird. Verfechter dieser Methode sagen, dass durch die explizite Formulierung der Anforderungen die eigentliche Implementierung qualitativ verbessert und vereinfacht wird (im Sinne eine Zeitersparnis). Gleichsam als Nebenprodukt erhält man automatisierte Tests. Demzufolge erscheint mir TDD zunächst eine Frage der „Vorliebe“; sie besagt nichts über den Sinn oder Unsinn von automatisierten Tests.</p>
+<p>Der Sinn eines jeden Tests (ob automatisiert oder auch nicht) ist es die Korrektheit von Software zu beweisen und mithin Risiken zu minimieren. Wenn ich in diesem Zusammenhage lese, der Kunde sei nicht daran interessiert, ob und wie getestet wird, regt sich bei mir Unmut: Der Kunde muss über Projektrisiken aufgeklärt werden und er muss auch derjenige sein, der entscheidet ob Risiken akzeptiert werden oder nicht.</p>
+<p>In Lars Fall muss der Kunde darüber aufgeklärt werden, dass er natürlich die gelieferte Software auf Korrektheit prüfen muss. Er muss wissen, dass diese Prüfung vollständig, im Sinne eines Regressionstests, bei jeder Änderung erfolgen muss. Der Kunde muss entscheiden, ob er diese Aufwaende akzeptiert oder ob er in eine Automatisierung der Tests investiert.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-07-19):</p>
+<p>@Lars: Qualität ist der Grad, in dem Anforderungen erfüllt werden.</p>
+<p>Wichtig ist es also, die Anforderungen möglichst vollständig zu erheben. Das (!) geschieht heute nicht. Allzu oft konzentriert man sich auf Äußerlichkeiten: Funktionalität, Performance, Sicherheit, Skalierbarkeit... Das sind Anforderungsdimensionen, die der Kunde mehr oder weniger selbst kennt. Deshalb hat er dazu ausdrückliche Wünsche.</p>
+<p>Aber das sind nicht alle mögliche und auch nicht alle relevanten Anforderungsdimensionen. Das Bündel an Anforderungsdimensionen, das mit Evolvierbarkeit, Korrektheit, Produktionseffizienz zu tun hat, wird gewöhnlich nicht mal thematisiert. Deshalb kennt der Kunde es nicht. Deshalb nimmt er an, dass er an alles gedacht hat. Oder er nimmt an, dass der Entwickler weitere Dimensionen schon passend mit Anforderungen füllen wird, weil er ja soviel Erfahrung hat.</p>
+<p>Was das Ergebnis ist, wissen wir alle. Der Entwickler hat diese "verborgenen Dimensionen" auch nicht im Blick und schießt aus der Hüfte los, um die Qualitäten herzustellen, die er mit dem Kunden abgesprochen hat. Und schon gehts bergab... das Brownfield ist eröffnet.</p>
+<p>Wenn man hingegen wirklich professionell und transparent vorgeht, dann kommen auch die Dimensionen auf den Tisch, die der Kunde nicht mal ahnt. Dann kann man darüber reden. Carsten sagt es schon richtig:</p>
+<p>"In Lars Fall muss der Kunde darüber aufgeklärt werden, dass er natürlich die gelieferte Software auf Korrektheit prüfen muss. Er muss wissen, dass diese Prüfung vollständig, im Sinne eines Regressionstests, bei jeder Änderung erfolgen muss. Der Kunde muss entscheiden, ob er diese Aufwaende akzeptiert oder ob er in eine Automatisierung der Tests investiert."</p>
+<p>Wenn man dem Kunden erklärt, wie das mit den Fehler ist, dass die sich immer wieder einschleichen können, nicht weil man zu doof ist, sondern die ganze Sache sehr komplex ist, dann kann er entscheiden, wie er es gern hätte.</p>
+<p>Auf dem Schlachtfeld ist es unausgesprochener Konsens: Der Sani fragt den verletzten Soldaten nicht, ob er eine Erstversorgung lieber mit Händewaschen vorher hätte oder nicht. Das Risiko, durchs Händewaschen zwei Leben aufs Spiel zu setzen, ist zu groß.</p>
+<p>Bei Software in Flugzeugen ist es ähnlich. Da gibt es keine zwei Meinungen. Die muss sicher, sicher, sicher sein im Sinne der Gesundheit der Passagiere.</p>
+<p>Aber bei der nächsten AVI-Vorschausoftware... da kann und soll man fragen: "Wie hätten Sie´s denn gern? Schnell ein Ergebnis, dass im Rahmen einiger manueller Tests irgendwie läuft - aber ohne Potenzial für Weiterentwicklung, weil keine evolvierbaren Strukturen und kein Testgerüst gegen Regressionsfehler? Oder doch lieber evolvierbar usw.?"</p>
+<p>Ein Preisunterschied ist dann aber nicht nur jetzt zu nennen ("Sie bezahlen 2.000 EUR ohne Tests und 4.000 EUR mit Tests."), sondern auch für die Zukunft ("Sie bezahlen für Veränderungen in der Zukunft 5.000 EUR ohne Architektur und 2.000 EUR mit Architektur.").</p>
+<p>Ich bleibe aber dabei: Das sind eigentlich Fragen, deren Tragweite viele Kunden nicht abschätzen können. Genauso wäre es, würde mich der Chirurg fragen, ob ich meinen Blinddarm minimalinvasiv oder "normal" entnommen wünsche. Dann erklärt er noch ein paar Unterschiede... aber am Ende lässt er mich allein mit der Entscheidung. Tja... was dann tun? Wie selbst die Wahrscheinlichkeiten abwägen? Was weiß ich denn schon?</p>
+<p>Und so geht es vielen Kunden. Deshalb stehe ich auf dem Standpunkt, dass man ihnen einige Fragen ersparen sollte und zu einem allgemein höheren Qualitätsstandard aufsteigen sollte.</p>
+<hr />
+<p><strong>Carsten</strong> (2010-07-19):</p>
+<p>Ich fürchte bloß, Ralf, Du wirst den Auftrag verlieren. Schließlich bist Du 2.000 EUR teurer als der Wettbewerber. Wenn Du den Job haben willst, dann führt kein Weg daran vorbei dem Kunden zu erklären, warum er bei Dir 2.000 EUR mehr investieren sollte. Am Ende wird der Kunde die Kosten gegen den Nutzen abwägen und sich für die eine oder andere Lösung entscheiden.</p>
+<p>Gelingt es Dir nicht, über den Nutzen von Tests Transparenz herzustellen, so ist dies das Problem und die Schlussfolgerung es dem Kunden zu verschweigen ist kontraproduktiv im Sinne des Deines Ziels den „allgemeinen Qualitätsstandard“ anzuheben. Dies allein in die Hände der Entwicklergemeinde zu legen scheint mir auch nicht der richtige Weg zu sein, denn hier ist das Thema Testen zur Religion geworden (Lars spricht ja auch vom Beichtstuhl in diesem Zusammenhang)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-07-19):</p>
+<p>@Carsten: Und damit sind wir beim lieben Geld angekommen. Eindeutig. Wo es ums Geld geht, gibt es kein Halten mehr. Der Preis ist heiß. Und wenn ein anderer noch billiger ist, dann geben wir auch nach, damit wir den Auftrag bekommen? Indien, China, Kasachstan, der Schwager... egal. Einer wird schon billiger sein und dann müssen wir nachregeln. Hauptsache Auftrag.</p>
+<p>Sorry, da halte ich nicht mit. Das ist Söldnertum: "Wir machen alles. Hauptsache die Kohle stimmt."</p>
+<p>Bei einer reinen Preisbetrachtung gräbt sich jeder das Wasser selbst ab.</p>
+<p>Aber konkreter: Ja, dann verliere ich den Auftrag. Das habe ich in der Vergangenheit schon gemacht. Und ich werde es wieder tun. Geld ist nicht alles.</p>
+<p>Wer verzweifelt das Geld braucht, der kann es anders halten. Aber damit leistet er der Geiz-ist-geil-Mentalität weiter Vorschub. Vielleicht sollte er dann doch überlegen, woanders mehr zu verdienen: Arbeit auf einer Ölbohrplattform soll einiges an Geld bringen.</p>
+<p>Wenn wir den Menschen als Maß der Dinge aus den Augen verlieren, wenn wir Qualität als Ziel aus den Augen verlieren... dann ist das der Anfang vom Ende.</p>
+<p>Und ich behaupte: Wer die 2000 EUR für mehr Qualität nicht verkauft kriegt, der ist womöglich auch am falschen Platz. SRP! Als Entwickler soll man nicht verkaufen. Als Verkäufer soll man nicht entwickeln.</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-07-19):</p>
+<p>Als verantwortlicher Entwickler steckt man mitunter in der Zwickmühle. Zumal der Vertrieb vielleicht schon sehr enge Grenzen ausgehandelt hat um den Auftrag zu bekommen. Am Ende sollte man bei jedem Auftrag den man annimmt auch einen zufriedenen Kunden hinterlassen. Wenn dieser mit einer Zero-Quality-Lösung Wert schöpft, wird das Problem schnell wieder auf den Entwickler zurückfallen - beim Folgeauftrag.</p>
+<p>Schlechte SW-Qualität herzustellen bedeutet ja so etwas wie ein Ein-Weg-Produkt zu realisieren. Es wäre tatsächlich interessant, ob man den Punkt ermitteln kann bei dem schlechte Software aufhört betriebswirtschaftlich sinnvoll zu sein.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-07-20):</p>
+<p>@Ralf: Du sprichst das Grundproblem aus, benennst es aber nicht: Der Vertrieb hat irgendwas ausgehandelt.</p>
+<p>Als wüsste der Vertrieb irgendetwas über die Dauer einer Entwicklung.</p>
+<p>Der Vertrieb kann nichts aushandeln, wozu du nicht vorher durch Analyse der Anforderungen etwas gesagt hast. Und selbst das wird oft recht grob daneben liegen, weil Softwareentwicklung kein Reihenhausbau auf bekanntem Grund ist.</p>
+<hr />
+<p><strong>Carsten</strong> (2010-07-20):</p>
+<p>Du kannst dem Kunden sehr wohl sagen: „Bei uns gibt es keine Software, die nicht unseren internen Qualitätsstandard entspricht. Wenn Sie weniger wollen, dann sind wir nicht die richtigen. Dann gehen Sie bitte zur Schrauber-IT GmbH. Diese Standards sind nicht nur Selbstzweck, diese Standards sollen Ihre Investition schützen und eine langfristige Partnerschaft aufbauen, die nicht permanent dadurch gefährdet wird, dass die Qualität unserer Software bei jedem Release in Frage steht.“</p>
+<p>Das nennt man einen „Profound Purpose“.</p>
+<p>Nur reden muss man darüber. Man darf ihn nicht im Dunkel lassen, nach Deinem Motto: „Fragen nach der Qualität erspare ich dem Kunden. Der ist eh zu doof.“</p>
+<p>Und leben muss man es: „Zu jeder Rechnung bekommen Sie von uns ein Protokoll über die Testergebnisse der Fälle, die wir im Vorwege definiert haben.“</p>
+<p>Gelingt es einem, diesen „Profound Purpose“ zum allgemeinen Unternehmenswert zu machen, der gelebt und permanent kommuniziert wird, dann hat man auch kein Problem mit dem Vertrieb.</p>
+<p>Insbesondere für eine Vertriebsorganisation ist es wichtig diesen Wert verinnerlicht zu haben. Denn dann verkauft man nicht nur etwas was Geld kostet, sondern man verkauft einen zusätzlichen Wert und Menschen lieben es, aus innerer Überzeugung zu verkaufen. „A business that makes nothing but money is a poor business“.</p>
+<p>Nur, lieber Ralf, reden musst Du darüber. Mit dem Kunden. Wenn es nur ein Ralf-Und-Jünger-Standard ist, dann gehen die Kunden zu der Geiz-Ist-Geil-IT.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-07-20):</p>
+<p>@Carsten: "[D]iese Standards sollen Ihre Investition schützen und eine langfristige Partnerschaft aufbauen, die nicht permanent dadurch gefährdet wird, dass die Qualität unserer Software bei jedem Release in Frage steht."</p>
+<p>Das find ich sehr schön formuliert. Könnte quasi auf einer Tafel zum Eingang von CCD stehen :-)</p>
+<p>Allerdings: Was tun, wenn eben keine langfristige Partnerschaft benötigt ist?</p>
+<p>Das muss eben klar herausgearbeitet werden. Und dann muss man schauen, welche Qualitätsbausteine dadurch heruntergefahren oder ausgeschaltet werden können. Zu einem Schnellschuss "Dann sind Tests unnötig und auch CI." würde ich mich nicht einfach so hinreißen lassen.</p>
+<p>Denn es kann zwar sein, dass keine längere Partnerschaft gewünscht ist, aber vielleicht ist der Druck sehr hoch, dass zügig geliefert werden muss. Das wäre für mich ein Zeichen dafür, dass Agilitätsbausteine wichtig sind. Denn die sichern zu, dass ständig geliefert wird, so dass der Kunde schnellstmöglich gegensteuern kann, wenn etwas aus dem Ruder läuft. Wenn er nämlich Zeitdruck hat, dann hat er keine Zeit für Irrfahrten.</p>
+<p>Womit wir wieder beim Testen wären :-) Denn wo Tests nur manuell gemacht werden, dauern sie in Summe länger als automatisierte Tests.</p>
+<p>Hm... also doch kein Freibrief für Verzicht auf Tests, wenn die Partnerschaft nicht anhalten soll? ;-)</p>
+<hr />
+<p><strong>Carsten</strong> (2010-07-21):</p>
+<p>Jetzt argumentierst Du im Sinne des Kundennutzens: „Sie haben hohen Zeitdruck? Dann müssen wir oft liefern und sie müssen oft testen. Warum investieren wir nicht in eine Automatisierung? Das befreit sie von Testaufwaenden und wir können schneller und öfter liefern. Wir steigern nicht nur den Funktionsinhalt, wir erhöhen sogar sukzessive die Qualität des Produktes“.</p>
+<p>Reden muss man darüber.</p>
+<p>Ich finde, dass Lars eine sehr professionelle Frage gestellt hat: „Ich muss eine Funktionalität liefern und bekomme dafür Betrag X. Alle CCD und TDD usw. sagen, man sei ein Schmuddel-Programmierer wenn es nicht an allen Ecken und Enden mockt. Nur, bezahlen tut mir das keiner. Was soll das denn?“</p>
+<p>Testen und insbesondere automatisiertes Testen ist in unserer Branche zur Weltanschauung mutiert. Dadurch entfernt es sich vom eigentlichen Zweck. Stattdessen müssen die Tests wieder näher zum Kunden. Er muss sie verstehen.</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-07-21):</p>
+<p>@carsten ..full ack</p>
+<p>Ich vermisse immer bei CCD, TDD, BDD,  .. den Blick auf bewaehrte
+Testmethodiken. Man findet in den entsprechenden Buechern
+kaum Bezuege zu Standards z.Bsp. solche Juwelen wie:
+Component Testing Standard (www.testingstandards.co.uk/Component%20Testing.pdf)
+oder A Practitioner's Guide to Software Test Design von Lee Copeland</p>
+<p>Die Diskussionen erinnern mich immer ein bisschen (in meinem Umfeld)an C++ Entwickler,
+welche auch noch die letzte Sprachmoeglichkeit in ihrer Schnittstelle unterbringen wollen
+und dabei vergessen, dass andere damit klar kommen muessen incl. des Testers, welcher
+n Module von n Entwicklern behandeln muss. Dieser Tester ist dann vielleicht
+"der GUI" - Entwickler.</p>
+<p>Matthias, vermutlich Schmuddelprogrammierer :-)</p>
+<hr />
+<p><strong>Jörg Dieber</strong> (2010-07-26):</p>
+<p>Wird sollten endlich von den Mindset "Test = mehr Zeit" wegkommen. Jeder Entwickler muss ein paar Zeilen Code schreiben, um die neu erstellte Funktionalität zu testen. Wenn man nun Änderungen und auf die Tests vergisst, dann sollen sie ja auch fehlschlagen. Nur wenn man die Tests anpasst hat man die volle Funktionalität getestet.
+Die Einfachheit von C# und Java gaukeln den einzelnen eine Welt vor, die es in der professionelle Softwareentwicklung nicht geben darf. Nur weil man ein Program zum Laufen bringt bedeutet das nicht, dass man Qualität abliefert. Tests gehören zu einer Software dazu.</p>
+<hr />
+<p><strong>Carsten</strong> (2010-07-29):</p>
+<p>@Jörg, es bezweifelt niemand, dass eine Software getestet werden soll und muss.</p>
+<p>Ich bezweifle folgende Thesen:</p>
+<p>1) Tests schreiben ist professionell
+So wie ist schlechten Code gibt, so gibt es auch schlechten Testcode (was immer man unter schlecht verstehen mag). Die alleinige Tatsache, dass jemand testet, macht ihn/sie nicht zum professionellen Programmierer.</p>
+<p>2) Tests schreiben kostet nicht mehr Zeit
+Gute Tests zu schreiben muss aufwändig sein! Für die Testkonzeption braucht man Zeit; man muss sich genau überlegen was man wie und auf welcher Ebene testet. Am besten macht das auch nicht jeder für sich, sondern man bespricht dies mit dem Kunden und Kollegen und entwickelt einheitliche Vorgaben für Tests. Wenn das nicht Zeit kostet, heiße ich August.</p>
+<p>2) Automatisierte Tests sichern die Korrektheit von Software
+So wie Intelligenz etwas ist was man mithilfe eines Intelligenztests ermitteln kann, so ist die Qualität einer Software nur so gut wie ihr Test. TDD verschiebt die Testverantwortung in Richtung Entwickler und der testet das, was er meint testen zu müssen.
+Ein Test, wie jeder Test, kann nur falsifizieren, beweisen kann er nichts. Ein Test ist dazu da, Fehler zu finden. Wenn keine Fehler gefunden wurden, heißt das nicht, dass es keine mehr gibt.</p>
+<p>Aus meiner Sicht sollten wir von dem Mindset: „ich schreibe Tests, ich bin toll und meine Software ist fehlerfrei“ wegkommen.</p>
+<hr />
+<p><strong>Rene</strong> (2010-08-16):</p>
+<p>"Aber warum ist es dann überall? Warum gibt es solche Massen an unwartbarem Code"</p>
+<p>Weil Heuern und Feuern immer noch an der Tagesordnung ist und neue Besen bekanntermaßen "besser" kehren - das ist im Kleinen wie im Großen - was zurück bleibt ist irgen wann Code, den kein Mensch mehr versteht - das klassische Brownfield ebend - und mit diesem Zirkus aufzuhören ist die Grundherausforderung, an der nicht nur die Softwareentwicklung angekommen ist. Es war für einige Firmen noch vor einiger Zeit geil in Rumänien oder Bulgarien zu entwicklen... Inzwischen kehren einige von diesem Ausflug zurück, weil sie erkannt haben, dass Qualität und Zuverlässigkeit ihren Preis haben.</p>
+<p>"Nicht für jeden Bau sind statische Berechnungen im selben Umfang nötig" - Doch, natürlich! Anders, im Fahrzeugbau, wo mit getesteten Bauteilen gearbeitet wird. Hier wird man kaum vor jeder "serienbedingten" Verwendung den Bauteiletest starten.</p>
+<p>@Carsten: "Aus meiner Sicht sollten wir von dem Mindset: 'ich schreibe Tests, ich bin toll und meine Software ist fehlerfrei' wegkommen."</p>
+<p>dem ist nichts mehr hinzuzufügen. Tests sind selbstverständlich. Selbst wenn ich die Prinzipien der TDD nicht konsequent umsetze, so teste ich meine Arbeit, bevor ich ein "fertig" melde. In der ganzen TDD Diskussion kam und kommt bei mir immer so das Gefühl auf, dass TDD ein absolutes Muss ist. Die Diskussion hier und bei Thomas hat deutlich gezeigt, das dem eben nicht so ist. Und das ist gut so.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

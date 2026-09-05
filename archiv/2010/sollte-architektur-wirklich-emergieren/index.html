@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sollte Architektur wirklich emergieren? [OOP 2010] — ralfw.de Archiv</title>
+<meta name="description" content="In Objektspektrum 3/2010 steht ein Artikel auf der Höhe der Zeit: “Emergente Architektur: Der machtlose Architekt”. Denn davon spricht man auch hier oder hier. Und woanders mag es ">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/sollte-architektur-wirklich-emergieren/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Sollte Architektur wirklich emergieren? [OOP 2010] — ralfw.de Archiv">
+<meta property="og:description" content="In Objektspektrum 3/2010 steht ein Artikel auf der Höhe der Zeit: “Emergente Architektur: Der machtlose Architekt”. Denn davon spricht man auch hier oder hier. Und woanders mag es ">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/sollte-architektur-wirklich-emergieren/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Sollte Architektur wirklich emergieren? [OOP 2010]</h1>
+    <div class="doc-meta"><span>1. Mai 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/05/sollte-architektur-wirklich-emergieren.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/sollte-architektur-wirklich-emergieren/</code></span></div>
+    <div class="art"><p>In Objektspektrum 3/2010 steht ein Artikel auf der Höhe der Zeit: <a rel="noopener" href="http://www.sigs-datacom.de/fachzeitschriften/objektspektrum/archiv/artikelansicht.html?tx_mwjournals_pi1[pointer]=0&amp;tx_mwjournals_pi1[mode]=1&amp;tx_mwjournals_pi1[showUid]=6588">“Emergente Architektur: Der machtlose Architekt”</a>. Denn davon spricht man auch <a rel="noopener" href="http://blogs.zdnet.com/Hinchcliffe/?p=674">hier</a> oder <a rel="noopener" href="http://www.infoq.com/news/2009/08/Emergent-Architecture">hier</a>. Und woanders mag es auch <a rel="noopener" href="http://www.amazon.de/Emergent-Design-Evolutionary-Professional-Development/dp/0321509366">Emergent Design</a> heißen.</p>
+<p><a rel="noopener" href="http://de.wikipedia.org/wiki/Emergenz">“Emergenz”</a> scheint ein neues Zauberwort zu sein. Es bedeutet soviel wie Entstehung von etwas Ganzem, ohne dass dieses Ganze so geplant worden wäre. Eine Termitenbau entsteht auf diese Weise oder geordnete Menschenströme in einer Einkaufsstraße oder sogar die erfolgreiche Jagd eines Löwenrudels.</p>
+<p>Klingt gut, oder? Wäre doch toll, wenn Softwareentwicklung nicht länger krampfhaft und bewusst versuchen müsste, der ewig nörgelnden Forderung nach einer sauberen Architektur nachzukommen, sondern sie irgendwie “wie von selbst” entstehen lassen, sie emergieren lassen könnte.</p>
+<p>Zugegeben, eine schöne Vorstellung. Aber glauben tue ich an sie genauso wenig wie an die Rettung der Welt durch CASE, SOA oder O/R Mapper. Trotz aller Erkenntnisse der Komplexitätsforschung sehe ich weiterhin die Notwendigkeit zur Planung von Architektur. Denn:</p>
+<ul>
+<li><strong>Emergenz ist trivial:</strong> Wenn Systeme genügend unbekannt oder genügend groß in Bezug auf den Kenntnishorizont eines Teams sind, dann kann ihre Architektur nicht “auf einmal” geplant werden. Sie entwickelt sich vielmehr über die Zeit in Reaktion auf neue Erkenntnisse und Anforderungen. Jeder Entwicklungsschritt folgt dabei (hoffentlich) den lange bekannten Prinzipien “guter Architektur”. Jeder einzelne Architekt hat dann über die Zeit nur einen Teil zum großen Ganzen beigetragen.
+Emergenz ist letztlich also kein neues Phänomen, sondern nur ein modischer Begriff für Evolution. Weniger Rede von Emergenz und mehr von Evolution könnte helfen, nicht schon wieder nach einer neuen Silberkugel zu suchen.  <strong>Emergenz ist unvermeidbar:</strong> Auch wenn die Kenntnis über das zu realisierende System groß ist, endet die Verantwortung eines Architekten irgendwo. Er ist ja Architekt und nicht Entwickler. Und Planungspapiere sind kein Code. Bei der Umsetzung der Architekturplanung kann daher immer noch einiges passieren und passiert auch. Architekturvorstellungen werden selten 1:1 umgesetzt. Die Architektur eines Systems ist damit immer mehr oder weniger ungeplant und Resultat vieler kleiner Entscheidungen vor Ort während der Implementation.  <strong>Emergenz ist schwer planbar:</strong> Soll ein makroskopisches Ergebnis (z.B. Architektur) emergent entstehen, sind passende microskopische, einfache Regeln zu definieren. Solche Regeln a posteriori durch Analyse von Ergebnissen zu finden, ist eine Sache. Sie jedoch a priori zu postulieren, eine andere. Das makroskopische, am Ende recht simple Verhalten von Schwärmen hat schon Forscherjahre in der Analyse gekostet, auch wenn nur 3 Kernregeln dabei gerausgekommen sind. Was ist dann für so etwas komplexes wie Softwarearchitektur zu erwarten? Ich bin sehr im Zweifel, ob die Softwarekunst darauf schon eine Antwort hat. Entwickler mit TDD vor sich hinwerkeln zu lassen, mit S.O.L.I.D kräftig voran zu schreiten und darauf zu vertrauen, dass Featureteams es schon richten werden, halte ich für zuwenig. Damit sind zwar Richtschnüre auf der Microebene gespannt – doch die führen nicht so unausweichlich wie die Regeln eines Sardinenschwarms zu einem evolvierbaren großen Ganzen.</li>
+</ul>
+<p><strong>Architektur braucht, so glaube ich, auf unabsehbare Zeit immer noch ein gerüttelt Maß an expliziter Planung “in der Mitte”.</strong> BDUF ist out, soviel ist klar. Gesamtplanungen sind womöglich nicht mal machbar. Microplanung ist ebenfalls kontraproduktiv; sie zerstört Motivation und Effizienz. Doch “in der Mitte” gibt es Raum und Notwendigkeit für explizite Architekturplanung.****Denken und Planen hilft, da bin ich mir sicher. Immer noch. Ameisen oder Sardinen mögen nicht planen müssen. Aber “große Maschinen”, die sich auch noch ständig ändern sollen, die deshalb auf der Metaebene konstant änderbar/evolvierbar sein müssen, solche “Maschinene” “sich ergeben zu lassen” durch lokale Anwendung überschaubarer Regeln… das halte ich für zumindest eine verfrühte Vorstellung.</p>
+<p>Denn wahre Emergenz" bedeutet eben keine Planung des großen Ganzen. Niemand malt ein Architekturdiagramm. Niemand hat eine Vorstellung von der Form des Ganzen – sondern immer nur von seinem Verhältnis zur Umwelt. Viele kleinste Entscheidungen auf Microebene ergeben – oh, Wunder! – ein wahrhaft elegantes und zweckmäßiges Ganzes. (Wobei Zweckmäßigkeit von Software immer einschließt, dass die nicht nur heute vorhanden ist, sondern auch für morgige Anforderungen leicht hergestellt werden kann.)</p>
+<p><strong>Damit komme ich sozusagen zum philosophischen Teil meiner Position:</strong></p>
+<p>Keine Ameise versteht das Ganze ihres Staates. Kein Mensch versteht mehr das Ganze einer Volkswirtschaft. Dasselbe mag für ein genügend großes Softwaresystem gelten. Das Internet könnte dafür ein Beispiel sein. So ist das halt, wenn etwas sehr komplex wird.</p>
+<p>Das bedeutet im Umkehrschluss jedoch, dass das, was da so groß und komplex ist, was über die Köpfe der Individuen hinaus gewachsen ist, keine (oder nur wenige) von den Individuen planbare Eigenschaften hat. Wir das an der Finanzkrise, wir sehen das an den Entwicklungen im und um das Internet und die neuen Medien.</p>
+<p>Wie können womöglich noch etwas Emergiertes erkennen. Wir können das Ganze beobachten. Aber wir können ihm als “Rädchen im Getriebe” keine spezifischen Eigenschaften mehr verordnen. Klar, wir schrauben am Ganzen herum. Jede unserer Handlungen verändert das Ganze. Aber es in eine funktionale Richtung zu bewegen oder auf der Metaebene es Flexibel zu machen… das sind geradezu titanische Aufgaben, deren Lösung unabsehbar ist.</p>
+<p>Was bedeutet das für Software, wenn wir uns für sie wünschen, dass ihre Architektur emergieren möge? Mir scheint es, dass Emergenz nur um den Preis eines Kontrollverlustes zu haben ist. Aber wer möchte den schon erleiden? Software soll sehr konkrete Zwecke erfüllen, Architektur ist dafür die Basis. Wenn Architektur dann jedoch “nur” emergiert, wenn Architekten machtlos sind und das Ganze “sich ergibt” aus regelhaften Einzelaktionen… wie stellt ein Team dann sicher, dass der durch den Kunden vorgegebene Zweck zeitig wie nachhaltig erfüllt wird?</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/b2372e1dd77a1abe.png" /></p>
+<p>Ergo: <strong>Solange wir noch Ziele ansteuern, können wir uns nicht auf Emergenz verlassen. Softwareentwicklung ist kein Selbstzweck. Also kann ihr Ergebnis nicht komplett einer Emergenz anheim gestellt werden.</strong></p>
+<p>Das bedeutet nicht, dass wir nicht immer wieder prüfen sollten, wieviel Planung/Kontrolle wann angemessen ist. Wir sollen nach Microregeln suchen, die helfen, Makroeigenschaften “einfach so” herzustellen. Doch um explizite Architekturentscheidungen kommen wir nicht herum. Architekten werden nicht überflüssig und degenerieren auch nicht zu reinen Prozessmoderatoren.</p>
+<p>Ein wenig Bescheidenheit mag allerdings angezeigt sein. Eine Haltung der Akzeptanz der Vorläufigkeit hilft. Etwas weniger Kontrolle haben wollen, schadet nicht. Kollektive Intelligenz fördern, ist sicherlich ein guter Ansatz. <strong>Aber Planen und Denken bleiben Kernaufgaben von Architekten.</strong></p>
+<h2>Kommentare</h2>
+<p><strong>Uwe Friedrichsen</strong> (2010-05-02):</p>
+<p>Hallo Ralf,</p>
+<p>sehr schöner Post!</p>
+<p>Ich glaube manchmal, dass es sich der ein oder andere ein wenig zu einfach macht, wenn er Architektur einfach als "emergent" erklärt bzw. dass er (oder sie) schlicht etwas anderes meint. Neal Ford hatte das für meinen Geschmack einmal sehr schön auf den Punkt gebracht, indem er von "Evolutionärer Architektur und emergente Design" sprach.</p>
+<p>Architektur kann für die meisten Systeme nicht wirklich optimal upfront gestaltet werden, ein evolutionärer Ansatz ist da auf jeden Fall angebracht. Dennoch ist es ein expliziter Akt zu versuchen, einen für die Aufgabenstellung geeigneten Lösungsrahmen zu finden. Das geschieht nicht "zufällig".</p>
+<p>Bzw. es könnte schon zufällig geschehen, wenn wir nur genügend Zeit und Geld zur Verfügung hätten. Emergente Architktur hätte dann nämlich viel mit genetischen Algorithmen zu tun: Wir fangen mit einer willkürlichen Basisstruktur an, modifizieren diese zufällig gemäß unserer Refactoring-Regeln und wenden eine Bewertungsfunktion darauf an (Kundenzufriedenheit, Entwicklerzufriedenheit, Kosten für Anpassungen, etc.), um die nächste Generation auszuwählen, usw. Das wäre dann irgendwie wirklich emergent, weil wir so ohne Kenntnis der eigentlichen Zielstruktur diese entwickeln könnten.</p>
+<p>Oder aber im Sinne von Schwarmintelligenz: Das Ergebnis einiger einfacher Regeln löst in Summe eine um eine Größenordnung komplexere Aufgabe, z.B. die Lösung eines komplizierten Klassifikationsproblems unter Verwendung dreier absolut trivialer Regeln für die einzelnen Schwarmmitglieder. (Das ist nämlich eine zweite, häufig übersehene Definition von Emergenz: Dieses "1+1&gt;2" oder das Ergebnis ist mehr als die Summe seiner Teile.)</p>
+<p>Das ist jetzt nicht ironisch gemeint; ich fände es klasse, wenn wir auf die eine oder andere Art Architekturen emergent entstehen lassen könnten. Nur sind wir m.E. (noch?) nicht so weit. Für die genetische Variante werden wir wahrscheinlich nicht die Zeit und das Geld vom Kunden bekommen und für die Schwarmvarainte haben wir (noch?) nicht das Wissen: Wir haben keine Ahnung bzgl. irgendwelcher Architekturmechanismen, wie wir eine komplizierte Architekturanforderung auf einige triviale Regeln heruntertransformieren können. Umgekehrt haben wir auch keine Ahnung, welche komplizierten Aufgaben die uns bekannten Regeln lösen.</p>
+<p>Wir stecken also weiter in unserem komplexen Umfeld, und dafür wissen wir mittlerweile wenigstens, dass iterative Ansätze mit häufigen Feedbackzyklen, sogenannte empirische oder auch evolutionäre Vorgehensweisen das Mittel der Wahl sind ... etwas besseres haben wir bislang nicht zur Hand.</p>
+<p>Etwas anders sieht das m.E. bei dem Design aus, bei dem Ausgestalten und Verfeinern der initialen Lösungsidee. Hier können wir tatsächlich versuchen, uns einfach von einer Reihe einfacher Gestaltungsprinzipien (wie z.B. SOLID) leiten zu lassen und die finale Struktur emergent (natürlich zusammen mit den notwendigen Refactorings auf dem Weg) entstehen zu lassen. Etwas schwierig ist das noch mit der Bewertungsfunktion im Sinne der genetischen Algorithmen, aber bis wir da weitere Hilfsmittel an der Hand haben, fahren wir da mit der Erfahrung der "Senior-Entwickler" gepaart mit einer Portion gesundem Menschenverstand als Bewertungsfunktion ganz gut. Vielleicht brauchen wir da auch gar nicht mehr ...</p>
+<p>Zusammenfassend: Ich glaube, dass das mit der "Emergenz" von Architekturen bei den meisten eine unachtsame Fehlverwendung des Begriffs ist: Entweder sie reden über Design (was den Aspekt der Findung einer Lösungsklasse, die zur Aufgabenstellung passt, auslässt, eben den - häufig vernachlässigten - Kern von Architektur) oder sie reden über Evolution.</p>
+<p>Und das deckt sich dann m.E. wieder sehr gut mit den - aus meiner Sicht absolut zutreffenden - Gedanken, die Du in Deinem Blog formuliert hast.</p>
+<p>Gruß, Uwe</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-05-02):</p>
+<p>@Uwe: Ich freue mich, dass wir so übereinstimmen.</p>
+<p>Dennoch zur "generischen Architektur": Daran glaube ich nicht, weil diese Verfahren eben mit einer "blinden" Evolution arbeiten, ja arbeiten müssen. Das ist der Trick an der Sache. Am Ende stehen dann immer Lösungen, die niemand versteht - die aber funktionieren ;-) Ein schönes Beispiel findet sich dazu in diesem Buch: http://www.amazon.de/Complexity-Guided-Tour-Melanie-Mitchell/dp/0195124413 Schon bei dem dortigen kleinen Beispiel ist es schwer herauszufinden, warum die eine Lösung der anderen überlegen ist.</p>
+<p>Wir wollen und müssen bei der Architektur vielmehr das Gegenteil erreichen: Eine Architektur für ein konkretes System muss verlässlich "gut" werden. Ohne viele Versuche und Irrtümer. Dafür brauchen wir Regeln - auf Makro- und/oder Mikro-Ebene.</p>
+<p>Einige kennen wir schon, denke ich. Aber andere müssen noch dazu kommen. Am Ende jedoch - wie von mir postuliert - wird trotz allem aber eben Planung bleiben. Architekturen werden auf einer gewissen Ebene immer entworfen werden müssen, um sie effektiv zu machen im Sinne eines Auftraggebers.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Carsten</strong> (2010-05-03):</p>
+<p>Schon wieder richtig:</p>
+<p>Konrad Lorenz erklärt unser Ich-Bewusstsein mit einer plötzlichen Verbindung der biologischen Fähigkeit zu sprechen und der Sprachanlage im Gehirn. Irgendwann ist der Hals und sind die Stimmbänder so ausgeformt, dass sie Laute bilden können. Zudem ist unsere Hand besonders geformt: wir sind die einzige Spezies, die mit dem Daumen den kleine Finger erreichen kann. All diese Sub-Systeme verbinden sich nun schlagartig.
+Die Evolution „blitzt“. Er nennt dies Fulgaration.</p>
+<p>Die speziellen Eigenschaften des niedrigeren Systems, so Lorenz, sind dabei im höheren enthalten, nie sei  es aber umgekehrt.</p>
+<p>Wenn man dann Softwareentwicklung und Evolution vergleicht, dann sollen Sub-Systeme klein und beherrschbar sein. Und nun wird gespielt: es werden neue Eigenschaften hinzugefügt, bestehende verändert, einfach nur so, ganz zum Spass. Das neue Sub-System wird mit verkoppelt und muss sich nun beweisen: Ist es sinnvoll, für eine Hand, sechs Finger zu haben? Nein – weg damit.</p>
+<p>Leben ist lernen (auch von Lorenz) und spielen (ich glaube, auch von Lorenz). Nun frage ich mal: wie wird den in unsrer Branche gespielt? Rennen wir doch mal zu unserem Chef und sagen: die nächsten drei Wochen daddeln wir mal so rum und danach fragen wir die Leute, ob sie das toll finden und dann schmeißen wir es ggf. wieder weg.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-05-03):</p>
+<p>@Carsten: Wir "spielen" zuwenig in der Branche. Allerdings ändert sich da grad was: Code Katas, Coding Dojos... Wir können hoffen.</p>
+<p>Bis wir allerdings da sind, wo andere Höchstleister "spielen", d.h. üben, üben, üben, das dauert noch lange.</p>
+<p>Aber jeder einzelne kann etwas daran tun. Wenn wir es als zu unserer Profession gehörig ansehen, dann müssen wir darum auch niemanden bitten. Wenn wir kollektiv sagen: "Der Morgen beginnt für jeden Programmierer mit 'Aufwärmübungen' von 90min.", dann ist das eben so. Punkt.</p>
+<p>Kein Tennismanager wird seinem Schützlich verbieten, sich aufzuwärmen oder statt am Tennisnetz im Fitnessstudio zu sein, um gezielt Muskeln aufzubauen. Warum sollten wir uns bei Analogem von einem Projektmanager reinreden lassen?</p>
+<p>-Ralf</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

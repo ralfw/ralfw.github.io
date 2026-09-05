@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beziehungsratgeber für Softwareentwickler — ralfw.de Archiv</title>
+<meta name="description" content="Komplexität vergällt uns das Programmieren. Unwartbarkeit ist ein Komplexitätsproblem. Aber was macht die Komplexität in Software aus?">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/beziehungsratgeber-fur/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Beziehungsratgeber für Softwareentwickler — ralfw.de Archiv">
+<meta property="og:description" content="Komplexität vergällt uns das Programmieren. Unwartbarkeit ist ein Komplexitätsproblem. Aber was macht die Komplexität in Software aus?">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/beziehungsratgeber-fur/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Beziehungsratgeber für Softwareentwickler</h1>
+    <div class="doc-meta"><span>27. Feb. 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/02/beziehungsratgeber-fur.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/beziehungsratgeber-fur/</code></span></div>
+    <div class="art"><p>Komplexität vergällt uns das Programmieren. Unwartbarkeit ist ein Komplexitätsproblem. Aber was macht die Komplexität in Software aus?</p>
+<p>Für mich ist etwas komplex, wenn ich es durch Nachdenken nicht verstehen kann.</p>
+<p>Solange etwas kompliziert ist, hilft Nachdenken. Beispiel: Der <a rel="noopener" href="http://en.wikipedia.org/wiki/Boyer%E2%80%93Moore_string_search_algorithm">Boyer-Moore Algorithmus</a> zur Zeichenkettensuche ist kompliziert (zumindest für mich). Ich verstehe ihn nicht sogleich, aber wenn ich die Beschreibung ein paar Mal lese und darüber nachdenke, dann blicke ich durch und kann ihn implementieren.</p>
+<p>Insofern sollte Software eigentlich gar nicht komplex sein. Programme sind doch nur Ansammlungen von Algorithmen, die jeder für sich höchstens kompliziert sind.</p>
+<p>Das wäre wohl korrekt, wenn da nicht Beziehungen bestünden. Die einzelnen “nur” komplizierten Teile einer Software sind miteinander verbunden. Sie stehen in Abhängigkeitsverhältnissen. Und das macht ihre Summe mehr als kompliziert, nämlich komplex.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/270efaaea91025a1.png" /></p>
+<p>Denn wo viele, gar unüberschaubar viele Beziehungen bestehen, da ist unklar, wie sich Veränderungen an einem Teil über die Beziehungen auf andere Teile auswirken. Mit unendlich viel Zeit, wäre das zwar herauszubekommen – doch wer hat die schon. Nachdenken würde also zwar grundsätzlich helfen, nur nicht in der verfügbaren Zeit. Somit ist Software nicht nur eine komplizierte Summe aus mehr oder weniger komplizierten Teilen, sondern ein komplexes Ganzes.</p>
+<p>Also: Beziehungen zwischen Funktionseinheiten machen Software komplex. Je mehr es sind, je undurchsichtiger sie sind, desto komplexer das Ganze. Das bedeutet: Softwareentwicklung muss sehr bewusst mit Beziehungen zwischen Funktionseinheiten umgehen, um die Komplexität nicht ungewollt wachsen zu lassen.</p>
+<p>Hier deshalb ein paar Beziehungsratschläge:</p>
+<h3>Ratschlag #1: Beziehungen vermeiden</h3>
+<p>Wenn Beziehungen aus Kompliziertem Komplexes machen, dann scheint es angeraten, auf sie zu verzichten, wo es nur geht. Denn ohne Beziehung keine (ungewollte) Ausbreitung von Änderungsnotwendigkeiten. Wenn Funktionseinheit A und B keine Beziehung haben, dann kann eine Veränderung an A keinen Effekt auf B haben.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a4a024562027851a.png" /></p>
+<p>Wo hingegen eine Beziehung besteht, da können sich Änderungen ausbreiten:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/614cbe75113aa57f.png" /></p>
+<p>Hier ein Beispiel: Methode A() ruft Methode B() auf, um Daten zu beschaffen; identifiziert werden die Daten durch einen Schlüssel. A() ist also abhängig von B():</p>
+<p>void A()
+{
+  var daten = B(“123”);
+  …
+}</p>
+<p>void B(string schlüssel) {…}</p>
+<p>Wenn nun B() seine Signatur ändert und statt einer Zeichenkette nur noch ganze Zahlen als Schlüssel akzeptiert, dann hat das Auswirkungen auf A().</p>
+<p>Das ist eine recht simple Abhängigkeit und der Compiler erkennt, wo sie nicht erfüllt ist. Was aber, wenn die Abhängigkeit nicht syntaktischer Natur ist?</p>
+<p>Nehmen wir an, B() liefert eine Zeichenkette der Form “a=1;b=2” zurück, aus der A() relevante Werte extrahieren soll. Dann zerlegt A() diese Zeichenkette sicherlich zunächst beim Trennzeichen “;”:</p>
+<p>void A()
+{
+  var daten = B(“123”);
+  foreach(string zuweisung in daten.Split(‘;’))
+  {…}
+}</p>
+<p>Wenn jetzt B() die Wertzuweisungen in der Zeichenkette aber nicht mehr durch “;” trennt, sondern durch “,” oder beide Trennzeichen zulässt, dann hat das ebenfalls Auswirkungen auf A() – allerdings kann der Compiler nicht helfen, diese zu aufzustöbern. Es liegt eine tückische semantische oder logische Abhängigkeit vor.</p>
+<p>Fazit: Sobald Beziehungen ins Spiel kommen, wird es bei der Softwareentwicklung ekelig. Vermeiden Sie daher Beziehungen oder minimieren Sie sie soweit es eben geht. Vorsicht vor allem vor logischen Beziehungen!</p>
+<h3>Ratschlag #2: Beziehungen syntaktisch machen</h3>
+<p>Nicht zu vermeidende Beziehungen sollten, wenn es irgend geht, syntaktisch sein und nicht logisch. Logische Abhängigkeiten machen das Ganze vor allem komplex, weil Werkzeuge nicht helfen, sie zu überblicken. Der Mensch muss sie “im Kopf haben”. Und wenn er das nicht hat, dann merk er erst zur Laufzeit, ob durch Änderungen an einer Funktionseinheit etwas bei anderen “verrutscht ist”.</p>
+<p>Bezogen auf das obige Beispiel bedeutet das, die Rückgabe von Name-Wert-Paaren in Form eines String aus B() sollte ersetzt werden z.B. durch ein Dictionary. Das Wissen um Trennzeichen ist dann konzentriert auf B(); sollten sie sich ändern, hat das keine Auswirkungen mehr auf abhängige Funktionseinheiten wie A().</p>
+<p>Strenge Typisierung ist also der erste Schritt zu einem anti-komplexen Beziehungsmanagement. Ein spezifischer Typ ist besser als ein allgemeiner. <em>string</em> reduziert logische Abhängigkeiten gegenüber <em>object</em>. Und <em>HashTable</em> reduziert sie noch weiter. Und <em>Dictionary</em> reduziert sich noch weiter.</p>
+<p>Abstrakte Datentypen (ADT) und Kapselung sind der nächste Schritt. Wieder in Bezug auf das Beispiel oben: Ein <em>Dictionary&lt;&gt;</em> ist zwar spezifischer als ein <em>string</em>, doch es lässt zum Beispiel zu, dass Werte überschrieben werden können. Vielleicht soll das jedoch nicht erlaubt sein für das, was zu Beginn als Zeichenkette kodiert war. Solange ein <em>Dictionary&lt;&gt;</em> “durch die Gegend geschoben wird”, existiert also noch eine subtile logische Abhängigkeit: die Funktionseinheiten, die mit den Daten umgehen, müssen wissen, dass sie Werte im <em>Dictionary&lt;&gt;</em> nicht überschreiben dürfen. Eine formale Prüfung, ob sie das auch beherzigen, gibt es aber nicht. Erst zur Laufzeit wird das sichtbar.</p>
+<p>Besser ist es da, statt eines Standard-Dictionary einen spezielleren Datentyp zu implementieren, z.B. <em>NonOverridableDictionary</em>. Die Beziehung zwischen A() und den Daten wird damit weiter syntaktisch formalisiert.</p>
+<p>Fazit: Beziehungen, deren Gültigkeit der Compiler überprüfen kann, sind anderen vorzuziehen.</p>
+<h3>Ratschlag #3: Süchtige vereinfachen</h3>
+<p>Der Drache der Komplexität ist noch nicht erschlagen, wenn die Beziehungen so gering wie nötig und so syntaktisch wie möglich sind. Auch dann kann es noch Funktionseinheiten geben, die von vielen anderen abhängig sind. Es sind die unvermeidbar “Süchtigen”; sie brauchen viele andere Funktionseinheiten zu ihrem Glück.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/fe69112fb1b4399e.png" /></p>
+<p>Wenn Sie auf solch ein Beziehungsmuster stoßen, dann… ja, dann hilft nur eines: Halten Sie die süchtige Funktionseinheit so einfach wie möglich in Bezug auf die Funktionalität bzw. Domäne ihrer “Suchtmittel”.</p>
+<p>Der Grund ist einfach: Wenn eine Funktionseinheit von vielen anderen abhängt, dann ist die Wahrscheinlichkeit sehr hoch, dass sich an einer Funktionseinheiten etwas ändert, die relevant für die Süchtige ist. “Irgendwas ist immer” könnte man sagen.</p>
+<p>Solche Änderungen können sich aber nur fortsetzen entlang der Beziehungen (vom Unabhängigken zum Abhängigen), wenn der Abhängige kompliziert ist, d.h. große Angriffsfläche bietet. Denn Kompliziertheit geht gewöhnlich einher mit vielen logischen Abhängigkeiten.</p>
+<p>Da logische Abhängigkeiten aber so schwer zu sehen sind, lautet der Rat, eher auf die Kompliziertheit der süchtigen Funktionseinheit zu achten, d.h. auf deren Umfang und den internen Aufbau. Der Umfang sollte klein, der interne Aufbau simpel sein.</p>
+<p>Wenn sich nun an den komplizierten Funktionseinheiten etwas ändert, dann ist die Wahrscheinlichkeit, dass das eine Auswirkung auf das einfache Abhängige hat, gering.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9417137ee7c85874.png" /></p>
+<p>Typisches Beispiel für ein solches Abhängigkeitsmuster sind DI Container. Bei ihnen werden viele Typen registriert, ihre Aufgabe ist sozusagen, maximal abhängig zu sein. Aber das macht nichts, weil DI Container sehr einfach sind in Bezug auf das, wozu sie Beziehungen haben. Sie wissen von den Domänen der Funktionseinheiten, die bei ihnen registriert werden, nichts.</p>
+<p>Fazit: Je einfacher eine Funktionseinheit, desto größer kann die Zahl ihrer Abhängigkeiten sein.</p>
+<h3>Ratschlag #4: Promiskuitive vereinfachen</h3>
+<p>Das Gegenteil von süchtigen Funktionseinheiten, d.h. solchen, die von vielen anderen abhängen, sind solche, zu denen viele andere Abhängigkeitsbeziehungen haben. Es sind Promiskuitive mit großem Netzwerk. Fallen an ihnen Änderungen an, dann haben die potenziell ein großes Ausbreitungsgebiet.</p>
+<p>Was können Sie dagegen tun? Machen Sie prosmikuitive Funktionseinheiten so simpel wie möglich in Bezug auf die Funktionalität der von ihnen abhängenden.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/3a839aa43a8aaa3d.png" /></p>
+<p>Das bedeutet, Änderungen setzen sich nicht so leicht entlang der Beziehungen fort. Vor allem aber: Es fallen Änderungen an der promiskuitiven Funktionseinheit gar nicht so häufig an. Denn was einfach ist, das sollte sich nicht so oft ändern.</p>
+<p>Typisches Anti-Pattern für Promiskuitive sind “fette” Domänendatenmodelle. Von ihnen hängen viele andere Funktionseinheiten ab – aber die Domänendatenklassen selbst sind funktionsreich (d.h. kompliziert) und haben auch noch eine große Oberfläche durch ihre Properties.</p>
+<p>Fazit: Je weiter bekannt eine Funktionseinheit, desto simpler sollte sie sein.</p>
+<h3>Ratschlag #5: Funktionseinheiten einzäunen</h3>
+<p>Funktionseinheiten sind nicht nur direkt, sondern auch indirekt gekoppelt. Änderungen an einer können sich deshalb u.U. weitreichend fortsetzen. Veränderungen an einem Teil führen dann zu Veränderungen an einem anderen, die wiederum zu Veränderungen an einem dritten Teil führen usw. Der Ausbreitungsprozess ist rekursiv entlang von Abhängigkeitsbäumen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/0b0aca7d27455fb6.png" /></p>
+<p>Um solchen Ausbreitungswellen Einhalt zu gebieten, ist es ratsam, Beziehungsnetzwerke in “Kästchen” zu isolieren. Selbst wenn die bisherigen Ratschläge beherzigt sind, sollten Beziehungen nicht beliebig verlaufen können.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/566d901419dc61af.png" /></p>
+<p>Vielmehr sollte Kohäsives, d.h. Funktionseinheiten die enger in Beziehung stehen, von anderem deutlich getrennt werden. Das enger Zusammengehörige aus dem vorigen Bild ist im nächsten zu diesem Zweck “umzäunt” und die Beziehungen zwischen den “Nachbarn” verlaufen über eine “Kontaktperson”, einen Vermittler.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d1f23a2866260c44.png" /></p>
+<p>Änderungen hinter der Fassade des Vermittlers haben dann eine geringere Chance auf Abhängige durchzuschlagen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/8ed7e6ee9a6dfa43.png" /></p>
+<p>Die sich durch die Trennung ergebenden Zusammenfassungen können dann als Funktionseinheiten auf höherer Abstraktionsebene angesehen werden. Auf sie sind dort dann natürlich dieselben Ratschläge zur Komplexitätsreduktion durch bewusste Beziehungspflege anzuwenden.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2b637eeead2e1940.png" /></p>
+<p>Fazit: Bewusst eingezogene Mauern zwischen Gruppen von Funktionseinheiten, die die Beziehungsaufnahme einschränken, reduzieren die Komplexität.</p>
+<h3>Zwischenstopp</h3>
+<p>Softwareentwicklung ist Beziehungsmanagement. Denn Software ist immer ein Geflecht aus Funktionseinheiten, die von einander abhängig sind. Fragt sich nur, wie. Ohne sorgfältige Planung von Beziehungen und der gegenseitigen Kompliziertheit der Bezogenen, läuft Software in eine Komplexitätsfalle.</p>
+<p>Unabhängig von Plattform und Programmiersprache gibt es jedoch Ratschläge, denen Sie folgen können, um nicht Opfer wuchernder Beziehungen zu werden. Wo Beziehungen nötig sind, lässt sich ihr Beitrag zur Komplexität minimieren.</p>
+<p>Bewegen Sie die Ratschläge #1 bis #5 im Herzen und schauen Sie dann auf Ihren Code oder die Empfehlungen der Literatur zu ihrer Plattform. Sie werden erkennen, dass hinter Technologiediskussionen und neuen Rezepten für bessere Software oft auch nur der Wunsch steht, Komplexität durch Beziehungsmanagement in den Griff zu bekommen. Exemplarisch seien im Folgenden einige bekannte Prinzipien aus diesem Blickwinkel betrachtet, die sich zum größten Teil auch als Bausteine bei der <a rel="noopener" href="http://www.clean-code-developer.de">Clean Code Developer Initiative</a> wiederfinden.</p>
+<h3>Beziehungsmäßige Prinzipien</h3>
+<p>Ratschlag #1 ist so fundamental, dass er im Grunde die Mutter aller Softwareprinzipien darstellt. Er findet sich im alten Prinzip <em>Lose Kopplung</em> wieder. Lose Kopplung bedeutet, Beziehungen zu vermeiden bzw. zu minimieren.</p>
+<p>Ratschlag #2 ist immer wieder im Gespräch, wenn es um die Typisierung von Programmiersprachen geht. Typsicherheit, Typinferenz, dynamische Typen, Variants… das alles sind Aspekte expliziter syntaktischer Beziehungen.</p>
+<p>Während lange Zeit galt, dass strenge Typsierung fundamental für die Reduktion der Fehlerzahl in Software sei, hat sich das Bild in den letzten Jahren jedoch verändert. Testautomatisierung wird von einigen Diskutanten als Alternative angeführt. Wo Tests automatisiert und schnell nach einem Compilerlauf ausgeführt werden können, ist Feedback zur Beziehungskonformität fast ohne Verzug auch zur Laufzeit zu erreichen. Das relativiert Ratschlag #2 etwas, dennoch gilt weiterhin: Einschränkungen der Beziehungsmöglichkeiten sind immer noch der Entdeckung von Beziehungsfehlern vorzuziehen. Gut, wenn Sie schnell erkennen können, wo etwas falsch läuft; noch besser, wenn Sie manche Fehler erst gar nicht machen können. Das Thema Abstrakter Datentyp (ADT) ist mit Testautomatisierung allemal nicht vom Tisch.</p>
+<p>Womit wir bei den Prinzipien <em>Information Hiding</em> und <em>Law of Demeter</em> wären. Beide plädieren für eine Verringerung der Oberfläche von Funktionseinheiten, so dass weniger Beziehungen zu ihnen aufgebaut werden können. Auf höherer Abstraktionsebene tut das auch die <em>Komponentenorientierung</em>. Es sind Prinzipien und Praktiken im Sinne von Ratschlag #5.</p>
+<p>Das gilt auch für das <em>Single Responsibility Principle</em>, das allerdings auch Ratschlag #3 und #4 zum Thema hat. Denn der Fokus auf nur eine Verantwortlichkeit pro Funktionseinheit reduziert deren Kompliziertheit. Dasselbe will natürlich auch <em>Keep it simple, stupid</em> (KISS).</p>
+<p>Konkreter im Sinne von Ratschlag #3 ist dann <em>Single Level of Abstraction</em>(SLA), dessen Anwendung dazu führt, Kompliziertheit aus einer Funktionseinheit hinauswandert in neu geschaffene auf niedrigerem Abstraktionsniveau. SLA macht aus normalen Funktionseinheiten Süchtige - die allerdings simpler sind als vorher.</p>
+<p>Das <em>Open Close Principle</em> (OCP) wendet sich auf der anderen Seite eher an promiskuitive Funktionseinheiten im Sinne von Ratschlag #4. Seine Anwendung macht sie weniger änderungsanfällig.</p>
+<p>Das <em>Inversion of Control Prinzip</em> (IoC) schließlich adressiert abhängige Funktionseinheiten jeder Art. Es will ihre Beziehungen lockern durch Austausch statischer gegen dynamische Abhängigkeiten. Das reduziert zwar nicht die Zahl der Abhängigkeiten, macht sie aber flexibler, so dass Textautomatisierung besser ansetzen kann.</p>
+<h3>Fazit</h3>
+<p>Das Thema Beziehungsmanagement ist für die Softwareentwicklung also alt. Viele Prinzipien, die heute weithin anerkannt sind, um korrekten und evolvierbaren Code zu schreiben, drehen sich um Beziehungen – ohne das immer explizit zu machen. Damit ist die Zentralität des Beziehungsthemas leider leicht verschleiert. Statt eines Namens hat es viele. Das verhindert eine Diskussion darüber, wie es an der Wurzel gepackt werden kann.</p>
+<p>Denn Prinzipien sagen zwar, was getan werden kann, um das fundamentale Beziehungsproblem zu mildern, doch sie drängen sich nicht auf. Jeder Entwickler hat die Freiheit, sie anzuwenden oder auch nicht. Im Zweifelsfall entscheidet er sich – natürlich nur für den Moment und immer aus guten Gründen – deshalb dagegen. Und so wächst die Komplexität in Software weiter, obwohl wir eigentlich genau wissen, was ihre Ursache ist und was wir dagegen tun können.</p>
+<p>Prinzipien geben allerhöchstens Handreichungen, definieren aber keine Methode und kein Rahmenwerk. Prinzipien wie auch die hier gegebenen Ratschläge allein sind daher schwache Waffen gegen die Komplexität.</p>
+<p>Ich glaube, wir müssen stärkere Waffen in Anschlag bringen. Wenn der Spruch gilt, “Sag mir, wie du mich misst, und ich sage dir, wie ich mich verhalten werde”, dann müssen wir mehr am Start haben als fluffige Prinzipien. Die sind nämlich keine genügend starken Wände, an denen man sich die Stirn einhauen kann, bis man von selbst auf dem Pfad der Tugend bleibt. Wenn Beziehungsmanagement so zentral für die Softwareentwicklung ist, dann müssen wir Sprachen oder allemal Denkwerkzeuge haben, die das Beziehungsmanagement in den Mittelpunkt stellen. Beziehungen müssen sich weitgehend von allein und intuitiv den Ratschlägen entsprechend bilden. Sonst ist nicht zu hoffen, dass die wenigen Ratschläge oder die vielen Prinzipien zur Reduktion von Komplexität führen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/026d959a4ff14efa.gif" /></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

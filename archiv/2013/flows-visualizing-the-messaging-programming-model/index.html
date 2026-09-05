@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flows – Visualizing the Messaging Programming Model — ralfw.de Archiv</title>
+<meta name="description" content="Object orientation was ment to be based on messaging – at least if you follow Alan Kay. But that´s not really how it turned out to be, I´d say. Today´s mainstream OO languages are ">
+<link rel="canonical" href="https://ralfw.de/archiv/2013/flows-visualizing-the-messaging-programming-model/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Flows – Visualizing the Messaging Programming Model — ralfw.de Archiv">
+<meta property="og:description" content="Object orientation was ment to be based on messaging – at least if you follow Alan Kay. But that´s not really how it turned out to be, I´d say. Today´s mainstream OO languages are ">
+<meta property="og:url" content="https://ralfw.de/archiv/2013/flows-visualizing-the-messaging-programming-model/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>Flows – Visualizing the Messaging Programming Model</h1>
+    <div class="doc-meta"><span>18. Aug. 2013</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2013/08/18/flows-ndash-visualizing-the-messaging-programming-model.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2013/flows-visualizing-the-messaging-programming-model/</code></span></div>
+    <div class="art"><p>Object orientation was ment to be based on messaging – at least if you follow Alan Kay. But that´s not really how it turned out to be, I´d say. Today´s mainstream OO languages are far from being "message-oriented"; they focus on objects as aggregates of data and functionality. Like in the old times of procedural languages it´s all about subprograms calling each other in deep dependency hierarchies. It´s about clients and services, requests and responses.</p>
+<p>But messaging is different, as I tried to explain in my previous article. With messaging there is only one-way communication. Messages flow from senders to receivers. Procedures are a better way to express this than functions.</p>
+<p>As long as we´re only able to talk about messaging using programming languages, we´ll have a hard time to reap its benefits. We´ll get bogged down by language idiosyncrasies and traditional OO suggestions inherent in OO languages. We won´t see the forest for the trees.</p>
+<p>Steve Bate for example and used a particular implementation. Wouldn´t it be sad if someone got turned off by that, just because he didn´t like Steve´s pipeline implementation?</p>
+<p>I guess, it would be beneficial to separate the concept from the languages. Then we could talk about its pros and cons without misunderstanding due to different backgrounds in platform.</p>
+<p>That´s why I´d like to suggest a very simple notation to describe messaging solutions. For a start it just consists of just two symbols: boxes and arrows.</p>
+<p>A functional unit is the receiver and/or sender of messages. And messages flow between functional units in the direction of arrows. (x) and (y) denote messages of different data or even data type.</p>
+<p>That´s it, I´d say. We don´t need more. But the devil is in the detail;-) It´s the limitation to arrows which makes the essential difference between today´s variant of OO and "object orientation as it was ment" based on messaging.</p>
+<p>Look at this code from Steve´s article:</p>
+<pre><code class="language-csharp">var loginPipeline = new PipeLine&lt;LogInMessage&gt;;
+
+loginPipeline.Register(msg =&gt; new CheckUserSuppliedCredentials(msg))
+             .Register(msg =&gt; new CheckApiKeyIsEnabledForClient(msg))
+             .Register(msg =&gt; new IsUserLoginAllowed(msg))
+             .Register(msg =&gt; new ValidateAgainstMembershipApi(msg))
+             .Register(msg =&gt; new GetUserDetails(msg));
+</code></pre>
+<p>Using the above notation it can be expressed independently of any platform like this:</p>
+<p><em>(Diagram not captured)</em></p>
+<p>Easy to read, isn´t it? Even easier than the code. And that´s the point: a visual model of what´s supposed to happen in a program is easier to read and easier to communicate and easier to change than our textual program code overloaded with details.</p>
+<p>Of course, this notation is no invention of mine. It´s so simple, it´s just natural. Or – if you like – you can find something alike in UML: activity diagrams. But I try to keep things simple for every day use. That´s why I´m not a big fan of UML. Please pardon my non-conformism – as long as what you see is easy to understand.</p>
+<p>If Steve would use such a notation before coding, it would be easier for him to talk with his colleagues about his idea of a solution for a particular problem, I guess. And he would not attach himself or his colleagues to a certain way of implementing such a design. He could do it like shown above – or he could do it like this:</p>
+<pre><code class="language-csharp">var msg = new LogInMessage;
+…
+msg = CheckUserSuppliedCredentials(msg);
+msg = CheckAPIKeyIsEnabledForClient(msg);
+IsUserLoginAllowed(msg, _ =&gt; {
+    msg = ValidateAgainstMembershipAPI(_);
+    GetUserDetails(msg);
+});
+</code></pre>
+<p>As long as there exists a clear and simple translation rule for the notation into code, all´s fine. Bubbles might not crash – but that´s not important. If we are able to translate notational bubbles into code which reflects the original bubbly design, then we can let it crash to give us feedback on our design. It will be easy to carry it back to the drawing board.</p>
+<p>And of course we need to distinguish between crashes due to bad design on the level of bubbles and crashes originating from implementation mistakes. I believe the latter are far more common. So if software doesn´t work don´t blame it on the bubbles;-)</p>
+<p>Basing software on messaging creates flows. That´s what I call the arrow-linked sequences of functional units. Messages are flowing through processing steps to be transformed from some input into some output.</p>
+<p>And now for the fun part: If we free ourselves from particular programming languages while designing messaging graphs aka flows, then we can come up with patterns like this kind of functional unit:</p>
+<p>How do you translate multiple inputs/outputs into code? Do messages arrive on multiple inputs at the same time? Do they leave from outputs at the same time? How many output messages are created for each input message? That´s questions arising from such messaging designs – and it´s not important to know the implementation right away. The implementation is not that important. It´s too much detail while pondering a solution structure. It´s enough to know, all answers/patterns can be translated into code in a straightforward manner. For example:</p>
+<ul>
+<li>Multiple outputs could be implemented as returning a tuple from a function or as continuations passed to a function or as events on an object.</li>
+<li>Multiple inputs could be implemented as several parameters of a subroutine or as several subroutines on a class.</li>
+<li>Several outputs for an input could be implemented as lists of data sent on as a single message or as several messages.</li>
+</ul>
+<p>Messaging sure is different from how we´re doing OOP today. But being different does not mean worse. Faced with huge brownfield problems this difference could mean better. We just need to try it out. How does testability, evolvability, or production efficiency change, if we adopt a different thinking and implementation style?</p>
+<p>Could digging up the roots of OO in messaging help us with today´s software maintenance problems? I think so. But we shouldn´t fall into the language trap again. Programming languages are secondary. Source code is secondary. Before source code in concrete languages come concepts and models. We need to be able to express our solutions in other terms than source code. Only by using visualizing our solutions in language independent ways we can harvest the collective intelligence of teams. That´s why I find it so important to have a visual notation for messaging as a programming model.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

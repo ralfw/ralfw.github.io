@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Form Follows Feasibility — ralfw.de Archiv</title>
+<meta name="description" content="Code verändern, ist schwer. Wer kämpft sich schon gern durch einen Dschungel aus Legacy Code? Viel schöner ist die Entwicklung auf einer grünen Wiese. Code neu schreiben, ist demge">
+<link rel="canonical" href="https://ralfw.de/archiv/2012/form-follows-feasibility/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Form Follows Feasibility — ralfw.de Archiv">
+<meta property="og:description" content="Code verändern, ist schwer. Wer kämpft sich schon gern durch einen Dschungel aus Legacy Code? Viel schöner ist die Entwicklung auf einer grünen Wiese. Code neu schreiben, ist demge">
+<meta property="og:url" content="https://ralfw.de/archiv/2012/form-follows-feasibility/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Form Follows Feasibility</h1>
+    <div class="doc-meta"><span>26. Sept. 2012</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2012/09/form-follows-feasibility.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2012/form-follows-feasibility/</code></span></div>
+    <div class="art"><p>Code verändern, ist schwer. Wer kämpft sich schon gern durch einen Dschungel aus Legacy Code? Viel schöner ist die Entwicklung auf einer grünen Wiese. Code neu schreiben, ist demgegenüber leicht.</p>
+<p>Wenn es in Projekten knirscht, weil die Last der Brownfield Codes erdrückend ist, ist Neuentwicklung allerdings nur selten eine Option. Der Aufwand wäre gewaltig; dafür gibt es kein Geld und keine Zeit.</p>
+<p>Aus dem Morast scheint dann nur der trübe Weg langwieriger Refaktorisierungen zu führen. Wochen und Monate arbeitet sich das Team daran ab. Spaß macht das nicht. <a rel="noopener" href="http://blog.ralfw.de/2012/09/vorsicht-co-evolution.html">Motvierend für andere ist das auch nicht.</a> Wenn die Codebasis an einem solchen Punkt ist, leidet das Produkt unter doppelt schlechter Qualität: nicht nur die des Codes lässt zu wünschen übrig, sehr wahrscheinlich ist auch die Qualität des Teams – oder zumindest seine Attraktivität – suboptimal.</p>
+<p>Natürlich kann Software nicht dauernd neu geschrieben werden. Aber wenn es soviel leichter ist, Legacy Code neu zu schreiben, statt ihn zu ändern, warum gibt es dann kein Bemühen, der Leichtigkeit des Greenfield näher zu kommen?</p>
+<p>Ich meine, darum sollte sich der Entwurf bemühen. <strong>Die Softwarearchitektur sollte die Machbarkeit der Neuentwicklung als nicht-funktionale Anforderung sehen, ohne die Nachhaltigkeit nicht zu erreichen ist.</strong></p>
+<p>Zunächst einmal wird Code natürlich zum Bug Fixing und für neue Anforderungen erweitert. Das geht auch eine ganze Zeit gut. Aber wie lange? Niemand weiß das genau. “Es kommt halt darauf an…” Das ist wahr – nur führt diese weise Haltung gewöhnlich eben zu dem monolithischen Code, der dann nicht mehr mit vertretbarem Aufwand veränderbar ist.</p>
+<p>Deshalb glaube ich, dass die Entscheidung, wie lange an Code rumgeschraubt werden sollte, weniger weise, weniger emotional ausfallen sollte, sondern viel pragmatischer und regelhafter.</p>
+<p>Hier mein Vorschlag:</p>
+<ul>
+<li><strong>Eine Codebasis sollte in Komponenten von max. 10.000 LOC aufgeteilt werden.</strong>  <strong>Eine Codebasis sollte in Services von max. 60.000 LOC aufgeteilt werden.</strong></li>
+</ul>
+<p>Unter Komponenten verstehe ich hier binäre Codeeinheiten mit separatem Kontrakt auf derselben Plattform. Komponenten machen also keinen Aufwand bei der Kommunikation untereinander.</p>
+<p>Unter Services hingegen verstehe ich Gruppen von Komponenten mit einem separatem gemeinschaftlichen Kontrakt – allerdings auf u.U. unterschiedlichen Plattformen. Die Kommunikation zwischen Services ist also kein no-brainer mehr.</p>
+<p>Die Aufteilung in Komponenten und Services dieser Größe schlage ich vor, weil sich für mich damit Grenzen machbarer Neuentwicklung ergeben.</p>
+<h3>Komponenten neu entwickeln</h3>
+<p><strong>Eine Komponente von 10K LOC [1] kann ein Team in einem Monat [2] neu entwickeln</strong>, wenn es hart auf hart kommt. Das scheint mir ein überschaubarer Zeitraum aus Sicht des Managements. Eine Entscheidung dafür sollte das Geschäft nicht aufs Spiel setzen.</p>
+<p>Eine Software wird von vornherein komponentenorientiert entwickelt. Das Team beobachtet das Wachstum der einzelnen Komponenten. Seien wir ehrlich: dabei kontinuierlich den Komponentencode sauber zu halten, ist eher eine Idealvorstellung. Kleinere Refaktorisierungen werden vorgenommen – aber wenn größere notwendig werden, ist dafür eher keine Zeit. Die werden vertagt… Also kommt der Tag, an dem eine Komponente 10K LOC umfasst und eigentlich so richtig refaktorisiert werden müsste.</p>
+<p>An dem Punkt entscheidet sich das Team nun jedoch für eine komplette Neuentwicklung. Statt mühselig Code zu säubern, wird auf der grünen Wiese neu angefangen – im Rahmen des Komponentenkontrakts. Der resultierende Code ist dann nicht nur sauber, sondern rein ;-) Damit meine ich, <strong>dass Refaktorisierung nur zu Clean Code zweiter Wahl führt, weil sie sich im Rahmen des Existierende bewegt.</strong> Das schränkt die Kreativität ein, das behindert die Innovationsmöglichkeiten. Ein Beginn auf der grünen Wiese hingegen ist frei von solchen Altlasten. Da ist alles erlaubt und denkbar – solange der ursprüngliche Kontrakt eingehalten wird.</p>
+<h3>Services neu entwickeln</h3>
+<p>Einen Service von 60K LOC kann ein Team in 6 Monaten neu entwickeln, wenn es hart auf hart kommt. Das ist kein ganz kurzer Zeitraum, das entscheidet man nicht zwischen Tür und Angel – doch es ist immer noch viel überschaubarer als die Neuentwicklung einer kompletten Anwendung von 500.000+ LOC. 6 Monate sind absehbar. 6 Monate sind in vielen Teams ein Releasezyklus oder gar weniger.</p>
+<p>Der Trick bei den Services ist nun, dass ihre Neuentwicklung noch mehr Freiheitsgrade bietet. Nicht nur kann die interne Struktur über Komponentengrenzen hinweg rein gemacht werden, nein, es kann sogar ein Plattformwechsel stattfinden. Damit ist die Bedingung für die Möglichkeit kontinuierlicher Innovation geschaffen. Denn die hängt nicht nur an den Fähigkeiten der Entwickler, sondern auch am technologischen Fortschritt.</p>
+<p>Wer sich vor 5 Jahren einmal für Java entschieden hat, muss dann nicht bis zum Lebensende (der Software) alles in Java entwickeln. Für jeden Service kann vielmehr immer wieder neu entschieden werden, ob ein Plattformwechsel Vorteile bietet. Eine Entscheidung ist möglich, weil die Servicegrenze in der Architektur überhaupt gezogen wurden – und weil darauf geachtet wurde, die Größe im Rahmen machbarer Neuentwicklung zu halten.</p>
+<p><strong>Günstig mag ein Plattformwechsel sein, wenn eine andere Plattform bessere technische Möglichkeiten bietet. Aber der Wechsel kann auch durch Erhaltung der Attraktivität der Codebasis motiviert sein.</strong> Plattformen unterliegen Moden. <strong>Um dauerhaft Entwickler für die Mitarbeit zu begeistern, mag es angezeigt sein, Plattformmoden zu folgen</strong>. Wer will denn heute eine große Cobol-, Fortran-, PHP- oder VB6-Codebasis pflegen? Durchschnittlich attraktiv sind C# oder Java oder Ruby oder Python – dahinter lauern aber schon Scala, Groovy, Clojure, Erlang, F#, JS und andere.</p>
+<p><strong>Nur wer “Sollbruchstellen” im Code in Form von Servicegrenzen vorsieht, hat die Chance, technologisch kontinuierlich uptodate zu bleiben.</strong></p>
+<p>Heute wird vielen Softwaresystemen eine solche Grenze nachträglich durch den Wunsch nach mobile applications aufgezwungen. Da entsteht plötzlich ein zusätzlicher Service in Form einer App. Da tritt nach Jahren mal wieder – gezwungenermaßen – eine neue Plattform auf den Entwicklungsplan. Da entsteht plötzlich Attraktivität. Leider sind damit aber auch viele Teams überfordert, weil sie jahrelang keine Übung gehabt haben im Plattformwechsel oder gar auch nur im Neuanfang auf einer grünen Wiese.</p>
+<h3>Fazit</h3>
+<p><strong>Refaktorisierungen zur Herstellung und Erhaltung evolvierbarer Stukturen sind nicht überflüssig – aber überbewertet,</strong> würde ich mal sagen. <strong>Viel öfter sollte Neuentwicklung statt Refaktorisierung gedacht werden.</strong> Dazu bedarf es aber klarer Grenzen, in denen Neuentwicklung auch machbar ist. Ich habe hier mal zwei solche Grenzen unterschiedlicher Granularität vorgeschlagen. Ob die bei diesen LOC und diesen Zeiträumen verlaufen sollten, sei dahingestellt. Da mag sich jedes Team seine eigenen Grenzen setzen. Dass es jedoch Komponenten- und Servicegrenzen geben sollte, da bin ich sicher. Wir brauchen diese beiden Horizonte.</p>
+<p>Der Servicehorizont liegt mir besonders am Herzen. Denn einer der größten Übelstände der Softwareentwicklung scheint mir derzeit die Erstarrung durch Konsolidierung und Homogenisierung. Dem muss entgegen gewirkt werden. Vielfalt muss möglich sein. <strong>Denn Vielfalt bedeutet natürliche Lebendigkeit. Nur so ist Innovation kein Kraftakt alle Jubeljahre, sondern jederzeit möglich.</strong></p>
+<p><strong>Die Herausforderung für die Softwarearchitektur besteht also darin, die Form der Software so zu entwerfen, dass auch echte Reinigungen machbar sind.</strong></p>
+<h4>Fußnoten</h4>
+<p>[1] Die LOC habe ich mal über den Daumen für ein Team von 5 Entwicklern berechnet, das jeden Tag pro Entwickler im Schnitt 100 LOC Produktionscode herstellt. Bei 20 Arbeitstagen/Monat ergibt das 10.000 LOC.</p>
+<p>[2] Den Monat Aufwand für eine machbare Neuentwicklung einer Komponente bzw. die 6 Monate für einen Service meine ich nicht wörtlich. Was ein Unternehmen für machbar bei Neuentwicklungen hält, soll es selbst entscheiden. Mir scheint ein Monat für eine Komponente jedoch nicht ganz unrealistisch. Und ein halbes Jahr für die Möglichkeit eines Plattformwechsels, hören sich auch nicht so schlecht an, oder? Wenn möglich, können Services aber natürlich auch kleiner gehalten werden. 3 Monate für eine Neuentwicklung wären besser als 6.</p>
+<h2>Kommentare</h2>
+<p><strong>Mike Bild</strong> (2012-09-28):</p>
+<p>Der Traum von autonomen Dingern (Services/Components/Actors)und Composite UI. KLingt gut wie ich finde!</p>
+<hr />
+<p><strong>SMon'</strong> (2012-10-04):</p>
+<p>M.E. ist es gerade die Herausforderung der Architektur, diese Schnitte zu finden und zu halten.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

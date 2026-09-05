@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TDD skaliert nicht — ralfw.de Archiv</title>
+<meta name="description" content="Dieser Tage beschäftige ich mich intensiv mit TDD. Ich kann sogar sagen, dass ich ein rechter Freund von TDD geworden bin. TDD ist cool – oder genauer: TDD 2.0 :-) - das ist nämlic">
+<link rel="canonical" href="https://ralfw.de/archiv/2012/tdd-skaliert-nicht/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="TDD skaliert nicht — ralfw.de Archiv">
+<meta property="og:description" content="Dieser Tage beschäftige ich mich intensiv mit TDD. Ich kann sogar sagen, dass ich ein rechter Freund von TDD geworden bin. TDD ist cool – oder genauer: TDD 2.0 :-) - das ist nämlic">
+<meta property="og:url" content="https://ralfw.de/archiv/2012/tdd-skaliert-nicht/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>TDD skaliert nicht</h1>
+    <div class="doc-meta"><span>12. Dez. 2012</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2012/12/tdd-skaliert-nicht.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2012/tdd-skaliert-nicht/</code></span></div>
+    <div class="art"><p>Dieser Tage beschäftige ich mich intensiv mit TDD. Ich kann sogar sagen, dass ich ein rechter Freund von TDD geworden bin. TDD ist cool – oder genauer: TDD 2.0 :-) - das ist nämlich <a rel="noopener" href="http://cumulative-hypotheses.org/2011/08/30/tdd-as-if-you-meant-it/">TDD as if you meant it</a> (TDDaiymi).</p>
+<p>Nicht trotz dieser Freundschaft, sondern wegen ihr schaue ich aber auch genauer hin. Und da sehe ich ganz klar eine Beschränkung in TDD. Und das ist die mangelnde Skalierbarkeit.</p>
+<p>TDD ist und bleibt eine Methode für 1 Entwickler (oder auch 1 Entwicklerpaar). That´s it.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c233fb98eb20ddc9.png" /></p>
+<p>TDD setzt mit einem Test irgendwo an einer Schnittstelle an und treibt von dort eine Struktur aus. Die wird feiner und feiner. Erst eine Methode, dann mehrere; erst eine Klasse, dann mehrere. <a rel="noopener" href="http://www.amazon.de/Growing-Object-Oriented-Software-Guided-ebook/dp/B002TIOYVW/ralfwestphalh-21">Growing Object-Oriented Software, Guided by Tests</a> beschreibt das recht gut.</p>
+<p>Bei der Lektüre wird die Begrenzung von TDD aber natürlich nicht so deutlich. Daran haben erstens die Autoren kein Interesse und zweitens ist das Buch selbst ein “Single User Medium”. Man liest es allein und kann deshalb dem TDD-Vorgehen gut folgen.</p>
+<p>Doch was ist, wenn 2, 3, 5, 10 Leute im Team sind? Dann kann jeder nach TDD vorgehen. Super! Aber was geht jeder dann mit TDD an?</p>
+<p>TDD skaliert, wie Holzhacken skaliert. Wenn ein großer Haufen Holz rumliegt, kann man an jeden Holzklotz einen Holzhacker setzen. Das funktioniert, weil das Gesamtergebnis so einfach ist: ein Haufen Holzscheite. Und jeder Holzklotz ist auch so überschaubar, dass man nur schwer 2 oder 3 Holzhacker an einen setzen wird.</p>
+<p>Anders ist das bei einem Sägewerk. Da arbeiten auch mehrere Holzarbeiter – aber an ganz verschiedenen Positionen. Die machen eben nicht alle dasselbe. Die tun Verschiedenes – und koordinieren ihre Arbeit.</p>
+<p>Genau diese Koordination fehlt TDD jedoch. TDD ist eine Axt, mit der einer Anforderungen zu Code zerkleinern kann. Und was die anderen tun… Egal. Die machen irgendwo anders mit ihren Äxten auch irgendwas.</p>
+<p>TDD skaliert also insofern nicht, als dass damit Zusammenarbeit mehrere Entwickler nicht befördert wird. In TDD selbst steckt keine Idee von Teamwork. TDD ist nur eine Methode, die auf eine gegebene Schnittstelle angewendet werden kann, um dahinter Strukturen auszutreiben.</p>
+<p>Aber wie kommt man zu dieser Schnittstelle? Wo ist die im Big Picture einer Software angesiedelt? Dazu hat TDD keine Ahnung.</p>
+<p>Und deshalb verfallen Teams immer wieder auf die eine unvermeidbare Schnittstelle als Ausgangspunkt, die jede Software hat: die Benutzerschnittstelle. In der werden Features verortet – und dann je 1 Entwickler an 1 Feature gesetzt, um daran mit TDD zu rumzuhacken.</p>
+<p>Klar, damit kann man 1, 2, 5 oder 10 Entwickler beschäftigen. Nur kommt dabei jedes Feature nicht maximal schnell voran. Das meine ich mit “TDD skaliert nicht”. In TDD steckt kein Ansatz, eine Anforderung beliebiger Granularität auf mehr als 1 Entwickler zu verteilen, um es in konzertierter TDD-Aktion schnellstmöglich umzusetzen.</p>
+<p>Das meine ich gar nicht als Kritik an TDD. Eine Axt kann ich ja auch nicht dafür kritisieren, dass in ihr keine Idee davon steckt, wie man in konzertierter Aktion mit mehreren Holzarbeitern einen Baum fällt. Eine Axt zerteilt das Holz unter ihr. TDD strukturiert Code hinter einer Schnittstelle unter sich.</p>
+<p>Wer die Softwareentwicklung skalieren will, wer schneller 1 Anforderung umsetzen will, um schneller Feedback zu bekommen, der sollte von TDD keine Hilfestellung erwarten. Dafür muss man sich woanders umschauen.</p>
+<p>Eine Menge von Schnittstellen, die irgendwie zusammen an der Lösung von 1 Anforderung beteiligt sind und auf die mehrere Entwickler gleichzeitig mit TDD angesetzt werden können, muss sich durch eine andere Methode ergeben.</p>
+<p>Deshalb sind TDD-Beispiele auch immer überschaubar. Man kann mit TDD allein nichts Größeres angehen. Code Katas – so nützlich sie sein mögen, um die Methode zu üben – sind winzig. Und wer dann nur mit Code Katas TDD übt, der lernt eben auch nicht mehr als TDD. Der lernt Programmierung in Bezug auf eine Schnittstelle. Das ist eine nützliche Kompetenz so wie das Feilen, Sägen, Schweißen usw. Doch nur weil 20 Leute da sind, die alle feilen, sägen, schweißen können, entsteht noch lange keine Dampfmaschine.</p>
+<p>Über TDD hinaus müssen wir uns also mit der Arbeitsorganisation beschäftigen. Wir müssen Wege finden, wie wir Anforderungen in etwas transformieren können, das von mehreren Entwicklern gleichzeitig mit TDD umgesetzt werden kann. Was TDD fehlt, ist eine TDD-Vorbereitung. Sich Gedanken über Testfälle zu machen, ist allerdings zu wenig. Denn auch die beziehen sich ja nur auf eine Schnittstelle.</p>
+<p>Also: Was tun vor TDD, damit TDD den größten Effekt hat, damit die Entwickler zum Besten eingesetzt werden, damit endlich aus einer Gruppe von Entwicklern ein Team wird?</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2012-12-12):</p>
+<p>ok - stimmt alles.</p>
+<p>Ja TDD ist die Axt - eben zum Baumfällen - das zum Schrank bauen mehr Werkzeug gebraucht wird ist sowieso klar - und es mehr als die Arbeiter (also den Baumfäller oder den Schreinerlehrling) geben muss um einen schönen Schrank zu bauen ist auch klar - da braucht man dann eben vielleicht noch den Designer oder den, der schonmal einen Schrank gebaut hat - wenns größer wird braucht man dann vielleicht den Ingenieur oder Architekten ...</p>
+<p>Und genau das vermisse ich hier irgendwo - das man mit Werkzeugen wie einer Axt oder Bohrmaschine keinen Bauplan entwirft ist klar - aber das ist letztlich auch nicht unbedingt die Aufgabe der Leute, die Äxte in die Hand nehmen.</p>
+<p>Und jetzt beschwert sich der Ingenieurberater, dass die Axt so unflexibel ist ... :D</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-12-12):</p>
+<p>@Anonym: Nö, ich beschwere mich überhaupt nicht - falls du das denken solltest.</p>
+<p>Im Gegenteil! Ich fühle meine bisherige Position bestätigt. Schon früher war ich der Ansicht, TDD skaliere nicht. Doch die neuerliche und auch andere Beschäftigung mit dem Thema hat mir das nochmal vor Augen geführt.</p>
+<p>Insofern ist mein Artikel keine Klage, sondern eine öffentliche Feststellung, eine Beschreibung meiner Erfahrung.</p>
+<p>Sieh es als Desillusionierung. Illusionen zu verlieren, ist ne gute Sache. Wenn ich dazu beitragen kann... dann gern ;-)</p>
+<p>Ohne die Illusion können wir nämlich viel besser an die Problemlösung gehen: Wie schaffen wir es besser, Software zu strukturieren für Evolvierbarkeit und Produktionseffizienz?</p>
+<p>Falsche Vorstellungen, von dem, was eine Methode kann, behindern dabei nämlich.</p>
+<hr />
+<p><strong>Florian</strong> (2012-12-12):</p>
+<p>Hallo Ralf,</p>
+<p>ich stimme deinen Ausführungen zu. TDD ist ein Werkzeug und mehr nicht. Es kann nicht als Allheilmittel verwendet werden.
+Auf deine Frage, wie denn die Arbeitsorganisation erfolgen soll, hast du schon in diversen Artikeln Antworten gegeben. Sei es bei der Definition der Architektur, dem Trennen von Aspekten und Belangen und dem Ausschneiden einzelner Funktionsscheiben, die durch verschiedene Lagen der Software reichen. In Summe liegen schon reichlich viele Punkte vor, deren geordnetes Abarbeiten eine gute Grundlage schaffen kann. Allerdings kann dies nur geschehen, wenn Zeit zum lernen genommen wird. Lernen Anforderungen dünn zu schneiden, lernen Software als Prozess zu denken, lernen ein Feature auf mehrere Personen zu verteilen, lernen gemeinsam zu arbeiten.
+Ich habe die Erfahrung gemacht, dass es ein langwieriger Lernprozess ist, doch wenn die Standarddenkweise a la Pflichten-/Lastenheft abgestreift ist, die Arbeit anders organisiert werden kann.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-12-12):</p>
+<p>@Florian: Ich freue mich, dass du schon fehlende Puzzleteile siehst ;-) Natürlich habe ich auch eine Idee, was TDD vorgelagert werden sollte. Aber darum ging es mir diesmal gar nicht.</p>
+<p>Dass Um- und Dazulernen Mühe macht, ist unleugnbar. Aber ich denke, der Gewinn, der winkt, ist es wert. Raus aus dem Jammern, rein in die Systematik.</p>
+<p>Toll, dass du schon bei dir positive Erfahrungen gemacht hast.</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-12-12):</p>
+<p>Bei der Arbeitsaufteilung/organisation zu helfen war ja auch nie der Anspruch von TDD. Das ist ja auch nicht der Anspruch von CI, deswegen zu sagen, CI skaliert nicht oder TDD skaliert nicht ist meiner Meinung nach nicht ganz richtig.</p>
+<p>Wenn man die User stories klein genug schneidet/gut aufteilt und im Team eine gute Kommunikation herrscht sollte es trotzdem kein Problem sein eine grosse Story von mehreren Entwicklerpaaren bearbeiten zu lassen.</p>
+<p>Gerade in grossen und eventuell verteilten Entwicklerteams empfinde ich TDD als durchaus essentiell fuer die Skalierbarkeit. Die Tests kommunizieren die API und sind damit die erste Anlaufstelle fuer andere Entwickler wenn sie eine Komponente verwenden oder verstehen wollen.</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-12-12):</p>
+<p>@pragtob: Ja, das war nicht der Anspruch von TDD.
+@Ralf: &gt;Was tun vor TDD, damit TDD den größten Effekt hat, damit die Entwickler zum Besten eingesetzt werden, damit endlich aus einer Gruppe von Entwicklern ein Team wird?</p>
+<p>Das ist eine mehrteilige Frage
+1) Was ist vor TDD (dem Kodieren)?
+2) Arbeitsorganisation, Aufgabenverteilung bishin zu Teamskills
+3) TDD-Effekt
+4) Teambuilding</p>
+<p>Zu 1) Vor dem kodierenden Design (=TDD) liegt ein gedankliches Design (meinetwegen nennt man das "Design" oder Architekturentwurf)
+      Vor dem gedanklichen Design und zeitgleich dazu liegt das Ausprobieren, um das Machbare, Praktikable aus dem Lösungsraum herauszuschürfen
+      Vor dem gedanklichen Design liegt auch die Formulierung der Anforderungen
+      Vor der Formulierung liegt das Herausfinden, was zu tun ist bzw. wofür der Kunde bereit ist Geld auszugeben
+      Davor liegen Probleme, Nöte, Ziele oder Visionen ...</p>
+<p>Zu 2) Heterogene Teams machen TDD nicht nur am Code, d.h. es arbeiten nicht alle zeitgleich am Code, sondern alle arbeiten System, das "irgendwann" so ähnlich entstehen wird.</p>
+<p>Zu 3) TDD ist das Auffangnetz für den produktiven Code. TDD soll nachweisen, was der Code tut. TDD im Grossen (Integrations- und Systemtest) zeigt dem Kunde grüne Features anhand von Szenarien, Testfällen und Akzetanztests</p>
+<p>Zu 4) jetzt nicht.</p>
+<p>Ich denke, die Herausforderungen vor TDD sind
+- das Zielsystem stückweise anforderungstechnisch (WAS) und designtechnisch (WIE) zu definieren, heranwachsen zu lassen
+- die Gruppe auf das (vermutl. noch vage) Zielsystem einzschwören und auszurichten
+- jeden Tag, Stück-für-Stück, versuchen das Richige zu tun</p>
+<p>Ich wünsche mir ein TDD für Anforderungen und Designs. Was ich vermisse? Anforderungsarchitekturen und test- und abnehmbare Anforderungen</p>
+<p>"Specification by example".</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-12-13):</p>
+<p>@pragtob: Du sagst es so leicht hin: "User Story klein genug schneiden". Aber wie? Meinst du in Scheiben (vertikal, also weiterhin Durchstiche)? Oder meinst du in "Schichten" (horizontal)?</p>
+<p>Ersteres bringt ja nix. Da hast du immer noch Durchstiche, die je von einem Entwickler gearbeitet werden. Darum geht es mir ja aber, dass genau das langsam ist. Da skaliert TDD nicht. Egal, wie dick oder dünn ein Durchstich ist, TDD allein lässt nur die Arbeit durch 1 Entwickler daran zu. Das soll ja aber gerade anders werden, um jeden Durchstich so schnell wie möglich zu entwickeln. Nur so bekommt man zügig Feedback und legt nichts auf Halde.</p>
+<p>Letzteres ist keine Sache von TDD. Natürlich kann und soll man einen Durchstich "horizontal" zerlegen, damit mehrere dran arbeiten. Gern dann auch an den Teilen mit TDD.</p>
+<p>Nur eben ist diese Zerlegung nicht Teil von TDD. Man darf das nicht von TDD erwarten. Nur das wollte ich hervorheben. Also keine überzogenen Erwartungen an TDD. TDD bringt etwas bei gegebener Schnittstelle. Welche das ist? Das ist nicht Sache von TDD. Und deshalb sollte man sich nicht allein auf TDD für den Entwurf (!) von Software verlassen (im Sinne von Test-Driven Design).</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-12-13):</p>
+<p>@Anonym: Ich stimme dir zu in Bezug auf die genannten Herausforderungen vor und außerhalb von TDD.</p>
+<p>Spec by example löst das "Zerlegungsproblem", das für bessere Skalierbarkeit gelöst werden muss, aber auch nicht.</p>
+<hr />
+<p><strong>Florian</strong> (2012-12-13):</p>
+<p>Moin Ralf,</p>
+<p>die Problematik, woher eine Schnittstelle kommt und wie sie evtl. aussieht lässt sich sicher  durch Nachdenken im Voraus lösen. Momentan stehe ich auch bei einem Projekt vor genau dieser Aufgabe und habe es durch einen abstrakten, allgemeinen, nicht in Stein gemeisselten Systementwurf gelöst. Die Frage, welchen Umfang diese Schnittstellen haben werden/sollen, lässt sich allerdings zum jetzigen Zeitpunkt noch nicht sagen. Für diesen Zweck wäre TDD ein Lösungsweg, um die Lösung dynamisch und mit Kundennutzen verbunden zu erzeugen.</p>
+<hr />
+<p><strong>Manuel</strong> (2012-12-13):</p>
+<p>Hallo Ralf</p>
+<p>Es geht hier doch grundsätzlich um die Problematik, wie ein Feature möglichst effizient durch mehrere Entwickler gleichzeitig umgesetzt werden kann. Bei dieser Grundsatzfrage würde ich TDD mal ganz aussen vor lassen.</p>
+<p>Darum sind für mich auf Ebene 1 folgende Punkte Voraussetzung:
+- Gemeinsames Verständnis des Features
+- Definierte Akzeptanzkriterien
+- Design und Architektur</p>
+<p>Danach kann man sich auf die nächste Ebene begeben und sich mit Themen wie TDD, Pair Programming, CI etc. befassen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-12-13):</p>
+<p>@Anonym: Teammitglieder werden nicht zeitgleich an einem Feature arbeiten?</p>
+<p>Klar, so ist das normalerweise. Aber ist das gut? Nein. Allemal nicht, wenn es alternativlos ist. So ist es aber auch normalerweise. Man tut es, weil man nicht anders kann, keine Idee von anderer Arbeitsorganisation hat.</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-12-13):</p>
+<p>Hallo Ralf,</p>
+<p>das Team arbeitet zeitgleich an einem (oder mehreren, max. WIP-Limit) Feature - aber nicht zeitgleich alle an allem. Z.B. detaillieren einige weiter die Testfälle, andere beseitigen dazu Lücken am Testsystem, einige widmen sich zukünftigen, einige setzen das Feature um, etc.</p>
+<p>Alle arbeiten mehr oder minder an einem Feature, aber an unterschiedlichen Stellen.</p>
+<p>Featureteams skalieren offenbar besser (http://www.featureteamprimer.org/)</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-12-13):</p>
+<p>Hallo Ralf,</p>
+<p>ich halte die Frage nach TDD und Skalierung für nicht zielführend, weil ich keinen Sinn erkennen kann.</p>
+<p>Eine Axt skaliert nicht, eine Tastatur ebenso wenig (beides ist unabhängig davon, wie gross das Team ist, n &gt; 2-3). Zwei drei Personen können sich diesen Engpass teilen, aber nicht mehr.</p>
+<p>Ein PKW skaliert auch nicht (normalerweise bei 5 Personen voll besetzt). Die Frage nach Skalierung erbrügt sich - oder hat man die Automobilindustrie danach befragt? Antwort: SUV? Van? Onmibus? Fahrzeug-Kolonen?</p>
+<p>"Hello World!" skaliert auch nicht, obwohl man dieses x-fach parallel schreiben (meinetwegen in immer einer neuen Sprache, Technologie) kann.</p>
+<p>Die entscheidende Frage ist, wie kann man den Lösungraum finden, wie kann man unter Berücksichtigung von Rahmenbedingungen und Einschränkungen ein bestmögliches Ergebnis erzielen? Wie strukturiert man seine Lösung für heute (aktuelles Projekt/Produkt) und wie sieht es morgen aus (Nachfolgeprojekt, Änderungen bzw. Weiterentwicklung)?</p>
+<p>Wie organisiert man z.B. ein Team von &lt;5 Personen (Umfang 5 MJ), wie ein Team von 10-20 Personen (~15MJ) und wie viel grössere Projekte? Was ist ein gutes das Verhältnis von Neulingen zu "alten Hasen"? Wo arbeiten die alten Hasen - in der Führung, Leitung, der Anforderungsklärung oder am/im Kernsystem? Wie lernt das Team? Wie werden die einzelnen "schlechterenn" besser und wie das gesamte Team besser? Wie hält und steigert man die Qualität, Moral und Spannung nach 1, 2 oder 5 Jahren?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-12-14):</p>
+<p>@Anonym (der eine): Nicht zielführend sei es, festzustellen, dass TDD nicht skaliere?</p>
+<p>Warum? Wie kannst du das behaupten, wenn du womöglich mein Ziel nicht kennst. Welches ist denn dein Ziel?</p>
+<p>Mein Ziel ist es, eine realistische Sicht auf das Thema Design zu bekommen. In Bezug darauf halte ich es deshalb sehr wohl für zielführen zu konstatieren, dass Test-Driven Design eben nicht skaliert. Damit kann man nicht erwarten, ein Design "des Ganzen" hinzubekommen.</p>
+<p>TDD erzeugt - at best - optimale Designs hinter der Schnittstelle, auf die man es anwendet. Und das tut eben nur 1 Entwickler zur Zeit pro Schnittstelle.</p>
+<p>Wenn dann 1 Entwickler nur an 1 Feature sitzt (Durchstich), dann ist das Design höchstens optimal auf diesen Durchstich bezogen.</p>
+<p>Aber was ist mit den anderen? Eine Summe von featurebezogenen optimalen Designs ergibt es kein optimales Design auf das Ganze gesehen. Das ist es, was ich meine mit "TDD skaliert nicht".</p>
+<p>Es geht um eine realistische Einschätz der Design-Leistung, die mit TDD machbar ist.</p>
+<p>Ich sehe es auch grad wieder am Buch "Growing OO Software". Hübsches TDD - nur fehlt das big picture. Seitenweise wird geschrieben, Text, Text, Text... aber wo der Code dann im Ganzen auftaucht, wird nicht/kaum gezeigt. Man hat dafür keine Bildsprache (oder Entwurfssprache).</p>
+<p>Ab und an gibt es Bildchen - die sehen aber eher verschämt aus. Alibibilder ;-)</p>
+<p>Und auch dort wird - ich erwähnte es bereits - keine Chance gesucht oder gesehen, die Entwicklung an einem Durchstich zu skalieren, d.h. mehr als 1 Entwickler damit zu betrauen.</p>
+<p>TDD skaliert auch insofern nicht, als dass in ihm eben kein Hinweis steckt, wie ein Durchstich von mehreren angegangen werden kann.</p>
+<p>Das meine ich beides aber eben nicht als Kritik. Ich wünsche mir das nicht anders von TDD. Ich meine es als Beschreibung, Hinweis, Achtung-Schild, Desillusionierung. Man soll einfach auch nicht mehr von TDD erwarten.</p>
+<p>Ein Hammer - so nützlich er sein mag - bleibt ein Hammer. Aus seiner Nützlichkeit in einem begrenzten Einsatzgebiet darf man keine Heilserwartung machen zur Rettung in anderen Einsatzgebieten.</p>
+<p>Vielleicht so: Ich wünsche mir für TDD (oder manche seiner Vertreter) etwas mehr Bescheidenheit. Sie dürfen gern auch mal die Grenze von TDD ausleuchten und sagen: "Leute, dahinter müsst ihr euch etwas anderes suchen. Da geht es weiter, aber TDD ist am Ende."</p>
+<p>TDD ist nützlich. Grundhandwerkszeug für jeden Entwickler. Ganz sicher! Allerdings für mich nun nicht mehr unter TDD 2.0 :-)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-12-14):</p>
+<p>@Anonym (der andere): Featureteam? Klar! Da bin ich dabei. Habe nie etwas anderes empfohlen.</p>
+<p>Ob dann an 1 Feature von 5 Entwicklern 5 sitzen, weil das Sinn macht und die Zeit dafür haben - oder ob es nur 3 sind und die anderen 2 mit Bugfixing und Kundengespräch oder CI beschäftigt sind, das ist egal.</p>
+<p>Es geht mir darum WIP minimal zu halten (am besten 1). Und an das 1 WIP-Feature zur Zeit soviele Entwickler wie möglich setzen zu können.</p>
+<p>TDD hilft nun nicht dabei, die Teilbereiche zu identifizieren, an denen mehrere Entwickler parallel jeweils mit TDD arbeiten können, um das ganze Feature schnellstmöglich voran zu treiben.</p>
+<p>Das ist meine Kritik, ne, das ist mein Hinweis, den ich geben wollte.</p>
+<p>Der ewige Fokus auf TDD - jetzt auch wieder mit mehreren basic sessions auf den Hamburger XPdays - hilft nun nicht, diese Situation zu verbessern. Wir müssen mal langsam den Blick weiten und jenseits von TDD nach systematischen Wegen suchen, um Design zu betreiben. Design kann nicht auf den Schultern von TDD allein lasten.</p>
+<p>Wie schon gesagt: Genau dazu findet sich z.B. in dem vielgelobten Buch "Growing OO Software" eben kein Hinweis. Da fällt ein bigger picture eher vom Himmel für das Auktionsbeispiel. Keine Systematik in der Herangehensweise. Nur Anforderungen fein scheibieren - gut! - und dann an eine Scheibe den TDD Hammer ansetzen. Puh...</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-12-14):</p>
+<p>Hall Ralf,
+sehr geiler Artikel.
+Ich denke das dahinter die Frage nach dem Testmanagement steht.
+Gruß Thomas</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-12-14):</p>
+<p>Hallo Ralf,</p>
+<p>für mich ist und war es so selbstverständlich, dass TDD nicht skaliert, daher konnte ich mit dieser Frage nichts anfangen.
+Ich habe TDD nie so glorifiziert, daher ist und bleibt es ein Werkzeug und kein Allheilmittel.</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-12-15):</p>
+<p>Wie viele Zeilen Code hast du denn im letzten Jahr implementiert? Nur mal so aus interesse.</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-12-15):</p>
+<p>Nun, da muss ich einmal nachdenken:
+im Berufsleben würde ich einmal auf 15.000 Zeilen Code produktiven Code tippen und ca. 60% davon entfallen auf autom. Tests. Ca. 5k-7k Zeilen fallen gerade dem Refactoring zum Opfer.
+Dazu kommen ca. 3 - 4k Zeilen Prototyping (kaum wirkliche Tests), privat war es so glaube ich ungefähr auch in der Grössenordnung.
+Wieso die Frage nach LOC? Was kann man denn daraus implizieren?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-12-16):</p>
+<p>@Anonym: Für was ist es wichtig, wieviele LOC ist geschrieben habe in 12 Monaten?</p>
+<p>Warum nicht die LOC die ich in 32 Jahren geschrieben habe?</p>
+<p>Warum nicht die LOC, die ich gelesen (!) habe in den letzten 10 Jahren?</p>
+<p>Was macht es für einen Unterschied, wenn die Antwort 10.000 oder 100.000 lauten würde? Berechtigen 100.000 LOC zu irgendetwas durch die schiere Zahl?</p>
+<p>Das glaube ich nicht. Denn ich habe leute soviele LOC produzieren sehen, die größtenteils Mist waren, dass es auf die Zahl nun wirklich nicht ankommt.</p>
+<p>Die Frage ist eher: Wieviele Stunden deliberate practice (!) betreibst du jede Woche, jeden Monat, jedes Jahr? Welchen Anteil an der Arbeitszeit haben die?</p>
+<hr />
+<p><strong>Sageniuz</strong> (2013-04-04):</p>
+<p>Hi Ralf!
+Toller Beitrag. Ich wollte dich fragen, ob du schon eine Fortsetzung zu diesem Post geschrieben hast. Ich wäre sehr an deiner „Vorlagerung“ von TDD interessiert. Was genau hast du für eine Vorstellung bzw. Idee wie man das Entwickeln an einem Feature skalieren könnte?
+Danke vielmals.
+LG,
+Claus</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-04-05):</p>
+<p>@Sageniuz: Damit das Codieren skalieren kann, muss vorher eine Vorstellung vom Code entwickelt werden. Das geschieht implizit z.B. dadurch, dass man Entwickler E1, E2, E3 an Funktionalität für Dialog D1, D2, D3 entwickeln lässt.</p>
+<p>Das Problem dabei: Diese Inkremente kommen nur langsam voran. Feedback zu D1 kann erst kommen, wenn E1 damit fertig ist. Wenn das negativ ist, kann es sein, dass E2 und E3 an D2 und D3 schon dieselben "Fehler" begangen haben - und so ist eine Menge Arbeit in den Sand gesetzt.</p>
+<p>Ziel sollte es sein, die Arbeit an einem Dialog so schnell wie möglich zu erledigen. Dafür muss aber eine Vorstellung davon existieren, wie der Code dahinter aussieht, damit man die Arbeit daran verteilen kann. Diese Vorstellung liefert ein expliziter Entwurf.</p>
+<p>Das ist der erste Schritt. Der zweite ist, die Methoden/Klassen, die dabei herausgekommen sind, auf Bibliotheken/Komponenten zu verteilen. Dann kann E1 alles Nötige in K1 tun, E2 in K2 und E3 in K3. Zusammen arbeiten sie dann alle an D1.</p>
+<p>So einfach kann das sein :-)</p>
+<hr />
+<p><strong>Sageniuz</strong> (2013-04-05):</p>
+<p>Hi Ralf, danke für die rasche Antwort. So etwas in die Richtung habe ich mir schon gedacht. Da du dich ja des Öfteren in diesem Post auf GOOS beziehst: Was hältst du davon  wenn das Team gemeinsam eine „Broad-Brush“ Architektur entwirft und danach (ebenfalls gemeinsam) mittels dem ersten End-to-End Test das im Buch erwähnte „Walking Skeleton“ implementiert. Somit wird das Verständnis der groben Systemarchitektur im Team geschärft. Die beim „Walking Skeleton“ entstandenen Schnittstellen sollten ja eigentlich bereits dem entsprechen, wie du in deinem letzten Kommentar beschrieben hast, oder? In GOOS wird Folgendes geschrieben: „To design this initial structure, we have to have some understanding of the purpose of the system, otherwise the whole exercise risks being meaningless. We need a high-level view of the client’s requirements, both functional and nonfunctional, to guide our choices. This preparatory work is part of the chartering of the project, which we must leave as outside the scope of this book.” D.h., die Autoren machen dem Leser schon bewusst, dass man bevor man mit dem altbekannten TDD-Rhythmus anfängt, etwas entworfen werden muss. Nun kann gemeinsam an Features gearbeitet werden. Jeder kennt die Komponenten und weiß auch, wie und warum sie entstanden sind. Eventuell werden die nächsten End-to-End Tests (die ja jeweils einem Feature entsprechen) wieder gemeinsam entwickelt. Die notwendigen Implementierungen der einzelnen Komponenten dann wieder getrennt. Ich würde mich sehr über einen Kommentar von dir freuen. LG, Claus</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-04-06):</p>
+<p>@Claus: Da bin ich dabei:
+- Das Team entwirft zusammen
+- Zuerst ein gröberer Entwurf (dann verfeinern)
+- Anfangen mit einem walking skeleton (oder tracer bullet development)</p>
+<p>Das Buch lässt das aus. Nur leider halte ich genau das für das Problem. Um im Bild zu bleiben: Man spricht übers wachsen lassen, d.h. gießen und beschneiden, vielleicht mal umtopfen - aber woher die Pflanzen kommen, welche zusammen passen, wie der Garten warum angelegt ist, das bleibt im Dunkeln.</p>
+<p>Genau dieser Schritt ist in weiten Teilen der (TDD) Literatur magisch. ("In der gesamten Literatur" traue ich mich nicht zu schreiben, doch eigentlich ist das eher meine Meinung.)</p>
+<p>OOD hat versucht, diese Lücke zu schließen - leider mit den bekannten Resultaten. Das haut nicht wirklich gut hin. Da helfen keine CRC Karten und auch keine Rollen von Rebecca Wirfs-Brock.</p>
+<p>Das bleibt alles künstlich. Man versucht vorzeitige Optimierung zu betreiben - denn nichts anderes ist es, nach Klassen zu suchen beim Übergang von Anforderungen zu Code, wenn man strickt objektorientiert vorgeht.</p>
+<p>GOOS gefällt mir erstens nicht so gut, weil der entscheidende Schritt wieder ausgelassen ist. Denn um nochmal TDD zu zeigen, hätte es kein Buch gebraucht. Und zweitens weil das, was dann da mit der magisch auftauchenden Struktur gemacht wird, wieder nur einer macht. Teamwork sehe ich nicht adressiert.</p>
+<p>Wir müssen also die Lücke schließen und dabei immer das Team im Blick haben für hohe Produktionseffizienz.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

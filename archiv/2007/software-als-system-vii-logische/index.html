@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software als System VII - Logische Strukturierung — ralfw.de Archiv</title>
+<meta name="description" content="Swolons mit ihrer Funktionalität und ihren Zuständen lassen sich in zwei Arten einteilen: logische und physische Swolons.">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/software-als-system-vii-logische/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software als System VII - Logische Strukturierung — ralfw.de Archiv">
+<meta property="og:description" content="Swolons mit ihrer Funktionalität und ihren Zuständen lassen sich in zwei Arten einteilen: logische und physische Swolons.">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/software-als-system-vii-logische/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Software als System VII - Logische Strukturierung</h1>
+    <div class="doc-meta"><span>11. März 2007</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2007/03/software-als-system-vii-logische.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/software-als-system-vii-logische/</code></span></div>
+    <div class="art"><p>Swolons mit ihrer Funktionalität und ihren Zuständen lassen sich in zwei Arten einteilen: logische und physische Swolons.</p>
+<p>Logische Swolons haben keine bzw. nicht notwendig eine Entsprechung "in der Codewelt". Sie sind lediglich Hilfskonstrukte zur Gliederung einer Software. Ich nenne sie mal <strong>Module</strong>, weil der Begriff nur relativ wenig besetzt ist. Jede Software kann dann als Hierarchie von Modulen beschrieben werden. Jedes Modul kann aus beliebig vielen Submodulen bestehen. Dasselbe Submodul kann in mehreren Modulen enthalten sein.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/ad94f250e3e0f608.png" /></p>
+<p>Jedes Modul hat eine möglichst klare Aufgabe und entsteht im Prozess einer schrittweisen Dekomposition oder Verfeinerung. Das Wurzelmodul ist die zu entwickelnde Lösung; sie wird in Funktions- oder Verantwortlichkeitsbereiche zerlegt. Diese Module werden dann wiederum in kleinere Funktions- oder Verantwortlichkeitsbereiche zerlegt und so weiter...</p>
+<p>Diese Art der Zerlegung eines Systems in immer kleinere Bestandteile ist im Laufe der letzten Jahre leider in Verruf geraten, nicht agil genug zu sein.  Dieser grundsätzlichen Kritik kann ich jedoch nicht folgen. Agilität ergibt sich nicht einfach aus dem Verzicht auf eine hierarchische Strukturierung/Planung von Software. Sie ist vielmehr eine Frage des Umgangs mit ihr. Und das ist eine Frage des Entwicklungsprozesses - den ich an dieser Stelle jedoch zunächst ausklammern möchte.</p>
+<p>Unabhängig vom Prozess halte ich es für unabdingbar, auch ein Softwaresystem (wie jedes andere komplexe System) sauber in logische Bestandteile zu zerlegen. Die Zerlegungstiefe soll dabei problemangemessen sein. Ziel ist es, schrittweise zu Funktionseinheiten zu kommen, deren Aufgabe klar und überschaubar ist, die einen abschätzbaren Implementationsaufwand haben.</p>
+<p>Dabei ist ganz wichtig zu beachten, dass Module eben keine Klassen sind. Module sind logische Swolons, Klassen physische. Die logische Dekomposition findet also losgelöst von einer konkreten Implementierung und Entwicklungsplattform statt. Leitmotiv sollte dabei lediglich sein, Kompliziertes in Einfacheres zu zerlegen. Da Software immer eine Funktion hat, sind Module für mich daher immer zuerst Funktionsträger. Sie stehen für eine möglichst klar umrissene Dienstleistung. Sie sind verantwortlich für ihre Erbringung. Diese Dienstleistung kann natürlich mal mehr funktionsorientiert und mal mehr zustandsorientiert sein.</p>
+<p>Jede Ebene im Modulbaum kann auch als Abstraktionsebene angesehen werden. Die Dienstleistung der Module in einer Ebene sollten dann in Bezug auf diese Ebene möglichst klar umrissen sein. Konjunktionen wie "und" und "oder" sollten in Funktionsbeschreibungen nicht vorkommen. Die Summe der Funktionen aller Submodule entspricht dann wieder der Gesamtfunktionalität ihres Moduls.</p>
+<p>In Bezug auf seine Submodule ist die Dienstleistung eines Moduls jedoch eher grob und unscharf. Die Submodule präzisieren sie. Ein Beispiel:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/617a648382ed4a68.png" /></p>
+<p>Auf der obersten Abstraktionsebene geht es nur um einen online Shop. Die Ebene darunter präzisiert: zu einem online Shop gehören Produkte, Bestellungen dieser Produkte und die Wahrung der Sicherheit des Bestellvorgangs. Und was genau bedeutet "Wahrung der Sicherheit"? Das präzisiert die darunterliegende Abstraktionsebene. Laut ihr gehören eine Benutzerverwaltung und die Authentifizierung bzw. Autorisierung von Benutzern dazu.</p>
+<p>Die Modularisierung einer Software ist sozusagen eine sich schrittweise in das Problem hineingrabende Bestandsaufnahme der Verantwortungsbereiche oder "Abteilungen", die nötig sind, um am Ende einen Nutzen für den Anwender herzustellen. Software kann in diesem Sinn auch als Unternehmen oder Fabrik - <em>software as a factory</em> - angesehen werden: Ihre Produkte sind Dienstleistungen für den Anwender. Der wünscht sich z.B. die Aufnahme eines Artikels in den Warenkorb und die Software erfüllt ihm diesen Wunsch. Oder der Anwender "bestellt" die Umsetzung einer Verkaufszahlenliste in eine Grafik und die Software produziert diese Grafik.</p>
+<p>Geleistet werden solches Services von, hergestellt werden solche Produkte durch das Zusammenspiel vieler Swolons mit sehr unterschiedlichen Verantwortlichkeiten und auf unterschiedlichen Abstraktionsebenen. Blätter des vorstehenden Modulbaumes können daher auch als Aufgabenbereiche zu einem "Unternehmen" zusammengesetzt werden:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a2969ef150d30280.png" /></p>
+<p>Eine Modulhierarchie kann insofern auch als Orga-Diagramm angesehen werden. Und die Knoten darin sind Rollen. Damit bewegt sich die logische Strukturierung in der Nähe von OORAM - <a rel="noopener" href="http://heim.ifi.uio.no/%7Etrygver/documents/book11d.pdf">Object Oriented Role Analysis Method</a> -, verzichtet aber auf die Bindung an ein Implementationsdetail wie Objekte. Während Modularisierung geht also eher und allgemeiner um eine Swolon Rollenanalyse.</p>
+<p>Module sind auf allen Ebenen der Modulhierarchie gleich. Es sind Swolons mit den grundsätzlich gleichen allgemeinen Eigenschaften. Auf höheren Ebene sind die Module nur sozusagen größer, weil sie noch Submodule enthalten.</p>
+<p>Wann sollten Sie mit der logischen Dekomposition aufhören? Wenn es Ihnen in den Fingern kribbelt und Sie mit der Implementation eines Moduls beginnen wollen. D.h. wenn Sie meinen, Sie würden die Dienstleistung eines Moduls hinlänglich gut überblicken und keine weitere Zerlegung in Submodule benötigen. Implementiert, d.h. in Code gegossen, werden also die Blätter des Modulbaumes. Die Tiefe, in der diese Blätter unter der Wurzel hängen, kann von Ast zu Ast natürlich verschieden sein.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warum Lego nichts mit Softwareentwicklung zu tun hat [OOP 2009] — ralfw.de Archiv</title>
+<meta name="description" content="Laien Softwareentwicklung verständlich zu machen, ist nicht leicht. Helfen sollen dann Analogien. Beliebt ist die, Software mit einem Küchenrezept zu vergleichen. Doch nicht nur La">
+<link rel="canonical" href="https://ralfw.de/archiv/2008/warum-lego-nichts-mit/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Warum Lego nichts mit Softwareentwicklung zu tun hat [OOP 2009] — ralfw.de Archiv">
+<meta property="og:description" content="Laien Softwareentwicklung verständlich zu machen, ist nicht leicht. Helfen sollen dann Analogien. Beliebt ist die, Software mit einem Küchenrezept zu vergleichen. Doch nicht nur La">
+<meta property="og:url" content="https://ralfw.de/archiv/2008/warum-lego-nichts-mit/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Warum Lego nichts mit Softwareentwicklung zu tun hat [OOP 2009]</h1>
+    <div class="doc-meta"><span>29. Okt. 2008</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2008/10/warum-lego-nichts-mit.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2008/warum-lego-nichts-mit/</code></span></div>
+    <div class="art"><p>Laien Softwareentwicklung verständlich zu machen, ist nicht leicht. Helfen sollen dann Analogien. Beliebt ist die, Software mit einem Küchenrezept zu vergleichen. Doch nicht nur Laien haben ihre <a rel="noopener" href="http://www.infoq.com/presentations/lego-hypothesis"></a>Schwierigkeit mit der Softwareentwicklung. Auch die Profis ringen immer wieder um Verständnis. So suchen auch die Profis nach Analogien. Beliebt ist bei ihnen die, Softwareentwicklung als Arbeit mit einem Lego-Bausatz zu sehen. Oder sie wünschen sich zumindest, dass es so wäre. Denn das Zusammensetzen von Lego-Bausteinen hat soviel mit Softwareentwicklung  zu tun wie Bambi mit einem Reh. Daran ändern auch wortreiche Beschwörungen wie die von <a rel="noopener" href="http://www.infoq.com/presentations/lego-hypothesis">James Noble auf InfoQ</a> nichts.</p>
+<p>Seine "Lego Hypothese" ist wieder einmal hübsch anzuhören - doch sie weist auch wieder in die falsche Richtung. Ich glaube, solange wir noch das Ziel haben, Softwareentwicklung wie ein Lego-Spiel werden zu lassen, solange stehen wir uns selbst im Weg zu einer einfacheren Softwareentwicklung. Genauso wie uns RPC à la .NET Remoting im Weg steht bei der Entwicklung paralleler und skalierbarer Software.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/b222f58295e400f0.png" /></p>
+<p>Was ist nun das Problem mit der Lego-Metapher?</p>
+<p>Vom Offensichtlichen sehen wir einmal ab; Lego-Bausteine bieten keine Dienstleistungen, wie es Funktionseinheiten jeder Größenordnung - von der Methode bis zum SOA-Service - in einer Software tun. Lego-Bausteine sind also trivial.</p>
+<p>Das Problem hat nicht mit der "Qualität" oder dem "Inhalt" von Lego-Bausteinen zu tun, sondern mit der "Lego-Form".</p>
+<h2>Problem 1: Feine Granularität</h2>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/7646111f80ccd9ac.jpg" /></p>
+<p>Da ist zum einen die uniforme Größe der Lego-Bausteine. Sie variiert zwar in gewissen Grenzen, aber in Bezug auf das, was aus ihnen am Ende gebaut wird, sind sie im Grunde alle gleich groß. Oder eben gleich klein. Lego bietet nur eine Granularität für den Bau. Ob es ein kleines Auto oder der Nachbau einer Kathedrale ist, alles wird aus kleinsten Teilen zusammengesetzt. "Container", um größere Teile unabhängig von einander zu bauen und später zusammenzusetzen, gibt es nicht. Lego kennt keine Abstraktionen.</p>
+<p>Das ist keine Kritik an Lego. Der Erfolg von Lego ist von Abstraktionsmitteln unabhängig und ganz unbestritten. Lego soll nichts an seiner Ideen und seinen Produkten ändern. Nur sollten wir angesichts dieser Simplizität oder gar Trivialität des "System Lego" aufhören, darin einen Wegweiser für die Softwareentwicklung zu sehen. Lego kann uns viel lehren, zum Beispiel die Eleganz der Einfachheit oder den Nutzen von Standards. Aber in Lego steckt keine Botschaft zur Strukturierung komplexer, ständig in Veränderung begriffener Systeme. Die können wir nämlich nur planen, wenn wir sie auf unterschiedlichen Abstraktionsebene denken können, und bauen, wenn wir Bausteine ganz unterschiedlicher Granularität haben.</p>
+<p>Lego-Bausteine sehen so aus, wie sie aussehen, eben weil sie keine vielfältigen Dienstleistungen bieten, sondern immer wieder nur Festigkeit in konstanter Form. Das war´s. Software jedoch ist anders, ganz anders. Und so ist es eine Illusion anzunehmen, vielfältige Softwaredienstleistungen ließen sich zusammenstecken wie triviale Lego-Bausteine.</p>
+<h2>Problem 2: Direkte Verbindungen</h2>
+<p>Lego-Bausteine sind "tot". Software hingegen "lebt". Nicht nur sind Software-"Bausteine" ständig in Aktion, Software insgesamt ist auch beständig im Wandel. Das bedeutet:</p>
+<ul>
+<li>Die Zahl der "Bausteine" in einem System ändert sich ständig.</li>
+<li>Die Zahl der Beziehungen zwischen den "Bausteinen" in einer Software ändert sich ständig.</li>
+</ul>
+<p>Software als System von Funktionseinheiten mit vielfältigen Beziehungen ist kontinuierlich im Wandel begriffen. Sie unterliegt dauernder Umkonfiguration im Kleinen und im Großen. Das liegt in der Natur ihres Zwecks, der Lösung komplexer Aufgabenstellungen. Und das ist natürlich auch der schlichten Möglichkeit geschuldet, Immaterielles wie Software so flexibel "kneten" zu können.</p>
+<p>Lego-Bausteine hingegen werden im Zuge einer "Baumaßnahme" einmal aufeinander gesetzt und bleiben dann so. Weder verändern sich die Bausteine, noch verändert sich die Statik des großen Ganzen.</p>
+<p>Deshalb ist es ausreichend, dass Lego-Bausteine direkt miteinander verbunden werden. Wir stecken sie unmittelbar aufeinander. Für die mit ihnen zu bauenden "Systeme" ist das genug.</p>
+<p>Komplexeres jedoch, das wird seit jeher anders zusammengesetzt. Wo echte Dienstleistungseinheiten - im Gegensatz zu Stabilitätseinheiten - größeres bilden sollen, da sind die nicht direkt verbunden wie Lego-Bausteine. Echte Dienstleistungen stehen immer indirekt in Beziehung. Zwischen ihnen ist immer ein "Beziehungsvermittler", etwas Drittes, das sie zusammenbringt und -hält.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/61b70f2016938f92.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c8d7274fd55f59af.png" /></p>
+<p>Stecker und Buchse, Schrauben, Nägel, Bolzen, Klemmen... es gibt viele Arten, Zusammenhalt herzustellen. Manchmal sind sie ganz einfach wie ein Holzzapfen, manchmal komplex wie ein Router. Aber immer ist ihre vornehmste Aufgabe zu verbinden. Nicht mehr, nicht weniger.</p>
+<p>Ganz grundsätzlich unterscheiden wir in komplexen Systemen also zwischen den eigentlichen (Teil)Dienstleistungen und ihren Verbindungen. Wir koppeln Funktionseinheiten explizit und damit indirekt. Lego hingegen koppelt implizit und direkt.</p>
+<p>Diese direkten Verbindungen zwischen Lego-Bausteinen sind für mich das k.o. der Lego-Analogie. Wannimmer wir sie beschwören, suggerieren wir mehr oder weniger subtil, dass direkte, implizite Verbindungen zwischen Funktionseinheiten genügen würden, um komplexe Softwaresysteme zu bauen. Das ist weitreichend kontraproduktiv. Solche Suggestionen vergiften das Nachdenken über Software und erzeugen früher oder besser Schmerzen. Denn wo direkt und implizit verbunden wird, da ist das Resultat starr. Und das bedeutet, Veränderungen sind schwierig; sie erzeugen Schmerzen, weil sie immer wieder die inhärente Starrheit überwinden müssen.</p>
+<h2>Eine bessere Analogie</h2>
+<p>Wenn Bauteile, Baugruppen, Module, Subsysteme von komplexen Systemen immer indirekt verbunden sind, um sie effizient fertigen, separat prüfen und flexibel zusammenbauen zu können, dann sollten wir unsere Analogien danach wählen, wenn wir welche brauchen. Statt uns immer wieder nach einer Lego-Softwarewelt zu sehnen, sollten wir eher nach Stabilbaukästen oder Elektronikbaukästen schielen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9c44ae11b0b6a419.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/1bf4a82ad25b9037.png" /></p>
+<p>Wenn schon eine spielerische Analogie, wenn schon Bausatz, dann so. Sie führen vor, wie aus kleinen Teilen größere werden durch indirekte Verbindungen.</p>
+<p>Software ICs sind eine tauglichere Zielvorstellung als Software Lego-Bausteine.</p>
+<p>Natürlich sollten wir dann auch danach in der Softwareentwicklung handeln. Die passend gewählte Analogie sollte uns etwas sagen; sie sollte rückwirken auf uns. Wir sollten definieren, was für uns explizite und indirekte Verbindungen sind. Denn Verbindungen haben wir viele und in vielerlei Ausprägungen:</p>
+<ul>
+<li>synchron/asynchron</li>
+<li>lokal/verteilt</li>
+<li>single-/cross-platform</li>
+</ul>
+<p>Nicht, dass es dazu noch keine Ideen gäbe. DI, WCF, REST, ESB sind einige Akronyme in diesem Zusammenhang.</p>
+<p>Doch ich glaube, dass uns noch ein echter Konsenz darüber fehlt, wann wir wie Software-Bausteine zusammenfügen. Ganz davon zu schweigen, was denn die Software-Bausteine sind, die dann so verbunden werden. Reichen Objekte und SOA-Services? Nein, ich denke, sie sind nur der Anfang.</p>
+<p>Objektorientierung allein bewegt sich tatsächlich auf der Lego-Ebene. SOA-Services hingegen sind sehr große Bausteine, die vor allem asynchron, verteilt und cross-platform verbunden sind. Dazwischen liegt aber  noch ein weites Feld, dessen sich zumindest der Hype nicht bewusst ist. Das müssen wir beackern. Nur dann kommen wir raus aus dem Hypothesenstadium und hinein in echte, skalierbare Software-Bausteinpraxis.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

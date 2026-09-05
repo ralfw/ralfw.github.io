@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Messaging as a programming model – Let&#x27;s get real — ralfw.de Archiv</title>
+<meta name="description" content="Steve Bate just has written two very hones and straightforward blog articles on how he approaches programming. I very much agree with him. For some four year´s I´ve explored progra">
+<link rel="canonical" href="https://ralfw.de/archiv/2013/messaging-as-a-programming-model/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Messaging as a programming model – Let&#x27;s get real — ralfw.de Archiv">
+<meta property="og:description" content="Steve Bate just has written two very hones and straightforward blog articles on how he approaches programming. I very much agree with him. For some four year´s I´ve explored progra">
+<meta property="og:url" content="https://ralfw.de/archiv/2013/messaging-as-a-programming-model/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>Messaging as a programming model – Let&#x27;s get real</h1>
+    <div class="doc-meta"><span>17. Aug. 2013</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2013/08/17/messaging-as-a-programming-model-ndash-letacutes-get-real.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2013/messaging-as-a-programming-model/</code></span></div>
+    <div class="art"><p>Steve Bate just has written two very hones and straightforward blog articles on how he approaches programming. I very much agree with him. For some four year´s I´ve explored programming along the same lines – and have experienced much relief. Programming has become easier and more fun. Many of the problems I experienced before and others are complaining about have disappeared.</p>
+<p>Just take Mock Frameworks as an example: I´m not using them anymore. There´s no need for them. I don´t need to stay informed on the latest Mock Framework development, I don´t to select any, I don´t need to install one, I don´t need to learn how to use them in dozens of different situations. That has freed up time I can now invest in other areas, which actually might earn me money. Because, let´s be honest, using Mock Frameworks are not what we´re getting paid for. They might be necessary evils, to make testing of certain structures easier. But using them is nothing to strive for.</p>
+<p>Anyway… What I wanted to say is: I thank Steve for coming out with how he´s constructing his code. And I want to support him. By saying "Don´t be ashamed, I´m doing it too!" – and by adding some more fundamental thoughts to his pragmatic presentation.</p>
+<p>Steve´s description is concrete. He shows code of how he´s living a message passing programmer´s life. But despite some general thoughts on what OOP and message passing could mean, he does not define it. But what exactly is message passing or messaging? For Alan Kay it was at the very heart of object orientation:</p>
+<p><em>I thought of objects being like biological cells and/or individual computers on a network, only able to communicate with messages (so messaging came at the very beginning -- it took a while to see how to do messaging in a programming language efficiently enough to be useful.</em></p>
+<p>Unfortunately Alan Kay did not explain, what he actually meant by "messaging", except for an analogy to biology. Sure, we could turn to Smalltalk and see how it´s done there. But that is just a concrete implementation, not a definition.</p>
+<p>So what is messaging? Why can Steve call his programming style messaging? Why does he rightfully criticise mainstream OOP as not implementing messaging? (At least I think his criticism is valid.)</p>
+<p>I´d like to try to answer this with my own 2c definition of messaging. It´s very, very simple:</p>
+<p>Messaging is one-way communication by transporting data (message) from a sender to a receiver.</p>
+<p>How this communication is done, is irrelevant as long as it has the defined core characteristic: it´s one-way.</p>
+<p>Yes, I believe not thinking in terms of one-way communication is the main problem of today´s mainstream OO programming languages. That´s where they fundamentally misunderstood Alan Kay. There´s simply too little difference between:</p>
+<pre><code class="language-pascal">/* Pascal */
+Var y : Integer;
+y := f(x);
+</code></pre>
+<p>or</p>
+<pre><code class="language-c">// C
+int y = f(x);
+</code></pre>
+<p>or</p>
+<pre><code class="language-csharp">// Java, C#
+SomeClass o = new SomeClass();
+int y = o.f(x);
+</code></pre>
+<p>Global functions of pre-OO languages became local functions of objects. That´s all? And all of a sudden programming was supposed to become a walk in the park? The maintenance problem solved?</p>
+<p>I´m guilty of believing this myself. I thought the combination of data structures and functions into was a godsent. True encapusaltion was possible. And then inheritance and polymorphism… Could it get any better than C++, Delphi, Java, C#? Well, as it turned out, most of the projects wading hip deep in brownfields have been written using these and other OO programming languages. How can that be? Wasn´t object orientation supposed to solve mainteance problem by making encapsulation and reuse so much easier?</p>
+<p>Sure, there´s lots of reuse today. And I´m very grateful for "components" of all sorts I simply can download. But has that really been made possible by OO languages? I don´t think so. There were libraries before that era. I even remember switching between C and Modula and use the same libraries. Libraries and then dynamic link libraries brought reuse at our fingertips. VB became so popular because of its VBX-"components" – but the VBX interface definition wasn´t object oriented.</p>
+<p>So whatever advantages we´ve gained through reuse is not due to OO in general or OO languages in particular.</p>
+<p>Now back to the above code:</p>
+<p>I´ve never found any student of programming who really understood why</p>
+<pre><code class="language-csharp">int y = o.f(x);
+</code></pre>
+<p>was called "sending a message to an object". It´s a function call. That´s all. And if you remember the early implementations of C++ compilers which compile C++ to C you know why. They transformed an object-local methode like this to a global function call:</p>
+<pre><code class="language-c">int f(SomeClass this, int x) {…}
+…
+SomeClass o;
+…
+int y = f(o, x);
+</code></pre>
+<p>So where is the message gone? Instead of sending a message to an object the code is sending data to a function.</p>
+<p>A function is a function is a function. Calling it a message does not change that.</p>
+<p>So I dare to say: Languages like C++, Java, C# are not object oriented with regard to what Alan Kay originally intended.</p>
+<p>They are not, because they heavily rely on functions, i.e. subroutines returning results. Request plus immediate response is the main programming model. Request and response are supposed to happen as close together as possible in terms of time and space. The sender of the request is not just a sender but a client. He´s expecting a result back, right here, right now.</p>
+<p>This thinking is so deeply ingrained in our programmer brains, it even led to abberations like RPC and CORBA etc. Think of all the money that was sunk into these attempts to deny the laws of physics.</p>
+<p>Backt to messaging:</p>
+<p>If we want to take Alan Kay seriously, if we want to truely program in an object oriented way, then we´ve to live by the definition of messaging. That means, there must only be one-way communication. We´ve to do away with functions. Or at least – since functions are useful syntactic sugar for symmetric relationships between message processors – find rules as to how to use this sharp edged sword.</p>
+<p>Messaging can be implemented in different ways. It´s not important, if a method name stands for the message type or if that get´s passed to an object explicitly:</p>
+<pre><code class="language-csharp">o.f(x, …);
+</code></pre>
+<p>or</p>
+<pre><code class="language-csharp">o.Send(&quot;f&quot;, x, …);
+</code></pre>
+<p>It´s also not important, whether messages are structures or lead to longer method signatures:</p>
+<pre><code class="language-csharp">SomeMessage m = new SomeMessage{A=a, B=b, C=c};
+…
+o.f(m, …);
+</code></pre>
+<p>or</p>
+<pre><code class="language-csharp">o.f(a, b, c, …);
+</code></pre>
+<p>And of course we can continue to use methods as we know them, i.e. pass parameters to them. There´s no need for explicit intermediate data structures or even queues.</p>
+<p>Also asynchronous processing is not mandatory for message passing.</p>
+<p>I strongly believe the core characteristic of messaging unidirectionality. There is no coupling between request and response. And that means, there are just messages flowing from sender to receiver.</p>
+<p>That´s what Steve shows us in his articles. Each processing step is implemented as a procedure. His pipeline infrastructure is doing the message passing work behind the scenes.</p>
+<p>I´m not saying this is the best way to do it. But it´s true to the definition of messaging.</p>
+<p>And altervative Implementation would be:</p>
+<pre><code class="language-csharp">var loginPipeline = new PipeLine();
+CheckUserSuppliedCredentials.Process(msg);
+CheckApiKeyIsEnabledForClient.Process(msg);
+…
+GetUserDetails.Process(msg);
+</code></pre>
+<p>The private instance methods would just need to be set to public static.</p>
+<p>Or even simpler:</p>
+<pre><code class="language-csharp">var loginPipeline = new PipeLine();
+checkUserSuppliedCredentials(msg);
+checkApiKeyIsEnabledForClient(msg);
+…
+getUserDetails(msg);
+</code></pre>
+<p>Here the processing methods would be defined in the caller´s scope.</p>
+<p>Also functions would be ok:</p>
+<pre><code class="language-csharp">var loginPipeline = new PipeLine();
+msg = checkUserSuppliedCredentials(msg);
+msg = checkApiKeyIsEnabledForClient(msg);
+…
+getUserDetails(msg);
+</code></pre>
+<p>The pipeline that way would not rely on global data anymore.</p>
+<p>And using functions in this kind of controled way is true to the messaging definition: there is no response processing at the caller. Any response just gets passed on to the next processor. This becomes clear when replacing the response with a continuation:</p>
+<pre><code class="language-csharp">var loginPipeline = new PipeLine();
+checkUserSuppliedCredentials(msg, _ =&gt;
+    checkApiKeyIsEnabledForClient(msg, _ =&gt;
+        …
+        getUserDetails
+    )
+);
+</code></pre>
+<p>Each processing step would be defined like this:</p>
+<pre><code class="language-csharp">void checkApiKeyIsEnabledForClient(LogInMessage msg, Action continueWith) {…}
+</code></pre>
+<p>The source code might not look that straightforward when using lots of continuations, but nevertheless its true messaging passing.</p>
+<p>To tame functions there is just one rule: Whoever calls a function does not process the return value itself.</p>
+<p>I call that the Integration Operation Segregation Principle (IOSP), but that´s a topic for another article. Suffice it to say, to me that´s a special case of the Single Responsibility Principle (SRP).</p>
+<p>But what if a message receiver wants to communicate back something to a sender? Well, then the receiver becomes the sender and the original sender becomes the receiver. Messages of course may flow in both directions between communicating parties. But each message in itself is just one-way.</p>
+<p>That´s how communication in the real world works, too. Biological cells don´t know request/response communication. They are autonomous units who even communicate asynchronously. But communication does not need to be async to pass as messaging.</p>
+<p>The whole concept of request/response communication is an abstraction. A very useful one as long as the code base is small. But it does not scale. It does not scale, unless reigned in. It fails for remote communication. And it fails if used to build huge hierarchies with logic smeared all over the place.</p>
+<p>Technical object orientation – aka features of OO languages – is not evil. Right to the contrary! I don´t want to miss any of C#´s features. But technical object orientation needs principles and rules for use. We should stop programming in an "anything goes" manner. Just because we can do something we shouldn´t do it.</p>
+<p>That´s what Steve is shows us. He´s using OO features in a very particular manner (rules) to stay true to a basic principle: messaging. The result is easier maintenance, easier teasting, and code that´s easier to comprehend.</p>
+<p><em>P.S. If you liked this, have a look at "Flows – Visualizing the Messaging Programming Model" for a suggestion on how to describe messaging solutions in a source code independent way. And then read on about how to truly decouple processing steps in flows. Ah, by the way: Don´t forget to also check out this one on hierarchical messaging.</em></p>
+<hr />
+<p><em>Endnotes: [1] Steve Bate, Messaging as a programming model – Part 1. [2] Steve Bate, Messaging as a programming model – Part 2. [3] Stefan Ram, Alan Kay, Dr. Alan Kay on the Meaning of "Object Oriented Programming".</em></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

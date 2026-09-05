@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Softwareentwurf in der hohlen Hand — ralfw.de Archiv</title>
+<meta name="description" content="Gerade komme ich wieder von drei Trainingstagen zum Thema agiler Softwareentwurf. Ein inhouse Training für ehemalige C bzw. C++ Entwickler, die sich noch an .NET gewöhnen müssen. A">
+<link rel="canonical" href="https://ralfw.de/archiv/2013/softwareentwurf-in-der-hohlen-hand/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Softwareentwurf in der hohlen Hand — ralfw.de Archiv">
+<meta property="og:description" content="Gerade komme ich wieder von drei Trainingstagen zum Thema agiler Softwareentwurf. Ein inhouse Training für ehemalige C bzw. C++ Entwickler, die sich noch an .NET gewöhnen müssen. A">
+<meta property="og:url" content="https://ralfw.de/archiv/2013/softwareentwurf-in-der-hohlen-hand/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Softwareentwurf in der hohlen Hand</h1>
+    <div class="doc-meta"><span>1. Feb. 2013</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2013/02/softwareentwurf-in-der-hohlen-hand.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2013/softwareentwurf-in-der-hohlen-hand/</code></span></div>
+    <div class="art"><p>Gerade komme ich wieder von drei Trainingstagen zum Thema agiler Softwareentwurf. Ein inhouse Training für ehemalige C bzw. C++ Entwickler, die sich noch an .NET gewöhnen müssen. Aber es hat vielleicht gerade deshalb besonders Spaß gemacht, weil sie noch nicht so “objektorientiert verdorben” sind. Ihnen steckt vor allem die C-Praxis in den Knochen, die sie anscheinend offen für den Softwareentwurf mit Softwareuniversum und Flow-Design gemacht hat. Denn wenn die prozedurale Programmierung in einem Recht hatte, dann darin, dass es zuerst und vor allem um Funktionalität und nicht um Daten geht.</p>
+<p>Aber von dem positiven Feedback, das Stefan Lieser und ich dort bekommen haben, wollte ich gar nicht sprechen. Die gute Stimmung bei den Trainingsteilnehmern hat vielmehr mich selbst nochmal unseren Ansatz frisch erleben lassen.</p>
+<p>Abends saß ich nämlich im Hotel bei einem gemütlichen Kaminfeuerchen und habe an einer Anwendungsidee herumgebastelt. Eine Web-Anwendung, die helfen soll, eine Klippe des Kennenlernens über online Partnerbörsen zu umschiffen. Wie das gehen soll wird die dotnetpro demnächst berichten ;-) Technologisch mit von der Partie werden jedenfalls <a rel="noopener" href="https://appharbor.com/">AppHarbor</a>, <a rel="noopener" href="http://nancyfx.org/">Nancy</a> und <a rel="noopener" href="http://www.iron.io/">iron.io</a> sein.</p>
+<p>Da saß ich also und habe darüber nachgedacht, wie die Idee in Software funktionieren könnte. Welche Seiten sollte so ein Website haben? Wie sollten die Seitenübergänge sein? Was sollte dabei passieren? Welche Klassen/Komponenten sollte es geben? Wie würden Feature ineinander greifen?</p>
+<p>Im Kopf kann ich so etwas bewegen – aber nur bis zu einer gewissen Grenze. Dann muss ich einen Dump machen. Irgendwie muss ich meine Gedanken und Ergebnisse manifestieren. Visual Studio hatte ich vor dem Kamin aber nicht zur Hand. Warum auch? Ich brauche keinen Code, um Software zu entwerfen.</p>
+<p>So hat mir denn ein kleiner Notizblock des Hotels geholfen. Der war nur handtellergroß mit schmalen Blättern. Aber er hat mir gereicht wie diese Bilder zeigen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/cd66158fbdca9c66.jpg" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/15152cde0d99d1f6.jpg" /></p>
+<p>Wenn Sie nicht wissen, was die Symbole bedeuten und meine Schrift nicht lesen können, macht das nichts. Ich will Ihnen ja nicht erklären, was die Anwendung tut und wie ich gedenke, das zu realisieren.</p>
+<p>An dieser Stelle soll nur rüberkommen, dass ich mit zwei kleinen Zetteln die Software entwerfen konnte. Ich weiß nun, welche Klassen ist brauche. Ich weiß, welche Methoden die haben. Ich weiß, wie alles zusammenhängt und die Funktionalität herstellt. Ich weiß, welche Daten fließen. Ich weiß, wie ich APIs kapseln muss. Ich weiß sogar schon, wie ein guter Teil des Codes aussehen muss.</p>
+<p>Den Entwurf der beiden Bilder kann ich “so runtercodieren”. Da ist alles drin, was ich brauche. Nur das Layout der Seiten fehlt. Aber das gehört ja auch nicht zum funktionalen Entwurf. Wichtig ist dafür nur, welche Interaktionen der Benutzer mit Dialogen hat. Und die stecken in dem Modell drin.</p>
+<p>Durch das Training geöffnet habe ich frisch erlebt, wie effektiv Softwareentwurf mit Papier und Stift sein kann – wenn man eine geeignete Methode hat ;-) Ich muss nicht darauf warten, dass Softwarestrukturen durch Tests wachsen. Ich brauche keine IDE, um bei einer Anwendung voran zu kommen.</p>
+<p>Klar, am Ende muss implementiert werden. Bubbles don´t crash. Ich weiß nicht, ob mein Entwurf 100% korrekt/ausreichend ist. Aber ich bin ein gutes Stück voran gekommen. Ich habe mit “systematischer Kritzelei” das Codieren solide vorbereitet. Wenn ich dann Details mit TDD austreiben will, weiß ich, wo ich ansetzen kann.</p>
+<p>Und all das steckt in zwei Blättchen mit Flow-Designs. Das fand selbst ich, der ich täglich mit Flow-Design arbeite, irgendwie bemerkenswert cool.</p>
+<h2>Kommentare</h2>
+<p><strong>Andreas Richter</strong> (2013-02-01):</p>
+<p>Good old paper.
+Es sind oftmals die einfachen Dinge, auf die man lange Zeit hinarbeiten muss.</p>
+<p>Beim betrachten der Fotos bin ich im übrigen sehr froh, dass Stefan Lieser im letzten Video den Part am SMART-Board übernommen hat :)</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-02-01):</p>
+<p><em>Eine Web-Anwendung, die helfen soll, eine Klippe des Kennenlernens über online Partnerbörsen zu umschiffen.</em></p>
+<p>Also da bin ich, als Single, ja ganz Ohr!
+Ich hoffe, dass du die Idee dahinter auch noch auf deinem Blog besprichst und es nicht nur exklusiv für die DotNet Pro reserviert ist. :-)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-02-01):</p>
+<p>Die Idee ist ja nicht geheim. Und sie ist ganz einfach:</p>
+<p>Wenn man sich denn per Dating Platform zu einem Date verabredet hat, sitzt am Ende des Date da und muss sich gegenseitig sagen, wie man es gefunden hat. Das fällt nicht jedem leicht.</p>
+<p>Wenn man sagt, "Es war klasse!" und der andere findet das nicht so, dann ärgert man sich womöglich, sich so aus dem Fenster gelehnt zu haben. Also mauert man vielleicht lieber. Das ist aber nicht ganz ehrlich und führt zu Anspannung.</p>
+<p>Oder man bekommt zu hören, es war klasse, wollte aber sagen, "Ich möchte dich nicht wiedersehen". Dann kann es sein, dass man auch keine ganz ehrliche Meinung äußert.</p>
+<p>Mit einem "Treuhandservice" für die Stimmungsäußerung wird das alles viel einfacher :-) Beide Date Partner geben dann darüber ihre Meinung ab und die wird beiden gegenseitig erst sichtbar gemacht, wenn beide auch "gevotet" haben.</p>
+<p>Heute haben ja alle ein Smartphone beim Date dabei. Also sagt man am Ende, "Lass uns jetzt mal voten..." :-) Und dann sagt jeder ehrlich, was er meint. Das nimmt dann auch unangenehme Emotionalität aus der Situation. Naja, so die Theorie zumindest.</p>
+<p>War halt ne Idee für ne kleine Web-App, an der ich mal ein paar Cloud-Dienste vorstellen kann.</p>
+<hr />
+<p><strong>Andreas Richter</strong> (2013-02-02):</p>
+<p>@Ralf: Klingt nach Planning Poker :)</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-02-02):</p>
+<p>Mal 'ne blöde Frage:</p>
+<p>Werden die Zettel weiter archiviert oder irgendwie (digital) aufbereitet?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-02-03):</p>
+<p>@stmon: Die Zettel werden natürlich nicht archiviert, aber Fotos von den Zetteln - wenn es denn die Entwürfe sind, die implementiert werden. Vorstadien sind nicht nötig, es sei denn, dass die Entwicklung der Erkenntnis zu dokumentieren nützlich ist.</p>
+<p>Die digitale Aufbereitung besteht in der Codierung :-)</p>
+<p>Aber was ich eher nicht rate ist, solche handschriftlichen Entwürfe (auch wenn gemeinsam am Flipchart gemacht), in Visio oder so reinzuzeichnen. Damit werden sie starr und bekommen eine Autorität, die ihnen nicht zusteht.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-02-03):</p>
+<p>@Ralph: Ok... war auch so meine Einschätzung bzgl. der "Archivierung" :)</p>
+<p><strong>Aber was ich eher nicht rate ist, solche handschriftlichen Entwürfe (auch wenn gemeinsam am Flipchart gemacht), in Visio oder so reinzuzeichnen. Damit werden sie starr und bekommen eine Autorität, die ihnen nicht zusteht.</strong></p>
+<p>Mhm... hört sich fast an wie ein Anti-Pattern ;)</p>
+<p>Diese Erfahrung habe ich schon öfters machen dürfen, dass solche Entwürfe als "einzig wahre Wahrheit" angenommen wurden.</p>
+<p>"An Worte läßt sich trefflich glauben..."</p>
+<hr />
+<p><strong>Denis</strong> (2013-02-04):</p>
+<p>Bzgl. der "objekt-orientierten Verdorbenheit" habe ich ähnliche Erfanrungen gemacht. Firmware-Entwickler, die vorrangig in C programmieren, ist Flow-Design sehr viel einfacher rüberzubringen, als z.B. Java-Entwicklern. Hier war auch die Metapher des elektronischen Bauteils und des Designs von elektronischen Boards, das Du ganz am Anfang mal verwendet hast, sehr hilfreich. Ich halte das auch immer noch für einen guten Einstieg ins Flow-Design, wenn man die Parallelen zum Design von elektronischen Boards aufzeigt.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

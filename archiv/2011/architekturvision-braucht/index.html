@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Architekturvision braucht Visualisierung — ralfw.de Archiv</title>
+<meta name="description" content="Über den Begriff Architekturvision bin ich in letzter Zeit ein paar Mal gestolpert. Zuletzt in der “Hauszeitschrift” Ausgabe August/2011 von it-agile.">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/architekturvision-braucht/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Architekturvision braucht Visualisierung — ralfw.de Archiv">
+<meta property="og:description" content="Über den Begriff Architekturvision bin ich in letzter Zeit ein paar Mal gestolpert. Zuletzt in der “Hauszeitschrift” Ausgabe August/2011 von it-agile.">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/architekturvision-braucht/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Architekturvision braucht Visualisierung</h1>
+    <div class="doc-meta"><span>9. Juli 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/07/architekturvision-braucht.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/architekturvision-braucht/</code></span></div>
+    <div class="art"><p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d181fd811aad36a5.png" /></p>
+<p>Über den Begriff Architekturvision bin ich in letzter Zeit ein paar Mal gestolpert. Zuletzt in der <a rel="noopener" href="http://www.it-agile.de/agilereview.html">“Hauszeitschrift” Ausgabe August/2011</a> von it-agile.</p>
+<p>Es freut mich natürlich, dass das Thema Softwarearchitektur an Sichtbarkeit gewinnt. Doch irgendwie will mir nicht ganz schmecken, was da jetzt unter “Agile Softwarearchitektur” in Umlauf gebracht wird. In dem Topf wird schnell alles verrührt, was irgendwie im Umlauf ist: User Stories + TDD + DIP + CQRS, fertig ist die Architektursuppe. Hm… Aber darüber ein andermal mehr. Hier will ich mich auf die Architekturvision konzentrieren.</p>
+<p>Auf Seite 27 des genannten Heftes findet sich eine Beispielarchitekturvision (ohne nähere Angabe einer Problemdomäne):</p>
+<blockquote>
+<p><em>“1. Es handelt sich um eine Internetanwendung.</em><em>2. Als Programmiersprache wird Java verwendet und JavaScript für das Frontend.</em><em>3. Im Backend wird Spring als Dependency-Injection-Container verwendet.</em><em>4. Für die Persistenz wird ein relationales Datenbanksystem verwendet und Hibernate für die Anbindung an das Datenbanksystem.</em><em>5. Als View-Framework wird Spring Web MVC mit JSPs verwendet.</em><em>6. Quasar ist unser Architekturstil.”</em></p>
+</blockquote>
+<p>Der Zweck dieser Architekturvision:</p>
+<blockquote>
+<p><em>“In dieser sollten genau die technischen und architekturellen Eigenschaften des Produktes beschrieben sein, die sich im weiteren Entwicklungsgeschehen far nicht mehr oder nur sehr schwer ändern lassen.”</em></p>
+</blockquote>
+<p>Die Architekturvision soll sich also mit nicht-funtkionalen Belangen der Aufgabenstellung befassen. Und sie soll sich auf Fixpunkte konzentrieren. Bei beidem stimme ich zu. Eine Architekturvision ist also von Natur aus auf einem hohen Abstraktionsniveau. Die Beispielvision konzentriert sich auf das Was und nicht auf das Wie. So weit so gut.</p>
+<p>Was ist aber mit dem Warum? Das halte ich für sehr wichtig gerade bei Architekturentscheidungen. Der vorgestellte Architekturvision fehlt jede Begründung, warum die Entscheidungen so ausgefallen sind. Weder enthält sie eine Erklärung, noch enthält sie einen Kontext, aus dem eine Erklärung später abgeleitet werden könnte.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/6ceb0aa4b83a6d1f.png" /></p>
+<p>Laut it-agile ist eine Architekturvision eine simple Liste von Festlegungen. Das war´s.</p>
+<p>Mir ist das zuwenig. Und auch die rein textuelle Fassung finde ich wenig hilfreich. Da gibt es zwar eine verbale Verortung von Technologien, doch letztlich muss sich jeder die Topologie des Systems zusammenreimen. Missverständnisse sind da vorprogrammiert.</p>
+<p>Auch mit dieser Aussage stimme ich nicht überein:</p>
+<blockquote>
+<p><em>“Folglich hängt der konkrete Umfang der Architekturvision von den Fähigkeiten des Entwicklungsteams ab.”</em></p>
+</blockquote>
+<p>Das würde ja die Architekturvision von der Selbsteinschätzung eines Teams abhängig machen. Damit wäre letztlich jedes Team grundsätzlich legitimiert, die Architekturvision dünn zu halten, weil es sich einfach für erfahren und fähig hält. “Ach, das haben wir schon so oft gemacht. Das müssen wir jetzt nicht nochmal diskutieren und aufschreiben.” Ich höre sie schon die Teammitglieder, die alles lieber tun, als über eine Architekturvision zu diskutieren und sich dann auch noch festzulegen. Das ist doch einengend; wer weiß schon, was in der Zukunft kommt? Besser man spart die Zeit und hält sich alle Optionen offen.</p>
+<p>Nein, mit so einer relativierenden Empfehlung bin ich gar nicht zufrieden.</p>
+<p>Das soll natürlich nicht heißen, dass man Architekturvisionsdokumentenberge erzeugt. Doch ein wenig immer gleiche Systematik kann nicht schaden. Ich verstehe schon, dass die Architekturvision keine Doktorarbeit werden soll. Natürlich soll sie zügig hergestellt werden können. Dem dient aber die Reduktion von Missverständnissen. Und das kann erreicht werden, indem Sie sich eine kleine Checkliste für Architekturvisionen zurechtlegen. Die besteht für mich aus zumindest zwei Oberpunkten:</p>
+<h3>Architekturvision I – Das Big Picture</h3>
+<p>Zuerst sollten Sie sicherstellen, dass Sie das Big Picture vollständig im Blick haben. Darin betrachten Sie das zu realisierende Softwaresystem als Ganzes in seinem Umfeld.</p>
+<p>Fragen Sie:</p>
+<ol>
+<li>
+<p>Wer benutzt das Softaresystem? Welche Rollen arbeiten damit, welche anderen Softwaresysteme benötigen seine Dienste? Es geht darum, wer von Ihrem Softwaresystem abhängig ist.</p>
+</li>
+<li>
+<p>Wovon ist Ihr Softwaresystem abhängig? Auf welche Ressourcen greift es zu, seien das Dateien, Datenbanken, andere Softwaresysteme, Drucker, Maschinen usw.?</p>
+</li>
+</ol>
+<p>Mit diesen Information erstellen Sie ein erstes System-Umwelt-Diagramm:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/40fb50f76bc62b4e.png" /></p>
+<p>Damit bekommt die Architekturvision eine erste grobe Form. Sie wird visuell, wie es sich für eine anständige Vision gehört ;-) So lässt sich eine Architekturvision auch viel besser kommunizieren – am Whiteboard oder auf einer PPT-Folie.</p>
+<p>Daran hangeln Sie sich anschließend weiter, Rolle für Rolle, Ressource für Ressource. Zu jedem Umweltelement stellen Sie Fragen wie:</p>
+<p>a. Mit welcher Technologie findet die Interaktion statt? Das können bei Rollen z.B. sein Desktop-Client, Smartphone App, Web-Client oder auch Webservice. Bei Ressourcen kämen z.B. in Frage ORM, Webservice, ESB.</p>
+<blockquote>
+<p>a.1. In welchem Modus werden die Interaktionstechnologien betrieben, z.B. zustandslos/zustandsbehaftet, REST/SOAP, unterbrechungsfreie Verbindung usw.
+a.2. Gibt es Vorgaben für das Format der Datenrepräsentation bei Rollen und Ressourcen? Dialogskizzen und Datenformate können wichtige Hinweise für Architekturentscheidungen sein. [1]</p>
+</blockquote>
+<p>b. Welche nicht-funktionalen Anforderungen sind an die Interaktionen gestellt? [2]</p>
+<blockquote>
+<p>b.1. Gibt es Geschwindigkeitsanforderungen (Performance)?
+b.2. Gibt es Lastanforderungen (Skalierbarkeit)?
+b.3. Ist die Interaktion abzusichern (Security)?
+b.4. Soll die Interaktion eine bestimmte Form haben (Usability)?</p>
+</blockquote>
+<p>Das sind nur einige nicht-funktionale Anforderungen, die in den meisten Fällen relevant sind. Andere könnten sein Internationalisierbarkeit, Austauschbarkeit oder Ausfallsicherheit.</p>
+<p>Lassen Sie sich nicht irritieren, wenn Sie nicht zu allen Antworten gleich genau wissen, wie Sie sie genau umsetzen sollen. Darum geht es bei der Architekturvision nicht. Sie können sich für Internationalisierung eines WP7-Clients entscheiden, ohne eine Ahnung zu haben, wie das mit Sliverlight geht; oder Sie setzen auf REST-Kommunikation mit einer Ressource, auch wenn Sie noch nicht recht wissen, mit welchem API Sie das in der Software bewerkstelligen.</p>
+<p>Bei der Architekturvision geht es um Entscheidungen für Prinzipien und Paradigmen und Techniken zur Bewältigung von nicht-funktionalen Anforderungen. Solange Sie beurteilen können, dass eine Entscheidungsoption in dieser Hinsicht etwas bringt, wählen Sie sie.</p>
+<p>Je mehr Erfahrung Sie damit haben, desto besser natürlich. Hier haben Teams mit Übung natürlich einen Vorteil; sie können Entscheidungen schneller und besser fällen. Explizit fällen sollten sie sie aber nichtsdestotrotz.</p>
+<p>Dokumentieren Sie anschließend Ihre Entscheidungen im System-Umwelt-Diagramm. Hier eine Umsetzung der Architekturvision aus dem it-agile Heft (inkl. einiger Angaben, die dort explizit nicht zur Architekturvision gezählt wurden, mir jedoch wichtig erscheinen):</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f8e203f9bad2d6d0.png" /></p>
+<p>Ist doch nicht schwer zu malen, so ein Diagramm, oder? Aber es bringt soviel mehr als eine simple Liste wie im Heft. Es macht Annahmen expliziter, es lässt sich besser kommunizieren und überblicken und es ist auch noch ausführlicher, ohne überladen zu sein. Das Diagramm kostet keinen Mehraufwand gegenüber einer Spiegelstrichliste. Also nehmen Sie den Kommunikations- und Erinnerungsvorteil mit.</p>
+<p>Am besten fragen Sie sich bei jeder Entscheidung immer sofort: Wo in einem Diagramm verorte ich die Entscheidung? Wo hat die Technologie, das Paradigma, die nicht-funktionale Anforderung ihren Platz? Ich behaupte, dass Ihnen damit Architekturentscheidungen auch leichter fallen. Sie werden nämlich greifbarer.</p>
+<h3>Architekturvision II – Das System</h3>
+<p>Das System-Umwelt-Diagramm bietet allerdings noch nicht für alle Entscheidungen einen passenden Ort. Oben haben Sie sicher schon ein paar Punkte aus der Architekturvision vermisst.</p>
+<p>Deshalb sollten Sie das System-Umwelt-Diagramm noch etwas verfeinern. Zoomen Sie hinein in das Softwaresystem und bestimmen Sie in einem ersten Schritt grob die beteiligten Maschinen und/oder Betriebssystemprozesse. Was läuft wo? Diese Frage sollten Sie beantworten.</p>
+<p>Hört sich nach Detailarbeit an, aber mir geht es nicht um Details, sondern nur eine zunächst grobe Vorstellung und ausdrückliche visuelle Formulierung von Fixpunkten. Um eine erste Idee von der Verteilung Ihres Softwaresystems auf Maschinen und Prozesse zu bekommen, sollten Sie nicht lange nachdenken müssen.</p>
+<p>Fällt es Ihnen leicht, ist alles in Butter. Detaillieren Sie das System-Umwelt-Diagramm. Fällt es Ihnen nicht leicht, können Sie überhaupt noch keine Architekturvision haben. Ihnen fehlen dann Informationen, um zentrale, “visionäre” Entscheidungen fällen zu können.</p>
+<p>Für das Beispiel sähe das Systemdiagramm aus meiner Sicht so aus (Kleinigkeiten habe ich dazu erfunden, um die Vision etwas spannender/vollständiger zu machen) [3]:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/aac4877fff27ea21.png" /></p>
+<p>Auch hier sind die Annotationen wichtig. Assoziieren Sie soviele Entscheidungen wie möglich mit distinkten Bildelementen. Lassen Sie sich von den Bildelemente sogar leiten. Nehmen Sie jede Linie, jeden Kreis als Anlass sich zu fragen: Was könnten hier für nicht-funktionale Anforderungen relevant sein? Müssen wir etwas jetzt entscheiden, weil es grundlegend und später schwer zu verändern ist?</p>
+<p>Ja, das meine ich so: Nutzen Sie die obige Liste und die Bilder als Checkliste. Arbeiten Sie die Spiegelstriche ab und gehen Sie dann nochmal durch die Grafiken und schauen Sie, ob Ihnen bei diesem zweiten Durchlauf noch etwas einfällt.</p>
+<p>Die Grafiken sind insofern nicht nice to have, sondern Denkhilfe. Ich garantiere Ihnen, wenn Sie solche Grafiken als Visionsdokumente an der Wand Ihres Teamrooms haben, fällt es allen leichter, sich an der Architekturvision auszurichten.</p>
+<p>Bottom line: Architekturvision ist gut und agil. Wunderbar. Doch machen Sie sich das Leben leichter mit systematischem Vorgehen anhand von Checklisten. Nutzen Sie die “Kraft des Visuellen”, um das mentale Modell von Ihrer Software auch schon in einem frühen Stadium möglichst leicht im Team homogen zu entwickeln.</p>
+<p>Vsisionen dienen der Kohärenz. Sie sollen Kräfte bündeln und auf ein gemeinsames Ziel ausrichten. Was könnte dem besser dienen, als ein wahrhaft sichtbares Ziel, also eine Visualisierung der Architekturvision?</p>
+<p><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY"></a><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY">Spendieren Sie mir doch einen Kaffee, wenn Ihnen dieser Artikel gefallen hat…</a></p>
+<h4>Fußnoten</h4>
+<p>[1] Bei der Architekturvision sollte vor der Entscheidung eine Auslotung der Entscheidungsspielräume stehen.</p>
+<p>[2] Je genauer und quantifizierter die Angaben, desto besser, z.B. bei Skalierbarkeit die Transaktionen pro Sekunde oder Benutzer pro Stunde oder bei der Performance die maximale Antwortzeit.</p>
+<p>[3] Halten Sie sich übrigens nicht lange mit komplizierten visuellen Sprachen auf. Standardkonforme UML ist hier nicht nötig. Die visuelle Sprache, die ich hier und auch sonst benutze, besteht aus 4 Symbolen für Funktionseinheiten, Rollen, Ressourcen und Abhängigkeiten. Das war´s.</p>
+<h2>Kommentare</h2>
+<p><strong>Frank</strong> (2011-07-11):</p>
+<p>Zu diesem Thema empfehle ich das arc42 Architektur-Template (www.arc42.de) zusammen mit dem Buch "Effektive Softwarearchitekturen" von Gernot Starke.</p>
+<hr />
+<p><strong>Laurin Stoll</strong> (2011-07-31):</p>
+<p>Mir ist. Icht ganz klar wieso das Architekturvision heisst...was it isionär an dem ganzen?
+Wie wärs mit Architekturdokument?</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

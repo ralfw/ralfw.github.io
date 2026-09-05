@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clean Code Developer - Ein Weg zu mehr Professionalität [OOP 2009] — ralfw.de Archiv</title>
+<meta name="description" content="Softwareentwicklung ist zwar eine Profession - aber läuft sie auch immer professionell? Ich glaube - oder besser: Stefan Lieser und ich glauben, dass das leider nicht der Fall ist.">
+<link rel="canonical" href="https://ralfw.de/archiv/2008/clean-code-developer-ein-weg-zu-mehr/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Clean Code Developer - Ein Weg zu mehr Professionalität [OOP 2009] — ralfw.de Archiv">
+<meta property="og:description" content="Softwareentwicklung ist zwar eine Profession - aber läuft sie auch immer professionell? Ich glaube - oder besser: Stefan Lieser und ich glauben, dass das leider nicht der Fall ist.">
+<meta property="og:url" content="https://ralfw.de/archiv/2008/clean-code-developer-ein-weg-zu-mehr/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Clean Code Developer - Ein Weg zu mehr Professionalität [OOP 2009]</h1>
+    <div class="doc-meta"><span>30. Dez. 2008</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2008/12/clean-code-developer-ein-weg-zu-mehr.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2008/clean-code-developer-ein-weg-zu-mehr/</code></span></div>
+    <div class="art"><p><a rel="noopener" href="http://www.clean-code-developer.de"></a> Softwareentwicklung ist zwar eine Profession - aber läuft sie auch immer professionell? Ich glaube - oder besser: <a rel="noopener" href="http://www.lieser-online.de/">Stefan Lieser</a> und ich glauben, dass das leider nicht der Fall ist. Die Gründe dafür sind vielfältig.</p>
+<p>Da ist zum einen die Jugend unserer Branche: in nur 60 Jahren hat sich bisher kaum ein Konsens herausbilden können, was denn nun wirklich professionelle Softwareentwicklung ausmacht.</p>
+<p>Da ist zum anderen der ewige Fachkräfte-Notstand: weil soviele Softwareentwickler immer noch oder immer wieder fehlen, gibt es keine einheitliche Ausbildung. Unternehmen stellen ein, wer halt irgendwie demonstrieren kann, dass er es mit der Softwareentwicklung ernst meint.-</p>
+<p>Und schließlich brodelt es bei den Technologien ständig so, dass es wichtiger scheint, etwas Neues zu lernen, als sich auf etwas als Branche einzuschießen. Objektorientierung und Agilität sind zwar gewisse Konstanten, doch von einem Konsens im Sinne von "So tut man es und nicht anders!" sind wir dennoch weit entfernt.</p>
+<p>Wir meinen nun, dass solcher Konsensmangel bei allem Verständnis für seine Ursachen, immer kontraproduktiver wird. Denn da der Fachkräftemangel wieder einmal nach einer Zeit der Ruhe ganz offensichtlich ist, stellt sich ja auch die Frage ganz dringlich: Wer ist denn ein guter, ein wirklich professioneller Softwareentwickler?</p>
+<p><a rel="noopener" href="http://www.amazon.de/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882"></a> Dazu kommt die Erkenntnis, dass Ausbildungen auf einer Plattform wie .NET oder Java oder in einem Paradigma wie der Objektorientierung eben nicht zwangsläufig auch zu gutem Code oder hoher Produktivität führen.</p>
+<p>Gelegentlich der Lektüre des Buches <a rel="noopener" href="http://www.amazon.de/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882">"Clean Code"</a> von Robert C. Martin sind Stefan und ich deshalb auf die Idee gekommen, es als Ausgangspunkt für eine Bewegung für mehr Professionalität zu machen.</p>
+<p>Die dortigen Empfehlungen sowie einige andere scheinen uns so grundlegend, dass sie konsensfähig sind/sein könnten. Wir trauen uns also einfach mal, eine Reihe von Prinzipien, Regeln und Praktiken zusammenzustellen, von denen wir meinen, alle - ja, alle! - Softwareentwickler können und sollen sie beherzigen. (Naja, mit Ausnahme des einen oder anderen Prinzips, das doch eher mit der Objektorientierung zu tun hat. Dem mag dann ein C-Entwickler nicht folgen. Aber das ist unerheblich.)</p>
+<p>Den, der diese Prinzipien, Regeln und Praktiken fleißig befolgt in seiner Arbeit, den nennen wir dann <em>Clean Code Developer</em> (CCD) als Hommagè an Roberts Buch.</p>
+<p>Und was gehört zu unserem Kanon? <a rel="noopener" href="http://www.clean-code-developer.de">www.clean-code-developer.de</a> gibt Auskunft. Dort haben wir in den vergangenen Wochen unser Wertesystem, wie wir es nennen, zusammengetragen. Eine Übersicht zeigt diese Seite: <a rel="noopener" href="http://www.clean-code-developer.de/wiki/CcdWertesystem">http://www.clean-code-developer.de/wiki/CcdWertesystem</a>. Detailseiten führen dann aus, was wir unter den einzelnen "Werten" verstehen.</p>
+<p>Der Trick dabei: Wir haben unser Wertesystem in "Module" verpackt. Ganz nach Manier der Budo-Sportarten definieren wir Grade, die unterschiedliche Entwicklungsstufen bei der Einarbeitung in das Wertesystem beschreiben. Damit wollen wir keine besser-schlechter, schlauer-dummer Hierarchie aufstellen, sondern nur im Sinne iterativen Lernens "Meilensteine" setzen. Dass einer das ganze Wertesystem von jetzt auf gleich einfach beherzigen kann, glauben wir nicht. Also lieber Schritt für Schritt vorgehen. Ein Grad nach dem anderen. Ganz locker und unbürokratisch. Niemand muss dafür ein Fomular ausfüllen oder eine Prüfung machen. Wir appellieren an die Ehrlichkeit des Adepten. Zumindest sie sollte ja auch zur Professionalität gehören ;-)</p>
+<p>Wer sich solcher Mühe unterzieht, soll natürlich auch stolz darauf sein. Deshalb haben wir uns - auch angeregt durch Robert C. Martin - überlegt, dass wir Armbänder tragen könnten. Sie sind in der Form Ausdruck des Willens zu mehr Professionalität und in der Farbe ein Hinweis auf den Grad, an dem ihr Träger arbeitet. Eine dezentes wie auch effektives Berufsabzeichen, wie wir finden. Aber: auch das ist kein Zwang, sondern nur Angebot. Wir fänden es allerdings toll, wenn wir bei den nächsten Entwicklerveranstaltungen eine wachsende Zahl von CCD-Armbandträgern träfen :-) (Für eine Kostenerstattung schicken wir Interessenten gern ein Armband zu; einfach hier den Bestellknopf drücken: <a rel="noopener" href="http://www.clean-code-developer.de/wiki/CcdArmband">http://www.clean-code-developer.de/wiki/CcdArmband</a>)</p>
+<p>Wie gesagt: Das CCD-Wertesystem ist nur ein Vorschlag. Wir hauen einfach mal einen Pflock in den Boden. Während Microsoft über zukünftige Technologien sinniert und die Ausbildungen in den vergangenen Technologien verharren, sammeln wir einfach mal, was wir für zeitlos und unverbrüchlich halten. Ganz technologieneutral und paradigmenfern. Wer meint, dass wir dabei etwas vergessen hätten oder zuviel des Guten täten, der kann das mit uns gern diskutieren. Dafür haben wir ein Clean Code Developer Forum aufgesetzt: <a rel="noopener" href="http://groups.google.de/group/clean-code-developer">http://groups.google.de/group/clean-code-developer</a>.</p>
+<p>Nach den Wochen der Ausarbeitung bin ich nun ganz gespannt, wie die Community unsere Idee aufnimmt. Gebt uns Feedback!</p>
+<p>Aber noch besser: Fangt mal mit dem <a rel="noopener" href="http://www.clean-code-developer.de/wiki/CcdRoterGrad">roten Grad</a> an. Ist gar nicht schwer. Das kann eigentlich jeder .NET-Entwickler aus dem Stand. Vielleicht ist so ein Armband ja auch ein Mittel, um dem Chef mal zu vermitteln, dass zur Softwareentwicklung mehr gehört, als Kundenanforderungen irgendwie zu erfüllen?</p>
+<p>PS: Wer nach Durchsicht des CCD-Wertesystems einen Vorschlag zur Verbesserung hat oder eine Frage oder einfach nur seine Meinung äußern möchte, der möge das am besten gleich im <a rel="noopener" href="http://groups.google.de/group/clean-code-developer">CCD-Diskussionsforum</a> tun. Da ist mehr Raum, um wirklich darüber zu sprechen. Mit den Kommentaren hier ist das eher hinderlich und leistet am Ende einer Verletzung des DRY-Prinzips Vorschub ;-)</p>
+<h2>Kommentare</h2>
+<p><strong>brase</strong> (2008-12-30):</p>
+<p>Hi Ralf,</p>
+<p>ich finde eure Idee super. Ich selbst habe mir das besagte Buch kurz vor Weihnachten gekauft und finde es ebenfalls sehr gelungen. Euer Wiki ist eine super Zusammenfassung des gelesenen und hilft einem die Prinzipien auch einzuhalten.
+Macht weiter so!</p>
+<p>Viele Grüße,
+Sebastian</p>
+<hr />
+<p><strong>Holger Möser</strong> (2008-12-30):</p>
+<p>Hallo Herr Westphal!
+Super, dass Sie sich die Mühe machen, solche Ausarbeitungen zur Verfügung zu stellen.  Eine tolle Motivation für Entwickler, täglich besser zu werden. Vielen Dank!</p>
+<p>Übrigens, Chefs sind keine ausschließlich nach Rendite trachtenden Ungeheuer, die die Leistungen ihrer Entwickler nicht zu schätzen wissen ;-)
+Gruß
+Holger Möser</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2008-12-30):</p>
+<p>@Herr Möser: Nein, natürlich sind nicht alle Chefs "Rendite trachtende Ungeheuer". Und es geht auch gar nicht so sehr darum, dass sie die Leistung ihrer Entwickler nicht schätzen.</p>
+<p>Es ist schlimmer ;-)</p>
+<p>Sowohl vielen Chefs wie vielen Entwicklern fehlen einfach Leitlinien. Was ist guter Code? Auf diese scheinbar simple Frage können sie nämlich keine Antwort geben. Naja, außer der einen: Guter Code ist der, der läuft.</p>
+<p>Zuviele Chefs und auch Entwickler können nur laufenden von nicht laufendem Code unterscheiden - und stehen dann fassungslos vor einem Wartungsscherbenhaufen, wenn Code mal 2-3 Jahre um neue, auch laufende Features erweitert wurde. Das (!) ist das wahre Problem.</p>
+<p>Aber bitte nicht so sehr als Kritik verstehen, sondern nur als Beschreibung des Ist-Zustands. Es besser zu wissen, war bisher schwer. Der Branche fehlen Handreichungen, es besser zu machen.</p>
+<p>Bisher. Denn jetzt gibt es ja das Clean Code Developer Wertesystem ;-) Wir würden uns sehr freuen, wenn wir damit eine Diskussion um Werte anstoßen würden. Ob es dann unsere oder andere sind... das ist relativ egal. Hauptsache wir nähern uns mal einem Konsens.</p>
+<p>-Ralf Westphal</p>
+<hr />
+<p><strong>Prof. Dr. Stefan Edlich</strong> (2008-12-31):</p>
+<p>Gute initiative.
+Übrigens habe ich vor langer Zeit angefangen, dies <a rel="noopener" href="http://prof.tfh-berlin.de/edlich/lecture-results/swt-best-practices/">hier</a> für die Java und Ruby Welt im kleinen zusammenzutragen. Leider ist es noch lange (oder niemals) fertig...</p>
+<p>Und natürlich habe ich Eure Initiative gleich hinzugefügt ;-)</p>
+<hr />
+<p><strong>(anonym)</strong> (2008-12-31):</p>
+<p>Zwei weitere Bücher sollten in diesem Zusammenhang nicht unerwähnt bleiben, die ihren Beitrag zu "Clean Code" leisten: Code Complete und The Pragmatic Programmer. Sollte jeder angehende Entwickler mindestens einmal komplett gelesen und verinnerlicht haben.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2008-12-31):</p>
+<p>@Stefan: Danke für die Verlinkung!</p>
+<p>Von deiner Seite habe ich die Anregung ins CCD Forum mitgenommen, über "Defect Tracking" als CCD-Praktik nachzudenken.</p>
+<p>@Anonym: Code Complete habe ich ins CCD-Bücherregal gestellt. Die Pragmatischen Programmierer sind dort schon drin.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2008-12-31):</p>
+<p>Hallo Ralf,
+die Idee, auf das rote Armband zurückzugehen, wenn man das weiße erreicht hat, finde ich gut. So bleiben alle Aspekte des CCD immer im Blick und entwickeln sich iterativ weiter. Aber wäre es nicht schön, wenn nicht nur der aktuelle Stand durch ein Armband gekennzeichnet wird, sondern auch die jeweilige Iteration? Immerhin ist jemand, der von weiß auf rot geht, wesentlich weiter als einer, der bei rot einsteigt. Vielleicht könnte es bei Erreichen des weißen Bandes einen Ring geben, ähnlich einem Graduate Ring, wie in den USA (s. z.B. www.ringcompany.com). Somit würden die CCDs über ein echtes Gradsystem verfügen, was den Ansporn zur Weiterentwicklung vielleicht noch fördert.
+- Ingolf</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2008-12-31):</p>
+<p>@Ingolf: Eine interessante Idee mit dem Ring. Stell das doch am besten mal im CCD Forum zur Diskussion.</p>
+<p>An dieser Stelle nur soviel: Da es kein besser oder schlechter gibt bei den Graden, ist es egal, ob man rot zum ersten oder siebten Mal trägt. Dem 8. Dan beim Karate sieht man auch nicht den 8. Dan an. Er trägt einen schwarzen Gürtel wie der 1. Dan.</p>
+<p>Indem es nicht sichtbar ist, wo einer steht, kommt zur sonstigen Professionalität eben noch ein Kleinwenig Bescheidenheit. Das halte ich zumindest für gut.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2008-12-31):</p>
+<p>Wo findet man die Bücherliste denn? Der Link unter "Die Literatur" führt nur auf die Startseite von Shelfari.</p>
+<hr />
+<p><strong>(anonym)</strong> (2008-12-31):</p>
+<p>Tolle Sache !
+Ich werde die Stufen für meine persönliches Training heranziehen.
+Zwei Aspekte halte ich für unterbewertet.
+Der erste ist, dass ich das KISS Prinzip nicht entdeckt habe.
+War es vielleicht irgentwo versteckt und ich habe es überlesen ?
+Gilt nicht analog zu dem von Euch erwähnten YAGNI auch: 'Do the simplest thing that could possible work' ?
+Wenn ich mit hoher Wahrscheinlichkeit alle Anwendungsfälle mit einem hartcodierten case statement abdecke, dann ist das IMHO völlig in Ordnung.
+Ich sehe die Gefahr, dass bei aller Fundiertheit der aufgestellten Thesen, ein Effekt eintritt wie bei der Pattern Bewegung, wo es 'schick' wurde eine maximale Anzahl der GoF Patterns in einem Projekt unterzubringen.  Dabei entstand auch ein heftiger Konsendruck, ohne 'adequate' Anzahl von Mustern, war der Code unter Niveau.</p>
+<p>Der zweite Aspekt ist der des Menschen, der nunmal bei einem Handwerk nicht unerheblich ist.
+Obie Fernandez hat mal auf einer Ruby Konferenz einen Vortrag gehalten, der eine Ansammlung der schlimmsten Code Schnipsel zeigte, die ihm in seiner Consulting Tätigkeit untergekommen waren und stellte denen dann den richtigen (oder einen besseren) Weg gegenüber.
+Am Ende gab er den Ratschlag, um solche Fehler zu vermeiden und besser zu werden, sollten die Leute mehr Bücher und / oder  Quellcode von Könnern lesen.
+Die Fehler jedoch, die er während des Vortrages illustrierte, hätte aber Niemand gemacht, der zumindestens ein Werk der Standardliteratur gelesen hat. Der Ratschlag geht also komplett an der Zielgruppe vorbei, die natürlich auch nicht im Auditorium saß !</p>
+<p>Es gibt gute Bücher und weniger gute aber es gibt doch so gut wie kein Fachbuch welches Ratschläge gibt die unter aller Kanone sind. Fazit: Die Leute die den übelriechenden Code schreiben haben keine Zeit,keine Lust oder sehen keine Notwendikeit sich durch Fachliteratur weiterzubilden. Sie reflektieren ihren Code nicht und haben auch keine von aussen kommende Korrektur. Sie sind sich ihrer Defizite nicht bewusst oder ignorieren diese.
+Genau diese Herrschaften jedoch sind für einen guten Teil des Grauens draussen 'im Feld' zuständig.
+Die werden sich kaum mit dieser wunderbaren Idee des CCD auseinandersetzen.</p>
+<p>Die bevorzugte Lösung wäre, wenn jedes Entwickler Team regelmässig, im Beisein von Kompetenz, Code Reviews durchführen würde. In dieser idealen Welt würde eine gesunde Gruppdendynamik dafür sorgen, dass sich der Mensch dessen Code zurecht kritisiert wurde, Mühe geben würde nicht wieder denselben Fehelr zu machen. Nach einiger Zeit wären alle im Team bessere Entwickler und der Quellcode stabil, zuverlässig, leicht zu warten und zu erweitern und gelegenlich würden Inspiration und sogar Kunst durchscheinen.
+In einer idealen Welt ...</p>
+<p>Guten Rutsch</p>
+<p>Joachim</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-01-01):</p>
+<p>@Anonym: Wir haben die Literaturliste bei shelfari hinterlegt. Das schien uns mehr Nutzen zu bieten, als nur eine textuelle Liste.</p>
+<p>Funktioniert die shelfari Darstellung in der Wikiseite nicht?
+Oder war das aus anderen Gründen keine gute Idee?</p>
+<p>@Joachim: Zum KISS-Prinzip: Interessanter Vorschlag. Den sollten wir im CCD-Forum diskutieren.</p>
+<p>Zu Patterns: Während eine maximale Anzahl von Patterns in einem Projekt keine Tugend ist, ist es doch eine Tugend, soviele CCD-Werte wie möglich zu berücksichtigen. Patterns haben weniger Wert an sich; es sind Lösungen, die einfach passen müssen. Unsere Werte hingegen sind keine Lösungen, sonder Voraussetzungen.</p>
+<p>Zu den "Ratschlägen": Interessanter Punkt. Stoße dazu doch mal im CCD-Forum eine Diskussion an. Hier sage ich mal nur soviel dazu: Es mag kein Fachbuch Ratschläge unter aller Kanone geben - das wahre Problem liegt aber woanders.</p>
+<ol>
+<li>
+<p>Die Ratschläge in den meisten Fachbüchern sind technologischer Natur. Wer "ASP.NET vor und zurück" liest, der erfährt weder etwas zu KISS noch zum LSP oder zu Versionskontrolle. Das CCD-Wertesystem ist somit orthogonal zur üblichen Fachliteratur (von Ausnahmen abgesehen wie "Clean Code" usw.).</p>
+</li>
+<li>
+<p>Wenn Fachbücher Ratschläge in unserem Sinne geben, dann stehen sie noch für keinen Konsens. Das versuchen wir nun zu verbessern. Insofern sind wir nochmal anders als "Clean Code" oder die Pragmatic Programmers. Wir ziehen zusammen, was da so an Ratschlägen herumgeistert, machen einen Kreis drum und sagen: "Tut das!" Tut das, beißt euch durch, seid stolz drauf, tragt das Armband.</p>
+</li>
+</ol>
+<p>Das ist nochmal eine andere Qualität!</p>
+<p>In Zeiten der ewigen Relativierungen - "Man muss immer abwägen!" oder "Ich schlage mal was vor, aber das musst du natürlich nicht annehmen." - sagen wir: "Denkt nicht drüber nach! Tut es einfach. Es ist richtig so. Zweifelsfrei."</p>
+<p>Das meinen wir dann genausowenig arrogant, wie ein Karate-Schwarzgurt arroganz ist, wenn er einen Weißgurt im Stand verbessert. Manche Dinge sind einfach in ganz bestimmter Weise immer am besten. Wenn man so und so beim Karate stehen soll, dann hat das schlicht mit Physik zu tun. Ein Weißgurt weiß das aber nicht. Also sagt der Schwarzgurt, wie es eben richtig ist. Punkt.</p>
+<p>In diesem Sinne sehen wir das CCD-Wertesystem als Sammlung von "Best Practices" (um mal ein beliebtes Wort zu benutzen) im Angesicht der Natur von Software.</p>
+<p>Wie schon an anderer Stelle gesagt, sind wir bei aller Festigkeit unserer Meinung aber</p>
+<p>a. offen für Diskussion (s. CCD-Forum)
+b. und sehen einen Unterschied zwischen Anfängern und Meistern. Anfänger müssen Regeln plump erstmal ins Stammhirn kriegen und nicht abwägen. Meister haben Regeln verinnerlich und fließen mit ihnen und jenseits ihrer situationsangemessen.</p>
+<p>Klar, alle wollen Meister sein. Aber leider sind wir es eben nicht. Nicht einfach so. Die durchweg schlechte Wartbarkeit von Software ist der einfache Beweis.</p>
+<p>Ergo: Wir allen müssen uns als Anfänger durch ein Wertesystem (z.B. das CCD-Wertesystem) hocharbeiten zur Meisterschaft. Und das hat nichts mit Technologien zu tun. C# oder Java oder Ruby? Egal. O/R Mapping oder Flat Files? Egal.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2009-01-02):</p>
+<p>Ich schlage jetzt schon das Wort
+<strong>Problemwurzelanalyse</strong>
+als Kandidat für das (Un)Wort des Jahres 2009 vor. (Siehe roter Grad).</p>
+<p>Die Idee CCD finde ich super.</p>
+<p>Freundliche Grüße</p>
+<p>Horst Blechinger</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-01-02):</p>
+<p>@Horst: Guter Vorschlag.</p>
+<p>Noch besser wäre es aber, denn du ihn im CCD-Forum machen würdest.</p>
+<p>Das gilt auch für alle anderen Vorschläge, für die zunächst ein Kommentar hier naheliegt. Besser gleich im Diskussionsforum vorschlagen.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2009-01-02):</p>
+<p>Zu "Funktioniert die shelfari Darstellung in der Wikiseite nicht?": Wenn man weiss, dass man dafür JavaScript aktivieren sollte... Ein kleiner Hinweis dazu wäre ganz praktisch.</p>
+<p>Und der Link, wie gesagt, führte nicht direkt zu eurem Shelf, sondern nur auf die Homepage von Shelfari. Das scheint aber inzwischen korrekt zu sein.</p>
+<hr />
+<p><strong>(anonym)</strong> (2009-01-04):</p>
+<p>Ja,</p>
+<p>wirklich prima und nützlich. Und wenn das ganze nicht bereits vor einiger Zeit im MSDN Magazin in der Kolumne "Patterns in Practice" von Jeremy Miller so nicht zusammengetragen, veröffentlicht und mit entsprechendem Literaturhinweis (Robert C. Martin,...) versehen worden wäre, dann wäre das hier auch Neu und Eigenarbeit.</p>
+<p>http://msdn.microsoft.com/en-us/magazine/cc546578.aspx</p>
+<p>http://msdn.microsoft.com/en-us/magazine/cc947917.aspx</p>
+<p>...</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-01-04):</p>
+<p>@Anonym: Danke für die Links zu den MSDN Magazine Artikeln. Habe ich in unsere Literaturhinweise aufgenommen.</p>
+<p>Allerdings wäre es ein Missverständnis anzunehmen, wir behaupteten, irgendetwas erfunden zu haben. Auch Jeremy Miller hat nur zusammengetragen, was zum Zeitpunkt der Veröffentlichung seiner Artikel schon lange bekannt und diskutiert war. Insb in der Java-Welt und ab von Microsofts Hauptbetätigungsfeldern.</p>
+<p>Worin sehen wir also die Leistung von CCD? Nicht im "Erfinden" von irgendwelchen Prinzipien, Regeln und Praktiken oder Tools.</p>
+<p>Ich formuliere mal so unsere Leistung:</p>
+<ol>
+<li>
+<p>Wir definieren ein abgeschlossenes System. Das halten wir für gleichermaßen grundlegend wie allgemeingültig. Das Wertesystem ist nur eine von vielen Listen mit Prinzipien wie auch die bei Jeremy Miller, sondern hat einen Anspruch. Das bedeutet nicht, dass es perfekt ist, aber ist deutlich mehr als ein Sammlung von Empfehlungen.</p>
+</li>
+<li>
+<p>Nicht nur definieren wir ein System, wir gliedern es auch noch in aus unserer Sicht didaktische Happen, die leicht verdaulich sind. Wir bemühen uns also darum, das System einfach erlernbar zu machen. Diesen Anspruch hat sonst keine Liste, die wir kennen - weder J. Miller noch Uncle Bob.
+Ob wir schon die besten Happen definiert haben oder nicht, ist eine andere Frage. Aber wir machen uns wenigstens Gedanken darum, wie man unsere Empfehlungen möglichst leicht aufnehmen kann.</p>
+</li>
+<li>
+<p>Wir listen nicht nur ein paar Werte, sondern motivieren durch ein äußeres Zeichen. Neue Gewohnheiten im stillen Kämmerlein anzunehmen, ist nicht leicht. Indem wir die Armbänder als Symbol dafür setzen, legen wir jedoch zumindest den Grundstein für eine sichtbare Community. In der kann es dann leichter fallen, sich Mühe zu geben.</p>
+</li>
+</ol>
+<p>Ergo: Im Inhalt sind wir nicht wirklich neu. Aber in der Form tun wir Neues. Und das mag am Ende den Unterschied machen.</p>
+<p>Schauen wir also mal...</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-04-06):</p>
+<p>"Clean Code" hat gute Ansätze, aber die Beispiele für schlechten Code sind in Wahrheit <em>alle</em> lesbarer als die over-engineerten Beispiele für angeblich guten Code! Nach eingehender Beschäftigung mit "Robert C Martin" wird dann auch schnell klar, dass er keine Ahnung von formalen Methodiken hat. Wenn er etwa versucht, mit Unit-Tests sicherzustellen, dass korrektes XML generiert wird. Dabei ist das trivial lösbar, indem man sich das statische Typsystem einer Programmiersprache zunutze macht: "Correct by construction" macht professionelle Software-Entwicklung aus. Davon aber haben die Jünger agiler Software keine Ahnung. Da helfen Zertifikate und das Tragen von Bändchen wenig...</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-04-06):</p>
+<p>@Anonym: Interessante Thesen: Agile Softwareentwickler haben keine Ahnung von Softwareentwicklung. Clean Code ist unnötig.</p>
+<p>Ich würde mich freuen über Beispiele, wo "schlechter Code" besser lesbar ist als "over-engineerte Beispiele".</p>
+<p>Und ich würde mich freuen über die konkrete Nennung der dann doch vielleicht nicht so schlechten Aspekte von Clean Code.</p>
+<p>Und ich würde mich über ein Beispiel von "Correct by Instruction" sehr freuen, das auch uns Laienentwicklern eingängig ist. Vielen Dank, lieber Anonym.</p>
+<p>-Ralf</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

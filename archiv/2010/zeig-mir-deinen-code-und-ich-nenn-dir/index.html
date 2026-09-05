@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zeig mir deinen Code und ich nenn dir deinen Dojo-Stil — ralfw.de Archiv</title>
+<meta name="description" content="Die Coding-Dojo-Welt hat sich geteilt. Es gibt nun den münchener Latifa-Stil von Ilker. Und es gibt den Schwarm-Stil von Stefan Lieser und mir. Bei der Teilung hat es ein wenig ger">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/zeig-mir-deinen-code-und-ich-nenn-dir/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Zeig mir deinen Code und ich nenn dir deinen Dojo-Stil — ralfw.de Archiv">
+<meta property="og:description" content="Die Coding-Dojo-Welt hat sich geteilt. Es gibt nun den münchener Latifa-Stil von Ilker. Und es gibt den Schwarm-Stil von Stefan Lieser und mir. Bei der Teilung hat es ein wenig ger">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/zeig-mir-deinen-code-und-ich-nenn-dir/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Zeig mir deinen Code und ich nenn dir deinen Dojo-Stil</h1>
+    <div class="doc-meta"><span>29. Juni 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/06/zeig-mir-deinen-code-und-ich-nenn-dir.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/zeig-mir-deinen-code-und-ich-nenn-dir/</code></span></div>
+    <div class="art"><p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/90421fe7f7755d7f.png" /></p>
+<p>Die Coding-Dojo-Welt hat sich geteilt. Es gibt nun den münchener <a rel="noopener" href="http://bit.ly/cytPH9">Latifa-Stil von Ilker</a>. Und es gibt den <a rel="noopener" href="http://bit.ly/cjwHmw">Schwarm-Stil von Stefan Lieser und mir</a>. Bei der Teilung hat es ein wenig gerumpelt in der Community – aber nun sollten wir in friedlicher Koexistenz coden können. Die Welt ist halt bunt.</p>
+<p>Den einen wahren, kanonischen Coding-Dojo-Stil gibt es nicht. Es gab und gibt nur Interpretationen dessen, was Leute wie z.B. Robert C. Martin mal gezeigt haben. Einzig in der Praktik des TDD sind sich die Dojo einig – und natürlich darin, dass Code geschrieben werden soll.</p>
+<p>Über den Prozess, wie zu diesem Code im Dojo gekommen werden sollte, ist schon geschrieben worden. Das ist es, worin sich Latifa- und Schwarm-Stil unterscheiden. Und das macht natürlich einen Unterschied im Lernen der Teilnehmer.</p>
+<p>Aber welchen Einfluss hat das auf das Produkt eines Dojos? Merkt man es dem Code an, ob er nach diesem oder jenem Stil entwickelt wurde? Ich habe mal versucht, das herauszufinden.</p>
+<p>Für die Kata FizzBuzz habe ich versucht, mich in den Latifa-Stil hinein zu versetzen. Ich hoffe, das Ergebnis ist nicht zu sehr gefärbt von irgendwelchen Missverständnissen oder Voreingenommenheiten.</p>
+<p>Anschließend habe ich den Code nach Schwarm-Stil Manier nochmal entwickelt.</p>
+<h2>FizzBuzz à la Latifa</h2>
+<p>Gerade nach der Erfahrung des letzten Coding Dojo zum dotnetpro.powerday bin ich mir sicher, dass ein Latifa-Dojo die grundsätzliche Codestruktur so aufgesetzt hätte:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/3a7d68fcd8d9d5c0.png" /></p>
+<p>Implementation und Test sind in einem Projekt zusammengefasst. Begründung: Mehr braucht es nicht. Das Beispiel ist so klein, dass alles andere Overkill wäre.</p>
+<p>Von der Implementation nehme ich an, dass sie im Wesentlichen so aussehen würde:</p>
+<blockquote>
+<p>public class FizzBuzzer
+{
+    public List Generate()
+    {
+        var numbers = new List();
+        for (int i = 1; i          {
+            if (IsFizz(i) &amp;&amp; IsBuzz(i))
+                numbers.Add("fizzbuzz");
+            else if (IsFizz(i))
+                numbers.Add("fizz");
+            else if (IsBuzz(i))
+                numbers.Add("buzz");
+            else
+                numbers.Add(i.ToString());
+        }
+        return numbers;
+    }      private bool IsBuzz(int i)
+    {
+        return i % 5 == 0;
+    }      private bool IsFizz(int i)
+    {
+        return i % 3 == 0;
+    }
+}</p>
+</blockquote>
+<p>Die Aufgabe ist klein. Hexenwerk ist nicht nötig. Alles geradlinig implementiert. Die Funktionen IsFizz() und IsBuzz() sind bei einer Refaktorisierung herausgezogen worden.</p>
+<p>Exemplarisch hier auch noch ein Ausschnitt aus den Tests:</p>
+<blockquote>
+<p>[TestFixture]
+public class Test_FizzBuzzer
+{
+    [Test]
+    public void Check_numbers()
+    {
+        var sut = new FizzBuzzer();          var numbers = sut.Generate();          Assert.AreEqual("1", numbers[0]);
+        Assert.AreEqual("91", numbers[90]);
+    }      [Test]
+    public void Check_fizz()
+    {
+        var sut = new FizzBuzzer();          var numbers = sut.Generate();          Assert.AreEqual("fizz", numbers[2]);
+        Assert.AreEqual("fizz", numbers[98]);
+    }
+   …</p>
+</blockquote>
+<p>Sie setzen alle beim FizzBuzz-API an – öffentliche Methode Generate() der FizzBuzzer-Klasse. Alle Tests sind Black Box Tests.  So, wie ich bisher die Latifa-Dojos erfahren habe, glaube ich nicht, dass weitere Refaktorisierungen vorgenommen worden wären. Ich glaube auch nicht, dass andere Datenstrukturen gewählt worden wären.  Und warum auch? Läuft doch.</p>
+<h2>FizzBuzz à la Schwarm</h2>
+<p>Nach solcher (visionierter) Vorlage eines Latifa-Dojos stellt sich die Frage, inwiefern eine Lösung überhaupt anders aussehen kann. Das Problem ist ja trivial. Kann es da überhaupt zwei Meinungen geben?</p>
+<p>Ja, es gibt Alternativen. Der Schwarm-Stil unterscheidet sich also nicht nur im Prozess vom Latifa-Stil, sondern auch in seinem Anspruch an die Lösungsformulierung. Die beginnt bei der Codeorganisation:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/676bee357bf4174e.png" /></p>
+<p>Zwei Projekte, statt einem. Denn beim Schwarm legen wir Wert nicht nur auf TDD und Funktionalität, sondern auch auf Klarheit in der Form. Verständlichkeit ist uns wichtig. Separation of Concerns (SoC) gilt nicht nur innerhalb von Code, sondern auch für seine Form. Deshalb sind für uns Tests und Implementation immer getrennt. Der Schwarm bemüht sich, möglichst viele Clean Code Developer Bausteine zu berücksichtigen.</p>
+<p>An der groben Codeorganisation ist aber noch mehr als eine SoC abzulesen. Das Testprojekt besteht aus drei Klassen. Die spiegeln wider, dass vor dem Coden über den Lösungsansatz nachgedacht wurde. Es hat eine kurze Kreativphase gegeben, in der erkannt wurde, dass die Lösung ein Prozess ist, der aus zwei Phasen besteht:</p>
+<ul>
+<li>Zahlengenerierung  Zahlenübersetzung (Mapping).</li>
+</ul>
+<p>Um diese Erkenntnis im Code festzuhalten, habe von vornherein für beide Phasen Methoden im Code vorgesehen. Und deshalb konnte ich mich auch entscheiden, welche ich davon zuerst nach TDD implementiere. Ich habe mich für die Zahlenübersetzung entschieden. Sie ist ja auch der Kern des FizzBuzz-Problems.</p>
+<blockquote>
+<p>public class FizzBuzzer
+{
+    internal static string MapNumber(int number)
+    {
+        if (IsFizz(number) &amp;&amp; IsBuzz(number)) return "fizzbuzz";
+        if (IsFizz(number)) return "fizz";
+        if (IsBuzz(number)) return "buzz";          return number.ToString();
+    }      private static bool IsBuzz(int number)
+    {
+        return number % 5 == 0;
+    }      private static bool IsFizz(int number)
+    {
+        return number % 3 == 0;
+    }</p>
+</blockquote>
+<p>Natürlich habe ich die Tests jeweils vorher geschrieben:</p>
+<blockquote>
+<p>[TestFixture]
+public class Test_MapNumber
+{
+    [Test]
+    public void Map_straight_number()
+    {
+        Assert.AreEqual("1", FizzBuzzer.MapNumber(1));
+        Assert.AreEqual("2", FizzBuzzer.MapNumber(2));
+        Assert.AreEqual("4", FizzBuzzer.MapNumber(4));
+        Assert.AreEqual("98", FizzBuzzer.MapNumber(98));
+    }      [Test]
+    public void Map_fizz_number()
+    {
+        Assert.AreEqual("fizz", FizzBuzzer.MapNumber(3));
+        Assert.AreEqual("fizz", FizzBuzzer.MapNumber(6));
+        Assert.AreEqual("fizz", FizzBuzzer.MapNumber(99));
+    }</p>
+</blockquote>
+<p>Von den Testfällen her unterscheiden die sich eigentlich nicht vom Latifa-Stil. Aber betonenswert anders ist, dass ich sofort mit dem Kern des Problems anfangen konnte, weil ich wusste, dass es dafür eine Funktionseinheit gibt. Und die Tests sind fokussierter, weil sie nur die Übersetzung testen und nicht immer auch noch die Zahlengenerierung berücksichtigen müssen. Schließlich ist der Code in der MapNumber()-Methode auch noch simpler als der Übersetzungscode beim Latifa-Stil, weil er weniger tief schachtelt (keine else-Zweige).</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/bc353a521e67c6de.png" /></p>
+<p>Hätte der Latifa-Stil mit konsequentem TDD auch dahin kommen können? Klar. Aber die Latifa-Dojo-Erfahrung zeigt, dass das nicht passiert. Da es im Latifa-Stil kein “offizielles” Nachdenken über den Lösungsansatz gibt, gibt es auch keine Gewissheit, dass das demokratische Voranschreiten so tief ins Refactoring einsteigt, wo es doch viel spannender ist, überhaupt eine lauffähige Lösung zu produzieren.</p>
+<p>Nach Implementation des Mappings habe ich die Zahlenerzeugung implementiert. Die ist natürlich trivial. Dem Schwarm-Stil ist das jedoch egal. Wenn in der Kreativphase ein Lösungsansatz erarbeitet wurde, der die Zahlengenerierung ausweist, dann wird sie in einer expliziten Funktionseinheit implementiert. Das entspricht dem Single Responsibility Principle (SRP).</p>
+<blockquote>
+<p>internal static IEnumerable NumberGenerator(int from, int to)
+{
+    for (var i = from; i          yield return i;
+}</p>
+</blockquote>
+<p>Die Zahlenerzeugung ist kein Bestandteil des API. Deshalb erfolgt sie in einer internen Methode.</p>
+<p>Beim Testen ist zu sehen, dass auch der Schwarm-Stil pragmatisch vorgeht. Ich habe nur einen Test geschrieben:</p>
+<blockquote>
+<p>[TestFixture]
+public class Test_NumberGenerator
+{
+    [Test]
+    public void Numbers_1_to_3()
+    {
+        var numbers = FizzBuzzer.NumberGenerator(1, 3);
+        Assert.AreEqual(new[]{1,2,3}, numbers.ToArray());
+    }
+}</p>
+</blockquote>
+<p>Im Sinne eines universellen Zahlengenerators ist das natürlich zuwenig. Wie würde der z.B. auf Zahlengrenzen   public IEnumerable Generate()</p>
+<blockquote>
+<p>{
+    return NumberGenerator(1, 100).Select(MapNumber);
+}</p>
+</blockquote>
+<p>Im Vergleich zur Latifa-Lösung folgt sie sofort dem Single Level of Abstraction (SLA) Prinzip. Die Lösung wird auf hohem, einheitlichem Abstraktionsniveau beschrieben. Und die Phasenfolge ist klar zu erkennen. Schwer zu verstehende Schachtelung ist nicht nötig.</p>
+<p>Da die Einzelfunktionalitäten schon getestet sind, ist für die Integration nur noch ein Integrationstest nötig:</p>
+<blockquote>
+<p>[TestFixture]
+public class Integrationtest
+{
+    [Test]
+    public void Check_number_generation_and_mapping()
+    {
+        var sut = new FizzBuzzer();
+        Assert.AreEqual(
+            new[] { "1", "2", "fizz" },
+            sut.Generate().ToArray().Take(15));
+    }
+}</p>
+</blockquote>
+<p>Der Test kann so kurz ausfallen, weil lediglich geprüft werden muss, ob die Funktionseinheiten überhaupt korrekt zusammenspielen.</p>
+<h2>Fazit</h2>
+<p>Wenn ich die typischen Vorgehensweisen von Latifa- und Schwarm-Stil hier halbwegs wirklichkeitstreu wiedergegeben habe, dann führen sie zu unterschiedlichem Code. Ob das eine Ergebnis besser oder schlechter ist, will ich nicht beurteilen. Mir war nur die Beantwortung der Frage wichtig, ob es überhaupt einen Unterschied gibt. Und wenn ja, was der ausdrückt.</p>
+<p>Unterm Strich scheint mir hier <a rel="noopener" href="http://bit.ly/dswpPi">Conway´s Law</a> bestätigt: Der Code spiegelt Prozess und Organisation des Teams wider. Latifa setzt auf Demokratie, d.h. Gleichberechtigung und Gleichstellung, und hat darüber hinaus keinen Prozess jenseits TDD.</p>
+<p><a rel="noopener" href="http://www.clean-code-developer.de"></a> Schwarm setzt auf einen klaren Prozess (Kreativphase gefolgt von Umsetzungsphase) und die Einhaltung von Prinzipien jenseits von TDD bei der Umsetzung.</p>
+<p>Nun mag jeder (potenzielle) Teilnehmer an einem Dojo entscheiden, welchen Stil er/sie bevorzugt.</p>
+<h2>Kommentare</h2>
+<p><strong>Steffen Forkmann</strong> (2010-06-29):</p>
+<p>Hi Ralf,</p>
+<p>ich kapier nicht warum beim Latifa das Mapping kein eigener Step sein sollte. Die Tests sehen mir auch nicht wirklich "echt" aus.</p>
+<p>Der erste Test aus meiner Sicht ist: ConvertingOneWithFizzBuzzShouldGiveOne()</p>
+<p>und schon hast du dein Mapping extra.</p>
+<p>Aber wenn du den Schwarm schon so anpreisen willst, dann könntest du die Methode wenigstens noch DRY machen. ;-) (Nur Spaß)</p>
+<p>Grüße Steffen</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-06-29):</p>
+<p>@Steffen: DRY hab ichs extra nicht gemacht, weil so ein Refactoring am Ende der Entwicklung des Mappings stehen würde. Es wäre damit durch keine weitere Arbeit am Mapping getrieben. Unser Credo ist ja: Refactor-Red-Green. (Darüber wurde auch im Muc Dojo diskutiert - und sogar zu Ungusten von Red-Green-Refactor (vertreten durch Golo Roden) entschieden.)</p>
+<p>Sind die Tests nicht echt? Doch, so hab ich entwickelt. Und warum sollte es ein ConvertingOneWithFizzBuzzShouldGiveOne() ausgeführt auf dem API ein extra Mapping ergeben?</p>
+<p>Wenn das dein erster Test gewesen wäre, hätte in Generate() nur return 1 gestanden.</p>
+<p>Und dann? Dann hätte der nächste Test eine Schleife eingebaut. Und dann...?</p>
+<p>Wie im Posting erwähnt: Prinzipiell (!) kann Latifa zum selben Ergebnis wie Schwarm führen. In der Praxis (!) aber habe ich das noch nicht gesehen. Und genau das macht für mich den Unterschied der Stile aus.</p>
+<p>Wir reden also hier nicht über TDD. Wir reden über Dojo-Stile, die auch TDD einsetzen.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Kostja</strong> (2010-06-29):</p>
+<p>Hallo Ralf,</p>
+<p>bei all den Kommentaren und Ausführungen, "Anfeindungen" und unterschiedlichen Einstellungen der letzten Tage zum Thema Coding Dojo bleibt aus meiner Sicht ein Punkt auf der Strecke: Das gemeinsame Ziel.</p>
+<p>Bisher war ich der Auffassung, dass wir alle (Du, Stefan, Ilker, ... und ich) der gemeinsamen Meinung waren, dass mehr Professionalität, und Guidance um diese zu erreichen, in unserer Branche gefragt ist. Ein Coding Dojo war für mich ein weiteres Mittel, um Menschen auf Ihrem Weg zu diesem Ziel zu unterstützen.</p>
+<p>Aus diesem Grunde finde ich es wenig zielführend nun zwei klar abgegrenzte Dojo Stile ins Leben zu rufen, die, trotz gegenteiliger Beteuerung von Deiner Seite, bei den Leuten da draußen das Gefühl erzeugen werden, dass es ein "besser" und "schlechter" bzw. ein "richtig" und "falsch" schon beim Dojo Stil gibt.</p>
+<p>Derjenige, der noch nie an einem Dojo teilgenommen hat, soll sich jetzt auch noch im Vorfeld für einen Stil entscheiden.</p>
+<p>Mir gefällt das nicht. Das Spannende wäre doch gewesen, wenn verschiedene Herangehensweisen und deren Pros und Contras innerhalb eines Dojos zur Diskussion hätten kommen können, um so dem Teilnehmer eine Hilfestellung und die Chance auf ein eigenes Gefühl in Bezug auf eine qualitativ hochwertige Lösung der entsprechenden Problemstellung zu ermöglichen.</p>
+<p>Ich finde es sehr schade, dass dies innerhalb der deutschen .NET Community nicht möglich sein soll.</p>
+<p>Vielleicht aber gibt es ja doch noch die Chance diesen Versuch einmal zu wagen...</p>
+<p>Beste Grüße
+Kostja</p>
+<hr />
+<p><strong>Steffen Forkmann</strong> (2010-06-29):</p>
+<p>Hi Ralf,</p>
+<p>mein Test heißt nicht: ConvertingOneWithFizzBuzzShouldReturnAListContainingOne() ;-)</p>
+<p>Ich denke einfach nicht dass man am Anfang eine Generate()-funktion baut. Aber hängt natürlich am konkreten Verlauf des Dojos und seiner Teilnehmer.</p>
+<p>Ok, bei dem Refactoring auf DRY kann man sich sicherlich streiten. Das kommt sicher auch auf die Teilnehmer an. Mancheinem würde es aber sicherlich beim Betrachten weh tun, wenn "FizzBuzz" am Ende ein Sonderfall bleibt und nicht das logische UND von Fizz und Buzz darstellt.</p>
+<p>Grüße Steffen</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-06-29):</p>
+<p>@Kostja: Gute Frage: Was ist das Ziel? Oder gar das gemeinsame Ziel?</p>
+<p>Mehr als "Lernen beim Codieren im Rahmen von TDD" kann ich nicht als gemeinsames Ziel erkennen. (Dass das mit grundsätzlicher Gleichberechtigung geschieht, dass dabei Spaß gehabt werden soll... selbstverständlich. Muss man das überhaupt erwähnen?)</p>
+<p>Jenseits dieses Minimalziels jedoch... nun, da gehen unsere Meinungen auseinander. Und deshalb gibt es nun zwei Stile.</p>
+<p>Wir haben öfter bei Ilker dabei gesessen. Wir haben wirklich versucht, Ilkers Stil zu unterstützen. Aber am Ende haben wir unsere Vision, die darüber hinausgeht, darin nicht wiedergefunden. Das hätte auch nichts gemacht und es hätte kein "Schisma" gegeben, wenn nicht, tja, wenn nicht mein Dojo in Muc als falsch, unkanonisch, zu geführt tituliert worden wäre.</p>
+<p>Gegen "ah, du hast es ja ganz anders gemacht" habe ich nichts. Auch gegen "hm... bei dir habe ich weniger gelernt als bei Ilker" habe ich nichts. Solche Kommentare gab es aber nicht! Die Kritik bezog schlicht auf die Andersartigkeit, die so ganz unerwartet war und nicht sein hätte sollen.</p>
+<p>Darauf, das kannst du bestimmt verstehen, reagiere ich zumindest dann nicht mehr so flauschig. Wenn mein Stil schon gleich falsch ist, einfach so falsch, dann sehe ich keinen Raum mehr für Gemeinsamkeit. Dann will die Community (!) eine Trennung der Stile. Denn dass ich es so mache wie Ilker, ist kaum zu erwarten. (Genausowenig wie er es so machen will wie ich.) Und dass ich dann das, was ich mache, nicht Dojo nennen darf, das ist völliger Blödsinn. Ergo: Stiltrennung. In aller Freundschaft. Ganz sachlich, mit Argumenten. Deshalb mein Positing heute, das stilspezifischen Code zeigt.</p>
+<p>Mir gehts also nicht um richtig oder falsch. Mit gehts um effizient (im Sinne einer Vision) oder nicht.</p>
+<p>Müssen nun künftige Dojo-Macher sich für einen Stil entscheiden? Nö. Die können machen, was sie wollen.</p>
+<p>Aber wenn dann einer zuschaut, kann er überlegen, ob das eher Latifa oder Schwarm ist oder was anderes. Und er kann überlegen, ob das Dojo effektiv und effizient war in Bezug auf das ausgelobte Ziel.</p>
+<p>Ilker ist insofern herzlich eingeladen, nach Berlin (oder Nürnberg) zu kommen, um an einem Schwarm-Dojo teilzunehmen. Dann kann er kritisieren, was nicht gepasst hat und wo wir unserem Anspruch hinterher hinken. Und dann versuchen wir zu lernen. Wie wir auch bei jedem Clean Code Developer Training lernen und darüber Buch führen und es nächstes Mal ein bisschen besser machen.</p>
+<p>Gibt es eine Möglichkeit zur Stilauflösung/-vereinigung? Solange es jmd gibt, der meint, Dojo dürfe nur so oder so ablaufen, solange geht das nicht. Und ich kann dir sagen, derjenige bin ich nicht.</p>
+<p>Andererseits finde ich es auch absolut nicht schlimm, wenn es nun zwei Stile gibt. Wo ist das Problem? Das ist sogar gut, weil man dann darüber sprechen kann. Jeder Stil hat sich ja nun profiliert. Dadurch werden ansonsten nur pers. Herangehensweisen objektiver beurteilbar. Das halte ich für einen Gewinn.</p>
+<p>Ilker macht völlig legitime Dojos. Stefan und ich und andere machen ebenso völlig legitime Dojos - in einem anderen Stil. Plurality rules :-) Das Leben wird leider nicht einfacher ;-)</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-06-29):</p>
+<p>@Steffen: Die Generate() Funktion ist der API der FizzBuzz-Klasse. Genau deshalb würde sie im Latifa-Dojo als allererstes gebaut. Ich habe es noch nie anders erlebt. Die TN fangen nach Verständnis der Anforderungen sofort an mit dem Codieren. Und das können sie dann nur auf dem API. Das ist ja auch der Anspruch von TDD: Fange beim API an und die weitere Struktur wird sich ergeben.</p>
+<p>Inwiefern die weitere Struktur sich jedoch ergibt, das hängt vom weiteren Prozess ab. Je mehr der Zielfokussiert ist, desto weniger wird rausfaktorisiert. Und so ergeben sich keine feineren Strukturen, wenn man nicht vorher drüber nachgedacht hat.</p>
+<p>Du musst halt unterscheiden zw dir als Einzelnem, der TDD macht, und einer Gruppe.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Sebastian Jancke</strong> (2010-06-29):</p>
+<p>Ralf, ich denke es ist "unglücklich" wenn du selbst in die Rolle der Latifa-Schule schlüpfst. Damit wird dein Vergleich sehr angreifbar.</p>
+<p>@Kostja
+Ralf hats doch schon beantwortet: "Die Welt ist bunt". Darüber hinaus wüsste ich nicht, wo das Problem ist einen speziellen Dojo-Stil, und damit ja eine bestimmte Schule der Softwareentwicklung, anzupreisen. Wer das Gefühl hat, der "falschen" Schule zu folgen kann ja wechseln.</p>
+<p>Das ist im Karate auch so und gilt ansonsten in der Softwareentwicklung auch ständig: Welche Konferenzen/Bücher/Blogs besuche/lese ich? Man muss sich halt entscheiden oder vieles ausprobieren. Die Welt ist eben bunt, aber das heißt noch lange nicht das alles gleich "gut" für einen ist.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-06-29):</p>
+<p>@Sebastian: Natürlich ist es angreifbar, wenn ich versuche, Latifa-Code zu produzieren.</p>
+<p>Da ich aber bei einige Latifa-Dojos mitgemacht habe, glaube ich doch, ein gewisses Destillat produzieren zu können. Dabei gehts nicht ums Detail, sondern das big picture.</p>
+<p>Ich erkenne auch an, dass es schwieriger ist, Latifa-Code zu imaginieren als Schwarm-Code. Denn Latida ist per definitionem viel offener. Es ist weniger vorhersehbar, was rauskommt.</p>
+<p>Latifa sieht das als Vorteil. Das ist legitim. Kein Problem. Dennoch erlaube ich mir, Muster zu erkennen und gegen Schwarm-Code zu halten.</p>
+<p>Jedes Latifa-Dojo darf mir auch demonstrieren, dass sie "ohne Abkupfern" ;-) und bei reiner Befolgung der Latifa-Regeln Code wie beim Schwarm-Dojo produzieren. Kein Problem. Immer gern.</p>
+<p>Bottom line: Im Grunde zeigt mir dein Kommentar, dass ich mein Ziel erreicht habe mit dem Posting. Bei Latifa gibt es viel weniger Festlegung als bei Schwarm. Deshalb kann ich weniger behaupten, typischen Latifa-Code produziert zu haben.</p>
+<p>Latifa kann damit immer sagen: Ne, so hätten wirs nicht gemacht.</p>
+<p>Klingt positiv - kann ich aber auch anders lesen: Latifa liefert weniger Kriterien für eine Falsifizierung. Ob das im Sinne der von Ilker schonmal beschworenen Wissenschaftlichkeit ist...?</p>
+<p>Bei Schwarm hingegen haben wir sehr konkrete Ideen darüber, wie Code im Dojo produziert werden sollte. Wir haben sozusagen eine Agenda. Wenn also jmd anderes ein Schwarm-Beispiel produziert, kann ich eher sagen, ob das Schwarm-like ist oder nicht.</p>
+<p>Nun mag jeder für sich beurteilen, ob Unvorhersehbarkeit zu ihm/ihr passt oder nicht.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Steffen Forkmann</strong> (2010-06-29):</p>
+<p>@Ralf: Natürlich hast du da irgendwo recht: Ich bin ein einzelner und habe nur geringen Einfluss auf die Gruppe.</p>
+<p>Aber ich (und andere vermutlich auch) würde immer mit dem leichtesten Test anfangen und der gibt aus meiner Sicht eben keine Liste zurück. Dann müsste ich den Wert ja wieder über die Position aus der Liste extrahieren. Wäre mir persönlich zu kompliziert.</p>
+<p>Ich denke hier sieht man recht schön, dass die Art und Weise wie ich teste großen Einfluss auf das Design hat. Wenn der Test klein ist, dann wird auch die zu testende Einheit klein.</p>
+<p>Grüße Steffen</p>
+<p>PS:</p>
+<p>Mir stellt sich auch die Frage ob die Liste tatsächlich das API beschreibt. In der Aufgabenstellung unter http://codingdojo.org/cgi-bin/wiki.pl?KataFizzBuzz steht nur was von "print".</p>
+<p>Console.Writeline ist natürlich noch schlechter testbar ;-)</p>
+<p>Bist du von dieser Aufgabenstellung ausgegangen?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-06-29):</p>
+<p>@Steffen: Ich bin von der allgemeinen Aufgabenstellung ausgegangen, dass die Liste von 1..100 generiert werden soll, wobei manche Zahlen halt ersetzt sind. So habe ich die Aufgabe immer verstanden gesehen in Dojos. Mein API ist also sehr typisch; da bin ich mir sicher.</p>
+<p>"Mit dem leichtesten Test anfangen" - gut Idee. Aber in Bezug auf was? Dazu muss man eine Vision haben. Ein "leichtester Test" ergibt sich nicht einfach so.</p>
+<p>Ich fange auch mit dem leichtesten Test an. Aber ich habe eine andere Vorstellung von dem, was überhaupt testbar ist. Weil ich nachgedacht habe.</p>
+<p>Nochmal: Ich habe nicht beschrieben, wie ich denke, dass man nach TDD Code für FizzBuzz produziert. Ich habe stattdessen beschrieben, wie ich meine, dass ein typisches Latifa-Dojo Code produziert. Das ist ein Unterschied.</p>
+<p>Und für Latifa (sofern ich das bisher gesehen habe) ist das Testbare der API. Der besteht auf List Generate(). Wie sieht darauf der leichteste Test aus?</p>
+<p>Nun, das ist ein Test, der prüft, ob Überhaupt Zahlen produziert werden. Da hätte ich mit einer Prüfung nur auf "1" anfangen können. Ok. Den hab ich übersprungen. Zugegeben. Aber man muss sich ja nun auch nicht dümmer stellen als man ist. Also habe ich dem Latifa-Dojo "angedichtet", dass es alle Zahl von 1..100 erzeugt.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Kostja</strong> (2010-06-29):</p>
+<p>@Sebastian
+Ich habe auch nichts dagegen, dass die Welt bunt ist :-)</p>
+<p>Auch gegen eine Vielfalt an Coding Dojos habe ich grundsätzlich nichts. Allerdings stimme ich eben in einem (entscheidenden) Punkt nicht zu: Latifa oder Schwarm - Du musst Dich entscheiden.</p>
+<p>Meine bisherige Erfahrung mit Coding Dojos hat gezeigt, dass insbesondere bei unterschiedlicher Zusammensetzung der Teilnehmer immer wieder neue Aspekte bei der Herangehensweise und insbesondere auch in der Gruppendynamik aufgetaucht sind. Mein Verständnis des Moderators/Leiters eines solchen Dojos war dann aber eben nicht dogmatisch einen Weg zum Ziel vorzugeben, wie dies vielleicht eine bestimmte Karateschule tun würde, sondern die Gruppe auf dem Weg zu Entscheidungen durch Moderation zu unterstützen.</p>
+<p>In anderen Worten: Für mich war (übrigens auch bei den Dojos von Ilker) eigentlich nicht von vornherein klar welche Entscheidungen die Gruppe treffen und welchen Weg ("Knobler" vs. "Coder") man einschlagen würde.</p>
+<p>Das es im Sinne des Lehrens gute Praxis sein kann hier eigene Gedanken und Werte der Organisatoren einfliessen zu lassen, halte ich insofern trotzdem für möglich, als das diese jederzeit zur Diskussion gestellt werden könnten.</p>
+<p>Und wenn die Welt bunt ist, dann sollte sie dass eben auch im Rahmen eines Dojos sein können.</p>
+<p>Um es deutlich zu sagen: Ich habe keine Präferenz für den einen oder den anderen Stil. Ich bin im Gegenteil davon überzeugt, dass eine Mischung aus Anhängern der einen und der anderen Variante die Realität (in vielen Entwicklerteams) am Besten abbildet. Eine gemeinsame Arbeitsebene (auch im Dojo) zu finden, das ist die Herausforderung. Daran sind wir jetzt scheinbar gescheitert.</p>
+<p>-Kostja</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-06-29):</p>
+<p>@Kostja: Du kannst doch deinen Dojo machen wie du willst. Kein Problem. Du kannst auch einen Kostja-Stil prägen :-) Denn so wie du es beschreibst, ist es nicht Latifa und nicht Schwarm.</p>
+<p>Latifa ist nicht offen für jede Form. Anleitung wird offen abgelehnt. Die Kommentare waren eindeutig. Die Praxis ist eindeutig. Da wird nichts angeleitet.</p>
+<p>Und Schwarm ist auch nicht offen für jede Form. Schwarm hat eine Form; eine Minimalform: Anforderungserfassungsphase, Kreativphase, Umsetzungsphase, Reflexionsphase. In der Umsetzungsphase wird TDD betrieben und es werden die CCD Bausteine angemessen berücksichtigt. (Ich persönlich habe noch mehr Anspruch z.B. an die Form des Lösungsansatzes; aber den möchte ich nicht dem Schwarm-Stil allgemein aufprägen.)</p>
+<p>Alles, was diese Form sprengt, ist nicht Schwarm, sondern was anderes. Das ist völlig ok. Aber eben kein Schwarm.</p>
+<p>Du sagst: "Meine bisherige Erfahrung mit Coding Dojos hat gezeigt, dass insbesondere bei unterschiedlicher Zusammensetzung der Teilnehmer immer wieder neue Aspekte bei der Herangehensweise und insbesondere auch in der Gruppendynamik aufgetaucht sind."</p>
+<p>Dem kann ich nur zustimmen. Immer wieder sind neue Aspekte aufgetaucht.</p>
+<p>Das ist für mich aber nicht per se positiv. Oder nicht jeder Umgang mit diesen neuen Aspekten ist für mich per se positiv.</p>
+<p>Schwarm steht für verlässliches Lernen innerhalb einer bestimmten Form von der ich glaube, dass sie nützlich ist.</p>
+<p>Daran muss sich jeder neue Aspekt messen. Wenn ein neuer Aspekt bedeutet, wir sollten uns alle Wollmützen aufziehen beim Coden, damit es besser wird, dann muss mindestens argumentativ gezeigt werden, warum das so ist.</p>
+<p>Bei bisherigen Dojos habe ich viele unterschiedliche Sichtweisen gehört - aber leider wenige, die wirklich hilfreich waren.</p>
+<p>Deshalb bin ich - wie schon oft gesagt - ein Freund davon, sich einfach mal auf etwas einzulassen. Die Divergenz bei den Entwicklern ist so groß, dass wir uns bemühen müssen, etwas Konvergenz zu bekommen. Sonst können wir uns als Profession nicht wirklich profilieren. Wenn alles immer zur Diskussion steht, dann kommen wir nicht voran.</p>
+<p>Schwarm steht daher für eine Fahrt zum Code auf einer definierten Straße. Es mag andere Straßen geben, die zum Ziel führen. Wir fahren aber eine ganz bestimmte. Zumindest solange bis uns jmd zeigt, dass eine andere Straße zum Ziel führt.</p>
+<p>Das passiert aber besser außerhalb des Dojos. Im Dojo tun wir es, wie die Dojo-Regeln es definieren. (Es sei denn, es wird mal ein Meta-Dojo einberufen ;-)</p>
+<p>Damit tun wir es wie Budo-Dojos. Da wird im Dojo auch nicht lang diskutiert. Das wird nach den Regeln der Kunst unter Anleitung geübt.</p>
+<p>Bottom line: Das Schwarm-Dojo ist kein Debattierclub über die Form. Die Form ist so, wie sie ist. Darüber können wir diskutieren - aber außerhalb.</p>
+<p>Das Schwarm-Dojo führt zu Code-Lösungen in einer bestimmten Form. Innerhalb (!) dieser Form, sind Diskussionen selbstverständlich erlaubt, nein, gewünscht. Der "Sensei" achtet möglichst nur darauf, ob die Form eingehalten wird. Teilnehmer können sich also die Köpfe heiß reden darüber, ob dieser oder jener Test besser ist. Kein Problem. Oder diese oder jene Datenstruktur oder dieser oder jener Lösungsansatz der bessere ist.</p>
+<p>Das Schwarm-Dojo betet Lösungen nicht (!) vor. Die Teilnehmer lösen das Problem selbst. Allerdings in einem Rahmenwerk, das sie nicht selbst bestimmen. Beim Schwarm-Dojo geht es also darum, sich mal auf etwas einzulassen. Für manche Freigeister mag genau das aber das Problem sein.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-06-29):</p>
+<p>Ich hab jetzt noch nie an einem Dojo teilgenommen und erlaube mir auch kein Urteil darüber, welcher Stil "besser" ist.
+Trotzdem will ich einige Dinge loswerden:</p>
+<ol>
+<li>
+<p>Durch diesen Disput werde ich überhaupt erst sensibilisiert für solche Details. Also ich finde das nicht schlimm. Jeder coded doch sowieso so, wie es ihm gefällt (solange es keine Auflagen gibt). Und um den Stil zu finden, welcher am besten zu einem passt, ist es ja nicht schlecht zu hören, warum andere Menschen andere Stile bevorzugen.</p>
+</li>
+<li>
+<p>AOP,TDD,ORM,MVVM,EBC,ISB,WCF,CCD,CCR usw. Jedes mal wenn irgend so eine Abkürzung gehyped wird, sollte man das möglichst bedenken was häufig zu ganz fundamentalen Änderungen am Code bzw. der Art zu arbeiten führt.
+Kein Wunder, wenn kaum noch eine (größere) Software fertig wird.
+Jetzt wird lang und breit über die Art von Tests gesprochen...und ich wette, bis der Test dann nach den Wünschen aller optimal ist, gibts von MS-Research ne ganz doole Erweiterung, warum man keine Unit-Tests mehr braucht.
+Ich würde jetzt nicht so zu viel Zeit mit dem Streit über Coding-Stile verschwenden. ^^
+Nix ist älter als der Stil von gestern.
+Hab gerade in meinen alten Modulen zu EMS,XMS,IPX&amp;Mod-Music geblättert...bis auf "if" und "for" sehe ich da keine Ähnlichkeiten mehr zu aktuelleren Sources. ^^</p>
+</li>
+</ol>
+<hr />
+<p><strong>Mike Bild</strong> (2010-06-29):</p>
+<p>@Kostja: An der hybriden Coding Dojo Herausforderung gescheitert? Schade, ja ich meine das ist es inzwischen.</p>
+<p>Mehr Vielfalt in den .NET Coding Dojos?</p>
+<p>Mein vorläufiges Fazit: http://bit.ly/diIHXa</p>
+<hr />
+<p><strong>Mathias Raacke</strong> (2010-06-29):</p>
+<p>Hi Ralf,</p>
+<p>aus der ganzen Diskussion halte ich mich mal lieber raus ;-).</p>
+<p>Ich wollte (etwas "off-topic") nur die Gelegenheit nutzen, um auf die (wenig bekannte, aber manchmal praktische) Range-Methode der Enumerable-Klasse hinzuweisen. Die macht nämlich genau das, was Du im 2. Teil Deines Beispiels selbst implementiert hast, also Zahlen generieren: http://msdn.microsoft.com/en-us/library/system.linq.enumerable.range.aspx</p>
+<p>Gibt es im CCD schon eine Regel, die besagt, dass man im Framework vorhandene Funktionalität nicht selbst neu implementieren sollte? DRYF - Don't repeat your framework? Falls nein fände ich es gut, wenn ihr so eine Regel noch aufnehmen würdet. Ich sehe nämlich immer wieder in Schulungen, dass meine Kunden irgendwelche Funktionalitäten (Logging z.B.) nachbauen, die es so schon in .NET und in externen Frameworks gibt.</p>
+<p>Grüße,
+Mathias</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-06-29):</p>
+<p>@Mathias: Danke für den Hinweis auf Range(). Ich hatte im Hinterkopf, dass es so eine Funktion gibt, hab sie heute morgen aber nicht auf die Schnelle gefunden. (Irgendwie hab ich auf IE und nicht auf Enumerable gesucht.) Da es nur um 2 Zeilen vs 1 Zeile ging... hab ich mich entschieden, die einfach runter zu schreiben.</p>
+<p>War lernen wir? Was man nicht im Kopf hat, dass muss man Google fragen ;-)</p>
+<p>Oder besser: In einem Dojo wäre sicher irgendjmd dabei gewesen, der es gewusste hätte.</p>
+<p>Habe die Funktion nun eingesetzt.</p>
+<p>Ein DRYF Prinzip bei CCD ist deshalb aber nicht nötig. DRY reicht völlig aus.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Christoph T.</strong> (2010-06-30):</p>
+<p>Hallo Ralf,</p>
+<p>Nun der versprochene Kommentar ;)
+Vorneweg, ich bin weder pro  Latifa, noch pro Schwarm... Viel mehr pro Dojo, pro miteinander, pro sauberem Code.</p>
+<p>Was habe ich also zu deinem Post zu sagen?
+Zunächst einmal habe ich eine andere Interpretation des Latifa Stils.
+In Twitter hat du geschrieben:
+"Natürlich wird bei Latifa viel diskutiert. Meine Erfahrung mit dem Stil ist aber: das ist wenig systematisch." Und gleichzeitig verweist du in deinem Blogeintrag auf ein evtl. nicht vorhandenes Refactoring: <em>"So, wie ich bisher die Latifa-Dojos erfahren habe, glaube ich nicht, dass weitere Refaktorisierungen vorgenommen worden wären"</em></p>
+<p>Bei Twitter habe ich zunächst geantwortet da kommt in meinen Augen der Moderator ins Spiel. Die Aussage muss ich so in der Form zurück nehmen, denn deine Aussagen beinhalten mehr, als mir auf den ersten Blick klar war und sie haben mich die letzten Tage sehr zum nachdenken angeregt. Gleichzeitig habe ich beim Nachdenken mehr und mehr den Eindruck gewonnen, das Latifa kein eigener Stil eines Coding Dojos ist. In Code gesprochen wäre Latifa für mich ein Interface. Keine fertige Struktur,die ich einfach blind übernehmen kann. Ich muss Latifa mit Leben füllen, denn es definiert nur die Regeln des Umgangs und eine bestimmte geistige Haltung <em>ZU</em> einem Dojo. Mehr nicht. Keine Vorgaben zum Entwicklungsprozess, zum Inhalt oder zur Entscheidungsfindung. Gerade hier hatten wir am Samstag die heiße Diskussion konsens oder konsent?
+Meine Antwort wäre: Beides ist mit Latifa zu vereinbaren, denn gleichberechtigt und gleichgestellt widersprechen weder konsens, noch konsent. Ilkers Argument: beim konsent bleibt der Lerneffekt auf der Strecke kann ich außerdem nicht unterstützen. Hier muss man entgegnen, was unklar ist, kann und muss nachgefragt werden. Das erlauben die Regeln.
+Was hier in meinen Augen zu kurz kommt ist folgendes: Bei gleichberechtigt und gleichgestellt wird immer nur von Rechten gesprochen. Für mich existieren auch Pflichten, nicht so hart formuliert könnte man auch sagen, man trägt eine Verantwortung. Und eine essentielle Pflicht sollte sein, unbekanntes Nachzufragen. Ich trage für mich selbst die Verantwortung die Informationen zu bekommen, die ich benötige oder erlangen möchte. Das kann mir niemand abnehmen.
+Ob nun konsent oder konsens gewählt wird ist eigentlich irrelevant. Das sollte die Entscheidung der Gruppe sein, oder eben des Stils, der Latifa "implementiert".</p>
+<p>Zu Schwarm kann ich mich aktuell nur schwer äußern, da würde ich vorher gerne mal ein Schwarm Dojo besuchen.</p>
+<p>Zum Abschluss des Kommentares möchte ich noch betonen, dass ich unabhängig vom gewählten Stil die gemeinsamkeiten in den Vordergrund stellen möchte. Es wäre Schade wenn es aufgrund hitzig geführter Stil Diskussionen zu einem Bruch in der Dojo Community kommen würde. Ähnliches hat ja auch Mike Bild bereits in seinem Blog geäußert und Kostja hier im Blog. Ich persönliche hätte gerne diese "andere" Dojo mit dir in München erlebt. Als Vergleich. Hier sollte wohl bei allen Seiten für mehr Toleranz geworben werden. Denn alle vermitteln wertvolles Wissen. Aber wird das wissen effizienter vermittelt, in dem man sich auf einen Stil festlegt? Sollte man aufhören über den Tellerrand zu schauen?</p>
+<p>Es grüßt herzlich,
+Christoph Tohermes</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-06-30):</p>
+<p>@Christoph: Ich verstehe nicht, dass immer wieder von einem Bruch gesprochen wird, nur weil es zwei Stilrichtungen gibt.</p>
+<p>Ich zumindest sehe kein unversöhnliches Schisma. Für mich ist da einfach nur Raum für unterschiedliche Ansätze. (Leider wollen mir allerdings andere absprechen, dass ich dem Dojo-Geist folge.)</p>
+<p>Auch ohne die Stilbezeichnungen würden und werden Teilnehmer an Dojos von Ilker und Stefan/mir sagen, dass die irgendwie anders sind. Wie konkret? Hm... da würden sie dann ein paar Wahrnehmungen äußern. Hinterher.</p>
+<p>Jetzt haben wir Dojo-Stile mit Namen. Da muss man sich nicht überraschen lassen, dass die Dojos verschieden sind. Die Bezeichnung "Dojo" ist sozusagen keine "Mogelpackung" mehr ;-) Wer ein Schwarm-Dojo besucht, weiß was ihn erwartet. Wer ein Latifa-Dojo besucht, weiß das auch.</p>
+<p>Natürlich ist der jeweilige Moderator von entscheidender Bedeutung. Der moduliert auch nochmal den jeweiligen Stil. Das kann sogar soweit gehen, dass in einem offiziellen Latifa-Dojo am Ende die Schwärmerei losgeht ;-) (Obwohl... dann kriegt der Moderator wieder Haue, weil er zu stark führt, nehme ich an. Denn Anti-Führung, Anti-Schema scheint mir denn doch das Fundament von Latifa zu sein. Das meine ich nicht negativ, sondern nur beschreibend.)</p>
+<p>Ins Kino geh ich meist, um mich unterhalten zu lassen. Da sind erstmal alle Filme gleich. Die Unterhaltung durch einen Thriller ist aber eine andere als die durch eine Komödie. Ich wähle also besser noch das Genre, sonst bin ich enttäuscht.</p>
+<p>Dito beim Dojo: Im Dojo gibt es gemeinsames Codieren einer kleinen Aufgabe nach TDD - und Spaß macht es auch. Soweit die grundsätzliche Unterhaltung.</p>
+<p>Besser jedoch, ich wähle auch da ein Genre. Und Latifa (gelebt durch Ilker) ist definitiv anders als Schwarm (gelebt durch Stefan/mich).</p>
+<p>Die Spielfilmwelt bietet bunte Unterhaltung. Die Dojo-Welt bietet buntes gemeinschaftliches Codieren.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Christoph T.</strong> (2010-06-30):</p>
+<p>Hallo Ralf,</p>
+<p>Generell finde ich unterschiedliche Ansätze sehr gut. Sie beleben die Geschichte. Diskussionen bringen uns weiter und regen an, über das persönlich bevorzugte Dojo nachzudenken.</p>
+<p>Ich möchte dir keinesfalls absprechen das du dem Dojo Geist folgst. Es ist eher ein fokussierterer Geist. Mein Eindruck ist, deine Art Dojo lebt von einem konkreten Ziel auf das hingearbeitet wird, während Ilker eher eine "mal gucken was sich entwickelt" Philosophie vertritt.
+Beide vermitteln wissen, aber auf eine andere Art, auf einer anderen Ebene.</p>
+<p>Ein gewisses Maß an Führung halte ich für sehr wichtig. Grade wenn wir Timeboxed arbeiten. Ausufernde Diskussionen sind gut und fördern auch das mitdenken. An einem bestimmten Punkt muss man sich aber auch wieder auf das wesentliche fixieren können.
+Wie du sagst: <em>"Denn Anti-Führung, Anti-Schema scheint mir denn doch das Fundament von Latifa zu sein."</em></p>
+<p>Genau wegen diesem Punkt habe ich in meinem ersten Kommentar das Beispiel des Interface gewählt. Bei Ilkers Art kann das in der Form passieren, dort ist Disziplin der Teilnehmer gefragt. Ich teile dort deinen Eindruck. Wenn die Akzeptanz für ein wenig Führung durch den Moderator vorhanden ist, tut das dem Latifa Dojo definitiv gut.</p>
+<p>Vom eigentlichen Ansatz her gefällt mir Schwarm aktuell etwas besser. Bei meinem bisherigen Dojo Erlebnissen fehlte mir am Ende ein Ergebnis. Etwas greifbares, dass ich mit nach Hause nehmen konnte. Die Sache fühlte sich unfertig an.</p>
+<p>Ich habe nur bei einem dieser Dojos Führung durch den Moderator erlebt. Aber das führte gleich zu einem strukturierteren vorgehen und besseren Prozessen. Trotzdem würde ich behaupten  DAS war Latifa.</p>
+<p>Ich fände es schade, wenn es zu "Die machen Schwarm? Da geh ich lieber doch nicht hin" Erlebnissen kommt. Auch wenn das natürlich bei einer Programmauswahl passieren kann und vollkommen okay wäre.
+Wenn sich die Stile während eines Dojos vermischen fände ich das übrigens gut. Spricht doch nichts gegen Schwärmerei während Latifa ;-)</p>
+<p>Ich hoffe ich bekomme mal die Gelegenheit an einem deiner Dojos teilzunehmen. Schwarm Live würde mich sehr interessieren und vor allem, wie mein Gefühl nach einem solchen Dojo wäre.</p>
+<p>Schönen Abend noch,</p>
+<p>Christoph</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-07-01):</p>
+<p>@Christoph: Ich behaupte nicht, dass Schwarm Latifa ausschließt. Das behaupten andere. Die sehen durch die Struktur und die Anwesenheit eines Experten (oder zumindest eines Teilnehmers, der etwas weiter in einem Aspekt ist und deshalb anleitet) einen Widerspruch zu den Latifa-Regeln; Schwarm sei nicht zwanglos, enthielte Druck, hätte ein Leistungsziel, sagen sie.</p>
+<p>Nun ja, wenn man Struktur und Anleitung als Zwang, Druck, Leistung ansieht... dann haben sie halt Recht. Mir ist das aber egal. Wer so sensibel reagiert und sich gleich unter Zwang gesetzt fühlt und unter Leistungsdruck stöhnt, nur weil es nicht in jedem Moment so geht, wie er/sie grad meint... der muss halt schauen, wo er anders lernt.</p>
+<p>Dass es beim Latifa-Dojo wirklich besser ist, sehe ich nicht. Denn durch die Heterogenität der Teilnehmer sind auch immer unterschiedliche Ansprüche ans Dojo versammelt. Die werden nur nicht ausgesprochen. Also kommt es in Diskussionen zu Konflikten weil der eine fertig werden will, während die andere noch länger diskutieren möchte. Das erzeugt Spannungen, die zwar kein "Druck von oben" sind, aber nichtsdestotrotz ein ungutes Gefühl machen.</p>
+<p>Latifa ist - entgegen mancher Darstellung - eben nicht einfach nur eitel Sonnenschein. Schwarm auch nicht. Aber Schwarm weiß das und will auch nicht eitel Sonnenschein sein. Ich muss nicht am Ende rufen "War alles super!" quasi egal wie das Feedback war. Schwarm will nur eines: Erkenntnis im wohlwollenden und freundlichen Miteinander.</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-07-01):</p>
+<p>Hi,
+mein Vorname ist Björn und ich beweg mich seid neustem auf deinem Blog,
+Golo, Buchner seinem Blog.
+Bei Csharp (Viper78) beteteilige ich mich nach meinem Wissen, vorallem bei dem Datenbankteil und versuch dort zu helfen.</p>
+<p>Erst mal bin ich dankbar um diesen Blog.
+Es insperiert mich über solche Sachen nachzudenken, wo ich von selber erst mal nicht drauf gekommen wäre.
+Ihr zerfleischt euch (überspitzt gesagt) über eine Dojo stiel.
+Ein großteil der Programmier wird das kaum nachvollziehen können.
+Heist es nicht: Der Weg ist das Ziel!
+(Ich bin ein CCD:Orange/Gelb)
+Ihr habt mein Bewustsein wieder Ordentlich erweitert mit diesem Beitrag für das professionelle Programmieren.
+Ich hab mein eigenen Dojo Stiel :-) Hat das nicht einfach auch was mit der Persöhnlichkeit zu tuhn?</p>
+<p>MfG
+Björn ein sehr Intressierter Dojo Schüler!</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-07-02):</p>
+<p>@Björn: Natürlich hat jeder seinen Stil. So ganz grundsätzlich. Und das ist gut so. Das macht ja die Vielfalt aus. Die soll und muss sein, denn nur aus der Vielfalt entsteht Neues. Und das neue erzeugt wieder mehr Vielfalt usw. usf. Kurz: Entwicklung, Evolution braucht Vielfalt.</p>
+<p>Aber: Vielfalt allein ist nichts. So wie Geld allein auch nicht glücklich macht. Es darf auch gern noch Gesundheit und Freundschaft usw. dazu kommen.</p>
+<p>Vielfalt braucht also Gegengewichte. Denn ohne die gibt es keine Konvergenz. Wenn nur Vielfalt zählt, reden alle aneinander vorbei. Und wenn du einfach nur sagst, "Mein Stil ist halt mein Stil; mir sind die anderen egal", dann isolierst du dich.</p>
+<p>Der Schwarm-Stil ist nun der Überzeugung, dass Vielfalt an manchen Stellen sehr gut ist und an anderen begrenzt werden muss. Das hat der Schwarm-Stil nicht nur von der kognitiven Psychologie gelernt (konvergentes vs divergentes Denken), sondern auch in Dojo erlebt.</p>
+<p>Deshalb gibt es beim Schwarm-Stil eine minimale Grundstruktur für das Vorgehen und für die "Konvergenzphase" (Umsetzung) auch einen "Experten" in Bezug auf Umsetzungstechniken.</p>
+<p>Architekten haben auch alle ihre Stile. Doch sie müssen sich in gewissen Bahnen bewegen. Davon sollte die Softwareentwicklung lernen.</p>
+<p>Künstler sehen das übrigens auch so. Obwohl es in der Kunst in Stilen ja nicht mangelt, ist Kunst nicht regellos. Im Gegenteil! Am Anfang des Künstlerdaseins steht das Pauken von Regeln bzw. Techniken.</p>
+<p>Nur die Softwareentwickler glauben da nicht so recht dran. Die wollen immer wieder neu erfinden und sich nicht durch Regeln begrenzen lassen. Nach dem Motto "Es kommt darauf an" erfinden Sie das Rad nicht nur immer wieder neu in Bezug auf Problemlösungen, sondern auch in Bezug auf die Prozesse, die zu Problemlösungen führen oder in denen die umgesetzt werden.</p>
+<p>Das halte ich mindestens mal für ineffizient wenn nicht sogar für naiv und ignorant.</p>
+<p>Ergo: Der Weg mag das Ziel sein so allgemein im Leben. Aber sag das mal deinem Kunden. Der will, dass du ankommst, dass du auslieferst. Und zwar Zeug, das fehlerfrei ist, das zeitgerecht hergestellt ist und das sich auch noch leicht weiterentwickeln lässt.</p>
+<p>Wieviel Raum da für deinen Stil ist, für deine Erfindungen an Techniken, Konzepten, Prozessen... das kannst du dir ja mal überlegen.</p>
+<p>-Ralf</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

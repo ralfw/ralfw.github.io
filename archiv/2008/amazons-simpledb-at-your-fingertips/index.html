@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Amazons SimpleDB at your fingertips — ralfw.de Archiv</title>
+<meta name="description" content="Dass ich an einer Open Source Implementation (NSimpleDB) von Amazons SimpleDB Datenmodell und API sitze, hatte ich ja schon berichtet. Bisher lief das Ganze allerdings nur lokal. A">
+<link rel="canonical" href="https://ralfw.de/archiv/2008/amazons-simpledb-at-your-fingertips/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Amazons SimpleDB at your fingertips — ralfw.de Archiv">
+<meta property="og:description" content="Dass ich an einer Open Source Implementation (NSimpleDB) von Amazons SimpleDB Datenmodell und API sitze, hatte ich ja schon berichtet. Bisher lief das Ganze allerdings nur lokal. A">
+<meta property="og:url" content="https://ralfw.de/archiv/2008/amazons-simpledb-at-your-fingertips/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Amazons SimpleDB at your fingertips</h1>
+    <div class="doc-meta"><span>28. Jan. 2008</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2008/01/amazons-simpledb-at-your-fingertips.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2008/amazons-simpledb-at-your-fingertips/</code></span></div>
+    <div class="art"><p>Dass ich an einer Open Source Implementation (NSimpleDB) von <a rel="noopener" href="http://www.amazon.com/b/ref=sc_fe_l_2?ie=UTF8&amp;node=342335011&amp;no=3435361&amp;me=A36L942TSJ2AJA">Amazons SimpleDB</a> Datenmodell und API sitze, hatte ich ja <a rel="noopener" href="http://ralfw.blogspot.com/2008/01/oop-2008-die-datenbank-in-den-wolken.html">schon berichtet</a>. Bisher lief das Ganze allerdings nur lokal. Aber das war ok, denn ich wollte ja zunächst auch nur eine lokale Version zum Herumspielen für diejenigen, die noch keinen Zugang zum SimpleDB Betaprogramm bekommen hatten bzw. die, die einen so einfachen Datenbank-API für die Persistenz einfach auch lokal einsetzen wollen.</p>
+<p>Nun habe ich inzwischen jedoch selbst Zugang zur SimpleDB Beta bekommen. Deshalb war es mir natürlich ein Anliegen, den Umgang mit Amazons online Tuple Space in meine Implementation zu integrieren. Da mein eigenes API-Serviceinterface <em>ISimpleDBService</em> schon "serviceorientiert", d.h. für eine Benutzung als Remote-Schnittstelle ausgelegt war, stellte das nun auch kein Problem dar.</p>
+<p>Über dasselbe Interface lassen sich also nun sowohl Daten lokal wie online nach dem Amazon SimpleDB Datenmodell speichern und abfragen. Bisher ging das so lokal:</p>
+<p>ISimpleDBService ts;</p>
+<p>ts = new NSimpleDB.Service.VistaDb.VistaDbSimpleDBService("hello.ts");</p>
+<p>...</p>
+<p>ts.Close();</p>
+<p>Aber jetzt geht es auch so:</p>
+<p>ts = new NSimpleDB.Service.Amazon.AmazonSimpleDBService("", "");</p>
+<p>Einfach die <em>AmazonSimpleDBService</em> Implementation instanzieren, die von Amazon Ihrem AWS-Konto zugewiesenen Keys übergeben, fertig. An den sonstigen Operationen auf <em>ISimpleDBService</em> ist nichts zu ändern. Noch etwas mehr dazu in <a rel="noopener" href="http://weblogs.asp.net/ralfw/archive/2008/01/28/nsimpledb-use-amazon-180-s-simpledb-data-model-in-your-applications-now-part-4.aspx">meinem englischen Blog</a>.</p>
+<p>Ich finde mein Interface für das Amazon Datenmodell ziemlich gradlinig. Etwas objektorientierter könnte es zwar noch hier und da sein, aber dennoch leicht zu bedienen. Für einen remote service passt es aber erstmal so, würde ich sagen. Wer damit herumspielen mag, kann von meinem <a rel="noopener" href="http://code.google.com/p/nsimpledb/downloads/list">NSimpleDB Open Source Projekt</a> bei Google Code auch eine fertig übersetzte Assembly inkl. Demoprogramm herunterladen.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2008-01-29):</p>
+<p>Hallo Ralf,</p>
+<p>Du greifst mal wieder ein Thema auf, das mich auch sehr interessiert. Was Amazon da zur Zeit vom Stapel lässt, ist cool und wegweisend - vor allem auch das SQS Messaging API, dem ich allerhöchstes Erfolgspotential einräume. Sofern die Entscheider eines Tages meine Auffassung teilen, dass diese Art des Nachrichtenversandes über einen externen Internet Hub im Prinzip für jede verteilte Enterprise-Anwendung Sinn machen kann. Denn erst dann habe ich vollkommene Transparenz und es ist egal, ob die kommunizierenden Nodes nebeneinander im Büro oder an entferntesten Ecken der Welt stehen, ich kann mich auf meine Daten konzentrieren und die Infrastruktur weitgehend vergessen resp. isoliert betrachten.</p>
+<p>Die Idee, dass das Internet dereinst zum omnipräsenten Datenbus, quasi der "Äther" ausnahmslos aller Software und Services werden wird, ist bestimmt nicht von mir. Ich bin auf jeden Fall ein überzeugter Anhänger davon. Services wie SimpleDB und SQS flehen einen geradezu an, lokal begrenzte Speicher- und Messaging-Lösungen Geschichte werden zu lassen.
+Das einzig stichhaltige Gegenargument ist IMO noch die Verfügbarkeit/Bandbreite. Aber es ist nur eine Frage der Zeit, wann selbst Mobilfunkgeräte im 10 Mbit-Bereich senden und empfangen, über Kabelanbindungen braucht man dann gar nicht mehr zu reden.</p>
+<p>Dein Ansatz, SimpleDB fürs LAN nachzubauen, mag zwar technisch spannend sein, ist aber für die Akzeptanz von Service Outsourcing a la Amazon im Grunde ein Bärendienst. Wenn es z.B. einen genialen Wetter Webservice im Internet gibt, wieso sollte ich das lokal im LAN, mit Wetterstation auf dem Dach, nachbauen?
+Auch wenn sich die lokale NSimpleDB programmatisch gleich anfasst und man leicht auf den öffentlichen Anbieter switchen kann - am Ende pflegt man doch wieder aufwendig seine eigene Speicherlösung inkl. Backup, Failover &amp; Co., wo man eigentlich nur an die Businesslogik und die Frontend-Applikation denken wollte und sollte.</p>
+<p>In diesem Sinne,
+gutes Gelingen</p>
+<p>Hansi</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2008-01-29):</p>
+<p>@Hansi: Ich habe zuhause eine 30 Mbit Leitung ins Internet für 27 EUR/Monat inkl. Tel, alles flat. Für 35 EUR/Monat könnte ich 100 Mbit haben. Mein WLAN Router macht 54 MBit, wenn ich mich nicht irre. Das ist alles so schnell, dass es mir inzw. ziemlich egal ist, wo meine Daten liegen. Ich habe kein LAN mehr, in dem ich Daten sichere, sondern packe z.B. meine Sourcen komplett in online Subversion Repositories.</p>
+<p>Insofern stimme ich in deine Vision ein. SaaS ist die Zukunft für viele Szenarien.</p>
+<p>Allerdings: Vor allem bei sehr allgm Infrastrukturdiensten wie SQS oder S3 oder SimpleDB sehe ich eine Zukunft. Denn dann kann ich in meiner App immer noch entscheiden, was ich davon nutze, mache mich also nicht ganz abhängig. Ich könnte dann SimpleDB für einen Discovery-Service einsetzen und ansonsten direkt kommunizieren. BT Services stehen für mich auch in der Linie.</p>
+<p>Deine Kritik an NSimpleDB verstehe ich allerdings nicht. Ich habe meine Beweggründe doch deutlich genannt. 1. Verfügbarmachen des SimpleDB Datenmodells für die, die nicht in der Beta sind. Die haben sonst keine Alternative. 2. Einen Spielplatz bieten, der keine Kosten verursacht. 3. Anwendungen sowohl (!) lokal wie online mit dem selben API arbeiten lassen können.</p>
+<p>NSimpleDB will SimpleDB nicht ersetzen, sondern ergänzen. Mit der aktuellen Version kann ich lokal entwickeln und offline im Flugzeug. Dann instanziere ich eine andere Klasse und schon ist Amazons SimpleDB eingeschaltet. Das ist wie eine Attrappe beim Testen. Warum sollte es das nicht geben?</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2008-01-29):</p>
+<p>NSimpleDB als Entwicklungswerkzeug hat seine Berechtigung, das will ich gar nicht in Abrede stellen. Es ist absolut ehrenwert, so ein mock-up kostenfrei anzubieten.
+Aber wie Du selber sagst: Es ist eben -im Gegensatz zu SimpleDB- kostenfrei und so mancher wird nach schnellen, erfolgreichen Tests (es ist ja nun wirklich easy) versucht sein, das als nette kleine Embedded DB zu nutzen, jede Wette.
+Das an sich ist auch wieder nicht verwerflich. Das eigentliche Motiv jedoch, einen bestimmten externen Service -mithin das genaue Gegenteil einer Embedded Komponente- zu erläutern, bleibt dabei auf der Strecke.</p>
+<p>Meine Kritik zielt weniger auf NSimpleDB explizit als eher auf die allgemeine Problematik, Sinn und Anwendung solcher Services im Fallbeispiel darzustellen. Ohne dass ich selber genau wüsste, wie man es besser schaffen könnte.
+Googles Gears zeigt IMO eine mögliche Richtung auf: Offline-Betrieb mit Cache als Fallback und Teil eines Service, nicht als Ersatz.</p>
+<p>Könntest Du NSimpleDB in diese Richtung schieben? Das wär's!
+:-)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2008-01-29):</p>
+<p>@Hansi: Und warum sollte jmd NSimpleDB nicht statt SimpleDB einsetzen? Ich seh da kein Problem.</p>
+<p>Ein SaaS ist doch kein Selbstzweck. Wenn ein SaaS der geeignete Weg zu einer Problemlösung ist, dann wird er benutzt und kein lokaler Ersatz. Wenn ein SaaS aber unpassend ist, dann benutzt man vielleicht eine lokale, embedded Lösung - die genauso aussieht wie der SaaS. Was könnte es besseres geben als diese Wahlfreiheit???</p>
+<p>Mir geht es doch auch nicht darum, SaaS als Konzept "zu verkaufen". Und Amazon geht es nicht darum, auf Deubel komm raus, SimpleDB reinzudrücken. Es geht um die Steigerung der Optionenvielfalt. Und ich hab insofern einen draufgesetzt, als dass ich eine Option hinzugefügt habe, die kompatibel zu einer anderen ist. Und darüber hinaus ist NSimpleDB eine "enabling technology", weil die Nutzung von SimpleDB deutlich einfacher wird (wie ich finde), als mit dem Amazon-eigenen API.</p>
+<p>Wenn du mich dafür kritisiert, dass ich "Sinn und Zweck solcher Services" nicht dargestellt habe, dann geht das leider an meiner Intenstion völlig vorbei. "Sinn und Zweck" herauszufinden, habe ich bisher jedem selbst überlassen. Sie sind für mich entweder evident oder im Augenblick einfach nicht Thema.</p>
+<p>Meine Intention war nicht mehr und nicht weniger als das Datenmodell und einen API schlicht verfügbar zu machen, eben damit (!) man Sinn und Zweck selbst herausfinden kann. Leichter, kostengünstiger, universeller verfügbar.</p>
+<p>Hm... NSimpleDB local als Fallback zu benutzen, ist eine interessante Idee. Warum versuchst du dich nicht daran? Setze eine ISimpleDBService Implementation auf, die je nach online Status zwischen local und remote tuple space schaltet und Daten bei Bedarf repliziert. Das wäre doch mal eine Herausforderung. Dafür musst du nicht mal in die Sourcen eingreifen. Ich möchte erstmal an anderen Sachen arbeiten.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2008-01-29):</p>
+<p>Hm, offenbar denken wir aneinander vorbei - oder ich denke zu radikal?
+Ich sehe SaaS/SOA weniger als Ergänzung bestehender Techniken (Du nennst es "Steigerung der Optionenvielfalt") sondern in vielen Fällen als deren Ablösung. Wozu Optionenvielfalt, wenn eine Lösung die offensichtlich Mächtigste ist? Warum sollte ich dann noch andere Ansätze wählen? Services, vor allem im Internet, sind IMO der nächste Schritt der Software Evolution und ich tue mich schwer, am sogenannten "Bewährten" fest zu halten wo das Neue soviel mehr verspricht.</p>
+<p>Wie auch immer, NSimpleDB als Caching Layer vor der echten SimpleDB ist eine sehr spannende Aufgabe, der ich mich bei Zeiten widmen werde. Mangels freier Zeitkontingente nicht sofort, aber Du erhältst ein Update zum Thema!</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2008-01-29):</p>
+<p>@Hansi: Kleine, neue Alternativen heute können natürlich morgen die Platzhirsche sein. Aber das werden wir immer seltener erleben.</p>
+<p>So auch bei SimpleDB &amp; Co. SaaS wird lokale DBs nicht verdrängen so wie ODBMS die RDBMS nicht verdrängt haben und werden.</p>
+<p>Bei aller Connectivity sind wir noch weit davon entfernt, uns auf das Internet so zu verlassen wie auf den Strom. Ich sehe es als meist vorhanden an, aber nicht als so sicher, wie meine lokale Platte. Deshalb speichere ich gern Backups im Internet, aber nicht meine Zwischenschritte am Tag. Denn die möchte ich garantiert immer zur Verfügung haben.</p>
+<p>Insofern haben offline und online Applikationen ihre Berechtigung. Dass alles zum Thin Client wird, ist schon versucht worden - ohne Erfolg. Und das wird auch durch Silverlight mittelfristig nicht anders.</p>
+<p>Zumindest gilt das für PC-Applikationen. Etwas anderes mag es sein bei Applikationen, die eh eher "in the cloud" leben wie die auf Handys. Die werden sich mehr auf SaaS verlassen.</p>
+<p>Die Zeit der einen Wahrheiten, der großen Gegensätze ich vorbei. Wir leben in der Postmoderne. Nicht nur kulturell. Ersetzungen wie sie dir vorschweben, sind heute selten. Pluralität ist der Weg in die Zukunft.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2008-01-29):</p>
+<p>"[...] Etwas anderes mag es sein bei Applikationen, die eh eher "in the cloud" leben wie die auf Handys. Die werden sich mehr auf SaaS verlassen."
+In meinen Augen ist es nur eine Frage der Zeit, bis ausnahmslos alle Applikationen in diesem Sinne "in the cloud" leben und Vernetzung immanenter Bestandteil allen Entwicklungsstrebens sein wird. Vernetzte Kühlschränke, Fernseher und Autos werden heute noch immer gerne belächelt - aber die Zeit wird kommen, da bin ich mir sicher.</p>
+<p>"Ersetzungen wie sie dir vorschweben, sind heute selten."
+IMO öffnen sich gerade durch Vernetzung und Service Allgegenwart die Freiräume für ständige Ersetzungen - leistet ein Service nicht, was ich brauche, wird er durch einen anderen abgelöst! SOA führt doch genau hin zu Pluralität, einem vielfältigen konstruktiven Nebeneinander. Pluralität ist der Weg in die Zukunft - das sagst Du ja selber. Ich behaupte nichts Gegenteiliges!</p>
+<p>Gruß,
+Hansi</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2008-01-29):</p>
+<p>@Hansi: Vernetzung wird natürlich allgegenwärtiger. Aber ein Gefälle wird es noch länger geben. GBit-Anbindungen hier, langsame Verbindungen mit offline Pausen dort.</p>
+<p>Früher gab es nur offline, wenn es dann jetzt online gibt, dann gibt es und wird es geben: offline und online. Wenn ich also eine reine online Lösung wie SaaS anbiete, dann muss ich einkalkulieren, dass ich die, die "in einer anderen Welt leben (müssen)" verliere. Aber das ist ok. Weder das eine noch das andere ist deshalb aber "die Wahrheit".</p>
+<p>Schön, dass wir in der Pluralität einig sind. Ich sehe sie aber auch in der Form, wo es dir vor allem um den Inhalt geht. Die Form ist online vs offline.</p>
+<p>Wir werden sehen.</p>
+<p>-Ralf</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Asynchronizität und Verteilung üben - Szenarien für verteilte Anwendungen — ralfw.de Archiv</title>
+<meta name="description" content="Wer was Neues lernen will, tut das am besten zunächst mit Übungen. Chirurgen lernen neue Techniken erst an toten und/oder nicht menschlichen Lebewesen, Piloten lernen im Simulator.">
+<link rel="canonical" href="https://ralfw.de/archiv/2009/asynchronizitat-und-verteilung-uben/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Asynchronizität und Verteilung üben - Szenarien für verteilte Anwendungen — ralfw.de Archiv">
+<meta property="og:description" content="Wer was Neues lernen will, tut das am besten zunächst mit Übungen. Chirurgen lernen neue Techniken erst an toten und/oder nicht menschlichen Lebewesen, Piloten lernen im Simulator.">
+<meta property="og:url" content="https://ralfw.de/archiv/2009/asynchronizitat-und-verteilung-uben/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Asynchronizität und Verteilung üben - Szenarien für verteilte Anwendungen</h1>
+    <div class="doc-meta"><span>10. Juni 2009</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2009/06/asynchronizitat-und-verteilung-uben.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2009/asynchronizitat-und-verteilung-uben/</code></span></div>
+    <div class="art"><p>Wer was Neues lernen will, tut das am besten zunächst mit Übungen. Chirurgen lernen neue Techniken erst an toten und/oder nicht menschlichen Lebewesen, Piloten lernen im Simulator. Und ich will den neuen <a rel="noopener" href="http://xcoappspace.codeplex.com">Application Space</a> ausprobieren oder allgemeiner asynchrone und verteilte Architekturen üben. Was sind aber Übungsaufgaben, an denen ich mich versuchen kann? Einen <a rel="noopener" href="http://ralfw.blogspot.com/2009/05/auf-ins-raumzeitalter-asynchron-und.html">asynchronen und verteilten Service aufzusetzen</a> ist ja trivial. Von dem Service dann auch noch <a rel="noopener" href="http://xcoappspace.codeplex.com/Wiki/View.aspx?title=SampleDistributedComponent">Notifikationen</a> zu bekommen oder <a rel="noopener" href="http://xcoappspace.codeplex.com/Wiki/View.aspx?title=PubSubFeature">Pub/Sub</a> einzurichten, das ist auch trivial. Jeweils für sich genommen sind diese Dinge einfach - aber wie füge ich diese Bausteine zu etwas Größerem, Realistisch(er)em zusammen? Erst in einem umfassenderen Szenarion, das nicht von der Technik ausgeht, sondern von "Kundenanforderungen" kann ich auch feststellen, was einer Technologie wie dem Application Space noch fehlen mag (oder wo sie besonders geeignet ist).</p>
+<p>Hier möchte ich nun einige Szenarien zusammentragen, die mir als Übungen für Verteilung und Asynchronizität erscheinen. Sie sind mehr oder weniger komplex, aber immer irgendwie "zum Anfassen". Jedes bietet für die zu übende oder evaluierende Technologie eine andere Herausforderung. Ich werde sie mit dem Application Space implementieren, wer mag, kann aber natürlich WCF pur oder mit <a rel="noopener" href="http://www.microsoft.com/azure/sdk.mspx">Azure</a> oder <a rel="noopener" href="http://www.ag-software.de/index.php?page=agsxmpp-sdk">Jabber pur</a> oder <a rel="noopener" href="http://code.google.com/p/masstransit/">MassTransit</a> oder <a rel="noopener" href="http://www.nservicebus.com/">NServiceBus</a> oder <a rel="noopener" href="http://ayende.com/Blog/archive/2008/12/17/rhino-service-bus.aspx">Rhino Service Bus</a> oder MSMQ pur oder TCP Sockets pur oder noch ganz andere Technologien damit ausprobieren. Ganz im Sinne der <a rel="noopener" href="http://ralfw.blogspot.com/2009/06/school-of-net-stakeholdervertragliches.html">School of .NET Diskussion</a> sehe ich diese Szenarien auch als Chancen für ganzheitliches Lernen. <a rel="noopener" href="http://www.clean-code-developer.de/">Clean Code Development</a>, Komponentenorientierung, .NET Framework Grundlagen, TDD... all das und mehr kann man auch einfließen lassen.</p>
+<h4>Szenario 1: Stammdatenverwaltung</h4>
+<p>Aller Anfang sollte einfach und typisch sein. Deshalb ist mein erstes Szenario eines, mit dem viele Entwickler immer wieder konfrontiert werden: die Stammdatenverwaltung oder "forms over data". Ein Anwender verwaltet mit seinem Client Daten in einer Datenbank mit den üblichen CRUD-Funktionen: Create, Read, Update, Delete. Zusätzlich kann er einen serverseitigen Datenimport anstoßen.</p>
+<p>Ob sich für dieses Szenario eine Verteilung überhaupt lohnt, sei einmal dahingestellt. Allemal, wenn aus anderen Gründen eine Anwendung verteilt werden soll, muss auch die Stammdatenverwaltung auf eine solche Architektur abgebildet werden.</p>
+<p>Um das Datenmodell einfach zu halten, reicht es aus, wenn das Szenario sich nur um Personen mit ihrer Adresse dreht.</p>
+<p>Datenmodell:</p>
+<ul>
+<li>Person(Nachname, Vorname, Straße, PLZ, Ort, Land, Tel, Soundex)</li>
+</ul>
+<p>Featureliste:</p>
+<ul>
+<li>Der Anwender kann nach Personen suchen; der Server liefert eine Liste von passenden Personen zurück.  Der Anwender kann eine gefundene Person bearbeiten und speichern.  Der Anwender kann eine neue Person anlegen.  Der Anwender kann eine Person löschen.  Der Anwender kann gefundene Adressen in eine CSV-Datei exportieren. Der Export kann clientseitig erfolgen.  Der Anwender kann den Import von Personen aus einer CSV-Datei veranlassen. Dazu muss er dem Server mitteilen, in welcher Datei die Daten liegen. Der Server importiert, meldet zwischendurch den Fortschritt und liefert am Ende ein Importresultat.  Dublettenprüfung: Jede Person soll nur einmal in der Datenbank stehen. Mehrere Sätze mit denselben Daten sind zu vermeiden, um bei Mailings nicht mehrere Briefe an dieselbe Person zu senden. Um den Vergleich von Personen zu vereinfachen, können sie mit einem Soundex-Wert ausgestattet werden. Wannimmer eine Person gespeichert werden soll (nach Bearbeitung, nach Neuanlage, beim Import) und schon mit einem anderen Datensatz in der Datenbank vertreten ist, wird die Operation verweigert und der Anwender informiert. Die Dublettenprüfung kann in Schritten implementiert werden:   Dubletten bei Neuanlage prüfen  Dubletten beim Import prüfen  Dubletten nach Bearbeitung prüfen</li>
+</ul>
+<p>Klingt doch einfach, oder? Hat aber natürlich seine Tücken, denn es gilt ja, diese Funktionalität asynchron und verteilt zu realisieren. Wie kommunizieren Client und Server im Sinne einer solchen Stammdatenverwaltung miteinander?</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9e6035454eb2156c.png" /></p>
+<p>Herausforderungen:</p>
+<ul>
+<li>Wie werden asynchrone Operationen wie Speichern oder Import im UI repräsentiert?  Wie meldet der Server den Fortschritt beim Im/Export an den Client (Notifikationen)?</li>
+</ul>
+<h4>Szenario 2: Referentenfeedback (Heckle Service)</h4>
+<p>Christian Weyer hat ein schon älteres Szenario in seinem dotnetpro-Artikel <a rel="noopener" href="http://dotnetpro.de/articles/onlinearticle2934.aspx">"Schnuppern an Azure"</a> (5/2009)mit den aktuellen Technologien neu implementiert. In der dotnetpro 7/2009 greife ich das auf und realisiere es mit dem Application Space.</p>
+<p>Die Idee ist einfach: Zuschauer eines Vortrags auf einer Konferenz sollen dem Referenten live Feedback geben können. Sie sollen sozusagen elektronisch zwischenrufen können (engl. to heckle). Dazu hat jeder Teilnehmer einen Client, mit dem er kurze Textnachrichten an den Referenten senden kann, der sie in einem eigenen Frontend auflaufen sieht.</p>
+<p>Datenmodell:</p>
+<ul>
+<li>Nachricht(Absendername, Nachrichtentext, Eingangszeitstempel) - Jede Nachricht gehört natürlich zu einem Referenten. Ob das allerdings in der Nachricht vermerkt werden muss, soll hier nicht festgelegt werden.</li>
+</ul>
+<p>Featureliste:</p>
+<ul>
+<li>Teilnehmer senden Zwischenrufe an den Referenten.  Teilnehmer sehen sich die Liste der letzten n Zwischenrufe an.  Der Referent bekommt jeden Zwischenruf automatisch angezeigt.  Falls der Referent sein Frontend - aus welchen Gründen auch immer - neu startet, bekommt er die Liste aller bisher eingegangenen Zwischenrufe angezeigt.  Der Referent identifiziert sich irgendwie, so dass die Teilnehmer ihm und keinem anderen ihre Zwischenrufe senden. Die Teilnehmer müssen einen Referenten also beim Zwischenrufen adressieren. Potenziell kann die Heckle-Anwendung ja gleichzeitig in vielen Vorträgen zum Einsatz kommen.  Der Veranstalter der Vorträge kann die Zwischenruflisten aller Referenten jederzeit einsehen.</li>
+</ul>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a29ac35d2e272d31.png" /></p>
+<p>Herausforderungen:</p>
+<ul>
+<li>Wie nehmen Teilnehmer mit dem Referenten Kontakt auf? Direkt, indem sie seinen Rechner adressieren oder indirekt via eines Discovery-Servers?  Wo werden die Nachrichten vorgehalten, damit vor allem Teilnehmer und Veranstalter sich jederzeit einen Überblick verschaffen können?  Wie wird insb. der Referent automatisch über neue Nachrichten informiert?</li>
+</ul>
+<h4>Szenario 3: Tic Tac Toe</h4>
+<p>Es ist zwar kein typisches Geschäftsanwendungsszenario, aber es macht Spaß: ein Spiel realisieren. Bei <a rel="noopener" href="http://de.wikipedia.org/wiki/Tic_Tac_Toe">Tic Tac Toe (TTT)</a> sind die Regeln simpel, so dass man sich auf die verteilte Implementation konzentrieren kann.</p>
+<p>Zwei Spieler spielen gegeneinander auf einem TTT-Brett. Jeder sitzt an seinem PC und sieht den gemeinsamen Spielstand.</p>
+<p>Datenmodell:</p>
+<ul>
+<li>Spielfeld mit 3x3 Spielfeldern in den Zuständen O, X und leer. Zusätzlich sollte das Spielfeld noch einen Spielzustand haben wie Spiel begonnen, Spiel beendet, Gewinner ist Spieler 1, Gewinner ist Spieler 2.</li>
+</ul>
+<p>Featureliste:</p>
+<ul>
+<li>Ein Spieler bietet sich zum Spiel an.  Ein Spieler nimmt Kontakt mit einem anderen auf und sie beginnen eine Partie.  Spieler machen Züge.  Ob und welcher Spieler gewinnt, wird automatisch festgestellt.  Ein Spieler beendet eine Partie vorzeitig.</li>
+</ul>
+<p>Dies ist während des Spiels natürlich ein Peer-to-Peer-Szenario. Ob intern die Rollen aber auch gleich sind oder nicht vielleicht doch ein Spieler ein Partienserver ist, hängt von der Implementation ab.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/5e993d603115e169.png" /></p>
+<p>Herausforderungen:</p>
+<ul>
+<li>Wie nehmen die Spieler Kontakt miteinander auf?  Wo wird der Partienzustand gehalten?  Wie erfahren die Spieler über den nächsten Zug?  Wie wird den Spielern das Spielende mitgeteilt?</li>
+</ul>
+<h4>Szenario 4: Starbucks</h4>
+<p>Gregor Hohpe hat <a rel="noopener" href="http://www.eaipatterns.com/ramblings/18_starbucks.html">in einem Blogbeitrag</a> deutlich gemacht, wie wenig praktikabel die bisher so beliebten 2-Phase-Commit-Transaktionen in der realen Welt, d.h. in asynchronen (und verteilten) Szenarien sind. <a rel="noopener" href="http://masstransit.pbworks.com/starbucks">MassTransit</a> und <a rel="noopener" href="http://ayende.com/Blog/archive/2009/01/14/rhino-service-bus-the-starbucks-example.aspx">Rhino Service Bus</a> haben das aufgenommen und versucht, mit ihren Mitteln das Szenario abzubilden. Es ist einfach eine schöne Fingerübung für jeden, der in die verteilte und asynchrone Programmierung einsteigen will.</p>
+<p>Bei Starbucks kommen Kunde, Kassierer und Barista zusammen. Der Kunde bestellt ein Getränk, der Kassierer nennt den Preis und nimmt das Geld entgegen. Währenddessen bereitet der Barista schon das Getränk zu und serviert es, wenn die Zahlung geklappt hat.</p>
+<p>Datenmodell:</p>
+<ul>
+<li>Bestellung(Getränkeart, Bechergröße, Menge)  Zahlungsaufforderung(Gesamtpreis einer Bestellung)  Bezahlung(Betrag, Zahlmittel) - Zahlmittel könnten Barzahlung oder Kreditkarte sein</li>
+</ul>
+<p>Featureliste:</p>
+<ul>
+<li>Kunde bestellt ein Getränk beim Kassierer. Variation: Kunde bestellt mehrere und verschiedene Getränke beim Kassierer.  Kassierer nennt den Gesamtpreis  Kunden bezahlt  Kassierer nimmt Bezahlung entgegen und prüft den Betrag. Wenn ok, dann schließt er die Bestellung ab.  Barista bereitet bestellte Getränke vor.  Wenn Bezahlung abgeschlossen, stellt der Barista die Getränke zur Abholung bereit.</li>
+</ul>
+<p>Der Kunde kann hier als interaktiver Client realisiert werden. Kassierer und Barista hingegen sind automatische Dienste. Um die reale Welt nachzustellen, können ihre Funktionen über Pausen (Thread.Sleep()) eine wahrnehmbare Dauer bekommen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e93988223aae1303.png" /></p>
+<p>Herausforderungen:</p>
+<ul>
+<li>Wie nehmen die Beteiligten Kontakt miteinander auf?  Wie wird der Dialog zwischen Kunde und Kassierer geführt?  Wie erfährt der Kunde über das fertiggestellte Getränk?  Was passiert mit einem schon zubereiteten Getränk, wenn die Zahlung nicht erfolgreich ist?</li>
+</ul>
+<h4>Szenario 5: Arbeitsteilung</h4>
+<p>Das MSDN Magazine Juni/2009 beschreibt in <a rel="noopener" href="http://msdn.microsoft.com/en-us/magazine/dd882514.aspx">"A Peer-To-Peer Work Processing App With WCF"</a> ein Szenario, dass sich auch zur Übung zu realisieren lohnt. Mehrere sog. Worker stehen da bereit, um Aufträge von sog. Usern anzunehmen. Der Artikel nutzt zur Arbeitsverteilung das P2P-Protokoll von WCF - aber man kann es auch anders machen.</p>
+<p>Datenmodell:</p>
+<ul>
+<li>Arbeitsauftrag(Id, Dauer)</li>
+</ul>
+<p>Featureliste:</p>
+<ul>
+<li>User vergeben Aufträge in einen Pool von Workern hinein.</li>
+<li>Worker übernehmen einen oder mehrere Arbeitsaufträge.</li>
+<li>Worker können dem Pool beitreten oder ihn verlassen.</li>
+<li>Ob ein Worker Aufträge annimmt hängt von seiner Last ab. Die gesamte Auftragslast soll natürlich möglichst gleichmäßig auf die Worker verteilt werden.</li>
+<li>Wie die Arbeit "so läuft" können sog. Spectators beobachten; sie dienen der Instrumentierung des Systems.</li>
+</ul>
+<p>In dieser Featureliste fehlen einige Aspekte, die der Artikel beschreibt, z.B. "Work Item Backup" oder "Work Sharing". Ich habe sie nicht aufgenommen, weil sie mir abhängig scheinen vom gewählten Lösungsweg (hier: P2P-Kommunikation). Meine Szenarien sollen aber keine Lösungswege oder Technologien nahelegen (z.B. Einsatz eines Busses oder Sagas oder P2P-Kommunikation).</p>
+<p>Die schlanken Aufträge habe ich ebenfalls deshalb übernommen. Es geht ja nicht um eine konkrete Problemdomäne. So müssen die Aufträge nur eine Dauer haben, um Lastverteilung beobachten zu können.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f74473221cfed9ab.png" /></p>
+<p>Herausforderungen:</p>
+<ul>
+<li>Wie wird die Auftragslast möglichst gleichmäßig (oder "gerecht") auf die Worker verteilt?</li>
+<li>Wie werden weitere Worker möglichst unmittelbar in die Auftragsbearbeitung einbezogen? Oder allgemeiner: Wie kann der Worker-Pool "atmen"?</li>
+<li>Wie werden User über Auftragsergebnisse (oder gar Fortschritte) informiert?</li>
+<li>Wie kann ein Spectator die Arbeit(sverteilung) beobachten?</li>
+<li>Müssen Aufträge nach Vergabe noch "gesichert" werden können, falls Worker noch nicht zu ihrer Verarbeitung gekommen sind?</li>
+<li>Wie können die Worker möglichst ortsunabhängig verfügbar gemacht werden?</li>
+</ul></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

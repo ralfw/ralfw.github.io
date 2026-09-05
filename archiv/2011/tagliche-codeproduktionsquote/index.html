@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tägliche Codeproduktionsquote — ralfw.de Archiv</title>
+<meta name="description" content="Wieviel Code produzieren Sie eigentlich? Wieviele LOC pro Tag, wieviele LOC davon Produktionscode? Schätzen Sie mal. Sind das 100, 500, 1000 Zeilen (ohne Kommentare, automatisch ge">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/tagliche-codeproduktionsquote/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Tägliche Codeproduktionsquote — ralfw.de Archiv">
+<meta property="og:description" content="Wieviel Code produzieren Sie eigentlich? Wieviele LOC pro Tag, wieviele LOC davon Produktionscode? Schätzen Sie mal. Sind das 100, 500, 1000 Zeilen (ohne Kommentare, automatisch ge">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/tagliche-codeproduktionsquote/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Tägliche Codeproduktionsquote</h1>
+    <div class="doc-meta"><span>26. Juni 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/06/tagliche-codeproduktionsquote.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/tagliche-codeproduktionsquote/</code></span></div>
+    <div class="art"><p>Wieviel Code produzieren Sie eigentlich? Wieviele LOC pro Tag, wieviele LOC davon Produktionscode? Schätzen Sie mal. Sind das 100, 500, 1000 Zeilen (ohne Kommentare, automatisch generierte using-Anweisungen und ohne Tests)?</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a8db38a218d23152.png" /></p>
+<p>Habe gerade die <a rel="noopener" href="http://smartbear.com/PDF/11_Best_Practices_for_Peer_Code_Review.pdf">Code-Review-Fibel</a> von SmartBear gelesen. Darin ging es auch um LOC.</p>
+<p>Empfohlen wird nämlich, pro Peer Code Review nicht mehr als 200+ LOC durchzusehen. Da frage ich mich, wie lang ein Entwickler an diesen durchzusehenden Zeilen gesessen haben mag.</p>
+<p>Der Review sollte nicht länger als 60-90 Minuten dauern. Wieviel Zeit ist vorher aber in die Produktion der Sourcen geflossen? Weniger oder deutlich mehr?</p>
+<p>Keine Ahnung. Aber ich rechne einfach mal:</p>
+<p>Wenn 1 Entwickler pro Tag 200 LOC netto Produktionscode schreibt, dann kommen pro Woche 1.000 LOC heraus und bei 200 Arbeitstagen pro Jahr 40.000 LOC. Ein Team von 3 Entwicklern käme auf 120.000 LOC/Jahr, 5 Entwickler auf 200.000 LOC/Jahr.</p>
+<p>Das finde ich nicht schlecht. Denn insgesamt sind das ja immer doppelt soviele LOC, weil Produktionscode natürlich testgestützt ist und Tests gut und gern 50% des Gesamtcodeumfangs ausmachen.</p>
+<p>120.000 LOC oder 200.000 LOC… das sind keine kleinen Projekte. Dazu kommt, dass eine Codeproduktionsquote von 200 LOC/Tag mit der Zeit immer mehr Kundenwert produziert. Je mehr Code schon existiert, desto eher können 200 neue Zeilen auf schon geschaffene Abstraktionen zurückgreifen.</p>
+<p>200 LOC/Tag pro Entwickler mögen sich wenig anhören. Und natürlich kann man mehr “raushauen”, wenn man ein Code-Cowboy ist. Doch die 200 LOC/Tag, die ich meine, sind sauberer, d.h. verständlicher, evolvierbarer und gut testabgedeckter Code. Solche 200 LOC/Tag pro Entwickler konsequent produzieren, finde ich daher völlig akzeptabel.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/469878f4c0a04f47.png" /></p>
+<p>Dabei fällt mir die <a rel="noopener" href="http://www.prodevcollege.de/ccd-school.html">Clean Code Developer School</a> ein, deren 5. Staffel wir vor ein paar Wochen abgeschlossen haben. Darin unterrichten wir den Stoff an vielen Projekten (<a rel="noopener" href="http://clean-code-advisors.com/ressourcen/application-katas">AppKata</a> würde ich sie heute nennen). Und jedes Projekt durchlaufen wir nach einem systematischen Prozess, zu dem mindestens gehören: Anforderungsanalyse, Feature Slicing, Modellierung, Implementierung, Code Review.</p>
+<p>Pro solcher Iteration produziert jeder Teilnehmer ca. 50-80  LOC Produktionscode, schätze ich mal. Und pro Tag durchlaufen wir meistens 2 Iterationen. D.h. unter Lernbedingungen, wo alles etwas langsamer geht, kommen schon 100-150 LOC raus.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/44a56c2a1e464058.png" /></p>
+<p>Der Review dauert je nach Übung 30-60 Minuten. Dabei schauen wir den Code von 1 bis 3 Teilnehmern unter verschiedenen Gesichtspunkten an.</p>
+<p>Und am Ende des Tages? Da sind wir zufrieden. Das finde ich sehr wichtig. Wir wissen einfach, dass wir Qualität produziert haben. Wir schließen immer mit einer Retrospektive und reflektieren unsere Arbeitsweise.</p>
+<p>Wenn ich das nun auf ein Projekt übertrage, dann scheinen mir 200 LOC/Entwickler netto Produktionscode als Tagesquote ein brauchbarer Wert.1 Der Code lässt sich dann nämlich nicht nur schreiben, sondern auch noch in einem Code Review lesen.</p>
+<p>Der Rhythmus könnte z.B. so sein: Heute 200 LOC produzieren, morgen die 200 LOC annotieren (d.h. als Produzent reflektieren, s. <a rel="noopener" href="http://smartbear.com/PDF/11_Best_Practices_for_Peer_Code_Review.pdf">Code Review Fibel</a>) und Peer Code Review durchführen. Dann hat man einmal drüber geschlafen und schaut seinen Code am nächsten Tag frischer an. Das trägt sicher positiv zur Fehlerfindung bei. Was heute geschrieben wurde, ist morgen durchgesehen und bereit für die QS. Jeden Tag wieder. Konsequent. Systematisch.</p>
+<p>Zuwenig Code sind 200 LOC/Tag/Entwickler also nicht.</p>
+<p>Aber sind sie vielleicht zuviel? Ja, in manchen Projekten mögen Entwickler nicht einmal auf soviele LOC/Tag kommen. Immer ist irgendwas, das sie davon abhält: Meetings, Support, Dokumentation schreiben… Die Ablenkung lauert überall.</p>
+<p>Sollte das der Fall sein, dann haben Sie nun mit den 200 LOC Codeproduktionsquote für den Tag einen Wert, über den Sie mit dem Chef reden können. Solange die “Produktionsverhältnisse” nicht so sind, dass Sie jeden Tag 200 LOC netto Produktionscode schreiben, solange müssen die Verhältnisse noch verbessert werden. Aber Achtung: Dazu gehört natürlich auch der tägliche Code Review!</p>
+<p><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY"></a><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY">Spendieren Sie mir doch einen Kaffee, wenn Ihnen dieser Artikel gefallen hat…</a></p>
+<h4>Fußnoten</h4>
+<p>1 Sollten Sie mehr Code “raushauen” können pro Tag, dann müssen Sie sich fragen, wann dafür Code Review stattfinden soll. Ich bezweifle, dass Sie bei einer höheren Produktionsquote systematisch mit Code Reviews die Qualität steigern können.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2011-06-27):</p>
+<p>Ich wusste ja gar nicht, dass Anwendungsentwickler Fließbandarbeiter sind. (Tut mir Leid, aber das konnte ich mir nicht verkneifen. <em>g</em>)</p>
+<p>Ganz ehrlich:
+Einen Entwickler daran zu messen, wieviel LOC er am Tag schafft, ist so ähnlich, als würde ich einen Maler daran messen, wieviele Bilder er am Tag malt.
+Wir hatten das ja schon mal, dass der Anwendungsentwickler ein kreativer Beruf ist.</p>
+<p>Wie kommt man aber jetzt auf die Schiene der LOC pro Tag?
+Ich könnte z.B. gar nicht mal sagen, wieviel LOC ich am Tag schaffe, da dieser Wert für mich absolut unbedeutend ist.</p>
+<p>Für mich zählt in erster Linie:
+Ist der Kunde mit der Lösung zu Frieden oder nicht?
+Wenn er z.B. ein Feature haben will, was schon mit ca. 10 LOC implementiert ist, dann ist es eben so. Der Kunde freut sich ... und ich ärgere mich, weil es dann doch "nur" 10 LOC am Tag waren? <em>rofl</em></p>
+<p>Nein, auf dieses Maß der LOC pro Tag lasse ich mich nicht herab.
+Ich bin doch kein Sekretär, den man danach misst, wieviel Wörter er in der Minute tippen kann.</p>
+<p>(Vielleicht habe ich Deinen Beitrag auch nur falsch verstanden ... hoffe ich mal.)</p>
+<p>mfg</p>
+<p>Christian</p>
+<hr />
+<p><strong>pvblivs</strong> (2011-06-27):</p>
+<p>200 LOC je Tag netto ist eine krasse Annahme.</p>
+<p>In meinem Hinterkopf war eher irgendwas niedriges zweistelliges (20-50). Und Googlen hat behauptet 10-16. Z.B.: http://www.torsten-horn.de/techdocs/buecher.htm#LudewigLichter-SoftwareEngineering</p>
+<p>Die Argumentation dahinter Langfristigkeit, insofern mögen in der täglichen Realität 20 bis 50 vielleicht an der Tagesordnung sein. Aber was nach einem halben Jahr übrig bleibt? Da kommen 5 Leute nicht mir normalen Mitteln auf 6-stellige Beträge.</p>
+<p>200 Zeilen ohne Tests produzieren bei 8 Stunden konzentriertem Arbeiten am Stück das wären nach Herrn Riese auch 25 LOC je Stunde oder 1 Zeile Produktionscode alle 2 Minuten. Gerade auf einem Blog wo Design hochgehalten wird eine sehr spannende Annahme, selbst wenn ich so perfekt bin dass ich auf Refactorings an dem Tag verzichten kann</p>
+<p>;-)</p>
+<hr />
+<p><strong>Golo Roden</strong> (2011-06-27):</p>
+<p>Hi Ralf,</p>
+<p>mir ist nicht ganz klar, warum gerade 200 das Maß der Dinge sein soll?</p>
+<p>Ich hätte intuitiv auf weniger getippt, allerdings halte ich auch LoC für so ziemlich die schlechteste Metrik, wenn man denn schon die Entwicklung überhaupt mit einer Metrik versehen will (was ich auch nicht für sonderlich sinnvoll halte).</p>
+<p>Abgesehen davon greifen die üblichen Probleme mit LoC: 200 Zeilen in C# sind sicherlich etwas anderes als 200 Zeilen in Perl oder gar in Assembler. Gut, nun mag man argumentieren, dass man hier ausschließlich über Hochsprachen spricht, dennoch sagt die Anzahl der Zeilen überhaupt nichts über die Produktivität, und erst recht nicht über die Qualität aus.</p>
+<p>Was mich auch daran stört: Man misst mit LoC/Tag den Weg, nicht das Ziel. Der Weg ist langfristig aber uninteressant, nur das Ergebnis spielt eine Rolle. Wichtig am Ergebnis sind:</p>
+<ul>
+<li>In-time</li>
+<li>In-quality</li>
+<li>In-budget</li>
+<li>In-scope</li>
+</ul>
+<p>(ohne damit eine Priorisierung andeuten zu wollen).</p>
+<p>Wie viele LoC dafür notwendig waren, ist mir dabei herzlich egal. Möglichst wenige, ohne die Lesbarkeit zu vernachlässigen. Ob das nun 200 sind oder 20, spielt für das Ergebnis keine Rolle.</p>
+<p>Und so lange die vier genannten Faktoren für jedes Feature gelten, ist es mir auch egal, wie viele Codezeilen jemand am Tag schreibt. Potenziell ist jemand produktiver und effizienter, der nur 5 Zeilen "genialen" Code schreibt, als jemand, der 200 Zeilen mal eben schnell, schnell herunterbricht - nur um auf die willkürlich festgesetzte 200 zu kommen und der Metrik zu entsprechen.</p>
+<p>Wozu also dieses Maß?</p>
+<p>Viele Grüße,</p>
+<p>Golo</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-06-27):</p>
+<p>@alle: Ach, das ist so herrlich zu sehen, wie die Entwicklergemeinde so ihre Knöpfe hat.</p>
+<p>"Objektorientierung" ist so ein Knopf, "Schätzen" auch. Wie ich feststelle - und eigentlich hätte ahnen müssen - "LOC" ebenfalls. So sei es denn.</p>
+<p>Warum merkt denn aber niemand, worum es mir hier geht? Habe ich das sooo schlecht ausgedrückt. Wirklich?</p>
+<p>Weder geht es um Messung; LOC als Machtinstrument ist doch gar nicht mein Thema.</p>
+<p>Noch geht es um ein Mindestmaß. Dass das niemand merkt, verstehe ich am wenigsten. Ich habe kein Mindestmaß mit 200 LOC/Tag beschrieben, das mal besser alle sich anstrengen sollten zu erreichen. Vielmehr habe ich ein Höchstmaß definiert.</p>
+<p>Und hat denn überhaupt niemand erspürt, dass ich hier für Langsamkeit plädiere, für Sorgfalt, für Qualität, für Zufriedenheit?</p>
+<p>Diese Begriffe kommen in meinem Artikel vor. Haben die da gar keine Bedeutung, mit der sie den anderen Begriff - LOC - einfärben?</p>
+<p>Auch ich glaube, dass 200 LOC/Tag netto Produktionscode ne ganze Menge ist. Wer sie konsequent erreicht, der segelt schon ganz schön zügig.</p>
+<p>Ich stelle die aber nicht so einfach in den Raum, sondern setze sie in Bezug. Nämlich zu der Menge, die pro Sitzung in einem Code Review durchgesehen werden soll.</p>
+<p>Ich sage: Wenn ihr dem Ideal folgt, jeden Tag einen Code Review zu machen, dann versucht nicht, mehr als 200 LOC zu produzieren.</p>
+<p>So einfach ist das.</p>
+<p>Es zählt eben nicht, möglichst viel LOC rauszuhauen, sondern nur soviel, dass der Code komplett (!) unter Code Review steht. Immer. Konsequent. Systematisch.</p>
+<p>Wer jeden Tag nur 15 Zeilen schafft und vom Chef keinen Druck kriegt... nun, der erfüllt diese Bedingung. Ist doch schön.</p>
+<p>Allerdings: In einer Hinsicht habe ich die 200 LOC auch als, hm, anzupeilendes Ziel gemeint. Nämlich insofern, als dass Entwickler nicht mit allen Arbeitsverhältnissen zufrieden sein sollen.</p>
+<p>Man kann sich 15 LOC/Tag schön reden, indem man sagt, "Mehr geht nicht, wenn wir Qualität herstellen wollen."</p>
+<p>Wenn das stimmt, dann ok. Aber Achtung, das kann auch eine Rationalisierung sein. Hinter der Aussage kann auch stecken, "Wir würden gern mehr schaffen, aber wir stecken andauernd in Meetings und machen Support usw. usf. Da geht einfach nicht mehr."</p>
+<p>Wenn das der Fall ist, dann sag ich: Tretet eure Chefs. Macht euch stark für mehr von dem, was eigentlich eurer Job ist: LOC produzieren.</p>
+<p>Jep, so ist das; Programmierer haben einen Zweck: die Produktion von Code. Und wer dafür keine Zeit hat, der tut nicht, was er nach Stellenbeschreibung tun sollte.</p>
+<p>Also: Augen auf! Warum kommen denn wirklich nur 15 LOC/Tag raus? Wegen der Qualität? Wirklich. Oder weil das Team sich immer wieder durch Missverständnisse in den Fuß schießt? Oder weil die Zeit fürs Codieren so knapp ist? Oder weil das Codieren nicht gut geplant ist?</p>
+<p>Seien wir ehrlich: 200 LOC sind nicht viel.</p>
+<p>Wer mit weniger zufrieden ist pro Tag, der muss das schon sehr, sehr gut begründen. Ich hab lange genug selbst Branchensoftware geschrieben, um zu wissen, dass 200 LOC/Tag gehen. Wir haben über knapp 10 Jahre auch mehr pro Programmiertag geleistet - nur war die Qualität auch dementsprechend.</p>
+<p>200 LOC/Tag sind daher aus meiner Sicht genug. Wie gesagt: Die kommen schon zu 50% während Trainings raus. Und dass reale Aufgaben 10x komplizierter sind, das kann ich nicht glauben.</p>
+<hr />
+<p><strong>pvblivs</strong> (2011-06-27):</p>
+<p>Hey Ralf,</p>
+<p>Du hast gesagt, Du schätzt mal und ich habe versucht, die Schätzung zuhinterfragen. Und Du argumentierst im Nachgang auch noch für 200 Zeilen - irgendwie zwiegespalten :-)</p>
+<p>Ich widerspreche auch nicht, dass man 200 Zeilen raus"cranken" kann. Ich hab auch bei der Google-Code-Jam mitgemacht und gefühlt 300 Zeilen rausgepustet. Ohne automatischen Test und mehrfach umgebaut. Geht, auch wenn man hinterher kaputt ist.</p>
+<p>Nur: Code in Challenges ist selten ein Maß. Meist kann ich daraus nicht mehr viel machen, ihn allenfalls wegwerfen - oder als Inpiration verwenden. Wenn ich damit in Produktion was machen will, muss ich den noch 3 Tage umbauen und testen. Und schon bin ich bei 50 oder 70 Zeilen Produktionscode für jeden der 4 Tage netto. Dann kommt hin und wieder noch ein fieser Bug. 40-50 Zeilen. Irgendwann wird da ein neues Feature eingebaut, wozu ich den Code umbauen muss. Schon sind nur noch 30 Zeilen pro Tag netto übrig.</p>
+<p>Ich denke, das ist die Rechnung: Langfristig. Das habe ich auch geschrieben :-)</p>
+<p>Dazu ein Zitat, leicht abgewandelt: Chef: "Warum hast Du eigentlich diese 200 Zeilen Code reingeprügelt, die uns jetzt so viel Arbeit verursachen?" - "Weil ich kann!"</p>
+<p>Grüße
+Stefan</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-06-27):</p>
+<p>@pvblivs: Die 200 kommen zuerst mal aus dem Code Review Paper.</p>
+<p>Es geht mir darum, die Produktion pro Tag zu begrenzen auf ein Maß, das sich jeden Tag durchsehen lässt.</p>
+<p>Bei 8 Stunden Arbeitszeit, von denen ich mal 3-4 für die Codierung vorsehen würde, scheinen mir 200 LOC immer noch nicht zuviel.</p>
+<p>3-4 Std coden! Vorbereitet coden. Nicht rumstochern, sondern eine Lösung, die man im Kopf hat, einfach coden. Das ist mein Modus. Und da schaffe ich doch wohl 4-5 Bildschirmseiten pro Tag. Auch inklusive Tests. (Inkl. Tests sind es natürlich doppelt soviele.)</p>
+<p>Ja, das ist dann konzentrierte Arbeit. Aber so soll es ja auch sein. Da steckt tatsächlich ein Stück Forderung in meinem Artikel: man solle sich bemühen, 3-4 Std pro Tag ungestört zu coden.</p>
+<p>Oder überleg mal anders: Wenn wir bei 50 LOC/Tag sind (oder noch weniger, wie einige behaupten), was schaffen wir denn dann? 3 Leute à 50 LOC netto sind 150 LOC/Tag, sind 750 LOC/Woche, sind 30.000 LOC/Jahr.</p>
+<p>Das ist nicht viel. Ein bisschen mehr Anstrengung darf schon sein, finde ich ;-)</p>
+<p>Aber wie gesagt: Wer bei bestem Bemühen um konzentrierte Zeit und Qualität auf nur 50 LOC/Tag kommt, tut es recht. Alles ok. Wunderbar. Kein Problem.</p>
+<p>Wer aber schneller ist... der sollte bei 200 LOC einfach aufhören. Denn mehr kann sein Peer nicht pro Tag im Code Review bearbeiten.</p>
+<p>Das ist aber mein Anspruch: Nur soviel produzieren, wie sich auch reviewen lässt.</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-07-04):</p>
+<p>LOC sind so 80s...</p>
+<hr />
+<p><strong>Tom</strong> (2011-07-08):</p>
+<p>Hoffentlich liest das niemand mit Personalverantwortung.</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-08-02):</p>
+<p>One of my most productive days was throwing away 1000 lines of code.
+- Ken Thompson</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Konsequente Verlässlichkeit - Promise Like a Pro — ralfw.de Archiv</title>
+<meta name="description" content="Die grundlegenden Kompetenzen, die jeder Softwareentwickler haben sollte sind nach Joel Spolsky:">
+<link rel="canonical" href="https://ralfw.de/archiv/2015/konsequente-verlasslichkeit-promise/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Konsequente Verlässlichkeit - Promise Like a Pro — ralfw.de Archiv">
+<meta property="og:description" content="Die grundlegenden Kompetenzen, die jeder Softwareentwickler haben sollte sind nach Joel Spolsky:">
+<meta property="og:url" content="https://ralfw.de/archiv/2015/konsequente-verlasslichkeit-promise/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Konsequente Verlässlichkeit - Promise Like a Pro</h1>
+    <div class="doc-meta"><span>13. April 2015</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2015/04/konsequente-verlasslichkeit-promise.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2015/konsequente-verlasslichkeit-promise/</code></span></div>
+    <div class="art"><p>Die grundlegenden Kompetenzen, die jeder Softwareentwickler haben sollte sind nach <a rel="noopener" href="http://www.joelonsoftware.com/articles/GuerrillaInterviewing3.html">Joel Spolsky</a>:</p>
+<blockquote>
+<p>Smart, and  Get things done.</p>
+</blockquote>
+<p>Dem kann ich nur zustimmen. Und nicht nur für Softwareentwickler gilt dies, würde ich sagen. Es sind die Voraussetzungen für jeden “Wissensarbeiter”, egal ob Programmierer, Tester, Product Owner, Softwarearchitekt, Entwicklungsleiter usw.</p>
+<p>Wie es mit der Smartness in der Branche steht, will ich hier nicht diskutieren. Das ist ein schwieriges Feld. Auch wenn ich ein Gefühl dafür habe, was “Smart” bedeutet… eine klare Definition fällt mir noch nicht ein. Da geht es um Auffassungsgabe, Denkvermögen, Abstraktionsvermögen, Konzentrationfähigkeit, Lernfähigkeit und -willigkeit. Weniger allerdings um schon vorhandenes Wissen. Nur soviel ist klar: Smartness ist sehr unterschiedlich verteilt.</p>
+<p>Wie es allerdings mit “Get things done” steht, das soll hier mein Thema sein. Denn da ist das Bild grimm.</p>
+<p>“Get things done” setze ich gleich mit “zuverlässig sein”. Jemand liefert Zugesagtes wie vereinbart. Ganz einfach. Ohne, dass man ihn andauernd anstoßen muss.</p>
+<p>Solche Zuverlässigkeit sehe ich in unserer Branche am Boden. Genauso wie bei der “Büroarbeit” im Allgemeinen. In Ersteres habe ich selbst Einblick, über Letzteres erfahre ich immer wieder von meiner Freundin, die <a rel="noopener" href="http://zeitgewinn-hamburg.de">Professional Organizer und Efficiency Trainer</a> ist.</p>
+<p>Was wird denn zuverlässig erledigt? Im Kleinen wir im Großen grassiert die Unzuverlässigkeit. Man kommt zu spät zum Meeting, man ruft nicht wie versprochen zurück, Emails werden nicht (in angemessener Zeit) beantwortet, Abschätzungen werden nicht eingehalten, Zulieferungen werden nicht in vereinbarter Qualität gemacht, man vergisst Unterlagen usw. usf. ad nauseam.</p>
+<p>Natürlich sind die Entschuldigungen vielfältig. Meist sind “die Umstände” schuld, dass man unzuverlässig ist. Ist das nicht verständlich?</p>
+<p>Und da jeder unzuverlässig ist, entschuldigt man sich auch gegenseitig immer wieder. Man nimmt es hin. Man sagt gar “Ach, ist doch nicht so schlimm.” - weil man es ohnehin schon geahnt hatte, dass es nicht so kommen würde, wie es vereinbart war.</p>
+<p>Ja, so ist das. Das beobachte ich überall. Und es kotzt mich an. Was ist denn das für eine Art des Umgangs miteinander?</p>
+<p>Unabhängig von der Respektlosigkeit die in dieser epidemischen Unzuverlässigkeit steckt, ist sie auch noch kontraproduktiv. Sie trägt dazu bei, dass die Arbeit länger dauert, als sie müsste. Sie trägt dazu bei, dass die Arbeit teurer wird, als sie müsste. Unzuverlässigkeit erzeugt Verschwendung.</p>
+<p>Leider ist der Preis, den jeder Einzelne wie auch Unternehmen dafür zahlen, oft kaum messbar. Nachbesserungen und Wartezeiten und zusätzliche Transaktionskosten aller Art sind meist unterhalb des Radars des Controlling. Das sieht dann nur ungünstige makroskopische Effekte und versucht - kaum verwunderlich - mit wenig tauglichen Maßnahmen gegenzusteuern. Eher verschlimmern solche Maßnahmen sogar die Unzuverlässigkeit. Eine negative Spirale beginnt sich zu drehen…</p>
+<p>Die Klagen sind laut über die Unzuverlässigkeit. Warum, zum Teufel, können denn Zusagen nicht eingehalten werden? Warum wird zu spät geliefert? Warum ist das alles teurer als geplant? Warum sind die Leute, die zugesagt wurden, nicht da?</p>
+<p>Und keiner sieht, dass die Ursache dafür nicht woanders liegt, sondern in jedem selbst.</p>
+<p>Wir alle sind für die großen Unzuverlässigkeitsprobleme mit verantwortlich, wenn wir uns schon im Kleinen gleichgültig verhalten, was unsere persönliche Zuverlässigkeit angeht.</p>
+<p>Wir haben verlernt, Zuverlässigkeit als Wert anzusehen. Pünktlichkeit war einmal ein Charaktermerkmal, an dem man gemessen wurde. Das ist wie andere auch in Ungnade gefallen. Pünktlichkeit ist heute keine Selbstverständlichkeit mehr. Und andere Zuverlässigkeit auch nicht. WTF!</p>
+<p>Wenn wir wollen, dass Kunden mehr Vertrauen in unserer Tätigkeit haben, dann müssen wir etwas dafür tun. Wir müssen die Zuverlässigkeit wieder kultivieren. Wir müssen anstreben, 100% zuverlässig zu sein. Ja, genau: 100% sind das Ziel. Nicht weniger.</p>
+<p>Wir müssen jedes, aber auch jedes Versprechen einhalten. Immer. Denn um nichts weniger geht es bei Zuverlässigkeit: Zuverlässig ist, wer Versprechen stets einhält.</p>
+<p>Wer unzuverlässig ist, bricht ein Versprechen - und irgendwo stirbt ein kleines Kätzchen einen grausamen Tod.</p>
+<p>Jedes gebrochene Versprechen hinterlässt einen Knacks bei dem, dem wir versprochen haben. Es mögen manchmal und zuerst nur Haarrisse sein. Doch je öfter wir nicht halten, was wir versprechen, desto weiter wird das Geflecht dieser Risse. Dann entstehen brüchige Stellen im Vertrauen. Und am Ende… da zerbricht es womöglich daran.</p>
+<p>Das ist ein schlimmer Effekt. Denn Vertrauen ist ein wesentliches <a rel="noopener" href="http://www.amazon.de/Vertrauen-Mechanismus-Reduktion-sozialer-Komplexität-ebook/dp/B00NM86KME">Mittel zur Reduktion von Komplexität</a>. Fehlt das Vertrauen, zieht explizite Kontrolle ein. (Micro-)Management ist die Folge. Oder Rechtsanwälte übernehmen.</p>
+<p>Nach 100% Zuverlässigkeit zu streben, hat also nur positive Effekte. Warum tun wir es dann nicht?</p>
+<p>Weil unser Verständnis von Versprechen undifferenziert ist. Im Grunde ist uns meist nicht bewusst, was wir da eigentlich tun, wenn wir etwas versprechen. Oder wir ahnen nicht einmal, dass wir überhaupt etwas versprochen haben.</p>
+<p>Aber das lässt sich ändern. Hier einige Denkanstöße für Sie. Das Ziel 100% Verlässlichkeit ist erreichbar.</p>
+<h2>Verantwortung übernehmen</h2>
+<p>Zunächst einmal sollte jedem, der etwas verspricht bewusst sein, dass man nur für sich selbst etwas versprechen kann. Denn ein Versprechen abgeben, bedeutet, Verantwortung zu übernehmen. Wichtig ist dabei das <em>Übernehmen</em>. Verantwortung kann - entgegen dem Sprachgebrauch - nicht übertragen werden. Sie kann nur im vollen Besitz aller geistiger Kräfte <em>übernommen</em> werden.</p>
+<p>“Ich verspreche, dass ich Auftrag A wie gewünscht ausführe!”: Das ist ein gültiges Versprechen. Damit kann ein Auftraggeber etwas anfangen. Der Auftragnehmer wird damit verantwortlich; das Ergebnis wird zurechnungsfähig.</p>
+<p>“Ich verspreche, dass Mitarbeiter M den Auftrag A wie gewünscht ausführen wird!”: Das ist ein ungültiges Versprechen - zumindest solange die dritte Partei, der eigentliche Auftragnehmer, nicht selbst schon die Verantwortung übernommen hat. Wer diese Verantwortungsübernahme lediglich vermittelt, übernimmt sie dann nicht selbst.</p>
+<p>Leider grassiert die Unart, dass Versprechen im Namen Dritter ohne vorherige Rücksprache und Übernahme abgegeben werden. Da verspricht der Vertrieb, dass ein Feature bis zum Termin T eingebaut sein wird - ohne die Entwicklung vorher zu fragen. Der Support verspricht, dass ein Bug sofort gefixt wird - ohne den Product Owner zu konsultieren. Der Manager verspricht, dass das Release noch diese Woche live geht - ohne das mit der IT-Abteilung abgesprochen zu haben.</p>
+<p>All dieses und viele andere Versprechen mehr sind jedoch ungültig. Man kann ihnen nicht vertrauen. Ihr Bruch ist vorprogrammiert. Oder zumindest ist Stress vorprogrammiert. Die Gründe liegen auf der Hand:</p>
+<ul>
+<li>Wer im Namen Dritter verspricht (und nicht nur vermittelt) übernimmt selbst Verantwortung. Wenn er dann aber nicht an der Ausführung beteiligt ist, wird er dazu tendieren, Druck auf die Ausführung auszuüben, damit er sein ungültigerweise abgegebenes Versprechen auch hält. Das macht selten für die Ausführung etwas besser.  Wer im Namen Dritter ohne deren ausdrückliche Verantwortungsübername verspricht, also über deren Zeit und Arbeitsinhalte bestimmt, beschädigt die Motivation. Wer will schon keine Wahl haben bei der Verantwortnungsübernahme?  Ohne echte Verantwortungsübernahme sind die Bedingungen für die ausführenden Dritten selten so, wie sie sein müssten. Auch ohne Micro-Management entsteht dadurch sehr wahrscheinlich Stress, weil es an Budgets und/oder Ressourcen mangelt.</li>
+</ul>
+<p><strong>Merke: Versprechen kann nur, wer selbst ausführt.</strong></p>
+<p>Und was kann einer versprechen, der etwas ausführt?</p>
+<h2>Ergebnisse versprechen</h2>
+<p>Üblicherweise werden Ergebnisse versprochen. Das wird auch erwartet.</p>
+<p>“Die Kosten der Wagenreparatur werden 1000€ sein. Sie können ihn übermorgen abholen.”, “Das Essen wird in einer halben Stunde auf dem Tisch stehen.”, “Das Release geht morgen früh raus.”, “Ich rufe dich um 9h an.”, “Meine Email-Adresse ist …” - so lauten größere und kleinere, bewusstere und unbewusstere Ergebnisversprechen, die wir jeden Tag abgeben.</p>
+<p>Das Dumme dabei: Ergebnisse zu versprechen, ist sehr risikoreich. Man muss die Ausführungsumstände schon sehr unter Kontrolle haben, um ein Ergebnis verlässlich zu erzielen. Für die Zubereitung des Mittagessens mag das noch der Fall sein. Wahrscheinlich auch bei der Wagenreparatur - immerhin hat der KFZ-Mechaniker sich für den Kostenvoranschlag Zeit genommen zu einer Begutachtung des Autos. Aber ob das Release wirklich morgen früh rausgeht?</p>
+<p>Selbst so simple Versprechen wie der Anruf am Morgen oder auf Emails in angemessener Zeitspanne zu antworten, sind risikoreich, wie es scheint. Denn wie oft werden sie gebrochen…<a href="#fn:1">[1]</a></p>
+<p>Ein Ergebnis kann nur versprochen werden, wenn seine Herstellung eine “handwerkliche Tätigkeit” ist (vgl. “<a rel="noopener" href="http://blog.ralfw.de/2015/04/unschatzbare-arbeitsweisen.html">Unschätzbare Arbeitsweisen</a>”). Handwerker sind die, die Ergebnisse verlässlich reproduzieren. Dafür bauen sie über Jahre Erfahrung auf. Diese Erwartung haben wir an sie - zurecht.</p>
+<p>Ein Mittagessen zuzubereiten sollte eine handwerkliche Tätigkeit sein. Auch den Anruf für den nächsten Tag sollte auf dem Niveau sein. Ebenso, sich zu einem Treffen einzustellen. Und nach Erforschung des Zustands eines Wagens erwarten wir auch, dass der KFZ-Mechaniker sich in einer Handwerkerzone befindet.</p>
+<p>Aber ist das Fixing eines Bugs handwerklich? Kaum. Dazu gehört eine unbestimmte Menge Forschung. Dito die Umsetzung eines neuen Features oder auch nur die Analyse von Anforderungen. Gerade in der Softwareentwicklung sind wir immer wieder erwartbar (oder auch überraschend) als Forscher und Ingenieure gefragt. Dann tun wir gut daran, keine Ergebnisse zu versprechen. Denn nichts anderes wollen Kunde und Management, wenn sie um eine Aufwandsschätzung bitten. Schlimmer noch, wenn z.B. das Marketing ungültig verspricht, “Das Feature haben wir bis zur Messe drin!”</p>
+<p>Widerstehen Sie in diesen Fällen! Lassen Sie sich auf kein Ergebnisversprechen ein - solange für Sie als Ausführender nicht sonnenklar ist, dass die Ausführung zu 80+% rein handwerkliche Tätigkeit ist.</p>
+<p>Und wie erkennen Sie ein Ergebnisversprechen? <strong>Ergebnisse sind Zielzustände, deren Erreichung an ein Budget geknüpft ist.</strong></p>
+<p>Budgets können finanziell sein, aber vor allem zeitlich. “Das Essen ist um 12h auf dem Tisch!” Wer dieses Ergebnis um 11h verspricht, hat ein Zeitbudget von 60 Minuten, um den Zustand “Essen auf dem Tisch” herzustellen.</p>
+<p>Wie gesagt: Es ist nicht unmöglich, Ergebnisse zu versprechen. Aber vermeiden Sie es oder seien Sie sich zumindest dessen sehr, sehr bewusst. Tun Sie es nur, wenn die Herstellung des Zielzustands quasi eine Reproduktion ist, wenn sie das schon oft unter gleichen Umständen getan haben.</p>
+<p><strong>Merke: Ergebnisversprechen sind riskant!</strong></p>
+<p>Eine Sonderform von Ergebnisversprechen sind die, bei denen die Budgetgröße nicht im Vordergrund steht, sondern der “Liefertermin” für den Zustand. Das ist der Fall, wenn das Ergebnis mit einem (unplanbaren?) Ereignis verknüpft wird. Beispiele: “Ich verspreche, dass ich bei jedem Anruf Name und Anliegen und Uhrzeit notiere.”, “Ich verspreche, dass ich keine Aufträge mehr annehme, die nicht schriftlich vorliegen.”</p>
+<p>Das Risiko besteht hier weniger in der Herstellbarkeit des Zielzustands, als vielmehr darin, ihn auch tatsächlich zu produzieren. Handwerkskunst ist in Bezug auf das Erinnerungsvermögen und den Willen gefragt. Erinnere ich mich im rechten Moment daran, was ich versprochen habe? Habe ich die Disziplin, das Versprochene zu tun? Der zu erreichende Zustand ist also vor allem “Bewusstsein und Energie”.</p>
+<h2>Verhalten versprechen</h2>
+<p>Sie werden nun wahrscheinlich denken: “Aber wenn ich keine Ergebnisse mehr versprechen darf… Was soll ich denn dann versprechen? Man verlangt von mir doch ein Commitment.”</p>
+<p>Sie haben Recht. Wir brauchen Commitments in der Zusammenarbeit, im Zusammenleben. Ohne Verlässlichkeit wird alles zäh, stressig, ärgerlich.</p>
+<p>Aber Sie können ja nicht nur riskante Ergebnisse versprechen, sondern auch Verhalten. Das ist viel weniger riskant.</p>
+<p>Ein plakativer Vergleich: Wenn Sie das Ergebnis “2020 habe ich den Welthunger besiegt!” versprechen, ist der Misserfolg vorprogrammiert. Versprechen Sie hingegen “Ab heute werde ich jeden Tag bis 2020 2 Stunden dem Sieg über den Welthunger widmen!”, dann ist ein Erfolg in Ihrer Reichweite.</p>
+<p>Ein Verhaltensversprechen verlangt Ihnen keine handwerkliche Erfahrung in Bezug auf den Tätigkeitsgegenstand ab. Sie müssen kein Budget für die Ergebniserreichung angeben. Verhaltensversprechen können Sie also auch immer dann guten Gewissens eingehen, wenn Sie noch forschen und planen müssen. Und das ist - zumindest in der Softwareentwicklung - meistens der Fall.</p>
+<p>Und wie erkennen Sie ein Verhaltensversprechen? <strong>Verhalten ist eine Tätigkeit unter festgelegtem Ressourceneinsatz.</strong></p>
+<p>Verhaltensversprechen versprechen also keinen Zustand (“Bug gefixt”, “Essen gekocht”), sondern eine Aktivität (“Bug fixing”, “Essen kochen”). Statt Futur II (“Ich werde geschafft haben.”) benutzen Sie Futur I (“Ich werde tun.”).</p>
+<p>Verhaltensversprechen haben allerdings nichts mit Versuchen zu tun, ein Ergebnis herzustellen. Sagen Sie also nicht “Ich werde versuchen, Zustand Z bis zum Termin T herzustellen.” Damit verleiten Sie den Auftraggeber, ein Ergebnisversprechen herauszuhören. Wenn Sie kein Ergebnis versprechen können oder wollen, dann tun Sie das auch nicht. Seien Sie mutig und klar in Ihrer Aussage.</p>
+<p>Ebenso wenig haben Verhaltensversprechen mit Mühe zu tun. Sagen Sie also auch nicht “Ich werde mich bemühen, Aktivität A zu tun.” Was Sie da nämlich versprechen, ist nicht die Aktivität A, sondern sich zu bemühen. Das will ein Auftraggeber jedoch nicht. Der möchte A und sonst nichts. Sagen Sie ihm also klar, ob ud wie Sie A leisten können.</p>
+<p>Warum hört man aber so oft, dass jemand nur Mühe verspricht? Weil es an handwerklichem Können fehlt. Denn auch für Verhaltensversprechen ist Handwerk grundlegend. Wir müssen nämlich in Bezug auf unsere Zeit Handwerker sein. Wir müssen unser Zeitmanagement im Griff haben. Der Umgang mit Kalender und Aufgabenliste ist zentral für jede Verlässlichkeit.</p>
+<p>Bei Ergebnisversprechen ist das selbstverständlich und offensichtlich. Da steht der Zustandslieferungstermin im Vordergrund.</p>
+<p>Verhaltensversprechen haben zwar keinen solchen Termin, dennoch braucht das Verhalten einen präzisen zeitlichen Rahmen.</p>
+<p>Das war mir lange nicht klar. So sinnig ich die <a rel="noopener" href="https://jockeholm.wordpress.com/2014/05/11/promises-promises-2014/">Unterscheidung zwischen Ergebnis- und Verhaltensversprechen</a> fand, war mir doch manchmal beim Versuch, ein Verhalten zu versprechen, nicht ganz wohl. Oder es kam mir bei vermeintlichen Verhaltensversprechen anderer irgendetwas noch nicht stimmig vor. Der Grund dafür, wie ich nun herausgefunden habe, war ein Mangel an zeitlicher Präzision. Da war zwar eine Tätigkeit statt eines Ergebnisses im Gespräch, nur war die unverbindlich. Es fehlte das Commitment.</p>
+<p>Beim Ergebnisversprechen besteht das Commitment in der Verknüpfung von Zustand mit Budget. Ich formalisiere das mal als Tupel: (Zustand, Budget), z.B. (Repariertes Auto, 2 Stunden Aufwand).</p>
+<p>Das Commitment des Versprechens muss die Tätigkeit auch mit etwas verbinden. Es gibt zwar kein fixes Budget, aber eine Ressource muss eingesetzt werden. Da Ressourcen jedoch kaum vollständig zur Verfügung stehen, geht es allgemeiner um einen Ressourcenanteil, z.B. (Bug fixen, 10% meiner Arbeitszeit).</p>
+<p>So sieht das minimale Verhaltensversprechen aus: Sie versprechen, einen gewissen Prozentsatz Ihrer Zeit auf eine Aktivität zu konzentrieren. Das tun Sie so lange, bis das gewünschte Ergebnis erreicht ist - oder ein anderer Zustand, der eine Meldung und ggf. eine Neuorientierung erfordert.</p>
+<p>Wenn Sie dem Auftraggeber schon nicht sagen können, dass Sie das gewünschte Ergebnis mit einem Budget verlässlich herstellen können, dann sichern Sie zumindest zu, sich mit einer gewissen Kraft darum zu kümmern. Wie viel Kraft das ist, muss verhandelt werden.</p>
+<p>Sie haben natürlich mehr auf dem Zettel als einen Auftrag. Deshalb müssen Sie den Ressourceneinsatz genau formulieren. Wenn es um Zeit geht, sind drei Angaben nötig:</p>
+<ul>
+<li>Wann beginnen Sie mit der Tätigkeit?  Wie viel Prozent Ihrer Zeit widmen Sie der Tätigkeit?  Wie dicht ist Ihr Einsatz gepackt?</li>
+</ul>
+<p>Auftraggeber wünschen sich natürlich, dass Sie sofort mit einer Tätigkeit beginnen. Sie wollen das Ergebnis schnellstmöglich. Kommt jedoch ein zweiter Auftrag herein, während der erste noch nicht abgeschlossen ist, führt dessen sofortiger Beginn zu einer Unterbrechung des ersten. Schädliches Multitasking nimmt seinen Lauf. Alles dauert länger, Ergebnisse werden später geliefert. Vermeiden Sie das! Staffeln Sie Aufträge, beginnen Sie sie nacheinander.</p>
+<p>Auftraggeber wünschen sich natürlich ebenfalls, dass Sie 100% Ihrer Zeit der gewünschten Tätigkeit widmen. Sie wollen das Ergebnis schnellstmöglich. Das ist nur möglich, wenn Sie immer nur einen Auftrag bearbeiten, bis das Ergebnis erzielt ist. Eine solche Staffelung ist jedoch nicht immer möglich und gelegentlich sogar unökonomisch. Immer wieder gibt es durch Abhängigkeiten Wartezeiten während der Bearbeitung eines Auftrags. Warum die nicht mit anderen Aufträgen füllen? Bis zu einem gewissen Grad ist solches Multitasking bekömmlich. Sie können Ihre Zeit also auch in Teilen versprechen. Aber Achtung: Zu klein sollten diese Teile nicht werden. Ich würde sagen, kürzer als 45–60 Minuten sollten Bearbeitungseinheiten nicht sein. Versprechen Sie also nicht weniger als 10% Ihrer Zeit.</p>
+<p>Weder bei 100%iger Auslastung mit einem Auftrag noch bei weniger können Sie sagen, wie lange es dauern wird, bis das gewünschte Ergebnis hergestellt ist. Deshalb geben Sie ja ein Verhaltensversprechen. Es kann daher sein, dass Sie nicht mit einem Zeitblock an einem Tag auskommen. Aber wann widmen Sie sich dann wieder dieser Tätigkeit? Das könnte morgen sein oder erst übermorgen oder nächste Woche. Das sollten Sie ebenfalls dem Auftraggeber kommunizieren.</p>
+<p>Beispiel 1, “Ich werde mich ab heute jeden Tag 2 Stunden mit dem Thema beschäftigen.”: Hier versprechen Sie 25% Ihrer Zeit einzusetzen. Die Dichte ist 100%, da das jeden Tag geschieht.</p>
+<p>Beispiel 2, “Ich werde jede Woche 4 Stunden X tun.”: Hier versprechen Sie 10% Ihrer Zeit für X aufzuwenden - allerdings nicht jeden Tag, sonder vielleicht einmal die Woche en bloc. Deshalb ist die Dichte in Bezug auf Tage nur 20%.</p>
+<p>Formal ist ein Verhaltensversprechen also ein 4-Tupel der Form <em>(Tätigkeit, Startzeitpunkt, Zeitanteil, Dichte)</em>, z.B. (Anforderungen analysieren, morgen 13:00h, 4 Stunden (50%), täglich (100%)).<a href="#fn:2">[2]</a></p>
+<p>Für ein Versprechen auf dem Gang zwischen Tür und Angel ist das natürlich ein bisschen zu detailliert. Aber wenn Sie etwas mehr Zeit haben oder für die Reflexion ist solche Differenziertheit nützlich, finde ich.</p>
+<p>Wenn Ihnen jetzt etwas mulmig wird, kann ich das verstehen. Wie sollen Sie denn eine bestimmte Intensität der Beschäftigung mit einem Auftrag versprechen können. Was wissen Sie über Ihren Kalender morgen oder nächste Woche? Aber genau <em>das</em> ist die Handwerkskunst, die mindestens nötig ist, wenn wir vertrauensvoll und verlässlich zusammenarbeiten wollen. Als Wissensarbeiter müssen Sie Meister des Zeitmanagements sein. Nicht weniger. So sieht die Grundkompetenz für die Zusammenarbeit jenseits handwerklicher Arbeiten aus. Das kann ich nicht schonend formulieren. Wer seine Zeit, seinen Kalender nicht im Griff hat, hat schon verloren. Der ist verdammt zu nicht endendem Stress.</p>
+<p><strong>Merke: Verhaltensversprechen sind jederzeit möglich!</strong></p>
+<h2>Handfeste Prioritäten</h2>
+<p>Ständig konkurrieren mehrere Aufträge um eine Verarbeitungsressource. Das kann eine Person, ein Team, ein Unternehmen, eine Maschine sein. Es stellt sich daher die Frage, wie sich die Ressource diesen Aufträgen widmen sollte.</p>
+<p>Mit der differenzierten Sicht auf Verhaltensversprechen ist es möglich, darüber handfest mit den Auftraggebern zu sprechen. Die können sich nun entscheiden, in welchen Aspekt sie investieren wollen, um die Abarbeitung eines Auftrags zu beschleunigen, d.h. höher zu priorisieren:</p>
+<ul>
+<li>Der Auftraggeber kann Argumente liefern, warum ein Auftrag möglichst bald begonnen werden soll. Je früher, desto höher die Priorität. Insbesondere, wenn dadurch andere Aufträge unterbrochen werden müssten, sind gute Argumente nötig.  Der Auftraggeber kann Argumente liefern, warum für die Abarbeitung eines Auftrags ein möglichst großer Prozentsatz der Ressourcenzeit pro Zeiteinheit alloziert werden sollte. Mehr Anteil, desto höher die Priorität. Insbesondere, wenn dadurch der Anteil für andere schon begonnene Aufträge verringert werden soll, sind gute Argumente nötig.  Der Auftraggeber kann Argumente liefern, warum die Anteilsdichte möglichst hoch sein sollte. Je höher die Dichte, desto höher die Priorität. Insbesondere, wenn dadurch die Dichte für die Abarbeitung anderer Aufträge sinken würde, sind gute Argumente nötig.</li>
+</ul>
+<p>Höchste Priorität hat, was sofort mit 100% der Zeit und 100% Dichte begonnen wird. Da gibt es kein Vertun. Das ist wünschenswert, um schnellstmögliche Ergebniserzielung zu erreichen. Das ist Work-in-Progress (WIP) = 1. Das ist erstrebenswert, weil nur so die Verschwendung minimal ist. Feedback wird maximal schnell generiert.</p>
+<p>Aus verschiedenen Gründen mag es aber doch sinnvoll sein, mehrere Aufträge quasi gleichzeitig zu bearbeiten, also Multitasking zuzulassen.</p>
+<p>Deshalb werden Sie Aufträgen eher selten 100% Anteil gewähren. Seien Sie jedoch vorsichtig! Erstens sollten Sie ohnehin nie 100% Ihrer Zeit verplanen; lassen Sie eher 30–40% Luft als Puffer für Unvorhergesehenes. Zweitens sollten Sie die Anteile nicht zu klein schneiden; unter 1 Stunde lohnen sich viele Tätigkeiten nicht. Sie brauchen zu lange, um (wieder) reinzukommen. Es ergibt sich, dass Sie pro Tag maximal 3–4 verschiedene Aufträge sinnvoll bearbeiten können.<a href="#fn:3">[3]</a></p>
+<p>Dasselbe gilt für die Dichte. Eine zu geringe Dichte ist dem Fortkommen eines Auftrags und der Bearbeitungsqualität abträglich. Streben Sie eine Dichte von 100% an. Bringen Sie Aufträge jeden Tag bis zum Abschluss voran, wenn schon nicht mit 100% Anteil. Wenn die Dichte darunter sinkt, dann nur weil externe Abhängigkeiten das erfordern. Wenn Sie auf Zuarbeiten warten müssen, hilft es nichts, dass Sie schon morgen weitermachen wollen. Dann sichern Sie nur eine geringere Dichte zu. Aber vermeiden Sie, bei Eintreffen von Ergebnissen sofort zur unterbrochenen Aufgabe zurückzukehren. Tun Sie das erst, wenn sie laut Anteil und Dichte wieder in Ihrem Plan dran ist.</p>
+<h2>Teileweise arbeiten</h2>
+<p>Versprechen zu halten ist schon schwer genug, auch Verhaltensversprechen. Versprechen über lange, gar unbestimmt lange Zeit zu halten, ist aber noch schwerer. Versuchen Sie daher, Aufträge, deren Budget sie nicht kennen, aber deren Größenordnung Ihnen ungefähr klar ist und jenseits von 7–10 Tagen liegt, in kleinere Teilaufträge von max. einer Woche zu zerlegen.</p>
+<p>Große Aufträge liegen schwer in Ihrem Kalender. Sie wirken immobilisierend. Sie verlieren mit ihnen die Fähigkeit, auf Änderungen zu reagieren.</p>
+<p>Suchen Sie in großen Aufträgen daher “Sollbruchstellen”, die für den Auftraggeber Sinneinheiten darstellen. Statt einer langen Verhaltensstrecke mit Blick auf das ultimative Ergebnis stecken Sie lieber Teilstrecken für Teilverhalten mit Teilergebnissen ab.</p>
+<p>Das gibt nicht nur Ihnen Flexibilität und erhöht Ihre Verlässlichkeit. Auch Auftraggeber bekommen die Möglichkeit, sich nach der Erarbeitung von Teilergebnissen wieder neu zu entscheiden.</p>
+<h2>Pacta sunt servanda</h2>
+<p>“Versprochen ist versprochen!” Wenn Sie Ergebnisse oder Verhalten versprechen, dann müssen Sie wie versprochen leisten. Schon die Römer wussten, dass das ein Grundpfeiler für Zivilisation ist und sagten “pacta sund servanda”, Verträge müssen eingehalten werden.</p>
+<p>Solange Sie jedoch im Dialog mit dem Auftraggeber stehen, können Sie bei Bedarf nachverhandeln. Versprechen können verändert werden, wenn alle beteiligten Parteien dem zustimmen.</p>
+<p>So eine Nachverhandlung erhält die Verlässlichkeit allerdings nur, wenn Sie ein Nein akzeptieren können. Veränderungswünsche sind Bitten, die abgelehnt werden können.</p>
+<p>Beispiel: “Ich weiß, ich habe Ihnen den Bericht für 13:00h zugesagt - aber nun würde ich gern dem Kollegen bei einem dringenden Auftrag helfen. Dadurch würde sich die Berichtsabgabe bis 15:00h verzögern. Ist das ok?” Die Frage zu stellen, ist völlig legitim. Dadurch brechen Sie kein Versprechen. Doch wenn der Auftraggeber Nein sagt und sie nach 13:00h liefern, sind Sie unzuverlässig.</p>
+<p><strong>Merke: Ergebnisversprechen führen häufig zu Nachverhandlungen. Versprechen Sie daher lieber ein Verhalten.</strong></p>
+<p><strong>Merke: Alle Versprechen können im gegenseitigen Einvernehmen modifiziert werden.</strong></p>
+<p>Aber Vorsicht: Auch wenn Versprechen grundsätzlich nachverhandelt werden können, sollte das die Ausnahme sein. Wenn Sie ein Versprechen abgeben, versprechen Sie nämlich auf zwei Ebenen. Ebene 1 ist die offensichtliche; Sie versprechen z.B. etwas zu tun. Ebene 2 liegt unausgesprochen darunter. Auf der Versprechen Sie, das Versprechen genau so einzuhalten, also eben nicht ständig nachzuverhandeln. Denn ein Versprechen soll ja Ruhe in die Zusammenarbeit bringen. Es soll damit eine Sache vorläufig abgeschlossen werden. Mentale Ressourcen sollen frei werden. Dieser Zweck würde durch ständige Nachbesserungen torpediert.</p>
+<h2>Promise Like a Pro</h2>
+<p>Versprechen scheinen so einfach. Wir versprechen ja schon als Kinder. Formal sind sie auch einfach. Sogar so einfach, dass wir sie oft unbewusst und leichtfertig abgeben. Wir sind uns über die Tragweite nicht im Klaren. Und wir haben nicht gelernt, mit diesem wichtigen Werkzeug der Zusammenarbeit systematisch umzugehen. So interpretiere ich jedenfalls das, was ich in Unternehmen sehe: die Unzuverlässigkeit grassiert im Kleinen wie im Großen. Die Effekte: Stress, Demotivation, hohe Kosten.</p>
+<p>Wenn wir diese Effekte nicht wollen, dann müssen wir Zuverlässiger werden. 100% aller Versprechen müssen eingehalten werden. Ja, das ist möglich, wenn Sie bewusst und vorsichtig und manchmal mutig sind. Schauen Sie genau hin, ob Sie all die Ergebnisse wirklich versprechen wollen und können und müssen, zu denen Sie sich jeden Tag committen. Wählen Sie bewusst immer öfter Verhaltensversprechen. Und bekommen Sie Ihre Zeit in den Griff! Wenn Sie keine Hoheit über diese ultimativ knappe Ressource Ihres Lebens haben… dann sollten Sie das als erstes ändern.</p>
+<p>Für mehr Vertrauen, für mehr Zuverlässigkeit müssen wir Profis des Versprechens werden. Der Slogan für mich ist: <a rel="noopener" href="https://jockeholm.wordpress.com/2014/05/11/promises-promises-2014/">Promise Like a Pro</a>. Das ist die Voraussetzung für “Gets things done”.</p>
+<hr />
+<ul>
+<li>Das ist natürlich eine Unart und darf nicht sein. So simple Dinge müssen wir 100% unter unserer Kontrolle haben. Wer einen Anruf verspricht, muss anrufen. Wer eine Email-Adresse herausgibt, muss antworten. <a href="#fnref:1">↩</a>  Um genau zu sein, gehört zu einem Ergebnisversprechen auch ein Startzeitpunkt: (Zustand, Startzeitpunkt, Budget), z.B. “Ich werde für das Bug fixing 4 Stunden brauchen - und morgen um 8:00h damit beginnen.” Doch insbesondere bei ad hoc Versprechen ist der Startzeitpunk uninteressant. Dann geht es nur um den Liefertermin. Das Budget ist also der Zeitraum ab Versprechensabgabe bis dahin. Deshalb habe ich den Startzeitpunkt oben nicht aufgeführt. Für Verhaltensversprechen ist er wichtiger, da sie keinen Liefertermin haben. <a href="#fnref:2">↩</a>  Ich spreche hier nicht über ein Call Center mit Anrufdauern von 3 Minuten. Das wäre auch handwerkliche Arbeit. Es geht um Wissensarbeit, zu deren Erledigung in den meisten Fällen mehrere Stunden, Tage, gar Wochen nötig sind. Dass Sie darüber hinaus noch eine Menge “Kleinscheiß” zu tun haben, ist klar. Damit müssen Sie gesondert umgehen. Die Tagesplanung ist aber nicht Thema dieses Artikels. <a href="#fnref:3">↩</a></li>
+</ul>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2015-04-14):</p>
+<p>"Im Kleinen wir im Großen grassiert die Unzuverlässigkeit."</p>
+<p>Finde ich gut. Hoffe, daß das noch weiter zunimmt. Das jetzige (Wirtschafts-)System ist korrupt, kriminell, sozialisitsch degeneriert, insgesamt verkommen und hoffentlich bald am Ende.</p>
+<p>Ich verstehe es so, daß gerade die so disziplinierten und zuverlässigen Deutschen durch "Unzuverlässigkeit" unbewußt angefangen haben zu streiken.</p>
+<p>Mehr davon. Bis unsere kriminellen Eliten nicht mehr die Propaganda-Ressourcen für den Selbstschutz aufbringen können.  Und die Idee, die "oberen Zehntausend" vor Gericht zu stellen, Wirklichkeit werden kann.</p>
+<p>Anklagepunkte: "Insolvenzverschleppung". Völkermord. Vorbereitung eines Angriffskrieges. Das Strafgesetzbuch gibt da einiges her, ebenso das Internationale Völkerrecht.</p>
+<hr />
+<p><strong>Erik</strong> (2015-04-14):</p>
+<p>Sehr lesenswerter Artikel.</p>
+<p>Für die "Forschungsarbeit" kann man wirklich nur eine "Zeitansatz" versprechen, ob das gewünschte Resultat dabei herauskommt, ist nicht von vornherein klar.</p>
+<p>Sicherlich muss man nicht immer so spezifisch sein wie "ab morgen, 2h, jeden Tag", wahrscheinlich reicht auch der Zeitansatz und ein Zieltermin: "ich nehme mir bis Dienstag nächste Woche 5h Zeit" für die Kommunikation mit dem Auftraggeber. Dann kann man die eigene Zeit auch flexibler verplanen.</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-04-14):</p>
+<p>Das Problem ist doch eher, dass es in den meisten Fällen garkein gemeinsames Verständnis eines Arbeitsaufrages, seiner Priorität usw. zwischen den beteiligten Parteien gibt. Ich kann am Tag nur eine begrenzte Menge von Dingen schaffen und dies ist meist weniger, als Arbeit da ist. Zudem bekomme ich gefühlt 10000 Mails von Leuten, die irgendwas wollen und das auch als sehr wichtig einstufen.</p>
+<p>Ich muss das aber nicht zwangsläufig genauso sehen. Mein Selbstmanagement zwingt mich, die wichtigen Dinge vor den lediglich dringenden Dingen zu erledigen. Die Annahme der Unzuverlässigkeit entsteht dann oft dadurch, dass es unterschiedliche Meinungen zur Priorität einer Aufgabe gibt.</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-04-20):</p>
+<p><em>Leider grassiert die Unart, dass Versprechen im Namen Dritter ohne vorherige Rücksprache und Übernahme abgegeben werden. Da verspricht der Vertrieb, dass ein Feature bis zum Termin T eingebaut sein wird - ohne die Entwicklung vorher zu fragen. Der Support verspricht, dass ein Bug sofort gefixt wird - ohne den Product Owner zu konsultieren. Der Manager verspricht, dass das Release noch diese Woche live geht - ohne das mit der IT-Abteilung abgesprochen zu haben.</em>
+ Preisfrage: Was wird derjenigen am Ende der kette tun, der die Scheiße ausbaden muß? Richtig - er wird die Sache via Dienst nach Vorschrift sabotieren.</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-04-20):</p>
+<p><em>Ich verspreche jeden Tag 25% daran zu arbeiten</em> Yo, ganz doll. Damit kann ich als Kunde mal so richtig was anfangen. Wir gehen dann also wie geplant mit der neuen Website zu 25% am 01.07. live? Das ist doch Blödsinn.</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-04-20):</p>
+<p>Unbedingt mal lesen:</p>
+<p>http://archiv.omnisophie.com/day_143.html</p>
+<hr />
+<p><strong>Paul Spritrechner</strong> (2015-04-23):</p>
+<p>ist ein ziemlich informativer Artikel, auch interessant für einsteiger wie mich. ich habe zwar nicht alles 100% verstanden und einiges googlen müssen aber hat spaß gemht, weil ich das thema sehr interessiert und auch reizt!
+Gruß
+Paul</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TDD, aber bitte mit System — ralfw.de Archiv</title>
+<meta name="description" content="Hier sind zwei recht ordentliche Artikel zum Thema TDD: Teil 1 und Teil 2. Mir gefällt daran besonders, dass Neal Ford sein TDD beginnt mit einer kleinen Liste von Schritten auf de">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/tdd-aber-bitte-mit-system/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="TDD, aber bitte mit System — ralfw.de Archiv">
+<meta property="og:description" content="Hier sind zwei recht ordentliche Artikel zum Thema TDD: Teil 1 und Teil 2. Mir gefällt daran besonders, dass Neal Ford sein TDD beginnt mit einer kleinen Liste von Schritten auf de">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/tdd-aber-bitte-mit-system/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>TDD, aber bitte mit System</h1>
+    <div class="doc-meta"><span>22. März 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/03/tdd-aber-bitte-mit-system.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/tdd-aber-bitte-mit-system/</code></span></div>
+    <div class="art"><p>Hier sind zwei recht ordentliche Artikel zum Thema TDD: <a rel="noopener" href="http://www.ibm.com/developerworks/java/library/j-eaed2/index.html">Teil 1</a> und <a rel="noopener" href="http://www.ibm.com/developerworks/java/library/j-eaed3/">Teil 2</a>. Mir gefällt daran besonders, dass Neal Ford sein TDD beginnt mit einer kleinen Liste von Schritten auf dem Weg zur Beantwortung der Frage, ob eine Zahl eine <a rel="noopener" href="http://de.wikipedia.org/wiki/Vollkommene_Zahl">Vollkommene Zahl</a> ist.</p>
+<p>Bei allem Gefallen an seinen Artikeln reibe ich mich jedoch an einigen Punkten.</p>
+<h2>Fragliche Objektorientierung</h2>
+<p>Wenn Sie die Wurzel einer Zahl berechnen wollten und ich würde Ihnen sagen, das geht mit C# so:</p>
+<p>var sqc = new SqrtCalculator(7);
+Console.WriteLine(“Wurzel aus 7: {0}”, sqc.Calculate());</p>
+<p>Würden Sie das als naheliegend empfinden? Kaum.</p>
+<p>Oder wenn ich Ihnen anbieten würde, einen String bei einer Zeichenkette so zu splitten:</p>
+<p>var splitter = new StringSplitter(“ ”);
+var words = splitter.Split(“the quick brown fox”);</p>
+<p>Würden sie das als komfortable ansehen? Kaum.</p>
+<p>Nichts anderes schlägt Neal Ford aber vor, wenn er seine Implementation zur Prüfung von Zahlen auf Vollkommenheit so aussehen lässt:</p>
+<p><strong>var c = new Classifier(6);</strong>Console.WriteLine(“Ist 6 vollkommen: {0}”, <strong>c.IsPerfect()</strong>);</p>
+<p>Das ist genausowenig komfortabel oder naheliegend wie die obigen Beispiele. Das ist erzwungen objektorientiert. Das ist ein für den Anwender der Funktionalität nicht nachvollziehbarer API.</p>
+<p>Die Prüfung, ob eine Zahl vollkommen ist, ist eine Funktion genauso wie die Prüfung, ob eine Zahl gerade ist oder die Berechnung ihrer Wurzel. Warum also sollte ich als Nutzer einer solchen Funktion(alität) eine Klasse instanzieren müssen? Warum sollte diese Klasse auch noch zustandsbehaftet sein?</p>
+<p>Neil leitet das auf Seite 8 seines Teil 1 daraus ab, dass zwei interne Funktionen (<em>factorsFor(int number)</em> und <em>isFactor(int number)</em>) auf demselben Parameter arbeiten, der zu prüfenden Zahl. Er meint, das sei nun wirklich zuviel prozedurale Programmierung. Oder vielleicht scheut er sich vor der “Feuchtigkeit” der Wiederholung eines Parameters? Ich weiß es nicht. Ich finde es einfach nur überkandidelt – und zwar leider in einer Weise die symptomatisch ist für die Branche. Denn sein Vorgehen ist ja tragisch: Er will das Gute erreichen, verschlimmert die Situation aber. Er möchte einem Paradigma dienen, das für sich gepachtet zu haben scheint, dass es durch und durch gut sei – aber das Paradigma passt leider nicht zum Problem. Mit dem Hammer Objektorientierung wird die funktionale Schraube eingeschlagen. Autsch!</p>
+<p>Hier dagegen meine Lösung:</p>
+<p>public class VollkommeneZahlen</p>
+<p>{</p>
+<p>public static bool IstVollkommen(int zahl)</p>
+<p>{</p>
+<p>return EchteTeilerVon(zahl)</p>
+<p>.ErgebenEineVollkommeneZahl(zahl);</p>
+<p>}</p>
+<p>…</p>
+<p>Die Nutzung sieht so aus:</p>
+<p>Console.WriteLine(<strong>VollkommeneZahlen.IstVollkommen(6)</strong>);</p>
+<p>Das halte ich sowohl in der Anwendung wie auch in der Implementation für intuitiv und angemessen. Egal, ob das nun speziell objektorientiert oder sonstwas ist. Der Anwender versteht es, weil eine Funktion als Funktion realisiert ist. Und der, der den Code liest, sieht sofort, wie das Ergebnis in zwei Schritten zustande kommt.</p>
+<h2>Unklare Verteilung von Verantwortung</h2>
+<p>Nicht nur ist aber die Objektorientierung für das Problem unangemessen, wie ich finde. Sie hat sogar einen negativen Effekt auf die Verständlichkeit und Flexibilität des Codes.</p>
+<p>Vollkommene Zahlen sind solche, deren echte Teiler in Summe die Zahl ergeben. Die Teiler von 6 sind 1, 2, 3 und 6. Allerdings ist 6 kein echter Teiler. Die Summe ist deshalb nur aus 1, 2 und 3 zu bilden und die ergibt 6. Damit ist 6 eine Vollkommene Zahl.</p>
+<p>In Neal Fords Code ist die besondere Behandlung der Zahl selbst als unechter Teiler an zwei Stellen codiert:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d3d460b02575a9f3.png" /></p>
+<p>Er fügt die Zahl selbst als Teiler zunächst der Menge aller Teiler hinzu – und zieht sie am Ende wieder ab. Damit erfüllt auch seine Funktion <em>calculateFactors()</em> nicht mehr wirklich ihre Verantwortlichkeit, die Teiler der Zahl zu berechnen. Das trägt nicht zur Verständlichkeit der Algorithmusimplementierung bei.</p>
+<p>Außerdem ist <em>isPerfect()</em> nicht nur von der Zahl als Zustand abhängig, sondern auch noch indirekt von der Menge der Teiler, die <em>calculateFactors()</em> berechnet und <em>sumOfFactors()</em> auswertet. Solcher Zustand erhöht immer die Komplexität einer Lösung. Und er macht die Wiederverwendung von Methoden in anderen Zusammenhängen schwieriger.</p>
+<p>Meine Funktion <em>IEnumerable EchteTeilerVon(int zahl)</em> hingegen ist von nichts abhängig und kann daher in jedem Zusammenhang, in dem nur die echten Teiler einer Zahl relevant sind, wiederverwendet werden.</p>
+<p>Auch macht <em>bool ErgebenEineVollkomeneZahl(this IEnumerable teiler, int zahl)</em> den Code selbstdokumentierender. Das Abstraktionsniveau der Bestandteile von <em>IstVollkommen()</em> ist einheitlich. Bei Neal hingegen liegen <em>calculateFactors()</em> und der Ausdruck zur Berechnung des Rückgabewertes auf unterschiedlichen Abstraktionsniveaus. Der Leser muss sich zusammenreimen, dass eine Zahl vollkommen ist, wenn die Summe von Teilern abzüglich einer Zahl gleich der Zahl ist. Zugegeben, das ist nicht so kompliziert, doch es ist ein spürbarer intellektueller Aufwand, der nicht Not tut. (Insbesondere verwunderlich ist sein Ansatz, da er <a rel="noopener" href="http://www.ibm.com/developerworks/java/library/j-eaed4.html">in einem anderen Artikel</a> das Single Level of Abstraction Prinzip lobt.)</p>
+<h2>Gesucht: Klares Vorgehen</h2>
+<p>Schließlich vermisse ich bei Neals Artikeln, dass er sein Vorgehen nicht weiter deutlich sichtbar systematisiert. Er tut schon das Richtige, in dem nicht mit TDD “reinspringt” und als erstes einen Test für <em>isPerfect()</em> schreibt, sondern mal einen Gedanken an den Algorithmus verschwendet. Er denkt also nach, bevor er codiert. Doch das hebt er nicht hervor. Einzig der “TDD workflow” wird als Handlauf für das Vorgehen wieder einmal thematisiert.</p>
+<p>Schade. Denn zu TDD gehört mehr, denke ich. Hier mein Version eines Entwicklungsprozesses, in den TDD eingebettet sein sollte:</p>
+<ul>
+<li>Verstehen<ul>
+<li>Nachdenken/planen</li>
+<li>Unsicherheiten ausräumen</li>
+<li>Codieren</li>
+</ul>
+</li>
+</ul>
+<p>Diese Schritte beziehen sich auf ein Problem bzw. auf die das Problem lösende Funktionseinheit. Sie sind daher rekursiv zu durchlaufen, sollte die Funktionseinheit in weitere zerfallen. Das ist ein wichtiger Punkt! Denn auf Zerlegungsebene eines Problem gilt es zuerst zu verstehen, dann zu planen usw.</p>
+<p><strong>Zu 1: Am Anfang der Entwicklung einer Softwarelösung</strong> – sei es Methode oder Klasse oder Komponente oder Anwendung – <strong>steht das Verstehen</strong>. Investieren Sie Zeit, das Problem oder gar den Kunden zu verstehen. Machen Sie sich klar, was die Anforderungen wirklich sind. Tragen Sie Fälle zusammen, die beschreiben, was die Eingaben/Parameter und der zugehörigen erwarteten Ausgaben/Ergebnisse sind. Das hört sich selbstverständlich an. In der Praxis ist aber schwierig und bedarf immer wieder Mut und Disziplin. Beide werden oft nicht ausgebracht. Schöner ist es, schnell den Code Colt zu ziehen und zu programmieren.</p>
+<p>Leider ist ungenügendes Verständnis aber wohl eine der wesentlichen Ursachen für soviele Probleme der Softwareentwicklung. Wer ungenügend versteht, der implementiert zuviel. Wer ungenügend versteht, der implementiert das falsche oder inkorrekt.</p>
+<p>Letztlich ist ungenügendes Verständnis zwar <a rel="noopener" href="http://ralfw.blogspot.com/search/label/Gesetze%20der%20Softwareentwicklung">nie ganz zu vermeiden</a>, doch ein wenig mehr Mühe darf es schon sein. Vor allem ist in den Prozess des Verständnisaufbaus der Kunde sehr aktiv mit einzubeziehen. Fragen Sie ihm Löcher in den Bauch! Dafür ist er da ;-) Lassen Sie ihn nicht aus seiner Verantwortung. Wenn er etwas von Ihnen will, dann soll er wirklich so genau wie möglich beschreiben, was das ist, wie es aussehen soll, wie es sich verhalten soll. Erbitten Sie von ihm sehr konkrete Abnahmetests.</p>
+<p>Falls der Kunde sich bei solch “peinlichen Befragung” ziehrt, machen Sie ihm klar, dass das Ergebnis Ihrer Arbeit nur so gut sein kann wie seine Spezifikation. Garbage in, garbage out – das gilt auch hier. Wer nur ungenau spezifiziert, der kann auch nur ein ungenaues Ergebnis bekommen. Dann muss nachgebessert werden. Das macht niemandem Freude.</p>
+<p>Da die meisten Kunden mit sehr genauer Spezifikation überfordert sein werden, gibt Ihnen das die Chance, ein agiles Vorgehensmodell “zu verkaufen”. Nutzen Sie die Chance! Aber nehmen Sie das nicht als Entschuldigung, ohne gründliches Verständnis mit dem Codieren zu beginnen.</p>
+<p><strong>Zu 2: Wenn Sie meinen, das Problem durchdrungen zu haben, sollten Sie noch nicht zur Tastatur greifen.</strong> Auch nicht, wenn Sie TDD betreiben wollen. Tun Sie sich den Gefallen und <strong>denken Sie zuerst über einen Lösungsansatz nach.</strong> Diese Phase fällt leider immer wieder zu kurz aus. Auch in wohlmeinenden Coding Dojos wird das nicht unbedingt praktiziert. TDD als Test-Driven Design verstanden soll es richten. Codieren kann Planung und Nachdenken aber nicht ersetzen, sondern allenfalls unterstützen. Eine Struktur für Ihre Software ergibt sich nicht einfach. Die will bewusst entworfen werden.</p>
+<p>Das ist, was mir an Neals Artikel gefallen hat: Er hat über das Problem nachgedacht und einen kleinen Plan aufgestellt. Er ist auf zumindest drei Funktionseinheiten/Verantwortlichkeiten gekommen, aus denen eine Lösung für das Problem “Vollkommene Zahlen erkennen” besteht:</p>
+<ul>
+<li>Potenzielle Teiler einer Zahl erzeugen<ul>
+<li>Feststellen, ob eine potenzieller Teiler tatsächlich ein Teiler ist</li>
+<li>Aufsummieren der tatsächlichen Teiler, um festzustellen, ob sie die Zahl ergeben</li>
+</ul>
+</li>
+</ul>
+<p>Das sind zugegeben kleine Funktionseinheiten. Macht aber nichts. Jede, die Sie beim Nachdenken finden, ist eine gute. Denn damit bekommen Sie “Bausteine” an die Hand, die sie separat testen können. Das ist immer gut. Und Sie können womöglich entscheiden, in welcher Reihenfolge Sie deren Umsetzung angehen.</p>
+<p>Ein zunächst monolithisches Problem zerfällt so in kleinere Probleme und die womöglich wiederum in kleinere usw. Nachdenken hilft also bei der Komplexitätsbewältigung.</p>
+<p><strong>Zu 3:</strong> Allerdings mag es sich herausstellen, dass Sie sich mit der Umsetzung der einen oder anderen Funktionseinheit, auf die Sie beim Nachdenken gestoßen sind, nicht 100%ig wohlfühlen. Das ist ganz normal. Es mag an der Problemdomäne liegen oder an einer Technologie, die zum Einsatz kommen soll. Deshalb ist es wichtig, dass Sie vor dem Codieren noch einen Zwischenschritt machen.</p>
+<p><strong>Seien Sie sensibel für Ihre Unsicherheiten und räumen Sie sie aus.</strong> Das können Sie durch das Studium von Fachliteratur tun. Oder Sie befragen den Kunden nochmal. Oder Sie programmieren etwas. Rotzen Sie Code raus (<a rel="noopener" href="http://www.extremeprogramming.org/rules/spike.html">Spike Solution</a>), um sich z.B. mit dem neuen O/R Mapper vertraut zu machen, bevor Sie damit Produktionscode schreiben. Oder für das Problem der vollkommenen Zahlen könnten Sie sich Erweiterungsmethoden anschauen, die es möglich machen, die Funktion <em>IstVollkommen()</em> so lesbar zu gestalten.</p>
+<p>Solange Sie noch unsicher sind, sollten Sie nicht mit der Codierung beginnen. Ansonsten entsteht schnell <a rel="noopener" href="http://en.wikipedia.org/wiki/Accidental_complexity">akzidenzielle Komplexität</a>, d.h. Komplexität, die nicht nötig ist, die Sie letztlich auch nicht wollen.</p>
+<p>Wenn Sie etwas programmieren, um Ihre Unsicherheit abzubauen, dann schmeißen Sie es am Ende besser weg. Nehmen Sie Erkenntnisse mit ins Codieren, aber keinen Code. Auch sind solche Spike Solutions keine Prototypen. (Allerdings können Sie offizielle Prototypen natürlich immer noch mit dem Kunden vereinbaren. Dann teilen Sie Ihre Unsicherheit mit dem Kunden.)</p>
+<p><strong>Zu 4:</strong> <strong>Erst wenn Sie genau verstehen, was der Kunde braucht, einen Plan haben, wie Sie ihm das geben können, nicht mehr unsicher sind, erst dann sollten Sie mit dem Codieren beginnen.</strong> Das gilt aus meiner Sicht auch für TDD. Oder gerade für TDD! Denn immer wieder sehe ich bei Entwicklern, die mit TDD beginnen, dass sie Schwierigkeiten haben, sich zuerst Tests vorzustellen, bevor sie etwas implementiert haben.</p>
+<p>Das liegt meiner Meinung nach daran, dass sie das Problem noch nicht genügend gut durchdrungen haben bzw. der Kunde keine Akzeptanztestfälle geliefert hat. Und/oder es liegt daran, dass sie unsicher sind, was eigentlich zu implementieren ist. Denn wer davon keine Vorstellung hat, der tut sich schwer damit, Erwartungen zu formulieren.</p>
+<p>Der Effekt ist dann oft, dass TDD mit trivialen Tests oder Sonderfalltests begonnen wird. Die für den Kunden viel wichtigeren “happy day” Szenarien werden dadurch auf die Lange Bank geschoben. Klarheit für deren Implementation ergibt sich auch nicht aus solchen Tests. Geschäftig mit Tests zu beginnen kann also auch ein subtiles Symptom von Prokrastination sein.</p>
+<h2>Zusammenfassung</h2>
+<p>TDD ist eine zentrale Praktik für professionelle Softwareentwicklung. Gerade deshalb ist es nötig, sich ihr ganz bewusst zu sein und immer wieder zu fragen, ob sie schon optimal betrieben wird. Ein systematisches Vorgehen hilft dabei – gerade am Anfang.</p>
+<p>Vor dem falschen Programmierparadigma schützt TDD aber natürlich nicht. Wir tun also gut daran, auch seine Grenzen bewusst zu sehen. TDD produziert also immer nur Code auf dem fachlichen Wissensstand seines Anwenders. Deshalb ist es gut, immer wieder über den Tellerrand (der Objektorientierung) zu schauen und sich mit anderen auszutauschen.</p>
+<h2>Kommentare</h2>
+<p><strong>Rainer Hilmer</strong> (2010-03-22):</p>
+<p>Hallo Ralf,
+als ich deine Vorschläge las, dachte ich, "das ist doch selbstverständlich". Na ich hab mich wohl getäuscht.
+Zu deinem Punkt 4 möchte ich noch einen Gedanken, eine Erfahrung in den Raum werfen: Kunden wissen auch nicht immer im Detail was sie wollen; haben eher nebulöse Vorstellungen. Ich erinnere an "Customers from hell". Wenn man als Entwickler mit solchen Vorgaben arbeiten muß - tja was macht man da am besten?
+Gruß
+Rainer</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-03-23):</p>
+<p>@Rainer: Nein, ich denke nicht, dass das, was ich beschrieben habe, selbstverständlich ist.</p>
+<p>Deine Frage, "Was tun, wenn man es mit Customers from Hell zu tun hat?" finde ich sehr verständlich. Die Antwort liegt für mich allerdings ganz klar auf der Hand. Sie ist total simpel:</p>
+<p>Wer nicht weiß, was er will, kann nicht bekommen, was er will.</p>
+<p>So einfach ist das.</p>
+<p>Wer nicht weiß, was er will, muss mit den Entscheidungen anderer leben. Dass das schwierig sein kann, weiß jeder, der mal einem Kind ein Eis gekauft hat, das sich nicht entscheiden konnte. "Willst du Erdbeer oder Schoko?", "Weiß nicht.", "Ok, hier ist Schoko.", "Bääääähhhh, ich wollte Erdbeer." :-)</p>
+<p>Kunden, auch wenn Jahrzehnte älter, sind da nicht besser. Die tragen dazu allerdings einen Anzug und keine Latzhose :-)</p>
+<p>Wenn der Kunde nicht weiß, was er will, dann musst du ihm genau das ganz, ganz, ganz klar machen. Ohne Vorwurf. Denn es ist nicht Schlimmes, nicht genau zu wissen, was man will. Es ist bei der "Bestellung" einer Software sogar fast unvermeidlich.</p>
+<p>Deshalb ist es zentral, dem Kunden das zu erklären. Denn dann kann er Vorkehrungen treffen.</p>
+<p>Die Unentschiedenheit/Unwissenheit eines Kunden als Entwickler kompensieren zu wollen, grenzt ans Übermenschliche. Das kann nicht funktionieren. Das führt in den Frust oder gar in den Burnout.</p>
+<p>Unwissen und Unentschiedenheit müssen mit einem passenden Vorgehensmodell beantwortet werden. Eines, das Wissen und Entscheidungen fordert, ist da offensichtlich untauglich.</p>
+<p>Es hilft nur 1. offene Kommunikation über die Unentschiedenheiten/das Unwissen, 2. die iterative Annäherung an etwas, das der Kunde als ok empfindet.</p>
+<p>Zum Schluss: Was tun, wenn du mit Vorgaben da sitzt, die unspezifisch sind? Was, wenn du mit dem Kunden nur schwer reden kannst?</p>
+<p>Dann sei der "Developer from Hell" für deinen Vorgesetzten :-) Baue ein bisschen und zeige es deinem Vorgesetzten. Nerve ihn mit Fragen wie "Ist das so richtig?" oder "Hat der Kunde sich das vielleicht so vorgestellt?" Immer und immer und immer wieder. Alle 2-3 Tage beim Vorgesetzten oder gar Kundenvertreter auf der Matte stehen und Feedback erbitten.</p>
+<p>Dafür musst du natürlich in Durchstichen denken. Frag nicht, "Ist da so richtig mit dem Datenzugriff?" ;-) Das verstehen die nicht. Aber frag, "Sitzt der Button hier an der richtigen Stelle?" oder "Ist es korrekt, wenn der Umbruch des Textes das Wort so trennt?"</p>
+<p>Wo der Kunde aus der Hölle kommt, da muss der Entwickler auch zur Hölle werden :-) Wie die Lateiner schon sagten: Abyssus abyssum invocat. Der Abgrund ruft den Abgrund.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Rüdiger Plantiko</strong> (2010-03-29):</p>
+<p>Hallo Ralf,</p>
+<p>eine kleine Anmerkung zur "falsch verstandenen Objektorientierung":</p>
+<p>wenn der arme Neal Ford Zahlen zu Objekten macht, ist das falsch verstandene Objektorientierung. Wenn aber Guillaume Laforge in Groovy eine <a rel="noopener" href="http://groovy.dzone.com/news/domain-specific-language-unit-">DSL für einheitenbehaftete Zahlen</a> entwirft, so dass er schreiben kann</p>
+<p>3.cm + 12.m * 3 - 1.km</p>
+<p>1.5.h + 33.s - 12.min</p>
+<p>usw.</p>
+<p>dann ist das wahnsinnig cool, und alle Clean Coder klatschen Beifall! :-)</p>
+<p>Wird hier mit zweierlei Mass gemessen? Gibt es etwa coole Entwickler, die Zahlen als Objekte benutzen <strong>dürfen</strong>, und uncoole, die für dasselbe in Blogs schlechte Noten bekommen?</p>
+<p>Es geht wohl auch hier nur darum, <strong>ob der resultierende Code lesbar ist.</strong> Wenn die Instanziierung des Zahl-Objekts wie in Groovy implizit ausgeführt wird und damit auch im Quelltext verborgen bleibt, dann ist das sehr im Sinne von "Clean Code". Hässlicher Code entsteht aber, wenn der Verwender der Zahlen die Instanzen zuerst umständlich beschaffen muss.</p>
+<p>Gruss,
+Rüdiger</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-03-29):</p>
+<p>@Rüdiger: Ich habe nichts dagegen, wenn Neal Ford Zahlen zu Objekten macht. Die "Object Calisthenics" (http://www.xpteam.com/jeff/writings/objectcalisthenics.rtf) find ich ne interessante Übung. Und ich finde natürlich die F# Einheiten klasse.</p>
+<p>In meinem Posting habe ich keinen Bezug zu solcherlei Objektorientierung drin. Schau nochmal rein. Mir ging es um viel Einfacheres.</p>
+<p>Du sagst, es ginge um Lesbarkeit. Da bin ich ganz bei dir. Schau dir deshalb den im Blogposting in Frage stehenden Code von Neal nochmal an. Ich habe die Punkte herausgearbeitet, die ich für schlecht Objektorientiert halte, eben weil (!) sie den Code weniger verständlich machen. Zustand macht Code eben nicht per se besser lesbar. Das (!) ist meine Kritik. Und Verteilung von Logik auch nicht.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Rüdiger Plantiko</strong> (2010-03-29):</p>
+<p>Hallo Ralf,</p>
+<p>Du schriebst aber: "Warum also sollte ich als Nutzer einer solchen Funktion(alität) eine Klasse instanzieren müssen? Warum sollte diese Klasse auch noch zustandsbehaftet sein?"</p>
+<p>Die erste Frage stelle ich mir beispielsweise auch, wenn ich die Nachricht "sqrt" an das zuvor instanziierte Objekt "2" senden muss, um die Wurzel zu berechnen. Auch hier finde ich den Standpunkt natürlicher, dass es bestimmte objektunabhängige Funktionen gibt, die ich auf Zahlen anwenden kann. M.a.W. finde ich das Java-Konzept primitiver Datentypen, die selbst keine Objekte sind, gut.</p>
+<p>Aber die erste Vorgehensweise wäre für mich auch OK, wenn die Instanziierung der "2" wie im Groovy-Beispiel vollständig hinter der Bühne abläuft, die Notation im Quelltext des Verwenders also klar und lesbar bleibt. Und darauf kommt es in der Hauptsache an.</p>
+<p>Mit Deiner <strong>zweiten Frage</strong>, wieso Neal Ford für seine Funktion Zustand einführt, stimme ich dann wieder vollkommen überein. Das war aber, wie ich es gelesen habe, nur ein Teil Deiner Kritik.</p>
+<p>Den Link auf die "objectcalisthenics" schaue ich mir gerne mal an, danke.</p>
+<p>Gruss,
+Rüdiger</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

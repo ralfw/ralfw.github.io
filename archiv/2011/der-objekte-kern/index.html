@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Der Objekte Kern — ralfw.de Archiv</title>
+<meta name="description" content="Was ist eigentlich Objektorientierung? Eigentlich sollte das doch klar sein – und doch erhitzen sich die Gemüter immer wieder darüber. Wenn ich Flow-Design vorstelle, höre ich z.B.">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/der-objekte-kern/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Der Objekte Kern — ralfw.de Archiv">
+<meta property="og:description" content="Was ist eigentlich Objektorientierung? Eigentlich sollte das doch klar sein – und doch erhitzen sich die Gemüter immer wieder darüber. Wenn ich Flow-Design vorstelle, höre ich z.B.">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/der-objekte-kern/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Der Objekte Kern</h1>
+    <div class="doc-meta"><span>28. April 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/04/der-objekte-kern.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/der-objekte-kern/</code></span></div>
+    <div class="art"><p>Was ist eigentlich Objektorientierung? Eigentlich sollte das doch klar sein – und doch erhitzen sich die Gemüter immer wieder darüber. Wenn ich Flow-Design vorstelle, höre ich z.B. den Einwand, das sei doch gar nicht mehr objektorientiert. Das ist dann nicht nur Feststellung, sondern auch Kritik. Aber ist das wirklich so? Und ist das kritikwürdig, wenn es denn so wäre?</p>
+<p>Ich denke, wir müssen uns <em>die</em> Objektorientierung ein wenig näher ansehen, um das beurteilen zu können. Die scheinbar eine Objektorientierung gibt es nämlich nicht.</p>
+<h3>Harte Objektorientierung – Technik</h3>
+<p>Unter Objektorientierung verstehen die meisten Entwickler zunächst einmal Mittel einer Programmiersprache. Es geht also um Technik, um Code. Diese technische Objektorientierung lässt sich für mich so auf das absolut Essenzielle reduzieren:</p>
+<p><strong>Hinter einem Interface verborgene allozierbare strukturierte Speicherbereiche.</strong></p>
+<p>Jup, das ist es für mich. Mehr ist technische Objektorientierung nicht. Alles andere ist nice to have, aber nicht wirklich essenziell.</p>
+<p><strong>Allozierbarer Speicherbereich</strong>: Ein Speicherbereich, den Code durch einen Befehl für sich reklamieren kann; der Code erhält ein Handle für diesen Speicherbereich, so dass er ihn benutzen kann. Der Speicherbereich wird nach einem Schema strukturiert – aber auch das ist nicht zentral für die Objektorientierung.
+Da der allozierende Code nur ein Handle auf den Speicherbereich bekommt, weiß er nicht, wo genau der Speicherbereich liegt. Er hat also keinen direkten Zugriff auf ihn.</p>
+<p><strong>Interface</strong>: Eine Menge von Prozeduren und Funktionen. Nur die Prozeduren und Funktionen des bei der Allokation eines Speicherbereichs angegebenen Interface haben Zugriff auf ihn.</p>
+<p>Technische Objektorientierung verbindet also Speicher mit Funktionalität, die auf diesem Speicher arbeitet.</p>
+<p>Wie passen dazu aber…</p>
+<ul>
+<li>Klassen: Klassen sind die Kombination von Schema und Interface. Ihre Felder strukturieren Speicherplatz und ihre Methoden bilden das default Interface für die Arbeit mit dem strukturierten Speicherplatz.
+Speicherallokation findet statt unter Angabe einer Klasse. Sie instanziiert eine Klasse zu einem…</li>
+<li>Objekte: Objekte sind allozierter, hinter einem Interface verborgener Speicher.</li>
+<li>Felder: Bereiche mit spezieller Semantik im allozierten Speicherbereich. Das Schema für Speicherbereiche besteht aus Felddefinitionen.
+Von außen sichtbare Felder (public, internal) widersprechen der obigen Definition von technischer Objektorientierung.</li>
+<li>Prozeduren/Funktionen: Objekte kommunizieren via Nachrichten. Prozeduren und Funktionen sind die nachrichtenverarbeitenden Funktionseinheiten auf Interfaces.
+Ob die Kontinuität der Prozedur/Funktionssyntax von C eine gute Wahl zur Definition dieser Funktionseinheiten war, lasse ich mal dahingestellt.</li>
+<li>Properties: Prozeduren bzw. Funktionen, die suggerieren, dass ein Durchgriff auf den Speicherbereich von außen möglich ist.
+Von außen sichtbare Properties (public, internal) widersprechen nicht direkt der obigen Definition von technischer Objektorientierung, da es sich ja um Methoden handelt. Dennoch ist Vorsicht angezeigt, denn wo Properties ins Spiel kommen, liegt es nahe, dass Schemadetails nach außen sichtbar gemacht werden.</li>
+<li>Vererbung: Vererbung ist für die obige Definition von Objektorientierung nicht essenziell. Sie ist nice to have, um hier und da Schemata oder Interfaces wiederzuverwenden.</li>
+<li>Polymorphie: Polymorphie gehört auch nicht essenziell zur Objektorientierung nach obiger Definition. Sie ist nice to have, um denselben Speicherbereich in unterschiedlichen Zusammenhängen auch durch unterschiedliche Interfaces gekapselt angesprechen zu können.</li>
+<li>Dynamische Programmierung: Ob das Interface, hinter dem ein Speicherbereich versteckt ist, fix oder dynamisch ist, ist unwesentlich für die obige Definition von Objektorientierung. In einigen Situation ist solche Dynamik nice to have.</li>
+</ul>
+<p>Von der <a rel="noopener" href="http://de.wikipedia.org/wiki/Objektorientierung">Wikipedia-Definition der Objektorientierung</a> bleibt für mich also nur die Kapselung als essenziell übrig. Damit möchte ich nicht den Nutzen von Polymorphie oder Vererbung negieren, sondern nur fokussieren. Um was geht es wirklich, wirklich ganz fundamental bei der Objektorientierung? Eben um hinter einem Interface verborgenen nach einem Schema allozierten Speicher. Nicht mehr, nicht weniger.</p>
+<p>Ich würde daher eigentlich auch gern den Begriff “Objekt” aus der Objektorientierung herausnehmen. Er ist mir zu suggestiv. Die scheinbare Entsprechung von programmiersprachlichen Objekten zu realweltlichen hat schon viel Schaden angerichtet.</p>
+<p>Für mich geht es eher um Funktionale Strukturen oder so, d.h. nach Schema strukturierte Speicherbereiche wie sie schon C und Pascal kannten – die nun aber eben reflexive Funktionalität tragen. Das gab es in C und Pascal nicht.</p>
+<p>Ob der Speicherbereich umfangreich oder detailliert strukturiert ist… das hängt von seinem Zweck ab. Er kann 0 Bytes umfassen oder 2 GB; sein Schema kann kein Feld oder hunderte Felder definieren.</p>
+<p>Wie der Umfang des Interface aussieht, ist jedoch relevant. Ist das Interface leer und liegt die Struktur damit zwangsläufig offen (sonst hätte die Umwelt ja keinen Zugriff darauf), dann handelt es sich im Grunde nicht mehr um Objektorientierung. Ihr zentraler Zweck, die Kapselung, wird dann ja nicht mehr verfolgt. (Standardfunktionen wie <em>Equals()</em> oder <em>ToString()</em> zähle ich hier mal nicht mit. Das wirkliche Interface eines Objektes beginnt erst jenseits von ihnen.)</p>
+<p>Die Entwicklung hin zur Objektorientierung ähnelt mithin ein wenig der Entwicklung primitiven Lebens. Dessen Evolution führte von einzelnen Molekülen über semilebendige Ansammlungen (die heutigen Zellorganellen) zu Zellen. Der entscheidende Schritt war dabei der der Entwicklung einer Membran, d.h. die Schaffung einer Blase. Die Membran oder Zellwand trennt Innenwelt von Außenwelt. Sie entkoppelt das Zellinnere von der Umwelt und ermöglicht damit den Aufbau von Zustand in gewisser Unabhängigkeit.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/3004b0a08cc7a42c.png" /></p>
+<p>Das Wesentliche an Objektorientierung ist also, dass sie Speicherplatzdetails (Ort und Schema) von der Umwelt, d.h. seiner Verwendung entkoppelt. Objektorientierung dreht sich um Kapselung, Kapselung, Kapselung. Und alles, was die Kapselung aufweicht, widerspricht ihr.</p>
+<p>Nicht, dass ungekapselte strukturierte Speicherbereiche sinnlos wären. Man spricht dann nur besser nicht mehr von Objektorientierung.</p>
+<p>Ein weiteres Argument spricht dafür, dass offengelegte Speicherbereiche keine Objekte sind. Die Kommunikation mit ihnen erfolgt dann nämlich nicht mehr über Nachrichten. Sie kann es nicht, weil Nachrichten Funktionalität zur Verarbeitung brauchen. Eine Nachricht selbst besteht ja nur aus Daten. Ohne passende Interfacemethode können die aber nicht verarbeitet werden. Daten direkt in einen Speicherbereich zu legen, ist keine Funktionalität, die ein Objekt bräuchte; das konnten schon C und Pascal.</p>
+<p>Technisch essenzielle Objektorientierung braucht also sehr wenig. Sie kann mit einer Untermene von C# oder Java betrieben werden. Klassen, Methoden, private/protected Felder, Interfaces – das ist es. Vererbung, Properties… nicht nötig. Für den Zweck der Kapselung reichen wenige Mittel. Alles andere ist nice to have; wir sollten uns darüber nicht die Köpfe heiß reden. Das wäre am wirklich spannenden Thema vorbei. Das ist nämlich: Wie sollte mit technischer Objektorientierung umgegangen werden?</p>
+<h3>Weiche Objektorientierung – Methode</h3>
+<p>Von der technischen Objektorientierung ist zu trennen der Umgang mit ihr. Technische Objekte sind “leer”, d.h. sie geben nicht vor, wie man sie benutzt. Technische Objekte sind sozusagen nur “kleine C Programme” (d.h. Einheiten von Daten und Funktionalität). Die Frage ist also: Wie sollte ein Problem in viele, viele “kleine C Programme” zerlegt werden, damit etwas qualitativ hochwertiges herauskommt?</p>
+<p>Dazu gibt es mehrere Ansätze. Der am weitesten verbreitete ist der von <a rel="noopener" href="http://de.wikipedia.org/wiki/Objektorientierte_Analyse_und_Design">Objektorientierte Analyse und Design (OOAD)</a> – oder noch nicht einmal. Verbreitet ist eher eine stark abgespeckte Version davon, sozusagen OOAD ultra light (OOADUL) :-)</p>
+<p>Das primäre Entwurfsmittel von OOADUL – wenn denn überhaupt expliziter Codeentwurf stattfindet – ist das Klassendiagramm. Und das primäre Vorgehen ist die Suche nach Substantiven in Anforderungen. Bei einem Tic Tac Toe Spiel würden sofort Spiel, Spieler, Spielbrett, Spielstein als Objektkandidaten identifiziert werden – um dann auf ihnen irgendwie erstens Zustand und zweitens Funktionalität zu verteilen.</p>
+<p>Die Prämisse bei OOADUL lautet: Software besteht aus Objekten, die nahe an der realen Welt sind. Was in der Problemdomäne zu sehen und anzufassen ist, das liegt nahe in problemlösenden Software als Objekte repräsentiert zu sein.</p>
+<p>An dieser Stelle will ich diesen Ansatz nicht bewerten, sondern ihn nur darstellen. Mir ist im Augenblick wichtiger, ihn als Methode zu trennen von der technischen Objektorientierung.</p>
+<h3>Zusammenschau</h3>
+<p>Konzeptionelle/methodische Objektorientierung und technische Objektorientierung sind zwei Paar Schuhe. Man kann auch methodisch objektorientiert Software planen – und dann mit einer technisch nicht objektorientierten Programmiersprache umsetzen. Und umgekehrt.</p>
+<p>Technische Objektorientierung ist ein leeres oder neutrales Werkzeug. Es dient durch die Kombination von Daten und Funktionalität im Verein mit der konsequenten Kapselung dem wohl ältesten Prinzip der Softwareentwicklung: der Entkopplung. “Neumodischer Krams” wie Properties oder auch Altmodisches wie öffentliche Felder widersprechen dem jedoch. Deshalb kann man sie trotzdem anwenden – muss nur eben wissen, dass man sich damit jenseits der Objektorientierung bewegt.</p>
+<p>Zurück zum Ausgangspunkt: die oft erhitzten Gemüter. Wo sich nun die Gemüter über die Objektorientierung erhitzen, da sollte als erstes gefragt werden, worum es geht. Erhitzt man sich über die Methode oder die Technik?</p>
+<p>Mein Gefühl ist, dass die Diskussionen sich weniger um technische Objektorientierung drehen. Die, die am Wert der technischen Objektorientierung zweifeln, treffen einfach relativ selten auf Freunde der technischen Objektorientierung. Am Ende ist sie ja auch unkritisch. Solche Daten-Funktionalität-Blasen zu haben, ist einfach eine nützliche Sache. Warum darauf verzichten.</p>
+<p>Viel schwieriger und inzwischen kontroverser ist jedoch, wie mit diesen Blasen umgehen? Hitzige Diskussionen entstehen, wenn die Methode angezweifelt wird. (Oder auch, wenn es um die Methode geht, aber jemand glaubt, es ginge um die Technik.)</p>
+<p>Auch ich wende mich mit Flow-Design gegen die Methode und nicht gegen die Technik. Zukünftig will ich das noch besser deutlich machen, um Missverständnissen vorzubeugen. Flow-Design ist eine Methode, um Software zu entwerfen. Und Event-Based Components (EBC) sind eine Übersetzung von Flow-Designs in C# Code; da geht es also um die Nutzung objektorientierter Technik.</p>
+<p>Wer Flow-Design für kritikwürdig hält, weil es nicht der (oder seiner Sicht auf die) Objektorientierung entspricht, der muss sich also mit seinen Argumenten auf der methodischen Ebene bewegen. Pauschal zu sagen, Flow-Design sei nicht objektorientiert, ist mithin falsch. Flow-Design ist nur methodisch nicht objektorientiert; und mit der Technik hat Flow-Design nichts zu schaffen.</p>
+<p>Und wer Event-Based Components als nicht objektorientiert kritisiert, der muss sich auf Technik konzentrieren. Er muss zeigen, inwiefern EBC der technischen Objektorientierung widerspricht. Und das wird schwer, würde ich sagen :-)</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2011-04-29):</p>
+<p>Jetzt bin ich ziemlich fassungslos ...</p>
+<p>Was soll das? Anstatt zu zeigen, welchen Fortschritt EBC bzgl. Objektorientierung bei der Softwareentwicklung bedeuten kann, wird die Objektorientierung "nieder gemacht".</p>
+<p>Gratulation!</p>
+<p>Auf die "Kritik", EBC sei nicht oder zu wenig "objektorientiert" derart beleidigt zu reagieren, indem man objektorientierte Softwareentwicklung - weil es passt - auf das "Minimum" reduziert, und dann schlussfolgert, ihr spielt ja nur in der Sandkiste und könnt nicht mal das richtig, ist wirklich armselig.</p>
+<p>Bei Neuerungen war/ist immer mit Gegenwind zu rechnen.
+Bei Neuerungen war/ist es immer erforderlich, sich mit dem "Bisherigen" auseinanderzusetzen.</p>
+<p>Ralf, Du willst überzeugen und fachst das Feuer des Konflikts noch mehr an.</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-04-29):</p>
+<p>Hm. Mir gefällt der Artikel auch nicht.</p>
+<p>Mit der Argumentation kann ich nämlich alles als objektorientiert darstellen, solange es ein Interface hat: Dann ist auch eine simple int-Variable schon objektorientiert, weil auch int ein bestimmtes Interface aufweist, und ich einen bestimmten Speicherbereich (32 Bit) in einer bestimmten Struktur (Big-Endian / Little-Endian) für mich allokieren kann.</p>
+<p>Das greift zu kurz.</p>
+<p>Dass auch EBCs / Flow-Design dann objektorientiert seien, ist logisch - nur geht das am Kern der Kritik vorbei, dass es mit OOP nichts zu tun hätte.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-04-29):</p>
+<p>@Anonym: Du wirfst mir vor, die Objektorientierung nieder zu machen.</p>
+<p>Deshalb gleich die Frage an dich: Welche denn? Meinst du, ich mache die technische oder die methodische Objektorientierung nieder?</p>
+<p>Siehst du, wie nützlich die Unterscheidung ist?</p>
+<p>Und dann zeige mir bitte in meinem Text den Satz, in dem ich ein Urteil über diejenige Objektorientierung fälle, von der du meinst, dass ich sie niedermache. Wo fälle ich ein Urteil und sage, "die technische Objektorientierung ist Mist" oder "die methodische Objektorientierung ist Mist"?</p>
+<p>Ich sehe solch einen Satz in diesem Beitrag nicht. Du hast also keinen Grund, fassungslos zu sein.</p>
+<p>Deiner Forderung, ich solle zeigen, welche Fortschritte EBC bzgl. (technischer) Objektorientierung bringe, kann ich nicht nachkommen. EBC verbessert ja die technische Objektorientierung nicht, sondern wendet sie nur in gewisser Weise an.</p>
+<p>Inwiefern allerdings Flow-Design mit EBC zu einer besseren Nutzung von technischer Objektorientierung führt, habe ich schon an anderer Stelle versucht darzustellen und werde es natürlich weiter tun. Dafür ist dieser Beitrag wichtig, denn der macht nun klar, worüber ich bei Flow-Design rede: über eine Methode zur Planung von technisch objektorientierten Strukturen. (Man kann Flow-Designs zwar auch anders übersetzen, doch wir nutzen heute halt OOP Sprachen.)</p>
+<p>Ich bin auch gar nicht begleidigt. Und schon gar nicht reduziere ich deshalb die technische Objektorientierung auf ein Minimum. Auch halte ich niemandem eine Sandkiste vor. Wo liest du das denn raus - allemal nicht in Bezug auf technische Objektorientierung. In der Sandkiste würde ich ja selbst spielen.</p>
+<p>Allerdings zweifle ich den Nutzen der methodischen (!) Objektorientierung an. Nicht in diesem Beitrag zwar, aber in anderen. Dafür habe ich ne Menge Argumente sehr grundsätzlicher wie auch praktischer Art.</p>
+<p>Und bisher - so muss ich sagen - hat mir noch kein Vertreter der methodischen (!) Objektorientierung in einer Gegenüberstellung gezeigt, dass seine Methode schneller zu besser evolvierbarerem und korrekterem Code führt. Aber vielleicht willst du diese Herausforderung ja annehmen.</p>
+<p>Nochmal: Technische Objektorientierung find ich völlig ok und nutze sie - sogar meist nur in der von mir definierten minimalen Form.</p>
+<p>Methodische Objektorientierung hingegen kritisiere ich. Nicht beleidigt, sondern auf der Basis von Praxiserfahrung und fundamentalen Prinzipien.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-04-29):</p>
+<p>@Anonym #2: Tut mir leid, wenn auch dir der Artikel nicht gefällt. (Im Grunde habe ich das aber auch nicht anders erwartet. Hier gehts ja ans Heiligste der Softwareentwicklung.)</p>
+<p>Du sagst: "Mit der Argumentation kann ich nämlich alles als objektorientiert darstellen, solange es ein Interface hat: Dann ist auch eine simple int-Variable schon objektorientier" und meinst das als Kritik.</p>
+<p>Tatsächlich ist aber genau das schon technische Objektorientierung. So lebt es C# und ist stolz drauf. Sonst würde 1.ToString() nicht funktionieren. Und so war es noch extremer bei quasi der Ursprache der Objektorientierung: Smalltalk.</p>
+<p>Dass dir pers. das nicht schmeckt... schade. Aber vielleicht auch ein Zeichen dafür, dass selbst die technische Objektorientierung nicht wirklich in der Entwicklergemeinde angekommen ist.</p>
+<p>Und dann:
+"Dass auch EBCs / Flow-Design dann objektorientiert seien, ist logisch - nur geht das am Kern der Kritik vorbei, dass es mit OOP nichts zu tun hätte."</p>
+<p>Welche Objektorientierung meinst du?</p>
+<p>Aber ich will helfen:</p>
+<p>Flow-Design kann nicht technisch objektorientiert sein, weil es eine Methode ist. Und sie ist methodisch nicht objektorientiert, weil sie genau das nicht sein will.</p>
+<p>Da hast du also etwas falsch verstanden.</p>
+<p>EBC sind auf technischer Ebene und nutzen die teschnische Objektorientierung. Ganz genau. Und das ist auch keine Interpretationsfrage, sondern evident. Wenn die Funktionseinheit F so übersetzt wird:</p>
+<p>class F {
+  public void Process(...) {...}</p>
+<p>private int SomeHelperFunction(...) {...}</p>
+<p>public event Action Result;
+}</p>
+<p>Dann ist das eindeutig technische Objektorientierung mit Genuss.</p>
+<p>Die mag nicht dem folgen, was die methodische Objektorientierung sich so vorstellt, wie man mit technischer Objektorientierung umgeht... aber das ist egal. Technisch bleibt es objektorientiert.</p>
+<hr />
+<p><strong>Sven</strong> (2011-04-29):</p>
+<p>Ich mag diesen Blog inklusive der Kommentare. Es wird immer alles so lange umdefiniert bis es passt :) Das ist lustig</p>
+<hr />
+<p><strong>Frank Jurisch</strong> (2011-04-30):</p>
+<p>Mal wieder der Versuch einer Mitmischung. Die bisherigen landeten in den Entwürfen, weil ich mich überhitzte aus Protest gegen das Kind dass mit dem Bade in der Rethorik schwamm. Zuerst schien es hier auch harmlos, technisch. Die Reaktion zeigt wieder emotionale Betroffenheit. Natürlich muss sich jeder ausgeschüttet fühlen der einen ganzen Nationalpark mit Objekten zu hüten versucht und dann nur OOADUL sein soll. @anonym #1 klingt jedenfalls mindestens wie ein Zoodirektor. Deine Argumentation gegen Täter- oder Domänen(nichtanämische)-Objekte klingt auch immer wieder seltsam agressiv wenn man EBCs scheinbar nicht auch als Täter-Objekte betrachten soll oder als datenfrei. Ob das soooo gesagt wurde oder nicht entsteht immer wieder der Eindruck dass EBC das mehr ablösen soll als intendiert.
+Wer sich EBC ansieht kann OO nicht vermissen. Eher im Gegenteil, die Menge der beteiligten Objekte schwillt ja immer mehr an. Es wirkt fast wie das Gegenteil der Gott-Klassen: totaler Zerfall in unüberschaubare Einzeltäter. Aber alle werden OO-mäßig verbandelt mit Hilfe der in der Objekt-Definition  nicht erwähnten Nützlichkeit der Kontrakte. Mag sein die sind auch ohne OO irgendwie zu haben aber nicht in unserem Sprachraum.</p>
+<p>Leider hab ich verpasst wo EBC als zu wenig objektorientiert sachlich (am Beispiel) kritisiert wird. Ich sehe schlimmstenfalls eine partielle Überbetonung der Nützlichkeit in der Argumentation. Es ist halt schon ein wenig anders alles über ResultEvents weiterzuleiten als aus Returnvalus zu fordern. Eigentlich aber eine korrekte Weiterentwicklung von "Frag nich sonder sag was du willst" (irgendwo bei Fowler? jedenfalls für mich eine prinzipiell korrekte Herangehensweise an ungewisse Situationen die ich eh nicht überblicken kann/will, dazu kann ich ja im EBC auch ein OnError haben oder in seinem Kumpel oder noch näher an dem der weiß wo es klemmt, ich (der Ergebniswünscher) muss mich nur auf beides vorbereiten ).
+Für mich ersetzt EBC nicht OOAOOD sondern verfeinert das in Richtung Handhabbarkeit für den eigentlich abzubildenden Arbeitsschritt. Es ist anfangs komplizierter die Wünsche zu formulieren wenn man an Services denken muss die jetzt nicht mehr prozedural antworten. Gar wenn alle anderen Mitspieler das aber (jetzt) doch tun. Ich persönlich hasse es gefragt zu werden ob ich Lust hab "diese unangenehme Tätigkeit" auszuführen. Ich bekomme den Auftrag und antworte mit dem Ergebnis oder/und einer Statusmeldung. Letztere kann auch heißen: frag mich nich. In persönlichen Verhältnissen kann das komliziert sein. EBC machen diese Sache nicht unkomplizieter. Man vergleiche die Dauerfrage nach der Unterbringung der Validierung. Wenn es eine Eingangsvalidierung braucht ist eine Prä-Commit-Validierung nicht überflüssig und auch nicht umgekehrt.</p>
+<p>Mir scheint ich sollte das wieder zu den Entwürfen werfen. Ich kann leider eine Frage nie ohne den Zusammenhang beantworten. Andere schreiben dann Bücher, da war ich doch kurz, oder ?-)</p>
+<hr />
+<p><strong>sdechi</strong> (2011-05-12):</p>
+<p>Hallo Herr Westphal,</p>
+<p>Zunächst einmal danke für diesen Blog Post, den er regt zum denken an und aktiviert mal wieder vergessenes Wissen :)</p>
+<p>Nun zum inhaltlichen, die Definition der technischen Objektorientierung, ist das eine geschaffene Definition oder gibt es Referenzen die dies genauso sehen.</p>
+<p>Persönlich finde ich EBC und Flow Design einen neuen interessanten Ansatz in der Informatik. Allerdings weckt es für mich auch oft ungewollt die Assoziation zu SPS Systemen aus der Automatisierungstechnik. Was ich bei diesen Systemen gelernt habe ist, nicht nur weil etwas von aussen wie eine schöne Komponente aussieht ist sie das auch in ihrer Implementierung, aber ich glaube dazu jetzt alle meine Gedanken auszuführen ist wohl eher so etwas für eine Flasche Rotwein als für ein Blog Kommentar.</p>
+<p>Anyway, ich freue mich wirklich darauf noch etwas mehr über die technische Objektorientierung zu lesen. Vielleicht kommt die Debatte zu den EBCs auch nur davon das, man ein kommunikatives Problem hat und mach die technische Objektorientierung in dieser weise wie hier beschrieben einfach nicht als "landläufige" Definition kennt. Vielleicht sollte man die Leute erst dafür begeistern und dann den schritt weiter gehen :)</p>
+<p>So lange habe ich noch eine recht nette Definition von object oriented in einem Paper des Erfinders von C++ auf Lager und möchte das mal so ohne Wertung stehen lassen.</p>
+<p>Zu finden hier: http://www2.research.att.com/~bs/oopsla.pdf</p>
+<p>Ich freue mich wirklich sehr mehr davon zu hören denke aber auch das wie hier in diesem Artikel beschrieben die methodische Objektorientierung seine Bewandtnis hat.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-05-12):</p>
+<p>@sdechi: Die Definition von techn. OOP, die ich gegeben habe, ist meine. Für mich stellt sie das minimale Destillat dar. Vererbung fehlt hier ganz bewusst. Insofern gehe ich auch nicht mit Bjarne Stroustroup konform. (C++ ist für mich trotz seiner Verbreitung auch eher ein Problem denn eine Lösung.)</p>
+<p>Wer mir eine Definition von techn. OOP "gestatten" sollte, weiß ich nicht. Niemand muss da um Erlaubnis fragen, sondern sich nur einem Diskurs stellen. Das tue ich.</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-05-15):</p>
+<p>Eine typische Diskussion über Objektorientierung. Schaut euch doch mal an wo die heutige Objektorientierung ihre Wurzeln hat. C#, Java usw. ist doch nicht wirklich Objektorientierung ;-) es ist eher Klassenorientierung. Mit Weichmachern wie Interfaces. Übrigens kommt EBC der originalen Objektorientierung sehr nahe.
+Ich denke nicht das Ralf hier etwas nieder machen wollte. Es ging darum wichtiges von unwichtigem zu trennen. Natürlich nur aus einer konkreten Perspektive betrachtet.</p>
+<p>Übrigens: Wer mal eine nettes Composer UI sehen möchte wie EBC aussehen könnte, nehme einen Standard Mac OS X mit Standard Development und starte dort Quartz Composer.. ist nur für Grafik, aber da ist alles drin was hier über EBC gesprochen wurde... sogar mit Platinen (dort Macros genannt)</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SEACON 2012 - Vortrag zu agilen Softwarestrukturen — ralfw.de Archiv</title>
+<meta name="description" content="Heute habe ich auf der SEACON 2012 Flow-Design vorgestellt, ohne es so zu nennen :-) Mein Ansatz war prinzipieller: Für mich ist das, was wofür Flow-Design steht, ein Ergebnis kons">
+<link rel="canonical" href="https://ralfw.de/archiv/2012/seacon-2012-vortrag-zu-agilen/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="SEACON 2012 - Vortrag zu agilen Softwarestrukturen — ralfw.de Archiv">
+<meta property="og:description" content="Heute habe ich auf der SEACON 2012 Flow-Design vorgestellt, ohne es so zu nennen :-) Mein Ansatz war prinzipieller: Für mich ist das, was wofür Flow-Design steht, ein Ergebnis kons">
+<meta property="og:url" content="https://ralfw.de/archiv/2012/seacon-2012-vortrag-zu-agilen/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>SEACON 2012 - Vortrag zu agilen Softwarestrukturen</h1>
+    <div class="doc-meta"><span>6. Juni 2012</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2012/06/seacon-2012-vortrag-zu-agilen.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2012/seacon-2012-vortrag-zu-agilen/</code></span></div>
+    <div class="art"><p>Heute habe ich auf der SEACON 2012 Flow-Design vorgestellt, ohne es so zu nennen :-) Mein Ansatz war prinzipieller: Für mich ist das, was wofür Flow-Design steht, ein Ergebnis konsequenter Anwendung des Single Responsibility Principle. Flow Design trennt die Verantwortlichkeiten Integration und Operation.</p>
+<p><strong>Operation</strong>: Hier spielt die Logik-Musik. Hier kommen 3GL-Kontrollstrukturen und Ausdrücke zum Einsatz. Das Ergebnis sind Codeeinheiten, die mit Unit Tests solide abgedeckt sein sollen. Um diese Codeeinheiten überschaubar und leicht testbar zu machen, sind sie unabhängig von einander. Deshalb werden sie über Datenflüsse zu Größerem verbunden.</p>
+<p><strong>Integration</strong>: Hier werden die Operationen zu Größerem verbunden. Integratoren enthalten keine Kontrollstrukturen oder Ausdrücke. Sie sind frei von solchen Logikkonstrukten. Ihre einzige Aufgabe ist es, Operationen und andere Integratoren zu integrieren. Das geschieht auf beliebig vielen (Abstraktions)Ebenen.</p>
+<p>Weil Operationen nicht von einander und am besten auch von keinem gemeinsamen Zustand abhängen sollen, setzen sie auf Datenfluss zur Kommunikation. Weil es um Datenfluss geht, sind Operationen und die daraus entstehenden Integrale eher Aktionen oder Prozess(schritte), denn Akteure. Es geht um Verben statt Substantive. Und weil das so ist, können die entstehenden Hierarchien unmittelbar ausdrücken, wie Code die Funktionalität für Features der Anforderungen herstellt.</p>
+<p>Eine Softwarestruktur, die diese Trennung lebt, ist deshalb bestens geeignet, agiles Denken im Code widerzuspiegeln.</p>
+<p>Mein Credo:</p>
+<p><strong>Process over Data</strong></p>
+<p>Wenn wir agil Vorgehen, sollten wir das datenorientierte Denken der bisherigen üblichen Objektorientierung zugunsten eines prozessorientierten Denkens aufgeben. Damit tragen wir auch dem alten Verständnis von Software Rechnung, dass sie als EVA begreift: Eingabe – Verarbeitung – Ausgabe.</p>
+<p><a rel="noopener" href="http://prezi.com/ckh7agsaypqy/softwarestrukturen-fur-agiles-vorgehen/">Softwarestrukturen für agiles Vorgehen</a> on <a rel="noopener" href="http://prezi.com">Prezi</a></p>
+<p>Wer nun mehr über diesen Ansatz erfahren möchte, der kann in den <a rel="noopener" href="http://clean-code-advisors.com/ressourcen/flow-design-ressourcen">Flow-Design Ressourcen bei den Clean Code Advisors</a> stöbern.</p>
+<p>Oder in der <a rel="noopener" href="http://www.dotnetpro.de/articles/">dotnetpro meine Artikel verfolgen</a>.</p>
+<p>Oder hier meinen <a rel="noopener" href="http://www.developerfusion.com/article/137636/taking-the-single-responsibility-principle-seriously/">Ausflug ins Single Responsibility Principle</a> mitmachen.</p>
+<p>Oder nicht nur dieses Blog verfolgen, sondern auch <a rel="noopener" href="http://geekswithblogs.net/theArchitectsNapkin/Default.aspx">mein englisches Blog lesen</a>. Ich werde mich bemühen, dort mehr zu schreiben, um das Konzept international zur Diskussion zu stellen. Es bewegt sich ja gerade recht viel dabei: Flow-Design wird “entzaubert” durch eine Gründung in fundamentalen Prinzipien. Und Flow-Designs ausführbar zu machen, wird durch die Flow Runtime NPantaRhei noch einfacher.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2012-06-06):</p>
+<p>Wo finde ich das versprochene Beispiel?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-06-06):</p>
+<p>Hier ein 1:42h Video, in dem ich ein Szenario mit Flow-Design (FD) und Event-Based Components (EBC) umsetze:</p>
+<p>http://vimeo.com/29660206</p>
+<p>FD entspricht dem, was ich heute auf der SEACON neutraler als "Separierung von Integration und Operation" bezeichnet habe. FD ist also das Denken, die Methoden.</p>
+<p>Die Übersetzung des FD-Entwurfs in Code erfolgt im Video mit Event-Based Components (EBC). Das ist aber nur eine Möglichkeit, wie man das machen kann.</p>
+<p>Hier noch die PPT Slides zum Vortrag:</p>
+<p>http://www.slideshare.net/patrickfritz/ralf-westphal-design-smart-not-hard</p>
+<p>Enjoy!</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-06-07):</p>
+<p>Ja, ne, genau: EVA. Sage ich doch die ganze Zeit schon - Stichwort Gymnasiast :-)</p>
+<p>Ich find's einfach nur prima, wenn sich die Prozessdenke langsam  aber sicher immer weiter durchsetzt. Bitte unbedingt weitermachen!</p>
+<hr />
+<p><strong>Arnfried Hansen</strong> (2012-06-08):</p>
+<p>In dem Video werden an einer Stelle die Funktionsblöcke BufferLines und GetPageFromBuffer und später FormatPage eingeführt. Dazu habe ich zwei Fragen.</p>
+<p>Warum liefert BufferLines eine PageDirection? Das erscheint mir künstlich. Ich verstehe, dass das nötig ist, damit der Fluss weitergeht, aber konzeptionell und im Sinne von EVA hätte ein solcher Block entweder gar keine Ausgabe (sondern nur den gewünschten Seiteneffekt) oder allenfalls den Buffer selbst als Ausgabe. Wie oft kommen solche künstlichen Ausgaben bei FlowDesign vor? Wie kann man das Design ändern, um das zu vermeiden?</p>
+<p>GetPageFromBuffer soll dem Buffer eine Seite liefern, aber woher weiß es im allgemeinen, wie viel des Bufferinhalts auf eine <em>Ausgabe</em>seite mit PageLength vielen Zeilen passt? Das weiß doch eigentlich nur FormatPage und auch dass erst während bzw. am Ende der Formatierung. Stell dir vor, es sollte statt CSV automatisch umgebrochener Fließtext ausgegeben werden. Wie viele Zeichen und wie viele Wörter auf eine Seite mit mit PageLength vielen Zeilen passen, hängt von deren Längenzusammensetzungen ab und steht erst am Ende des Formatierungsprozesses statt. Wie ließe sich das in FlowDesign realisieren, ohne dass in GetBuffer noch mal die ganze Formatierungsberechnung doppelt implementiert und durchgeführt werden müsste? Gibt es nicht viele Stellen, an denen es besser ist, dass sich eine Komponente die Daten nach Bedarf holt, statt sie von einer anderen Komponente übergeben zu bekommen. Das Problem lässt sich übrigens auch schon bei dem CSV-Beispiel einbauen, wenn nämlich wenn die Anforderung besteht oder kommt, dass der Header nur auf der ersten Seite ausgegeben werden soll, ist die erste Seite formatabhängig z.B um zwei CSV-Records kürzer. Das kann und sollte aber nur FormatPage wissen. Es tritt auch auf, wenn die CSV-Zeilen umgebrochen werden sollen, wenn sie formatiert nicht auf eine Zeile passen. Auch hier weiß erst FormatPage, ob es einen Umbruch geben wird, wie viele Bildschirmzeilen pro CSV-Record und damit wie viele CSV-Records benötigt werden.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-06-08):</p>
+<p>@Arnfried: Ich freu mich, dass du dir das Beispiel so genau angesehen hast.</p>
+<p>Dass BufferLines eine PageDirection liefert, ist tatsächlich reine Bequemlichkeit. Sauberer wäre es, BufferLines würde nur ein Signal senden, wenn genügend Zeilen zum Anzeigen gepuffert wurden. Und eine weitere Operation würde aus dem Signal eine PageDirection machen.</p>
+<p>Alternativ: Der Wechsel zur ersten Seite könnte über eine PageDirection oder über ein Signal stattfinden.</p>
+<p>Du missverstehst FormatPage, glaube ich. Es geht hier nicht um Seiten wie bei einem eBook Reader.</p>
+<p>Die Zeilenzahl pro Seite ist fix. Und die Zeilenlänge interessiert nicht. Sie wird als kurz genug angenommen, um zu keinem Zeilenumbruch zu führen.</p>
+<p>Die Vorstellung, dass statt CSV etwas anderes ausgegeben werden sollte, ist YAGNI-Denke. Es geht um kein anderes Programm als einen CSV-Viewer. Darüber zu spekulieren, ob Fließtext auch mit dem Formatter behandelt werden sollte, ist also völlig überflüssig.</p>
+<p>Ziel der Übung ist es auch, das Fokussieren zu lernen. Das realisieren, was gefordert ist. Nicht mehr. Nicht weniger. Verallgemeinerungen werden schnell Verschwendung.</p>
+<p>Dass Funktionseinheiten sich Daten holen, kann auch passieren. Vorzuziehen ist das aber nicht. Im Gegenteil! Dadurch entstehen nämlich Abhängigkeiten von Datenquellen. Die sollten aber minimiert werden für bessere Testbarkeit und bessere Parallelisierbarkeit.</p>
+<p>Datenflussdenke ist anders als die übliche Kontrollflussdenke. Das gilt es zu üben. Ansonsten wäre es ja kein Schritt voran gegenüber PAPs/Flow-Charts.</p>
+<hr />
+<p><strong>Arnfried Hansen</strong> (2012-06-08):</p>
+<p>Es ist natürlich YAGNI (und gleichzeitig nicht KISS), einen CSV-Viewer so zu entwerfen, dass er sich leicht auf den automatischen Umbruch von Fließtext umstellen lässt, da hast du vollkommen recht.</p>
+<p>Trotzdem ist ein Fließtext-Viewer für sich genommen ein realistisches Szenario. Du sagst, ich soll mich in FlowDesign üben. Ich kann mir leider nicht vorstellen, wie ich das in FlowDesign hinbekommen würde. Wie würde für so einen Fall ein gutes FlowDesign aussehen? Oder wäre man an dieser Stelle doch gezwungen, mit normalen Abhängigkeiten zu einer normalen Komponente zu arbeiten?</p>
+<p>Selbst bei einem CSV-Viewer finde ich es nicht so unwahrscheinlich (also nicht so YAGNI), dass der Kunde irgendwann sagt, er will den Header nur auf der ersten Seite, oder er will die Trennline nicht mehr oder noch eine zusätzliche Leerzeile darunter oder sogar alles konfigurierbar (z.B. per Befehlszeilenargument). Das sind aber alles Punkte, die Einfluss auf die Anzahl der benötigten CSV-Records haben. Und die sollte wegen SoC nur FormatPage berechnen. Oder übersehe ich was? Wie bekommt man das in FlowDesign hin? Im Sinne der Evolvierbarkeit möglichst ohne alles komplett umzuschmeißen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-06-08):</p>
+<p>@Arnfried: Bitte lass uns zwei Dinge trennen:</p>
+<ol>
+<li>
+<p>Fließtextumbruch vs CSV-Viewer. Das sind einfach zwei verschiedene Anwendungen.</p>
+</li>
+<li>
+<p>Änderung der Tabellenformatierung beim CSV-Viewer.</p>
+</li>
+</ol>
+<p>Zu 1: Einen Fließtextreader habe ich schon öfter als Aufgabe in Teamstatuserhebungen gegeben. Der sollte dann "ganz normal" von einem Team entworfen und implemtniert werden. Und "normal" bedeutet mit "Abhängigkeitsdenke". Das Ergebnis ist dann regelmäßig niederschmetternd. Frauen weinen, Männer reißen sich klagend die Kleider vom Leib.</p>
+<p>Mit Flow-Design hingegen ist es viel einfacher :-) Dennoch kann ich es dir hier nicht in drei Absätzen zeigen.</p>
+<p>Dass du dir das noch nicht vorstellen kannst, weil du keine Erfahrung in Flow-Design hast, ist klar. Du musst dich ja auch erstmal dekonditionieren :-) Raus aus der Abhängigkeitsdenke.</p>
+<p>Vergleiche es mit dem Hochsprung. Da gibt es verschiedene Techniken. Alle sind gültig. Und du magst der Meister der Frontalhocke sein.</p>
+<p>Wenn ich nun mit dem Rollsprung oder gar dem Fosbury-Flop komme, dann kannst du dir vielleicht nicht vorstellen, dass man damit auch was werden kann. Aber mit ein wenig Mühe lernst du um  - und stellst fest, dass du damit höher kommst als mit deiner bisherigen Technik.</p>
+<p>Zu 2: Alle möglichen Varianten lassen sich für den CSV-Viewer denken. Und die kannst du alle mit FD modellieren.</p>
+<p>In einem unterscheiden sie sich aber nicht, denn sonst wäre es kein CSV-Viewer in unserem Sinn mehr: die Zahl der Zeilen pro Seite ist fix.</p>
+<p>Aber selbst wenn du diese Bedingung aufheben willst, lässt sich das ja modellieren. Es steckt da ja kein grundsätzliches Problem drin. Dass bei manchen Record-Längen nur 8 statt 10 Records auf einer Seite angezeigt werden, ist doch nur ein Detail - das selbstverständlich bedacht werden muss. Das FD-Modell sieht dann anders aus. Ok. So soll es ja auch sein. Das ist sogar eine Tugend: das Modell soll die Anforderungen in seiner Struktur widerspiegeln. Das sehe ich in Linie mit Screaming Architecture.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-06-09):</p>
+<p>@Arnfried: Um dir vielleicht etwas klarer zu machen, warum das mit dem Fließtext so einfach ist, hier eine Skizze zweier Flüsse:</p>
+<p>Interaktion: Laden eines Textes
+Input: Dateiname
+Output: Image der ersten Seite</p>
+<p>-&gt; Textzeilen_aus_Datei_lesen -&gt;
+Textzeilen_zu_Absätzen_zusammenfassen -&gt;
+Absätze_in_Wörter_zerlegen -&gt;
+Wörter_puffern -&gt;
+Paginieren -&gt;
+Seiten_puffern -&gt;</p>
+<p>Erste_Seite_aus_Puffer_holen -&gt;
+Seite_rendern -&gt;</p>
+<p>Interaktion: Zur nächsten Seite blättern
+Input: -
+Output: Image der Seite</p>
+<p>-&gt; Nächste_Seite_aus_Puffer_holen -&gt;
+Seite_rendern -&gt;</p>
+<p>Interaktion: Seitengröße verändert
+Input: Anzahl Spalten, Anzahl Zeilen
+Output: Image der Seite mit dem vorher angezeigten Text</p>
+<p>-&gt; Wörter_aus_Puffer_lesen -&gt;
+Paginieren -&gt;
+Seiten_puffern -&gt;</p>
+<p>Aktuelle_Seite_aus_Puffer_holen -&gt;
+Seite_rendern -&gt;</p>
+<p>Du siehst, das ist vom Fluss her sehr einfach, weil der Text nur einmal paginiert (d.h. auf Seiten umgebrochen) wird, wenn er geladen wird (oder wenn sich die Seitengröße ändert).</p>
+<p>Dass ich den Prozess so einfach machen kann, liegt daran, dass das Paginieren (dort spielt die Musik) so schnell geht. Ein 500 Seiten Buch wird in ca. 0,1 Sek paginiert. (Das ist keine Schätzung; ich habs gebaut :-)</p>
+<p>Wenn das Paginieren so schnell ist, kann ich den Text einfach von vorn nach hinten durchlaufen und solange Worte in Zeilen und Zeilen in Seiten packen, wie es eben geht. Total simpel.</p>
+<p>Wenn das Paginieren dann 50 oder 100 Zeilen umfasst... dann macht das nichts. Ich behaupte ja nicht, dass wir mit Flow-Design keinen 3GL Code mehr schreiben sollen. Auch TDD soll gern zum Einsatz kommen, wenn die Methode zum Paginieren implementiert wird.</p>
+<p>Wie die Funktionalität so einer Anwendung jedoch ist, wird mit FD viel klarer, weil die Operationen (Paginieren usw.) vergleichsweise klein sind und mit einer Sprache integriert werden, die leicht lesbar ist und zu der man sogar aus Assemblies graphische Darstellungen generieren kann.</p>
+<p>Ich hoffe, damit habe ich dich etwas beruhigt, was das Potenzial von FD angeht.</p>
+<hr />
+<p><strong>Aleksandar Kalauz</strong> (2012-06-09):</p>
+<p>Hallo Ralf,</p>
+<p>für mich ist das eher eine Notlösung, als eine Lösung. Wie kann das gelöst werden, wenn sehr großen Datenmengen im Spiel sind die z.B. per Webservice geholt werden?
+Da kann ich ja nicht alle auf Verdacht holen, sondern muss die benötigten Daten per Bedarf holen, z.B. weil der Datentransfer aller Daten zu lange dauern würde. Wie du schreibst, kommt die Umstellung auf die Verarbeitung der gesamten Daten nur deshalb in Frage, weil sie im konkreten Fall schnell genug geht. Das wird aber nicht immer der Fall sein. Was tut man dann?</p>
+<p>Gruss Aleksandar</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-06-10):</p>
+<p>@Aleksandar: Lass uns zuerst klarstellen, über welche Lösung du urteilst: Du beziehst dich auf den Umbruch von Fließtext und das Blättern darin, oder? Nennen wir das Problem mal eBook-Reader (statt dem Ausgangsproblem CSV-Viewer).</p>
+<p>Wenn das so ist:</p>
+<p>Der skizzierte eBook-Reader kann leicht auf Texte im Web umgestellt werden:</p>
+<p>Interaktion: Laden eines Textes aus dem Web
+Input: URL
+Output: Image der ersten Seite</p>
+<p>-&gt; Text_herunterladen -&gt;
+Laden_eines_Textes -&gt;</p>
+<p>Du siehst, dem, was bei der Interaktion "Laden eines Textes" geschieht, habe ich nur eine Operation vorangestellt. Jetzt wird der Text zuerst heruntergeladen in eine lokale Datei (oder auch nur einen Stream) und der wird dann in Worte zerlegt und paginiert usw.</p>
+<p>Damit ist die eine Hälfte deines Einwandes, mein Ansatz sei eine Notlösung, entkräftet, denke ich. Die Datenquelle Internet habe ich ganz leicht einbinden können in meine Lösung.</p>
+<p>Die zweite Hälfte bezieht sich auf die Performance. Am Download kann ich nichts machen. Die Daten von einem Webserver zu holen, dauert solange wie es dauert. Wie lang kann das sein für eine Buchdatei (die ja auch gern gepackt sein kann)? Ich denke, das können wir vernachlässigen. Wir reden über vielleicht 200-600 KB für übliche Bücher.</p>
+<p>Ist ja auch nur ein Aufwand, der einmalig anfällt. Du beklagst dich darüber wahrscheinlich nicht, wenn deine Kindle-App oder ein sonstiger eBook-Reader auf deine iPad oder iPhone das tut.</p>
+<p>Und selbst bei größeren "Büchern" wie Die Zeit oder brand eins, die mit 20-80 MB zu Buche schlagen, nehmen wir das ohne Murren in Kauf.</p>
+<p>Jetzt noch die Umbruchperformance. Wo ist das Problem? 500 Seiten in 0,1 Sek umbrechen, 5000 Seiten in ca. 1 Sek. Ist das nicht schnell genug? Wann hast du zuletzt ein Buch mit mehr als vielleicht 1500 Seiten gelesen?</p>
+<p>Wenn du von einer Notlösung für das eBook-Reader Szenario sprichst, dann bist du aus meiner Sicht weit im Land von YAGNI. Du spekulierst über irgendwelche Anforderungen, die nicht sichtbar sind. Für 99,9% aller Bücher reicht mein Ansatz aus.</p>
+<p>Ich würde mich freuen, wenn wir uns darauf erstmal einigen können. Das Thema Fließtextumbruch/eBook-Reader haben wir damit dann abgeschlossen.</p>
+<p>Wenn wir uns von dem Thema aber lösen, dann kannst du natürlich fragen: Kann Flow-Design auch helfen, Szenarien zu lösen, in denen Daten aus dem Web heruntergeladen werden müssen. Und wie ist das, wenn es um sehr viele Daten geht?</p>
+<p>Darauf antworte ich dann: Selbstverständlich kann dir Flow-Design dabei helfen.</p>
+<p>Um darüber näher zu sprechen, brauchen wir allerdings ein konkretes Szenario. Schau dir mal die Applikation Katas hier an: http://clean-code-advisors.com/ressourcen/application-katas</p>
+<p>Wenn du ein Problem, in solcher Form mal auf 1 A4 Seite beschreibst und hier einen Link postest, dann können wir überlegen, wie FD das angehen würde.</p>
+<p>Schau dir auch mal die CSV-Viewer Kata an Iteration 3 an. Da siehst du, dass FD sich selbstverständlich vor großen Datenmengen nicht scheut. Im Gegenteil! :-)</p>
+<p>Ich bin gespannt auf deine Problemkonkretisierung.</p>
+<hr />
+<p><strong>Aleksandar Kalauz</strong> (2012-06-10):</p>
+<p>Hallo Ralf,</p>
+<p>vielen Dank für das Angebot, dass du dich im Rahmen einer Kata weiter damit weiter beschäftigen willst.</p>
+<p>Nehmen wir einen Fließtext-Viewer für (Fach-) Artikel der seine Daten von einem Webserver herunterladen muss. Das Datenformat ist fest vorgegeben und kann nicht geändert werden und basiert auf XML, das neben dem normalen Text noch eingebettete (base64 kodierte) Bilder enthält od. die Bilder referenziert sind, wobei in der Praxis beide Bildarten gleichberechtigt vorkommen.
+Die Datendateien können zig MB groß sein, so dass ein alles auf einmal laden nicht sinnvoll ist. Selbst bei schnellen DSL-Anschlüssen dauert das runterladen von 100MB gut eine Minute und die Anforderung an den Viewer ist, dass die Anzeige innerhalb einer Sekunde zu erfolgen hat. Gerade wenn in einem Unternehmen Mitarbeiter den Viewer verwenden sollen, dann kostet die (unnötige) Wartezeit eine Menge Geld. Oder wenn von vielen Dateien jeweils nur die erste Seite betrachtet werden soll (da dort i.d.R. das Abstract und die Einleitung steht), so ist es auch nicht akzeptabel jedesmal zu warten, bis alles heruntergeladen wurde.</p>
+<p>Dass es sich dabei nicht mehr um eine Konsolenanwendung, sondern um z.B. eine Winforms-Anwendung handelt sollte klar sein.</p>
+<p>Gruss Aleksandar</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-06-10):</p>
+<p>@Aleksandar: Ich denke, es ist klar, dass das Problem nichts speziell mit Flow-Design zu tun hat. Es ist ein ganz allgemeines Problem, wenn es denn überhaupt real ist.</p>
+<p>Und ich lasse auch mal dahingestellt, warum das Problem nicht mit PDF gelöst wird oder mit HTML. Denn genau dafür sind diese Technologien ja da.</p>
+<p>Und es sollte klar sein, dass die Anzeige der ersten Seite eben nicht innerhalb 1 Sek funktionieren kann, wenn darin schon ein 20 MB großes Bild eingebettet ist. (Dass es Quatsch ist, für die Bildschirmanzeige ein Bild solcher Größe einzubetten, lasse ich ebenfalls dahingestellt.)</p>
+<p>Daraus folgt, dass das XML-Format schon mal so ausgelegt sein muss, dass Text und Bilder innerhalb einer Datei getrennt sind. Sonst kommt man beim Download im schlimmen Fall nicht innerhalb der ersten Sekunde an die erste Seite, um sie schonmal anzuzeigen.</p>
+<p>Und im Text muss eine Info stehen, wie groß das Bild ist, damit beim Rendern schonmal Platz dafür eingeplant werden kann. Vielleicht liegt im Text auch eine Bildversion mit niedrigerer Auflösung, die schonmal eingesetzt werden kann.
+Außerdem sollten Metadaten (Titel, Abstract, Autor usw.) nochmal am Anfang abgesetzt vom sonstigen Text stehen, um sie schneller und getrennt laden zu können.</p>
+<p>Wie gesagt, das sind Anforderungen an das XML-Format, um überhaupt die nicht-funktionale Anforderung "1. Seite in 1 Sek anzeigen" erfüllen zu können. Mit einer Entwurfsmethode oder Plattform hat das nichts zu tun.</p>
+<p>(XML ist für ein solch großes Dokument übrigens keine gute Wahl, finde ich. Aber das können wir hier wohl nicht diskutieren.)</p>
+<p>Also, wenn das XML den Anforderungen an die verteilte Architektur entspricht (Server mit Dokument dort, Desktop-PC mit Reader hier), dann könnten Interaktionen so aussehen:</p>
+<p>Interaktion: Artikel öffnen
+Input: URL
+Output: Image der ersten Seite</p>
+<p>-&gt; Artikel_als_XML_Stream_öffnen -&gt;
+*Artikelelemente_aus_Stream_lesen.Text -&gt;
+Paginieren -&gt;
+Seite_puffern -&gt;</p>
+<p>*Erste_Seite_aus_Puffern_holen -&gt;
+Seitenbilder_aus_Puffer_holen -&gt;
+Seite_rendern -&gt;</p>
+<p><em>Artikelelemente_aus_Stream_lesen.Bild -&gt;
+</em>*Bild_von_base64_nach_JPG_konvertieren -&gt;
+Bild_puffern</p>
+<p>Das ist mal so eben runtergeschrieben. Deine Angaben sind nicht konkret. Mein FD-Design kann deshalb nicht besser sein. Aber soviel kann ich hier klar machen:</p>
+<p>Es kommt darauf an, wo du die Asynchronizität einbaust. Das ist ja auch, worauf du hinaus willst. Man kann nicht auf den ganzen Download warten, bevor man eine Seite (oder die 1. Seite) anzeigt. Also muss irgendwie etwas im Hintergrund laufen.</p>
+<p>...</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-06-10):</p>
+<p>...</p>
+<p>Mein Ansatz ist wie folgt:</p>
+<ol>
+<li>Mit der URL wird ein Stream zum fernen großen XML-Dokument geöffnet. Auf dem Stream wird mit C# ein XmlTextReader geöffnet, so dass er elementweise gelesen werden kann.</li>
+<li>Das passiert auf einem Hintergrund-Thread in Artikelelemente_aus_Stream_lesen. Deshalb steht vor der Funktionseinheit ein *.
+Aus der Funktionseinheit kommt auf einem Port Text raus (.Text). Wie genau, das lasse ich mal dahingestellt. Ob das Zeilen sind oder Worte oder was auch immer. Jedenfalls ist das Text in einer Form, die erstens auch Metadaten über Bilder enthält, die im Text angezeigt werden sollen. Und zweitens kann diese Form paginiert werden.</li>
+<li>Die Pagination läuft schnell ab, kann also auf demselben Thread wie die XML-Analyse laufen.</li>
+<li>Die Seiten werden ebenfalls auf dem Thread gepuffert.</li>
+</ol>
+<p>So dreht sich das XML-Analyserad munter auf einem Hintergrund-Thread, bis das ganze Dokument in Seiten zerlegt im Puffer steht.</p>
+<ol start="5">
+<li>Sobald eine erste Seite vorhanden ist, feuert die Pufferung ein Signal. Das wird von einer FE verarbeitet, die die erste Seite aus dem Puffer holt.</li>
+<li>In der Seite stehen Bildreferenzen irgendeiner Form. Dazu werden die Bilder aus einem zweiten Puffer geholt, sofern sie schon heruntergeladen sind.</li>
+<li>Die Summe aus Seitentext und Seitenbildern fließt zum Rendern.</li>
+</ol>
+<p>Das Ganze geschieht auf einem eigenen Thread, um die Analyse nicht zu behindern.</p>
+<p>2.1. Im Text stehen nicht nur Text, sondern auch Bilder. Die kommen aus der XML-Analyse auf einem zweiten Port heraus (.Bild).
+8. Zunächst ist jedes Bild nur ein base64 String oder eine URL. Daraus wird also erstmal ein JPG gemacht. Das geschieht wieder auf einem eigenen Thread, um die Analyse nicht zu behindern. Da die Bilder jedoch unabhängig von einander sind, kann die Bildkonvertierung (bzw. der Download) parallel ablaufen. Deshalb ** vor der Funktionseinheit. Hier kann auf vielen Threads gleichzeitig gearbeitet werden.</p>
+<p>Zusammenfassung:</p>
+<p>-Das XMl-Dok des Artikels wird im Hintergrund heruntergeladen und paginiert.
+-Bilder werden im Hintergrund konvertiert bzw. heruntergeladen. Das sogar parallel.
+-Seitenanzeige und Blättern sind möglich, sobald der Text für eine Seite paginiert ist. Damit das zügig auch ohne Bilder passieren kann, sollten Text und Bilder im XML-Dok getrennt vorliegen.</p>
+<p>Für meinen Geschmack zeigt sich hier sehr schön der Vorteil von FD: Ich kann dir die Funktionsweise hier auf einem hohen Level erklären - und was ich oben geschrieben habe, das ist sogar Quellcode. Quellcode für den Prozess.</p>
+<p>Die Operationen, die nun recht einfach sind, müssen in einer 3GL implementiert werden. Doch das ist kein Drama, weil sie unabhängig von einander sind. Ihnen sieht man auch nichts von der Asynchronizität oder Parallelität an. Die wird deklarativ im Modell nach Bedarf "zugeschaltet". (Natürlich ist darauf bei shared state zu achten. Aber das ist hier auch trivial. Das Performanceproblem in diesem Szenario liegt grundsätzlich in der Download-Geschwindigkeit.)</p>
+<hr />
+<p><strong>Arnfried Hansen</strong> (2012-06-10):</p>
+<p>Wenn ich dich richtig verstehe, kommt man nicht darum herum, dass die dem Formatierer (z.B. FormatPage) vorgeschaltete Funktionseinheit (z.B. GetPageFromBuffer) die nötigen Daten liefern muss. Und entweder sie kann auf einfache Weise ermitteln, welche Informationen sie liefern muss, z.B. durch eine feste Zeilen- bzw. Satzanzahl pro Seite oder sie muss alle Daten liefern, damit der Formatierer entweder selbst auswählen oder eben alle Daten auf einen Rutsch verarbeitet kann.</p>
+<p>Ich kann mir zwar vorstellen, dass es Fälle gibt, in denen beides keine Option ist, und so wie ich Aleksandar verstanden habe, hat er versucht, genau so ein Beispiel aufzuzeigen, aber wenn ich dich richtig verstehe, gibt es bei FlowDesign nur die genannten beiden Auswege. Sollte man die Anforderungen nicht ändern können, so dass sie einem offen stehen, muss man man dem Formatierer doch einen klassischen Funktionsbaustein mitgeben, mit dem er die benötigten Informationen gezielt selbst holen kann.</p>
+<p>Selbst wenn man im Beispiel von Aleksandar die eingebetteten Bilder aus dem XML entfernt bzw. durch ihre Metadaten und eine Referenz ersetzt, aber eine langsame Verbindung (z.B. 100KB/s) und einen großen Artikel (z.B. 250KB) hat sowie die geforderte Reaktionszeit von unter einer Sekunde einhalten muss, kann man die Daten nicht mehr komplett laden. Der einfache Weg über die Satzanzahl steht einem bei Fließtext auch nicht zur Verfügung. Also kann man, wenn ich dich richtig verstanden habe, diesen konkreten Fall mit reinem FlowDesign nicht modellieren.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-06-10):</p>
+<p>@Arnfried: Ich weiß nicht, was du da immer für grundsätzliche Limitationen bei Flow-Design siehst.</p>
+<p>Meine Vermutung: Du unterliegst einem Missverständnis. Aber ich erkenne nicht, welchem.</p>
+<p>Glaubst du, FD sei eine 3GL bzw. eine Turing-Complete "Sprache"? Das wäre falsch.</p>
+<p>Glaubst du, FD will ohne Zustand in Operationen auskommen? Das wäre falsch.</p>
+<p>Leider ahne ich, dass wir dein Missverständnis hier mit dem Medium des Kommentars nicht aus der Welt kriegen.</p>
+<p>Oder du formulierst ebenfalls konkrete Anforderungen, statt an anderen irgendwie rumzudoktoren. Stelle eine Aufgabe; fixiere Anforderungen, so dass du nicht hinterher dran rumschrauben kannst. Und dann kann ich überlegen, ob und wie ich dazu eine Modellskizze mache.</p>
+<p>Fühl dich aber auch eingeladen, am Agile Architecture Training teilzunehmen (http://www.sigs-datacom.de/seminare/akademien/clean-code-developer.html). Dort lernst du 5 Tage ausführlich, wie du evolvierbareres und verständlicheres Softwaredesign hinkriegst.</p>
+<hr />
+<p><strong>Arnfried Hansen</strong> (2012-06-10):</p>
+<p>Dass ich einem Missverständnis aufsitze, kann ich natürlich nicht ausschließen. Erkennen kann ich jedenfalls keins.</p>
+<p>Ich hatte es doch eigentlich schon ziemlich konkret gemacht. Nimm das Szenario von Aleksandar mit den Konkretisierungen aus meinem letzten Absatz, dann hast du was ich meine.</p>
+<p>Wobei dieses Szenario sowieso nur stellvertretend für alle Situationen steht, in denen eine Komponente erst und nur selber weiß, welche Informationen aus einer großen Datenmenge von ihr benötigt werden und es gleichzeitig aus Performance- oder Speichergründen nicht möglich ist, einfach die komplette Menge als Input zu geben.</p>
+<p>Ich behaupte nicht, dass man für das konkrete Beispiel keine gutes FlowDesign machen kann. Ich sehe nur nicht, wie es gehen soll, wenn die beiden Möglichkeiten, die du bisher zur Lösung der Probleme angegeben hast, ausscheiden.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-06-10):</p>
+<p>@Arnfried: Tut mir leid, ich verstehe immer noch nicht, was dein Problem ist.</p>
+<p>"kann man die Daten nicht mehr komplett laden" ist kein Problem. Ich habe doch beschrieben, dass die 100 MB große Artikeldatei eben nicht komplett geladen werden muss, um mit einem Seitenumbruch zu beginnen und die erste Seite schon nach 1 Sek anzuzeigen.</p>
+<p>Und ich verstehe leider nicht, was</p>
+<p>"eine Komponente erst und nur selber weiß, welche Informationen aus einer großen Datenmenge von ihr benötigt werden und es gleichzeitig aus Performance- oder Speichergründen nicht möglich ist, einfach die komplette Menge als Input zu geben."</p>
+<p>bedeutet. Was meinst du damit? Welche Information hat nur eine Funktionseinheit? Was bedeutet das für das Fließtextumbruchproblem? Welche Info könnte das da sein? Und warum ist da eine Grenze für FD?</p>
+<p>Bitte verweise nicht auf andere Probleme und modifiziere sie, sondern schildere vollständig eine Anforderung aus deiner Sicht. Möglichst auf dein Problem fokussiert. Dann versuche ich es nochmal.</p>
+<hr />
+<p><strong>Arnfried Hansen</strong> (2012-06-11):</p>
+<p>Ich weiß jetzt, wo das Missverständnis lag, auch wenn es kein klassisches Missverständnis, sondern eher ein Versäumnis meinerseits war. Ich hatte deinen Kommentar von 10. Juni 2012 15:24 überlesen - also zuerst aus Zeitmangel nur überflogen und dann später vergessen, ihn genauer zu lesen. Sorry, mein Fehler. Tut mir Leid. Mein darauf folgender Kommentar und die drei weiteren Kommentare sind dadurch eigentlich gegenstandslos und überflüssig.</p>
+<p>In dem bewussten Kommentar zeigst du auf, wie man es schafft, dass der Formatierer die Daten bekommt, die er benötigt, ohne dass es erforderlich ist, alle Daten zu übermitteln, bevor die erste Seite angezeigt werden kann (insbesondere Punkt 5). Ob das im Detail alles so hinkommt, kann ich aufgrund meiner geringen Erfahrung mit FlowDesign nicht beurteilen, aber ich habe anderseits auch keinen Grund, an deiner Aussage zu zweifeln.</p>
+<p>Momentan denke ich zwar, dass der Formatierer dann selber einen (internen) Puffer braucht, also man auf der Implementierungsebene doch eine Komponente braucht, die vom Formatierer klassisch benutzt wird, aber mir fehlt leider momentan die Zeit, das genauer zu durchdenken.</p>
+<p>Zumindest gestehe ich nach meinem momentanem Kenntnisstand ein, dass dein Vorschlag konzeptionell sauber ist.</p>
+<p>Ob das auch der Fall wäre, wenn aus einer großen Datenmenge nur einzelne Daten selektiert werden müssten und auch hier wieder nur der Formatierer (oder eine andere Verarbeitungskomponente, die an seine Stelle tritt) weiß, welche Daten er wann benötigt, weiß ich nicht. Leider fehlt mir auch hier die Zeit das genauer zu durchdenken.</p>
+<p>Vielleicht schreibt Aleksandar noch was, der schien einen ähnlichen Gedankengang zu haben, wie ich.</p>
+<hr />
+<p><strong>Alexander Moshe</strong> (2012-06-11):</p>
+<p>Hallo zusammen,</p>
+<p>Ralf schrieb am 11.Juni um 15:24:
+"4. Die Seiten werden ebenfalls auf dem Thread gepuffert.</p>
+<p>So dreht sich das XML-Analyserad munter auf einem Hintergrund-Thread, bis das ganze Dokument in Seiten zerlegt im Puffer steht.</p>
+<ol start="5">
+<li>Sobald eine erste Seite vorhanden ist, feuert die Pufferung ein Signal. Das wird von einer FE verarbeitet, die die erste Seite aus dem Puffer holt."</li>
+</ol>
+<p>Naja, die Probleme an diesem Beispiel haben ja eben nichts mit Flow-Design zu tun, sondern das Problem ist die grosse Datenmenge und die langsame Verbindung (im Vergleichzu einer Festplatte lokal).</p>
+<p>Das Problem habe ich übrigens auch mit dem LoungeRepository, wenn ich da massiv Test-Daten erzeuge (50 MB in einer Entity) dauert das Laden auch zu lange, also müssen halt Unter-Objekte eigene Entitys werden.</p>
+<p>So wäre das im vorliegenden Beispiel evtl. auch lösbar, dass zB Kapital des Buches eigene XML-Seiten wären, oder eben Bilder ausgelagert, etc.</p>
+<hr />
+<p><strong>Arnfried Hansen</strong> (2012-06-18):</p>
+<p>Ich hatte jetzt Zeit, darüber nachzudenken. Ich kann es nun auf den Punkt bringen. Gehen wir von einer ganz normalen EVA-Operation aus: Daten lesen, einer festen Geschäftslogik folgend ändern und schreiben. Für das Beispiel in drei separaten Schritten und nicht mit einem SQL-Update. Wenn ich FlowDesign richtig verstanden habe, gäbe es drei Funktionseinheiten, einen Reader, der die Daten liest, einen Processor, der sie ändert und einen Writer, der sie zurückschreibt. Ok, ich weiß, alles Substantive, sollten eigentlich Verben sein, aber was ich meine ist trotzdem klar.</p>
+<p>Dann gibt es die Geschäftslogik, die sagt, <strong>welche</strong> Daten <strong>wie</strong> geändert werden müssen. Und wenn ich das mit den Concerns richtig verstanden habe, dann gehört das Welche und das Wie zusammen in eine Funktionseinheit.</p>
+<p>Klassisch designed würde der Processor ein Repository benutzen. Das Repository hat mindestens je eine Operation zum Lesen und zum Schreiben. Welche Daten gelesen werden sollen, übergibt der Processor per Parameter an die passende Leseoperation. Das Ändern der Daten übernimmt der Processor selbst. Und das Ergebnis übergibt er per Parameter an die entsprechende Schreiboperation. Die Concerns "Geschäftslogik" (im Processor) und "Datenbankzugriff" (im Repository) sind an je genau einem Ort zusammengefasst und dadurch sauber voneinander getrennt. Wobei das Zusammenfassen mindestens genauso wichtig ist, wie das Trennen.</p>
+<p>Wie sieht das in FlowDesign aus? Meine erste Idee: -&gt; Read -&gt; Process -&gt; Write.</p>
+<p>Nur müsste der Parameter, welche Daten gelesen werden sollen, aus dem Nichts (allererster Pfeil) kommen. Aber erst der Processor weiß, welche Daten gelesen werden müssten. Ich denke, das war auch mein Problem mit dem Formatierer oben und ist gleichzeitig das generelle Problem: Dass erst und nur - gerade wegen der Zusammenfassung aller einen bestimmten Concern betreffenden Teile an einer Stelle - die Funktionseinheit selbst weiß, welche Daten sie benötigt, dass sie aber bei FlowDesign die Daten zwangsläufig von der vorgeschalteten Funktionseinheit bekommt, die das in den thematisierten Fällen leider nicht weiß. Das Welche und das Wie soll nicht auf zwei Funktionseinheiten aufgeteilt werden.</p>
+<p>Mir ist dazu nur eine einzige, unbefriedigende Lösung eingefallen.</p>
+<p>-&gt; Tell -&gt; Read -&gt; Process -&gt; Write</p>
+<p>Wobei man sich noch einen weiteren Pfeil von Tell zu Process denken muss, den ich lediglich wegen der hier eingeschränkten Darstellungsmöglichkeiten nicht eingezeichnet habe. Der Processor hat also zwei Eingänge.</p>
+<p>Der Teller weiß über das Welche und das Wie Bescheid und teilt das Welche dem Reader und das Wie dem Processor mit. Das Welche sollte kein Problem machen, denn das muss auch im klassischen Design per Parameter von einer Komponente zur anderen übergeben werden. Aber das Wie kann beliebig komplex werden. Und es darf im Processor nicht direkt ausprogrammiert sein, sondern - wegen SoC, bei dem nur der Teller das Wissen hat - tatsächlich per Parameter übergeben werden. Es ist aber schwierig - und YAGNI - einen Processor zu schreiben, der beliebige, durch Parameterübergabe bestimmte Geschäftslogik ausführen. Es sei denn, dass der Parameter einfach ein Delegat ist. Das würde zwar irgendwie gehen, aber es ist unbefriedigend. Der Processor müsste, wenn er beliebige Delegaten akzeptieren soll, generisch sein, denn sein Rückgabetyp muss mit dem Rückgabetyp des Delegaten übereinstimmen. Das ist insgesamt recht technisch. Auch konzeptionell ist es nicht wirklich natürlich und intuitiv, dass man einen Teller braucht, obwohl es doch eigentlich um eine ganz klassische EVA-Operation geht.</p>
+<p>Es wundert mich, dass man schon bei einer so einfachen EVA-Operation, die für FlowDesign geradezu wie gemacht zu sein scheint, schon solche Probleme bekommt. Gut, ich will eingestehen, dass ich möglicherweise einen naheliegenden Weg übersehen habe, weil ich immer noch zu klassisch denke. Aber darum schreibe ich. Ich komme gerne auf dein obiges Angebot zurück, behilflich zu sein. Kannst du das auflösen?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-06-18):</p>
+<p>@Arnfried: Na, das hört sich nun doch schon klarer an. Ich kann dir folgen, denke ich. Und ich verweise nochmal auf den Link im Posting "Ausflug ins SRP". Dort findest du meine Argumentation zu deinem Problem unter "Subtle Aspects - Request and Response".</p>
+<p>Hier in Kürze: Flow-Design führt nicht nur zu einer Trennung der Aspekte Integration und Operation, sondern auch der Aspekte Request und Response.</p>
+<p>Genau, du hast richtig gelesen: für mich sind Request und Response zwei Aspekte, d.h. etwas, das sich getrennt von einander verändern kann. Oder etwas, das ohne Not zwanghaft zusammengefasst wird in einer Einheit.</p>
+<p>Bei dir sieht das so aus:</p>
+<p>Process(...) {
+  // prepare query
+  Query q;
+  ...
+  q = ...;</p>
+<p>var d0 = Repo.Load(q);</p>
+<p>// really process data d0
+  ...
+  var d1 = ...;</p>
+<p>Repo.Store(d1);
+}</p>
+<p>In deiner Vorstellung tut Process() zwei Dinge selbst: irgendwie eine Query zusammenstellen, welche Daten gefordert sind. Und dann auch noch die Daten verarbeiten, die geladen werden.</p>
+<p>Ach, ne, auch noch zwei andere Dinge tut Process(): Es lädt auch noch die Daten und dann speichert es die Daten. Klar, mit Hilfe eines Repository. Aber veranlassen tut Process() das.</p>
+<p>So sieht es normalerweise aus. Oder? Dann meine Sicht im nächsten Kommentar.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-06-18):</p>
+<p>...</p>
+<p>Ich sehe das auch als ganz normal an - deshalb ist es aber nicht gut.</p>
+<p>Die Probleme liegen doch auf der Hand:</p>
+<ol>
+<li>
+<p>Process() tut etwas selbst. Aber darüber hinaus ist Process() auch noch abhängig. Das macht Process() schwer zu testen. Mockingaufwand ist zu treiben.</p>
+</li>
+<li>
+<p>Das, was Process eigentlich tun soll, nämlich die Datenverarbeitung, ist irgendwo eingequetscht zwischen anderem Zeugs. Das muss man förmlich suchen. Davor steht irgendwas anderes, danach auch.</p>
+</li>
+</ol>
+<p>Punkt 2 klingt so natürlich. Aber es ist ein Übelstand, der dafür sorgt, das Methoden kein Ende finden. Deshalb, weil das durch Request/Response möglich ist, gibt es Methoden von 1000 oder 10000 Zeilen Länge.</p>
+<p>Die müssen dann wieder mit irgendwelchen Tools gefunden und refaktorisiert werden. Und es muss Regeln geben in dicken Konventionsbüchern, die sie versuchen zu vermeiden.</p>
+<p>Punkt 1 ist übel, weil durch Abhängigkeiten das Testen schwer ist. Und man muss auch noch Tools lernen und Prinzipien folgen. IoC, DI, DI Container, Mock Fx. Was für ein Aufstand.</p>
+<p>Jetzt schau mal diese Variante an:</p>
+<p>Process(...) {
+  var q = Prepare_query(...);
+  var d0 = Repo.Load(q);
+  var d1 = Really_process_data(d0);
+  Repo.Store(d1);
+}</p>
+<p>Wie sieht die aus? Verständlich? Ich hoffe. Eigentlich passiert immer noch dasselbe in Process().</p>
+<p>Aber es gibt einen feinen Unterschied: Process() selbst tut nichts mehr im Sinne von Logik. Da gibt es keine Ausdrücke mehr. Da gibt es keine Kontrollstukturen mehr, die in deiner Version sicher noch drin gewesen wären. (Und wenn nicht, dann unterscheiden sich unsere Lösungen nicht.)</p>
+<p>Das, was ich hier aber hingeschrieben habe, das ist eine Übersetzung von Flow-Design. Hier eine textuelle Notation dieses Designs, das die Flow Runtime verarbeiten könnte:</p>
+<p>Process
+., Prepare_query
+Prepare_query, Repo.load
+Repo.loaded, Really_process_data
+Really_process_data, Repo.store</p>
+<p>Process ist hier ein Flow. Der integriert vier Operationen.</p>
+<p>Das, was getan werden muss, wird getan. Vor der Datenverarbeitung steht das Laden. Vor dem Laden die Herrichtung einer Query. So ist das. Klar.</p>
+<p>Aber all diese Notwendigkeiten sind jetzt in kleinen Operationen verpackt. Diese Operationen sind unabhängig von einander! Prepare_query weiß nichts von Really_process_data. Gut so! Ich kann jetzt nämlich beides unabhängig testen. Das konntest du in deiner (angenommenen) Version nicht.</p>
+<p>Request/Response-Denke zieht Verarbeitungsschritte in einer Methode zusammen, die dann nicht mehr unabhängig getestet werden können - wenn man nicht wie oben konsequent Integration und Operation trennt, also Flow-Design betreibt.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-06-18):</p>
+<p>...</p>
+<p>Und zum Schluss noch die Frage: Wer implementiert die Operationen?</p>
+<p>Process - in meiner Welt, die Flows mit einer Runtime ausführt - ist keine Methode, sondern eben ein Flow. Der wird so notiert wie gezeigt. Kein 3GL Code.</p>
+<p>Muss man den nicht auch testen? Gern. Dazu ist dann 1 Integrationstest nötig. Ja, in dem müssten wohl die Repo-Operationen gemockt werden - aber dazu brauche ich kein Mock-Fx. Das mach ich aus dem Handgelenk mit zwei Lambdas. Wie gesagt, es ist nur zu testen, ob der Fluss funktioniert.</p>
+<p>Die Operationen müssen allerdings immer noch implementiert werden in einer 3GL. Wie, wo?</p>
+<p>Es bieten sich zwei Klassen an: eine Repo-Klasse wie bisher. Und eine Domänenlogikklasse wie bisher. Die hat nun jedoch zwei Methoden: eine für die Queryvorbereitung und eine für die richtige Datenverarbeitung.</p>
+<p>Und, macht das was? Ne. Nix ist schlimmer geworden, manches aber deutlich besser. Die Methoden sind zum Beispiel jetzt kleiner. Ganz automatisch. Und das Testen ist einfacher. Denn die echte Verarbeitung zw Load und Store ist nun völlig unabhängig davon.</p>
+<p>Das ist Flow-Design - egal, ob du es mit der Flow-Runtime oder mit EBC oder so, wie ich gezeigt habe, mit Methoden übersetzt.</p>
+<hr />
+<p><strong>Arnfried Hansen</strong> (2012-06-24):</p>
+<p>Vielen Dank für die ausführliche Antwort. Sie ist gut verständlich und ich kann sie in allen Punkten nachvollziehen.</p>
+<p>Daran ändert sich auch nichts, wenn meine Bewertung in einigen Punkten etwas anders ausfällt. Der Hauptaufwand beim Mocking ist aus meiner Sicht das Schreiben der Mockfunktionalität, nicht das Einbinden der Mockklassen, welches man per DI-Container quasi für lau kommt. Insofern sehe ich keinen großen Unterschied, was den Testaufwand angeht.</p>
+<p>"Es bieten sich zwei Klassen an: eine Repo-Klasse wie bisher. Und eine Domänenlogikklasse wie bisher."
+Interessant finde ich, dass du unterhalb der FlowDesign-Ebene für die Implementierung normale Klassen in Betracht ziehst. Selbst wenn sich das Holen und das Ändern der Daten auf FlowDesign-Ebene auf zwei Funktionsbausteine verteilt, auf der Implementierungsebene ist beides wieder in einer Klasse zusammen. Damit ist in der Tat mein geschildertes SRP-Problem gelöst.</p>
+<p>Möglicherweise ließen sich solche SPR-Probleme durch eine Erweiterung des FlowDesign-Gedanken auch ohne den Rückgriffe auf normale Klassen lösen. Dazu bräuchte man im Grunde nur ein Gruppierungskonstrukt, das inhaltlich zusammengehörige Funktionsbausteine zusammenfasst, unabhängig davon, wo genau im Flow sie verwendet werden.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-06-24):</p>
+<p>@Arnfried: Natürlich liegt der Hauptaufwand im Schreiben von Mocks bzw. im Konfigurieren eines Mock-Fx für einen konkreten Testfall. Die Injection eines Mock ist nicht das Problem.</p>
+<p>Aber gerade weil der Hauptaufwand im Schreiben liegt, freue ich mich, dass ich so selten nur noch Mocks überhaupt schreiben muss bzw. für Testszenarien konfigurieren muss.</p>
+<p>Früher hatte ich damit andauernd zu tun. Jetzt fast gar nicht mehr - ohne dass meine Codequalität gesunken wäre.</p>
+<p>Mocking ist kein Selbstzweck. Es ist zu vermeiden, wo man kann.</p>
+<p>Natürlich liegt unterhalb der Flow-Entwurfsebene (dafür ist die kleine DSL da in der Flow Runtime) die Ebene der Implementierung. Die findet heute weithin mit OO-Sprachen statt. Also müssen wir doch überlegen, wie wir deren Sprachkonstrukte einsetzen, um Flow-Artefakte (Operationen) zu codieren.</p>
+<p>Bei EBC ging das auf eine Weise: Jede Funktionseinheit (Flow oder Operation) wurde zu einer Klasse.</p>
+<p>Bei der Flow Runtime geht das auf andere Weise. Da kann ich mich dafür entscheiden, 1 Operation als 1 Klasse zu implementieren. Oder ich kann mich entscheiden, n Operationen in 1 Klasse zusammenzufassen.</p>
+<p>Eine Zusammenfassung sollte natürlich wieder dem SRP folgen. Dabei leitet gemeinsamer Zustand oft das Denken. Wenn Operation A und B shared state haben, warum die dann nicht als Methoden derselben Klasse implementieren?</p>
+<p>Ein Konstrukt, um Methoden beliebig zusammenzufassen, gibt es. Das heißt Interface :-) Leider funktioniert das aber nur auf Klassen: Wenn ich Klasse K mit Methoden A, B, C habe, dann kann ich die unterschiedlich mit Interfaces zusammenfassen, z.B. I1(A,B) und I2(B,C). Das ist dann eine Anwendung des Interface Segregation Principle.</p>
+<p>Was jedoch, wenn A und B auf verschiedenen Klassen sitzen, ich sie aber irgendwie zusammenfassen will?</p>
+<p>Wie wäre es damit: http://codepaste.net/qvppq2</p>
+<p>So ein Aggregat kann Instanzmethoden und statische Methoden zusammenfassen, wie du es in einem bestimmten Kontext brauchst.</p>
+<p>Um Klassen als Implementationsmittel kommen wir nicht drumherum. Finde ich auch nicht schlimm. Wir müssen sie nur kreativ einsetzen. Das technische Mittel Klasse muss uns dienen. Bisher haben wir ihm jedoch eher gedient. Das ändert Flow-Design.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

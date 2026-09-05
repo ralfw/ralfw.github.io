@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bei häufigem Kontakt mit Gift refaktorisieren — ralfw.de Archiv</title>
+<meta name="description" content="(Bild nicht mehr verfügbar – ursprüngliche Quelle offline. Archiviert im Wayback Machine: http://web.archive.org/web/20130114082557/http://www.grahambrooks.com/blog/wp-content/uplo">
+<link rel="canonical" href="https://ralfw.de/archiv/2012/bei-haufigem-kontakt-mit-gift/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bei häufigem Kontakt mit Gift refaktorisieren — ralfw.de Archiv">
+<meta property="og:description" content="(Bild nicht mehr verfügbar – ursprüngliche Quelle offline. Archiviert im Wayback Machine: http://web.archive.org/web/20130114082557/http://www.grahambrooks.com/blog/wp-content/uplo">
+<meta property="og:url" content="https://ralfw.de/archiv/2012/bei-haufigem-kontakt-mit-gift/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Bei häufigem Kontakt mit Gift refaktorisieren</h1>
+    <div class="doc-meta"><span>4. Jan. 2012</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2012/01/bei-haufigem-kontakt-mit-gift.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2012/bei-haufigem-kontakt-mit-gift/</code></span></div>
+    <div class="art"><p><img loading="lazy" alt="Bild nicht mehr verfügbar" src="/assets/_shared/placeholder-missing-image.svg" /></p>
+<p><em>(Bild nicht mehr verfügbar – ursprüngliche Quelle offline. Archiviert im Wayback Machine: http://web.archive.org/web/20130114082557/http://www.grahambrooks.com/blog/wp-content/uploads/2012/01/refactoring-toxicity.png – bei Bedarf manuell nachladen.)</em></p>
+<p><a rel="noopener" href="http://www.grahambrooks.com/blog/metrics-based-refactoring-for-cleaner-code/">Graham Brooks bricht eine Lanze dafür</a>, Code nicht mit der Gießkanne zu refaktorisieren, sondern den Aufwand dort zu treiben, wo es gerade besonders nutzt. Das hört sich sinnig an.</p>
+<p>Noch sinniger wird es, wenn Graham als Nützlichkeitsindikatoren Giftigkeit (Toxicity) und Unbeständigkeit (Volatility) angibt.</p>
+<p>Giftig (als Steigerung von schmutzig) ist der Code dort, wo bestimmte Metriken besonders schlimme Werte annehmen. Unbeständig ist er dort, wo häufig an ihm gearbeitet wird.</p>
+<p>In Kombination ergibt sich eine Giftigkeit x Unbeständigkeit Matrix, die klar sagt: <strong>Refaktorisiere, wo häufiger Veränderungskontakt mit hoher Giftigkeit besteht; aber lass Code stabilen (relativ) ungiftigen Code in Ruhe.</strong> Das hört sich sinnig an.</p>
+<p><img loading="lazy" alt="Bild nicht mehr verfügbar" src="/assets/_shared/placeholder-missing-image.svg" /></p>
+<p><em>(Bild nicht mehr verfügbar – ursprüngliche Quelle offline. Archiviert im Wayback Machine: http://web.archive.org/web/20130114082507/http://www.grahambrooks.com/blog/wp-content/uploads/2012/01/toxicity-volatility-grid.png – bei Bedarf manuell nachladen.)</em></p>
+<p>Quelle: Graham Brooks</p>
+<p>﻿Nun fragt <a rel="noopener" href="http://twitter.com/#!/jensschauder/status/154303919139454976">Jens Schauder in einem Tweet</a> aber zurecht: Und wie misst man nun Giftigkeit? (Die Unbeständigkeit ist kein Problem; sie lässt sich aus einem VCS Log herauslesen.)</p>
+<p>Graham sagt nichts dazu. Er verweist vielmehr auf <a rel="noopener" href="http://erik.doernenburg.com/2008/11/how-toxic-is-your-code/">diesen Artikel von Erik Dörnenburg</a>. Der zeigt dann ein konkreteres Giftigkeitsdiagramm und gibt konkrete Metriken an. Auch sehr sinnig.</p>
+<p>Wenn Sie nun aber einmal diese Grafik genauer anschauen,…</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d5f9c4bf0e1a89a8.png" /></p>
+<p>Quelle: Erik Dörnenburg</p>
+<p>…dann fällt Ihnen sicher auf, dass sich im Grunde nur bei vielleicht 10 (7,5%) von 132 Dateien die Giftigkeit aus mehr als Zyklomatischer Komplexität (ZK) und Methodenlänge (ML) ergibt.</p>
+<p>Die Werte anderer Metriken spielen diesen beiden gegenüber kaum eine Rolle - oder sie korrelieren mit ihnen positiv: wo ZK+ML groß ist, da ist z.B. auch der Fan-Out (efferente Kopplung) groß.</p>
+<p>Ich frage mich deshalb: <strong>Was soll dieser ganze komplizierte Metrikenkram?</strong> Wenn man sonst nichts zu tun hat, kann man sich damit einen schönen Tag machen und wichtig aussehen. Für die Entscheidung an der Praxisfront jedoch reichen einfachere Heuristiken. Und um nicht mehr als Heuristiken geht es ohnehin. Denn auch die exaktesten Berechnungen von Metriken sollten nicht darüber hinweg täuschen, dass Giftigkeit vor allem im Auge des Betrachters entsteht.</p>
+<p><strong>Ich mache es mir in der Codebeurteilungspraxis einfacher. Mein Fokus liegt auf nur zwei Metriken:</strong></p>
+<ul>
+<li><strong>LOC</strong>: Je länger eine Codeeinheit, desto schmutziger und schließlich giftiger ist sie. (Oder genauer: Es geht eigentlich um Anweisungen und nicht um Lines. Aber LOC hat sich einfach eingebürgert als Begriff.)
+Wieviele LOC eine Codeeinheit hat, kann man sehen.</li>
+<li><strong>Zyklomatische Komplexität</strong>: Je höher die ZK, desto schmutziger und schließlich giftiger ist eine Codeeinheit.
+Wie die ZK einer Codeeinheit ist, kann man abschätzen nach der Zahl der Kontrollanweisungen (Fallunterscheidungen, Schleifen) und ihrer Schachtelungstiefe.</li>
+</ul>
+<p>Auch hier gibt es natürlich eine gewisse positive Korrelation: bei wenigen LOC wird die ZK eher gering sein, bei vielen LOC wird sie tendenziell auch steigen.</p>
+<p>Dennoch möchte ich auf keine der Metriken verzichten. Auch wenn sie korrelieren, repräsentieren sie unterschiedliche Aspekte des Codes. LOC steht für mich eher im Zusammenhang mit dem SRP. Und ZK steht für mich eher im Zusammenhang mit Testbarkeit.</p>
+<p>Ab welcher Länge oder Komplexität wird Code nun aber nicht nur schmutzig oder giftig? <strong>Meine persönlichen Alarmglocken gehen an, wenn eine Methode länger als eine Bildschirmseite ist, also bei LOC &gt; 20-30, und/oder mehr als 2-3 Kontrollanweisungen enthält und/oder die Schachtelungstiefe &gt; 2 ist.</strong></p>
+<p>Letztlich geht es aber für das Refaktorisieren weniger um absolute Zahlen. <strong>Refaktorisiert werden sollte dort, wo die Giftigkeit “nur” größer ist als woanders.</strong> Das gilt für Methoden mit 10.000 LOC und ZK 20 vs 8.000 LOC mit ZK 15 genauso wie für Methoden mit 100 LOC und ZK 10 vs 80 LOC mit ZK 6.</p>
+<p>Und dieses Verhältnis sollte dann auch noch im Lichte der Unbeständigkeit betrachtet werden. Da stimme ich Graham Brooks zu.</p>
+<p>Darüber hinaus interessiert mich allerdings noch die afferente Kopplung (AK, Fan-In). Denn wenn Codeeinheiten von vielen anderen referenziert werden, haben sie eine große Strahlkraft. Änderungen/Fehler an/in ihnen wirken sich leicht auf weite Teile der Software aus. Das bedeutet, <strong>Codeeinheiten mit hoher afferenter Kopplung verdienen ein besonderes Augenmerk.</strong></p>
+<p>Wenn ich eine Liste mit Codeeinheiten und ihren Metriken wie die folgende hätte</p>
+<blockquote>
+<p>Codeeinheit(Name, LOC, ZK, AK, Unbeständigkeit)</p>
+</blockquote>
+<p>würde ich sie so sortieren:</p>
+<ul>
+<li>Zuerst Codeeinheiten mit hoher Unbeständigkeit...</li>
+<li>...dann solche mit hoher afferenter Kopplung...</li>
+<li>...dann solche mit hoher LOC...</li>
+<li>...dann solche mit hoher ZK.</li>
+</ul>
+<p>Komplizierter muss die Entscheidungsgrundlage für die Refaktorisierung nicht sein, finde ich. Es sind keine komplizierten Schwellenwerte nötig, keine weiteren Metriken. LOC und ZK kann man sogar mit dem unbewaffneten Auge recht gut beurteilen. Für Unbeständigkeit und AK ist Werkzeugunterstützung nützlich.</p>
+<h2>Kommentare</h2>
+<p><strong>Sebastian Jancke</strong> (2012-01-04):</p>
+<p>Die Korrelationen zwischen den Metriken (insb Loc und McCabes CyclComlexity) ist nachgewiesen. Mir fällt adhoc das Paper nicht ein, kann ich aber bei Interesse raussuchen. Ich meine es war eine Metastudie zu Metriken. Meiner Erfahrung nach reichen die Metriken in deiner Heuristik völlig aus.
+Du scheinst anzudeuten, die Beschaffung beliebiger Werte sei "schwierig" - mit aktuellen Werkzeugen wie Sonar kriegt man diese plus Visualisierug fast geschenkt.</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-01-04):</p>
+<p>Vielleicht das hier:</p>
+<p>http://www.qsm.com/resources/function-point-languages-table</p>
+<hr />
+<p><strong>Florian Fanderl</strong> (2012-01-05):</p>
+<p>Und was mache ich mit Coder der overdesigned ist? Auch solchen Code gibt es. Der erfüllt beide Metriken ganz wunderbar, würde also überhaupt nicht auffallen. Aber das Design der Klassen ist dermaßen verhunzt, dass ich mich erstmal 1 Stunde damit beschäftigen darf bevor ich verstehe was da passiert. Ich denke das sind die wirklich schlimmen Fälle die man noch dazu sehr schlecht erkennt. Da würde dann der Ansatz "wie oft ändere ich etwas an dieser Codestelle und habe Schmerzen dabei" sehr gut helfen.
+Letzten Endes wird doch nur gesunder Menschenverstand helfen die Stellen zu finden die wirklich ein Refactoring nötig haben. Wenn ich dort nie etwas ändern muss und das Teil funktioniert, werde ich den Teufel tun und dort etwas ändern. Zumal für solch "giftigen" Code meistens auch keine Tests existieren.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-01-05):</p>
+<p>@Sebastian: Die Beschaffung von Messwerten ist nicht schwierig. Das Problem ist eher, dass es zu einfach ist :-) Die Schwierigkeit liegt in der Auswahl. Da gibt es kein Halten mehr. Man kann grübeln und grübeln und finetuning betreiben, um den besten Metrikmix zu finden.</p>
+<p>Das ist dann, als würden wir über die 12. Nachkommastelle von Pi reden, wenn wir herausfinden wollen, wieviele Orangen in unsere Einkaufstüte passen.</p>
+<p>Ich denke, hier haben wir wieder mal ein Beispiel, wo Tools uns den Blick fürs Wesentlich verstellen. Weil wir dollste Sachen messen können, messen wir, bis der Arzt kommt. Mit den Tools geht das Augenmaß verloren und damit der Blick fürs Wesentliche.</p>
+<p>Eine andere Analogie: Apparatemedizin. Wir können heute Blut- und Genomanalyse betreiben... nur leider verlieren wir dabei immer mehr den Patienten mit seinen wahren Problemen aus dem Blick.</p>
+<p>Deshalb: Reduktion. So wenige Metriken wie möglich, soviele wie nötig.</p>
+<p>LOC+ZK sagen, wie schlimm die Vergiftung ist. V(olatility)+AK sagen, wo Entgiftung am ehesten Not tut.</p>
+<hr />
+<p><strong>Sven Peters</strong> (2012-01-05):</p>
+<p>Ralph, ich stimme mir dir überein, dass zu viele Metriken den Blick fürs Wesentlichen vernebeln. Eigentlich finde ich den alten Begriff von Martin Fowler "Code Smells" für mich immer noch am Besten. Als relativ erfahrener Programmierer, hat man ein gutes Gespür für giftigen Code. Wenn man öfter mehr ein Mal über solchen Code stolpert, ist das ein guter Ansatz für ein Refactoring. Meistens refactored man ja auch nicht wie wild an seinem Code rum, sondern implementiert neue Funktionalität. Wenn man ehrlich ist, kennt man als Senior-Programmierer eigentlich die Stellen, an denen der Code "wehtut". Ich bin also auch der Meinung, dass man das Thema nicht zu sehr akademisch betrachten sollte. Wir verbessern unsere Programmierkenntnisse halt ständig und auch mit den Besten Metriken, wird ich wohl in einem Jahr über meinen Code von heute denken: "Was sollte das eigentlich?"</p>
+<hr />
+<p><strong>kimkulling</strong> (2012-01-05):</p>
+<p>Merke: man kann jede metrik missbrauchen, den gesunden Menschenverstand kann keine Messung ersetzen. Und ich denke,das will man auch gar nicht.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-01-05):</p>
+<p>@Kim: Gesunder Menschenverstand ist ne wichtige Sache.</p>
+<p>Allerdings: Wir sollten ihn eben auch nicht überschätzen. Ein wenig Unterstützung durch "Objektivierung" kann nicht schaden. Deshalb finde pragmatisches Messen angezeigt.</p>
+<p>Ansonsten kann es nämlich passieren, dass auch der gesunde Menschenverstand keine Grenze findet. Wenn alles nach Gefühl geht, zieht schnell Maßlosigkeit ein. Gefühl braucht ein Gegengewicht: Rationalität.</p>
+<hr />
+<p><strong>kimkulling</strong> (2012-01-05):</p>
+<p>Richtig, die Analyse einer Metrik muß halt immer mit gesundem Menschenverstand erfolgen. Schließlich bieten Metriken Berwertungshilfen an, keine endgültigen Lösungen. Die Kunst liegt meiner Ansicht nach darin, aus den verschiendensten Analysen / Metriken / Methodiken die richtigen Schlüsse zu ziehen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-01-05):</p>
+<p>@Kim: Deshalb habe ich diesen Artikel geschrieben. Es geht um eine "good enough" Heuristik, um aus wenigen Werten schnell Schlüsse zu ziehen.</p>
+<hr />
+<p><strong>Denis</strong> (2012-01-05):</p>
+<p>So wenig wie moeglich, so wenig wie nötig -- das ist, denke ich, eine gesunde Herangehensweise bei Metriken.
+Wenn man eine Metrik versteht und entsprechend interpretieren kann, macht es auch durchaus Sinn Trends aus Metriken fuer eine spezifische Codebasis abzulesen und daraus Konsequenzen abzuleiten. Messwerte aus Metriken sollte also immer relativ bewertet werden, nie absolut. Und schon gar nicht sollten Metriken zum Vergleich unterschiedlicher Codebasen verwendet werden (leider ein oft verwendetes Mittel falsch verstandenen Managements).
+Denis</p>
+<hr />
+<p><strong>mohk</strong> (2012-01-09):</p>
+<p>Ich glaube, das hier verschiedene Dinge miteinander vermischt werden.
+Toxic betrifft nur den sich aendernden Code. Da muss man aber keine Metrik erfinden, sondern nur dem Code arbeiten, wenn er als schlecht empfundunden wird, ja: <strong>EMPFUNDEN</strong>, wird er refaktorisiert, bis die die neue Funktionalitaet leicht hinzugefuegt werden kann. Als Begruendung moechte ich hier hinterschieben: Jeder Handwerker sortiert sein Werkzeug auf der Werkzeugbank so um, wie er es gewohnt ist, sonst sitzen seine Handgriffe nicht. So gehe ich mit Code auch um: Ich bereite den Code vor, damit das neue Stueck Funktionalitaet passgenau eingearbeitet werden kann. Das nebenbei und hinterher saubergemacht wird, ist normal, in der Werkstatt als auch im PC-Labor.</p>
+<p>Was bleibt ist die Frage, was wird durch die blosse Betrachtung von LOC uebersehen. Mit etwas Bauchgefuehl und einer Portion Wissen fuehle ich mich deutlich besser als mit einer Heuristik. Ich moechte hier nochmal auf "Refactoring" von Fowler verweisen: Code smells if it's bad.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-01-09):</p>
+<p>@mohk: Dass du Code, den du gleich verändern musst, "dir zurechtlegst", ist selbstverständlich. Darum geht es mir und Graham aber nicht. Sowas passiert unter dem Radar. Das machst du für dich. Und du urteilst da mal nach Gefühl.</p>
+<p>Mir geht es um größere Brocken. Auch das Team hat als Ganzes ja ein Gefühl dafür, ob es mit der Arbeit leicht/schwer voran geht, ob also der Code stinkt.</p>
+<p>Die Frage ist dann: Wo und in welchem Umfang sollte er refaktorisiert werden, während das vom Radar beobachtet wird?</p>
+<p>Hier sollte vom Gefühl Abstand genommen werden. Sonst gibt es kein Halten. Irgendwer hält immer irgendwas für ziemlich refaktorisierungswürdig.</p>
+<p>Um den Ressourceneinsatz zu begrenzen, muss ein Entscheidungskriterium her. Das habe ich beschrieben.</p>
+<p>PS: "Refactor on smell" ist übrigens auch eine Heuristik. Lies mal hier: http://de.wikipedia.org/wiki/Heuristik</p>
+<hr />
+<p><strong>Frank</strong> (2012-01-21):</p>
+<p>Warum stellst du hohe Unbeständigkeit über hohe Komplexität? Für mich macht die Tabelle von Graham Brooks mehr Sinn. Dort wo beides zusammenkommt, besteht der höchste Bedarf.</p>
+<p>Die Ergänzung um die hohe afferente Kopplung macht schon Sinn, aber m.E. auch nur in Kombination mit den anderen Kriterien. Warum sollte man sauberen, stabilen Code ändern, nur weil er eine hohe afferente Kopplung hat?</p>
+<p>Außerdem sollte man noch bedenken, dass alleine die <strong>Unbeständigkeit in der Zukunft</strong> relevant ist. Ob eine Methode oder Klasse schon hundertmal geändert wurde, spielt für sich gesehen keine Rolle. Es kommt darauf an, ob man sie noch hundertmal ändern wird. Die bisherige Frequenz der Änderungen taugt nur bedingt zur Beurteilung, wo in Zukunft eine hohe Frequenz zu erwarten ist. Es kann genauso gut sein, dass die hundertmal geänderte Klasse jetzt endlich fertig ist (z.B. weil endlich alle benötigten Features eingebaut wurden), wie eine noch nie geänderte Klasse plötzlich in den Fokus rücken kann (z.B. aufgrund einer Gesetzesänderung, die diesen bislang unberührten Teil betrifft).</p>
+<p>Auch hier gewinnt der gesunde Menschenverstand über reinen die Zahlen aus dem VCS.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-01-21):</p>
+<p>@Frank: Ich stelle die Afferente Kopplung nicht über andere Kriterien, sondern addiere sie als Kriterium. Sie wirkt weiter priorisierend.</p>
+<p>Natürlich ist der Blick ins Log eines VCS ein Blick in den Rückspiegel oder auf den Himmel. Angesichts unserer Unfähigkeit, in die Zukunft zu schauen, hat es sich als probate Heuristik herauskristallisiert, aus der Vergangenheit auf die Zukunft zu schließen. Das funktioniert erstaunlich gut:</p>
+<p>Der Verkehr vor uns entspricht mit hoher Wahrscheinlichkeit dem hinter uns. (Es ist eben viel wahrscheinlicher, dass du mittem im Stau bist als an seiner Spitze oder an seinem Ende.) Das Wetter morgen entspricht mit hoher Wahrscheinlichkeit dem von heute.</p>
+<p>Wenn du es nicht besser weißt (!), dann tust du also gut daran, dort zu refaktorisieren, wo sich lt. Log viel tut. Das ist keine perfekte Vorhersage, aber "good enough". Wie gesagt: Man muss sich nicht dümmer stellen als man ist. Wenn du also kenntnis darüber hast, dass morgen ein Bereich dran kommt, der seit 3 Jahren nicht angefasst wurde, dann schau dir seine Giftigkeit an und refaktorisiere dort.</p>
+<p>PS: Das mit dem gesunden Menschenverstand ist so eine Sache. Wir rufen ihn gern an, wenn wir uns nicht mit (scheinbar) komplizierten Regeln auseinandersetzen wollen - allemal, wenn die dann auch nicht perfekt sind. Leider gibt es aber nicht den einen gesunden Menschenverstand. Frag 3 Leute und erhalte 3 Meinungen darüber, was "nach gesundem Menschenverstand" in einer Lage zu tun sei. Wäre der gesunde Menschenverstand eine klare Kompassnadel, dann sähe die Welt nicht so bunt aus. Ich wäre also vorsichtig mit seiner Anrufung.</p>
+<p>Da scheinen mir Metaheuristiken wie "Wende Heuristiken mit Augenmaß an." (d.h. setze nicht alles auf ein Pferd; verstehe, dass es meist mehrere Werte gibt, die es auszugleichen gilt) oder "Wende Heuristiken in kleinen Schritten an." hilfreicher.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

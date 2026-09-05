@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TDD im Flow – Teil 1 — ralfw.de Archiv</title>
+<meta name="description" content="Steht Flow-Design eigentlich im Gegensatz zu Test-Driven Design? Nein. Zwar bin ich überzeugt, dass TDD viel weniger wichtig ist, als viele Vertreter agiler Softwareentwicklung gla">
+<link rel="canonical" href="https://ralfw.de/archiv/2012/tdd-im-flow-teil-1/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="TDD im Flow – Teil 1 — ralfw.de Archiv">
+<meta property="og:description" content="Steht Flow-Design eigentlich im Gegensatz zu Test-Driven Design? Nein. Zwar bin ich überzeugt, dass TDD viel weniger wichtig ist, als viele Vertreter agiler Softwareentwicklung gla">
+<meta property="og:url" content="https://ralfw.de/archiv/2012/tdd-im-flow-teil-1/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>TDD im Flow – Teil 1</h1>
+    <div class="doc-meta"><span>26. Jan. 2012</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2012/01/tdd-im-flow-teil-1.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2012/tdd-im-flow-teil-1/</code></span></div>
+    <div class="art"><p>Steht Flow-Design eigentlich im Gegensatz zu Test-Driven Design? Nein. Zwar bin ich überzeugt, dass TDD viel weniger wichtig ist, als viele Vertreter agiler Softwareentwicklung glauben, aber deshalb hat TDD doch seinen Platz. An einem Beispiel möchte ich das demonstrieren.</p>
+<p>Vor einiger Zeit habe ich <a rel="noopener" href="http://ralfw.blogspot.com/2011/10/skalierbare-softwarebausteine-teil-2.html">Gedanken zu einer Flow Execution Engine</a> geäußert. Die habe ich inzwischen angefangen zu bauen. Ihr Name ist “<a rel="noopener" href="http://de.wikipedia.org/wiki/Panta_rhei">PantaRhei</a>” und der Quellcode für eine C#-Implementation liegt bei CodePlex: <a rel="noopener" href="http://npantarhei.codeplex.com/">npantarhei.codeplex.com</a>.</p>
+<p>Selbstverständlich ist diese Flow Runtime selbst im Flow-Design entstanden. Ihre Aufgabe ist also, Flows wie den, der sie selbst beschreibt, auszuführen. Hier ein Ausschnitt aus dem Modell:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f7596007e2dd9605.png" /></p>
+<p>Gezeigt ist die asynchrone Verarbeitung von Nachrichten, die von außen hereinkommen:</p>
+<ul>
+<li>Sie fließen in einen Flow, der bei der Runtime registriert ist, über die Methode <em>ProcessAsync</em>() hinein.  Dann werden sie über die Funktionseinheit <em>Asynchronize</em> auf einen Hintergrund-Thread gehoben.  Vor der Ausführung wird dann nochmal geprüft, ob die Verarbeitung parallel zu anderen Nachrichten erfolgen soll (<em>Schedule processing</em>).  Zwei Parallelverarbeitungsmodi stehen zu Auswahl: echte Parallelverarbeitung, d.h. jede Nachricht an einen Port wird parallel zu anderen Nachrichten verarbeitet, oder eingeschränkte Parallelverarbeitung, da Nachrichten an den selben Port nur sequenziell verarbeitet werden.</li>
+</ul>
+<p>Der Flow im Bild ist nicht durch TDD entstanden. Klar. Den habe ich iterativ wachsen lassen: ein bisschen entwerfen (auf dem Papier), ein bisschen implementieren, dann wieder ein wenig entwerfen usw. Im Repository kann man verfolgen, wie es voran gegangen ist.</p>
+<p>Die (Sub-)Flows sind trivial in der Implementation. Die Musik spielt in den Operationen, den Blättern des oben grob erkennbaren Schachtelungsbaums. Blätter sind z.B. <em>Register operation,</em><em>Asynchronize</em> und <em>Execute task</em>.</p>
+<p>Diese Operationen sind so einfach, dass ich sie runtergeschrieben habe. Einige ohne Tests, einige mit Tests – hinterher. Ja, der TDD-Freund wird es den Tests ansehen, dass ich sie hinterher geschrieben habe ;-) Macht aber aus meiner Sicht nichts. Ich brauche sie ja nicht, um zu entwerfen, sondern nur zur Feststellung von Korrektheit kleiner Funktionseinheiten.</p>
+<p>Nun aber bin ich an einem Punkt, wo ich meinen Modus umschalte. Das will ich einmal dokumentieren, um zu zeigen, wie TDD und FD Hand in Hand gehen können.</p>
+<h3>Anforderungen</h3>
+<p>Ganz rechts im Bild finden Sie die Operation <em>Sequentialize</em>. Bei ihr geht es darum, Nachrichten zur Verarbeitung auf einen von mehreren Threads zu heben. <em>Parallelize</em> tut das ganz einfach: Nachrichten werden dem nächsten frei werdenden Thread zugewiesen. Das führt zu unterschiedsloser Parallelverarbeitung aller Nachrichten. Bei <em>Sequentialize</em> soll es dagegen etwas differenzierter vorgehen. Da sollen manche Nachrichten parallel und manche sequenziell verarbeitet werden.</p>
+<p>Unterschieden werden Nachrichten bei <em>Sequenzialize</em> nach den Ports, zu denen sie fließen. Nachrichten an unterschiedliche Ports werden parallel verarbeitet, aber Nachrichten an den selben Port werden sequenziell verarbeitet. Damit wird eine häufige Fehlerquelle des concurrent programming automatisch ausgeschaltet.</p>
+<p>Ganz einfach ließe sich die sequenzielle Verarbeitung aller Nachrichten an einen Port natürlich dadurch lösen, jeden Port mit einem eigenen Thread und einer Warteschlange auszustatten. Das würde die Verarbeitung insgesamt jedoch eher verlangsamen, dass es immer viel mehr Ports als Prozessorkerne gibt.</p>
+<p>Also soll die sequenzielle Verarbeitung der Nachrichten an einen Port bei gleichzeitiger Parallelität aller Ports mit nur wenigen Threads realisiert werden. <em>Sequentialize</em> muss daher für jede Nachricht prüfen, ob sie an einen Port geht, der gerade noch mit der vorhergehenden beschäftigt ist. Falls ja, muss die Nachricht warten; andernfalls kann sie vom nächsten freien Thread verarbeitet werden.</p>
+<p>Wenn eine Nachricht warten muss, kann eine andere, die zu einem anderen Port fließt, an den nächsten Thread zugewiesen werden. Die wartende Nachricht darf darüber natürlich nicht vergessen werden.</p>
+<h3>Lösungsidee</h3>
+<p>Mir scheint es für dieses Problem keine Lösung in der TPL zu geben, da ich ja keine fixen Task-Netzwerke aufbaue. Also muss ich selbst Infrastruktur basteln. Das sollte kein Hexenwerk sein – aber es ist schwieriger als das, was ich bisher für die Runtime zu tun hatte.</p>
+<p>Der Rahmen ist noch simpel:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d46ec453dc9b4cbf.png" /></p>
+<p>Zur Sequentialisierung in beschriebener Weise, müssen die Nachrichten in einen Puffer geschrieben werden: <em>Enqueue message</em>. Das geschieht auf dem Thread, der sie annimmt für die Verarbeitung (s. <em>Asynchronize</em>in <em>Flow asynchronously</em>).</p>
+<p>Die vielen Threads, auf denen Nachrichten dann parallel abgearbeitet werden können, entnehmen sie aus diesem Puffer, sobald sie frei für neue Arbeit sind: <em>Parallel dequeue</em>.</p>
+<p>Diese beiden Funktionseinheiten sind trivial. Die Musik spielt im <em>Message store</em>. Der kann nämlich nicht eine simple Warteschlange wie bei <em>Asynchronize</em>sein<em>.</em> Vielmehr muss der Message store dafür sorgen, dass Nachrichten erstens in der Reihenfolge ihres Eingangs herausgegeben werden, zweitens dabei aber eine Einschränkung für Nachrichten an denselben Port gilt.</p>
+<p>Das ist eine Funktionalität, die ich nicht eben mal so runterschreibe. Und dazu fällt mir auch gerade kein sinniger Flow ein. Mein Gefühl ist, hier bei einer Funktionseinheit angelangt zu sein, die aus Sicht von Flow-Design ein Blatt, eine Black Box darstellt.</p>
+<p>Dennoch hat der <em>Message store</em> eine Struktur: eine Datenstruktur wie auch eine Verarbeitungsstruktur. Wie komme ich an die heran?</p>
+<p>Meine Lösungsidee für die Datenstruktur sieht erst einmal so aus:</p>
+<ul>
+<li>Jeder Port bekommt eine eigene Warteschlange. Damit wird sichergestellt, dass pro Port die Nachrichten in der ursprünglichen Reihenfolge bearbeitet werden.  Allerdings hat jede solche Port-Warteschlange eine Flagge, die anzeigt, ob gerade an einer Nachricht dieses Ports gearbeitet wird. Solange das der Fall ist, kann kein Thread eine Nachricht aus dieser Warteschlange entnehmen. Sie ist dann blockiert.  Da es mehrere Warteschlange gibt, die mehrere Threads mit Arbeit versorgen, muss es gerecht zugehen. Kein Port darf bevorzugt werden. Deshalb sollten die Warteschlangen von freien Threads im Round Robbin Verfahren abgefragt werden. Entnimmt ein Thread aus einer Warteschlange eine Nachricht, entnimmt der nächste freie Thread aus einer anderen. Die Warteschlangen bilden deshalb einen Kreis in Form einer einfach verketteten Liste mit einem Zeiger auf die nächste zu befragende Warteschlange.</li>
+</ul>
+<p>Im Bild sieht das so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/7f6da6f4499d1195.png" /></p>
+<p>TDD-Anhänger mögen angesichts von soviel Entwurf sagen, das sei vielleicht nicht so einfach, wie es sein könnte. Darauf sage ich: Mag sein. Aber warum sollte ich nicht eine Lösungsidee haben auf der Basis der Kenntnis der Anforderungen? Warum sollte ich mich dümmer stellen als ich bin? Ob ich die Datenstruktur am Ende so umsetze, ist ja noch eine zweite Frage. Zunächst trenne ich aber die Phasen Lösungsentwurf und Implementierung. Damit entlaste ich die Implementierung. Ich habe dann nämlich schon eine Vorstellung von der Lösung – an die ich mich allerdings auch nicht sklavisch halten sollte.</p>
+<p>Es gibt mehrere Werte, die es auszugleichen gilt. Ein Wert mag die einfachst mögliche Implementation sein. Aber ein anderer ist Geschwindigkeit. Und die ist höher, wenn ich eine (zumindest grobe) Struktur habe, auf die ich hinarbeiten kann, ein Ziel. Dann muss ich nämlich nicht dauernd refaktorisieren, weil mich Erkenntnisse während der TDD-Codierung überraschen.</p>
+<p>Solange mein Entwurf verständlich ist und mit Augenmaß auch simpel gehalten, finde ich es völlig ok, vorauszudenken. Nein, ich finde es sogar empfehlenswert. Zu oft habe ich nämlich gesehen, dass mit TDD eine Implementation angegangen wird, ohne eine Vorstellung von der Lösung zu haben – um dann nach anfänglichen Erfolgen steckenzubleiben.</p>
+<p>Mit einem Entwurf schaffe ich mir sozusagen selbst eine Karte für ein bis dahin unbekanntes Terrain. Und mit Karte wandert es sich leichter. Das heißt nicht, dass ich auf dem Weg nicht auf Hindernisse treffe. Aber ich kann die dann in einem bigger picture verorten und schauen, wie ich sie umwandere.</p>
+<p>Und wie sieht meine Lösungsidee für die Verarbeitungsstruktur aus? Da kenne ich nur die Schnittstelle. Ich will die Datenstruktur als abstrakten Datentyp (ADT) realisieren. D.h. nach außen ist von einem Objektgraphen nichts zu sehen. Funktionseinheiten, die mit der Datenstruktur umgehen, sollen es so einfach wie möglich haben. Ich stelle mir das so vor:</p>
+<p>class NotifyingMultiQueue {
+    public void Enqueue(T message, string queueId) {…}
+    public bool TryDequeue(string workerId, out T message) {…}</p>
+<p>public void Wait(int milliseconds) {…}
+}</p>
+<ul>
+<li>Um eine Nachricht zur Verarbeitung auf irgendeinem Thread einzustellen, wird <em>Enqueue()</em> für eine Warteschlange aufgerufen.  Um eine Nachricht von der nächsten Warteschlange zur Verarbeitung abzuholen, wird <em>TryDequeue()</em> aufgerufen. Dabei ist anzugeben, wer die Nachricht dann verarbeitet, damit sichergestellt werden kann, dass keine ungewollte Parallelverarbeitung stattfindet.
+Eine erfolgreiche Entnahme aus einer Warteschlange sperrt diese durch Hinterlegung der Id des Workers, an den eine Nachricht ausgegeben wurde. Wenn der Worker dann das nächste Mal eine Entnahme tätigen will, wird die durch seine vorherige Entnahme gesperrte Warteschlange wieder freigegeben.  Und falls gerade keine Nachricht zur Verarbeitung anliegt (<em>TryDequeue()</em> liefert <em>false</em>), kann ein Thread sich mit <em>Wait()</em> schlafen legen, bis es wieder Arbeit gibt.</li>
+</ul>
+<p>Das klingt hoffentlich sinnig. Dass das grundsätzlich funktioniert, habe ich schon bei der asynchronen Nachrichtenverarbeitung überprüft. Mit so einer Schnittstelle läuft das Umheben auf andere Threads ordentlich.</p>
+<h3>Test-Driven Development</h3>
+<p>Die Anforderungen sind klar, die Schnittstelle ist einfach – aber wie sieht nun der Code dahinter aus? Den könnte ich jetzt versuchen runterzuschreiben; durch die Datenstruktur habe ich ja einen Überblick über das Nötige gewonnen. Aber dabei würde ich mich nicht wohl fühlen. Etwas mehr Systematik darf sein bei einem so wichtigen Bestandteil der Flow Runtime. Wenn die Datenstruktur nämlich nicht sauber aufgesetzt ist, dann kommt es zu Fehlern in der Arbeit mit mehreren Threads – und die sind sicher nur schwer zu reproduzieren und zu lokalisieren.</p>
+<p>Wie aber anfangen mit TDD? Jetzt Visual Studio anwerfen und einen ersten Test für eine der Schnittstellenmethoden schreiben? Nein! Am Anfang von TDD steht die Sammlung von Testfällen. Darauf, dass die Ihnen während der Codierung einfallen, sollten Sie sich nicht verlassen. Und schon gar nicht sollten Sie erwarten, dass sie Ihnen in einer guten Reihenfolge einfallen. Damit würden Sie das TDD-Vorgehen überfrachten.</p>
+<p>Testfälle für das Ganze, das Sie realisieren wollen, sind vor dem Beginn der Codierung festzulegen. Es sind schließlich die Akzeptanzkriterien für Ihren Code. Wenn Sie die nicht vorher kennen, lügen Sie sich schnell mit der Codierung – selbst wenn die Test-First geschieht – etwas in die Tasche. Außerdem dient die Sammlung der Testfälle dem tieferen Verständnis der Anforderungen.</p>
+<p>Hier die ersten 4 Testfälle von 14, die mir zu dieser speziellen Warteschlange eingefallen sind:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/796d0f518e14256d.png" /></p>
+<p>Sie sind in aufsteigender “Schwierigkeit” sortiert. Mit jedem Testfall wird das Szenario etwas komplizierter. Es gibt ja mehrere Variablen:</p>
+<ul>
+<li>Die Zahl der Einträge in einer Warteschlange  Die Zahl der Warteschlangen  Die Zahl der Worker, die auf die Warteschlangen zugreifen  Den Blockierungszustand  Benachrichtigungszustand</li>
+</ul>
+<p>Allerdings gibt es noch ein zweites Sortierkriterium: den Interessantheitsgrad eines Tests bzw. die Relevanz der durch ihn abgedeckten Funktionalität. Deshalb steht am Anfang ein happy day Szenario und nicht die sonst häufig zu sehende Prüfung, ob eine leere Datenstruktur korrekt behandelt wird. Das ist erst der 9. Test.</p>
+<p>Vor dem ersten Test bin ich so frei und setze meine Klasse mit den obigen Methoden auf. Das empfinde ich als keinen schlimmen Bruch mit der strengen TDD-Praxis. Alle Methoden werfen die <em>NotYetImplemented</em> Exception. So mache ich mir das Schreiben der Tests etwas einfacher und habe gleich sozusagen ein kleines Backlog im Code.</p>
+<p>Gleichfalls lege ich mir in meiner Testklasse das System under Test (SUT) zurecht. Wie mir die Testplanung zeigt, brauche ich ja immer wieder eine Instanz von <em>NotifyingMultiQueue</em>, die via <em>TryDequeue()</em> eine Nachricht zurückgibt.</p>
+<p>[TestFixture]
+public class test_NotifyingMultiQueue
+{
+    private NotifyingMultiQueue _sut;
+    private string _result;</p>
+<p>[SetUp]
+    public void Before_each_test()
+    {
+        _sut = new NotifyingMultiQueue();
+        _result = null;
+    }
+    …</p>
+<h4>Test #1: Ein Worker entnimmt aus einer Queue</h4>
+<p>Der erste Test ist ganz einfach. So soll es ja auch sein. Leicht beginnen und in kleinen Schritten vorgehen:</p>
+<p>[Test]
+public void Single_worker_takes_from_single_queue()
+{
+    _sut.Enqueue("a", "q1");
+    Assert.IsTrue(_sut.TryDequeue("w1", out _result));
+    Assert.AreEqual("a", _result);
+}</p>
+<p>Die Zeilen setzen die Testplanung treu um:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/90c26643b561aabb.png" /></p>
+<p>Ich habe länger überlegt, ob ich den ADT als Black Box testen soll. Am Ende habe ich mich dafür entschieden. Auch wenn ich eine hübsche Datenstruktur entworfen habe, will ich mich nicht daran in Tests binden, wenn es nicht absolut nötig ist. Also teste ich die Funktionalität immer durch den API hindurch. Bei der zu erwartenden Größe des Codes scheint es mir vertretbar, ganz auf Integrationstests zu setzen, auch wenn sich intern die funktionalen Strukturen ausdifferenzieren.</p>
+<p>Allerdings muss ich dadurch meist paarweise Änderungen vornehmen: bei <em>Enqueue()</em> und bei <em>TryDequeue()</em> bzw. <em>Wait()</em>. Anders kann ich nicht überprüfen, ob eine interne Zustandsveränderung korrekt erfolgt. Auf beiden Seiten muss ich mich also konzentrieren, das KISS Prinzip nicht aus den Augen zu verlieren.</p>
+<p>Für den ersten Test ist das aber noch einfach. Das Szenario kann mit einer Queue abgehandelt werden:</p>
+<p>internal class NotifyingMultiQueue
+{
+    Queue _queue = new Queue();</p>
+<p>public void Enqueue(T message, string queueName)
+    {
+        _queue.Enqueue(message);
+    }</p>
+<p>public bool TryDequeue(string workerId, out T message)
+    {
+        message = _queue.Dequeue();
+        return true;
+    }
+    …</p>
+<p>Die Implementation muss zur Zeit nur einen einzigen Test erfolgreich machen. Wenn also nicht alle Parameter benutzt werden oder von Round Robbin nichts zu erkennen ist, dann macht das nichts. Diese Implementation ist die einfachste mögliche, zur “Testbefriedigung”.</p>
+<p>Zumindest ist das so, wenn man den Anspruch hat, dass im Code etwas halbwegs sinniges passiert. Oft ist ja bei TDD Demos zu sehen, dass bei den ersten Tests triviale Implementationen vorgenommen werden, z.B.</p>
+<p>internal class NotifyingMultiQueue
+{
+    public void Enqueue(T message, string queueName)
+    {}</p>
+<p>public bool TryDequeue(string workerId, out T message)
+    {
+        message = “a”;
+        return true;
+    }
+    …</p>
+<p>Der Test würde damit grün – ansonsten wäre aber nichts gewonnen. Es wäre kein Schritt in Richtung einer Lösung unternommen worden.</p>
+<p>Tests sind ja aber kein Selbstzweck. Das Ziel ist nicht, Tests grün zu bekommen. Tests sind nur ein Mittel, um das Ziel zu ereichen. Das ist mit und ohne Tests grundsätzlich dasselbe: Produktionscode, der die Anforderungen erfüllt.</p>
+<p>Es ist gut, wenn kleinschrittige Tests zu einem Wachstum der Implementation auch in kleinen Schritten führt. Triviales Wachstum aber, von dem man weiß, dass es nicht belastbar ist im Sinne der Anforderungen, sollten Sie vermeiden.</p>
+<h4>Ein Testszenario entfällt</h4>
+<p>Nicht nur Implementation kann allerdings trivial wachsen. Auch bei Tests besteht die Gefahr. Das weiß man aber nicht immer, wenn man den Test formuliert. Der folgende schien mir beim Entwurf noch sinnig:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/38cf537f27d86b9c.png" /></p>
+<p>Nach der einfachen, aber nicht trivialen Implementation zu Test #1 war dieser Test jedoch überflüssig. Es wäre sofort grün gewesen. Ich habe ihn deshalb ausgelassen.</p>
+<p>Die Maxime dahinter lautet: Tests, die du keiner Änderung an der Implementation führen (d.h. die nicht zuerst rot sind), sollten nicht geschrieben werden. Sie treiben den Produktionscode nicht voran. Sie gehören zur selben Äquivalenzklasse wie ein anderer Test. Hier wäre es die Äquivalenzklasse “Ein Worker entnimmt aus einer Queue” gewesen.</p>
+<p>Würde ich eine Queue implementieren, wäre der Test nötig. Aber ich benutze in meinem ADT eine Queue. Und deren Funktionstüchtigkeit muss ich nicht auch nochmal testen. Darauf verlasse ich mich. In Bezug auf benutzte ADTs sind meine Tests also Integrationstests.</p>
+<p><em><a rel="noopener" href="http://ralfw.blogspot.com/2012/01/tdd-im-flow-teil-2.html">Weiter geht es im nächsten Teil…</a></em></p>
+<p><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY"></a><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY">Spendieren Sie mir doch einen Kaffee, wenn Ihnen dieser Artikel gefallen hat...</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

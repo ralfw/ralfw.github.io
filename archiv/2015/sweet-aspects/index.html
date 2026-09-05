@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sweet Aspects — ralfw.de Archiv</title>
+<meta name="description" content="When a module has a single responsibility that means it&#x27;s focused on producing the behavior of a single aspect. That&#x27;s how I described the Single Responsibility Principle (SRP) in ">
+<link rel="canonical" href="https://ralfw.de/archiv/2015/sweet-aspects/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Sweet Aspects — ralfw.de Archiv">
+<meta property="og:description" content="When a module has a single responsibility that means it&#x27;s focused on producing the behavior of a single aspect. That&#x27;s how I described the Single Responsibility Principle (SRP) in ">
+<meta property="og:url" content="https://ralfw.de/archiv/2015/sweet-aspects/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>Sweet Aspects</h1>
+    <div class="doc-meta"><span>27. April 2015</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2015/04/27/sweet-aspects.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2015/sweet-aspects/</code></span></div>
+    <div class="art"><p>When a module has a single responsibility that means it's focused on producing the behavior of a single aspect. That's how I described the Single Responsibility Principle (SRP) in my previous article.</p>
+<p>Since the SRP is so important and at the same time a bit elusive, I thought, I try to illustrate this "traits and aspects thing" a bit more. Maybe you can even develop a taste for the SRP :-)</p>
+<p>Look at this heap of sweets:</p>
+<p>Let them represent logic in your code. You know, those 5,000 lines of code in a method, or those 200 methods in a class, or those 1000 classes in a library… It's all the same. Unstructured stuff. High entropy. Disorder. Not clean. Yet at least ;-)</p>
+<p>At some point it might have been a good thing to throw all this together. Maybe that way delivery was faster/easier? You know all those explanation how legacy code just happened over time. Should get into technical debt very consciously; have a plan how to pay it back. But in my experience that's not how it works for teams. Like many private households (and companies) they stumble and falter and fall; or each time they they borrow it's an exception and sure will never happen again. Promise! Until the next emergency which requires an exception.</p>
+<p>5,000 line methods happen. They happen one line at a time. And each time there is a very good reason why to add the line instead of first refactor the whole heap of logic.</p>
+<p>So that's what there is at the end for 5,000 very good reasons: a huge bag of stuff. A brownfield.</p>
+<p>But now is the time to bring order to the chaos ;-) Refactoring time. Let's apply the SRP. It will make it easier to get an overview of what's there, to make it easier to pick just the sweet you like most. Or in code: Order will make it easier to understand code, when you want to add new features or fix a bug. Also extending the code will be smoother. Less refactoring, less digging around, less unwanted side effects.</p>
+<p>But what kind of order should there be? How to group the parts? Which traits to select to define sets with high cohesion between their elements?</p>
+<p>I think, with regard to the depicted sweets people are divided into those who like licorice and those who don't ;-) So "taste" could be a single trait to split the sweets into sets.</p>
+<p>One set has the responsibility to make people happy who like licorice. The other one has the responsibility to make those happy who don't like it. And then there is a third set with just one sweet which tastes like a gummibear, but with licorice.</p>
+<p>Picking just a single trait splits a whole into as many parts as there are values the trait can assume. That might lead to a coarse grained grouping aka modularization as you can see above.</p>
+<p>So now let's pick two traits and see what happens, e.g. "taste" and "form":</p>
+<p>You see, this doubles the groups! There is one for (licorice, cube), (licorice, tube), (gummibear, bear), (gummibear, fruit), (gummibear, frog), (licorice+gummibear, bat).</p>
+<p>And again. Now with yet another trait: "taste", "form", "color".</p>
+<p>Wow! More than 20 groups of sweets. A fine grained modularization, I'd say.</p>
+<p>The closer you look, the more traits you learn to distinguish, the smaller the groups/modules covering an aspect become. Yes, that what I'd call the selected traits: an aspect.</p>
+<p>The combination of taste+form+color we could call the "gourmet aspect" ;-) It's relevant for someone who relishes these kinds of sweets.</p>
+<p>But someone who needs to pack them up (or is very hungry) might be more interested in the "size aspect" which groups according to the trait volume.</p>
+<p>Or someone who wants do use sweets to lay out a picture with them might just look at the "color aspect":</p>
+<p>So as you can see, cohesion sometimes is tangible, but sometimes it's not. For sweets color, form, size are "hard" traits. You don't need experience with "using" the sweets in order to group them along these lines. In software it's easily visible traits like APIs, data, logic that lead to "hard aspects". You don't need to understand the domain for modularization - but a scrutinizing view helps.</p>
+<p>The trait taste is different though. You need to experience the sweets. Only then you can distinguish values and group the sweets. That's comparable to parts of logic where just looking at it won't help to find aspects. You have to really understand it's parts. What's the purpose of each line, of groups of statements? Only then you realize their "taste" and can separate them into focused modules.</p>
+<p>The result: What formerly was just a heap of stuff - sweets or logic - now is a nicely structured, clean, modularized system of code. Each module having a clear single responsibility on one of several levels of abstraction.</p>
+<p>I hope this excursion into an analogy helps you to get am even better grip on the SRP. It's worth trying. Good modularization is at the heart of any clean coding effort.</p>
+<p>Bon appétit! :-)</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

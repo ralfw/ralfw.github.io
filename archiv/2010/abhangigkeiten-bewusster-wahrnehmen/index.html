@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abhängigkeiten bewusster wahrnehmen — ralfw.de Archiv</title>
+<meta name="description" content="Abhängigkeiten sind eine der größten Geißeln der Softwareentwicklung. Wenn es ein allgemein anerkanntes Prinzip gibt, dann ist es, Abhängigkeiten zu minimieren. Jede Hilfe ist da w">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/abhangigkeiten-bewusster-wahrnehmen/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Abhängigkeiten bewusster wahrnehmen — ralfw.de Archiv">
+<meta property="og:description" content="Abhängigkeiten sind eine der größten Geißeln der Softwareentwicklung. Wenn es ein allgemein anerkanntes Prinzip gibt, dann ist es, Abhängigkeiten zu minimieren. Jede Hilfe ist da w">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/abhangigkeiten-bewusster-wahrnehmen/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Abhängigkeiten bewusster wahrnehmen</h1>
+    <div class="doc-meta"><span>7. Sept. 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/09/abhangigkeiten-bewusster-wahrnehmen.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/abhangigkeiten-bewusster-wahrnehmen/</code></span></div>
+    <div class="art"><p>Abhängigkeiten sind eine der größten Geißeln der Softwareentwicklung. Wenn es ein allgemein anerkanntes Prinzip gibt, dann ist es, Abhängigkeiten zu minimieren. Jede Hilfe ist da willkommen. Was können Sie also tun, um Abhängigkeiten im Code los zu werden?
+Für die Suche nach einer Lösung und die Beurteilung von Hilfsangeboten ist es nützlich, Abhängigkeiten zu kategorisieren. Nicht alle Abhängigkeiten sind gleich. Worüber reden wir also eigentlich?</p>
+<h4>Abhängigkeit</h4>
+<p>Eine Abhängigkeit ist vorhanden, wenn einer etwas braucht, ohne dass er seine Arbeit nicht verrichten kann. Eine Funktionseinheit kann eine andere Funktionseinheit brauchen; oder sie braucht nur eine Datei an einem bestimmten Ort. Oder sie ist von einem bestimmten Format von Daten abhängig, die als Zeichenkette an sie übergeben werden.
+Abhängigkeiten lauern also überall.
+Mir geht es allerdings vor allem um Abhängigkeiten zwischen den grundlegenden Funktionseinheiten Assembly, Klasse und Methode.</p>
+<h4>Statische Abhängigkeit</h4>
+<p>Wenn eine Funktionseinheit (FE) schon zur Compilezeit von einer anderen abhängig ist, dann nennt man das statische Abhängigkeit oder auch statische Kopplung. Hier ein Beispiel: Klasse <em>Client</em> ist von Klasse <em>Service</em> statisch abhängig.</p>
+<pre><code>   1: class Client
+</code></pre>
+<pre><code>   2: {
+</code></pre>
+<pre><code>   3:     private Service s;
+</code></pre>
+<pre><code>   4: }
+</code></pre>
+<pre><code>   5: 
+</code></pre>
+<pre><code>   6: class Service
+</code></pre>
+<pre><code>   7: {}
+</code></pre>
+<p>Oder hier eine Methode, die mit einer anderen statisch gekoppelt ist:</p>
+<pre><code>   1: void Foo()
+</code></pre>
+<pre><code>   2: {
+</code></pre>
+<pre><code>   3:     Bar();
+</code></pre>
+<pre><code>   4: }
+</code></pre>
+<pre><code>   5: 
+</code></pre>
+<pre><code>   6: void Bar()
+</code></pre>
+<pre><code>   7: {}
+</code></pre>
+<p>Oder hier eine statische Abhängigkeit von <em>Client</em> nicht zur Klasse <em>Service</em>, sondern auch noch zu einem Member von <em>Service</em>:</p>
+<pre><code>   1: class Client
+</code></pre>
+<pre><code>   2: {
+</code></pre>
+<pre><code>   3:     private Service s;
+</code></pre>
+<pre><code>   4:
+</code></pre>
+<pre><code>   5:     void Foo()
+</code></pre>
+<pre><code>   6:     {
+</code></pre>
+<pre><code>   7:         s.Text = &quot;hello&quot;;
+</code></pre>
+<pre><code>   8:     }
+</code></pre>
+<pre><code>   9: }
+</code></pre>
+<pre><code>  10: 
+</code></pre>
+<pre><code>  11: class Service
+</code></pre>
+<pre><code>  12: {
+</code></pre>
+<pre><code>  13:     public string Text;
+</code></pre>
+<pre><code>  14: }
+</code></pre>
+<p>Oder hier statische Kopplung zwischen Assemblies:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/464785a4e529ddb9.png" /></p>
+<p>Ohne, dass die Funktionseinheiten, zu denen eine Kopplung besteht, bei der Compilation vorhanden sind, ist keine fehlerfreie Übersetzung möglich. Das macht statische Abhängigkeiten vergleichsweise zahm. Es fällt einfach schnell auf, ob eine Abhängigkeit nicht erfüllt ist.</p>
+<p>Ted Faison hat in seinem Buch <a rel="noopener" href="http://www.amazon.de/Event-Based-Programming-Taking-Events-Limit/dp/1590596439">“Event-based Programming”</a> für Abhängigkeiten eine Notation eingeführt, die ich hier auch benutzen möchte. Abhängigkeiten bezeichnet er dabei so:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d7671a5e15347caa.png" /></p>
+<p>Der Pfeil zeigt vom Abhängigen zum Unabhängigen und das Symbol (Zeichen <em>Ou</em> des erweiterten Lateinischen Alphabets) macht klar, dass der Pfeil ein Abhängigkeitspfeil ist.</p>
+<p>Eine statische Abhängigkeit kann dann so qualifiziert werden:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/23d18e6e7f0303f1.png" /></p>
+<h4>Dynamische Abhängigkeit</h4>
+<p>Dynamisch ist eine Abhängigkeit, wenn erst zur Laufzeit die eigentliche unabhängige Funktionseinheit verfügbar ist; der abhängige Code kann zur Compilezeit dann nämlich nur Annahmen darüber treffen, wie das zur Laufzeit “nachgereichte” Unabhängige aussieht.</p>
+<p>Ein typsiches Beispiel sind Abhängigkeiten von Klassen, die zur Compilezeit durch Interfaces vertreten werden:</p>
+<pre><code>   1: class Client
+</code></pre>
+<pre><code>   2: {
+</code></pre>
+<pre><code>   3:     public IService s;
+</code></pre>
+<pre><code>   4:
+</code></pre>
+<pre><code>   5:     void Foo()
+</code></pre>
+<pre><code>   6:     {
+</code></pre>
+<pre><code>   7:         s.Text = &quot;hello&quot;;
+</code></pre>
+<pre><code>   8:     }
+</code></pre>
+<pre><code>   9: }
+</code></pre>
+<pre><code>  10: 
+</code></pre>
+<pre><code>  11: interface IService
+</code></pre>
+<pre><code>  12: {
+</code></pre>
+<pre><code>  13:     string Text { get; set; }
+</code></pre>
+<pre><code>  14: }
+</code></pre>
+<pre><code>  15: 
+</code></pre>
+<pre><code>  16: class Service : IService
+</code></pre>
+<pre><code>  17: {
+</code></pre>
+<pre><code>  18:     public string Text
+</code></pre>
+<pre><code>  19:     {
+</code></pre>
+<pre><code>  20:         get { ...  }
+</code></pre>
+<pre><code>  21:         set { ... }
+</code></pre>
+<pre><code>  22:     }
+</code></pre>
+<pre><code>  23: }
+</code></pre>
+<p>Hier ist die Klasse <em>Client</em> von der Klasse <em>Service</em> dynamisch abhängig. Vom Interface <em>IService</em> und dessen Property <em>Text</em> hingegen ist sie statisch abhängig.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f0ceb28c840feb8d.png" /></p>
+<p>Das macht klar, wie Komponentenorientierung funktioniert: Die Assembly, die <em>Client</em> implementiert, muss die referenzieren, die <em>IService</em> implementiert – aber nicht die Assembly von <em>Service</em>. <em>Client</em> und <em>Service</em> können also getrennt von einander entwickelt werden. Aber die <em>IService</em>-Assembly, der Kontrakt von <em>Service</em>,muss vorher da sein, weil die <em>Client</em>-Assembly wie die <em>Service</em>-Assembly daran statisch gekoppelt sind.</p>
+<p>Statische Abhängigkeiten erfordern mithin Colocation von Code in derselben Assembly oder zumindest, dass Assemblies einander statisch referenzieren. Die unabhängige Funktionseinheit muss dann vor der abhängigen implementiert werden.</p>
+<p>Ein typisches Muster, um diese Form der Abhängigkeitskonstellation zwischen Klassen und Interfaces auszudrücken, ist die Inversion of Control mit der ctor-Injection:</p>
+<pre><code>   1: class Client
+</code></pre>
+<pre><code>   2:     {
+</code></pre>
+<pre><code>   3:         private IService s;
+</code></pre>
+<pre><code>   4:         public Client(IService s)
+</code></pre>
+<pre><code>   5:         {
+</code></pre>
+<pre><code>   6:             this.s = s;
+</code></pre>
+<pre><code>   7:         }
+</code></pre>
+<pre><code>   8:
+</code></pre>
+<pre><code>   9:         void Foo()
+</code></pre>
+<pre><code>  10:         {
+</code></pre>
+<pre><code>  11:             s.Text = &quot;hello&quot;;
+</code></pre>
+<pre><code>  12:         }
+</code></pre>
+<pre><code>  13:     }
+</code></pre>
+<pre><code>  14: 
+</code></pre>
+<pre><code>  15:     class Program
+</code></pre>
+<pre><code>  16:     {
+</code></pre>
+<pre><code>  17:         static void Main(string[] args)
+</code></pre>
+<pre><code>  18:         {
+</code></pre>
+<pre><code>  19:             Client c = new Client(new Service());
+</code></pre>
+<pre><code>  20:         }
+</code></pre>
+<pre><code>  21:     }
+</code></pre>
+<p>So werden Klassen entkoppelt, um einfacher testbar zu werden, um Implementationen austauschen zu können und um produktiver bei der Entwicklung zu sein.</p>
+<p>Dynamische Kopplung ist loser als statische – das ist vorteilhaft. Allerdings werden Fehler erst zur Laufzeit sichtbar. Die Entscheidung zwischen statischen und dynamischen Abhängigkeiten ist also eine zwischen Flexibilität/Entkopplung und Gewissheit.</p>
+<p>Wer flexibel sein will, der setzt z.B. die neue dynamische Typisierung ein:</p>
+<pre><code>   1: class Client
+</code></pre>
+<pre><code>   2: {
+</code></pre>
+<pre><code>   3:     public dynamic s;
+</code></pre>
+<pre><code>   4:
+</code></pre>
+<pre><code>   5:     public void Foo()
+</code></pre>
+<pre><code>   6:     {
+</code></pre>
+<pre><code>   7:         s.Text = &quot;hello&quot;;
+</code></pre>
+<pre><code>   8:     }
+</code></pre>
+<pre><code>   9: }
+</code></pre>
+<p>Zur Entwicklungszeit muss man sich dann nicht entscheiden, wie die Instanzen von <em>s</em> aussehen sollen. Sie müssen lediglich eine Property oder ein Feld <em>Text</em> bieten.</p>
+<p>Das funktioniert dann gut mit dem bisherigen <em>Service</em>:</p>
+<pre><code>   1: static void Main(string[] args)
+</code></pre>
+<pre><code>   2: {
+</code></pre>
+<pre><code>   3:     Client c = new Client();
+</code></pre>
+<pre><code>   4:     c.s = new Service();
+</code></pre>
+<pre><code>   5:     c.Foo();
+</code></pre>
+<pre><code>   6: }
+</code></pre>
+<p>Ohne Kontrolle durch den Compiler kann aber auch jeder andere Typ zugewiesen werden:</p>
+<pre><code>   1: static void Main(string[] args)
+</code></pre>
+<pre><code>   2: {
+</code></pre>
+<pre><code>   3:     Client c = new Client();
+</code></pre>
+<pre><code>   4:     c.s = 42;
+</code></pre>
+<pre><code>   5:     c.Foo();
+</code></pre>
+<pre><code>   6: }
+</code></pre>
+<p>Und das funktioniert dann gar nicht mehr gut.</p>
+<p>Also: Vorsicht mit dynamischen Abhängigkeiten. Flexibilität, Entkopplung hat ihren Preis. Dynamische Abhängigkeiten lassen sich schlechter kontrollieren als statische. Sollte sich am Unabhängigen bzw. bei der Bedienung einer Abhängigkeit etwas ändern, ist erst viel später klar, auf welche Abhängigen das eine Auswirkung hat.</p>
+<h4>Logische Abhängigkeit</h4>
+<p>Der Compiler meldet kein Problem und Sie haben auch Ihre dynamischen Abhängigkeiten im Griff? Das ist gut – aber Ihre Software ist dann noch nicht in trockenen Tüchern, was die Abhängigkeiten angeht. Denn da sind noch die logischen Abhängigkeiten. Und das sind die fiesesten.</p>
+<p>Hier eine kleine Denksportaufgabe. Welche Abhängigkeiten enthält diese Funktion, die die Nachkommastellen einer Zahl abtrennen soll:</p>
+<pre><code>   1: static double Trunc(double n)
+</code></pre>
+<pre><code>   2: {
+</code></pre>
+<pre><code>   3:     var s = n.ToString();
+</code></pre>
+<pre><code>   4:     s = s.Substring(0, s.IndexOf(','));
+</code></pre>
+<pre><code>   5:     return double.Parse(s);
+</code></pre>
+<pre><code>   6: }
+</code></pre>
+<p>Gibt es statische Abhängigkeiten? Klar. Der Code ist ja streng typisiert.</p>
+<p>Gibt es dynamische Abhängigkeiten? Nein. Hier wird zur Laufzeit nichts konkretisiert, nachgereicht.</p>
+<p>Dennoch gibt es im Code eine Abhängigkeit. Und ob die Erwartung daran erfüllt wird, zeigt sich auch erst zur Laufzeit.</p>
+<p><em>Trunc()</em> ist davon abhängig, dass die String-Repräsentation  einer <em>double</em>-Zahl ein Komma enthält, das die Nachkommastellen abtrennt. Zahlen müssen diesem Format folgen:</p>
+<blockquote>
+<p>Zahl ::= Vorkommastellen [ “,” Nachkommastellen ].</p>
+<p>Vorkommastellen, Nachkommastellen ::= Ziffer { Ziffer }.</p>
+</blockquote>
+<p>Das ist eine legitime Annahme für eine Software, die nur in Deutschland laufen soll – für eine internationale Software hingegen sollte sie nicht getroffen werden.</p>
+<p>Eine solche Abhängigkeit nennt man logische Abhängigkeit. Sie besteht immer dann, wenn zwei Funktionseinheiten Annahmen übereinander machen, insbesondere Annahmen über ihre Funktionsweise. Deshalb drücken sich logische Abhängigkeiten oft in Daten aus, da die das Bindeglied zwischen Funktionseinheiten sind.</p>
+<p>Hier besteht die Annahme der Funktionseinheit <em>Trunc()</em> darin, dass die Funktionseinheit <em>double.ToString()</em> ein Komma vor die Nachkommastellen setzt.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/fb630caa28cecec9.png" /></p>
+<p>Als Kontrast ein Beispiel logischer Unabhängigkeit:</p>
+<pre><code>   1: static int GetIndexOf(string item, string[] list)
+</code></pre>
+<pre><code>   2: {
+</code></pre>
+<pre><code>   3:     for (var i = 0; i &lt; list.Length; i++)
+</code></pre>
+<pre><code>   4:         if (list[i] == item) return i;
+</code></pre>
+<pre><code>   5:     return -1;
+</code></pre>
+<pre><code>   6: }
+</code></pre>
+<p>Die Funktion ist nicht (!) abhängig davon, dass die Einträge in der Liste in einer bestimmten Reihenfolge stehen. Sie bestimmt mit und ohne Ordnung der Listenelemente den Index des gesuchten korrekt. So ist diese Funktion logisch unabhängig von potenziellen Quellen für Listen.</p>
+<p>Keine Annahme über die Reihenfolge der Einträge zu machen, dient also der Entkopplung. Das ist gut für die Evolvierbarkeit (oder auch Wiederverwendbarkeit), hat jedoch seinen Preis. Die Performance dieses Verfahrens ist nicht optimal. Ob das allerdings schlimm ist… das hängt vom Verwendungszusammenhang ab. Im Sinne der Prinzipien KISS und Beware-of-Premature-Optimization (BoPO) mag es sinnvoll sein, keine Annahmen zu machen und die lose Kopplung einzustreichen – bis das an eine Grenze stößt.</p>
+<p>Logische Abhängigkeiten machen die Softwareentwicklung wahrhaft komplex. Denn erstens wird erst zur Laufzeit sichtbar, ob sie erfüllt werden. Und zweitens führt ihre Nichterfüllung nicht immer und sofort zu einem Fehler.</p>
+<p><em>Trunc()</em> kann während der Entwicklung alle automatisierten Tests bestehen. Software, die die Funktion einsetzt, kann bei Hunderten Kunden fehlerfrei laufen. Doch dann, eines Tages, kommt es zu einem Fehler. Warum? Weil ein Anwender erstmalig auf die Idee gekommen ist, die Software auf einem Rechner mit anderer default Einstellung für das Dezimaltrennzeichen laufen zu lassen.</p>
+<p>Logische Abhängigkeiten können sehr subtil sein. Kein Compiler zeigt sie an. Kein Laufzeitsystem deckt sie auf. Womöglich werden sie nur sporadisch nicht erfüllt.</p>
+<p>Vorsicht also an den Schnittstellen zwischen Funktionseinheiten. Dort lauern immer wieder Annahmen über empfangene Daten, die die Funktionseinheiten mehr oder weniger offensichtlich und oft unerwartet stark miteinander logisch koppeln.</p>
+<h4>Zusammenschau</h4>
+<p>Abhängigkeiten machen das Softwareentwicklerleben schwer. Denn wo Abhängigkeiten bestehen, besteht immer die Gefahr, dass sich Änderungen am Unabhängigen auf Abhängige auswirken.</p>
+<p>Sind die Abhängigkeiten nur statisch, dann zeigt ein Übersetzungslauf an, wo Erwartungen bei Abhängigen enttäuscht werden. Insofern sind statische Abhängigkeiten unkritisch, was die Entdeckung von Nichterfüllung angeht. Diese Effizienz, diese Sicherheit wird jedoch durch Inflexibilität erkauft. Statische Abhängigkeit bedeutet immer enge Kopplung.</p>
+<p>Dynamische Abhängigkeiten koppeln loser – lassen sich jedoch erst zur Laufzeit entdecken. Durch die heutzutage sehr einfach mögliche Automatisierung von Tests lassen sich Probleme bei der Erfüllung dynamischer Abhängigkeiten jedoch auch fast so schnell erkennen wie bei statischen Abhängigkeiten.</p>
+<p>Programme geschrieben in dynamischen Sprachen wie Python oder Ruby leiden daher auch nicht unter größerer Fehlerhäufigkeit als Programme geschrieben in einer streng typisierten Sprache wie C#. Wer mit einer dynamischen Sprache entwickelt, stützt sich einfach nur weniger auf den Compiler und setzt stattdessen mehr auf eine Sammlung von automatisierten Tests.</p>
+<p>Die Komponentenorientierung hilft ebenfalls weiter, da sie dynamische Abhängigkeiten bewusst plant und Kontrakte auf beiden Seiten der Abhängigkeit für Stabilität sorgen. So kann lose Kopplung als Vorteil dynamischer Abhängigkeit eingestrichen werden, ohne die Sicherheit statischer Kopplung aufzugeben.</p>
+<p>Logische Abhängigkeiten teilen mit den dynamischen Abhängigkeiten, dass sie erst zur Laufzeit festgestellt werden können. Sie gehen in ihrer Gefährlichkeit jedoch darüber hinaus. Sie sind oft unsichtbar, sie sind oft subtil, sie machen womöglich nur sporadisch Probleme. Es hilft aber nichts: Wir müssen mit ihnen leben.</p>
+<p>Ohne logische Abhängigkeiten keine Zusammenarbeit. Wer sich nicht mindestens logische abhängig macht, steht allein.</p>
+<p>Bei Planung, Test und Review Ihres Codes achten Sie daher besonders auf logische Abhängigkeiten. Wo Sie sie erkennen, dokumentieren Sie sie. Am besten mit einem Test. Beispiel:</p>
+<pre><code>   1: [Test]
+</code></pre>
+<pre><code>   2: public void GetIndexOf_does_not_require_the_list_to_be_sorted()
+</code></pre>
+<pre><code>   3: {
+</code></pre>
+<pre><code>   4:     Assert.AreEqual(2,
+</code></pre>
+<pre><code>   5:                     Helpers.GetIndexOf(&quot;x&quot;,
+</code></pre>
+<pre><code>   6:                                        new[] { &quot;k&quot;, &quot;f&quot;, &quot;x&quot;, &quot;s&quot; }));
+</code></pre>
+<pre><code>   7: }
+</code></pre>
+<p>Das kann ein Unit Test wie hier sein. Das kann aber auch ein Integrationstest sein, der live die Funktionseinheiten, die Annahmen übereinander machen, zusammenspielen lässt.</p>
+<p>.NET 4 Code Contracts könnten auch helfen, um logische Abhängigkeiten zu dokumentieren.</p>
+<p>In jedem Fall gilt jedoch: zentralisieren Sie logische Abhängigkeiten. Lassen Sie möglichst nur eine Funktionseinheit in einer bestimmten Hinsicht logisch von einer anderen abhängig sein.</p>
+<p>Ein Beispiel dafür ist ein Proxy in der verteilten Kommunikation. Der zentralisiert die logische Abhängigkeit zwischen Client und Server in Bezug auf das Datenformat auf der Leitung. Der Client nimmt z.B. an, dass der Server SOAP-Nachrichten versteht. Statt nun aber diese Annahme an vielen Stellen im Code zu treffen, zentralisiert man sie im Proxy. Sollte sich das Datenformat ändern, trifft die Annahme also nicht mehr zu, dann ist nur eine Funktionseinheit betroffen.</p>
+<p>Der Proxy ist sozusagen dafür zuständig, eine logische Abhängigkeit in eine statische zu verwandeln. Denn wo der Proxy von SOAP-Nachrichten logisch abhängt, da hängt Code, der ihn nutzt, z.B. nur von einem POCO ab, das der Proxy umwandelt in einen Teil einer SOAP-Nachricht.</p>
+<p>Seien Sie also wachsam, was die Abhängigkeiten in Ihrer Software angeht. Unterscheiden Sie zwischen statischen, dynamischen und logischen. Werden Sie sich der Abhängigkeiten in Ihrem Code bewusst. Wählen Sie die eine oder andere Form mit Bedacht. Prüfen Sie die Erfüllung von Abhängigkeiten automatisiert. Dann sind Sie auf einem guten Weg, die Komplexität Ihrer Software zu verringern.</p>
+<h2>Kommentare</h2>
+<p><strong>Blog: Robert-M</strong> (2010-09-08):</p>
+<p>Ist eine Benutzereingabe auch eine logische Abhängigkeit? Ist die Erreichbarkeit eines Webservices eine physische Abhängigkeit?</p>
+<p>Bei logischer Abhängigkeit musste ich beim Lesen immer an mathematische Logik denken. Es ist für die Beispiele passender von Datenabhängigkeit zu sprechen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-09-08):</p>
+<p>@Robert: Wenn es bei der Benutzereingabe um das Format der Daten geht, dann wäre das eine logische Abhängigkeit.</p>
+<p>Von einem Webservice ist Code aber dynamisch abhängig. Vom Proxy des Webservice hingegen statisch.</p>
+<p>Datenabhängigkeit ist zu beschränkend. Logische Abhängigkeit kann sich auch auf die Performance beziehen. Eine Funktionseinheit erwartet, dass eine andere in einer bestimmten Zeit antwortet. Solche Annahmen werden bei Parallelprog oft subtil getroffen.</p>
+<hr />
+<p><strong>Blog: Robert-M</strong> (2010-09-08):</p>
+<p>Datenabhängigkeit passt für mich sowohl für eine Benutzereingabe, als auch für den Webservice. Kommen Daten nicht, fehlerhaft oder anders als erwartet, habe ich auf unterschiedlichste Art ein Problem - ein physisches, eine algorithmisches, vieleicht sogar ein logisches Problem!</p>
+<p>Wenn man jetzt zum Beispiel mit Single-Responsability oder einfach nur guter Architektur argumentiert, dann sollte auch eine Klasse oder eine Funktion nicht unbedingt Ahnung davon haben, ob das Datenproblem jetzt Aufgrund eines Parallelisierungs-problems oder durch falschen Input entstanden ist.</p>
+<p>Ein Compiler kann sowohl statische, dynamische als auch Datenabhängigkeiten erkennen. Wenn Datenabhängigkeiten nicht bedient werden, kann der Compiler warnen (siehe „Code Contracts“), bei logischen Fehlern auch, aber das sind logische Fehler im Sinne der Prädikaten- oder Aussagenlogik, hier wird auch der Compiler nicht von einer abhängigen Funktion/Klasse aus warnen.</p>
+<p>Sprachlich ist „logisch“ auch schwierig, denn „logisch“ ließe sich im Sinne von „daraus folgend“ oder "folgerichtig" verwenden aber so recht stimmig wird das nicht. Oder wie ist denn die Wortdefinition für „logisch“ in diesem Zusammenhang?</p>
+<p>Ich klebe ganz schön an der Begrifflichkeit, obwohl ich den Tenor des Posts sehr wichtig finde! Die Abhängigkeitsdiagramme gefallen mir sehr gut! Ich probieren die mal in meinem Alltag einzubinden. Danke.</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-09-19):</p>
+<p>Schöner Überblick über Abhängigkeiten. Aber: die statischen Abhängigkeiten werden als unkritischer dargestellt, als sie meiner Ansicht nach sind. Wird Assembly A (Component) von Assembly B (Application) benutzt und beide von zwei Entwicklerteams geschrieben, so herrscht hier durchaus Konfliktpotential, wenn Assembly A nicht (wenigstens compiler-, besser binär-)kompatibel geändert wird.</p>
+<p>Grüße.
+Carsten</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-09-19):</p>
+<p>@Carsten: Wenn zwei Team beteiligt sind, sollte eben nicht so wie von dir beschrieben werden. Dafür ist statische Kopplung zu eng. Stattdessen sollten dynamisch an die Implementation und statisch an ein Interface gekoppelt werden. Und damit sind wir bei der Komponentenorientierung.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

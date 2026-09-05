@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Die TDD Single Responsibility — ralfw.de Archiv</title>
+<meta name="description" content="Gerade wird wieder eine TDD Demo über Twitter herumgereicht. Corey Haines hat sich an die Kata Roman Numerals gemacht.">
+<link rel="canonical" href="https://ralfw.de/archiv/2012/die-tdd-single-responsibility/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Die TDD Single Responsibility — ralfw.de Archiv">
+<meta property="og:description" content="Gerade wird wieder eine TDD Demo über Twitter herumgereicht. Corey Haines hat sich an die Kata Roman Numerals gemacht.">
+<meta property="og:url" content="https://ralfw.de/archiv/2012/die-tdd-single-responsibility/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Die TDD Single Responsibility</h1>
+    <div class="doc-meta"><span>18. Dez. 2012</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2012/12/die-tdd-single-responsibility.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2012/die-tdd-single-responsibility/</code></span></div>
+    <div class="art"><p>Gerade wird wieder eine TDD Demo über Twitter herumgereicht. <a rel="noopener" href="http://programmingtour.blogspot.de/2012/12/roman-numerals-kata-with-commentary.html">Corey Haines hat sich an die Kata Roman Numerals gemacht</a>.</p>
+<p><a rel="noopener" href="http://programmingtour.blogspot.de/2012/12/roman-numerals-kata-with-commentary.html"></a></p>
+<p>Mal abgesehen davon, dass TDD anscheinend ein unerschöpfliches Thema ist und die Katas auf die Dauer langweilig werden… Mir gefällt die Darstellung aus einem anderen Grunde nicht so gut.</p>
+<p>Corey gibt sich Mühe. Alles läuft seinen kanonischen TDD Weg. Es könnte ein schönes Video sein. Wäre da nicht die ständige Überraschung.</p>
+<p>Ja, es hört sich so an, als würde Corey in die Lösung des Problems “Übersetzung arabischer Zahlen in römische” stolpern. Er zaubert Testfälle aus dem Hut und erstaunt sich dann immer wieder selbst mit der Lösung.</p>
+<p>Und ich meine hier wirklich die <em>Lösung</em> und nicht den Code.</p>
+<p>Da scheint mir ein Grundproblem im Umgang mit TDD zu liegen. Das habe ich auch neulich auf den XPdays in Coding Dojos gesehen. Das Muster ist so:</p>
+<ul>
+<li>Es wird ein Problem vorgestellt.</li>
+<li>Es wird mit dem Codieren à la TDD begonnen.</li>
+</ul>
+<p>Das Ergebnis? Regelmäßig kein Code, der die Aufgabe vollständig erfüllt [1].</p>
+<p>Mit dieser Realität sollten wir nicht streiten, denke ich. So ist es einfach. Man bemüht sich redlich um die rechte TDD-Schrittfolge. Das kommt mir vor wie beim Tanzen. Alle starren gebannt auf ihre Füße und hoffen, niemanden anzurempeln. Nur leider geht dabei das große Ganze verloren. Beim Tanzen der Spaß an der Bewegung und am Miteinander. Und bei der Softwareentwicklung lauffähiger Code. Vor lauter TDD-Rhythmus und versuchtem Design funktioniert es nicht mal.</p>
+<p>Wie frustrierend, wie tragisch. Kein Wunder, dass auch 2012 immer noch TDD hoch und runter evangelisiert werden muss.</p>
+<p>Dabei scheint mir die Rettung der Situation einfach: mehr Systematik.</p>
+<p>Ja, tut mir leid, dass ich mit so einem lästigen Wort komme. Das klingt nach Einschränkung, nach viel Aufwand ohne schnellen Nutzen… doch das Gegenteil ist der Fall. Systematik macht frei. Aus Komplexem macht sie Kompliziertes.</p>
+<p>Fehlende Systematik überfrachtet TDD. TDD soll plötzlich die ganze Softwareentwicklung retten. Endlich wird das mit der Korrektheit besser. Und dann auch noch bessere Dokumentation durch TDD. Und außerdem höhere Evolvierbarkeit durch besseres Design (lies: bessere Strukturen). Vor allem aber nicht zu vergessen: eine Lösung stellt sich auch wie von selbst ein.</p>
+<p>Kommt das niemandem merkwürdig vor? One size fits all?</p>
+<p>Ich bin ein großer Freund der Prinzipien Single Responsibility (SRP) und Separation of Concerns (SoC). Danach scheint mir ein bisschen viel Last auf den Schultern von TDD zu liegen.</p>
+<p>Das ist es auch, was mich an Coreys Demonstration wieder stört. Er steht dabei nur als einer von vielen, die TDD zeigen. Die Vermischung von Lösung und Design stößt mir auf. Sie ist es nämlich, die zu den erwähnten Misserfolgen in den Dojos führt.</p>
+<p>TDD bedeutete zunächst Test-Driven Development. Da ging es also um eine bestimmte Art zu codieren. Red-green-refactor. Das hat vor allem zu hoher Testabdeckung geführt.</p>
+<p>Dann wurde aus dem Development das Design: Test-Driven Design. Die Betonung wurde damit auf den Refactoring-Schritt gelegt. Zur hohen Testabdeckung sollte dann auch noch eine “gut” Codestruktur kommen.</p>
+<p>Und heute? Mir scheint, dass es gar nicht mehr um TDD geht, sondern um TDPS: Test-Driven Problem Solving. Nicht nur sollen Tests zu einem Design führen – denn über das Design soll man ja vorher nicht nachdenken, es soll entstehen, in minimaler Form. Nein, jetzt sollen am besten die Tests auch noch die Lösung herbeiführen.</p>
+<p>Wenn Sie sich nun fragen, was denn da der Unterschied sei, dann rühren Sie genau an dem Problem, das ich meine: Es wird kein Unterschied zwischen Lösung und Code gesehen. Oder vielleicht sollte ich sagen, zwischen Lösungsansatz und Code? Ist es dann deutlicher?</p>
+<p>Hier zwei Beispiele für den Unterschied.</p>
+<p>Als erstes eine Lösung für das Problem des Sortierens eines Feldes. <a rel="noopener" href="http://www.timmermann.org/ralph/index.htm?http://www.ralph.timmermann.org/software/sortieren.htm">Text und Bild</a> beschreiben einen Ansatz, sie beschreiben ein Vorgehen, sie sagen, wie man das Ziel ganz grundsätzlich erreichen kann:</p>
+<p><a rel="noopener" href="http://www.timmermann.org/ralph/index.htm?http://www.ralph.timmermann.org/software/sortieren.htm"></a></p>
+<p>Und jetzt ein <a rel="noopener" href="http://de.wikibooks.org/wiki/Algorithmensammlung:_Sortierverfahren:_Quicksort#F.23">Design in F#</a> für diesen Lösungsansatz:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/103fa8a1e076a454.png" /></p>
+<p>Im Design, im Code finden sich natürlich die Aspekte und Schritte des Lösungsansatzes wieder. Aber der Code ist nicht der Lösungsansatz. Er implementiert ihn in einer bestimmten Programmiersprache mit bestimmten Sprach- und Plattformmitteln.</p>
+<p>Als zweites ein Lösungsansatz für ein Problem im Compilerbau, die Erkennung von Bezeichnern. Hier ein <a rel="noopener" href="http://www.info-wsf.de/index.php/Akzeptor_zur_Syntaxanalyse,_Syntaxdiagramme">Syntaxdiagramm</a> dafür:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/7645de6b4da4087b.png" /></p>
+<p>oder alternativ ein <a rel="noopener" href="http://www.info-wsf.de/index.php/Akzeptor_zur_Syntaxanalyse,_Syntaxdiagramme">Deterministischer Endlicher Automat</a>:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e5bb945c296f5025.png" /></p>
+<p>Dass es überhaupt eine Phase zur Erkennung von Bezeichnern gibt (lexikalische Analyse), ist ebenfalls Teil eines <a rel="noopener" href="http://olli.informatik.uni-oldenburg.de/lalr/tutorial/deutsch/flow2/page3.html">Lösungsansatzes</a>:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2af53a6fba0e72ea.png" /></p>
+<p>Das konkrete Code-Design, die Implementierung des Lösungsansatzes, könnte dann <a rel="noopener" href="http://www.uni-giessen.de/~gc1079/compiler/compiler.pdf">so aussehen</a>:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2b7eec8fa2363e5d.png" /></p>
+<p>Lösungsansatz – oder auch Modell – und Code in einer bestimmten Struktur – nach TDD auch Design genannt –, sind einfach verschiedene Aspekte. In den TDD-Vorführung wie bei Corey und den TDD-Selbstversuchen in den Dojos werden die jedoch nicht sauber getrennt. Immer wieder wird gehofft, durch Red-Green-Refactor nicht nur ein evolvierbares Design herzustellen, sondern auch eine Lösung zu bekommen.</p>
+<p>Das (!) halte ich für falsch. Erstens ganz praktisch aus der Beobachtung heraus, dass so selten lauffähiger Code entsteht, der die Aufgabe erfüllt. Zweitens eher theoretisch aus dem Gedanken heraus, dass wir Menschen damit schlicht unterfordert sind. Das über Jahrtausende geschliffene Werkzeug “Denken” wird nicht genutzt. Man hofft vielmehr, durch Mustererkennung beim Code, irgendwie zu einer Lösung zu kommen.</p>
+<p>Das funktioniert manchmal tatsächlich, wenn man genau hinschaut. Die Kata Roman Numerals könnte dafür ein Fall sein. Nur ist nicht zu erwarten, dass das immer so geht. Auf den Quicksort Lösungsansatz kommt man nicht durch TDD, davon muss man einfach eine Vorstellung entwickeln – eben einen Lösungsansatz. Im Kopf. Durch Nachdenken.</p>
+<p>Und wie sollte es dann anders aussehen mit TDD?</p>
+<h3>Systematischeres Vorgehen</h3>
+<p>Systematisierung, Entzerrung, Entlastung, Fokus finde ich wichtig. Aus meiner Sicht sollte das Vorgehen diese Schritte beinhalten:</p>
+<ul>
+<li>Problem vorstellen</li>
+<li>Lösungsansatz entwickeln</li>
+<li>Testfälle ermitteln und priorisieren</li>
+<li>Lösungsansatz mit TDD implementieren</li>
+</ul>
+<p>Schritte 2. und 3. können dabei mehrfach durchlaufen werden. Und wenn sich bei 4. noch neue Erkenntnisse zum Lösungsansatz ergeben sollten, dann ist das auch ok. Aber 4. ohne explizites 2. und 3. zu beginnen, halte ich für eine Überlastung.</p>
+<p>Damit wären Lösungsansatz und Design getrennt. Damit würde – da bin ich ganz sicher – die Erfolgsquote jedes Coding Dojos steigen. Und wenn nicht, dann würde man genau sehen, woran es liegt: Liegt es an mangelnden TDD-Fähigkeiten oder liegt es an mangelndem Problemverständnis und dadurch fehlender Lösungsphantasie?</p>
+<p>Die Single Responsibility von TDD liegt für mich bei der Testabdeckung und bei einer hohen Strukturqualität im Kleinen [2].</p>
+<p>Was jedoch da überhaupt in Code gegossen und strukturiert werden soll… das ergibt sich nicht durch TDD, sondern durch Nachdenken. Den Lösungsansatz zu finden und die Testfälle zu priorisieren, das ist nicht Teil von TDD – muss aber gezeigt werden. Denn wird es nicht gezeigt bzw. wie bei Corey mit dem TDD-Vorgehen vermischt, entsteht entweder eine Überlastung, die die Aufgabenerfüllung behindert. Oder es entstehen “Wunderlösungen”, über die man nur staunen, sie aber eher nicht nachvollziehen kann. Wer “Wunderlösungen” goutiert, der wird es schwer haben, selbst Lösungen für andere Probleme zu finden.</p>
+<h4>Fußnoten</h4>
+<p>[1] Damit will ich nicht sagen, dass es keine Teams gibt, die die Aufgaben schaffen. Aber das passiert eben nicht regelmäßig und systematisch. Ich erinnere mich lebhaft an ein Dojo auf den XPdays und an eines auf der DDC im letzten Jahr. 5-10 Teams gab es jeweils. Und keines hat funktionierenden Code für die Kata Roman Numerals bzw. die Kata Zeckendorf (Übersetzung einer ganzen Zahl in eine <a rel="noopener" href="http://www.ijon.de/mathe/fibonacci/node5.html">Zeckendorf-Sequenz</a>) abgeliefert.</p>
+<p>[2] Wobei sogar diese Strukturqualität im Kleinen nicht einfach so entsteht, wie ich <a rel="noopener" href="http://blog.ralfw.de/2012/11/notorische-aspektlosigkeit.html">an anderer Stelle</a> schon ausgeführt habe. Dafür braucht es Refactoring-Kompetenz und –Willen. Die kommen nicht aus TDD. Dafür braucht es aus meiner Sicht noch Hilfestellung, die Refactorings näher legt. Dadurch kann sich ein TDD 2.0 auszeichnen. Aber dazu ein andermal mehr…</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2012-12-18):</p>
+<p>Hallo Ralf,</p>
+<p>da kann ich nur voll und ganz zustimmen. Persönlich baue ich für jedes einigermaßen nichttriviale Problem ersteinmal 1..n Prototypen. Auf Papier, manchmal im Kopf, oft als Code, selten jedoch testgetrieben. Und erst die finale Implementierung, ab und an auch ein letzter Prototyp sind dann tatsächlich testgetrieben entwickelt. Nach dem Design / Lösungsansatz, der sich aus den Prototypen ergeben hat...</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-12-20):</p>
+<p>Hi Ralf,
+vielen Dank für deine Gedanken. Diese Tage habe ich noch mit Kollegen diskutiert und dabei die These aufgestellt "Die Fachleute können nicht spezifizieren, so dass das Problem u. ein ev. Lösungsansatz für andere Fachleute verständlich ist.". Das ist dann darin gegipfelt, das ich schon Bedarf nach einem Fach Spezifikationslehre sah. Ok, das ist scharf angespitzt, aber mir immer noch lieber, als der tägliche Pfusch.
+Schöne Feiertage u. einen guten Rutsch.
+Gruß
+Andreas</p>
+<hr />
+<p><strong>Alex</strong> (2012-12-21):</p>
+<p>Danke für den interessanten Artikel, aber ich verstehe nicht so ganz wo das Problem liegt :/ Wieso ist es schlimm, wenn man über die Lösung "stolpert". Ist es nicht der Sinn der iterativen/agilen Entwicklungsmethoden, dass man nach und nach in kleinen Schritten zu einer Lösung kommt, statt vorher einen perfektes Design zurecht zu schustern, welches dann in der Realität kläglich versagt? Sicher TDD befreit natürlich nicht vom Entwurf, aber erlebt man beim Entwerfen und Modellieren nicht auch oft genung Überraschungen? ;)</p>
+<h1>Spezifikationslehre: Ist das nicht genau das, was die geschätzten Business Analysts so tun? Die haben uns imho ja auch nicht sehr weit gebracht und richten mehr Schaden an, als sie Nutzen bringen.</h1>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-12-21):</p>
+<p>@Alex: Es geht nicht um einen perfekten Lösungsansatz. Durch die Implementation kann sich ein Lösungsansatz auch immer noch verändern.</p>
+<p>Aber es geht mir darum, überhaupt einen Vorstellung von einer Lösung zu haben. Die fehlt oft. Es wird nach 2-3 Lesen einer Aufgabe losgelegt. Erstmal coden, dann mal sehen.</p>
+<p>Und genau so sieht es bei Corey im Video aus. Da mag man sagen, das sei dem Videoformat geschuldet... Das sehe ich jedoch anders. Wer das Vorgehen nicht systematisch präsentiert, der hat keine Systematik - oder vermittelt zumindest keine. Sehr schade.</p>
+<p>Wie gesagt: Roman Numerals ist trivial. Da mag es so gehen - wenn auch meine Erfahrung zeigt, dass es 90% der Teams eben nicht hinkriegen. Doch was ist mit etwas schwierigeren Aufgaben... Das Wurschteln nimmt da auch mit TDD kein Ende.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-01-07):</p>
+<p>Ich sehe das ähnlich!
+TDD verkommt eher zu einer Einladung, seinen Kopf komplett abzuschalten.</p>
+<p>"Jetzt tun wir alle mal so, als ob wir nicht 1 und 1 zusammenzählen können und sehen, wie uns TDD zum gewünschten Ziel führt."</p>
+<p>Ich weiß auch nicht, warum man sich neuerdings dümmer macht, als nötig.</p>
+<p>Für mich ist immer noch die Essenz beim Programmieren die Problemlösung. Quasi das Schönste am Ganzen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-01-07):</p>
+<p>@Christian: Schön gesagt: Die Problemlösung macht den Spaß aus, nicht die Codierung.</p>
+<p>Oder die Codierung nur insofern, als dadurch die Lösung zum Leben erwacht und jmd nützt. Das ist auch nett.</p>
+<p>Eigentlich ist das doch auch keine neue Erkenntnis. Codierung ist nötig und manchmal knifflig. Soooviele Technologien/APIs... Aber ich glaube nicht, dass es eine große Zahl Entwickler gibt, die es Klasse finden, sich darin aufzureiben.</p>
+<p>Die Lösung finde ich also am besten selbst. Das Hirn soll ja auch mal zu etwas nützlich sein ;-) Und nur, wenn ich grad so gar keine Idee habe... dann exploriere ich mit Code. Aber ich benutze dann doch nicht TDD.</p>
+<p>Insofern: Wer mit TDD arbeitet, der schreibt Produktionscode. Und wer Produktionscode schreibt, der hat die Lösung schon. Was er vielleicht noch nicht hat, ist das vollständige Design.</p>
+<p>Bei TDD kann es also nur darum gehen, Strukturen bei Kenntnis der Lösung auszutreiben.</p>
+<hr />
+<p><strong>GeH</strong> (2013-02-18):</p>
+<p>Das ist doch Quatsch zu behaupten das TDD das Denken verbietet. Es ist nun leider so, dass eine neue Technik nur erlernt werden kann wenn man versucht die bereits angeeigneten Muster nicht anzuwenden. Deshalb wird in Dojos versucht ohne vorherige Design-Gespräche TDD zu praktizieren mit manchmal erstaunlichen Ergebnissen, jedoch auch vielen Misserfolgen.
+TDD ist nicht nur ein Werkzeug sondern Werkzeug + Fähigkeit das Werkzeug zu benutzen. Diese Fähigkeit zu erlernen ist nicht einfach und dauert meiner Erfahrung nach 2 bis 6 Monate Praxis. Dazu sind Katas recht gut geeignet.
+Mich würde mal interessieren wie viele der erfahrenen TDD'ler in Katas Misserfolge haben würden.
+Grundsätzlich: TDD ist kein Ersatz für das Denken</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-02-18):</p>
+<p>@GeH:  Zu dem Satz "Nicht nur sollen Tests zu einem Design führen – denn über das Design soll man ja vorher nicht nachdenken, es soll entstehen, in minimaler Form." stehe ich.</p>
+<p>Dass TDD das Denken verbietet, steht da nicht drin. Aber vorher, bevor man den ersten Test schreibt, soll man nicht über Design (!) nachdenken. D.h. Lösungsansatz und daraus resultierende Grobstukturen des Codes sind kein Thema für TDD.</p>
+<p>Und wenn doch, dann zeige man mir 1. die einflussreiche Literatur, die das so sagt und vorführt, und 2. die Coding Dojos wo das so praktiziert wird. Dann nehme ich gern alles zurück und behaupte das Gegenteil.</p>
+<p>Einstweilen bleibe ich bei der simplen Beobachtung auf Coding Dojos verschiedener Plattformen. Und die zeigt mir: Nachdenken über Lösungen und Design findet de facto nicht statt.</p>
+<p>Aber wenn das so ist und man dann TDD übt, dann wird TDD nicht mit Nachdenken verknüpft. Es stellt sich dann ein Reflex ein, in dem Entwurf nicht vorkommt.</p>
+<p>TDD in einer Weise zu üben, bei der man Wichtiges auslässt, weil das Neue so bunt schillert, halte ich für fahrlässig.</p>
+<p>Außerdem sehe ich nicht, was an red+green+refactor monatelang zu üben wäre. Die Schrittfolge? Kaum.</p>
+<p>Refactoring? Sicherlich. Aber das ist eine Disziplin, auf die TDD ja schon aufbaut. Die übt man nicht speziell durch TDD, sondern wendet sie dort an - wenn man sie denn beherrscht. (Ob das der Fall ist, steht auf einem ganz anderen Blatt. Auch da sieht es nicht rosig aus.)</p>
+<p>Oder braucht es Monate, KISS zu üben? Oder der Einsatz von Mock-Frameworks?</p>
+<p>Dass man TDD üben muss, steht außer Zweifel. Aber wir sollten die Kirche im Dorf lassen. TDD ist kein Hexenwerk. Und es geht auch nicht um Perfektion. Selbst Robert C. Martin wird bei mehrfachem Durchlaufen der selben Kata zu immer wieder neuen Lösungen kommen. Wann ist er (bzw. der Code) also perfekt? Nie.</p>
+<p>Dass es viele erfahrene TDDler gibt, wage ich zu bezweifeln. Und damit meine ich Leute, die wirklich deliberate practice betreiben und nicht nur irgendwie mal nach test-first entwickeln.</p>
+<p>Leider sehe ich in Dojos nie (!) erfahrene TDDler. Ich sehe viele total motivierte Entwickler. Ich sehe Überzeugte, die etwas weitergeben wollen. Und das ist ja auch wunderbar.</p>
+<p>Aber eine Reflexion von TDD - und das gehört für mich zu Erfahrung dazu -, die sehe ich nie. Echt.</p>
+<p>Ich habe noch nie eine Diskussion über TDD in einem Dojo gehört. Also ein Gespräch auf der Meta-Ebene, bei dem z.B. gefragt würde, wann man nicht nur durch den SUT API testen soll oder wie man die Reihenfolge der Testfälle am besten festlegt.</p>
+<p>Es wird viel über KISS gestritten. Es wird lustig rotiert am Rechner. Es wird während des Codings in unterschiedliche Lösungsrichtungen gezogen. Es wird wenig über Refactoring gesprochen. (Wie denn auch bei den Miniproblemen?) That´s it.</p>
+<p>Wenn also TDD kein Ersatz für´s Denken ist, dann sollte Denken mal stattfinden im Dojo. Einfach mal ausprobieren. Wie wäre das?</p>
+<hr />
+<p><strong>GeH</strong> (2013-02-21):</p>
+<p>@Ralf: Wenn man TDD auf red+green+refactor reduziert, dann meinen die meistten TDD nach ein paar Tagen zu beherrschen. Sie stellen dann fest, dass es ihnen nicht wirklich weiterhilft und entfernen TDD aus ihrem Werkzugkasten.</p>
+<p>Für mich ist TDD aber viel mehr:
+red: richtige Tests in der richtigen Reihenfolge
+green: vernünftigen Code um das Problem zu lösen
+refactor: der schwierigste Schritt der in jedem guten TDD Training intensiv geübt wird</p>
+<p>Ich glaube nicht, dass wir ein TDD 2.0 brauchen. Deine vorgeschlagene Methode (DotnetPro) sollte meiner Ansicht nach anders genannt werden.</p>
+<p>Übrigens: einen RPN-Rechner hat Brett Schuchert vorbildlich mit TDD implementiert (http://vimeo.com/album/205252)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-02-21):</p>
+<p>@GeH: Tut mir leid, dass wir unterschiedlicher Meinung sind.</p>
+<p>Natürlich ist TDD unter den Phasen red+green+refactor genau das, was du beschreibst. Aber das wird eben nicht intensiv geübt. In keinem Dojo, das ich bisher gesehen habe. (Kurse besuche ich nicht, sondern gebe sie selbst ;-) Und da behandeln wir diese Punkte - allerdings etwas anders als üblich. Denn im Rahmen eines TDD Kurses, für den Firmen max. 2 Tage investieren, kann man nicht (!) all das intensiv üben. Das scheitert schon an der Infrastruktur, mit der Teilnehmer auf ihren Rechnern immer wieder Probleme haben.)</p>
+<p>Außerdem halte ich eine Verquickung unter der Überschrift TDD für falsch und fahrlässig. Gerade Refactoring ist so eine eigenständige Disziplin, dass man sie nicht im Vorbeigehen mit durchnehmen kann.</p>
+<p>TDD 2.0 ist deshalb nötig, um die Aspekte, die in TDD 1.0 von mir aus immer schon mitgedacht wurden, explizit zu machen. Nur so werden Entwickler verstehen, dass TDD eben nicht sooo einfach ist.</p>
+<p>Das Beispiel von Schuchert ist für mich übrigens wieder mal eine Demonstration dessen, wie man es nicht tun sollte. Ganz grauslich.</p>
+<p>Es fehlt jede Erklärung der Problemdomäne. Es wird überhaupt nicht sichtbar nachgedacht. Es gibt keine Testfälle mit Prioritäten. Und nach 1 Std ist noch kein Operator implementiert. Sorry, das ist für mich schon fast cargo cult.</p>
+<p>Und nochmal: Refaktorisierung ist kein Selbstzweck. Wenn ich durch kurzes Überlegen langes Refactoring sparen kann, dann sollte ich das tun. Allemal, wenn das kurze Überlegen auch noch Ergebnisse liefert, die die Lösung besser kommunizierbar machen. Oder die Implementation besser skalieren lassen. Denn so wie Schuchert es tut, kann nur einer allein an einem Problem arbeiten. Nicht sehr ökonomisch.</p>
+<hr />
+<p><strong>GeH</strong> (2013-02-21):</p>
+<p>@Ralf: unterschiedlicher Meinung zu sein ist ok. Ich schätze Dich persönlich sehr, TDD habe ich aber doch lieber bei Uncle Bob gelernt.</p>
+<p>Schuchert's Video finde ich faszinierend. Der Code der dabei entstanden ist entspricht so ziemlich  meinen Vorstellungen von 'Clean Code'.</p>
+<p>Ich kenne einige Trainer die für TDD Kurse etwa 2 Wochen empfehlen. Bei uns gab es auch nur einen 2 tägigen Kurs und danach hat keiner TDD praktiziert.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-02-21):</p>
+<p>@GeH: Schön, wenn Code irgendwann mal clean ist.</p>
+<p>Doch das ist mir zu wenig. Denn wenn ich nur auf das Endergebnis schaue, weiß ich nicht, wieviel das gekostet hat. Softwareentwicklung ist ein Unternehmen, das ökonomisch sein muss. Jedenfalls das, was man tagsüber am Arbeitsplatz macht. Wie man daheim bei einem Open Source Projekt als Hobby vorgeht, ist egal.</p>
+<p>Viele kleine und kleinste ökonomische Schritte (KISS) addieren sich jedoch nicht unbedingt zu einer insgesamt ökonomischen Lösung. Das sehe ich auch bei Schuchert so. Das 3.+4. Video zeigen zwar hübsch die Anwendung von Prinzip und Pattern - nur hätte Schuchert sich das von vornherein sparen können. Es ist ja nicht so, dass ihn Operatorvielfalt überrascht.</p>
+<p>Insofern sage ich mal, seine Lösung mag am Ende clean sein - der Weg dahin jedoch ist unökonomisch.</p>
+<p>Und agil ist sein Vorgehen schon gar nicht. Fast 1 Std hüsert er an irgendwelcher Infrastruktur herum, ohne auch nur einen Operator auf die Straße zu bekommen.</p>
+<p>Woher hat er auch seinen API? Der entsteht im luftleeren Raum. Warum gibt es da eine Enter()-Methode? Was hat er im Kopf, das er da implementiert? Ohne eine Vorstellung im Vorhinein kann er keine Liste priorisierter Testfälle haben, die du ja auch wichtig findest.</p>
+<p>Schuchert zeigt also aus meiner Sicht Fingerfertigkeit. Er zeigt, dass er ein Skript abarbeiten kann - denn das liegt garantiert neben ihm. Aber er zeigt kein realistisches TDD. Er zaubert. Doch dadurch lernt es niemand. Dasselbe gilt für Corey Haines Video, das ich schon mal zitiert habe. Das sind alles von mir aus tolle Zauberer.</p>
+<p>Doch Zauberei ist zunächst mal nur Entertainment. Sie beeindruckt mich. Nach einer Vorstellung kann ich aber nicht selber zaubern.</p>
+<p>Dass Entwickler die Videos faszinierend im Sinne von Entertainment finden, finde ich total verständlich. Alles geht Schritt für Schritt, es werden ein paar bekannte Vokabeln eingestreut, die ganze Zeit nur Code... da schlägt das Entwicklerherz höher.</p>
+<p>Wenn dann aber ein Zuschauer vor eine solche Aufgabe gestellt würde, hätte er außer der Schrittfolge red+green+refactor wieder nichts gelernt.</p>
+<p>Observational learning ist nicht schlecht. Nur sind wir alle nicht mehr 5 Jahre alt. Wir können auch anders lernen. Das wird hier gar nicht ausgenutzt.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-02-21):</p>
+<p>@Ralf:
+Genau solche "Entertainment"- bzw. "Zauber"-Videos kann ich mir auch nicht lange angucken, wenn ich etwas dabei lernen will.</p>
+<p>Diese Videos sind einfach zu perfekt in ihrer Ausführung. Gerade bei TDD wünscht man sich da mehr Spontanität.</p>
+<p>In der Hinsicht gelungener finde ich da diese Videoreihe:
+<a rel="noopener" href="http://www.jamesshore.com/Blog/Lets-Play">http://www.jamesshore.com/Blog/Lets-Play</a></p>
+<p>Da merkt man, dass James wirklich noch keine Idee hat, wo die Reise hingeht. Das wird besonders an seinen Kommentaren deutlich, während er coded. ;-D
+(Und es zeigt sich auch, dass es nicht schaden kann, vorher mal über das Problem nachzudenken.)</p>
+<p>Was auch noch sehenswert ist, ist diese Reihe:
+<a rel="noopener" href="http://lets-code.orfjackal.net/search/label/text-adventure">http://lets-code.orfjackal.net/search/label/text-adventure</a></p>
+<p>@GeH (und eigentlich alle ;-)):
+Nun ja, TDD hin oder her. Dazu kann man stehen, wie man will.</p>
+<p>Was mir beim TDD widerstrebt, ist, dass man zuerst den Test schreiben muss. Aber den Test wovon? Mit welchen Eingabewerten? Was sollen es für Ausgabewerte sein? Also ich brauche schon eine konkrete Vorstellung von dem, was ich umsetzen will/muss.</p>
+<p>Ich fange immer lieber mit dem UI bzw. dem GUI an, nachdem ich erstmal einige Zeit über das Problem und die gewünschte Lösung sinniert habe. Das ist für mich immer noch griffiger und führt MICH zumindest am Schnellsten zum Ziel.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

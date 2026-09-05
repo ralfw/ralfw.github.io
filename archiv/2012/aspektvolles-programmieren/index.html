@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aspektvolles Programmieren — ralfw.de Archiv</title>
+<meta name="description" content="Neulich habe ich kritisiert, Lösungen für Code Katas seien oft schwer verständlich. Als Ursache dafür habe ich einen Mangel an herausgearbeiteten Aspekten identifiziert.">
+<link rel="canonical" href="https://ralfw.de/archiv/2012/aspektvolles-programmieren/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Aspektvolles Programmieren — ralfw.de Archiv">
+<meta property="og:description" content="Neulich habe ich kritisiert, Lösungen für Code Katas seien oft schwer verständlich. Als Ursache dafür habe ich einen Mangel an herausgearbeiteten Aspekten identifiziert.">
+<meta property="og:url" content="https://ralfw.de/archiv/2012/aspektvolles-programmieren/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Aspektvolles Programmieren</h1>
+    <div class="doc-meta"><span>12. Nov. 2012</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2012/11/aspektvolles-programmieren.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2012/aspektvolles-programmieren/</code></span></div>
+    <div class="art"><p><a rel="noopener" href="http://blog.ralfw.de/2012/11/notorische-aspektlosigkeit.html">Neulich habe ich kritisiert</a>, Lösungen für Code Katas seien oft schwer verständlich. Als Ursache dafür habe ich einen Mangel an herausgearbeiteten Aspekten identifiziert.</p>
+<p>Mit Code Katas wird üblicherweise TDD geübt. Das hatte Dave Thomas zwar <a rel="noopener" href="http://codekata.pragprog.com/2007/01/code_kata_backg.html#more">nicht speziell im Sinn</a>, als er zu Code Katas ermunterte, doch es ist die de facto Praxis in Coding Dojos. Explizit hat Dave Thomas gesagt:</p>
+<blockquote>
+<p>“Some involve programming, and can be coded in many different ways. Some are open ended, and <em>involve thinking about the issues behind programming</em>.” (meine Hervorhebung)</p>
+</blockquote>
+<p>Dass über die Themen hinter der Programmierung nach-ge-dacht würde… Nein, tut mir leid, das habe ich in keinem Coding Dojo bisher erlebt, weder in einem offenen, noch in einem inhouse Dojo. Der Goldstandard ist vielmehr, dass schon Rechner und Beamer eingerichtet sind, kurz das Organisatorische besprochen wird, man sich flux über die Aufgabe austauscht – max. 15 Minuten – vor allem aber zügig das (Pair) Programming beginnt. Und damit endet dann ein eventueller “Nachdenkmodus” endgültig.</p>
+<p>Klar, es gibt Diskussionen über die nächsten Schritte. Aber so richtig ins Nachdenken über “issues behind programming” kommt da niemand mehr. Ist ja auch nicht das ausgelobte Ziel. Das lautet vielmehr, die Lösung möglichst weit mit TDD voran zu bringen. [1]</p>
+<p>Und so sehen dann die Lösungen aus. Man bekommt, was die Regeln vorgeben: grüne Tests. Das ist nämlich das einzige, was irgendwie “gemessen” wird. Darüber gibt es keinen Zweifel. Schon die Qualität der Tests ist nicht mehr leicht zu ermitteln. Sie ergibt sich eher implizit dadurch, ob der Fortschritt leicht oder schwierig ist. Denn sind die Tests schlecht geschnitten und ungünstig priorisiert, wird das Codieren zäh.</p>
+<p>Aber wie denn anders?</p>
+<p>Nun, es kommt erstmal aufs Ziel an. Was soll denn mit einer Code Kata erreicht werden? Wenn das ausschließlich lautet “TDD-Fingerfertigkeit entwickeln”, dann ist ja alles gut. Weitermachen mit Dojos wie bisher.</p>
+<p>Nur finde ich das inzwischen erstens langweilig und zweitens am Hauptproblem vorbei. Langweilig, weil nach 5+ Jahren Coding Dojos auch mal was anderes dran sein dürfte. Oder findet das sonst niemand zum einschlafen, wenn erwachsene Männer womöglich Monat für Monat zusammenkommen, um diese Fingerfertigkeit zu entwickeln. Mit Verlaub: Das ist doch viel, viel simpler, als aus einer Karate Kata das Letzte herauszuholen.</p>
+<p>Vor allem löst diese spezielle Variante automatisierter Tests nicht das Hauptproblem der Codeproduktion. Das ist mangelhafte Evolvierbarkeit von Code.</p>
+<p>Nicht, dass es keine Teams gäbe, die nicht von automatisierten Tests profitieren könnten. Davon gibt es noch viele. Die sollen da auch möglichst schnell Fuß fassen. Nur ist deren Einführung erstens technisch kein Hexenwerk: NUnit runterladen, referenzieren, los geht´s. Und zweitens ist die konkrete Praxis automatisierter Tests relativ unbedeutend. Ob nur “irgendwie” test-first oder richtiggehendes TDD oder Tests nach der Implementation geschrieben… klar, die Ergebnisse sind unterschiedlich, doch entscheidend ist nicht dieser Unterschied durch die Stile, sondern der zur vorherigen Testlosigkeit.</p>
+<p>Warum fällt es denn aber Teams auch heute noch schwer, überhaupt automatisierte Tests einzusetzen? Weil sie keine TDD-Fingerfertigkeit haben? Nein, weil sie keine Codebasis haben, die das (nachträgliche) Anbringen von Tests erlaubt. Und das kommt daher, dass sie nur wenig Vorstellung davon haben, wie eine saubere, testbare Codebasis überhaupt aussieht.</p>
+<p>Damit sind wir beim blinden Fleck der TDD-Coding-Dojo-Praxis. Über dieses “issue behind programming” wird nicht nachgedacht. Das Refactoring im TDD-3-Schritt red-green-refactoring ist für das übliche Coding Dojo eine Black Box. Deren Deckel wird höchstens ein wenig</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/1d7d394eeab9cdfa.png" /></p>
+<p>angehoben. Besser aber man lässt sie geschlossen. Es könnte eine Büchse der Pandora sein. Wenn die erstmal geöffnet ist, käme man mit dem Codieren ja gar nicht mehr voran – oder würde gar nicht erst beginnen.</p>
+<p>Das halte ich für sehr bedauernswert. Das möchte ich ändern.</p>
+<p>TDD ist gut und schön. Wem das noch nicht langweilig ist, wer glaubt, dass alles besser wird, wenn er darin nur perfekt ist… der soll gern TDD hoch und runter üben. Mir käme das allerdings so vor, als würde jemand meinen, ein großer Kung Fu Meister zu werden, weil er den ganzen Tag am <a rel="noopener" href="http://de.wikipedia.org/wiki/Mu_ren_zhuang">Mu ren zhuang</a> arbeitet.</p>
+<p>Zur Programmierkunst gehört aber doch mehr. Wenn nicht, wäre sie armselig und könnte schon bald von jedermann ausgeübt werden.</p>
+<p>Was das ist, das mehr dazugehört? Damit meine ich nicht die unendliche Vielfalt an Technologien. Die ist sicherlich eine große Herausforderung. Doch letztlich ist das eher eine Frage der Masse. Das sind komplizierte Oberflächlichkeiten.</p>
+<p>Viel, viel schwieriger sind jedoch die “issues behind programming”. Da geht es um Paradigmen. Da geht es um Methoden. Da geht es um eine Vielzahl von Qualitäten über die “simple” Korrektheit von Code hinaus.</p>
+<p>TDD adressiert die vermeintlich. Aber in Wirklichkeit adressiert sie nicht TDD selbst, sondern das Refactoring, auf das sich TDD stützt. Nur wird eben genau das nicht geübt. [2]</p>
+<p>Nun aber genug mit dem TDD bzw. Coding Dojo Bashing ;-) Ich will mich ja auch nicht zu sehr wiederholen.</p>
+<p>Wie stelle ich es mir denn nun anders vor? Wie hätte ich mir ein Vorgehen zum Beispiel in Bezug auf die Kata Word Wrap gewünscht?</p>
+<h3>1. Domäne spezifizieren</h3>
+<p>Als erstes sollte gefragt werden, was denn wirklich, wirklich die Problemdomäne ist. Worum geht es? Und das sollte dann in einem Satz knackig formuliert werden.</p>
+<p>Schon bei der <a rel="noopener" href="http://codingdojo.org/cgi-bin/wiki.pl?KataWordWrap">Kata Word Wrap</a> ist das nicht ganz einfach. Ich habe mich da auch erst verlaufen. Der Titel ist nämlich fehlleitend. Er passt nicht zur Aufgabenstellung.</p>
+<p>Im Titel kommt Word Wrap vor. Damit scheinen Worte und ihr Umbruch im Kern der Ubiquitous Language zu stehen. Interessanterweise tauchen dann Worte in der Aufgabenbeschreibung eigentlich nicht mehr auf. Da steht zwar “You try to break lines at word boundaries.” – doch zentral ist nicht “word”, sondern “break lines”.</p>
+<p>Es geht nicht um Word Wrap, sondern um Zeilen(um)bruch. Das mag zunächst im Gespräch ein feiner Unterschied sein – doch in der Implementation würde der sich ausweiten.</p>
+<p>Ich habe mich auch verleiten lassen, eine Wortumbruchlösung zu suchen, statt einer für den Zeilenumbruch. Doch der geht an der Aufgabe vorbei. [3]</p>
+<p>Mein Vorschlag für eine knackige Beschreibung der Problemdomäne wäre dann zum Beispiel diese:</p>
+<blockquote>
+<p><em>Der Wrapper zerlegt einen einzeiligen Text in mehrere Zeilen einer Maximallänge zerlegen - wobei Worte nicht zerschnitten werden sollen, wenn es sich vermeiden lässt.</em></p>
+</blockquote>
+<p>Diese Beschreibung betont die Zeilenorientierung. Worte kommen darin nur insofern vor, als dass sie nicht “beschädigt werden sollen”. Die Zerlegung soll zu keinen “Kollateralschäden” führen.</p>
+<p>Ob diese Formulierung die beste ist, sei dahingestellt. Aber sie ist besser als keine. Die Kraft überhaupt einer knackigen Formulierung ist nicht zu unterschätzen. Sie richtet das weitere Denken aus, sie spannt einen Lösungsraum auf – und zieht damit gleichzeitig eine Grenze. So kann konstruktive Diskussion über einen Lösungsansatz entstehen. Denn die kann, um sich fokussiert zu halten, immer wieder auf diese knappe Spezifikation verweisen. Der Zweck ist also ähnlich der der Metapher im XP.</p>
+<h3>2. Lösung skizzieren</h3>
+<p>Mit der Beschreibung der Problemdomäne als Leitstern und der Anforderungsdefinition als Karte, sollte als nächstes ein Lösungsansatz erarbeitet werden. Das geschieht im Wesentlichen durch Nachdenken. [4]</p>
+<p>Die Frage lautet: Wie würde ich das Problem lösen, wenn ich es von Hand tun müsste?</p>
+<p>Bei der Beantwortung soll natürlich jede Art von Erfahrung eingebracht werden. Alles ist erlaubt. Das Ergebnis kann ebenfalls alles mögliche sein – nur kein Produktionscode.</p>
+<p>Früher gab es für algorithmische Aufgabenstellungen die ehrenhaften Mittel Flowchart, Structogramm und vor allem Pseudocode. Heute scheint das nicht mehr hip zu sein. Überhaupt sehen Lösungsskizzen seltsam holprig aus, wo sie denn überhaupt externalisiert werden können. Meist existieren sie ja nur sehr diffus in den Köpfen der Entwickler – und niemand weiß so recht, ob alle denselben Lösungsansatz meinen.</p>
+<p>Ich sehe da ein großes Defizit bei unserer Zunft. Die Kunst, Lösungen zu beschreiben, ohne sie gleich zu codieren, ist sehr schwach ausgeprägt.</p>
+<p>Dabei verlange ich nichts Spezielles. Mir ist es im Grunde egal, wie man einen Lösungsansatz beschreibt. Er soll nur auf einem höheren Abstraktionsniveau als die spätere Implementierung liegen. Sonst hat man ja nichts gewonnen. Nur über “Skizzen” lässt sich effizient und effektiv diskutieren; nur sie lassen sich in einer Gruppe gemeinsam entwickeln. Code selbst ist dagegen zäh. Man verliert sich auch zu schnell in technischen Details und verliert das Big Picture der Lösung aus dem Blick.</p>
+<p>Für die Kata Word Wrap könnte die Lösungsskizze zum Beispiel in einer Schrittfolge bestehen. Nix Grafik, nix Tool, nix großer Aufwand. Einfach nur mal hinschreiben, wie man schrittweise das Problem eines Zeilenumbruchs lösen könnte. Beispiel:</p>
+<ul>
+<li><em>Vom gegebenen Text bricht man eine Zeile von Maximallänge vorne ab. Es entstehen eine Zeile und ein Resttext.</em></li>
+<li><em>Dann schaut man, ob diese Zerlegung dazu geführt hat, dass ein Wort zerschnitten wurde. Falls ja, macht man die rückgängig: Es wird der abgeschnittene “Wortkopf” am Ende der Zeile zurück an den Anfang des Resttextes zum “Wortrumpf” versetzt.</em></li>
+<li><em>Die Zeile kann jetzt an den bisher schon erzeugten umgebrochenen Text angefügt werden.</em></li>
+<li><em>Sofern noch Resttext übrig ist, den als neuen gegebenen Text ansehen und damit genauso wie bis hierher verfahren.</em></li>
+</ul>
+<p>Diese Lösungsschritte zu finden, ist doch kein Geniestreich, oder? Aber nun kann jeder im Team prüfen, ob er versteht, was die Aufgabe ist und wie eine Lösung aussehen könnte. Es kann Einigkeit im Team hergestellt werden. Ein Ziel kann anvisiert werden.</p>
+<p>Und wer diese Lösung nicht gut genug findet, der kann jetzt aufstehen und eine Diskussion anzetteln. Gut so! Das ist nämlich auf dieser konzeptionellen Ebene viel einfacher, als wenn erst Berge an Code produziert sind.</p>
+<p>Sobald die IDE angeworfen ist, sind alle im Codierungsbewusstseinszustand. Dann ist Diskussion über Grundsätzliches nicht erwünscht. Das finde ich auch total verständlich. Denn Lösungsfindung und Codierung der Lösung sind zwei ganz unterschiedliche Aspekte von Softwareentwicklung. [5]</p>
+<p>Nicht nur bei Code ist es also klug, Aspekte zu trennen, sondern auch im Entwicklungsprozess.</p>
+<h3>3. Lösungsaspekte identifizieren</h3>
+<p>Aber erstmal zu den Aspekten der Lösung. Wie lauten die? Wie umfangreich sind sie? Wie stehen sie im Zusammenhang?</p>
+<p>Im vorliegenden Beispiel sind die Aspekte:</p>
+<ul>
+<li>Textzerlegung und</li>
+<li>Textzusammenbau.</li>
+</ul>
+<p>Zur Zerlegung gehört das Abschneiden einer Zeile vom gegebenen Text und die eventuell nötige Korrektur dieses Schnitts. Der Textzusammenbau besteht dann nur noch aus dem Anhängen der endgültigen Zeilen an einander.</p>
+<p>Durch die Identifikation der Aspekte wird die Lösung nochmal auf ein höheres Abstraktionsniveau gehoben. Hier kann das Team wieder prüfen, ob sie sich stimmig anfühlt. Ja, es geht ums Gefühl, um Intuition, um Erfahrung. Denn bisher ist kein Code geschrieben.</p>
+<p>Aber das macht nichts. Entwickler geben ja immer soviel auf ihre Erfahrung. Dann ist hier der richtige Zeitpunkt, sie mal einzusetzen.</p>
+<p>Dass diese “Gedankenblasen” nicht crashen… Klar, das ist so. But it´s not a bug, it´s a feature. Würden sie crashen, wären sie Code. Und Code ist vergleichsweise starr – egal ob mit TDD oder sonstwie entwickelt.</p>
+<p>Nachdenken, eine konzeptionelle Lösung finden, ist erstens eine Tätigkeit, die das Team zusammenführt. Und zweitens ist es eine qualitätssichernde Maßnahme. Es wird damit nämlich die Qualität des Input für den Engpass “Implementierung” im Softwareentwicklungsprozess angehoben.</p>
+<p>Codieren ist kein Selbstzweck. Also sollten wir nicht möglichst viel Code, sondern möglichst wenig Code schreiben. Damit meine ich aber nicht möglichst wenige LOC, sondern möglichst wenige Überarbeitungen. Sozusagen “LOC in place” vs “LOC over time”.</p>
+<p>Hier der Überblick über die Aspekte und ihre Zusammenhänge:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e4abf502fe878760.jpg" /></p>
+<p>So ein Bild kann man leicht kommunizieren. Es enthält die Essenz der verbalen Lösungsskizze. Und es zeigt deutlich die Aspekte. Wenn jetzt zum Beispiel ein neues Teammitglied an Bord käme, könnte es anhand dieses Bildes leicht in den Lösungsansatz eingeführt werden. Warum den also nicht dem Code beigeben? Oder versuchen, ihn im Code möglichst nachvollziehbar festzuhalten?</p>
+<p>Ja, genau, dieser Entwurf sollte sich im Code widerspiegeln. Das ist nicht umsonst ein Clean Code Developer Prinzip. Denn wenn der Entwurf nur für den einmaligen Codierungsgebrauch gemacht würde und danach verschwände, müssten Entwickler in Zukunft wieder Codearchäologie betreiben, um herauszufinden, wie das denn alles gemeint war.</p>
+<p>Zu sehen ist im Bild eine Aspekthierarchie. Zuoberst der umfassende Aspekt der Domäne, d.h. der Gesamtheit der Anforderungen.</p>
+<p>Darunter die beiden aus der Lösungsskizze abstrahierten Aspekte.</p>
+<p>Und auf der untersten Ebene deren Sub-Aspekte, die konkreten Operationen. Die Doppelpfeile deuten an, wie sie horizontal zusammenhängen, um die funktionalen Anforderungen zu erfüllen.</p>
+<p>Das ist doch nicht schwer zu verstehen, oder? Da muss man kein UML-Studium absolviert haben. Man muss auch nicht OOP- oder FP-Jünger sein. Gesunder Menschenverstand reicht aus. Eine umfassende Aufgabe wurde hier nachvollziehbar zerlegt in kleinere Aufgaben. Das ist ein probater Ansatz bei einer so algorithmischen Aufgabenstellung.</p>
+<h3>4. Lösung codieren</h3>
+<p>Mit der Lösungsskizze in der Hand, kann man sich ans Codieren machen. Große Überraschungen sollten sich bei der geringen Komplexität nicht einstellen. Das Codieren kann geradlinig ablaufen. Ob mit TDD oder ohne? Ich sag mal: Zuerst einen oder mehrere Tests für eine Operation zu definieren, bevor man sie implementiert, ist schon eine gute Sache. Das kleinschrittige Vorgehen wie bei TDD jedoch, halte ich in diesem Fall nicht für zwingend. Also: Test-First, ja; TDD, nein.</p>
+<p>Und mit welcher Funktionseinheit beginnen?</p>
+<p>Das Schöne an der Lösungsskizze ist, dass man beliebig reingreifen kann. Man kann zum Beispiel mit dem Anfügen einer Zeile an den schon umgebrochenen Text beginnen. Hier die Tests zuerst:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/756d6353f1b473af.png" /></p>
+<p>Und hier die Implementation:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f0d4a331f68ee628.png" /></p>
+<p>Das ist überschaubar. Das bringt schnell ein Erfolgserlebnis. Das lässt sich auch sofort in eine <em>Wrap()-</em>Funktion einsetzen…</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/121bc9cdf17c00d7.png" /></p>
+<p>um erste Integrationstests zu erfüllen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/60775c97101ce67f.png" /></p>
+<p>Ist ja nicht so, dass bei diesem Vorgehen nicht in Durchstichen, d.h. in Nutzeninkrementen gedacht werden soll.</p>
+<p>Aber warum nicht den Code direkt in Wrap() schreiben und später raus-refaktorisieren? Weil wir uns auch nicht dümmer stellen müssen, als wir sind. Wir wissen schon, dass das ein eigener Aspekt ist und andere hinzukommen werden. Und Aspekte kapselt man mindestens in eigene Methoden.</p>
+<p>Der aspekteigene Test ist ein Unit Test. Wenn später mal etwas schiefgehen sollte, dann zeigen solche Unit Tests viel besser als Integrationstests, wo das Problem liegt. Der Test von Wrap() hingegen ist ein Integrationstest, weil er viele Aspekte auf einmal prüft.</p>
+<p>Und so geht es dann weiter: Jeder Aspekt kann für sich codiert werden. Naja, jede Operation, also die Aspekte auf der untersten Ebene bei der obigen Zeichnung. Die darüber liegenden Aspekte integrieren diese, sie sind abhängig. Deshalb ist wohl tendenziell eine bottom-up Codierung angezeigt.</p>
+<p>In jedem Fall entstehen Operationsmethoden, die jede für sich getestet sind. Wenn Sie die mit TDD implementieren wollen… ist das keine schlechte Idee. Ich bin ja nicht gegen TDD. Nur schmeckt mir der “Allmachtsanspruch” von TDD nicht. Im Rahmen eines durch Nachdenken entstandenen Lösungsansatzes kann TDD jedoch eine Hilfe bei der Implementierung dessen “Black Boxes” sein, d.h. der Operationen.</p>
+<h3>5. Ergebnissicherung</h3>
+<p><a rel="noopener" href="https://gist.github.com/4015879">Das Ergebnis</a> dieser Herangehensweise können Sie bei github einsehen. Tests und Produktionscode liegen in einem Gist. An dieser Stelle möchte ich daraus nur einen Teil zitieren, um zu zeigen, was ich unter Verständlichkeit verstehe:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/13e939d9d314a855.png" /></p>
+<p>Diesen Code kann man von oben nach unten lesen. Das Abstraktionsniveau sinkt von Methode zu Methode. Jede steht für einen Aspekt. Die Ebenen der obigen Zeichnung sind erhalten; der Code spiegelt damit den Entwurf. Oder umgekehrt: der Entwurf kann aus dem Code herausgelesen werden.</p>
+<p>Wie funktioniert Word Wrap?</p>
+<ul>
+<li>In Wrap() hineinschauen und erkennen, dass dort einfach nur an eine Methode delegiert wird. Was sagt uns das? Hier ist Rekursion im Spiel. Das ist ein Pattern. Wrappen ist also eine Tätigkeit, die irgendwie mehrfach ausgeführt wird, um das Gesamtergebnis herzustellen.</li>
+<li>
+<p>In Wrap_remaining_text() hineinschauen und dort die Schrittfolge sehen:</p>
+</li>
+<li>
+<p>Zeile extrahieren</p>
+</li>
+<li>Zweile an neuen Text anhängen</li>
+<li>
+<p>Das Ganze wiederholen mit dem restlichen Text [6]</p>
+</li>
+<li>
+<p>Und wie funktioniert das mit dem Extrahieren der Zeile? Einfach in der nächsten Methode nachschauen:</p>
+</li>
+<li>
+<p>Zeile einfach abschneiden vom Text</p>
+</li>
+<li>Heilen eines eventuell dabei “verwundeten” Wortes</li>
+</ul>
+<p>Und so weiter… Je nach Interessenlage des Lesers kann die Erkundung tiefer und tiefer vordringen. Jede einzelne Funktion ist überschaubar: der Name sagt den Zweck an, die wenigen Zeilen sind leicht zu entziffern.</p>
+<p>Das ist grundsätzlich anders bei den im vorherigen Artikel zitierten Lösungen. Die sind monolithisch. Word Wrap findet dort irgendwie statt. Erfolgreich – jedoch wenig verständlich.</p>
+<h3>Reflexion</h3>
+<p>Ob ich “die beste” Lösung gefunden habe? Keine Ahnung. Ich habe eine ausreichend funktionierende gefunden; sie ist good enough. Und ist finde sie verständlich. Nicht nur, weil ich sie entworfen und implementiert habe, sondern weil die “Gedankenstrukturen” im Code sichtbar geblieben sind. Mehr ist mit heutigen Sprachen nicht zu wünschen, glaube ich.</p>
+<p>Aber – so mögen Sie nun einwänden – die Lösung hat so viele LOC! Sie ist viel länger als Uncle Bobs.</p>
+<p>Ja? Und? Warum ist das ein Problem? Macht das einen Unterschied bei der Compilation oder in der Laufzeit? Nein. Müssen wir auf Hauptspeicher oder Festplattenplatz achten? Nein.</p>
+<p>Hat die Codierung deshalb länger gedauert? Das bezweifle ich. Aber selbst wenn, wäre mir das egal. Denn es kann nicht das Ziel der Softwareentwicklung sein, möglichst schnell Code zu schreiben, der funktioniert. Ziel muss es sein, Code zu produzieren, der lesbar und evolvierbar ist – ohne natürlich die funktionalen und nicht-funktionalen Anforderungen zu vernachlässigen.</p>
+<p>Code wird viel öfter gelesen, als geschrieben. Deshalb sollte er fürs Lesen und nicht fürs Schreiben optimiert sein. Das habe ich getan, würde ich sagen. Das war zumindest meine Absicht.</p>
+<h3>Bonus: Nagelprobe Evolution</h3>
+<p>Ob Code clean genug ist oder nicht, kann man eigentlich nicht 100% entscheiden, indem man ihn nur liest. Seine Sauberkeit erweist sich erst, wenn man ihn verändern will. Wie geschmeidig ist er dann?</p>
+<p>Das ist auch das Problem von 99% der Literatur. Dort Code präsentiert in eingefrorenem Zustand. Wie lange jemand dafür gebraucht hat, sieht man nicht. Wie gut die Struktur im Lichte der so wichtigen Evolvierbarkeit ist, sieht man nicht.</p>
+<p>Also versuche ich es ein bisschen besser zu machen. Hier drei neue Anforderungen an den Code:</p>
+<ul>
+<li>Der umzubrechende Text besteht nicht aus einer, sondern aus mehreren Zeilen. Die können als Absätze verstanden werden.</li>
+<li>Zusammengesetzte Worte können bei Bindestrichen getrennt werden.</li>
+<li>Zeilen sollen im Blocksatz formatiert werden.</li>
+</ul>
+<p>Wie genau diese Funktionalität aussieht, ist zunächst nicht wichtig. Sie zu implementieren, ist eine Fingerübung. Im Sinne der Evolvierbarkeit ist interessanter, wie leicht kann ich feststellen, wo überhaupt Veränderungen angebracht werden müssen? Werden bestehende Aspekte beeinflusst; welche? Sind neue Aspekte einzufügen; wo?</p>
+<p>Für das alles, will ich natürlich nicht Berge an Code durchsehen müssen. Ich will auch höherer Abstraktionsebene erstmal darüber grübeln.</p>
+<h4>Blocksatz</h4>
+<p>Also: Wo müsste ich beim Blocksatz ansetzen? Muss eine Funktionseinheit, ich meine eine Methode, verändert werden? Sollte ich den Blocksatz irgendwo dazusetzen?</p>
+<p>Blocksatz ist sicherlich ein ganz eigener Aspekt. Der hat nichts mit Texttrennung zu tun und auch nicht mit dem Zusammenbau des umgebrochenen Textes. Also darf keine bisherige Operation dafür verändert werden. Stattdessen sollte der Blocksatz zwischen den bisherigen Aspekten Textzerlegung und Textzusammenbau stattfinden. Weder muss die Textzerlegung davon wissen, noch der Textzusammenbau.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c072abf64783b1a7.png" /></p>
+<p>Der Blocksatz muss sich nur auf die gerade “abgebrochene” und “geheilte” Zeile konzentrieren. Das kann so im Code aussehen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2498989de0f8de5a.png" /></p>
+<p>Wieder lasse ich bewusst Details weg. Weil ich es kann. Weil es überhaupt mehrere Abstraktionsebenen gibt in meinem Code. Wer sich für die genaue Implementation von Justify() interessiert, kann ja weiter “reinzoomen” im <a rel="noopener" href="https://gist.github.com/4015879">Gist</a>.</p>
+<h4>Trennung bei Bindestrich</h4>
+<p>Wie ist es mit den Bindestrichen für die Trennung? Ist das ein neuer Aspekt wie der Blocksatz oder verändert diese Anforderung einen bestehenden?</p>
+<p>Ich würde sagen, hier geht es um eine Variation der Operation “Schnitt korrigieren” im ersten Entwurfsbild bzw. Schritt 2 in der verbalen Beschreibung des Lösungsansatzes.</p>
+<blockquote>
+<p>Falls ein Wort zerschnitten wurde, wird sein “Kopf” nicht einfach komplett wieder an den “Rumpf” im Resttext geheftet, sondern es wird nach einem Bindestrich im “Kopf” gesucht und nur der dahinter liegende “Teilkopf” wird angeheftet.</p>
+</blockquote>
+<p>Hier dazu die neuen Testfälle für die “Heilung” der Zeilenabspaltung:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/1140ca7e6991509e.png" /></p>
+<p>Dadurch ändert sich natürlich einiges am Arbeitspferd der “Heilung”. Dieser Aspekt bekommt Sub-Aspekte – eine Zeile kann entweder mit einem zerschnittenen Wort enden oder mit einer “Silbe”:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a0ad4b1ed347aff1.jpg" /></p>
+<p>…die sich dann auch im Code niederschlagen müssen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/62785f68d268e7f0.png" /></p>
+<p>Und nochmal: Wer mehr Details sehen will, “zoomt rein”. Für ein Verständnis des Lösungsansatzes sind das nicht nötig.</p>
+<h4>Mehrzeilige Texte</h4>
+<p>Für die Behandlung mehrzeiliger Texte ist zunächst zu klären, wie der API aussehen soll. Liegen die Texte als ein string vor, in dem Zeilen durch \n abgetrennt sind? Oder liegen mehrere Texte z.B. in Form eines IEnumerable vor?</p>
+<p>Ich nehme mal an, dass es weiterhin nur ein string ist, in dem jetzt auch schon Zeilenumbrüche vorhanden sein können. Damit ändert sich der API nicht.</p>
+<p>Diese Zeilenumbrüche sollen natürlich erhalten bleiben. Das ist in einem Testfall zu spezifizieren:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/54165c4f57969617.png" /></p>
+<p>Der Lösungsansatz sieht dafür dann im Grunde aus wie der bisherige:</p>
+<ul>
+<li>Etwas von einem Rest abtrennen, nämlich den nächsten Text</li>
+<li>Das Abgetrennte verarbeiten, nämlich den bisherigen Word Wrap darauf ausführen</li>
+<li>Das Verarbeitungsergebnis an das bisherige Resultat anhängen</li>
+</ul>
+<p>Graphisch wächst das Modell sozusagen nach oben. Es gibt eine neue Aspekt-Ebene oberhalb des bisherigen Word Wrap: das Word Wrap (multi) :-) Es zerfällt in das Word Wrap in drei Sub-Aspekte – von denen der letzte derselbe wie beim Word Wrap ist, der Textzusammenbau.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/62f8cb5198903ac9.png" /></p>
+<p>Bei soviel Ähnlichkeit liegt es nahe, die Struktur der Implementation zu kopieren. Eine Rekursion ist auch hier gleichermaßen elegant wie verständnisförderlich.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d4609fe3692c215b.png" /></p>
+<p>Wie funktioniert der Code? Wrap_multi_text() verrät es. Einfach wieder von oben nach unten lesen. Der Lösungsansatz steht dort 1:1 übersetzt.</p>
+<h3>Fazit</h3>
+<p>Tut mir leid, ich kann nicht anders als zu sagen: Das war alles ganz einfach mit ein bisschen nachdenken. Think a little, code a little.</p>
+<p>Ich hoffe, Sie sehen das genauso: Der Code ist verständlich und evolvierbar. Dass er nicht der kürzestmögliche ist, sei zugestanden. Aber ist das wirklich sooo wichtig? Nein. An LOC zu sparen, stolz auf eine kurze-knappe Lösung zu sein, halte ich für eine <em>premature optimization</em>.</p>
+<p>Nichts ist natürlich gegen Eleganz zu sagen, wenn Sie die Verständlichkeit und Evolvierbarkeit erhöht. Rekursion statt Schleife finde ich deshalb für diese Kata auch so gut wie Robert C. Martin. Aber an LOC sparen zu wollen, um vielleicht hier und da ein bisschen schneller mit dem Schreiben fertig zu werden, scheint mir wenig nachhaltig. Das ist nicht in die Zukunft gedacht, in der der Code noch viele Male gelesen und verstanden werden muss.</p>
+<p>Zum Schluss auf den Punkt gebracht. Was habe ich getan? Ich habe ganz konsequent…</p>
+<ul>
+<li>das SRP angewandt,</li>
+<li>das Prinzip SLA angewandt,</li>
+<li>möglichst die grundlegenden Semantikaspekte Integration und Operation getrennt,</li>
+<li>Domänenaspekte für sich getestet.</li>
+</ul>
+<p>Versuchen Sie das bei der nächsten Code Kata doch auch einmal. Aspektvolles Programmieren hilft.</p>
+<h4>Fußnoten</h4>
+<p>[1] Es täte mir leid, wenn ich damit zu pauschal urteilen würde. Wenn irgendwo die Dojo-Praxis davon deutlich abweicht, dann melde man sich. Ich werde mich dann bemühen, persönlich mal dabei zu sein und zu lernen, wie es auch anders gehen kann.</p>
+<p>[2] Dass es inzwischen hier und da Coding Dojos oder Code Retreats gibt, die sich mit Legacy Code befassen, ist löblich. Die Frage ist nur, inwiefern dort konzeptionell an die Sache herangegangen wird. In welchem Rahmen wird dort über Pathogenese und auch Salutogenese von Software nachgedacht?</p>
+<p>[3] Ob ein Wortumbruch statt eines Zeilenumbruchs sinnvoller wäre, lässt sich nicht entscheiden. Es gibt keinen Kontext für die Code Kata. Die Aufgabe fordert ihn jedenfalls nicht. Und wenn wir im Sinne von YAGNI auch lernen wollen, genau hinzusehen und nur zu implementieren, was wirklich gefordert ist, dann tun wir gut daran, uns an die Aufgabe zu halten – zumindest solange niemand da ist, mit dem wir über ihre Sinnhaftigkeit diskutieren können.</p>
+<p>[4] Wer dabei auch mal etwas ausprobieren muss, soll das gern tun. Nachdenken darf durch Hilfsmittel jeder Art unterstützt werden. Bei den üblichen Code Katas sollte das jedoch eher nicht nötig sein. Die sind rein algorithmisch und sehr überschaubar. Ausprobieren im Sinne von Codieren sollte nicht nötig sein.</p>
+<p>[5] Damit will ich nicht sagen, dass man die Lösungsentwicklung und Codierung personell trennen sollte. Auf keinen Fall! Aber wir sollten anerkennen, dass das eben zwei unterschiedliche Tätigkeiten sind, die auch unterschiedliche Kompetenzen brauchen. Deshalb sollten sie nicht pauschal vermischt werden, wie es bei TDD in der Literatur der Fall ist.</p>
+<p>[6] Bitte beachten Sie den Gebrauch von dynamic hier. Dadurch wird der Code leserlich, ohne dass ich für den Zweck der Zusammenfassung einer Zeile mit dem verbleibenden Rest einen eigenen Typen einführen muss oder auf Tuple&lt;&gt; ausweiche.</p>
+<h2>Kommentare</h2>
+<p><strong>Christian Jacob</strong> (2012-11-20):</p>
+<p>Puh, Ralf. Das ist mal starker Lesestoff. Ich schicke mir die Seite auf den Kindle und les' sie heute Abend. :)</p>
+<p>Bis dahin kann ich Dir aber schon mal Recht geben: Verständlicher Code ist mehr als nur Code + (vernünftiger) Kommentar.</p>
+<p>Gerade erst intern beim "Herumspielen" mit TDD gehabt. Wir haben überlegt, wie sich TicTacToe testgetrieben entwickeln ließe. Sprich: Fokus erst einmal weg von der UI hin zum Algorithmus.</p>
+<p>Mein Ergebnis ließ sich in drei Teile brechen:</p>
+<ol>
+<li>Wie speichere ich das Spielfeld?</li>
+<li>Wie merke ich mir ein gesetztes Feld?</li>
+<li>Wie finde ich heraus, ob eine Gewinnerkombination dabei ist?</li>
+</ol>
+<p>Kurzum: Ich habe den Weg gewählt, das Spielfeld an eine Player-Klasse zu hängen und damit jedem Spieler seine eigene Variable zu gönnen, in der seine eigenen Häkchen gespeichert werden. Damit hat es sich reduziert auf zwei Möglichkeiten: Feld gesetzt. Feld nicht gesetzt. Oder: 1 und 0. Und darauf baute meine Lösung auf.</p>
+<ol>
+<li>Wie speichere ich das Spielfeld?</li>
+</ol>
+<p>Lösung:
+int spielfeld;</p>
+<ol start="2">
+<li>Wie merke ich mir ein gesetztes Feld?</li>
+</ol>
+<p>Lösung:
+spielfeld |= 1 &lt;&lt; pos;</p>
+<ol start="3">
+<li>Wie finde ich heraus, ob eine Gewinnerkombination dabei ist?</li>
+</ol>
+<p>Lösung:
+var gewinnerKombinationen = new List { 448, 56, 7, 292, 146, 73, 27, 84 };
+...
+return gewinnerKombinationen.Exists(x =&gt; ((spielfeld &amp; x) == x));</p>
+<p>Und hier geht's los... zwar mathematisch korrekt und echt mit Stil programmiert... versteht keine Sau, was das soll.</p>
+<p>448? 56? 27? Was sind das für Zahlen? Klar... meine Idee war im Prinzip simpel:</p>
+<hr />
+<p>|8|7|6|
+|5|4|3|
+|2|1|0|</p>
+<p>Angenommen, das sei das Spielfeld und ich würde es derart durchnummerieren, dann könnte ich gesetzte Felder darauf als eine Aneinanderreihung von Bits verstehen.</p>
+<p>Beispiel:</p>
+<hr />
+<p>|x|x|x|
+|<em>|</em>|<em>|
+|</em>|<em>|</em>|</p>
+<p>= 111000000 = 448</p>
+<p>Und das Setzen von Feldern geht einfach durch eine Bitverschiebung der Zahl 1 und eine Oder-Verknüpfung mit dem Feld, sowie das Ermitteln von Gewinnern einer bitweisen Und-Verknüpfung aller Kombinationen jeweils mit dem Spielfeld entspricht.</p>
+<p>Aber den Code? Den verstehen keiner (auf Anhieb).</p>
+<p>Spannend fand ich daher einen Hinweis aus der Community:</p>
+<p>Wozu int? Oder Int32? Oder UInt32? Oder Short... oder was auch immer. Du brauchst Bits. Und zwar neun an der Zahl. Was Du brauchst ist ein BitArray.</p>
+<p>Ich:
+Toll... wie sieht das denn aus im Code?</p>
+<p>new BitArray(new bool[]{ true, true, true, false, false, false,...})</p>
+<p>Die Lösung:</p>
+<p>const bool x = true;
+const bool o = false;</p>
+<p>new bool[]{
+  x,x,x,
+  o,o,o,
+  o,o,o })</p>
+<p>Etc. PP.</p>
+<p>Klar ist das mehr Code... aber hier wird sofort verständlich, was er bedeutet.</p>
+<p>Das Setzen ist sogar richtig einfach zu verstehen, da BitArray eine Set Methode mit denkbar einfacher Signatur anbietet:</p>
+<p>spielfeld.Set(pos, true);</p>
+<p>Einzig das Ermitteln des Gewinners erfordert eine Hilfsmethode, die aber ebenfalls einfach zu verstehen ist. Die eigentliche Abfrage lässt sich Dank Lambda dann aber dennoch einfach formulieren:</p>
+<p>gewinnerKombinationen.Exists( x =&gt; Matches(x, spielfeld))</p>
+<p>Fazit</p>
+<p>Was uns als Entwickler häufig schwerzufallen scheint, ist mehr über den Code nachzudenken, den wir schreiben, einen Schritt zurückzutreten und dabei zu überlegen, wie andere ihn sehen. Aus meiner Sicht ist die Zeit monolithischer One-Man-Shows lange vorbei. Wir können es uns nicht leisten, dass andere unseren Code nicht verstehen. Und schon gar nicht, dass wir ihn selbst nach entsprechender Zeit nicht mehr verstehen.</p>
+<p>Und dabei würde es einfach nur reichen, wenn wir mehr darüber nachdenken würden, was wir tun... und dabei Fragen stellen wie: Wird daraus offensichtlich, was hier passiert, oder muss ich für das Verständnis dazu an anderer Stelle Informationen einholen?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-11-20):</p>
+<p>@Christian: Freut mich, dass der Artikel für dich interessant aussieht.</p>
+<p>Dass ihr TTT mal testgetrieben entwickeln wolltet... schöne Idee - wenn auch unrealistisch ;-) Denn gerade mit TTT wäre es schön zu sehen, wie sich nämlich eine Lösung anders entwickelt, wenn man mal wirklich agil und nicht durch die OOTDD Brille schaut.</p>
+<p>Woher du zum Beispiel eine Player-Klasse hast... keine Ahnung ;-) Ich komme nie auf die. Und ich wäre auch nicht auf ein Bitarray gekommen. Denn wie stellst du darin denn ein nicht belegtes Feld dar? Du brauchst ja Tri-State: nicht belegt, X O.</p>
+<p>Aber hier ist nicht der Ort, um über TTT zu sprechen. Bin gespannt auf Kommentare zu Word Wrap.</p>
+<p>Ach, noch eins: Nur weil Entwickler heute zu mehreren an einer Anwendung sitzen, bedeutet das nicht das Ende von Monolithismus. Es kommt nämlich darauf an, wi diese Gruppe die Software angeht. Der Monolith beginnt im Kopf oder gar in der Kultur des Unternehmens. Daher verschwindet er nicht, wenn mehrere Köpfe irgendwie auf IDEs schauen.</p>
+<hr />
+<p><strong>McZ</strong> (2012-11-25):</p>
+<p>Nette, gut nachvollziehbare Lösung. So weit, so gut.</p>
+<p>Ich wäre vermutlich niemals auf die Idee gekommen, WordWrap als Rekursion zu implementieren. Irgendwie habe ich was gegen dieses Pattern, vermutlich weil es eine endliche Menge an Informationen in etwas per Definition unendliches verwandelt.</p>
+<p>Ich bevorzuge den iterativen Weg, und ich will das auch begründen. Für mich sind die grundsätzlichen Aspekte Textzerlegung und Textzusammensetzung bereits gelöst.</p>
+<p>Ich habe bereits eine allgemeingültige Zerlegungsfunktion, eine String.Split-Funktion, die Text per Lambda inein IEnumerable splittet. Für die Textsuammensetzung gibt es eine entsprechende Join-Variante. Alles trivial, tausendfach eingesetzt, testgesichert -&gt; ich will den Mist nicht nochmal testen.</p>
+<p>Damit kann ich mich auf den explizit nicht genannten Aspekt 'wie zerlege ich Einen Text wort- oder gar silbenbasiert' konzentrieren. Zum einen, weil dies die Grundvoraussetzung für mannigfaltige Applikationen schafft, zum anderen sind hier die meisten Problem zu erwarten. Das ist im Falle Wörter recht einfach lösbar, im Falle Silben hätte ich instinktiv StackOverflow bemüht, ob jemand dieses Problem schon mal hatte. Dann wäre ich mehr oder minder sofort zu einer Teilimplementierung der Tex-Funktionalität gelangt. So oder so: dieser Bestandteil der Implementierung bleibt stabil, Erweiterungen im Bereich der Mehrsprachigkeit sind ohne Probleme nachrüstbar. Also kann ich hier den ersten Komposit zweiter Ordnung identifizieren und per Test sichern.</p>
+<p>Die Frage bei der Textzusammensetzung (also dem eigentlichen Umbruch) lautet dann: kann ich die nächste Silbe noch an die aktuelle Zeile anhängen, ggf. mit Trennstrich wenn darauf eine weitere Silbe folgt?</p>
+<p>In der Kata ist das einfach per Buchstabenzählung vorgegeben. In der Lösung wird diese Zählung  dann annähernd durch den gesamten Aufrufbaum geschleust.</p>
+<p>Realistisch ist aber die Angabe einer Breite in Pixel und einer Schriftart (auch wenn die Kata davon nicht spricht, aber wir wollen doch Evolution erlauben).</p>
+<p>Deshalb evolviert für meine Begriffe die Lösung auf einer zu niedrigen Ebene. Ich erlaube Evolution nur im Komposit.</p>
+<p>Das ist im vorliegenden Fall die Wrap-Methode. Eine zweite Signatur mit [widthPx] und [font], die dann ein neues Zusammensetzungslambda  einsetzt (und hier bitte keine Angst vor Copy-Paste) täte gut.</p>
+<p>Das Lambda selbst ist innerhalb von Minuten ohne irgendwelche Probleme anpassbar. Ich muss keine weitere Funktion anpassen.</p>
+<p>Und wenn RTF-Annotationen hinzukommen, dann wird es im Prinzip nicht schwieriger. Natürlich muss ein anderer Parser gewählt werden (also eine andere Zerlegungslogik), es entfällt der [font]-Parameter und es ändert sich die Logik zur Bestimmung der Silbenlänge.</p>
+<p>(Tatsächlich habe ich eine Implementierung genau so laufen, Zweck dort ist das Drucken von RTF-Text.)</p>
+<p>Ist das überhaupt test-driven oder agil? Keine Ahnung, politische Begriffe interessieren mich auch nicht besonders. Das betrifft auch die Definition der Problemdomäne. Für die FD-vorgehensweise interessieren mich Input, Verarbeitungslogik und Output.</p>
+<hr />
+<p><strong>Peter Gfader</strong> (2012-12-03):</p>
+<p>Hallo Ralf
+Ich finde deine 2 ersten Schritte
+"1. Domäne spezifizieren" und "2. Lösung skizzieren" auf jeden Fall  sinnvoll, würde aber sagen dass TDD diese nicht ausschliesst!</p>
+<blockquote>
+<blockquote>
+<p>Warum fällt es denn aber Teams auch heute noch schwer,
+überhaupt automatisierte Tests einzusetzen?
+Weil sie keine TDD-Fingerfertigkeit haben?
+Nein, weil sie keine Codebasis haben, die das
+(nachträgliche) Anbringen von Tests erlaubt.
+Und das kommt daher, dass sie nur wenig Vorstellung davon haben,
+wie eine saubere, testbare Codebasis überhaupt aussieht.
+Ist es nicht so, dass erst wenn man Tests schreibt man erkennen kann wie gut oder schlecht der Code ist??
+Das ist ein starker Zusammenhang zwischen Testability und gutem Design.
+Gut zusammengefasst durch Michael Feathers in: The Deep Synergy Between Testability and Good Design
+http://vimeo.com/15007792</p>
+<p>Damit sind wir beim blinden Fleck der TDD-Coding-Dojo-Praxis.
+Über dieses “issue behind programming” wird nicht nachgedacht.
+Ja. Weil einfach los codiert wird? Aber die eigentliche TDD Praktik sagt. Refactor!! -&gt; Think!!
+Ich glaube wie man TDD praktiziert macht hier einen grossen Unterschied.</p>
+<p>Viel, viel schwieriger sind jedoch die “issues behind programming”.
+Da geht es um Paradigmen.
+Da geht es um Methoden.
+Da geht es um eine Vielzahl von Qualitäten über die “simple”
+Korrektheit von Code hinaus.
+TDD adressiert die vermeintlich.
+Aber in Wirklichkeit adressiert sie nicht TDD selbst,
+sondern das Refactoring, auf das sich TDD stützt.
+Nur wird eben genau das nicht geübt. [2]
+Siehe Kommentar vorher. Hängt ab wie man die Übung macht. Jede Übung kann man gut oder schlecht üben.</p>
+</blockquote>
+</blockquote>
+<p>Genau um das geht es in Marc Gladwell’s Buch: „Outliers“
+  Was Erfolgreiche gemeinsam haben: 10000 Stunden üben.
+  Aber nicht einfach Blindes Üben! Sondern „Deliberate practice“. D.h. Gezieltes Üben: Mentor, Challenge, Feedback, Dedication…</p>
+<p>Ist deine Hauptaussage, dass TDD meistens falsch geübt wird?
+Da stimme ich dir zu ;-)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-12-03):</p>
+<p>@Peter: Ja, ich glaube, dass TDD meist falsch geübt wird. Zu wenig deliberate.</p>
+<p>Aber darüber hinaus glaube ich auch, dass TDD eine Lücke hat. Und die liegt im "schwammigen" Refactoring. Kann man machen - muss man aber nicht ;-)</p>
+<p>Doch, ja, ich weiß, muss man - nur da fängt es dann an, schwierig zu werden. Man lässt es also schnell mal sein. Weil man grad nicht so recht weiß, wo ansetzen, und der nächste Testfall ja auch noch schnell umgesetzt werden will.</p>
+<p>Refactoring für sich ist eine ganz eigene Disziplin. Und wenn dann Leute mit TDD anfangen, die keinen ausgebildeten Sinn für Refactoring haben, dann kommt bei TDD wenig raus.</p>
+<p>TDD hat einen hohen Anspruch, der auf dem Refactoring ruht. Aber TDD tut nichts fürs Refactoring, sondern überlässt alles dem Entwickler. Da stimmt was nicht.</p>
+<p>Deutlich besser ist da "TDD as if you meant it". Da gibt es keinen Ausweg. Man muss Refactoring betreiben - und schon sehen die Ergebnisse deutlich besser aus.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

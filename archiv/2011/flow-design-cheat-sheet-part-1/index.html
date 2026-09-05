@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flow-Design Cheat Sheet – Part I, Notation — ralfw.de Archiv</title>
+<meta name="description" content="You want to avoid the pitfalls of object oriented design? Then this is the right place to start. Use Flow-Oriented Analysis (FOA) and –Design (FOD or just FD for Flow-Design) to un">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/flow-design-cheat-sheet-part-1/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Flow-Design Cheat Sheet – Part I, Notation — ralfw.de Archiv">
+<meta property="og:description" content="You want to avoid the pitfalls of object oriented design? Then this is the right place to start. Use Flow-Oriented Analysis (FOA) and –Design (FOD or just FD for Flow-Design) to un">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/flow-design-cheat-sheet-part-1/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>Flow-Design Cheat Sheet – Part I, Notation</h1>
+    <div class="doc-meta"><span>19. März 2011</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2011/03/19/flow-design-cheat-sheet-ndash-part-i-notation.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/flow-design-cheat-sheet-part-1/</code></span></div>
+    <div class="art"><p>You want to avoid the pitfalls of object oriented design? Then this is the right place to start. Use Flow-Oriented Analysis (FOA) and –Design (FOD or just FD for Flow-Design) to understand a problem domain and design a software solution. Flow-Orientation as described here is related to Flow-Based Programming, Event-Based Programming, Business Process Modelling, and even Event-Driven Architectures.</p>
+<p>But even though "thinking in flows" is not new, I found it helpful to deviate from those precursors for several reasons. Some aim at too big systems for the average programmer, some are concerned with only asynchronous processing, some are even not very much concerned with programming at all.</p>
+<p>What I was looking for was a design method to help in software projects of any size, be they large or tiny, involing synchronous or asynchronous processing, being local or distributed, running on the web or on the desktop or on a smartphone. That´s why I took ideas from all of the above sources and some additional and came up with Event-Based Components which later got repositioned and renamed to Flow-Design.</p>
+<p>In the meantime this has generated some discussion (in the German developer community) and several teams have started to work with Flow-Design. Also I´ve conducted quite some trainings using Flow-Orientation for design. The results are very promising. Developers find it much easier to design software using Flow-Orientation than OOAD-based object orientation.</p>
+<p>Since Flow-Orientation is moving fast and is not covered completely by a single source like a book, demand has increased for at least an overview of the current state of its notation. This page is trying to answer this demand by briefly introducing/describing every notational element as well as their translation into C# source code. Take this as a cheat sheet to put next to your whiteboard when designing software.</p>
+<p>However, please do not expect any explanation as to the reasons behind Flow-Design elements. Details on why Flow-Design at all and why in this specific way you´ll find in the literature covering the topic. Here´s a resource page on Flow-Design/Event-Based Components, if you´re able to read German.</p>
+<h2>Notation</h2>
+<h3>Connected Functional Units</h3>
+<p>The basic element of any FOD are functional units (FU):</p>
+<p>Think of FUs as some kind of software code block processing data. For the moment forget about classes, methods, "components", assemblies or whatever. See a FU as an abstract piece of code. Software then consists of just collaborating FUs.</p>
+<p>I´m using circles/ellipses to draw FUs. But if you like, use rectangles. Whatever suites your whiteboard needs best.</p>
+<p>The purpose of FUs is to process input and produce output. FUs are transformational.</p>
+<p>However, FUs are not called and do not call other FUs. There is no dependency between FUs. Data just flows into a FU (input) and out of it (output). From where and where to is of no concern to a FU.</p>
+<p>This way FUs can be concatenated in arbitrary ways. Each FU can accept input from many sources and produce output for many sinks.</p>
+<h3>Flows</h3>
+<p>Connected FUs form a flow with a start and an end. Data is entering a flow at a source, and it´s leaving it through a sink.</p>
+<p>Think of sources and sinks as special FUs which conntect wires to the environment of a network of FUs.</p>
+<h3>Wiring Details</h3>
+<p>Data is flowing into/out of FUs through wires. This is to allude to electrical engineering which since long has been working with composable parts.</p>
+<p>Wires are attached to FUs usings pins. They are the entry/exit points for the data flowing along the wires. Input-/output pins currently need not be drawn explicitly. This is to keep designing on a whiteboard simple and quick.</p>
+<p>Data flowing is of some type, so wires have a type attached to them. And pins have names. If there is only one input pin and output pin on a FU, though, you don´t need to mention them. The default is Process for a single input pin, and Result for a single output pin. But you´re free to give even single pins different names.</p>
+<p>There is a shortcut in use to address a certain pin on a destination FU.</p>
+<p>The type of the wire is put in parantheses for two reasons. 1. This way a "no-type" wire can be easily denoted, 2. this is a natural way to describe tuples of data.</p>
+<p>To describe how much data is flowing, a star can be put next to the wire type.</p>
+<h3>Nesting – Boards and Parts</h3>
+<p>If more than 5 to 10 FUs need to be put in a flow a FD starts to become hard to understand. To keep diagrams clutter free they can be nested. You can turn any FU into a flow.</p>
+<p>This leads to Flow-Designs with different levels of abstraction. A in the above illustration is a high level functional unit, A.1 and A.2 are lower level functional units.</p>
+<p>One of the purposes of Flow-Design is to be able to describe systems on different levels of abstraction and thus make it easier to understand them. Humans use abstraction/decomposition to get a grip on complexity. Flow-Design strives to support this and make levels of abstraction first class citizens for programming.</p>
+<p>You can read the above illustration like this: Functional units A.1 and A.2 detail what A is supposed to do. The whole of A´s responsibility is decomposed into smaller responsibilities A.1 and A.2. FU A thus does not do anything itself anymore! All A is responsible for is actually accomplished by the collaboration between A.1 and A.2.</p>
+<p>Since A now is not doing anything anymore except containing A.1 and A.2 functional units are devided into two categories: boards and parts.</p>
+<p>Boards are just containing other functional units; their sole responsibility is to wire them up. A is a board. Boards thus depend on the functional units nested within them. This dependency is not of a functional nature, though. Boards are not dependent on services provided by nested functional units. They are just concerned with their interface to be able to plug them together.</p>
+<p>Parts are the workhorses of flows. They contain the real domain logic. They actually transform input into output. However, they do not depend on other functional units.</p>
+<p>Please note the usage of source and sink in boards. They correspond to input-pins and output-pins of the board.</p>
+<h3>Implicit Dependencies</h3>
+<p>Nesting functional units leads to a dependency tree. Boards depend on nested functional units, they are the inner nodes of the tree. Parts are independent, they are the leafs.</p>
+<p>Even though dependencies are the bane of software development, Flow-Design does not usually draw these dependencies. They are implicitly created by visually nesting functional units. And they are harmless. Boards are so simple in their functionality, they are little affected by changes in functional units they are depending on.</p>
+<p>But functional units are implicitly dependent on more than nested functional units. They are also dependent on the data types of the wires attached to them.</p>
+<p>This is also natural and thus does not need to be made explicit. And it pertains mainly to parts being dependent. Since boards don´t do anything with regard to a problem domain, they don´t care much about data types. Their infrastructural purpose just needs types of input/output-pins to match.</p>
+<h3>Explicit Dependencies</h3>
+<p>You could say, Flow-Orientation is about tackling complexity at its root cause: that´s dependencies. "Natural" dependencies are depicted naturally, i.e. implicitly. And whereever possible dependencies are not even created. Functional units don´t know their collaborators within a flow. This is core to Flow-Orientation. That makes for high composability of functional units.</p>
+<p>A part is as independent of other functional units as a motor is from the rest of the car. And a board is as dependend on nested functional units as a motor is on a spark plug or a crank shaft. With Flow-Design software development moves closer to how hardware is constructed.</p>
+<p>Implicit dependencies are not enough, though. Sometimes explicit dependencies make designs easier – as counterintuitive this might sound. So FD notation needs a ways to denote explicit dependencies.</p>
+<p>Data flows along wires. But data does not flow along dependency relations. Instead dependency relations represent service calls. Functional unit C is depending on/calling services on functional unit S. If you want to be more specific, name the services next to the dependency relation.</p>
+<p>Although you should try to stay clear of explicit dependencies, they are fundamentally ok. See them as a way to add another dimension to a flow. Usually the functionality of the independent FU ("Customer repository" above) is orthogonal to the domain of the flow it is referenced by. If you like emphasize this by using different shapes for dependent and independent FUs like above.</p>
+<p>Such dependencies can be used to link in resources like databases or shared in-memory state. FUs can not only produce output but also can have side effects.</p>
+<p>A common pattern for using such explizit dependencies is to hook a GUI into a flow as the source and/or the sink of data.</p>
+<p>Treat FUs others depend on as boards (with a special non-FD API the dependent part is connected to), but do not embed them in a flow in the diagram they are depended upon.</p>
+<h3>Attributes of Functional Units</h3>
+<p>Creation and usage of functional units can be modified with attributes. So far the following have shown to be helpful:</p>
+<ul>
+<li><strong>Singleton:</strong> FUs are by default multitons. FUs in the same of different flows with the same name refer to the same functionality, but to different instances. Think of functional units as objects that get instanciated anew whereever they appear in a design. Sometimes though it´s helpful to reuse the same instance of a functional unit; this is always due to valuable state it holds. Signify this by annotating the FU with a "(S)".</li>
+<li><strong>Multiton:</strong> FUs on which others depend are singletons by default. This is, because they usually are introduced where shared state comes into play. If you want to change them to be a singletons mark them with a "(M)".</li>
+<li><strong>Configurable:</strong> Some parts need to be configured before the can do they work in a flow. Annotate them with a "(C)" to have them initialized before any data items to be processed by them arrive. Do not assume any order in which FUs are configured. How such configuration is happening is an implementation detail.</li>
+<li><strong>Entry point:</strong> In each design there needs to be a single part where "it all starts". That´s the entry point for all processing. It´s like Program.Main() in C# programs. Mark the entry point part with an "(E)". Quite often this will be the GUI part. How the entry point is started is an implementation detail. Just consider it the first FU to start do its job.</li>
+</ul>
+<h3>Patterns / Standard Parts</h3>
+<p>If more than a single wire is attached to an output-pin that´s called a split (or fork). The same data is flowing on all of the wires.</p>
+<p>Remember: Flow-Designs are synchronous by default. So a split does not mean data is processed in parallel afterwards. Processing still happens synchronously and thus one branch after another. Do not assume any specific order of the processing on the different branches after the split.</p>
+<p>It is common to do a split and let only parts of the original data flow on through the branches. This effectively means a map is needed after a split. This map can be implicit or explicit.</p>
+<p>Although FUs can have multiple input-pins it is preferrable in most cases to combine input data from different branches using an explicit join.</p>
+<p>The default output of a join is a tuple of its input values. The default behavior of a join is to output a value whenever a new input is received. However, to produce its first output a join needs an input for all its input-pins. Other join behaviors can be:</p>
+<ul>
+<li>reset all inputs after an output</li>
+<li>only produce output if data arrives on certain input-pins</li>
+</ul>
+<p><em>[Continue with part 2 of the cheat sheet series]</em></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

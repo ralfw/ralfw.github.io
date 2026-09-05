@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Die Ubiquitous Language konsequent codieren [OOP 2010] — ralfw.de Archiv</title>
+<meta name="description" content="Das war mir doch ein Experiment wert: Wie würden es Entwickler aufnehmen, wenn quasi alle Parameter von Methoden (zumindest in den Kontrakten von Komponenten) nicht primitiv sein s">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/die-ubiquitous-language-konsequent/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Die Ubiquitous Language konsequent codieren [OOP 2010] — ralfw.de Archiv">
+<meta property="og:description" content="Das war mir doch ein Experiment wert: Wie würden es Entwickler aufnehmen, wenn quasi alle Parameter von Methoden (zumindest in den Kontrakten von Komponenten) nicht primitiv sein s">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/die-ubiquitous-language-konsequent/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Die Ubiquitous Language konsequent codieren [OOP 2010]</h1>
+    <div class="doc-meta"><span>1. Juni 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/06/die-ubiquitous-language-konsequent.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/die-ubiquitous-language-konsequent/</code></span></div>
+    <div class="art"><p>Das war mir doch ein Experiment wert: Wie würden es Entwickler aufnehmen, wenn quasi alle Parameter von Methoden (zumindest in den Kontrakten von Komponenten) nicht primitiv sein sollen? Auf dem <a rel="noopener" href="http://bit.ly/cV6Q2k">Coding Dojo in München</a> habe ich es ausprobiert.</p>
+<p>Das Beispielszenario dort war eine Rechtschreibprüfungsanwendung. In der gibt es dann irgendwo eine Funktion <em>WortKorrekt()</em>o.ä. Deren Signatur würde üblicherweise so aussehen:</p>
+<p>bool WortKorrekt(string wort)</p>
+<p>Darin sind zwei primitive Typen zu finden: <em>bool</em> und <em>string</em>.</p>
+<p>Ich bin nun der Meinung, dass wir uns anstrengen sollten, solche Typen (zumindest in den Kontrakten von Komponenten) zu vermeiden. <strong>Statt unspezifischer primitiver Typen sollten wir spezifische Typen passend zur Problemdomäne definieren.</strong></p>
+<h2>Codegrundlage Ubiquitous Language</h2>
+<p><strong>Über die Problemdomäne sprechen wir unter uns und mit dem Kunden in der</strong><a rel="noopener" href="http://bit.ly/9H5X1H">Ubiquitous Language</a><strong><em>*(UL)</em>.</strong><em> </em><em>Es ist deshalb wichtig, sie in unserem Code wiederzufinden.</em>* Sonst müssen wir ständig Aufwand treiben, um unsere Rede in Code (und wieder zurück) zu übersetzen. Code würde weniger verständlich. Und wir wären unsicherer, ob wir unseren Code geeignet strukturiert haben, denn die Begriffe der UL sollten darin repräsentiert werden.</p>
+<p>Damit wir uns der UL bewusst werden, habe ich im Dojo mit den Teilnehmern eine <a rel="noopener" href="http://bit.ly/daHPon">Concept Map</a> der UL für die Domäne “Rechtschreibprüfung” erarbeitet:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f2cf74abe467c42e.jpg" /></p>
+<p>Die sieht ein bisschen wüst aus, vor allem, weil man meine Schrift schon nach wenigen Minuten unleserlich wird ;-) Doch mir gehts hier nicht um Einzelheiten, sondern einfach mal eine Impression.</p>
+<p>Die Concept Map enthält für jeden Begriff der Domänensprache einen “Kuller”. Unterschieden wird dabei nicht zwischen Daten und Diensten, Verben und Substantiven. <strong>Was wichtig ist, wird in einen Kreis gesetzt. Und dann werden die Begriffe verbunden mit qualifizierten Beziehungen.</strong> Ein “Wörterbuch” (Begriff) ist z.B. “abgefasst in” (Beziehung) einer “Sprache” (Begriff).</p>
+<p><strong>Der Vorteil einer Concept Map (z.B. statt eines Klassendiagramms) in einem frühen Stadium der Planung ist seine Informalität.</strong> Es gibt nur wenige Regeln zu beachten. Sie können Ihren Gedanken freien Lauf lassen. Ziel ist Vollständigkeit in Bezug auf Begriffe/Konzepte und Beziehungen auf einem hohen Abstraktionsniveau. <strong>Concept Maps sind Landkarten des Begriffsterrains der Problemdomäne.</strong></p>
+<p>Worauf ich nun hinaus will: der Concept Map können Sie die grundlegenden Funktionseinheiten und Daten der Problemdomäne entnehmen. Sie dient mithin der Hinführung zur Implementierung. Die Konzepte “Prüfer” und “Parser” in der Concept Map der Rechtschreibkontrolle sollten also z.B. als Services implementiert werden. (Nein, ich meine nicht SOA-Services, sondern benutze den Begriff “Service” für dienstleistungsorientierte Funktionseinheiten im Gegensatz zu solchen, die eher Daten halten.)</p>
+<p>“Wörterbuch” hingegen hört sich eher wie eine Datenstruktur oder zumindest eine Entität an.</p>
+<p>Soweit so normal. Sie wären auf diese Konzepte und ihre spätere Implementierung als Klassen vielleicht auf anderem Weg gekommen; identifiziert hätten Sie sie jedoch allemal.</p>
+<p>Jetzt aber zu Prüftext, Prüfwort und Fehlerwort. Das sind ebenfalls Begriffe der Domänensprache. Doch wie übersetzen Sie die in Code? Das sind keine Services, keine Entitäten, nicht mal “echte” Datenstrukturen. Der Prüftext ist eher nur ein Text in einer bestimmten Situation. Dito das Prüfwort und das Fehlerwort. Prüfwort und Fehlerwort mögen sogar dieselben Texte sein, einmal vor der Prüfung und einmal hinterher.</p>
+<p>Da liegt es doch nahe, diese Begriffe in <em>string</em>-Parameter/Felder zu übersetzen, oder? Die obige Funktion tut das exemplarisch und sieht normal aus, oder? Immerhin haben diese Begriffe keine weiteren Eigenschaften, sind nur “im Fluss” zwischen Services zu finden und ihre Daten müssen auch nicht persistiert werden. Einer so simplen Übersetzung steht daher nichts im Wege.</p>
+<h2>Primitiven der Ubiquitous Language codieren</h2>
+<p>Die klassische OOA/OOD kennt natürlich die Repräsentation von Domänenbegriffen als Klassen. Aus einem “Kunden” wird die <em>class Customer</em>, aus einem “Termin” die <em>class Appointment</em>, aus einem Auftragsstatus ein <em>enum OrderState</em> usw. Begriffe, die offensichtliche Eigenschaften haben oder zusammengesetzt sind und Daten repräsentieren, werden in <em>class</em> oder <em>struct</em> übersetzt.</p>
+<p>Eine Rechnung besteht aus einer Rechnungsnummer, einem Rechnungsdatum, einem Kunden und vielem mehr. Die Übersetzung sieht dafür meist so aus:</p>
+<p>class Invoice
+{
+    public string InvoiceNumber { get; set; }
+    public DateTime InvoiceDate { get; set; }
+    public Customer Customer { get; set; }
+    …
+}</p>
+<p>Rechnung und Kunde haben eigene Datentypen bekommen, alle anderen Informationen sind als primitiv eingestuft und mit Standarddatentypen definiert.</p>
+<p><strong>Dem möchte ich nun entgegenhalten, auch Primitiven der Domänensprache durch eigene Datentypen zu repräsentieren.</strong> Ja, genau: <strong>Auch wenn ein Begriff nur für eine ganze Zahl oder eine Zeichenkette steht, sollten Sie ihm eine Klasse (oder eine Struktur) spendieren.</strong> Die Implementierung der Rechnung würde dann z.B. so aussehen:</p>
+<p>class Invoice
+{
+    public InvoiceNumber Number { get; set; }
+    public InvoiceDate CreatedAt { get; set; }
+    public Customer Customer { get; set; }
+    …
+}</p>
+<p>Oder die Prüfroutine der Rechtschreibkontrolle würde so aussehen:</p>
+<p>bool WortKorrekt(PrüfWort wort)</p>
+<p>Warum das? Ist nicht <em>bool WortKorrekt(string wort)</em>genauso gut zu lesen, genauso aussagekräftig wie <em>bool WortKorrekt(PrüfWort wort)</em>?</p>
+<p>Landläufig betrachtet liegen beide in puncto Verständlichkeit nahe beieinander. Doch <strong>ich behaupte, dass Code, der weniger mit primitiven oder allgemeinen Typen des .NET Framework arbeitet und stattdessen konkrete Typen der UL benutzt, typsicherer ist und semantisch weniger Zweifel lässt.</strong></p>
+<p>Am Ort der Definition mag das weniger sichtbar sein als am Ort der Nutzung:</p>
+<p>if (prüfer.WortKorrekt(new PrüfWort(…)))</p>
+<p>oder</p>
+<p>var inv = new Invoice(InvoiceNumber.Create(), InvoiceDate.Today(), …);</p>
+<p>lassen weniger Zweifel, ob zusammenpasst, was zusammenpassen soll.</p>
+<p>Einer Zeichenkette “Daten” können Sie nicht ansehen, was sie bedeutet. Es ist einfach nur eine Zeichenkette. Aber <em>new PrüfWort(“Daten”)</em> ist ganz eindeutig etwas anderes als <em>new Dateiname(“Daten”)</em>. <strong>Ebenso ist <em>new InvoiceDate(“2010-06-01”)</em> (der erste Tag im Monat Juni) etwas anderes als <em>new InvoiceNumber(“2010-06-01”)</em> (die erste Rechnung im Monat Juni).</strong></p>
+<p>Die übliche Objektorientierung richtet ihr Augenmerk auf Objekte, d.h. “Dinger mit Eigenschaften”. Ich möchte Sie motivieren, genauer hinzusehen. Zoomen Sie näher heran und sehen Sie die Eigenschaft als letztlich nichts anderes als die Objekte. <strong>Die Welt ist rekursiv. Sie besteht aus “Objekten”, die aus “Objekten” bestehen, die aus “Objekten” bestehen usw. Und auf jeder Ebene kann es Begriffe der Ubiquitous Language geben.</strong></p>
+<p>Im Beispiel besteht ein Prüftext aus Prüfworten. Das versteht ein Entwickler wie auch der Kunde. Wird das bei der Codierung nur in die Zerlegung einer Zeichenkette in Zeichenketten übersetzt, dann entsteht eine Diskrepanz zwischen Sprache und Code. Der Grundstein für Missverständnisse ist gelegt.</p>
+<p>So sollte in der Rechtschreibkontrolle also die Service-Funktionseinheit Parser besser wie folgt definieren:</p>
+<p>class Parser
+{
+    IEnumerable ZerlegeText(Prüftext text) { … }
+}</p>
+<p>mit</p>
+<p>class Prüftext
+{
+    public string Text;
+}</p>
+<p>class Prüfwort
+{
+    public string Wort;
+}</p>
+<p>(Dass ich hier der Klasse <em>Prüftext</em> keine Methode gebe, über die man an ihre Worte herankommt, möchte ich undiskutiert lassen. Das ist ein Thema für einen anderen Blogartikel.)</p>
+<h2>Zusammenfassung</h2>
+<p>Seien Sie rigoros bei der Implementierung. <strong>Nehmen Sie die Ubiquitous Language Ihrer Problemdomäne ernst.</strong> Repräsentieren Sie alle Begriffe durch “Kontrakte” (Interface/Klasse, Struktur, Methodensignatur). Primitive Typen des .NET Framework sollten “im API” von Komponenten auf das Nötigste beschränkt sein. Stattdessen <strong>übersetzen Sie selbst primitive Konzepte der Domäne in eigene Typen.</strong></p>
+<p><strong>Sie machen damit ihren Code leichter lesbar und auch leichter veränderbar.</strong> Denn wenn heute ein Prüfwort womöglich nur eine Zeichenkette ist, dann könnte es morgen eine Zeichenkette mit einer Position in einem Text sein.</p>
+<p>class Prüfwort
+{
+    public string Wort;
+    public Textposition Position;
+}</p>
+<p>Und übermorgen ist es eine Zeichenkette mit einer Position in einer Sprache.</p>
+<p>class Prüfwort
+{
+    public string Wort;
+    public Textposition Position;
+    public Wörterbuchsprache Sprache;
+}</p>
+<p><strong>Machen Sie Ihren Code an jeder Stelle so präzise und domänenorientiert wie möglich.</strong></p>
+<h2>Kommentare</h2>
+<p><strong>HiQ-Software</strong> (2010-06-01):</p>
+<p>Und wieder einmal: F# to the rescue!</p>
+<p>Mit F# Type Abbreviations kannst du einem primitiven oder komplexen Datentyp einen Alias verpassen.</p>
+<p>In deinem Beispiel:</p>
+<p>type Prüfwort = string
+type Prüftext = string</p>
+<p>oder</p>
+<p>type ZerlegterText = IEnumerable[string]</p>
+<p>Es müssen keine zusätzlichen Klassen definiert werden, wovor sich die meisten Entwickler scheuen, vieleicht sogar mehr scheuen as vor langen Parameternamen.</p>
+<p>Wenn du von primitiven Datentypen spricht, meinst du da die in der CLR nativen Datentypen, oder ValueTypes? Was macht einen primitiven Datentyp aus? Ist nicht mitlerweile ein IEnumerable[T] ein primitiver "Daten"Typ. Konsequenterweise müsstest du statt dem Rückgabeparameter IEnumerable[T] ein benanntes Interface zurückgeben, z.B.</p>
+<p>interface IZerlegteWörter : IEnumerable[string] {}</p>
+<p>Benjamin</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-06-01):</p>
+<p>@Benjamin: Schöne Idee mit dem Abbreviations. Nur leider funktioniert das wohl nicht in der Interop mit C#, oder? (Muss ich mal ausprobieren.)</p>
+<p>Was ist ein .NET primitiver Typ? Na, die primitiven Typen halt ;-) inkl. string.</p>
+<p>Array, und IEnumerable&lt;&gt; sehe ich als "Modulationen" davon. Ein Prüfwort[] muss ich nicht mehr extra Verpacken in eine PrüfwortListe.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-06-01):</p>
+<p>Hallo,</p>
+<p>was du vorschlägst hat auch den positiven Seiteneffekt, dass sich viele DI-Container mit der Auflösung leichter tun, bzw. sie dadurch ohne große Konfiguration möglich wird. Eine Klasse, die einen String injectet bekommen möchte muss immer aufwändiger konfiguriert werden, als wenn sie ein Objekt des Typs "RepositoryPath" erwartet - der praktischerweise ein Singleton ist und automatisch injiziert wird :)</p>
+<hr />
+<p><strong>Carsten</strong> (2010-06-01):</p>
+<p>Ich stolpere im Moment auch immer öfter über Methoden mit int und String als Übergabeparameter - wenn sie dann noch schlecht benannt sind, weiß man weder vor noch zurück und muss fremden Code lesen, um die Methode richtig anzuwenden.</p>
+<p>Ich würde daher immer auf eine Kapselung in Klassen (oder Abbreviations, sollte ich mal was in F# machen) hinweisen, bevor man unbedacht die primitiven Datentypen verwendet. Viele Kopfschmerzen können damit bei späteren Änderungen vermieden werden.</p>
+<hr />
+<p><strong>Steven Weiß</strong> (2010-06-01):</p>
+<p>Hallo Ralf,</p>
+<p>genau zu diesem Thema will ich meinen ersten Blog schreiben für das CCD Praktikum. Kürzlich hatte ich genau diesen Fall, dass ich im Rahmen eines größeren Refactorings vor der Wahl stand, einen int oder einen primitiven Datentypen zu nehmen.</p>
+<p>Ich habe mich in weiser Voraussicht für letzteres entschieden. Das hat mir im Nachhinein betrachtet viel, viel Arbeit gespart.</p>
+<p>Dazu mehr, wenn ich am Feiertag (oje...) Zeit für den Blog habe.</p>
+<p>Steven</p>
+<hr />
+<p><strong>Andreas Schädler</strong> (2010-06-02):</p>
+<p>Hallo zusammen</p>
+<p>Der Ansatz macht Sinn. Gerade auch mit generischen typen wie Generic.Dictionary(Of Int, String) stellt sich oft die Frage was für ein Key und was für ein Value da erwartet werden.
+Da ich mich erst seit kurzem mit CCD befasse ist mir der Aufbau noch nicht so klar. Würde das idealerweise heissen:
+1. Assembly (xyTypes.dll) in F# mit den Abbreviations Typen
+2. Assembly (xyContract.dll) in C# mit den Interfacex mit einem Verweis auf xyTypes
+3. Assembly (xy.dll) in C# mit dem eigentlichen Code und Verweisen auf xyTypes und xyContract</p>
+<p>Wie schon Benjamin Fragte ist mir nicht ganz klar, was ich im Bezug auf EBC aufgeschnappt habe. Da wir häufig mit Action oder so ähnlich gearbeitet. Wie weiss ich da, was übergeben werden muss?</p>
+<p>Andreas</p>
+<hr />
+<p><strong>Andreas Schädler</strong> (2010-06-02):</p>
+<p>Bei Action ist das [T] rausgefallen</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-06-02):</p>
+<p>@Andreas: Mit einer polyglotten Codebasis würde ich nicht gleich anfangen, nur weil du Domänenprimitiven auch durch eigene Typen repräsentieren willst.</p>
+<p>(Da fällt mir allerdings noch ein Feature von F# ein, das in diesem Zusammenhang hilt: units of measure.)</p>
+<p>Wie weiß man, was bei einem EBC-Event übergeben werden muss? Na, das sieht man halt am Typ:</p>
+<p>event Action On_TextPrüfenlassen;</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Andreas Schädler</strong> (2010-06-02):</p>
+<p>@Ralf
+wegen Action[T] war ich in Gedanken beim Asynchronbespiel und da muss es logischerwiese offen sein. Habe ich jetzt, glaub ich, verstanden.</p>
+<p>Zum Aufbau: Aber ist so, dass für Typen, Kontrakte und eigentlicher Funktionscode je eine Assembly erstellt werden muss?</p>
+<p>Danke im Voraus für die Beantwortung meiner Fragen.</p>
+<p>Andreas</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-06-02):</p>
+<p>@Andreas: Eigene Assemblies sind immer da nötig, wo Informationen verborgen (oder unveränderlich gemacht) werden sollen und Parallelarbeit ermöglicht werden soll.</p>
+<p>Kontrakte teile ich im Augenblick in 2 Assemblies: eine für  Servicekontrakte (lies: Interfaces), eine andere für Messagekontrakte (lies: Datenklassen).</p>
+<p>Und Serviceimplementationen liegen in eigenen Assemblies. Aber wie du sie darin zusammenfasst, kannst du dir überlegen. Die Chance für Mergekonflikte sollte minimal sein.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Laurin Stoll</strong> (2010-06-11):</p>
+<p>Hi Ralf,
+Wiedereinmal interessant :-)</p>
+<p>Einige Fragen haben sich mir sofort aufgedrängt, als ich das gelesen habe:</p>
+<p>1) Wieso wird IEnumerable nicht zu PrüfwortListe. Ich habe gelesen in den Kommentaren, dass du das als Modulationen ansiehst. Wieso hältest dus nicht für nötig die umzuformulieren? IEnumerable ist schon sehr unleserlich und Domänenfremd...?</p>
+<p>2) Gerade eine allgemeine Frage zur Ubiquitous Language: Du hast jetzt Prüfwort, also Deutsch. Wie handhabst du das? Quelltext immer englisch oder deutsch oder immer in der Sprache des Kunden?</p>
+<p>3) Aufwendiger wirds einfach mit dem Tooling, wenn man die primitiven Typen nicht mehr verwendet. Vorallem wenns um Interops geht, z.B. mit Java und in verteilten Systemen usw. Primitive Typen werden halt von fast allen Tools usw. unterstützt.</p>
+<p>4) Das mit den Aliasen wie mit den Abbreviations - geht das in C# nicht auch z.B. mit using oder präprozessor-Anweisungen? Reicht das nicht?</p>
+<p>Ansonsten, gerade in Punkto erweiterung errinnerts mich sehr an SOA Lösungen welche ja meistens auch immer einen Custom Type zurückgeben und einen hineinkriegen, damit nicht die ganze Schnittstelle ändert wenn ein Parameter wegfällt.</p>
+<p>Viele Grüsse :-)
+Laurin</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-06-11):</p>
+<p>@Laurin: Zu 1) IEnum finde ich nicht unleserlich. Im Gegenteil. Davon abgesehen halte ich es aber für durchaus relevant, dem Nachrichtentyp anzusehen, ob er für einen oder viele Werte steht. Geht es um einen Strom oder einen Wert?</p>
+<p>Aber du kannst es ja anders machen. Konventionen dürfen lokal sein.</p>
+<p>Zu 2) Mach, wie du willst. Du musst es lesen können. Sei nur konsequent.</p>
+<p>Zu 3) Wir sollten uns nicht vom Tooling regieren lassen. Lesbarkeit geht vor einfachem Tooleinsatz, würd ich mal sagen.</p>
+<p>Zu 4) Präprozessor in C# der irgendetwas ersetzt? Kenn ich nicht.</p>
+<p>Und schließlich: An SOA war ja nicht alles schlecht ;-)</p>
+<hr />
+<p><strong>Laurin Stoll</strong> (2010-06-11):</p>
+<p>Hi Ralf,
+Danke für die zügige Antwort.
+Aber mit Using gehts ja oder?</p>
+<p>Using myString = string</p>
+<p>Habe leider kein VS da - aber gehts nicht? Würde das dann nicht auch reichen?</p>
+<p>Viele Grüsse
+laurin</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-06-11):</p>
+<p>@Laurin: Ne, das geht nicht mit using. Ein Alias kann nur für einen Namespace definiert werden. Wir reden über C#, eine Sprache, die versucht, dem Prinzip des least astonishment zu dienen ;-)</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

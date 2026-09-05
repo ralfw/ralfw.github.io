@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bye, bye, function. Hello, transformer! — ralfw.de Archiv</title>
+<meta name="description" content="Funktionen sollten nicht länger die kleinsten Bausteine unseres Codes sein. Sie vermengen nämlich zwei Aspekte: Kontrollfluss und Datenfluss.">
+<link rel="canonical" href="https://ralfw.de/archiv/2013/bye-bye-function-hello-transformer/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bye, bye, function. Hello, transformer! — ralfw.de Archiv">
+<meta property="og:description" content="Funktionen sollten nicht länger die kleinsten Bausteine unseres Codes sein. Sie vermengen nämlich zwei Aspekte: Kontrollfluss und Datenfluss.">
+<meta property="og:url" content="https://ralfw.de/archiv/2013/bye-bye-function-hello-transformer/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Bye, bye, function. Hello, transformer!</h1>
+    <div class="doc-meta"><span>24. Sept. 2013</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2013/09/bye-bye-function-hello-transformer.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2013/bye-bye-function-hello-transformer/</code></span></div>
+    <div class="art"><p>Funktionen sollten nicht länger die kleinsten Bausteine unseres Codes sein. Sie vermengen nämlich zwei Aspekte: Kontrollfluss und Datenfluss.</p>
+<p>Wenn eine Funktion die Kontrolle aufgibt, dann fließen Daten aus ihr heraus. Sie kann danach die Kontrolle nicht zurückbekommen. Erst ein erneuter Aufruf überträgt Kontrolle wieder an sie.</p>
+<p>Wenn Daten aus einer Funktion fließen sollen, dann muss sie die Kontrolle aufgeben. Sie kann keine Zwischenergebnisse zur Weiterverarbeitung liefern.</p>
+<p>Kontrolle und Daten fließen mit Funktionen also immer gleichzeitig. Das ist oft ok – aber eben nicht immer. Indem wir diese Aspektkopplung jedoch so tief in unseren Sprachen verankert haben, fällt es uns schwer, anders zu denken. Das halte ich aber für nötig, wenn wir evolvierbarere Software herstellen wollen.</p>
+<p>Funktionen sind ein Relikt aus der Anfangszeit der Programmierung. Sie sind <em>syntactic sugar</em> für Maschinencodebefehle, die nicht nur ein Unterprogramm aufrufen (CALL), sondern auch noch anschließen ein Resultat für den Aufrufer bereitstellen. Dabei gibt es immer nur einen Punkt, an dem die Kontrolle ist: den Befehl, auf den der eine Befehlszeiger weist. Daten sind in diesem Paradigma wie Hunde, die ihrem Herrchen an der Leine folgen müssen. Sie können immer nur am selben Ort in Verarbeitung gedacht werden, wo auch gerade die eine Kontrolle ist.</p>
+<p>Das ist alles wunderbar und verständlich. Das hatte seine lange Zeit. Doch ich glaube, wir sollten jetzt darüber hinaus gehen. Dadurch wird dieses Paradigma nicht überflüssig. Die Newtonsche Physik gilt ja auch weiterhin. Aber wir denken dann nicht mehr, dass alles nur mit diesen Mitteln erklärt und beschrieben werden muss. Die relativistische Physik umfasst die Newtonsche. So sollte auch ein neues Paradigma das bisherige umschließen.</p>
+<p>Ist da schon alles mit der Funktionalen Programmierung gesagt? Hm… Nein, ich glaube, nicht. In der steckt ja schon im Namen die Funktion, also das, was wir überwinden sollten.</p>
+<p>Aber wie können Kontrollfluss und Datenfluss entkoppelt werden? Mit Continuations bzw. Observern.</p>
+<p>Aus einer Funktion</p>
+<p>R f(P p) {
+  …
+  return r;
+}</p>
+<p>würde z.B. eine Prozedur wie</p>
+<p>void f(P p, Action continueWith) {
+  …
+  continueWith(r);
+}</p>
+<p>Diese Prozedur hat alle Freiheiten, Kontroll- und Datenfluss zu entkoppeln:</p>
+<ul>
+<li>Sie kann ein Resultat via <em>continueWith()</em> liefern und dann die Kontrolle aufgeben – oder auch nicht.</li>
+<li>Sie kann entscheiden, überhaupt ein Resultat zu liefern.</li>
+<li>Sie kann sogar entscheiden, mehrfach ein Resultat zu liefern.</li>
+<li>Und schließlich ist eine solche Prozedur auch nicht darauf festgelegt, nur über einen “Kanal” Daten zu liefern.</li>
+</ul>
+<p>void f(P p, Action<R> onR, Action<T> onT) {
+  …
+  onR(r);
+  …
+  onT(t);
+  …
+}</p>
+<p>Solange der Name der Continuation auf die Prozedur bezogen ist, erhält sie keine Information über den Kontext der Weiterverarbeitung ihres Output. Wie eine Funktion erfüllt sie damit das <a rel="noopener" href="http://geekswithblogs.net/theArchitectsNapkin/archive/2013/08/19/messaging-for-more-decoupling.aspx">Principle of Mutual Oblivion</a> (PoMO).</p>
+<p>Ich nenne so ein Unterprogramm <em>Transformator</em>. Funktion impliziert gleichzeitigen Kontroll- und Datenfluss. Transformator ist als Begriff hingegen noch nicht verbrannt. Und irgendetwas gibt es ja immer zu transformieren, oder? Zahlen in andere Zahlen, Zeichenketten in andere Zeichenketten oder Zahlen in Zeichenketten oder Zeichenketten in Wahrheitswerte oder in-memory Daten in persistente Daten usw. usf.</p>
+<p>Unsere Programmiersprachen sind natürlich für den Umgang mit Funktionen optimiert:</p>
+<p>var y = f(x);
+var z = g(y);
+h(z);</p>
+<p>Das lässt sich leicht hinschreiben und lesen. Aber leider ist es begrenzt in seiner Ausdrucksfähigkeit, weil eben Kontrolle und Daten immer gleichzeitig fließen müssen.</p>
+<p>Die Alternative mit Transformatoren ist nicht so schön, ich weiß:</p>
+<p>f(x, y =&gt;
+g(y,
+h));</p>
+<p>Mit ein wenig Übung kann man das allerdings auch flüssig lesen und hinschreiben. Aber es ist zumindest ungewohnt. Schöner wäre es, wenn man z.B. schreiben könnte:</p>
+<p>f –&gt; g –&gt; h</p>
+<p>In F# geht das ähnlich – allerdings nur für Funktionen. Bei aller Fortschrittlichkeit ist man auch dort dem alten Paradigma verhaftet. Es sitzt tief in uns.</p>
+<p>Wie eine Lösung aussehen kann, weiß ich auch nicht. In meiner Entwicklung von Funktionen hin zu Transformatoren möchte ich mich dadurch aber nicht beschränken lassen. Denken kann ich Transformatoren, visuell darstellen kann ich Transformatoren, codieren kann ich Transformatoren. Da wird sich doch auch eine textuelle Notation finden lassen, oder?</p>
+<p>Der Pfeil scheint mir ein passender Operator, wenn mit Transformatoren nun Datenflüsse in den Blick kommen. Vielleicht könnten dann mehrere Flüsse so notiert werden:</p>
+<p>f.onR –&gt; g.onY –&gt; h,
+f.onT –&gt; m,
+g.onZ –&gt; n;</p>
+<p>Das Diagramm dazu wäre:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/05d180f43b7b39d2.png" /></p>
+<p>Das ist wunderbar übersichtlich. Der heutige C#-Code hinkt leider hinterher:</p>
+<p>f(x, r =&gt;
+  g(r,
+    h,
+    n),
+  m);</p>
+<p>Aber ich bin unverdrossen. Den Übergang von Funktionen zu Transformatoren halte ich für wichtig. Wir lösen uns damit aus der Umklammerung der von-Neumann-Maschinen. Nicht Kontrolle ist wichtig, sondern Resultate, d.h. der Fluss von Daten.</p>
+<p>Kontrolle kann in mehreren Transformatoren gleichzeitig sein. Oder Kontrolle kann vor uns zurück springen, wenn sie denn nur an einem Ort zur Zeit sein kann.</p>
+<p>Die Funktion als Werkzeug wird damit nicht überflüssig, sondern nur als Sonderfall neu positioniert. Transformatoren können sich wie Funktionen verhalten, wenn es sein muss. Können, müssen aber nicht. Und das find ich so wichtig. Mit Transformatoren ist entkoppelt, was nicht zwangsläufig zusammengehört. Freiheit für die Daten!</p>
+<h2>Kommentare</h2>
+<p><strong>Janek Fellien</strong> (2013-09-24):</p>
+<p>OK Ralf, Information verstanden und begriffen, ja sogar verinnerlicht. Allerdings habe ich bei diesen gerichteten nMethodenketten ein Problem. Was ist wenn ich eine Umwandlungsmethode habe, deren Rückgabewert ich benötige?</p>
+<p>Oder ist es so, dass du sagen willst: "Formuliere denen Code so um, dass keine Funktionen mehr gebraucht werden."
+Das resultiert, zumindest aus meiner Sicht, aus deiner Aussage, keine Funktion mehr zu benutzen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-09-24):</p>
+<p>Tja... wenn das denn ein Ergebnis von Transformatoren sein sollte... dann finde ich das ok :-)</p>
+<p>Nein, ich finde es mehr als ok. So soll es vielmehr sein. Die Befehl-Gehorsam-, Request-Response-Denke soll aufgebrochen werden.</p>
+<p>Wo Rückgabewerte "gebraucht werden" (vom Aufrufer, um damit selbst zu arbeiten), da ist die Natur noch nicht verstanden. In der gibt es nämlich keine Rückgabewerte. Das komplexe System "Mensch" kommt ganz ohne aus - dann sollten das auch unsere mikrigen Softwaresysteme können.</p>
+<p>Das Resultat werden sein: Transformatoren, die deutlich kleiner sind als heute üblicherweise Funktionen.</p>
+<hr />
+<p><strong>tanascius</strong> (2013-09-24):</p>
+<p>Hallo Ralf,
+ich sehe da folgendes Problem: Jeder Transformator braucht einen Eintrag auf dem Stack, da er im Gegensatz zu einer Funktion (mit return) nicht "beendet" wird.
+Das mag zwar nur ein Problem der Implementierung von zB C# sein, ist mir aber schon auf die Füße gefallen. Aufgaben, die man rekursiv angeht lassen sich ohne weiteres mit Transformatoren nicht lösen.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-09-24):</p>
+<p>Theoretisch lässt sich das sehr schön mit einem Message Bus lösen, entweder einer selbstgeschriebenen In-Process-Lösung oder zum Beispiel MassTransit oder NServiceBus.</p>
+<p>Dadurch wird die Kontrolle quasi komplett aufgegeben. Es werden Daten verschickt und weiterverarbeitet. Das entspricht ziemlich genau dem Transformator-Modell.</p>
+<p>Aber warum sind wir noch so sehr in Funktionen, Stack und Laufzeitkontrolle verhaftet? Ich meine weil es eine Abstraktion komplexer Systeme ist, die für den Programmierer leichter verständlich sind als Message-basierte Systeme.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-09-24):</p>
+<p>@tanascius</p>
+<p>Auch eine Funktion braucht einen Eintrag auf den Stack, dieser wird, im Detail mit GC komplizierter, bei return jedoch "entfernt". Klar brauchen damit "Transformatoren" auch einen Eintrag auf dem Stack. Doch wo liegt da das Problem? Die Anzahl der Stack-Einträge? Dir ist klar, dass das bei heutigen Systemen enorm viele seinen können? Rekursion arbeitet üblicherweise auf einer endlichen Menge bzw. Struktur. D.h. sie sind in aller Regel End-Rekursive und können damit immer über eine bsw. Schleife mit Abbruchbedingung ersetzt werden.</p>
+<p>Nun gibt es nicht immer endliche Mengen bzw. Strukturen. Dafür werden Korekursive Konstrukte verwendet. Genau davon plus einer Generatorfunktion wie bsw. "yield" ist auch in Ralf Beitrag die Rede. Nicht explizit, aber darauf kann mit etwas Phantasie abgeleitet werden.</p>
+<p>Rekursionen sind also nicht nötig und sogar, im Sinne von Speicher und GC Performanz, schädlich. Werden rekursive Aufrufe auf nicht endliche Mengen implementiert ist das sogar ein potentieller Bug, da einen Abbruchbedingung fehlschlagen könnte.</p>
+<p>Letztlich könnte ich auch 2 Transformatoren haben, die sich gegenseitig "Nachrichten" schicken. Das würde ebenfalls eine "endlose" Schleife ergeben. Nur eben ohne Stack-Overflow.</p>
+<p>@Markus:
+Da bin ich der Meinung - Nicht mit Kanonen auf Spatzen schießen. A) Ich möchte mir nicht vorstellen wie es wäre, wenn jede Funktion über einen NServiceBus eine Nachricht an eine andere Funktion schickt. B) Eine In-Process-Lösung macht IMHO Sinn für non-blocking I/O, async I/O, Threading und Synchronisierung. Behandlung von Seiteneffekten eben. Auf Programm bzw. Prozessebene bin ich jedoch uneingeschränkt der Meinung, dass EDA Sinn macht und wir vom klassischen Request/Response Modell abstand nehmen sollten.</p>
+<p>@Ralf: Nun würde ich nicht jede Funktion zu einem Event-Driven-Callback-Schlachtfeld transformieren. Für mich macht das besonders in einem non-blocking I/O / Seiteneffekte Umfeld Sinn. Gerade die Mathematik und besonders die Arithmetik lebt von Funktionen und diese haben nunmal Ergebnisse. Nur sind diese eben frei von Seiteneffekten. Und genau darum geht es aus meiner Sicht bei Transformatoren.</p>
+<p>Viele Grüße,
+Mike</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-09-24):</p>
+<p>... Im übrigen finde ich ein Marble-Diagramm als Notation durch die Abstration sehr passend ;-)</p>
+<hr />
+<p><strong>Blabla</strong> (2013-09-24):</p>
+<p>Ich habe gerade ein Web-Projekt mit AJAX und PHP abgeschlossen. Das Konzept kommt mir sehr bekannt vor. Im Browser hinterlegt man bei einer Choice-Message hinter jeder Alternative ein Stück Code, das "irgendwann" aufgerufen wird, oder auch nicht. Und zwar in einem eigenen Thread, während das Hauptprogramm bereits weiter läuft. Das führt zu paralleler Verarbeitung und damit zu einem Paradigmenwechsel.</p>
+<p>Paradigmenwechsel bedeutet, ab jetzt ist etwas oder alles anders als gewohnt, der Umgang damit/Einsatz davon muss überdacht/neu gelernt werden. Das ist nicht für jeden leicht und es regt sich Widerstand.</p>
+<p>Parallelverarbeitung kann so viel leichter implementiert werden, man (der Prozess) muss ja nicht mehr auf das Funktionsergebnis warten.</p>
+<p>Und eine Transformation kann dann starten, wenn alle Eingabeparameter bekannt sind, woher sie auch immer stammen. Damit würde das Eintreffen der Ergebnisse die Reihenfolge der Abarbeitung bestimmen und nicht der Kontrollfluss oder die Reihenfolge im Code. Ohne Objekte stelle ich mir das aber sehr schwierig zu realisieren vor.</p>
+<p>Was nicht heißt, dass man nur noch SW OHNE Kontrollfluss und OHNE Funktionen schreiben soll (kann), man hat jetzt viel mehr die Wahl, auf Kontrollfluss und Funktionen zu verzichten.</p>
+<p>Beispiel Kochrezept:
+Manches kann man parallelisieren, anderes jedoch nicht. Meistens ist es wichtig, ob man erst die Milch einfüllt und danach die Zutaten in die kalte oder heiße Milch gibt. Bei heißer Milch heißt es abwarten, bis die Temperatur stimmt. Aber man kann ja inzwischen etwas anderes tun, wenn es nicht zu lange dauert.</p>
+<p>VG Ralf.</p>
+<hr />
+<p><strong>tanascius</strong> (2013-09-24):</p>
+<p>@Markus:
+Ein Bus könnte das lösen, ist mir aber zu schwergewichtig ...</p>
+<p>@Mike:
+Das Funktionen mit "return" den Stackeintrag löschen ist ja genau meine Aussage - ein Call auf eine Action&lt;&gt; macht das eben nicht. Auch das Verwenden eines Events hilft da nicht.
+Deshalb verstehe ich die Aussage von dir nicht, dass zwei Transformatoren sich gegenseitig endlos Nachrichten schicken können. Zumindest mit Action&lt;&gt; und Events sollte (und wird) das schnell zu einem Overflow führen.
+Sicher @Markus ist das eine Diskussion auf Implementierungsebene und nicht über der abstrakten Idee - aber für mich ist die Implementierungsebene für eine Anwendung <em>heute</em> mit den gegebenen Sprachmöglichkeiten von z.B. C# wichtig. Hier sehe ich noch ein Problem.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-09-24):</p>
+<p>@tanascius
+Warum sollte der GC das nicht machen? Lambdas sind in c# syntatic-shugar und werden zu Objekt-Instanzen umgewandelt.Ist letztlich aber irgendwann ein normaler Funktionsaufruf und Closures werden separiert gehandelt. Das ist also weder Stack noch Rekursionshexenwerk.</p>
+<p>BTW: Klaro ist es so, wenn die beiden Transformatoren nicht durch z.B. eine Queue entkoppelt werden entsteht ein Problem anderer Art. Hier wird durch die Verarbeitungsgeschwindigkeit möglicherweise schneller Nachrichten produziert als konsumiert. Dadurch "baut" sich der Stack auf und erzeugt ziemlich schnell ein Overflow. Ein Delay rein, oder eine Queue löst das Problem.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-09-25):</p>
+<p>Die Lösung zur Vermeidung der Stackprobleme gibt doch schon "Tail call optimization"</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-09-25):</p>
+<p>... ja klar mit nem "richtigen" compiler gibt es solche coolen dinge gleich dazu ;-) da kann ich immer nur staunen!</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-09-25):</p>
+<p>Es ist schon richtig, dass</p>
+<p>var y = f(x);
+var z = g(y);
+h(z);</p>
+<p>den Stack nicht belastet, aber</p>
+<p>f(x y=&gt;g(y, h));</p>
+<p>den Stack belastet. Der wird erst abgebaut, wenn die Funktion am Ende einer Verarbeitungskette fertig ist und alles von rechts nach links "zurückfällt".</p>
+<p>Aber ist das ein Problem in der Praxis? Das sehe ich nicht so.</p>
+<p>Erstens: Es ist ein theoretisches Problem, das in 99% aller Fälle zu keiner Belastung führt.</p>
+<p>Das bedeutet nicht, dass man es ignorieren darf. Genausowenig wie man es bei Rekursion ignorieren darf. Aber ich fühle mich deshalb überhaupt nicht eingeschränkt.</p>
+<p>Zweitens: Man kann das Problem lösen, indem man Funktionen als spezielle Formen von Transformatoren einsetzt. Ich sage ja nicht, dass wir Funktionen abschaffen sollen. Nur glaube ich, dass wir unser Denken nicht auf sie beschränken sollten. Sie sollten für uns nicht Anfang und Ende bedeuten, sondern einen Sonderfall, eine Optimierung. Der allgemeine Fall, mit dem wir zunächst denken sollten, das sind Transformatoren. Aus den genannten Gründen.</p>
+<p>Drittens: Mit geeigneten Sprachen und Compilern kann man über Tail Aufrufe den Stack in so manchem Fall klein halten.</p>
+<p>Viertens: Wenn die Verarbeitung tatsächlich async wird, d.h. Transformatoren über Queues entkoppelt sind, verschwindet das Problem des Stackzuwachsens von allein - und es entsteht ein Problem beim Queuewachstum :-) Aber auch das halte ich erstmal für theoretisch.</p>
+<p>Leute, denkt doch mal nicht reflexartig und immer an Extremfälle.</p>
+<p>Und trennt doch mal technische Probleme, die es heute vielleicht geben mag, von Konzepten.</p>
+<p>Wenn ein Konzept scheiße ist, dann muss ich mir über technische Probleme keine Sorgen machen.</p>
+<p>Wenn ein Konzept aber gut ist, dann muss ich eben die technischen Probleme überwinden. Das haben wir in den letzten 60-70 Jahren der Softwareentwicklung doch auch gemacht.</p>
+<p>GC war ein gutes Konzept, aber erstmal viel zu langsam. Heute ist das Problem gelöst.</p>
+<p>OO war ein gutes Konzept, aber zu langsam und umständlich zu notieren mit C. Heute ist das Problem gelöst.</p>
+<p>Dynamische Sprachen und Schemalosigkeit sind auch gute Konzepte - aber zu langsam und fehleranfällig und speicherintensiv. Heute ist das weitgehend  gelöst durch RAD IDEs, Terabytespeicher usw.</p>
+<p>Bei Transformatoren müssen wir halt noch ein bisschen rumprobieren. Extension Methods, Lambdas, Linq, Rx, async await... alles schöne Versuche. Aber wir sind noch nicht am Ziel. (Und ob wir das mit textueller Notation je sein werden... Ich bin skeptisch.)</p>
+<p>Voraussetzung für eine Zielerreichung scheint mir nun, dass wir unser Denken ändern. Funktionen geben einfach nicht genug her. Aus den beschriebenen Gründen. Da hilft aus meiner Sicht auch nicht die schöne mathematische Nähe. All diese Reinheit... Die Praxis ist dreckiger. Bis wir Millionen Entwickler werden wir in nächster Zeit nicht zu FPlern umschmieden.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-09-25):</p>
+<p>@Ralf:</p>
+<p>f(x y=&gt;g(y, h));</p>
+<p>Richtig, dass hier ein Stack aufgebaut wird ist doch klar und das gewünscht Ziel ;-).</p>
+<p>@Stefan:</p>
+<p>Da gebe ich Dir erstmal recht. Funktionen sind schön einfach, aber sie blockieren. Mehrere Threads verschlimmbessern die Sache. Wie sieht Deine gedachte Lösung dazu aus?</p>
+<p>"Ich gebe ihm eine Continuation, doch wie oft er sie ausführt oder ob er sie überhaupt ausführt, kann ich von außen nicht sehen," ... genau das ist das gewollte Ziel - ENTKOPPLUNG!!!. BTW: Zu jeder Continuation gehört eine "Error-Message" oder "End-Message'". Siehe Promises oder auch Callbacks mit data, error - Parameter. BTW: Monads wie Observables oder Promise machen das auch so. Da hast Du Deine "eingebaute" Überwachung. Ich nehme an, zur Vereinfachung der Sache wurde diese hier nicht explizit erwähnt.</p>
+<p>@Ralf Peine: Ja genau ... absolut ... das verlangt ein Umdenken! Das fällt einigen sicher Schwer. Wer Non-Blocking / Entkopplung als wichtig empfindet sollte sich das jedoch antun ;-).</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-09-25):</p>
+<p>@Stefan Reichel: Was du als Bugs siehst, sind für mich Features. Entkopplung ist das Stichwort. Und das habe ich auch genau so gesagt: Kontroll- und Datenfluss werden getrennt. Das ist der Punkt.</p>
+<p>Die Funktion ist damit ein Spezialfall - während sie bisher sozusagen der einzige Fall war.</p>
+<p>Exceptions machen ein Problem? Du hängst immer noch an irgendwelchen Implementierungen. Mach dich doch davon mal frei.</p>
+<p>@Mike: Dass Tranformatoren gleich automatisch mit Error- und Ende-Kanälen kommen, sehe ich nicht so. Das ist bei manchen Implementierungen der Fall, aber steckt für mich nicht zwangsläufig im Konzept.</p>
+<p>Der Schritt, den ich machen will, ist der der Trennung von Kontroll- und Datenfluss. Mehr nicht. Wie das implementiert wird, was da fließt (mit welchen Metadaten)... das ist ne ganz andere Nummer. Da kann man den Regler nochmal verschieben von einfach nach kompliziert.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-09-25):</p>
+<p>@Stefan: BTW: Letzten Endes kannst Du auch bei Funktionen nicht genau wissen was rein geht und raus kommt. Syntaktisch wird das in statischen typisierten Sprachen gemacht. Symantisch jedoch nicht. Darauf kommt es jedoch an. Was hilft? Unit-Tests + Integrations-Tests. Du siehst ... Es gibt für alles eine Lösung ;-).</p>
+<p>Konzeptionell sehe ich das ähnlich wie @RalfW, wenn auch mit mehr Bezug zur Praxis (z.B. nur für non-blocking I/O) mit all den verborgenen Fallstricken. Mir ist eine "oberflächliche" Architektur- bzw. Allgemeinlösung dann auch zu wenig. Konventionen zur möglichen Lösung sind deshalb besonders wichtig und darüber muss gesprochen werden.</p>
+<hr />
+<p><strong>Horst Innerkofler</strong> (2013-09-25):</p>
+<p>Hallo Ralf,
+ich verwende fast genau diese Notation im EBC.AppBuilder - Projekt.
+https://ebcappbuilder.codeplex.com/wikipage?title=Flow%20Definition%20Language&amp;referringTitle=Documentation</p>
+<p>Kann nur sagen, dass deine Ausführungen zu 100% stimmen:
+- Keine Rückgabewerte
+- Entkopplung
+- Transformatoren die kleiner als übliche Funktionen sind
+- bisher kein Stack-Problem
+- ....</p>
+<p>Gruss, InneHo</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-09-25):</p>
+<p>@Stefan Reichel: Ich weiß nicht recht, was du willst, Stefan. Zuerst sagst du, Transformatoren seien scheiße, weil es ja ein massives Callback-Problem gibt. Dann ist das egal und du sagst, Transformatoren seien der wahrscheinlich älteste Hut der Softwareentwicklung - was irgendwie impliziert, dass sie so scheiße nicht sein können. Ja, was denn nun?</p>
+<p>Abgesehen davon verstehe ich nicht, was deine Polemik soll. Wenn du ein sachliches Argument hast - z.B. schlechte Lesbarkeit von Callback-Bäumen -, dann trag es vor. Aber der "alte Wein in neuen Schläuchen"... ne, das ist kein sachliches Argument.</p>
+<p>Denn auf der Ebene kann ich antworten, dass nach Parnas, Knuth, Djikstra, Hoare und anderen alten Herren wahrscheinlich nichts Neues mehr gesagt wurde. Spar dir also deine Zeit der Lektüre von modernen Blogs. Du wirst nichts finden, was nicht irgendeiner schon gesagt hätte. (Eine Kritik, die übrigens auch gegen die CCD Initiative vorgebracht wird.)</p>
+<p>Also: Was willst du? Sachlich argumentieren?
+Ich will es mal annehmen.</p>
+<p>Geht es hier um nichtblockierende Datenverarbeitung? (Die für dich offensichtlich etwas anderes darstellt als Funktionen.)</p>
+<p>Ja, warum nicht? Nenn es gern so.</p>
+<p>Lohnt sich dann aber kein weiteres Nachdenken darüber? Das bezweifle ich.</p>
+<p>Denn wie heißt die Funktionseinheit in der nichtblockierenden Datenverarbeitung? Also das Ding, das etwas tut? Wie nennst du das? Wie nennst du das, was einen oder mehrere Input-Datenströme verarbeitet und daraus einen oder mehrere Output-Datenströme macht?</p>
+<p>Nennst du es Actor? Fein. Damit schwingt aber soviel mit, was unnötig ist für den Kern des Konzeptes, z.B. hat jeder Actor einen Posteingang, was sehr nach Queue riecht. Und Actors sind nebenläufig. Was nicht sein muss, wenn man Kontroll- und Datenfluss entkoppeln will.</p>
+<p>Nennst du es Component wie in FBP? Fein. Dann stellst du dich mit dem Komponentenbegriff aber gegen eine Menge andere Leute, die darunter etwas anderes verstehen.</p>
+<p>Callback und Event bezeichnen hingegen ein Mittel der Kommunikation und auch noch ein recht spezifisches. Damit sind sie auf einem anderen Abstraktionsniveau. Und eine Funktionseinheit bezeichnen sie nicht.</p>
+<p>Nochmal die Frage: Was ist der Name für ein "Ding", das Datenflüsse verarbeitet und welche erzeugt? Und zwar auf dem Niveau wie wir heute "Funktion" benutzen.</p>
+<p>Mein Artikel ist nichts anderes als der Versuch dafür einen knappen Namen zu finden. Der ist für mich "Transformator". Damit habe ich Actors oder Events nicht erfunden, sondern aus meiner Sicht eine terminologische Lücke geschlossen. Der Effekt: Wir können besser über ein Konzept reden, weil wir uns nicht mehr gleich in Technologiediskussionen verstricken.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-09-25):</p>
+<p>@Horst: Danke für deine Unterstützung :-)</p>
+<p>Deinen AppDesigner find ich ja klasse. Ist zwar nur auf EBC bezogen - aber sieht cool aus. Und ganz ohne Kickstarter-Finanzierung, wie sie NoFlo gesucht hat.</p>
+<p>Wenn du willst, lass uns mal drüber sprechen, wie es mit dem AppDesigner weitergehen könnte. Schreib mir mal ne Mail.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-09-25):</p>
+<p>@all,</p>
+<p>Wer's nicht kennt, schaut euch mal Go (die Sprache) an. Da wird der Paradigmenwechsel leicht und das Denken öffnet sich von ganz alleine: Mehrere Rückgabewerte? =&gt; Kein Problem. Exceptions fangen? =&gt; Was zum Henker sind gleich nochmal Exceptions? Ach ja, das waren diese High-Level-Gotos zur (un)strukturierten Fehlerbehandlung ... ich entsinne mich.</p>
+<p>Ooops - erwischt?! Klar kann deine Sprache auch mehrere Rückgabewerte - nämlich über ref oder out. Aber warum stehen die dann nicht (je nach Sprache) hinten oder vorne dran, wenn es doch Rückgabewerte sind? Weil das nur Syntax ist, mehr nicht. Es ist im Grunde nämlich völlig Wurst, wo das Zeugs nun genau syntaktisch angeordnet wird.</p>
+<p>Der Grund, warum es schwerfällt, aus der Denkschine rauszukommen ist - wie Ralf sehr richtig erkannt hat - die Macht von Gewohnheit und Konditionierung. Man sieht eine Funktion und meint, es müsse etwas synchrones sein, welches sich auf eine bestimmte Art und Weise verhält. Ist es asynchron, muß daß extra gekennzeichnet werden, durch die Benennung und/oder den Rückgabewert Task&lt;&gt;. Es ist aber auf jeden Fall ungewöhnlich, weil Otto Normalprogrammierer eben einen synchronen Aufruf erwartet.</p>
+<p>Apropos: Wer hat sich schon mal gewundert, wieso so viele Leute offensichtlich Probleme mit parallelen und asynchronen Abläufen haben? Dabei funktioniert praktisch das ganze Leben asynchron, da fragt man sich doch ...</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-09-25):</p>
+<p>@Anonym:
+... ja da frag ich mich doch 8-|</p>
+<p>Nun, ob da jetzt Go allein hilft kann ich nicht sagen. Deadlocks sind laut Wikipedia trotz ausgefeiltem Concurrency Concept dennoch möglich. Also... auch hier aufgepasst und mitgedacht ;-)</p>
+<p>Async - Aussichtsreich, jedoch nicht immer leicht verständlich. Wenn Zeit ins Spiel kommt, ist es nicht mehr ganz so einfach mit dem Ursache-Wirkung-Prinzip.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-09-26):</p>
+<p>Hallo Ralf,
+es ist jetzt schon fast 30 Jahre her, da hab ich Software in OCCAM geschrieben...</p>
+<p>Das lief damals auf Transputern, einer CPU die genau dafür gebaut war.</p>
+<p>Die Verknüpfung Deiner "Knödel" erfolgt dann über Channel.</p>
+<p>Sieht so aus:
+PROC f (CHAN onR, onT)
+  SEQ
+    -- do something
+    result := 5
+    IF
+      cond
+        onR ! result
+      TRUE
+        onT ! result
+:</p>
+<p>PROC g (CHAN onR, onY, onZ)
+  SEQ
+    -- receive
+    onR ? data
+    -- do something
+    IF
+      cond
+        onY ! result
+      TRUE
+        onZ ! result
+:</p>
+<p>PROC h (CHAN onY)
+  SEQ
+    -- receive
+    onY ? data
+    -- do something
+:</p>
+<p>Das war damals leider seiner Zeit so weit voraus, dass es fast niemand verwendet hat. Die Performance war um Faktoren höher als die von klassischen Systemen.</p>
+<p>Es gab sogar Chips die die dynamische Verbindung von Channels zur Laufzeit ermöglicht haben. Sozusagen eine reale Platine, wie Du es in Flow-Design nennst.</p>
+<p>@AlleJammerer
+Probleme erkennen ist ja gut, aber dieses #mimimi statt nech einer adequaten Lösung zu suchen...</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-09-26):</p>
+<p>@Frank: COOL!</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-09-26):</p>
+<p>@Stefan: 8-|</p>
+<p>Ever responsive - async dient der Entkopplung - das ist der Zweck!
+Die Continuations "verbinden" die entstehenden, erstmal unabhängigen, Ergebnisse zu einem sinnvollen Prozess. Somit dienen die Continuations eigentlich der Kopplung von entkoppelten Ergebnissen oder Aktionen von Einzelschritten. Das ist das/ein Werkzeug um sinnvollen "Fluss" aus einem Strom von Tropfen herzustellen.</p>
+<p>... und wer Actors mag sollte sich auch (mein Beitrag zur Sache) mal Erlang/Elixir ansehen ;-)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-09-26):</p>
+<p>Ich finds ja schön, dass sich hier so eine rege Diskussion ergibt.</p>
+<p>Nur eines möchte ich nicht missverstanden wissen: Mir geht es nicht um Technologie. Scala, Akka, Erlang, Go... das ist mir einerlei. Auch Callback vs Event vs Continuation vs Channel... einerlei.</p>
+<p>Ich habe zwar "Continuation" statt "Funktionsresultat" gesagt. Der Grund war allein, Anschlussfähigkeit. Mit Continuations kann ich für das Konzept des Transformators nahe an Funktionen bleiben. (Wobei ich "Funktion" nicht mal im FP-Sinn meine, sondern rein syntaktisch: eine Funktionseinheit, die ein Resultat liefert. Prozeduren tun das nicht.)</p>
+<p>All die genannten Technologien haben auch das eine Ziel, Parallelverarbeitung einfacher zu machen. Das ist nicht mein Ziel!</p>
+<p>Mein Ziel ist Evolvierbarkeit herzustellen. Dafür ist Parallelverarbeitung bzw. Ausnutzung von Prozessorressourcen aber kein direktes Mittel. Wenn das als Abfallprodukt einfacher werden sollte, gern. Doch das interessiert mich nicht primär.</p>
+<p>Es geht mir ums Denken. Und das Kommunizieren des Gedachten. Dafür brauchen wir Begriffe. FBPs "Komponente" ist für mich untauglich. "Funktion" zu eng aus den genannten Gründen. Erlangs "Prozess" und auch "Actor" zu technologieorientiert bzw. zu sehr auf Parallelverarbeitung ausgerichtet.</p>
+<p>Deshalb und nur deshalb habe ich für mich den Begriff "Transformator" geprägt. Wer mag, benutzt den. Er ist ein Angebot, um über evolvierbare Systeme besser nachdenken zu können - im Sinne von "OOP as if you meant it" :-)</p>
+<p>Denn Objekte sind nun für mich polymorphe mit mehr oder weniger Zustand behaftete Zusammenfassungen von Transformatoren.</p>
+<p>So einfach kann das Leben sein :-) Da gibt es keine sichtbaren Felder/Properties. Kapselung ist deshalb automatisch. Vererbung ist orthogonal. Und wie die Polymorphie hergestellt wird und ob Objekte auf eigenen Threads "leben"... das ist auch orthogonal.</p>
+<p>Mit der Definition sind Objekte das, was Alan Kay sich mal vorgestellt hat, denke ich. Nämlich "Dinger", die mit Nachrichten kommunizieren. That´s it.</p>
+<p>Und das ist dann die Grundlage für Evolvierbarkeit. Die wollte er herstellen. Systeme, "die mit der Zeit gehen können", ohne uns arm zu machen. Ihm ging es nicht um Prozessorressourcen. Die hatte er gar nicht.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-09-26):</p>
+<p>"Dinger, die mit Nachrichten kommunizieren" und
+ "die mit der Zeit gehen können, ohne uns arm zu machen" ... teuflischer Gedanke ;-)</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-09-27):</p>
+<p>Das mit Go war ein Beispiel und bezog sich primär auf die Geschichte mit den eingefahrenen Denkmustern. Natürlich kann man mit jedem Werkzeug Blödsinn anstellen (zB. Deadlocks). Und wegen async - das bot sich erstens gerade an und zweitens wurden weiter oben ja auch Queue-basierte Systeme erwähnt.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-09-27):</p>
+<blockquote>
+<p>Parallelverarbeitung einfacher zu machen [...] nicht mein Ziel.</p>
+</blockquote>
+<p>Das mag sein, aber es wird immer ein Nebenprodukt sein, weil es der nächste logische Schritt ist.</p>
+<hr />
+<p><strong>McZ</strong> (2013-10-01):</p>
+<p>Das Gleichnis "Mensch-Software" halte ich für interessant. Nahrung gelangt von der Hand in den Mund in den Magen in den Darm ins Klo. Daneben werden Enzyme gebildet werden und mit diesen in den verschiedenen Organen Stoffe extrahiert. Das ist kein Baum. Die wirklich entscheidende Frage ist: wie merkt das Subsystem Magen, dass A) Nahrung ankommt, und B) Enzyme für die Verwertung vorhanden sind. Interessieren tut das den Dünndarm aber nicht. Der Magen ist ein Agent, der Nahrungs- und Enzymereignisse sammelt und Nährstoff- und Abfallproduktereignisse sendet.</p>
+<p>Diese "Transformer"-Logik ist kein Ersatz für solche Agenten.</p>
+<p>Bei mir ersetzt Sie komplexe Event-Strukturen inkl. den notwendigen Klassendefinitionen und mitunter Referenzzählungsproblemen. In der Regel decken diese Events Aspekte wie beispielsweise das Logging ab. Ich halte die Trennung von Operationsergebnis und Aspekt im Code für entscheidend.</p>
+<p>Ein Service Bus oder ein DI Container macht dann Sinn, wenn das Softwaresystem ein Ergebnis hat und die Adressaten nicht kennt. Z.B. kennt das Fakturierungsmodul das Umsatzstatistikmodul nicht. Da hilft der Transformer auch nicht weiter als die normale Verarbeitungslogik.</p>
+<hr />
+<p><strong>Michael Baer</strong> (2013-10-21):</p>
+<p>Guck dir mal JavaScript-Promises an. Das scheint mir thematisch sehr nahe zu liegen: http://blog.parse.com/2013/01/29/whats-so-great-about-javascript-promises/</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-10-21):</p>
+<p>Promises sind Spezialfälle von Transformatoren. Success und Failure sind zwei spezielle Output-Ports. Transformatoren sind ja aber nicht festgelegt darauf, Erfolg bzw. Misserfolg zu melden. Sie können dutzende Output-Ports haben. Und keiner von denen muss zwangsläufig überhaupt bedient werden.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

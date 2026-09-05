@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Freiheitsgrade nutzen — ralfw.de Archiv</title>
+<meta name="description" content="Wir engen uns beim Umgang mit Daten selbst ständig ein. Das passiert, weil wir uns der Freiheitsgrade und der Unsicherheit, in der wir uns bewegen, nicht recht bewusst sind.">
+<link rel="canonical" href="https://ralfw.de/archiv/2013/freiheitsgrade-nutzen/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Freiheitsgrade nutzen — ralfw.de Archiv">
+<meta property="og:description" content="Wir engen uns beim Umgang mit Daten selbst ständig ein. Das passiert, weil wir uns der Freiheitsgrade und der Unsicherheit, in der wir uns bewegen, nicht recht bewusst sind.">
+<meta property="og:url" content="https://ralfw.de/archiv/2013/freiheitsgrade-nutzen/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Freiheitsgrade nutzen</h1>
+    <div class="doc-meta"><span>8. Juli 2013</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2013/07/freiheitsgrade-nutzen.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2013/freiheitsgrade-nutzen/</code></span></div>
+    <div class="art"><p>Wir engen uns beim Umgang mit Daten selbst ständig ein. Das passiert, weil wir uns der Freiheitsgrade und der Unsicherheit, in der wir uns bewegen, nicht recht bewusst sind.</p>
+<p>Bei der Funktionalität ist es interessanterweise umgekehrt. Da wollen wir uns keine Tür durch vorschnelle Entscheidung verschließen. Der Grund ist allerdings derselbe: hohe Unsicherheit.</p>
+<p>Das Ergebnis ist Software mit fixen Datenstrukturen und durch Allgemeingültigkeit verrauschten Code. Und der Preis dafür ist hoch. Die fixen Datenstrukturen widersetzen sich natürlich die notwendig häufigen Änderungen – denn es ist ja unzweifelhaft, dass wir in hoher Unsicherheit programmieren. Und der Code, der nach allen Seiten offen sein will – und deshalb eher nicht ganz dicht ist ;-) - ist schwer lesbar und noch schwerer veränderbar. Intentionen sind nicht klar zu erkennen und verschmiert über die Codebasis.</p>
+<p>Ich sehe aus dieser Situation nur einen Ausweg: Wir müssen auf der einen Seite allgemeiner und auf der anderen spezifischer werden. Schlicht etwas mehr Lockerheit täte uns gut. Im Raum der Freiheitsgrade, die wir haben, sollten wir uns bewusster verorten.</p>
+<h3>Freiheitsgrad #1: Intention</h3>
+<p>Bei der Funktionalität bewegen wir uns solange wie es geht im Allgemeinen. Das Resultat sind die allgegenwärtigen CRUD-Benutzerschnittstellen. Weil wir nicht vorhersehen können oder wollen, was Anwender mit Daten tun möchten, lassen wir einfach alles zu. Statt eines Restaurants bieten wir ihnen einen Supermarkt. Selbst ist der Anwender. Soll er die rohen Datenstrukturen doch selbst formen.</p>
+<p>Das macht drei Probleme: Erstens zwingt uns das zu frühzeitigen Entscheidungen über Datenstrukturen, weil wir sie ja dem Anwender zur Befüllung vorgeben müssen. Zweitens bindet das uns wie Anwender an diese Datenstrukturen, da sie nun Teil des Kontraktes zwischen Software und Anwender sind. Und drittens senkt das letztlich die Effizienz der Bedienung, weil Anwender selbst ihren Weg zur Bewältigung einer Aufgabe durch Datenstrukturen finden müssen.</p>
+<p>Auf der Achse “Funktionale Konkretheit” legen wir uns häufig, viel zu häufig auf der linken Seite fest:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a2eb480bace2b3e4.png" /></p>
+<p>Stattdessen sollten wir uns weiter nach rechts orientieren. Die Benutzerschnittstellen sollten spezifischer, fokussierter sein in ihren Angeboten. Statt einem Dialog für 10 Zwecke lieber 10 Dialoge mit einem Zweck. Wir brauchen mehr Benutzerschnittstellen, die konkrete Angebote für die Intentionen der Anwender machen.</p>
+<p>Dafür müssen wir die Domäne natürlich genauer kennen. Das klingt nach mehr Aufwand up-front. Aber ich glaube, das Gegenteil ist der Fall – zumindest, wenn wir uns von dem Glaubenssatz verabschieden, dass wir nicht so kleinteilig liefern können, weil spätere Erweiterungen dann schwierig werden.</p>
+<p>Die Vorteile von intentionalen oder aufgabenorientierten Benutzerschnittstellen scheinen mir einfach zu groß, als dass wir sie ignorieren sollten. Anwender werden effizienter und wir befreien uns von der Bürde, einem Kontrakt treu zu bleiben, der die Anwender ohnehin nicht interessieren sollte. Ganz zu schweigen davon, dass dann unser Code klarer würde.</p>
+<p>Was dann aber tun mit den Daten? Die würden dadurch ja befreit. Wir würden sie ja immer nur durch kleine Gucklöcher präsentieren. Ein Big Picture von Datenstrukturen wäre für keinen Anwender sichtbar. Wir müssten uns also nicht mehr up-front für ein solches Big Picture entscheiden.</p>
+<h3>Freiheitsgrad #2: Schema</h3>
+<p>Derzeit starren wir auf Datenbankstrukturen und in-memory Domänenobjektmodelle wie das Kaninchen auf die Schlange. Es ist Heulen und Zähne klappern. Wir haben Angst, uns falsch zu entscheiden bei Strafe, von Ineffizienz verschlungen zu werden.</p>
+<p>Das ist ein grauenhafter Zustand, den wir aber gelernt haben, als unausweichlich, ja normal anzusehen. Es kann nicht anders sein. So funktioniert Softwareentwicklung eben. Am Anfang muss man sich halt für Datenstrukturen entscheiden. Und zwar am besten für so wenige wie möglich. “One size fits all” ist sogar das Beste.</p>
+<p>Aber auch hier engen wir uns künstlich und unbewusst ein. Wir sollten lernen, ein Kontinuum zu sehen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/3328e8440af65296.png" /></p>
+<p>Wenn wir nach außen hin kein Big Picture von Datenstrukturen mehr liefern müssen, dann können wir uns auch intern davon befreien. Die traditionelle Objektorientierung mit ihrem Fokus auf Daten ist eine Verirrung. Sie ist verständlich, war vielleicht angesichts knapper Hardwareressourcen auch unumgänglich – deshalb müssen wir sie ja aber nicht unnötig fortsetzen.</p>
+<p>Auf den Schultern der relationalen Datenstruktureffizienzdenke der 1970er haben wir geglaubt, wir müssten möglichst früh und möglichst spezifische Datenmodelle entwerfen. Das waren wir dem knappen Speicher und der Konsistenz schuldig. Und auch der Funktionalität, die damit scheinbar einfach eine Heimat findet.</p>
+<p>Aber was ist das Ergebnis? Entwickler, die an sich zweifeln, weil sie es nicht hinkriegen, Funktionalität zügig zu verorten. Code und Daten, die sich notwendigen Veränderungen widersetzen.</p>
+<p>Wie anders könnte aber die Welt aussehen, wenn wir nicht mehr versuchen würden, Daten in “one size fits all” Schemata zu pressen? Geben wir diese Optimierung auf. Sie ist angesichts der Unsicherheit der Anforderungen vorzeitig. Wir haben keine Ahnung, was der Kunde wirklich will und wohin das alles führt? Dann sollten wir genau das auch mit unseren Daten ausdrücken.</p>
+<p>Für mich bedeutet das, weniger up-front in Schemata zu denken und stattdessen Daten kleinstteilig in Bezug auf konkrete Funktionalität zu denken. Das Ergebnis sind Events, also Datendifferenzen. Die können hunderte Formen/Schemata haben – und ergeben nur zusammen ein Big Picture. Das existiert jedoch nicht vorab, sondern entsteht im doppelten Sinn erst über die Zeit.</p>
+<h3>Freiheitsgrad #3: Bevorratung</h3>
+<p>Kann man denn aber ohne Schema, d.h. ohne “das eine” Schema Software schreiben? Natürlich. Operationen können auch auf Events arbeiten: das ist dann (Complex) Event Processing ((C)EP).</p>
+<p>Einen kleinen Eindruck habe ich davon in meinem vorherigen Blogartikel über Tic Tac Toe gegeben. Alle Domänenfunktionen kommen dort ohne eine spielspezifische Datenstruktur aus. Ein zweidimensionales Spielbrett wird ausschließlich für den Anwender hergestellt.</p>
+<p>Größere Schemata – ob in-memory oder persistent ist egal – sind deshalb aber nicht “böse”. Sie haben ihren Zweck. Besonders, wenn man genau weiß, wie sie für einen konkreten Zweck aussehen sollten. Dann erhöhen sie Verständlichkeit und Effizienz.</p>
+<p>Doch die Frage ist, wann und wie lange sollten Daten in solchen größeren Strukturen vorliegen? Wann ist Zustandsherstellung und –haltung angezeigt im Gegensatz zur Arbeit auf Zustandsänderungen (Events).</p>
+<p>Ich denke, das muss im Einzelfall entschieden werden. Womit ich wieder bei den Intentionen bin. Je intentionaler die Benutzerschnittstelle, desto größer unsere Freiheit, uns immer wieder für die beste Art der Bevorratung von Zuständen in fixen Schemata zu entscheiden.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/dc0801060af91f74.png" /></p>
+<p>Mein Gefühl ist, wie halten Daten zu lange in zu großen Strukturen. Wir stecken in einem Mangeldenken fest. Wie Eichhörnchen bevorraten wir zu viel. Dabei ist die Welt doch schon längst im JIT-Zeitalter angekommen. Waren werden Just-in-Time geliefert und sogar Maschinencode wird JIT in kleinen Happen erzeugt. Warum gehen wir nicht so mit unseren Daten um? Wir haben die Prozessorressourcen, um kleine Datenstrukturen individuell für den aktuellen Anwendungskontext JIT zu füllen.</p>
+<p>Schluss mit dem einen Objekt für Kunde, Rechnung, Spiel, Vertrag, Gerät, Fragebogen, Auktion oder was immer die Domäne sein mag. Schluss mit dem einen Schema! Schluss mit der dauerhaften Speicherung in dem einen Schema! Schluss mit der zwanghaften Kombination von Daten und Funktionalität [1].</p>
+<p>Stattdessen: Mehr Logik direkt auf Events und auf fokussierte, JIT befüllte Datenstrukturen auslegen. OR-Mapping adé – zumindest für Datenroundtrips. Technologisch einfacher werden, um schneller und flexibler zu sein.</p>
+<h3>Freiheitsgrad #4: Zweck</h3>
+<p>Wo kleinere Datenstrukturen JIT befüllt werden, da stellt sich natürlich auch die Frage nach dem Zweck. Folgen Datenstrukturen dem Prinzip, das wir für Funktionalität so hoch halten? Haben Datenstrukturen auch immer nur eine Single Responsibility?</p>
+<p>Nein, ich glaube, wir überlasten sie. Wir denken vor allem in Allzwecksdatenstrukturen. Ist ja auch klar: je weniger es gibt, desto mehr Zwecke müssen die erfüllen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a3034f5befd9d86f.png" /></p>
+<p>Dass solche Wollmilchsäue schnell unwartbar werden, ist kaum verwunderlich. Wenn wir es ernst mit Clean Code meinen, dann müssen wir das Tabu ins Visier nehmen, dass an den großen Allzweckschemata nicht zu rütteln sei. Ob ein Datenbankschema oder ein OO-Domänenmodell, ist egal. Zustand, d.h. akkumulierte Veränderungen, sollte in verschiedenen Formen vorliegen, die auf konkrete Zwecke zugeschnitten sind. Die Unterscheidung zwischen Lesen und Schreiben wie bei CQRS ist da nur ein Anfang. Am Ende kann, darf, sollte es viele verschiedene flüchtige und persistente Datenstrukturen geben.</p>
+<p>Und alle sollten sich aus einer Quelle jederzeit re-generieren lassen. Soviel zum Thema Konsistenz. Die Datenwahrheit lebt wie in Zeiten des “Relationnismus” an nur einem Ort. Das scheint mir derzeit ein Event Store oder – das Bild gefällt mir eigentlich besser – <a rel="noopener" href="http://blog.ralfw.de/2013/07/eine-black-box-fur-software.html">eine Black Box</a>.</p>
+<h3>Fazit</h3>
+<p>Sie sehen, ich bin derzeit beseelt vom Thema Event Sourcing ;-) Aber es ist einfach so, dass darin für mich vieles zusammenläuft, was bisher getrennt nach einer Lösung gesucht hat. Und allemal sehe ich darin eine Antwort auf die ewig große Frage der Softwareentwicklung: Wie umgehen mit der Unsicherheit und Flüssigkeit der Anforderungen?</p>
+<p>Bei all den nicht-funktionalen Anforderungen der Kunden scheint mir das die größte und gleichzeitig die unbewussteste: “Ich möchte mich so wenig wie möglich festlegen müssen.”</p>
+<p>In Handwerker- oder auch Ingenieursmanier laufen wir dagegen jedoch Sturm. Seit Jahrzehnten. Es widerspricht allem, was wir in Tausenden Jahren gelernt haben. Sagen wir es denn nicht auch unseren Kindern, “Du musst dich entscheiden lernen!”?</p>
+<p>Was aber, wenn man das aus vielfältigen Gründen nicht kann? Dann ist es doch widersinnig, es immer wieder zu fordern und sein Tun darauf auszulegen. Dann sind fixe Strukturen für Daten und Funktionalität kontraproduktiv.</p>
+<p>Also sollten wir unsere Freiheitsgrade ausreizen. Sonst unterscheiden wir uns nicht von Fundamentalisten, die ständig auf dem Selben beharren, weil es nur so sein kann weil es immer so war und nur so sein darf.</p>
+<p>Lernen wir, über den Tellerrand des bisher Kanonischen hinaus zu blicken. Das braucht natürlich Experiment und Übung. Da werden wir auch scheitern und mal zu weit gehen. Macht aber nichts.Wir können nur gewinnen. Denn eines ist ja klar: So wie es ist, kann es nicht bleiben. Wir ersticken an Inflexibilität, d.h. an Unfreiheit zur Veränderung.</p>
+<p>Machen wir uns also auf den Weg. Ich würde sie gern hier sehen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/59343f2eb233b6f3.png" /></p>
+<h4>Endnoten</h4>
+<p>[1] Damit meine ich nicht, dass wir Objekte aufgeben sollten. Dass wir Daten und Funktionalität kombinieren können, soll erhalten bleiben. Ich bin also kein jünger extremer Funktionaler Programmierung. Aber wir sollten uns genauer als bisher überlegen, welche Funktionalität wir mit Daten zusammenfassen.</p>
+<p>Funktionaltität, die der Konsistenz einer Datenstruktur dient (Stichwort: Abstrakter Datentyp (ADT)), gehört natürlich zu den Daten. Aber da gibt es für mich eine Hierarchie.</p>
+<p>Ein Objekt, dass Name, Anschrift und Telefonnummer einer Person zusammenfasst, ist eine Datenstruktur, die nur wenig Funktionalität verträgt. Zum Beispiel könnte es sicherstellen, dass der Name nie leer ist. Genauso wie ein Stack sicherstellt, dass <em>Pop()</em> das zuletzt mit <em>Push()</em> eingelegte Element entnimmt.</p>
+<p>Ein Objekt hingegen, dass ein solches Personenobjekt enthält (!), kann Funktionalität auf einer höheren Ebene haben. Zum Beispiel kann es zuständig dafür sein, dass keine zwei Personen mit derselben Telefonnummer existieren.</p>
+<p>Wann jedoch ein Objekt andere <em>ent</em>halten sollte, also einen Zustand haben sollte, auf dem es arbeitet, und wann es andere <em>er</em>halten sollte, also auf einem Fluss wechselnder Objekte arbeiten sollte, das ist eine andere Frage.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2013-07-08):</p>
+<p>Vielen Dank für diesen (wieder einmal sehr gelungenen) Post.</p>
+<p>Ich denke auch dass es Zeit ist, dass "Anwendungsentwickler" und "Datenbänkler" voneinander lernen - Stichwort Fokus auf Funktionalität vs. Fokus auf Datenstrukturen und -verarbeitung (z.b. bei Beladungs- und Transformationsprozessen, ETL).</p>
+<p>Aber:
+Je nachdem wie nah der Kunde an "seinen" Datenstrukturen dran ist, wird es schwierig ihn davon zu lösen, und ihm den genannten Mehrwert von spezifischen Dialogen zu verkaufen.</p>
+<p>Viele Grüße
+Johannes</p>
+<hr />
+<p><strong>Blabla</strong> (2013-07-09):</p>
+<p>Das sehe ich genauso.</p>
+<p>Dazu muss man die Daten oefter einmal "umformen", aber dadurch hat man alle Freiheiten, z.B. beim Speichern im Repository.</p>
+<p>Im allerschlechtesten Fall nimmt man ein GUI-Werkzeug, das direkt auf den DB-Tabellen aufsetzt. Da erzielt man schnell Erfolge. Aber wehe, wenn die DB-Tabellen geaendert werden (muessen)! Das ist bei grossen Systemen nicht mehr beherrschbar...</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-07-10):</p>
+<p>"...Ein Objekt, dass Name, Anschrift und Telefonnummer einer Person zusammenfasst, ist eine Datenstruktur, die nur wenig Funktionalität verträgt. Zum Beispiel könnte es sicherstellen, dass der Name nie leer ist..."</p>
+<p>Fällt dies nicht in den Zuständigkeitsbereich einer Validierung und stellt somit einen eigenen Belang dar (Seperation of concerns)?</p>
+<p>Datenstrukturen, finde ich, sollten "as stupid as possible" sein.</p>
+<p>Je mehr ich drüber nachdenke, desto schwerer tue ich mich auch mit den uns durch Programmiersprachen vorgegebenen Strukturen. Z.B.:
+Usercontrols besitzen Positionsangaben (Top, Left,...). Wieso muss ein Usercontrol solche Informationen tragen. Das bedeutet doch, dass es sich seiner Umgebnung bewusst ist. Wenn ich ein Usercontrol im Code erzeuge, also nicht direkt auf ne Form 'raufbatsche', schon dann machen solche Properties (also Daten) überhaupt keinen Sinn mehr. Wenn ich eine Vase auf einen Tisch in einen Raum stelle, warum soll dann die Vase wissen, wo sie sich befindet? Wo sich die Vase befindet und welche anderen Gegenstände, das sind doch Informationen, die ein Raum besitzen muss.</p>
+<p>Genauso die Verortung von Funktionalitäten auf Datenobjekten...
+Wenn ich auf meiner Pizza neben Tomaten und Schinken zusätzlich auch Champignons haben möchte, dann sag ich doch nicht der Pizza, dass sie Champignons hinzufügen soll, coded à la Pizza.Belaege.Add("Champignons");    oder Pizza.BelagHinzufügen("..");
+Und weil ich die Pizza immer gerne so esse sag ich dann auch noch Pizza.Save(); oder was.
+Erstaunlich - eine Pizza kann sich selber speichern... Respekt!</p>
+<p>Wenn ich nun Champignons auf der Pizza haben will, dann bin ich es doch, der sie auf die Pizza packt. Eine Pizza, die so schlau ist, sich selber Champignons hinzuzufügen und ggf. noch zu sagen "nö, geht nicht, sind schon Pfifferlinge drauf"... nein, so eine intelligente Pizza würd' ich nicht essen wollen :-)</p>
+<p>Sry, das war jetzt ein wenig abgeschweift, aber irgendwie musste das mal raus.</p>
+<p>Gruß,
+Mirko Schneider</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-07-10):</p>
+<p>@Mirko: Was für Funktionalität eine Person-Klasse haben kann, ist natürlich zu bedenken. Ich sage ja auch nicht, dass sie die von mir genannte besitzen muss. Aber für mich wäre die noch plausibel.</p>
+<p>Ein Stack hat Methoden, um eine gewisse Semantik und Konsistenz sicherzustellen. Das ist ein ADT.</p>
+<p>Was das für eine Person bedeutet, liegt an der Domäne. Wenn ich sage, sie stellt sicher, dass der Name nicht leer ist, dann finde ich das sehr strukturell. Es wird ja nicht festgestellt, ob der Name nur einmal vergeben wurde oder mit einem Großbuchstaben beginnt. Sondern es wird nur sichergestellt, dass eine Person immer irgendeinen Namen hat, so wie ein Stack sicherstellt, dass Neues über Altem liegt. Fertig.</p>
+<p>Datenklassen können Methoden haben. Aber natürlich: Vorsicht! Don´t get carried away! :-)</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-07-11):</p>
+<p>@Ralf:</p>
+<p>Datenklassen sind da, um Daten zu halten. Das ist ihr Zweck und kein anderer.
+Die Strukturelle Integritäts- bzw. strukturelle Prüfung ("Name ist nicht leer") ist ein Prozess.
+Daten fließen in Prozesse hinein; die Prozesse erzeugen Datenoutput. Z.B.</p>
+<p>(Personendaten) -&gt; Strukturelle_Integritaet_prüfen -&gt; (Personendaten, Prüfungsergebnis) -&gt; ....</p>
+<p>"Datenklassen können Methoden haben", sagst Du.
+Technisch gesehen ohne Zweifel ja, aber ich denke es verletzt das SRP.</p>
+<p>Gruß,
+Mirko</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

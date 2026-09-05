@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software als System V - Was ist ein Swolon? — ralfw.de Archiv</title>
+<meta name="description" content="Software besteht aus Swolons, habe ich in meinem letzten Posting zum Thema &quot;Software als System&quot; einfach mal so definiert. Spannend dabei ist, dass Swolons nicht nur eine Software ">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/software-als-system-v-was-ist-ein/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software als System V - Was ist ein Swolon? — ralfw.de Archiv">
+<meta property="og:description" content="Software besteht aus Swolons, habe ich in meinem letzten Posting zum Thema &quot;Software als System&quot; einfach mal so definiert. Spannend dabei ist, dass Swolons nicht nur eine Software ">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/software-als-system-v-was-ist-ein/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Software als System V - Was ist ein Swolon?</h1>
+    <div class="doc-meta"><span>5. März 2007</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2007/03/software-als-system-v-was-ist-ein.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/software-als-system-v-was-ist-ein/</code></span></div>
+    <div class="art"><p>Software besteht aus Swolons, habe ich <a rel="noopener" href="http://ralfw.blogspot.com/2007/02/software-als-system-iv-die-hierarchie.html">in meinem letzten Posting zum Thema "Software als System"</a> einfach mal so definiert. Spannend dabei ist, dass Swolons nicht nur eine Software als Ganzes ausmachen, sondern selbst wiederum aus Swolons bestehen. Von einer ganz allgemeinen Warte aus betrachtet, ist Software also eine Hierarchie von verschalteten Bausteinen, die wiederum aus verschalteten Bausteinen bestehen, die wiederum aus verbundenen Bausteinen bestehen usw. Software ist damit rekursiv definiert. Hier eine vereinfachende textuelle Definition in EBNF:</p>
+<p>Software ::= Swolonsystem .
+Swolonsystem ::= Swolon { Swolon } .
+Swolon ::= Swolonsystem .</p>
+<p>Die Produktionsregel <em>Swolonsystem</em> definiert sich indirekt rekursiv selbst.</p>
+<h5>Einheiten von Funktionalität und Zustand</h5>
+<p>Was ist denn nun aber ein Swolon außer, dass es wieder aus anderen Swolons aufgebaut ist? Ein Swolon hat zwei Gesichter: es vereinigt Funktionalität und Daten.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/ecd42d0c97248704.gif" /></p>
+<p>Wenn Sie nun denken, dass ein Swolon dann doch irgendwie ein Objekt ist... dann liegen sie nicht ganz falsch. Ein Swolon hat selbstverständlich ganz bewusst diese Eigenschaften heutiger Objekte, die auch Funktionalität und Daten zusammenfassen, wo früher Prozeduren und Datenstrukturen nebeneinander standen.</p>
+<p>Aber ein Swolon ist viel allgemeiner als ein Objekt. Nicht ein Swolon ist ein Objekt, sondern ein Objekt ist ein Swolon.</p>
+<p>Für mich ist Software einfach aus einer Hierarchie von Systemen von "Dingen" aufgebaut, die <strong>Funktionalität</strong> implementieren, d.h. eine Dienstleistung verkörpern, und gleichzeitig natürlich auch Informationen halten können, die zu ihrer Funktionalität gehören. Ganz allgemein können diese Informationen als der <strong>Zustand</strong> eines Swolon bezeichnet werden.</p>
+<p>Daraus ergibt sich natürlich, dass Swolons mehr oder weniger Funktionalität bieten und mehr oder weniger Zustand halten können. Es gibt also ganz allgemein gesprochen Swolons, die zustandslos sind und nur reine Dienstleistung anbieten, die sozusagen keine eigene Erinnerung hat. Und es gibt ganz allgemein gesprochen Swolons, deren Aufgabe es ist, nur Zustand zu halten und keine Funktionalität über den Zugriff auf diese Daten hinaus anzubieten.</p>
+<p>Zustandslose Geschäftslogik wie sie oft für den Einsatz in Applikationsservern entworfen wird und Data Transfer Objects (DTO) wie sie für den Transport von Daten zwischen den Tiers in verteilten Anwendungen benutzt werden, können also ganz wunderbar auch mit meiner Swolon-Terminologie beschrieben werden.</p>
+<p>Wenn man das Swolon als ganzes betrachtet, dann ist es eine Black Box. Dann interessiert es nicht, wie es seinen Zustand hält und seine Leistung erbringt. Wenn man jedoch in ein Swolon hineinschaut, dann sieht man das System von Swolons (oder Sub-Swolons), die für die Zustandshaltung und/oder Funktionalität zuständig sind.</p>
+<h5>System durch Operationen</h5>
+<p>Zu einem System wird eine Ansammlung von Swolons erst, wenn sie aufeinander operieren. Swolons, die einander nur kennen, d.h. eine irgendwie geartete Referenz halten, sind zwar auch verbunden, aber diese Verbindungen sind recht uninteressant. Solange diese Verbindungen zuu nichts weiter dienen, tragen sie nicht zur Komplexität eines Swolonsystems bei.</p>
+<p>Verbindungen müssen leben, d.h. sie müssen die Bahnen sein, entlang derer Swolons aufeinander zugreifen und Leistungen voneinander nutzen. Dann entsteht ein lebendiges System. Nehmen Sie als Analogie Nervenzellen. Solange Nervenzellen nur miteinander verbunden sind, nützen sie nichts; der Organismus ist tot. Sobald entlang der Verbindungen aber Impulse laufen, lebt ein Organismus. Genauso ist es mit einer Swolarchie.</p>
+<p>Verbindungen zwischen Holons können <strong>unidirektional</strong> oder <strong>bidirektional</strong> sein. D.h. Operationen laufen immer nur von einem Swolon zum anderen oder in beide Richtungen. Die Operationen auf Holons sind dann entweder <strong>zustandsneutral</strong> oder <strong>zustandsverändernd</strong>. Je weniger die Operationen auf einer Verbindung zwischen Swolons zustandsverändernd sind, desto entkoppelter sind die Swolons. Kopplung ist also ein Maß dafür, wieviel Einfluss ein Swolon auf den Zustand eines anderen hat.</p>
+<h5>Kopplung sorgt für Komplexität</h5>
+<p>Kopplung ist daher für mich ein wesentlicher Faktor bei der Beurteilung der Komplexität eines Systems. <a rel="noopener" href="http://msdn2.microsoft.com/en-us/library/aa479371.aspx">Roger Sessions hat in einem Artikel</a> versucht, Komplexität mit Würfeln zu erklären. Seine These: Eine Münze ist weniger komplex als ein Würfel, weil eine Münze nur zwei Zustände einnehmen kann, ein Würfel aber sechs. Und drei Würfel zusammen sind komplexer als ein Würfel, weil sie 6<em>6</em>6=216 Zustände einnehmen können. Daraus leitet er dann ab: Wenn man ein komplexes System besser handhabbar machen will, dann muss man es in Partitionen teilen. Aus den 216 Zuständen des komplexen gesamten Würfelsystems könnten so 6+6+6=18 Zustände eines viel weniger komplexen partitionierten Würfelsystems werden:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/bec796de7f560c5b.gif" /></p>
+<p><a rel="noopener" href="http://msdn2.microsoft.com/en-us/library/aa479371.aspx">Quelle: Microsoft</a></p>
+<p>Auch wenn ich mit Roger Sessions Schlussfolgerung übereinstimme, so bin ich mit seiner Erklärung nicht einverstanden. Ich halte sein Ausgangsbeispiel der drei Würfel für zu simpel. Platt gesagt: Eine Münze und ein Würfel und drei Würfel, wie er sie darstellt, sind für mich gleich un-komplex. Sie sind nicht unterschiedlich komplex, sondern allerhöchstens unterschiedlich kompliziert. Ein 216-seitiger Würfel wäre für mich auch nicht komplexer als die drei 6-seitigen Würfel.</p>
+<p>Zur Komplexität fehlt den Würfeln nämlich etwas: eine Verbindung. Die Würfel bilden kein System, weil sie nicht verbunden sind. Und selbst wenn sie verbunden wären, dann käme es darauf an, wie stark gekoppelt sie dann wären.</p>
+<p>Komplexität ist also nicht einfach eine Frage der Anzahl von Zuständen, wie Roger Sessions darstellt, sondern eine Frage der Anzahl der Verbindungen und der Stärke der Kopplung entlang dieser Verbindungen.</p>
+<p>Seine Systeme A..D sind also keine Systeme. Erst Systeme E und F sind Systeme, weil ihre Strukturbestandteile verbunden sind.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/752f4f396fe44eda.gif" /></p>
+<p>Ob sie allerdings komplex sind, hängt davon ab, ob die Änderung am Zustand eines Strukturelements eine Änderung des Zustands in anderen nach sich zieht. Kann ich einen Würfel werfen, ohne dass sich dadurch die Augenzahl der anderen ändert? Dann ist seine Verbindung zu den anderen losen und das System nicht komplex. Wenn der Wurf eines Würfels aber die Änderung der Zustände eines oder mehrerer anderer Würfel nach sich zieht... dann wird das System interessant - und komplex. Jenachdem wie die Kopplungen ausgelegt sind, wird der Zustand des Gesamtsystems mehr oder weniger schwer vorhersagbar. Und das (!) ist es, was Komplexität ausmacht.</p>
+<p>Roger Sessions System C mit seinen 216 Zuständen ist viel weniger komplex, als ein echtes System von z.B. drei Münzen wäre, die miteinander nicht nur verbunden, sondern gekoppelt wären, und das nur 2<em>2</em>2=6 Zustände hätte.</p>
+<p>Die Komplexität einer Swoloarchie hängt daher nicht nur von der Zahl der Verbindungen zwischen den Swolons ab, sondern von deren Zustandsreichtum und der Stärke der Kopplung.</p>
+<p>Was Roger Sessions daher vorschlägt mit dem Begriff der Partionierung, ist die Reduktion der Kopplung von Systembestandteilen. Er plädiert für eine Komplexitätsreduktion durch bewusste Planung und Kontrolle von Verbindungen zwischen zustandsreichen Systembereichen.</p>
+<p>Zu den von mir <a rel="noopener" href="http://ralfw.blogspot.com/2007/02/komplexitt-beherrschen.html">an anderer Stelle</a> genannten Mitteln zur Beherrschung von Komplexität müssen also noch das "Beziehungsmanagement" und die "Zustandsplanung" treten.</p>
+<p>Zum "Beziehunsgmanagement" gehört z.B. das Schichten-Entwurfsmuster. Es ordnet die Verbindungen zwischen Swolons. Swolons einer Schicht sind mit denen darunterliegender nur unidirektional verknüpft.</p>
+<p>Das N-Tier Architekturmuster für verteilte Anwendungen geht dann noch einen Schritt weiter. Es bezieht die Zustandsplanung mit ein und plädiert für eine Entkopplung von Swolons in unterschiedlichen Tiers, d.h. physischen Schichten. Swolons in der Geschäftslogik sollen vorzugsweise zustandslos sein. Sie sollen also zur Komplexität des Systems bestehend aus den Tiers Frontend-Geschäftslogik-Datenzugriff möglichst wenig beitragen.</p>
+<h5>Zusammenfassung</h5>
+<p>Swolons sind Kombinationen aus Funktionalität und Zustand. Ihre Verbindungen können uni- oder bidirektional sein. Operationen entlang dieser Verbindungen spannen ein System von Swolons auf und sind entweder zustandsneutral oder zustandsverändernd.</p>
+<p>Aber das ist natürlich noch nicht alles, was sich zu Swolons und ihren Verbindungen sagen lässt...</p>
+<h2>Kommentare</h2>
+<p><strong>Dennis Bischof</strong> (2007-03-06):</p>
+<p>Hrm... den Würfel gibt es doch gar nicht :-)</p>
+<p>Wozu auch?
+Wir denken ja in Swolons jetzt ;-)</p>
+<p>Und nach etwas überlegung behaupte ich mal, dass Münze = Würfel = Würfelautomat ist.
+Alle bestehn aus den Swolon "Seiten".
+Welcher aus den Atom True oder False besteht daher nicht mehr als ein Container ist.</p>
+<p>Das schöne ist jede Seite interessiert nicht ob es noch andere gibt :-)</p>
+<p>Was ist jetzt noch nicht verstanden habe Ralf ist:</p>
+<p>Ein Swolon kann sowohl Container sein wie auch Funktion.
+Also müsste ein Swolon auch Portal sein können.
+Was wiederrum bedeuten würde, das die Münzen nicht miteinander Kommunizieren müssen sonder nur mit den jeweiligen Portal-Swolon.
+Sind die Striche schon jene Portal-Swolons oder muss man die extra Zeichnen?</p>
+<p>Was ist wenn wie in dem Fall eine Dynamische Anzahl von Münz-Swolons angenommen werden kann?
+Legt man in der Zeichnung eine Fixe fest (mind. zwei wohl) oder wie zeichnet man sowas?</p>
+<p>Ist eine solide Basis-Klasse, welche im Grunde nur Modifizierte Portale brauch besser als zich verschiedene Klassen die aufeinander aufbauen und erben?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2007-03-06):</p>
+<p>@Dennis: Genau, ein Swolon kann Container oder Dienstleister sein. Bei einem Container-Swolon liegt die Betonung auf seinem Zustand, beim Dienstleister auf seiner Funktionalität.</p>
+<p>Ein Swolon kann natürlich auch Portal im Sinne des Softwarezellenmodells sein. Aber Portal oder Adapter oder Logik usw. sind orthogonal zu Container bzw. Dienstleister.</p>
+<p>Bei Container/Dienstleister geht es um den "Funktionalitätsgehalt", bei Portal/Adapter geht es um die Art (!) der Funktionalität, den Zweck eines Swolons im Rahmen einer Architektur in Bezug auf den Kontakt mit der Umwelt einer Software.</p>
+<p>Striche sind keine Swolons, sondern Verbindungen zwischen Swolons.</p>
+<p>Auch Portal-Swolons müssen natürlich mit anderen Verbunden sein. Ein Portal allein ist sinnlos. Da fehlt ja die Anwendungslogik (egal wie minimal die ist).</p>
+<p>Beim Zeichnen ist zwischen Entwicklungszeit und Laufzeit zu unterscheiden. In einer Grafik kann daher ein Swolon mit einem anderen Verbunden sein - und das bezieht sich auf die Entwicklungszeit. Eine Klasse "kennt" eine andere.</p>
+<p>Zur Laufzeit ist dann aber eine Instanz des so dargestellten Swolons mit vielen anderen verbunden. Ein Objekt hat Referenzen auf viele andere. Ob die Zahl der referenzierten vorher festgelegt wurde oder nicht, ist erstmal unerheblich.</p>
+<p>Deine letzte Frage zu der Basisklasse kann ich leider nicht beantworten. Ich verstehe nicht genau, was du meinst, aber ich zweifle auch, dass sich eine allgemeine Antwort geben lässt.</p>
+<hr />
+<p><strong>Dennis Bischof</strong> (2007-03-06):</p>
+<p>Ok, dann hab ich es ganz falsch verstanden.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

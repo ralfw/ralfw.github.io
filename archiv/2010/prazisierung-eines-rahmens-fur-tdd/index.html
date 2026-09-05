@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Präzisierung eines Rahmens für TDD — ralfw.de Archiv</title>
+<meta name="description" content="TDD ist nur ein Tool. Deshalb kann man TDD nicht nur besser oder schlechter bedienen, sondern auch angemessen oder unangemessen benutzen. Gestern beim 4. Coding Dojo in Hamburg gab">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/prazisierung-eines-rahmens-fur-tdd/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Präzisierung eines Rahmens für TDD — ralfw.de Archiv">
+<meta property="og:description" content="TDD ist nur ein Tool. Deshalb kann man TDD nicht nur besser oder schlechter bedienen, sondern auch angemessen oder unangemessen benutzen. Gestern beim 4. Coding Dojo in Hamburg gab">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/prazisierung-eines-rahmens-fur-tdd/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Präzisierung eines Rahmens für TDD</h1>
+    <div class="doc-meta"><span>26. Aug. 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/08/prazisierung-eines-rahmens-fur-tdd.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/prazisierung-eines-rahmens-fur-tdd/</code></span></div>
+    <div class="art"><p>TDD ist nur ein Tool. Deshalb kann man TDD nicht nur besser oder schlechter bedienen, sondern auch angemessen oder unangemessen benutzen. Gestern beim <a rel="noopener" href="https://www.xing.com/events/4-net-coding-dojo-541477">4. Coding Dojo in Hamburg</a> gab es für beides Beispiele. Das war schön, denn so konnten wir etwas lernen.</p>
+<p>Über die “Bedienung” des TDD-Werkzeugs ist anderswo schon einiges geschrieben worden. Dazu gehört die Einhaltung des Red-Green[-Refactor]-Rhythmus oder die Bennung von Tests oder die Zahl der Asserts pro Test usw. Deshalb an dieser Stelle heute keine Bemerkungen dazu.</p>
+<p>Die Angemessenheit findet allerdings aus meiner Sicht noch keine angemessene Beachtung. Wann ist TDD angemessen? Wann nutzen und wann nicht? In einem <a rel="noopener" href="http://ralfw.blogspot.com/2010/03/tdd-aber-bitte-mit-system.html">früheren Posting</a> hatte ich mir dazu schonmal Gedanken gemacht. Von dem dortigen Rahmen für TDD bin ich weiterhin überzeugt:</p>
+<ul>
+<li>Bevor Sie in die Tasten greifen und einen Test schreiben, sollten Sie sicherstellen, dass Sie das Problem durchdrungen haben.  Auch nach Durchdringung des Problems sollten Sie nich sofort loscodieren, sondern erst einen Lösungsansatz entwerfen.</li>
+</ul>
+<p>Im 4. Coding Dojo in Hamburg wurde nun gestern eine Kata fortgeführt (<a rel="noopener" href="http://codingdojo.org/cgi-bin/wiki.pl?KataPokerHands">KataPokerHands</a>), die beim 3. Dojo angefangen worden war. Bei dem bin ich nicht dabei gewesen, insofern kann ich nicht genau sagen, inwiefern sich die Gruppe in diesem Rahmen bewegt hat. Sicherlich hat man aber versucht, die Anforderungen zu verstehen. Und im Code waren auch Effekte von Nachdenken zu sehen. Dennoch bewahrheitete sich recht schnell die schon am Ende des 3. Dojos geäußerte Vermutung, dass die Lösung suboptimal sei.</p>
+<p>Meine Erkenntnis nach dem 4. Dojo ist, dass der bisherige Rahmen noch zu unpräzise ist. Er gibt am Ende der Implementation keine Richtung. Was tun mit dem Verständnis des Problems und dem Lösungsansatz? Wo und wie beginnen mit der Umsetzung des Lösungsansatzes?</p>
+<h3>TDD beginnt beim API</h3>
+<p>Ergebnis des Lösungsentwurfs ist eine Menge von Funktionseinheiten, die zusammen die Anforderungen umsetzen. Je nach Ausdauer beim Nachdenken über den Lösungsansatz sehen Lösungsansätze natürlich unterschiedlich aus. Das 3. Dojo ist für die KataPokerHands auf diese Funktionseinheiten gekommen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/ed2b96494d0668ee.png" /></p>
+<p>Mich haben 30 Sekunden Nachdenken hingegen zu einer größeren Menge Funktionseinheiten gebracht:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/db9f9e93793f6c7a.png" /></p>
+<p>Ich will nicht sagen, dass der eine oder andere Lösungsansatz besser ist. Hier gehts nur darum, dass die Funktionseinheiten des Lösungsansatzes auf unterschiedlicher Ebene liegen können. Manche sind “von außen” sichtbar – <em>Hand</em> oder <em>Pokerspiel entscheiden</em> –, manche nicht.</p>
+<p>Mit “von außen” meine ich, dass ein Nutzer der Lösung sie sieht, mit ihnen umgehen muss. Für <em>Blatt bewerten</em> in meinem Ansatz gilt das z.B. nicht; es ist eine interne Funktionseinheit, mit der ich mir die Implementation leichter machen will. Ich muss nicht erst durch TDD auf sie stoßen und durch Refaktorisierung freistellen. So mag ich es – andere ziehen einen anderen Weg vor.</p>
+<p>Nun hat also eine Entwurfsphase einen Lösungsansatz mit einigen Funktionseinheiten geliefert. Wie sollte TDD darauf nun ansetzen? Immer beim API.</p>
+<p>TDD sollte sich initial immer nur um die Member kümmern, die zum API einer Funktionseinheit gehören. Das sind die Member, die für die Nutzer einer Funktionseinheit relevant sind.</p>
+<p>Hier hatte das 3. Dojo aus meiner Sicht einen Fehler begangen bei allem guten Willen zu TDD. Damit hat man eine Chance verschenkt, durch TDD ein gutes Design “austreiben” zu lassen.</p>
+<p>Damit Sie verstehen, was ich beobachtet habe, hier die Anforderung der Kata in Kürzestform:</p>
+<blockquote>
+<p>Vergleiche zwei Pokerblätter und bestimme das Gewinnerblatt</p>
+</blockquote>
+<p>Das 3. Dojo hatte sich dafür entschieden, ein Pokerblatt durch eine Instanz der Klasse Hand zu repräsentieren:</p>
+<pre><code>class Hand
+{
+    …       
+}
+
+</code></pre>
+<p>Und dann? Dann hatte man angefangen, Tests zu schreiben für Properties, die anzeigen, ob ein Blatt der einen oder anderen Poker-Figur (Pair, Full House usw.) entspricht. Die Klasse wurde schnell mit getestetem Code gefüllt.</p>
+<pre><code>class Hand
+{
+    public bool IsPair { get {...} }
+    public bool IsThreeOfAKind { get {...} }
+    public bool IsFourOfAKind { get {...} }
+    …
+}
+</code></pre>
+<p>Die Tests waren schön grün. Aber war das Design auch gut? Nein, nicht wirklich. Das hatte die Gruppe dann auch schon am Ende des 3. Dojos erkannt und dieser Eindruck wurde beim 4. Dojo, das den Code weiterentwickeln sollte, bestätigt.</p>
+<p>Ich glaube nun, der Grund dafür, dass trotz TDD kein gute Ergebnis herausgekommen war, liegt daran, dass die Tests nicht beim API, sondern bei imaginierten Interna angesetzt haben. Aus der Aufgabenstellung geht einfach nicht hervor, ob eine <em>IsPair</em> Property o.ä. benötigt wird. <em>IsPair</em> gehört nicht zum API, weil es den Nutzer der Klasse <em>Hand</em> nicht interessiert. Der will nur wissen, welches von zwei <em>Hand</em>-Objekten der Gewinner ist.</p>
+<p>Beim 4. Dojo kam man gleich zu Beginn auf diese Frage und entschied sich, bei allen Zweifeln am Design doch den bisherigen objektorientierten Ansatz weiter zu verfolgen. Das Ergebnis sah dann so aus:</p>
+<pre><code>class Hand : IComparable&lt;Hand&gt;
+{
+    public int CompareTo(Hand other)
+    {
+        …
+    }
+}
+</code></pre>
+<pre><code>Hand h1, h2;
+…
+if (h1.CompareTo(h2) &gt; 1)
+    Console.WriteLine(&quot;h1 gewinnt&quot;);
+</code></pre>
+<p>Ein Nutzer stellt Blätter in <em>Hand</em>-Objekten zusammen und vergleicht sie über die Standardschnittstelle <em>IComparable</em>.</p>
+<p>Das ist doch ein wunderbar objektorientierter API, oder?</p>
+<p>Leider hatte das 3. Dojo nicht darüber nachgedacht oder zumindest nichts daraus gemacht. Denn hätte es seinen ersten Test gegen diesen API geschrieben, wäre die weitere Entwicklung sicherlich anders verlaufen.</p>
+<p>Beim Lösungsansatz des 3. Dojo gab es nur eine wesentliche Funktionseinheit und die deshalb auch dem Nutzer der Lösung sichtbar war. Ihr API fiel zusammen mit der Sicht des Nutzers.</p>
+<p>Mein Lösungsansatz hat hingegen nicht nur für den Nutzer sichtbare Funktionseinheiten. Was ist denn da der API z.B. für <em>Blatt bewerten</em>? Das finden Sie heraus, wenn Sie sich fragen, wer die Nutzer der Funktionseinheit sind. Das könnte z.B. die umschließende Funktionseinheit <em>Pokerspiel bewerten</em> sein. Was könnte die von <em>Blatt bewerten</em> wollen? Ich denke, in diesem Fall ist es so einfach wie: “Ich will Blatt bewerten mit einem Blatt aufrufen und eine Blattbewertung als Ergebnis bekommen.”</p>
+<p>Ich würde mich daher für eine Übersetzung von <em>Blatt bewerten</em> in eine Funktion entscheiden. Dasselbe gilt für die Funktionseinheit <em>Gewinner ermitteln</em>.</p>
+<pre><code>class Blatt
+{
+    …
+}
+
+public class PokerspielBewerten
+{
+    internal class Blattbewertung : IComparable&lt;Blattbewertung&gt;
+    {
+        …
+        public int CompareTo(Blattbewertung other)
+        {
+            …
+        }
+    }
+
+    public enum Gewinner
+    {
+        Schwarz,
+        Weiß,
+        Patt
+    }
+
+    internal Blattbewertung BlattBewerten(Blatt blatt)
+    {
+        …
+    }
+
+    public Gewinner GewinnerErmitteln(Blatt schwarz, Blatt weiß)
+    {
+        Blattbewertung bewertungSchwarz = BlattBewerten(schwarz);
+        Blattbewertung bewertungWeiß = BlattBewerten(weiß);
+
+        switch(bewertungSchwarz.CompareTo(bewertungWeiß))
+        {
+            case -1: return Gewinner.Weiß;
+            case 1: return Gewinner.Schwarz;
+            default: return Gewinner.Patt;
+        }
+    }
+}
+</code></pre>
+<p>In diesem Fall sind die APIs der nicht öffentlichen Funktionseinheiten simpel. In anderen Fällen müssen Sie etwas länger nachdenken. Immer jedoch geht es um die minimale Zahl an Members einer Funktionseinheit, die für ihre unmittelbare Umgebung, ihre Nutzer sichtbar sein müssen. Ausschließlich darauf sollte TDD ansetzen.</p>
+<p>Und wie komme ich bei meinem Lösungsansatz darauf, dass es überhaupt eine Funktionseinheit <em>Blatt bewerten</em> geben sollte? Nachdenken hilft ;-) Aber natürlich sollte das nicht zu spekulativ sein. Festzustellen, ab wann es spekulativ wird, ist einerseits Erfahrungssache, andererseits Geschmackssache. Und selbstverständlich sind Sie hinterher immer schlauer; sie können sich also auch vertun und zuwenig oder zuviel nachdenken. Das passiert. Es deshalb jedoch zu lassen, verschenkt Produktivitätspotenzial.</p>
+<h3>Ohne Nutzen nützt TDD nichts</h3>
+<p>Mit TDD konsequent nur auf dem API von Funktionseinheiten zu beginnen, ist ein Erfolgsfaktor. Bis Sie damit Erfolg haben, kann es jedoch dauern. Deshalb sollten Sie ebenfalls beachten: Produzieren Sie so schnell wie möglich Nutzen.</p>
+<p>Auch hier hatte das 3. Dojo “gesündigt”. Nach mehreren Stunden der Arbeit konnte der Code zwar eine Menge und alle Tests waren grün – nur wäre keine Auslieferung des Codes möglich gewesen. Es gab keinen API, es gab nichts für einen Nutzer Nützliches. Die so entscheidende Vergleichsfunktionalität für <em>Hand</em>-Objekte gab es nicht.</p>
+<p>Hätte das 3. Dojo mit Tests durch den API begonnen, wäre das Problem nicht vorhanden oder zumindest nicht so groß gewesen. Doch auch dann wäre die Marschrichtung noch nicht sonnenklar gewesen. Wie hätte man entwickeln sollen? Zuerst alle Figuren erkennen und vergleichen können? Oder nur wenige Figuren, dafür aber die auch noch nach ihrem Kartenwert unterscheiden können (ein 2-Pair ist weniger wert als ein König-Pair)?</p>
+<p>Diese Frage stellt sich noch deutlicher, wenn Ihr Lösungsansatz mehrere Funktionseinheiten enthält. Sollte ich zuerst <em>Blatt bewerten</em> komplett implementieren, bevor ich mich an <em>Gewinner ermitteln</em> machen?</p>
+<p>Suchen Sie die Antwort immer beim Kundennutzen. Stellen Sie sich vor, dass der Kunde nach dem nächsten grünen Test die Software ausprobieren möchte. Kann er das? Haben Sie mit dem letzten red-green-Zyklus etwas geschaffen, das für den Kunden einen Unterschied macht?</p>
+<p>Implementieren Sie also immer in Durchstichen. Bei mehreren Funktionseinheiten sollten Sie sich also nicht an internen festbeißen. Übertragen auf meinen Lösungsansatz hatte das 3. Dojo seine ganze Energie in <em>Blatt bewerten</em> investiert. Es hätte nicht ausliefern können. Ohne <em>Gewinner ermitteln</em> wäre für den Kunden/Nutzer kein Wert erkennbar gewesen.</p>
+<p>Darüber hinaus hatte dsa 3. Dojo aber auch unabhängig von den Funktionseinheiten den Fokus auf der Implementation der Figurenerkennung. Die ist ber nur für einen Teil der Gewinnermittlung relevant. Bei gleicher Figur geben die Kartenwerte den Ausschlag. Und bei gleichen Kartenwerten die Bewertung der nicht zur Figur gehörenden Karten.</p>
+<p>Diese weiteren Bewertungen waren nicht angegangen worden. Man hatte also keinen Eindruck davon, ob sie einfach oder kompliziert durchzuführen wären. Vielleicht wären sie ja sogar entwurfsrelevant gewesen?</p>
+<p>Teilen Sie Anforderungen in Äquivalenzklassen und realisieren aus jeder zunächst nur ein Feature. Die Äquivalenzklassen für das Pokerspiel sind aus meiner Sicht:</p>
+<ul>
+<li>Karten haben eine Farbe
+Karten haben einen Wert
+Gewinnerkennung aufgrund Figur
+Gewinnerkennung bei gleicher Figur nach Kartenwert
+Gewinnerkennung bei gleicher Figur und gleichem Kartenwert nach Restkartenwert</li>
+</ul>
+<p>Es hätte dann genügt, Karten mit zwei Farben und Werten zu erkennen. Und es hätte vor allem genügt, nur Zwillinge und eine kleine Straße als Figuren zu erkennen, aber auch deren Kartenwert und Restkartenwert zu bestimmen.</p>
+<p>Ein imaginierter Kunde hätte dann schon ganz verschiedene Aspekte eines Pokerspiels ausprobieren können. Das hätte geholfen herauszufinden, ob die Anforderungen verstanden wurden. Und das hätte geholfen, das Design möglichst früh auszutreiben bzw. zu verifizieren.</p>
+<h3>Fazit</h3>
+<p>TDD is the way to go beim Unit Testing. Aber nicht grüne Tests allein oder der Rhythmus red-green[-refactor] sind ausreichend. Softwareentwicklung und Testen sind kein Selbstzweck. Denken Sie daher immer an den Nutzer des System under Test. Beginnen Sie Ihre Tests beim API der entworfenen Funktionseinheiten; starten Sie also mit Black Box Tests Ihrer Systems under Test. (Was nicht heißt, dass TDD bedeutet, sie sollten nur Black Box Tests schreiben; Funktionseinheiten, die TDD austreibt, können sehr wohl unsichtbar für einen SUT-Nutzer sein. D.h. auch White Box Tests sind völlig ok mit TDD, nein, sie sind am Ende sogar eigentlich immer nötig.)</p>
+<p>Produzieren Sie dann so schnell und so vielfältig Kundennutzen in möglichst vielen Bereichen.</p>
+<p>Selbst wenn Sie nicht viel von großartiger Architektur halten, tun Sie Ihrer TDD Praxis einen gefallen, wenn Sie immer den Kunden im Blick haben. Auch nicht zu verachten ist, dass kleine Nutzeninkremente und quasi ständige Auslieferfähigkeit Ihnen ein gutes Gefühl machen.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2010-08-26):</p>
+<p>Hallo Ralf,</p>
+<p>vielleicht wäre BDD das richtige Framework zur testgetriebenen Entwicklung gewesen, weil dadurch auch verschiedene Szenarien im Vorfeld ("eine Karte", "zwei Karten") dargestellt werden könnten. Der Kunde kann danach (bei grün) sofort selber ausprobieren, ob die Anwendung seinen Wünschen entspricht.</p>
+<p>Allerdings stellt sich dann auch die Frage, ob StoryQ bspw. im Rahmen eines Dojos nicht zu techniklastig ist.</p>
+<p>Viele Grüße,
+André</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-08-26):</p>
+<p>Hallo Ralf,</p>
+<p>Ihren, zugegebener Maßen sehr umfangreich und ausführlich dargelegten Gedanken zufolge, müsste man das Dojo in ein (Architektur &amp;) Design Treffen und ein TDD Dojo teilen?
+Natürlich wurden im 3. Dojo einige, teils gewichtige (teure) Fehler gemacht.
+Natürlich verlangt jede SW-Entwicklungsaufgabe eine zu ihrer Komplexität angemessene Durchdringung.
+Ich gehe davon aus, dass alle Teilnehmer gestern Abend neue Erkenntnisse gewonnen haben. Für meinen Teil bekam ich die (triviale?) Bestätigung, dass man vor dem Angehen einer Aufgabe eine <em>hinreichende</em> Durchdringung derselben haben muss. Ob das allerdings gleich ein „komplettes“ Design sein muss, darf aus Sicht des TDD bezweifelt werden. Wenn das von Ihnen oft zitierte Nutzer-API bestimmt ist, kann bereits losgelegt werden, oder? Enthusiasten meinen ja, dass TDD selbst Design austreiben kann und immerhin erzeugt man dann schon (nutzbringenden) Kode, anstatt sich möglicherweise in Design zu verlieren. (Nicht immer und nicht jeder hat bereits nach 30 Sekunden eine Design-Lösung parat.)
+Fazit: Etwas mehr Augenmerk auf die Bestimmung des Nutzer-API zu Beginn. Ggf. auch zeitige „Durchstiche“, um das sich entwickelnde Design auszuleuchten. Ansonsten aber striktes Festhalten an TDD, denn genau darum geht es in diesem Dojo. Und insbesondere „durchstichige“ Refaktorierungen mit YAGNI/KISS-Smell vermeiden.</p>
+<p>Grüße,</p>
+<p>Ihr CoPilot</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-08-26):</p>
+<p>@Copilot: API als Ausgangspunkt und Denken in Durchstichen - ja, ich würd sagen, dass ich das allermindeste, was man zu TDD noch hinzunehmen muss, damit es klappt.</p>
+<p>Zwar bin ich davon überzeugt, dass weiteres Nachdenken auch sehr hilfreich ist... Aber darüber können wir ein andermal sprechen.</p>
+<p>(Sitze grad bei einem Kunden, der zur Übung ein internes Dojo macht. Da wurde z.B. auch zuviel nachgedacht. Bringt dann auch nix.)</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-09-29):</p>
+<p>Hallo Ralf,</p>
+<p>Deine Funktion BlattBewertung BlattBewerten(Blatt blatt) braucht ja auch eine öffentliche Schnittstelle für das Blatt.
+Hast Du nicht dasselbe Problem wieder, dass Du am Blatt Methoden
+publizieren musst, die das Pokergame nicht braucht?</p>
+<p>Markus</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-09-29):</p>
+<p>@Markus: Das Blatt ist nur eine Datenstruktur. Die ist nicht intelligent. Oder muss es zumindest nicht sein. So trenne ich Logik von Datenstruktur. Ist für mich eine saubere Separation of Concerns.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

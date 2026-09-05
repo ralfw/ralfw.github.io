@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bindungsenergie – Gedanken über ein Tooling für Event-Based Components — ralfw.de Archiv</title>
+<meta name="description" content="Der Gewinn, den Event-Based Components (EBC) bringen, steht nach meinem vorhergehenden Blogartikel inzwischen unzweifelhaft fest. Bevor EBC weitere Kreise ziehen können, muss es da">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/bindungsenergie-gedanken-uber-ein/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bindungsenergie – Gedanken über ein Tooling für Event-Based Components — ralfw.de Archiv">
+<meta property="og:description" content="Der Gewinn, den Event-Based Components (EBC) bringen, steht nach meinem vorhergehenden Blogartikel inzwischen unzweifelhaft fest. Bevor EBC weitere Kreise ziehen können, muss es da">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/bindungsenergie-gedanken-uber-ein/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Bindungsenergie – Gedanken über ein Tooling für Event-Based Components</h1>
+    <div class="doc-meta"><span>26. Feb. 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/02/bindungsenergie-gedanken-uber-ein.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/bindungsenergie-gedanken-uber-ein/</code></span></div>
+    <div class="art"><p>Der Gewinn, den Event-Based Components (EBC) bringen, steht nach meinem <a rel="noopener" href="http://ralfw.blogspot.com/2010/02/verbindungsstucke-event-based.html">vorhergehenden Blogartikel</a> inzwischen unzweifelhaft fest. Bevor EBC weitere Kreise ziehen können, muss es dafür aber ein Tooling geben, glaube ich. Dependency Injection kann man von Hand betreiben – aber das macht keinen Spaß, wenn die Anwendungen größer werden. Dasselbe gilt sogar potenziert für die Verdrahtung von EBC “Pins”. Deren Zahl ist viel größer als die der Interfaces, für die DI zuständig ist.</p>
+<p>Wie könnte also ein Unterstützung von EBCs mit einem “Container” aussehen?</p>
+<p>Die Grundsituation sieht so aus: Komponente Client und Service sind zusammen zu stecken. Client publiziert dafür einen Event, Service einen Event-Handler. Der Event ist der Output-Pin, der mit dem Event-Handler als Input-Pin verbunden werden muss. Zwischen beiden ist eine Leiterbahn zu legen.</p>
+<blockquote>
+<p><em>Anmerkung</em>: Ich benutze ab jetzt Begriffe aus der Elektrotechnik ohne Anführungszeichen. Platine, Pin, Bauteil, Leiterbahn usw. scheinen mir einfach so gut zu passen, dass ich sie nicht mehr als Analogie hervorheben will, sondern für den Moment mal zu EBC-Fachbegriffen mache.</p>
+</blockquote>
+<p>Die EBC-Bauteilspezifikationen sehen dafür z.B. so aus:</p>
+<p>interface IClient</p>
+<p>{</p>
+<p>event Action OnOutput;</p>
+<p>}</p>
+<p>interface IService</p>
+<p>{</p>
+<p>void ProcessString(string text);</p>
+<p>}</p>
+<p>Konkrete Bauteile, die diesen Spezifikationen folgen, können dann so zusammengesteckt werden:</p>
+<p>IService s = new Service();</p>
+<p>IClient c = new Client();</p>
+<p>c.OnOutput += s.ProcessString;</p>
+<p>Das ist ganz einfach. Aber wenn es um mehr als 2-3 Leiterbahnen geht, dann wird es lästig. Wie kann das also automatisiert werden?</p>
+<h2>Vom Nutzen eines DI Container</h2>
+<p>Zunächst dachte ich, ein DI Container hat bei EBC nicht mehr soviel Bedeutung. Doch das stimmt nicht. Er seinen vollen Wert für die <em>Build Phase</em>. In der werden die EBC-Bauteile instanziert. Die legt sie sozusagen auf die Werkbank, bevor sie in der <em>Bind Phase</em> auf einer Platine zusammengesteckt werden.</p>
+<p>Im obigen Beispiel besteht die Build Phase aus den beiden Instanzierungen. Mit einem DI Container kann die so aussehen:</p>
+<p>IUnityContainer uc = new UnityContainer();</p>
+<p>uc.RegisterType();</p>
+<p>uc.RegisterType();</p>
+<p>IService s = uc.Resolve();</p>
+<p>IClient c = uc.Resolve();</p>
+<p>Obwohl die EBC-Komponenten keine funktionalen Abhängigkeiten untereinander haben, lohnt sich der Einsatz eines DI Containers. Denn zum einen können Bauteile von anderer Funktionalität abhängen, die nichts mit EBC zu tun hat. Zum anderen können Bauteile Platinen sein und insofern doch von Bauteilen abhängen. Davon später mehr.</p>
+<p>Wenn Sie sich auf EBC einlassen, vergessen Sie Ihren liebsten DI Container also nicht! Instanzieren Sie die EBC-Bauteile mit ihm.</p>
+<h2>Bauteile binden</h2>
+<p>Die Herausforderung für das Tooling rund um EBCs liegt also nicht in der Instanzierung, sondern in der automatischen Verbindung von Pins, d.h. in der Bind Phase. Die besteht im Beispiel nur aus einer Zeile:</p>
+<p>c.OnOutput += s.ProcessString;</p>
+<p>Wenn das nun mehr Zeilen werden, wie könnte Ihnen ein Tool die Arbeit abnehmen? Ich stelle mir das derzeit so vor:</p>
+<p>ComponentBinder.Bind(c, s);</p>
+<p>Schön einfach, oder? So soll es ja auch sein. Die <em>Bind()</em>-Methode soll halt irgendwie dafür sorgen, dass die Input- und Output-Pins der übergebenen Bauteile “zu einander finden”. Ganz allgemein sollen Sie also <em>Bind()</em> Instanzen aller zu verdrahtenden Bauteile übergeben. Wieviele das sind, hängt vom Abstraktionsniveau des Codes ab, in dem die Bindung stattfindet.</p>
+<p>Sie können sich z.B. entscheiden, nur mit atomaren Bauteilen zu arbeiten. Dann rufen Sie <em>Bind()</em> nur einmal mit all diesen Bauteilen auf. Für die Bauteile</p>
+<p>A-&gt;B-&gt;C-&gt;D</p>
+<p>sähe das so aus: <em>Bind(a, b, c, d)</em></p>
+<p>Wenn Sie allerdings Bauteile auf Platinen zu größeren Einheiten aggregieren, dann sieht das anders aus:</p>
+<p>A-&gt;Platine(B-&gt;C)-&gt;D</p>
+<p>würde zu den Aufrufen <em>Bind(a, platine, d)</em> und <em>Bind(b, c)</em> führen.</p>
+<p>Aufgerufen wird Bind() immer von einer Platine. Im einfachsten Fall gibt es nur eine für Ihre ganze Anwendung. Sobald die Sache jedoch etwas größer wird, werden Sie Bauteile auf kleineren Platinen zusammenfassen und sogar Platinen wieder auf größeren zusammenstecken. Davon gleich mehr.</p>
+<p>Wie kann eine automatische Bindung von Output- mit Input-Pin stattfinden? Die Pins haben folgende Grundform:</p>
+<p>Output: <em>event Action _</em>
+Input: <em>void <em>(T </em>) {…}</em></p>
+<p>Die Unterstriche stehen hier für Angaben, die für die Bindung zunächst nicht relevant sind. Im ersten Anlauf würde ich einfach mal alle Methoden mit 1 Parameter vom Typ T und ohne Rückgabetyp als Event-Handler bei allen Events vom Typ Action registrieren.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/8d37d8c6c4d77f41.png" /></p>
+<p>Jedem Event sind also potenziell mehrere Event-Handler zugeordnet:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/1bc820e412c83812.png" /></p>
+<p>Und falls es mehrere Events vom selben Typ gibt, dann sind die Event-Handler mit all diesen Events verbunden:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/4b426b65e943b84a.png" /></p>
+<p>Wer solches Leiterbahnenspaghetti vermeiden möchte, der muss einfach nur zusehen, dass sich die Typen der Events konsequent unterscheiden und dass es für jeden Event-Typ nur einen Handler gibt.</p>
+<p>Soweit eine erste einfache Bindungsalgorithmusversion. Eine zweite Version könnte dann auch noch die Namen der Pins mit einbeziehen. Dann würden nur Pins verbunden, deren Typen übereinstimmen und (!) bei denen auch irgendwie die Namen passen. Dazu braucht es eine Konvention. Die könnte so aussehen:</p>
+<p>Events haben den Präfix “On”, Event-Handler der Präfix “Process” oder “Handle”. Pins werden zusammengesteckt, wenn sie im Typ übereinstimmen und in dem, was auf den jeweiligen Präfix folgt:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/b3936a602bec4d0e.png" /></p>
+<p>Dem Nachrichtentypnamen ist sozusagen noch ein Pinname zugeordnet. Im vorstehenden Bild sind das T.X und T.Y.</p>
+<p>Das scheint mir zunächst auszureichen. Das Matching der Output- mit den Input-Pins kann dann so ablaufen:</p>
+<ul>
+<li>Sammle alle Output-Pins<ul>
+<li>Sammle alle Input-Pins</li>
+<li>Für jeden Output-Pin…             Finde alle Input-Pins, die zu seinem “qualifizierten Typ” (Typ + Pinname) passen<ul>
+<li>Wenn es solche Pins gibt, dann registriere sie als Event-Handler…</li>
+<li>…ansonsten suche alle Pins, die nur zu seinem Typ passen                     Wenn es solche Pins gibt, dann registriere sie als Event-Handler…<ul>
+<li>…ansonsten hängt der Output-Pin in der Luft. Was tun? Ich denke, das ist eine Fehlermeldung wert – es sei denn, auf die wird ausdrücklich verzichtet.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Schritte 1. und 2. laufen auf allen an <em>Bind()</em> übergebenen Bauteilen ab. Alle Bauteile sind gleich. Wie schon in einem früheren Posting geschrieben, gibt es bei EBC formal keine Client-Service-Abhängigkeiten. Dadurch ist es auch möglich, eine Komponente mit sich selbst zu verbinden. Rekursionen sind also auch möglich.</p>
+<h2>Platinen</h2>
+<p>Platinen sind ebenfalls EBC-Komponenten. Sie erfüllen allerdings keine Funktion im Sinne einer Geschäftslogik. Ihre Verantwortlichkeit ist allein die Aggregation von Bauteilen. Platinen bestehen daher vor allem aus einem Konstruktor, in dem die Platinenbauteile zusammengesteckt werden.</p>
+<p>Hier ein simples Szenario:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c2ffbef3c90214b0.png" /></p>
+<p>Das Bauteil in der Mitte empfängt T-Nachrichten und erzeugt S-Nachrichten. Ob es atomar ist und die Transformationvon T nach S selbst vornimmt oder “nur” eine Platine ist, die andere Bauteile zu diesem Zweck aggregiert, das ist für die anderen Bauteile nicht erkennbar und auch nicht wichtig. Womöglich verändert sich das auch über die Zeit. Die Spezifikation bleibt gleich:</p>
+<p>interface IMittelteil</p>
+<p>{</p>
+<p>void ProcessX(string _);</p>
+<p>event Action OnY;</p>
+<p>}</p>
+<p>Im Falle einer Platine sieht die Implementation allerdings speziell aus. Nehmen wir mal an, dass auf dem Mittelteil als Platine zwei andere Bauteile stecken:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/bdc73eee7c06d27d.png" /></p>
+<p>Dann sähe die Implementation des Mittelteils mindestens so aus:</p>
+<p>class Platine : IMittelteil</p>
+<p>{</p>
+<p>public Platine(IB b, IC c)</p>
+<p>{</p>
+<p>…</p>
+<p>ComponentBinder.Bind(b, c);</p>
+<p>}</p>
+<p>…</p>
+<p>Die Platine sorgt dafür, dass ihre Bauteile verdrahtet werden. Welche Bauteile das sind, bekommt sie über DI mitgeteilt. Hier tut also der DI Container wieder gute Dienste.</p>
+<p>Auch wenn die Aufgabe der Platine denkbar simpel ist (und sie daher viele Abhängigkeiten haben darf), so ist sie wie oben noch nicht vollständig. Ihre Bauteile sind zwar untereinander verdrahtet – aber es fehlt die Verbindung zu den Pins der Platine. Der Input in die Platine muss ja in ihr Bauteil B fließen und Output aus C muss an die Umwelt der Platine weitergereicht werden.</p>
+<p>Der Input-Event-Handler der Platine muss dazu mit dem Input-Event-Handler von B verbunden werden. Und der Output-Event von C muss den Output-Event der Platine feuern:</p>
+<p>class Platine : IMittelteil</p>
+<p>{</p>
+<p>private IB b;</p>
+<p>public Platine(IB b, IC c)</p>
+<p>{</p>
+<p>this.b = b;</p>
+<p>this.c.OnY += x =&gt; this.OnY(x);</p>
+<p>…</p>
+<p>}</p>
+<p>public void ProcessX(string _)</p>
+<p>{</p>
+<p>this.b.ProcessX(_);</p>
+<p>}</p>
+<p>public event Action OnY;</p>
+<p>}</p>
+<p>Inputs einer Platine müssen an Inputs von Bauteilen weitergeleitet werden, unverdrahtete Output-Pins von Bauteilen müssen verbunden werdne mit Output-Pins der Platine.</p>
+<p>Das ist – wie gesagt – nicht schwierig und sehr regelmäßig - dennoch ein wenig nervig. Im Augenblick sehe ich allerdings noch keinen Weg, um das zu automatisieren. Die Verbindung von Bauteil-Outputs mit Platinen-Outputs wäre möglich, weil dafür nur ein Delegat ad hoc erzeugt werden muss (s. Lambda Funktion im Ctor). Aber was tun mit der Weiterleitung vom Platinen-Event-Handler zum Bauteil-Event-Handler? Vielleicht ist da etwas zu machen, wenn Platinen abstrakte Basisklassen sind oder ihre Event-Handler virtuelle Methoden? Dann könnte man von ihnen zur Laufzeit ableiten und die Event-Handler überschreiben. Hm… darüber muss ich mal nachdenken. Für den Anfang kann ich allerdings auch ohne eine Automatisierung dieses Aspektes der Verdrahtung von EBCs leben.</p>
+<h2>Injektionen</h2>
+<p>Wenn eine automatische Bindung grundsätzlich funktioniert, dann wäre der nächste Schritt, in diesen Prozess eingreifen zu können. Ich könnte mir vorstellen, dass ein <em>ComponentBinder</em> Events feuert, wenn er dabei ist, Pins zu verbinden. Auf diesen Events könnten Sie lauschen und eingreifen. Eine Verdrahtung könnte unterdrückt werden. Oder sie könnten einen anderen Event-Handler-Delegaten zurückreichen (z.B. einen für einen Tracer).</p>
+<p>Alternativ könnten dem <em>ComponentBinder</em> Prädikate mit anhängenden Kommandos mitgegeben werden. Bei jeder bevorstehenden Bindung könnten die Prädikate geprüft und bei Wahrheit ihre Kommandos ausgeführt werden.</p>
+<p>In jedem Fall scheint mir die Injektion von Zwischenstücken zwischen Output- und Input-Pins, wenn sie denn von Hand vorgenommen wird, keine so große Sache. In einer ersten Version eines Binders würde ich sie dennoch raus lassen.</p>
+<h2>Automatische Dokumentation</h2>
+<p>Ein interessanter Aspekt ist mir noch zur automatischen Bindung eingefallen: Der Binder “sieht” ja alle Bauteile. Warum sollte er dann nicht auch Auskunft geben darüber, welche das sind und wie er sie verdrahtet hat? Konkret: Warum sollte der Binder nicht eine Dokumentation generieren können über die Schachtelung und Verbindung von Bauteilen? In einem XML-Format ausgegeben könnte daraus anschließend eine Visualisierung der de facto Architektur generiert werden. Wie wäre das?</p>
+<p>DI Container hätten das auch immer schon tun können. Haben sie aber nicht. Schade. So kann es denn ein <em>ComponentBinder</em> von vornherein besser machen.</p>
+<p>PS: Jetzt hab ich es doch schon getan. Eine erste Version eines Binders für EBCs ist online bei CodePlex unter <a rel="noopener" href="http://ebcbinder.codeplex.com/">http://ebcbinder.codeplex.com</a>:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2cac5c2534c7dff8.png" /></p>
+<p>Probieren Sie den Binder mal aus. Dann diskutieren wir im Forum des Projektes, wie es damit weitergehen kann.</p>
+<h2>Kommentare</h2>
+<p><strong>Markus</strong> (2010-02-27):</p>
+<p>Zum Problem der event-Weiterleitung von der Platine zum Bauteil:
+Wäre nicht die Lösung die Handler explizit zu definieren?</p>
+<p>In etwa so:</p>
+<p>public event Action OnY
+{
+  add
+  {
+    this.c.OnY += value;
+  }
+  remove
+  {
+    this.c.OnY -= value;
+  }
+  }</p>
+<p>Oder spricht etwas dagegen?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-02-27):</p>
+<p>@Markus: Es geht um die Weiterleitung des Event-Handler Aufrufs auf der Platine an den Event-Handler des Bauteils. Also Platine.ProcessX() and B.ProcessX().</p>
+<p>Die Events (On_) sind kein Problem.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Volker von Einem</strong> (2010-02-28):</p>
+<p>Hallo Ralf,</p>
+<p>ich finde Deine Reihe zur EBC Architektur wirklich lesenswert!
+Allerdings bin ich mir nicht sicher, ob diese automatische Bindung über Typ und Namenskonvention wirklich zielführend ist.
+Wenn man das mal wieder auf die Elektronik überträgt, hieße das doch: Ich schmeiße 3 Transistoren, einen OPV und 5 Wiederstände auf den Tisch, und diese verbinden sich dann, wie von Geisterhand und machen dann noch etwas sinnvolles.</p>
+<p>Habe ich da was falsch verstanden?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-02-28):</p>
+<p>@Volker: Ja, wie von Geisterhand sollen die Pins der Komponenten verbunden werden.</p>
+<p>Bei Hardware geht das nicht. Bei Software schon. Warum also nicht?</p>
+<p>Konsequente Namensgebung (convention over configuration) hat schon andere Plattformen einen Siegeszug antreten lassen.</p>
+<p>Ich kann deine Bedenken andererseits auch verstehen. Findet da wirklich zueinander, was zueinander gehört?</p>
+<p>Ich denke, das funktioniert. Technisch ohnehin. Ich habs ja schon gebaut ;-) Aber ich behaupte nicht, dass es schon fertig ist. Es braucht Nachvollziehbarkeit. Also müssen passende Logs (bei Bedarf) produziert werden. Und es müssen auch Ausnahmen und Sonderwege möglich sein. Aber das ist mit Platinen ja kein Problem. Die können die autom. Bindung nutzen - oder auch nicht. Wie du magst.</p>
+<p>Überhaupt kannst du auf die autom. Verdrahtung verzichten. Kein Problem. Du musst dich auch an keine Namensregel halten. Alles ok. Nur sobald es regellos wird (in Bezug auf Namen und Parameter), musst du eben auf gute alte Handarbeit umsteigen. Das kann dann sehr mühsam sein. Aber es geht ohne Frage.</p>
+<p>Eigentlich sind Interfaces übrigens auch nicht viel anders. Die Konvention lautet da nur: Einer der es haben will, muss es z.B. im Ctor verlangen. Und einer der es anbieten will, muss es implementieren. Zusammenstecken tut dann der DI Container. Es gibt nur viel weniger Interfaces als "Pins".</p>
+<p>Das mag für die autom. Injection vorteilhaft sein. Aber für die Defintition einer Komponentenspezifikation ist das nachteilig, wie ich gezeigt habe. Die ist mit "traditionellen" Interfaces nicht mehr self contained. Und Interfaces als "Noppen" oder Steckverbindungen sind sehr grob granular. Von den Schwierigkeiten der Interception will ich gar nicht erst anfangen.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Markus Schmidt</strong> (2010-03-04):</p>
+<p>Hallo Ralf,
+Es gibt da ein paar Dinge, die mir durch den Kopf gehen. Die ersten zwei Dinge betreffen das Verhalten zur Laufzeit:</p>
+<p>a) Events - und mehrere Objekte die einen Event beim der gleichen Event-Quelle (gleiches Objekt) registrieren. Da ist durchaus Vorsicht geboten, denn jedes Objekt muss beim Beenden (Dispose) alle registrierten Events wieder de-registrieren. Ansonsten gibt’s „Geisterobjekte“, die durch nicht aufgelöste Eventhandler im Speicher bleiben und weiterhin Events empfangen und bearbeiten! Auch dann, wenn offensichtlich die letzte Referenz auf ein Objekt aufgelöst wurde. Ich denke, Du weißt was ich meine!?
+b) Der zweite Punkt ist das synchrone Verhalten. Man sollte sich darüber klar sein, dass beim synchronen „versenden“ einer Nachricht, der Response-Eventhandler erst dann aufgerufen werden kann, wenn der Aufrufer fertig ist – nichts mehr tut! Wer also in einer Schleife viele Requests absetzt, wird die erste Response-Message erst dann bekommen, wenn die Schleife beendet ist.</p>
+<p>Beides Dinge, die vielen Programmierern so sicher nicht bewusst sind.</p>
+<p>Dabei fiel mir auf, dass Du vielleicht noch klarer Darstellen solltest, dass nicht jede <em>Klasse</em> so ausgeprägt werden sollte, wie beschrieben. Sonst kommen die Programmierer noch auf die Idee, die Kommunikation von Klassen innerhalb einer Assembly so zu programmieren.</p>
+<p>Generell halte ich Deinen Ansatz für gut. Allerdings nicht für jeden Zweck!</p>
+<p>Wenn die Komponentenkommunikation synchron ausgeprägt ist - Laufzeit: Client wartet auf Server und er benötigt das Ergebnis, bevor er weitermachen kann - dann halte ich die oben genannten Gefahren der „virtuellen“ Asynchronität (Events) für relativ hoch. Ich bin (noch) nicht sicher, ob ich Dein Modell dafür wählen würde … . Vielleicht ist mir auch der Programmfluss (wie gesagt bei synchroner Verarbeitung) durch die vielen Events nicht mehr ganz transparent. Man erkannt ja nicht mehr, was in welcher Reihenfolge ausgeführt wird.</p>
+<p>Sinn macht das Ganze, wenn die die Komponenten tatsächlich asynchron laufen – also die Messages tatsächlich jederzeit hin- und herfeuern, weil sie die Objekte in unterschiedlichen Threads ablaufen. Aber auch dann wird’s für viele Programmierer komplex. Wenn der Request und der Response „gleichzeitig“ laufen, wollen Ressource geschützt werden etc.</p>
+<p>Zu guter Letzt: ich programmiere gerne asynchron und auch event-basiert.
+Was mir bei Deinem Modell vielleicht fehlt, ist eine Statemachine, die mir meine Objekte zur Laufzeit verwaltet! Die Statemachine könnte dann auch das Tracing der Messages etc. übernehmen und die „überflüssigen“ Eventhandler eliminieren … ich muss das mal zu Ende denken … ist momentan mehr so ein „Gefühl“, dass das gut sein könnte – gerade bei asynchronen (multi-threaded) Nachrichten, bei denen Objekte im Speicher bleiben müssen (z.B. Port-Listener, ... ).
+Gruß aus Wiesbaden
+Markus Schmidt</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-03-04):</p>
+<p>@Markus: Danke für deine ausführlichen Gedanken. Ich glaube aber, wir haben noch ein Missverständnis: EBCs sind eben nicht (!) für async Kommunikation gedacht. Sie sehen vielleicht so aus, funktionieren aber sync. Mit Absicht. Sie bieten damit einen Migrationspfad von methdodenbasiert sync nach eventbased async.</p>
+<p>Zu deinen Punkten im einzelnen:</p>
+<p>a) Nein, da sehe ich keine Gefahr. Oder jedenfalls nicht mehr Gefahr als bei jeder anderen Eventverwendung. Was du beschreibst ist kein spezielles Problem von EBCs.</p>
+<p>Ich meine sogar, dass EBCs mit diesen potenziellen Problemen wenig zu tun haben. EBCs sind Singletons oder zumindest Objekte, die während der ganzen Anwendungslaufzeit existieren. Die werden instanziert... und dann bleiben sie. Wie die Bauteile auf einer Platine. Die tauscht man auch nicht während des Betriebs aus.</p>
+<p>Das kann man zwar mit Softwarebauteilen machen. Aber das ist vergleichsweise selten. Dann muss man halt aufpassen. Joe Developer wird damit erstmal nix zu tun haben.</p>
+<p>b) Das Gegenteil ist der Fall. Der Response-Handler wird schon aufgerufen während der Request noch nicht zurückgekehrt ist. Aufrufender Code muss also reentrant ausgelegt sein.</p>
+<p>Auch wenn man das verstehen muss, halte ich das für kein so großes Problem. Der Gewinn der Ereignisbasiertheit ist so groß, dass man diese kleine Unannehmlichkeit in Kauf nehmen kann.</p>
+<p>Du hast Recht: Nicht mit jeder Klasse soll eventbasiert kommuniziert werden. Wir reden ja aber auch über Komponenten und nicht über Klassen. Das ist ein anderes Abstraktionsniveau.</p>
+<p>Was man innerhalb einer EBC tut, ist quasi egal. Und was zwischen EBCs fließt, das ist auch keine EBC. EBCs unterscheiden noch klarer als "traditionelle" Komponenten zwischen Prozess und Daten.</p>
+<p>Ich halte EBCs für jeden Zweck angemessen. Damit meine ich, dass sie nicht auf spezielle Anwendungen beschränkt sind. Buchhaltung oder Game, egal.</p>
+<p>Aber EBCs sind halt eben Komponenten und insofern sind sie recht grobe Funktionseinheiten. Sie sind architekturrelevante Funktionseinheiten.</p>
+<p>Eine Entität würde ich nicht als EBC auslegen. Eine Entität ist "Material", das zwischen EBCs fließt und von ihnen verarbeitet wird. Aber ein Repository ist eine EBC.</p>
+<p>Ein Zustandsautomat mag ein Pattern sein, das man mal generell implementieren kann. Ich sehe aber nicht, dass der ganz allgemein fehlt im Konzept der EBCs. EBCs beschreiben die Form von Komponenten, nicht ihre Funktionalität.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>frank jurisch</strong> (2010-03-08):</p>
+<p>Geht doch wenn man ein wenig drin rumspielt. Die Bedenken mit der Magie sind berechtigt wenn man meint die Beispielimplementierung von Compomentbinder ist schon der Verkaufsschlager. Da brauchts dann wirklich eine absolute Passfähigkeit der Pins die zusammengehören sollen. Da wird es dann mit gleichartigen Bauteilen schwierig, die verkuppeln sich so oft sie können: Kurzschluss weil jedes OnStrom mit jedem ProcessStrom. Eine kleine Ergänzung im Bind unterscheidet aber schon die Typen und ein wenig Reflection mehr erlaubt sicher feinere Differenzierungen. Ausprobiert und ja:<a rel="noopener" href="http://ebcbinder.codeplex.com/Thread/View.aspx?ThreadId=204254">es gefällt mir</a>.
+Mal Zeit dazu: Danke Ralf für Deine tollen Ideen und vor allem Beispielimplementierungen nicht nur hier.
+Ein "tiefgründendes"  brown-vb6  (schwimmende Torfinseln) hat mein Interesse an eventbasiertem Eindringen seit einigen gelungenen Interceptions in Beschlag.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-03-10):</p>
+<p>@Frank: Danke für deine Mühe mit den Posting bei ecbbinder.codeplex.com.</p>
+<p>Klar, da ist beim ComponentBinder noch was zu tun. Ist bisher ein erster Wurf.</p>
+<p>Inzw. halte ich die Reichweite eines ComponentBinder aber auch für begrenzt. Der ist nett für den Einstieg - doch schon recht bald stößt man auf Szenarien, wo die Namenskonventionen nicht helfen oder gar nicht eingehalten werden können.</p>
+<p>Der wesentliche Schritt in der Zukunft muss daher sein, eine Designhilfe zu haben.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Peter</strong> (2010-05-22):</p>
+<p>Hallo Ralf,
+nun habe ich mich für ein neues Projekt auch dieser "Erfindung" angenommen und habe noch kleinere Bauchschmerzen.</p>
+<p>Folgendes Szenario:
+Ein Repository (sagen wir einfach mal AdressenRepository)</p>
+<p>Clients (gemeint sind hier mehrere Sichten, die unterschiedliche Personen zeigen) zur Anzeige der Adressen unterschiedlicher Personen.</p>
+<p>Wenn man nun den normalen Weg gehen würde
+(AdressenRepository.ProcessAddressRequest(guid personId);
+event Action AdressenRepository.OnAddressResult;), könnte man wunderbar mittels des EBC-Binders tatsächlich ein MessageTracing einbinden (nachträglich, konfigurationsabhängig, etc). Aber was nun zur Krux wird, ist das zuordnen von Request zu Response, denn es soll ja jeder Client nur seine Response bekommen.</p>
+<p>Für die aufruferabhängigen Requests müsste man also tatsächlich die Responseadresse in den Request verlegen. Jetzt verliere ich aber die so schön einfache Möglichkeit später an den Kommunikationsstellen Senken einzubinden.</p>
+<p>Habe ich nur was übersehen, oder habe ich hier ein grummeln in der Magengegend wo keines sein sollte?</p>
+<p>Gruß, Peter</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-05-22):</p>
+<p>@Peter: Dass du über diesen Punkt stolperst, ist normal. Aber du übersiehst auch zweierlei.</p>
+<ol>
+<li>
+<p>EBCs sind zunächst einmal synchron! Damit kann du Responses zu Requests einfacher zuordnen als in async Szenarien.</p>
+</li>
+<li>
+<p>Ich habe in anderen EBC-Postings schon Patterns erklärt, wie man mit Request/Response (bzw. Queries) umgeht. Das ist nie so einfach wie mit normalen Funktionsaufrufen. Ist ja auch klar. Aber es ist so einfach, dass es nicht weiter stört. Es geht ja nur darum, an Komponentengrenzen so zu kommunizieren.</p>
+</li>
+</ol>
+<p>Versuch es mal.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Patrick Hesse</strong> (2011-03-16):</p>
+<p>Hallo Ralf,</p>
+<p>ich glaube die automatische verbindung widerspricht so ein wenig der Idee von EBC mit seiner synchronität. Ich kann einen Prozeß modellieren in dem ich gewisse Komponenten in einer mir gewünschten Reihenfolge verbinde. In einem früheren Block war auchmal gezeigt worden, das das Verbinden ebenfalls eine Logik enthält (Mwst und runden).</p>
+<p>Da ich nun zwischen meinen Komponenten zugunsten einer hohen wiederverwendbarkeit untypisierte Nachrichten verwende, kann ich nicht mehr den korrekten Lauf der Dinge vorraussagen. Ich glaube dieses automatische Binding funktioniert in asnchronen Modellen besser, welche ich aber erst noch durch deinen Migrationsweg erreichen muss.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

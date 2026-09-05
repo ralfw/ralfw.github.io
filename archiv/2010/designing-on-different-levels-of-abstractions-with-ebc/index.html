@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Designing on different levels of abstractions with Event-Based Components — ralfw.de Archiv</title>
+<meta name="description" content="Designing software on different levels of abstraction is nothing new. That´s what UML Packet-, Component-, and Class diagrams are for. But how does that work with Event-Based Compo">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/designing-on-different-levels-of-abstractions-with-ebc/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Designing on different levels of abstractions with Event-Based Components — ralfw.de Archiv">
+<meta property="og:description" content="Designing software on different levels of abstraction is nothing new. That´s what UML Packet-, Component-, and Class diagrams are for. But how does that work with Event-Based Compo">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/designing-on-different-levels-of-abstractions-with-ebc/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>Designing on different levels of abstractions with Event-Based Components</h1>
+    <div class="doc-meta"><span>26. Juli 2010</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2010/07/26/designing-on-different-levels-of-abstractions-with-event-based-components.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/designing-on-different-levels-of-abstractions-with-ebc/</code></span></div>
+    <div class="art"><p>Designing software on different levels of abstraction is nothing new. That´s what UML Packet-, Component-, and Class diagrams are for. But how does that work with Event-Based Components (EBC)? Let me show you using the small desktop calculator example from my previous posts.</p>
+<h2>The application</h2>
+<p>The calculator application should support entering numbers, and applying the four basic arithmetic operations (+, -, *, /) to them, ending with a "=" to see the result.</p>
+<h2>Starting simple</h2>
+<p>Let´s start with a very simple feature: entering/editing a number. What are the events (triggers) leading to this feature doing its job? And what´s the result of the feature?</p>
+<p>The trigger is a digit key or the decimal point key being pressed. The result is the number to be shown updated on the display.</p>
+<p>This translates into a functional unit (FU), i.e. a class, like this:</p>
+<pre><code class="language-csharp">class NumberAggregator
+{
+    private double currentNumber = 0.0;
+    private bool isFraction = false;
+    private double fractionDivisor = 1.0;
+
+    public void ExtendNumber(char c, Action&lt;double&gt; out_currentNumber)
+    {
+        if (c == '.')
+        {
+            this.isFraction = true;
+        }
+        else
+        {
+            var digit = double.Parse(c.ToString());
+            if (!this.isFraction)
+            {
+                this.currentNumber = this.currentNumber * 10 + digit;
+            }
+            else
+            {
+                this.fractionDivisor *= 10;
+                this.currentNumber += digit / this.fractionDivisor;
+            }
+        }
+
+        out_currentNumber(this.currentNumber);
+    }
+
+    public void DiscardNumber(Action&lt;double&gt; out_currentNumber)
+    {
+        this.currentNumber = 0.0;
+        this.isFraction = false;
+        this.fractionDivisor = 1.0;
+
+        out_currentNumber(this.currentNumber);
+    }
+}
+</code></pre>
+<p>Note how the class does not use events for its output, but instead takes an <code>Action&lt;double&gt; out_currentNumber</code> parameter. That´s a valid alternative for functional units whose output is directly correlated with a single input, i.e. which are not really asynchronous or need to fan out their output.</p>
+<h2>Zooming in on Calculate</h2>
+<p>Now let´s look at the more interesting part: what happens when an operator key or "=" is pressed. On a high level this is just a single activity: Calculate. It takes the pending operation and operands and produces a result.</p>
+<p>But if I look closer, Calculate really consists of two sub-activities: first the currently entered number needs to be "ejected" from the number aggregator (and the aggregator reset), then the operation needs to be applied to the operands accumulated so far.</p>
+<p>So I "zoom in" on Calculate and depict it as a flow of its own:</p>
+<ul>
+<li>Eject current number</li>
+<li>Apply operation</li>
+</ul>
+<p>To express this nesting in code, I introduce a namespace for the sub-activities, e.g. <code>wincalc.calculationengine</code>, mirroring the diagram structure. This way the code structure resembles the design structure across abstraction levels.</p>
+<p>Here´s the code for the CalculationEngine, which realizes "Apply operation":</p>
+<pre><code class="language-csharp">namespace wincalc.calculationengine
+{
+    public class CalculationEngine
+    {
+        private readonly Stack&lt;double&gt; operands = new Stack&lt;double&gt;();
+        private char operation = '=';
+
+        public void In_ApplyOperation(Tuple&lt;char, double&gt; input, Action&lt;double&gt; out_result)
+        {
+            this.operands.Push(input.Item2);
+            var result = Calculate();
+            this.operation = input.Item1;
+
+            out_result(result);
+        }
+
+        private double Calculate()
+        {
+            var calc = new Calculate();
+            return calc.Execute(this.operation, this.operands);
+        }
+    }
+}
+</code></pre>
+<p>And the <code>Calculate</code> class, using helper classes <code>DropData&lt;char&gt;</code> and <code>Join&lt;char, double&gt;</code> to combine the pending operation with the accumulated operands:</p>
+<pre><code class="language-csharp">public class Calculate
+{
+    public double Execute(char operation, Stack&lt;double&gt; operands)
+    {
+        if (operands.Count &lt; 2)
+            return operands.Count &gt; 0 ? operands.Peek() : 0.0;
+
+        var op2 = operands.Pop();
+        var op1 = operands.Pop();
+        double result;
+
+        switch (operation)
+        {
+            case '+': result = op1 + op2; break;
+            case '-': result = op1 - op2; break;
+            case '*': result = op1 * op2; break;
+            case '/': result = op1 / op2; break;
+            default: result = op2; break;
+        }
+
+        operands.Push(result);
+        return result;
+    }
+}
+</code></pre>
+<h2>Wiring it together</h2>
+<p>Finally, here´s the <code>Main()</code> method wiring the whole application together, connecting the GUI events to the <code>NumberAggregator</code> and <code>CalculationEngine</code>:</p>
+<pre><code class="language-csharp">static void Main()
+{
+    var numberAggregator = new NumberAggregator();
+    var calculationEngine = new wincalc.calculationengine.CalculationEngine();
+    var gui = new CalculatorForm();
+
+    gui.Out_DigitPressed += c =&gt; numberAggregator.ExtendNumber(c, gui.In_Display);
+    gui.Out_OperatorPressed += op =&gt;
+        {
+            double currentNumber = 0.0;
+            numberAggregator.DiscardNumber(n =&gt; currentNumber = n);
+            calculationEngine.In_ApplyOperation(
+                Tuple.Create(op, currentNumber),
+                gui.In_Display);
+        };
+
+    Application.Run(gui);
+}
+</code></pre>
+<h2>PS</h2>
+<p>The code above differs slightly from the diagrams: in the diagrams I originally used a Split, but in the code I replaced it with a <code>DropData</code> step, since only the aggregated number, not the trigger event itself, needs to flow onward.</p>
+<h2>PPS</h2>
+<p>Also note there are still known bugs in this version: the "reset whole calculation" feature is missing, and there is incorrect behavior for a sequence like <code>1 + 2 = * 4 =</code>. I fixed both in a follow-up post.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

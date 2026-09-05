@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Datengranulat oder: Mapping als Lust statt Last — ralfw.de Archiv</title>
+<meta name="description" content="Anlässlich einer Diskussion um NoSql in Ayende Rahiens Blog mache ich mir Gedanken darum, was wir eigentlich von einem Persistenzmedium wollen (sollten). Lange haben wir es jetzt a">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/datengranulat-oder-mapping-als-lust/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Datengranulat oder: Mapping als Lust statt Last — ralfw.de Archiv">
+<meta property="og:description" content="Anlässlich einer Diskussion um NoSql in Ayende Rahiens Blog mache ich mir Gedanken darum, was wir eigentlich von einem Persistenzmedium wollen (sollten). Lange haben wir es jetzt a">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/datengranulat-oder-mapping-als-lust/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Datengranulat oder: Mapping als Lust statt Last</h1>
+    <div class="doc-meta"><span>21. April 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/04/datengranulat-oder-mapping-als-lust.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/datengranulat-oder-mapping-als-lust/</code></span></div>
+    <div class="art"><p>Anlässlich einer <a rel="noopener" href="http://ayende.com/Blog/archive/2010/04/21/that-no-sql-thing-modeling-documents-in-a-document-database.aspx">Diskussion um NoSql in Ayende Rahiens Blog</a> mache ich mir Gedanken darum, was wir eigentlich von einem Persistenzmedium wollen (sollten). Lange haben wir es jetzt als gesetzt angesehen, dass Daten von Geschäftsanwendungen in relationalen Datenbanken gespeichert werden. Man tut das einfach so. Das ist der Default. Die Gründe dafür sind vielfältig. Oft ist schon eine relationale Datenbank vorhanden und es ist einfacher, eine neue Anwendung oder auf die aufzusetzen. Oder das RDBMS XYZ ist Unternehmensstandard, so dass auch bei der nächsten Anwendung XYZ zum Einsatz kommen muss. Oder Entwickler sind schlicht vertraut mit dem relationalen Datenmodell. Oder die sonstigen Tools um das relationale Datenmodell erlauben einfache Eingriffe in persistierte Daten an Anwendungen vorbei.</p>
+<p>Gehupft wie gesprungen, Daten werden immer noch vor allem mit RDBMS verwaltet. Ist so. Aber ist das auch gut so?</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/809a5cbf8d77b74a.png" /></p>
+<p>Die Diskussion um NoSql zeigt, dass es eine wachsende Gemeinde von Entwicklern gibt, die sagt, dass sei nicht gut so. RDBMS haben ihren Wert – doch der sollte von Anwendung zu Anwendung immer wieder neu festgestellt werden. Für manche Anwendungen sind RDBMS die passende Wahl, für andere nicht. So geht es der NoSql-Bewegung um Alternativen, nicht um Ersatz. RDBMS sollen und werden nicht einfach durch Dokumentendatenbanken o.ä. ersetzt. NoSql will nur dafür sorgen, dass Entwickler mehr als eine Option für die Persistenz haben. Das mag dann mal wie eine Rebellion gegen die RDBMS-Hersteller aussehen… am Ende ist´s aber nicht mehr als eine Ausbalancierung mit Gegengewichten.</p>
+<p>Ayende Rahien bastelt nun auch an einer NoSql-Datenbank: RavenDB. Ein interessantes Projekt. Ich bin gespannt. Eine Dokumentendatenbank à la CouchDb oder MongoDb, aber in C# implementiert, tut der .NET-Plattform gut.</p>
+<p>Nichtsdestotrotz hat mich sein Posting zu der Frage geführt: Was wollen wir denn eigentlich von einer Datenbank, von einem Persistenzmedium? Ein RDBMS ist nicht per se “gut”. Eine DocDB ist auch nicht per se “gut”. Dasselbe gilt für ODBMS, Graphendatenbanken, assoziative Datenbanken usw.</p>
+<p>Warum sollten wir also das eine persistente Datenmodell dem anderen vorziehen? Zur Laufzeit gehen wir in jedem Fall nicht mit den persistenten Daten in ihrem Ursprungsformat um, sondern wünschen uns immer wieder Objekte. Nicht umsonst arbeiten wir uns seit Jahren am Thema O/R Mapping ab. Im Hauptspeicher wollen wir durch Objektgraphen navigieren. Wie die Daten auf der Platte liegen, ist uns letztlich egal.</p>
+<p>Als das relationale Datenmodell entwickelt wurde, gab es keine Objektorientierung. Deshalb hat man gleich zum Datenmodell eine passende Sprache erfunden (SQL), mit der die Daten manipuliert/abgefragt werden können. Datenmodell und Sprache haben zueinander gepasst. Heute ist das anders: C# passt nicht zum relationalen Datenmodell. Deshalb gibt es O/R Mapper.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/0f874c9529e2eeb2.png" /></p>
+<p>Passt C# nun aber zum Dokumentendatenmodell? Wenn ich den Code in Ayendes Posting anschaue, dann lautet die Antwort für mich: nein. C# mag hier besser passen, aber es ist keine 100%ige Passgenauigkeit. RavenDB bietet zwar gleich einen objektorientierten API, der durchaus Ähnlichkeiten mit dem meines <a rel="noopener" href="http://loungerepo.codeplex.com/">Lounge Repository</a> hat. Doch wenn Sie genau hinschauen, dann gibt es merkwürdige invertierte Beziehungen: da wird einem Posting ein Blog zugewiesen, obwohl der naheliegende Gedanke doch wohl eher ist, dass ein Blog Postings enthält. Warum Ayende es so macht, können Sie in den Kommentaren zum Blogartikel lesen. Das ist schon verständlich. Doch es zeigt, dass auch zwischen Dokumentendatenbanken und Objektorientierung ein Impedanzunterschied ist, der durch Mapping überwunden werden will. Denn ein Objektmodell wie das im Artikel wollen Sie nicht einfach so in der Anwendung allerorten verwenden, denke ich. Dafür ist es zuwenig intuitiv mit seinem “Beziehungssystem”, das der Skalierbarkeit geschuldet sind.</p>
+<h2>Mapping ist unvermeidbar</h2>
+<p>Wie es aussieht, ist das objektorientiere Datenmodell immer irgendwie anders als ein persistentes. Immer existiert ein Impedanzunterschied. Oder? ODBMS versprechen, dass das nicht so sei. Stimmt auch. Mit db4o können Sie Objekte mit ihren Beziehungen “as is” speichern. Kein Mapping ist nötig. Ist das nicht der heilige Gral? Merkwürdig nur, dass die Branche den bisher nicht erkannt hat. Vielleicht ist er gar keiner. Oder liegt das nur an der Übermacht böser RDBMS-Hersteller, so dass das Wahreguteschöne keine Chance hat? Die Antwort ist eine Mischung aus allem, denke ich.</p>
+<p>An dieser Stelle möchte ich mich aber auf einen Aspekt konzentrieren: die Abwesenheit eines Mappings. Die scheint mir nämlich ein Problem zu sein.</p>
+<p>Ja, genau: das Problem, das ODBMS lösen, vereitelt ihren breiten Erfolg, glaube ich. ODBMS lösen das Mapping-Problem und graben sich damit das Wasser ab. Wie kann das sein? Eine Antwort ist nur möglich, wenn wir erneut die Frage stellen, wozu denn überhaupt Persistenz heute nötig sei?</p>
+<p>Früher bzw. dort, wo Daten vor allem mit SQL verarbeitet werden, ist das persistente Datenmodell <em>das</em> Datenmodell, das einzige, das zentrale. Persistenz ist dann kaum zu unterscheiden von Verarbeitung. Mit RDBMS, SQL und Store Procs schlägt man also quasi zwei Fliegen mit einer Klappe.</p>
+<p>Heute ist das nicht mehr nötig oder wir wollen es einfach nicht mehr. Das persistente Datenmodell verliert damit einen Zweck. Es muss nicht mehr der Verarbeitung dienen. Damit bricht im Grunde die mathematische Basis von RDBMS weg. Dass RDBMS mit ihrem Datenmodell so wunderbar dem relationalen Kalkül entsprechen, ist uninteressant. Datenbanken sollen heute vor allem eines: Daten persistieren. Fertig, aus, Applaus. Verarbeiten tun wir die Daten in unseren objektorientierten 3GL Hochsprachen. Und dabei sollte uns das Persistenzmedium am besten nicht im Wege stehen.</p>
+<p>Jetzt der Trick: Wie wir Daten im Hauptspeicher halten, das ändert sich alle Nase lang. Oder aus unterschiedlichen Perspektiven (Stichwort <a rel="noopener" href="http://domaindrivendesign.org/node/91">Bounded Context</a>) sehen dieselben Daten unterschiedlich aus. Wenn also ein ODBMS so wunderbar ein Objektmodell impedanzunterschiedlos gespeichert hat, dann ist das schön für den Augenblick und für den speichernden Kontext. Aber was ist morgen? Was macht ein anderer Kontext damit, der die Daten anders sehen möchte?</p>
+<p>ODBMS fixieren ein Datenmodell im Persistenzmedium. Und das ist gut, wenn man das denn will. Wer sicher ist, dass sein Datenmodell so bleibt, wie es ist, der ist mit einem ODBMS wunderbar bedient. Ich möchte ODBMS also nicht abschaffen. Sie sollen zur Artenvielfalt der Persistenzmedien beitragen. Aber sind eben nicht der heilige Gral, sondern haben auch nur einen Bereich von Szenarien, in dem sie mit Gewinn eingesetzt werden sollten.</p>
+<p>Durch den Frust, den der Impedanzunterschied zwischen OO-Datenmodell und relationalem in der Branche erzeugt hat, haben wir jedoch falsch eingeschätzt, was ganz breit das wahre Problem heutzutage mit persistenten Daten ist. Deshalb scheinen/schienen ODBMS so vorteilhaft. Ist nicht Mapping das Problem, von dem wir erlöst werden müssen?</p>
+<p>Nein.</p>
+<p>Mapping ist kein Problem, sondern unvermeidbar, gar eine Tugend.</p>
+<p>Nicht immer, aber in vielen, vielen Fällen.</p>
+<p>Denn das Problem, von dem wir erlöst werden müssen, ist das Problem des inflexiblen persistenten Datenmodells. Anwendungen leiden heute darunter, dass sie sich frühzeitig auf ein persistentes relationales Datenmodell festlegen müssen, dass einem objektorientierten entspricht. Dann verändert sich das objektorientierte Datenmodell und das relationale muss nachgeführt werden. O/R Mapper sollen das verbergen helfen… aber das klappt nicht so recht. Also pflegen wir zwei Datenmodelle und ein Mapping.</p>
+<p>Bei ODBMS muss zwar nur ein Datenmodell gepflegt werden, aber die persistenten Daten sind sehr star. Sie enthalten ja direkte Objektbeziehungen, die morgen anders sein können.</p>
+<p>Wir leiden also entweder unter zwei Datenmodellen + Mapping oder einem sehr starren Datenmodell.</p>
+<p>NoSql tritt zwar an, mit seinen schemalosen Datenbanken das persistente Datenmodell etwas weniger starr zu machen. Doch ich bin im Zweifel, ob das schon reicht. Derzeit ist meine Vorstellung, dass wir noch radikaler denken sollten. Nicht in allen Persistenzszenarien natürlich; aber in denen, wo Datenmodelle im Fluss sind. Und das ist viel öfter der Fall, als wir wahr haben wollen.</p>
+<p>ODBMS sind effizient. Wir sparen uns das Mapping. Der Preis dafür ist Inflexibilität. Das bedeutet für mich im Umkehrschluss: Wenn wir wahrhaft Flexibilität haben wollen, dann kommen wir ums Mapping nicht herum. Wir müssen sogar noch mehr und häufiger mappen als bisher.</p>
+<h2>Daten als Granulat</h2>
+<p>Kennen Sie <a rel="noopener" href="http://de.wikipedia.org/wiki/Digital_Fabricator">Fabbing</a>? Beim Fabbing wird – zumindest bei einem Verfahren – aus einem Granulat ein Gegenstand “gedruckt”. Fabbing ist “Drucken in 3D”. Wie der “Ausdruck” aussehen soll, definiert ein Modell. Das Material liegt als Granulat vor. Im Grunde ist das ähnlich wie beim Laserdrucker: Da liegt der Ausdruck als Text vor und wird auch Tonerstaubpartikeln “hergestellt”.</p>
+<p>Tonerstaub und Fabbing-Granulat sind das Material, aus dem “Ausdrucke” nach immer wieder neuen Modellen produziert werden können. Sie sind die ultimativ flexible Grundsubstanz für “Ausdrucke”.</p>
+<p>Wenn wir in unseren Anwendungen nun immer wieder die in-memory Datenmodelle verändern oder neue definieren, also Datenstrukturen ganz unterschiedlicher Form aus den selben Daten herstellen wollen, dann sollten wir anfangen, unsere persistenten Daten als Grundsubstanz anzusehen, denen wir auch eine ultimativ flexible Struktur geben müssen.</p>
+<p>Wir brauchen eine Art persistentes Datengranulat, wenn wir hochflexibel bei unseren Laufzeitdatenmodellen sein wollen. Dessen persistentes Datenmodell ist dann natürlich ganz weit weg vom Laufzeitdatenmodell. Noch weiter als relationales oder dokumentenorientiertes. Zwischen Datengranulat und OO-Datenmodell müsste also noch mehr Mapping betrieben werden.</p>
+<p>Doch das macht nichts. Das ist vielmehr der Trick an der Sache. Dass wir bereit sind für mehr Mapping ist die Bedingung für die Möglichkeit, eines hochflexiblen persistenten Datenmodells, ein Datengranulat.</p>
+<p>Wie das aussehen soll? Keine Ahnung. Wie das dann auch noch skaliert? Keine Ahnung. Daran müsste man wohl mal forschen. Dass RDBMS oder NoSql heute ein solches Datengranulat aber schon bieten, bezweifle ich.</p>
+<p>Sicher ist für mich auch, dass so ein Datengranulat einen Preis über das Mapping hinaus hat. Es wird wohl weniger performant und weniger skalierbar sein bzw. weitere Technologieentwicklung wie Mehrkernprozessoren oder Hochgeschwindigkeitsleitungen oder mehr Speicher einfach “aufsaugen”. Der Gewinn, der winkt, ist jedoch – glaube ich – enorm. Höchste Flexibilität und damit eine Befreiung von vergeblicher Planungssicherheit.</p>
+<p>Bottom line: Solange wir Mapping zwischen persistentem Datenmodell und objektorientiertem Laufzeitdatenmodell noch als Problem ansehen, suchen wir die Lösung für die Datenpersistenz noch unter der Laterne statt dort, wo sie wirklich liegt. Die Notwendigkeit zum Mapping ist kein Bug. Sie liegt in der Natur der Sache, dass persistente Daten langlebig und weitreichend sind. Deshalb müssen sie flexibel sein. Sie müssen unterschiedlichen Herren dienen können. RDBMS mit dem relationalen Datenmodell haben das schon lange irgendwie geboten. Aber wie NoSql zeigt, ist das nicht genug. Entwickler wollen mehr Flexibilität. Also sollten wir über einen wirklichen Sprung in puncto Flexibilität nach vorn nachdenken. Wie könnte ein Datengranulat als Grundstoff für alle möglichen Datenmodell in Anwendungen aussehen?</p>
+<h2>Kommentare</h2>
+<p><strong>Mike Bild</strong> (2010-04-22):</p>
+<p>"Mapping ist unvermeidbar" – Ja-Ja-Ja. Genau! Und auf Gefahr hin zu wiederholen und/oder auszuufern, Mapping ist für mich auch ein Elementarkonzept. Das Transformieren/Projizieren, kurz Mappen, von Datenstrukturen zwischen verschiedenen Funktionseinheiten (Modulen, Kontexten, Bounded Context, Komponenten, System, Lösungen wie auch immer) schafft Flexibilität. Warum? Es entkoppelt ab einen bestimmten Abstraktionsgrad die Datenstrukturen mit der dahinter stehenden Funktionsweise des Modells vom Rest der Welt. Die formale Grundlage abstrakter Datentypen, eine Implementierung wäre die Klasse, ist die Algebra. Hier heißt es, die Algebra ist eine Struktur in der eine Menge von Operationen auf eine Menge von Daten definiert ist. Will für mich heißen - das Objekt ist auf seine Daten plus seiner Operationen definiert – sie gehören irgendwie zusammen die Funktionen und die Datenstrukturen. Diese Funktionen funktionieren nur mit dieser Datenstruktur. Sie haben nicht nur technische Abhängigkeiten wie Typengenauigkeit, sondern auch inhaltliche. Kann ich Daten und  Operationen durch „dumme“ DTOs trennen und somit Verwendung in unterschiedlichen Kontexten finden? Sicher … ab und zu, oder irgendwie nicht – es gibt dennoch Operationen die auf diese Datenstruktur wirken und somit eine Abhängigkeit erzeugen. Und hier haben wir sie wieder… die Kopplung.  Ab hier bin ich der Meinung, dass es zum guten Ton (es ist vielleicht sogar notwendig) im Sinne von SRP, SoC und SLA gehört, Datenstrukturen innerhalb ihres Kontextes zu definieren und diese zwischen verschiedene Kontexten je nach Bedarf zu transformieren, zu Mappen, zu projizieren, zu Filtern und/oder zu Aggregieren. Storagemodell zu Domainmodell, Domainmodell zu Präsentationsmodell … Visa-Vis … usw. Nun, ich finde es hört sich kompliziert und unnatürlich im täglichen Umgang an. Einfach Mist! Das muss doch endlich einfacher gehen - mein konzeptionelles Domänenmodell in eine Persistenz zu schieben und fertig. Ich bin auf der Suche nach dem supereinfachen Daten-Gral, ADO.NET, DataTable, DataSets, eigene Persistenzframeworks, NHibernate, EntityFramework und jetzt (ganz neu :-)) alle möglichen Formen von NoSQL. Für mich aber irgendwie Abstraktionen von Domain-Storage-Modell-Mappern, denn das tun sie intern – sie transformieren/mappen Datenstrukturen mit Hilfe von speziellen, optimieren Operationen auf Daten in eine Persistenz wie Filesystem oder Datenbank. Doch was ist mit Präsentationsmodell/Ansichtenmodell zu Domainmodell/Businessmodell? Oder zwischen JavaScript Datenstrukturen und Datenstrukturen innerhalb eines WebServices. Was mach ich jetzt damit? Anderer Kontext, gleiches Problem – Ein Modell für alles, oder Modell-Mapping? Es geht irgendwie nicht anders – ich brauche flexible Transformation, ich brauche Mapping. Ich möchte und kann mein MVC ViewModel mit seinen DTOs, VOs, EntityObjects mit speziellen DataAnnotations und speziellen Properties zur Anzeige nicht direkt in meinem Domänenmodell verwenden. Das Domänenmodell mit seinen DTOs, VOs, EntityObjekten hat mal gleich wieder Marker-Interfaces für Extention-Methods oder Basisklassen innerhalb seines Modells und dann kommt z.B. der O/R Mapper, ein Web/WCF Service/Azure oder Amazon Cloud Service mit speziellen  DataAnnotations, Interfaces und Basisklassen dass in seinem Modell zur technischen Verarbeitung nötig ist. Kurzum - verschiedene Sichtweisen, verschiedene Operationen, verschiedene Kontexte.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2010-04-22):</p>
+<p>... Wie soll ich das mit einem gemeinsamen Datenmodell  mit unterschiedlichen kontextabhängigen Operationen abbilden? Geht das überhaupt? Ist das sinnvoll? Überlaste und verkompliziere ich nicht womöglich mit nur einem Modell? Sind die sauber getrennten Komponenten nicht doch über das gemeinsame Datenmodell schon wieder gekoppelt? Derzeit finde ich Mapping und Mapper-Tools wie EF, NHibernate oder LINQ und AutoMapper als Datenmodellunabhängige Mapper unabdingbar um flexible, anpassbare, erweiterbare, entkoppelte, unabhängige zwischen Funktionseinheiten/Komponenten/Systeme/ganze Lösungen zu entwickeln. Der Mapper ist für mich eine Art flexibler Klebstoff – ein unabhängiger Koppler - zwischen ihnen und damit ein Elementarkonzept. Ich brauche sogar noch mehr, besseres, flexibleres Mapping der Datenstrukturen - unabhängig vom Abstraktionsgrad der Funktionseinheiten, Grenzen der Systeme und der eingesetzten Technologien wie EF, MS SQL, Amazon Services, NHibernate, ASP.NET MVC, Silverlight … und, und, und – oder brauche ich ein ganz anderes Konzept – vielleicht dein Datengranulat? Mhh, weiß nicht genau. Datengranulat müsste modellunabhängig sein, sie dürften (in ihrer einfachsten Form) keinen Bezug zu Operationen besitzen, sie müssten einheitlich sein und erst ihre zusammengesetzte Form ergibt einen Bezug zum Kontext mit seiner Funktionalität. Wir müssen sie zusammenstecken und zerlegen und dann haben sie erst Funktion, oder anders die Funktion entsteht und/oder wächst erst beim zusammenstecken und/oder zerlegen. Mhh, spannend. Klingt nach feingranulare DTOs, AOP, Annotationen, Marker-Interfaces und Extention-Methods. Oder nicht … Mhh, mal drüber nachdenken. Mein Fazit ist derzeit aber – höhere Flexibilität = Datenstrukturentkopplung =  Operation auf Datenstrukturen innerhalb von Komponenten + Mapping der Datenstrukturen zwischen Komponenten</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-04-22):</p>
+<p>Es gibt für mehr Flexibilität verschiedene Ansätze, beide sind aber recht aufwendig:</p>
+<p>Zum Einen kann ein Zwischenmodell, quasi ein Persistenzmodell verwendet werden, dass analog zu dem verwendeten Persistenzmedium aufgebaut ist. Der Persistenzlayer der Domain-Schicht mappt dann gegen dieses Modell.</p>
+<p>Bei einer relationalen Datenbank kann dieses Persistenzmodell zum Beispiel aus L2SQL-Klassen bestehen, die dann von den Repositories explizit auf das Domainmodell gemappt werden.</p>
+<p>Dieser Ansatz klappt auch hervorragend mit anderen Persistenzlösungen, da den Domain-Repositories egal ist, ob das Persistenzmodell SQL, Dokumente, Dateien oder Web Services für die interne Speicherung verwendet.</p>
+<p>Im Ergebis ist man nicht nur flexibel bei der Modellierung der Domainklassen sondern auch beim Ändern des Schemata im Persistenzmedium, da ein Zwischenlayer als Mapping vorhanden ist. Diese Vorgehensweise ist am besten geeignet, wenn man vorhandene Daten (aus einer bestehenden Anwendung) integrieren muss, oder aus nicht-funktionalen Gründen auf ein bestimmtes Schema oder Persistenzmedium festgelegt ist.</p>
+<p>Wenn ich auf einer grünen Wiese anfange, würde ich eine andere Strategie erfolgen, die gedanklich näher am Granulat-Gedanken ist:</p>
+<p>Mit einer Kombination aus CQRS und Event Sourcing (bei näherem Hinsehen unterschiedliche Konzepte) wird ein "Sollzustand" für die Applikationsdaten definiert. Dieser Sollzustand muss sicher persistiert werden (z. Bsp in einem RDBMS). Hieraus lassen sich verschiedene weitere Persistierungen ableiten. Die Anwendung selbst kann ein OODBMS verwenden; sollte sich das Modell ändern, kann die ODB gelöscht und aus dem Solldaten neu unter Verwendung des geänderten Domainmodells aufgebaut werden. Analog können Daten zur Abfrage durch Drittprodukte in SQL oder NoSQL Datenbanken abgeleitet werden.</p>
+<p>Der Sollzustand stellt hier das Modell dar, bei dem Granulat handelt es sich um die Programmierwerkzeuge, die zur Abbildung der Daten verwendet werden. Allerdings ist hier ein erheblicher Mehraufwand gegenüber einer simplen CRUD-Anwendung gegeben...</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-04-22):</p>
+<p>@Markus: Wie ein Granulat letztlich persistiert wird, ist zunächst egal. Es geht um das Datenmodell für ein Granulat.</p>
+<p>Dass das (zunächst) eher nur für Greenfield-Anwendungen in Frage kommt, liegt nahe. Aber das macht nichts. Nicht anders ist es bei (anderen) NoSql-Datenbanken/-modellen.</p>
+<p>CQRS mag ein Ansatz sein, der mit einem Datengranulat noch einfacher funktioniert. Vielleicht. Eine Query "fertigt" aus dem Granulat einen Objektgraphen, wie ihn die Anwendung gerade braucht. Und ein Kommando manipuliert das Granulat.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Mike Bild</strong> (2010-04-22):</p>
+<p>Nun ich finde Container um Datenstrukturen passen konzeptionell ganz gut. Sie sind breiter Anwendbar und das vielleicht sogar Modellübergreifend. So richtig natürlich sind sie für mich aber (noch) nicht. Konzepte wie Name-Values-Container (Reduzierung auf Basisdatentypen (string, int, usw.), Messages oder auch Monaden als "einheitliche" Containerformate zwischen Funktionseinheiten. Mhh, ich ersetzte hier das Mapping/Transformation mit vielen Projektionen (Datenstruktur-Fertigungsstraße). Meine kontextabhängigen Operationen wirken dann auf die Container und nicht auf die darin liegenden Daten. Eine Operation zieht sich dann die benötigten Daten (vielleicht noch Metainformationen) und mach dann was. Das können Queries und/oder Commands auf den Container, auf die darin enthaltenen Datenstrukturen sein oder eben auf interne Operation wie Speichere in Persistens, generiere View oder berechne Rechte. Klingt alles nach Servicebus, Messagebus, Eventbus... Mhhh</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

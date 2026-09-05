@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Code Kata statt Thai Chi vor dem Frühstück [endlich-clean.net] — ralfw.de Archiv</title>
+<meta name="description" content="Statt einer Zeitung lese ich am Morgen vor dem Frühstück gern meine RSS-Feeds. Heute fand ich darin einen Bericht vom ersten Coding Dojo in München. Der hat mich motiviert, die Fiz">
+<link rel="canonical" href="https://ralfw.de/archiv/2009/code-kata-statt-thai-chi-vor-dem/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Code Kata statt Thai Chi vor dem Frühstück [endlich-clean.net] — ralfw.de Archiv">
+<meta property="og:description" content="Statt einer Zeitung lese ich am Morgen vor dem Frühstück gern meine RSS-Feeds. Heute fand ich darin einen Bericht vom ersten Coding Dojo in München. Der hat mich motiviert, die Fiz">
+<meta property="og:url" content="https://ralfw.de/archiv/2009/code-kata-statt-thai-chi-vor-dem/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Code Kata statt Thai Chi vor dem Frühstück [endlich-clean.net]</h1>
+    <div class="doc-meta"><span>11. Sept. 2009</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2009/09/code-kata-statt-thai-chi-vor-dem.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2009/code-kata-statt-thai-chi-vor-dem/</code></span></div>
+    <div class="art"><p>Statt einer Zeitung lese ich am Morgen vor dem Frühstück gern meine RSS-Feeds. Heute fand ich darin einen <a rel="noopener" href="http://www.gmbsg.com/stories/?p=328">Bericht vom ersten Coding Dojo in München</a>. Der hat mich motiviert, die <a rel="noopener" href="http://codingdojo.org/cgi-bin/wiki.pl?KataFizzBuzz">FizzBuzz Kata</a> auch gleich mal zu machen.</p>
+<p>Welch erweckende Tätigkeit am Morgen! Statt sich beim Thai Chi im Park die Füße im Gras nass zu machen, lieber im Bett die geistigen Energien in Fluss bringen :-) Eine kleine Kata vor dem Frühstück macht frisch und kregel. FizzBuzz ist nicht schwierig vom Problem her, bietet dem “Testmuskel” aber genügend Widerstand, um einen Übungseffekt zu erzielen.</p>
+<p>Mir ist heute dabei z.B. diese kleine Erkenntnis gekommen: Was mache ich eigentlich, ich weiß, das mein Code für Einzelfälle korrekt ist, aber noch prüfen möchte, ob er auch im allgemeinen Fall oder größeren Umfang läuft? Wie sieht sozusagen mein “Induktionsbeweis” aus?</p>
+<p>Beispiel FizzBuzz Kata: Ich hatte geprüft, dass meine Klasse <em>FizzBuzzGenerator</em> für 1, 2, 3, 5, 15 den erwarteten Output liefert: “1”, “2”, “Fizz”, “Buzz”, “FizzBuzz”. Der API ist ganz einfach:</p>
+<p>var fbg = new FizzBuzzGenerator();</p>
+<p>Assert.AreEqual("1", fbg.Next());</p>
+<p>Zum Abschluss wollte ich dann noch einen Test mit einer längeren Folge von Zahlen durchlaufen lassen. Die bisherigen Tests hatten eher separat die Generierung von Zahlen und die Prüfung auf Fizz usw. geprüft. Die längere Zahlenfolge war für mich eine Art Integrationstest. Hier der Code:</p>
+<p>[Test]</p>
+<p>public void Integrationstest()</p>
+<p>{</p>
+<p>var sut = new FizzBuzzGenerator();</p>
+<p>var folge = new List() { "1", "2", … };</p>
+<p>while(folge.Count &gt; 0)</p>
+<p>{</p>
+<p>Assert.AreEqual(folge[0], sut.Next());</p>
+<p>folge.RemoveAt(0);</p>
+<p>}</p>
+<p>}</p>
+<p>Dabei bin ich über zwei Fragen gestolpert: Wie kann ich bei so einem Test dem Muster red-green-refactor folgen, wenn ich doch schon die Erwartung habe, dass mein Code korrekt ist? Und: Wie kann auch sicher sein, dass mein Testcode korrekt ist?</p>
+<p>Zunächst habe ich diese Fragen beiseite geschoben und mir einfach gesagt, dass das hier ein triviales Beispiel sei und es schon einfach laufen würde.</p>
+<p>Doch dann haben sich die Fragen von selbst beantwortet.</p>
+<p>Die Antworten kamen aus der Folge des erwarteten Output, die zunächst so aussah: “1”, “2”, “Fizz”, “4”, “Buzz”, “6”, “7”, “8”, “Fizz”, “10”, “11”, “12”, “13”, “14”, “FizzBuzz”, …</p>
+<p>Wer sieht, worin die Antwort besteht?</p>
+<p>Die Antwort lautet: <em>Wenn du eigentlich sicher bist, dass die zu testende Funktionalität korrekt ist, dann baue in die Erwartungen des Tests Fehler ein, um ihn im ersten Anlauf rot zu machen.</em></p>
+<p>Das hatte ich unwillentlich mit meiner Output-Folge getan, weil ich 6,  10 und 12 nicht als “Buzz” bzw. “Fizz” eingetragen hatte. Das doppelt positive Ergebnis des ersten Testlaufs war daher:</p>
+<ul>
+<li>Der Test schlug fehl, weil er auf eine inkorrekte Erwartung gelaufen war. Das bedeutete im Umkehrschluss, dass der Testalgorithmus korrekt war, denn sonst wäre er gar nicht erst zu dieser Erwartung gekommen.<ul>
+<li>Die inkorrekte Erwartung wurde erkannt, so dass auch das System Under Test für diesen bisher nicht getesteten Fall korrekt war.</li>
+</ul>
+</li>
+</ul>
+<p>Nach Korrektur der fehlerhaften Erwartungen lief dann alles glatt und ich war zuversichtlich, dass nun das integrierte Ganze wirklich fehlerfrei war.</p>
+<p>So hat eine kleine Code Kata meinen Testmuskel noch vor dem Frühstück sehr angenehm gestärkt und für den Tag fit gemacht. Eine empfehlenswerte Praktik für alle, die für den Frühsport lieber im Haus bleiben wollen ;-)</p>
+<h2>Kommentare</h2>
+<p><strong>Peter Gfader</strong> (2009-09-12):</p>
+<p>Hallo Ralf.
+Roy Osherove empfiehlt bei Code reviews von Tests, alle Tests zu brechen und wirklich zu schauen ob die Tests nicht IMMER grün sind.
+D.h. baue Fehler ein und schaue ob Tests wirklich brechen (rot werden)</p>
+<p>Code reviews für Tests --&gt; awesome :-)</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

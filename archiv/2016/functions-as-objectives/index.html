@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Functions as Objectives — ralfw.de Archiv</title>
+<meta name="description" content="Software development undervalues an age old principle: building complicated stuff from simpler stuff. That&#x27;s what became clear to me when I saw this advertisement today: Shell offe">
+<link rel="canonical" href="https://ralfw.de/archiv/2016/functions-as-objectives/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Functions as Objectives — ralfw.de Archiv">
+<meta property="og:description" content="Software development undervalues an age old principle: building complicated stuff from simpler stuff. That&#x27;s what became clear to me when I saw this advertisement today: Shell offe">
+<meta property="og:url" content="https://ralfw.de/archiv/2016/functions-as-objectives/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-01)"></span>ralfw.de</p>
+    <h1>Functions as Objectives</h1>
+    <div class="doc-meta"><span>15. Jan. 2016</span><span>Erstveröffentlichung: ralfw.de</span><span><a href="https://ralfw.de/functions-as-objectives/" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2016/functions-as-objectives/</code></span></div>
+    <div class="art"><p><img loading="lazy" alt="" src="/assets/01-ralfw.de/7809f384407a4d57.jpg" /></p>
+<p><a rel="noopener" href="https://ralfw.de/wp-content/uploads/2016/01/2016-01-14-14.10.13.jpg"><img loading="lazy" alt="Shell Lego racing car" src="/assets/01-ralfw.de/7ea530320d099d5a.jpg" /></a></p>
+<p>Software development undervalues an age old principle: building complicated stuff from simpler stuff. That's what became clear to me when I saw this advertisement today: Shell offers at its gas stations an exclusive Lego racing car.</p>
+<p>When I saw this my first reaction was "See, Lego is not dead!" But after a couple of seconds I thought: "This is wrong! This is against the original spirit of Lego!"</p>
+<p>I grew up with Lego building cars, houses, rockets, and all sorts of stuff from the proverbial Lego building blocks. But back then Lego was different: it provided just a few small very generic building blocks. With them I was able to compose very, very different stuff. And that was the whole point of Lego!</p>
+<p>Lego was about the ability to combine simple shapes to form more complicated shapes. Thus you were only limited by your creativity.</p>
+<p>But Shell's racing car is different. It's build from parts sporting the same connectivity as the original Lego building blocks. But its parts have a very specific form. You'll be hard pressed to re-use them in a different context. Your creativity is limited by their very concreteness. They make up a nice racing car – but are good for little else.</p>
+<p>And this made me think about software development...</p>
+<p><img loading="lazy" alt="Me with Lego" src="/assets/01-ralfw.de/60c4d699113e6bec.jpg" /></p>
+<p>A software is like Shell's racing car or my robots and rockets, when I was a child. It's a whole made of smaller parts. But what kind of parts?</p>
+<p>As you can see, for my Lego figures on the left it's the smallest building blocks there are. And it's the same for the car. The smallest building blocks might be used multiple times, but there are no additional levels of abstraction. It's either the whole or atoms. That's it.</p>
+<p>For such small wholes that's just fine. But it does not scale. If you want to build larger stuff, especially stuff with moving parts, you want to define levels of part granularity between whole and atom.</p>
+<p>Look at the following picture. It shows in a schematic way how I built my toys from atomic Lego building blocks. The form and smoothness of the shape of the whole is limited by the size and shape of the generic Lego parts in relation to the size of the whole. What's built from Lego parts is not continuous but quantized.</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/221f199aa26da087.jpg" /></p>
+<h2>It's black boxes all the way down</h2>
+<p>If you wanted to build more complicated stuff, you would first assemble sub-systems, and then you'd assemble the whole system from those sub-systems. Nobody builds a house from atoms :-)</p>
+<p><img loading="lazy" alt="Stratified design" src="/assets/01-ralfw.de/3c92bd734b7bd6ca.jpg" /></p>
+<p>This is houses, cars, computers, blow dryers, even organisms are build. But to me it seems, software is not build like this. Software developers do not define levels of abstractions in their solutions.</p>
+<p><strong>Please note: the layered architecture pattern is not (!) about different levels of abstrations!</strong> All layers are on the same level of abstractions, but doing different things.</p>
+<p>At the core of abstraction like shown above is nesting. Smaller parts are really hidden inside larger. Smaller parts vanish. Once a larger part has been assembled its constituents are no longer important. That's the whole point of building stuff like this. It's black boxes <em>made of</em> black boxes.</p>
+<p>Most software architectures, though, seem to be just three strata of black boxes:</p>
+<ol>
+<li>The top stratum is the whole system. It's one big black box containing everything.</li>
+<li>Then there is the bottom stratum consisting of the atoms, i.e. programming language statements and API calls.</li>
+<li>And between the two there is one stratum of heavily interconnected black boxes.</li>
+</ol>
+<p><a rel="noopener" href="https://ralfw.de/wp-content/uploads/2016/01/img_5697cf0c21fc0.png"><img loading="lazy" alt="" src="/assets/01-ralfw.de/3cc7ef6840a9eee4.jpg" /></a></p>
+<p>Software thus might consist of many, many layers – but very often those layers exist on the same level of abstraction.</p>
+<p>We simply don't really live by the Lego mantra: build complicated stuff from simple stuff. Build large things from small things. Because this is a recursive mantra. <strong>Once something large and complicated has been build it immediately becomes something small and simple <em>with regard to a yet higher level of abstraction</em>.</strong></p>
+<p>This is what is hardly ever done. At least from what I see.</p>
+<h2>Stratified Design</h2>
+<p>Abselson and Sussmann called this <em><a rel="noopener" href="http://dspace.mit.edu/bitstream/handle/1721.1/6064/AIM-986.pdf">stratified design [PDF]</a></em>. You see, I did not make up the term "stratum". The idea is quite old. And Alan Kay <a rel="noopener" href="https://www.tele-task.de/lecture/video/2772/">talked about it</a>, too.</p>
+<p>Each level of abstraction consists of a number of parts made up of smaller parts from lower levels. They even say, each stratum should be defined in its own language. <strong>Think of it: software as a system built from lots of languages sitting on top of each other.</strong></p>
+<p>This is no science fiction but daily reality. Maybe we've forgotten about it:</p>
+<ol>
+<li>On the lowest level there is machine instructions. That's a very, very low level programming language.</li>
+<li>On top of that is (at least in the Java and .NET world) an intermediate language.</li>
+<li>On top of that sits a "regular" programming language like Java or C# plus whatever libraries you use.</li>
+<li>And on top of that is whatever you code.</li>
+</ol>
+<p>Programming like that works very well. But interestingly we don't carry this strategy forward into our own programs. We stop at stratum #4. We just define one big language soup from whatever level #3 provides us with.</p>
+<p>But why is that?</p>
+<p>My guess is: because it's not taught how to do it differently. Object-orientation provides means to do that. But most projects don't use it to that end. They are content with just one additional stratum which they slice and dice into many, many small building blocks heavily interconnected. That's what then is called a monolith.</p>
+<p>Let me repeat: Just because you divide up your code into classes, libraries, or even components <em>does not</em> mean, you're defining different strata. Even layering those modules <em>does not</em> mean, you're working on different levels of abstraction.</p>
+<p>Or to put it more succinctly and maybe provocatively: <strong>To modularize <em>does not</em> necessarily mean to abstract.</strong></p>
+<h2>Behavior over data</h2>
+<p>For 25 years at least, though, our industry has been obsessed with modularization under the name of object-orientation. As we now can see: this thinking does not cut it. Code still becomes hard to maintain after a short while, sometimes even after minutes.</p>
+<p>How can this be changed?</p>
+<p>By switching the focus to what easily can be stratified. That's behavior.</p>
+<p>Or if you like it more in programming language terms: by switching the focus to functions.</p>
+<p>Functions encapsulate behavior encoded in the form of logic, i.e. transformations, control structures, and API calls.</p>
+<p>And behavior can be defined on different levels of abstraction. That's what the strata from machine code to high level language code show us. That's what you easily see once you think about any complicated behavior. Take cooking a meal for example:</p>
+<ul>
+<li>Top stratum: just one whole behavior "cook meal".</li>
+<li>Below the top stratum there are high level behaviors on the next stratum like "prepare starters", "prepare main course", "prepare desert".</li>
+<li>The high level behaviors are made up of for example of "prepare meat", "prepare side orders" for "prepare main course".</li>
+<li>Then on the next lower stratum it's for example "peel potatoes", "cook potatoes", "place potatoes on plate", "get can of beans", "open can of beans", "cook beans" for "prepare side orders".</li>
+</ul>
+<p>If you take together all the partial behaviors on one stratum they define what the whole behavior is about – each stratum on another level of abstraction.</p>
+<p>Each stratum has its own vocabulary. "open can" or "peel" or "cook" are activities not known in the top three strata. Likewise "main course" is no term known in lowest stratum.</p>
+<p>It's like with <em>==</em> of a high level language. It's nothing you'll find in machine code. Like <em>ADC</em> from the x86 instruction set: you won't find that in Java or C#.</p>
+<p><strong>What I want to suggest is, you should use functions to encode behavior on different levels of abstraction.</strong> Not just split-up logic horizontally to fulfill the Single Responsibility Principle. That's not thinking in terms of different levels of abstraction. But consciously refine software behavior top-down like shown above for "cook meal".</p>
+<p>That, to me, is the first and most important task during software development. It's not only modularization but also stratification. And once you see behavior on different levels of abstraction, once you have a bunch of stratified functions constituting languages of different fidelity, you can start thinking about how to continue with modularization by bundling them up into classes and libraries.</p>
+<p>Yes, I firmly believe, that all hand-wringing and heated discussions about the dire state of codebase maintainability will not advance our industry, until we embrace stratified design. <strong>Functions need to become our first concern.</strong> Splitting up behavior on different levels of abstractions into functions needs to become our main objective.</p>
+<p>And what about data? Well, data's is gonna take care of itself ;-) Once we get the behavior right, once we get our functions right, data will naturally follow.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

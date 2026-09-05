@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entspannte Persistenz – The Lounge Repository — ralfw.de Archiv</title>
+<meta name="description" content="Relationale Datenbanken sind nicht die ganze Wahrheit für die Datenspeicherung. Das merken immer mehr Entwickler. Die Zahl der “alternativen Datenbanken” nimmt zu und die RDBMS-Fru">
+<link rel="canonical" href="https://ralfw.de/archiv/2009/entspannte-persistenz-lounge-repository/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Entspannte Persistenz – The Lounge Repository — ralfw.de Archiv">
+<meta property="og:description" content="Relationale Datenbanken sind nicht die ganze Wahrheit für die Datenspeicherung. Das merken immer mehr Entwickler. Die Zahl der “alternativen Datenbanken” nimmt zu und die RDBMS-Fru">
+<meta property="og:url" content="https://ralfw.de/archiv/2009/entspannte-persistenz-lounge-repository/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Entspannte Persistenz – The Lounge Repository</h1>
+    <div class="doc-meta"><span>29. Aug. 2009</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2009/08/entspannte-persistenz-lounge-repository.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2009/entspannte-persistenz-lounge-repository/</code></span></div>
+    <div class="art"><p>Relationale Datenbanken sind nicht die ganze Wahrheit für die Datenspeicherung. Das merken immer mehr Entwickler. Die Zahl der <a rel="noopener" href="http://themindstorms.blogspot.com/2009/05/quick-reference-to-alternative-data.html">“alternativen Datenbanken”</a> nimmt zu und die RDBMS-Frustrierten <a rel="noopener" href="http://www.computerworld.com/s/article/9135086/No_to_SQL_Anti_database_movement_gains_steam_">formieren sich schon</a>: NOSQL ist der Schlachtruf.</p>
+<p><a rel="noopener" href="http://couchdb.apache.org/"></a> Einige Prominenz hat bei den “alternativen Datenbanken” nun <a rel="noopener" href="http://couchdb.apache.org/">CouchDB</a> erlangt: eine schemalose Datenbank zur Speicherung von Dokumenten. Der API ist denkbar einfach, Queries sind natürlich auch möglich – aber für viele Anwendungen sind Dokumente eine unpassende Abstraktion ihrer Daten. Ein Kunde mit seinen Adressen mag noch als Dokument durchgehen. Doch wie ist es mit einem Kunden und seinen Rechnungen oder umgekehrt einer Rechnung mit ihrem Kunden? Kunden und Rechnungen als separate Dokumente anzusehen, funktioniert, doch sie müssen ja in Beziehung gesetzt werden. Beziehungen zwischen Dokumenten sind jedoch nicht natürlich. Das macht ja gerade die “Dokumentenhaftigkeit” aus, dass in einem Dokument Daten zusammengefasst sind, die eng zueinander gehören. Ein Dokument ist etwas Abgeschlossenes, es ist <em>self-contained</em>.</p>
+<p>Dennoch übt die Einfachheit der Persistenz mit CouchDB Faszination aus. <a rel="noopener" href="http://blog.aztec-project.org/2009/07/13/stupiddb-object-persistence-framework/">StupidDB</a> versucht z.B. das Persistenz-Paradigma von CouchDB in die .NET-Welt zu bringen und noch “einen oben drauf zu setzen”: StupidDB ist bewusst serverlos, denn <em>“[d]urch Replikation des Filesystems z.B. per Windows-DFS ist […] eine einfache Hochverfügbarkeit und Skalierbarkeit der Datenbasis”</em> herstellbar.</p>
+<p>So schön einfach die Persistenz mit StupidDB jedoch auch ist, sie leidet unter demselben Problem wie CouchDB. StupidDB verwaltet Dokumente, die nur als Ganzes gespeichert werden. Objektgraphen werden en bloc in eine Datei serialisiert.</p>
+<h2>Schemalosigkeit für Geschäftsanwendungen: The Lounge Repository</h2>
+<p>Motiviert durch diese Ansätze habe ich nun versucht, die Vorteile der Schemalosigkeit auch für Geschäftsanwendungen zu erschließen. Statt stupide auf dem Sofa abzuhängen, finde ich es jedoch zeitgemäß und auch geselliger, zu “loungen”. Deshalb habe ich meinen kleinen Open Source Persistenzframework <a rel="noopener" href="http://loungerepo.codeplex.com/">“The Lounge Repository”</a> genannt.</p>
+<p>Der Name ist Programm:</p>
+<ul>
+<li>“Lounge” soll anzeigen, dass es ein denkbar einfach und intuitiv zu benutzender Framework ist. Entspannt Objektgraphen persistieren: das soll The Lounge Repository möglich machen. Sie müssen das Persistenzmedium (hier: das Dateisystem) nicht mit einem Schema strukturieren, bevor Sie darin etwas speichern können.  “Repository” statt des verbreiteten Suffixes “DB” soll einen Hinweis auf die Art der Daten geben, die mit dem Framework verwaltet werden.  <a rel="noopener" href="http://domaindrivendesign.org/node/123">Repository</a> ist ein Begriff aus dem <a rel="noopener" href="http://domaindrivendesign.org/resources/what_is_ddd">Domain Driven Design</a> (DDD) und bezeichnet eine Dienstleistung zur Speicherung von Entities: <em>“Definition</em><em>:</em><em> A Repository is a mechanism for encapsulating storage, retrieval, and search behavior which emulates a collection of objects.”</em></li>
+</ul>
+<p>Entspannt Entities persistieren, darum geht es bei The Lounge Repository. Es ist als generisches Repository für alle möglichen Arten von Entities gedacht.</p>
+<p>Was ist eine <a rel="noopener" href="http://domaindrivendesign.org/node/109">Entity</a>? Ein zustandsbehaftetes Objekt mit einer eigenen, speicherübergreifenden Identität. Sie identifiziert es im Hauptspeicher wie im Persistenzmedium.</p>
+<p>Kunde und Rechnung sind naheliegende Entitäten für eine Faktura-Anwendung. Eine Rechnungsposition jedoch nicht, da sie nicht unabhängig von einer Rechnung existiert. Auf Kunden wie Rechnungen möchte man sicher direkt zugreifen, sie müssen unabhängig von einander adressierbar sein; auf Rechnungspositionen kommt man hingegen nur über ihre Rechnung. Rechnungspositionen sind im DDD-Jargon sog. <a rel="noopener" href="http://domaindrivendesign.org/node/135">Value Objects</a>.</p>
+<p>Wenn Sie Ihre Anwendung auf der Basis von DDD modellieren, dann kommen am Ende sicherlich auch Entities und Value Objects heraus, die Sie persistieren wollen. Entities sollen einzeln geladen und gespeichert werden oder in größeren Zusammenhängen, z.B. eine Rechnung zusammen mit ihrem Kunden. Solche Zusammenhänge (cluster) nennt DDD <a rel="noopener" href="http://domaindrivendesign.org/node/88">Aggregate</a>.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/7b204c158168fbd0.png" /></p>
+<p>Wie nun die Persistenz von Éntities bewerkstelligen? Sicherlich können Sie dafür ein RDBMS Ihrer Wahl heranziehen. ADO.NET macht es dann möglich. Oder Sie machen es sich schon etwas einfacher und benutzen einen O/R-Mapper Ihres Geschmacks – von EntityFramework über Open Access und LLBLGENPRO bis zu NHibernate. Aber ich versichere Ihnen, wenn Sie nicht sattelfest mit einem dieser Persistenzframeworks sind, dann werden Sie eine rechte Mühe haben, Ihre Entities zu persistieren. Persistor.Net verspricht zwar, Ihnen einige dieser O/R-Mapping-Mühen abzunehmen, aber auch er setzt auf ein RDBMS, das es dann zu verwalten gilt.</p>
+<h2>Entity Graphen im Dateisystem speichern</h2>
+<p>CouchDB &amp; Co. haben es deshalb auch leicht gehabt, bei der Usability zu punkten. Ihre APIs sind allemal “für die schnellere Persistenz zwischendurch” sehr schön einfach. Nur leider passen sie, wie schon erwähnt, nicht so gut zum Datenmodell er üblichen Geschäftsanwendungen. Objektgraphen mit vielen Entities (Aggregate) lassen sich nicht wirklich als Dokument beschreiben. Denn wenn dieselbe Entity in mehreren solchen Aggregaten vorkommt, wird sie in mehreren Dokumenten persistiert. Sie verliert damit ihre zweckstiftende Eigenschaft, ihre Identität, ihre Eindeutigkeit.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/decde83e2787a53c.png" /></p>
+<p>So sieht Ihr schöner Entity Graph aus, wenn CouchDB oder StupidDB ihn gespeichert haben. Alles ist zu einem Dokumentenganzen zusammengefasst.</p>
+<p>The Lounge Repository macht es hingegen anders! Jede Entity wird hier separat in einer Datei gespeichert, egal wie tief eingeschachtelt sie in einem Entity Graphen ist. Das funktioniert natürlich auch mit zyklischen Referenzen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/09e27894320951a2.png" /></p>
+<p>The Lounge Repository erhält die logische Identität durch physische Separierung. Das unterscheidet es wesentlich von StupidDB.</p>
+<h2>Der Lounge Repository API</h2>
+<p>The Lounge Repository ist zunächst eine Fingerübung (oder eine umfangreichere Code Kata, wenn Sie so wollen). Mit dem Lounge Repository will ich also zwei Fliegen mit einer Klappe schlagen: Ich möchte ein Werkzeug haben, mit dem ich meine Gedanken zum Thema Schemalosigkeit praktisch ausprobieren kann. Und ich möchte in kontrollierter Umgebung meinen Programmiersüchten nachgehen können ;-) Denn wer würde leugnen wollen, dass die Programmierung von Infrastruktur nicht <a rel="noopener" href="http://www.endlich-clean.net/suechtigsein.html">süchtig macht</a>? Im kleinen Freizeitrahmen ist das aber genauso wenig schlimm, wie ein gelegentliches Bierchen am Abend oder eine Zigarette alle Jahre wieder auf der Wies´n. In den <a rel="noopener" href="http://www.endlich-clean.net">endlich-clean.net</a> Entzug muss ich deshalb jedenfalls noch nicht. Allemal, weil ich mich bemüht habe, den Lounge Repository Code clean zu halten. Doch Vorsicht vor Infrastrukturprogrammierung in Ihren Projekten!</p>
+<p>Doch jetzt weiter zu Konkretem, zum Code. Wie sieht der API des Lounge Repository aus? Ein Hello-World-Beispiel zeigt das Grundsätzliche in wenigen Zeilen. Laden Sie den <a rel="noopener" href="http://loungerepo.codeplex.com">Quellcode von CodePlex</a> herunter und machen Sie mit. Das geht mit einem SVN-Client wie <a rel="noopener" href="http://tortoisesvn.tigris.org/">Tortoise</a> ganz schnell. Die Quellen enthalten auch eine Projektmappe mit kleinen Beispielen.</p>
+<p>Hier nun ein Beispielprojekt, wie Sie es aufsetzen können, wenn Sie die Lounge Repository Quellen mittels deren Projektmappe einmal übersetzt haben. Es stehen dann im globalen bin-Verzeichnis des Quellbaumes die Assemblies des Frameworks bereit:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/7e358ec249b77f2e.png" /></p>
+<p>Davon binden Sie zunächst aber nur zwei ein: LoungeRepo.Core und LoungeRepo.Contracts:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/571bcda4309f3749.png" /></p>
+<p>Mehr ist als Vorbereitung nicht nötig. The Lounge Repository kennt keine Datenbankdateien und hat (noch) keinen Serverprozess. Es ist eine experimentelle “embedded database”.</p>
+<p>Und jetzt der Hello-World-Code:</p>
+<p>1 using System;</p>
+<p>2 <strong>using LoungeRepo.Contracts.Core;</strong></p>
+<p>3 <strong>using LoungeRepo.Core;</strong></p>
+<p>4 </p>
+<p>5 namespace BlogSample</p>
+<p>6 {</p>
+<p>7     class Program</p>
+<p>8     {</p>
+<p>9         static void Main()</p>
+<p>10         {</p>
+<p>11             using(<strong>ILoungeRepository repo = new LoungeRepository()</strong>)</p>
+<p>12             {</p>
+<p>13                 <strong>repo.Store("hello, world!", "1");</strong></p>
+<p>14 </p>
+<p>15                 string greeting = <strong>repo.Load("1");</strong></p>
+<p>16                 Console.WriteLine(greeting);</p>
+<p>17             }</p>
+<p>18         }</p>
+<p>19     }</p>
+<p>20 }</p>
+<p>Mit Store() speichern Sie Entities, mit Load() laden Sie sie wieder. So einfach ist das mit der Persistenz.</p>
+<p>Eine Entity ist jedes Objekt, dem Sie dieses Privileg zugestehen möchten. Sie müssen die Klassen zu persistierender Objekte nicht mit einem bestimmten Attribut kennzeichnen oder von bestimmten Klassen ableiten. Eine Zeichenkette kann genauso gut wie ein Kunde-Objekt eine Entity sein:</p>
+<p>5 namespace BlogSample</p>
+<p>6 {</p>
+<p>7     <strong>class Kunde</strong></p>
+<p>8     {</p>
+<p>9         public string Name { get; set; }   </p>
+<p>10     }</p>
+<p>11 </p>
+<p>12     class Program</p>
+<p>13     {</p>
+<p>14         static void Main()</p>
+<p>15         {</p>
+<p>16             using(ILoungeRepository repo = new LoungeRepository())</p>
+<p>17             {</p>
+<p>18                 Kunde k = new Kunde {Name="Peter"};</p>
+<p>19                 <strong>repo.Store(k, "2");</strong></p>
+<p>20 </p>
+<p>21                 k = <strong>repo.Load("2");</strong></p>
+<p>22                 Console.WriteLine(k.Name);</p>
+<p>23             }</p>
+<p>24         }</p>
+<p>25     }</p>
+<p>26 }</p>
+<p>Wichtig ist, dass jede Entity auch wirklich eine Identität hat. Die ist beim Speichern und Laden wichtig. Denn aus ihr “berechnet” das Repository den Namen der Datei, in der es die Entität speichert bzw. aus der es sie lädt.</p>
+<p>Ein string oder das obige Kundenobjekt haben keine von ihrer Hauptspeicheradresse unabhängige Identität. Also muss der Code explizit eine beim Speichern angeben.</p>
+<p>Die Identität einer Entity besteht aus zwei Teilen: einer Id (eine Zeichenkette Ihrer Wahl) und einer optionalen Partition (ebenfalls eine Zeichenkette Ihrer Wahl).</p>
+<p>Partitionen unterteilen den “Persistenzraum” (hier: das Dateisystem) und ermöglichen auf lange Sicht eine Lastverteilung. Entities einer bestimmten Partition könnten von dedizierten Servern verwaltet werden. Auch wenn das Zukunftsmusik ist, habe ich mir gedacht, das grundlegende Konzept der Partitionierung schon jetzt mit in die Funktionalität aufzunehmen. Das mag ein wenig YAGNI sein… aber was soll´s? ;-)</p>
+<p>Innerhalb einer Parition muss dann die Id eindeutig sein. Zusammen ergeben sie die Identität, die im “Persistenzraum” eindeutig ist. Ist keine Partition definiert, nimmt das Lounge Repository eine default Partition an.</p>
+<p>Wenn Sie nicht wissen, was Sie als Partition angeben sollen, dann lassen Sie sie aus – oder wählen Sie z.B. den Klassennamen einer Entity als Partitionsnamen:</p>
+<p>12 <strong>class Rechnung</strong></p>
+<p>13 {</p>
+<p>14     public string Rechnungsnummer;</p>
+<p>15     public Kunde Empfänger;</p>
+<p>16 }</p>
+<p>17 </p>
+<p>18 class Program</p>
+<p>19 {</p>
+<p>20     static void Main()</p>
+<p>21     {</p>
+<p>22         using(ILoungeRepository repo = new LoungeRepository())</p>
+<p>23         {</p>
+<p>24             Kunde k = new Kunde {Name="Maria"};</p>
+<p>25             Rechnung r = new Rechnung</p>
+<p>26                             {</p>
+<p>27                                 Rechnungsnummer = "090829-1",</p>
+<p>28                                 Empfänger = k</p>
+<p>29                             };</p>
+<p>30             <strong>repo.Store(r, "3", "Rechnung");</strong></p>
+<p>31 </p>
+<p>32             r = repo.Load("3", "Rechnung");</p>
+<p>33             Console.WriteLine("#{0} für {1}",</p>
+<p>34                         r.Rechnungsnummer,</p>
+<p>35                         r.Empfänger.Name);</p>
+<p>36         }</p>
+<p>37     }</p>
+<p>38 }</p>
+<p>Aber nicht nur die Partition “Rechnung” für die Rechnung-Entity ist bemerkenswert an diesem Stück Code. Bitte beachten Sie auch folgendes:</p>
+<ul>
+<li>Die Kundin Maria wurde natürlich zusammen mit der Rechnung persistiert.  Beim Laden der Rechnung wurde die Empfängerin natürlich auch wieder mit geladen.  In diesem Beispiel gibt es nur eine Entity: die Rechnung. Das Kunde-Objekt hat von sich aus keine Identität und wurde nicht ausdrücklich als Entity gespeichert.</li>
+</ul>
+<p>Das Repository sieht jetzt so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/4aec3e38ed6848b3.png" /></p>
+<p>Die Entities aus den vorangehenden Beispielen hatten keine eigene Partition und wurden daher in der default Partition gespeichert. Entity “3”, die Rechnung, steht in der explizit angegebenen Partition “Rechnung”.</p>
+<p>Und wo ist die Kundin Maria? Sie steckt in der Rechnung-Entity mit Namen 3.entity, weil ihr Kunde-Objekt ja nicht als Entity gespeichert wurde. Das ist verständlich, oder? Schön ist es aber nicht. Sie wollen ja nicht alle Entity-Objekte explizit speichern müssen. Außerdem würde das nichts nützen, denn selbst wenn das Objekt zu Kundin Maria als Entity gespeichert worden wäre, würde das Repository das nicht merken während der Speicherung der Rechnung. Die “Entitätshaftigkeit” ist einem Kunde-Objekt ja nicht anzusehen. Bisher.</p>
+<p>Um Entities nicht mit expliziter Identitätsangabe speichern zu müssen und auch in Entity Graphen erkennbar zu machen, können Sie sie das Interface ILoungeRepoEntityIdentity implementieren lassen. Das definiert nur zwei Properties: Id und Partition. Es trägt also nicht dick auf Ihre Domänenobjekte auf. Damit wird dann das kleine Szenario wirklich intuitiv:</p>
+<p>7 class Kunde : <strong>ILoungeRepoEntityIdentity</strong></p>
+<p>8 {</p>
+<p>9     #region Implementation of ILoungeRepoEntityIdentity</p>
+<p>10     public <strong>string Id</strong> { get; set; }</p>
+<p>11     public <strong>string Partition</strong> { get { return "Kunden"; } }</p>
+<p>12     #endregion</p>
+<p>13 </p>
+<p>14     public string Name { get; set; }</p>
+<p>15 }</p>
+<p>16 </p>
+<p>17 </p>
+<p>18 class Rechnung : ILoungeRepoEntityIdentity</p>
+<p>19 {</p>
+<p>20     #region Implementation of ILoungeRepoEntityIdentity</p>
+<p>21     public string Id { get { return this.Rechnungsnummer; } }</p>
+<p>22     public string Partition { get { return "Rechnungen"; } }</p>
+<p>23     #endregion</p>
+<p>24 </p>
+<p>25     public string Rechnungsnummer;</p>
+<p>26     public Kunde Empfänger;</p>
+<p>27 }</p>
+<p>28 </p>
+<p>29 </p>
+<p>30 class Program</p>
+<p>31 {</p>
+<p>32     static void Main()</p>
+<p>33     {</p>
+<p>34         using(ILoungeRepository repo = new LoungeRepository())</p>
+<p>35         {</p>
+<p>36             Kunde k = new Kunde {<strong>Id="4"</strong>, Name="Maria"};</p>
+<p>37             Rechnung r = new Rechnung</p>
+<p>38                             {</p>
+<p>39                                 Rechnungsnummer = "090829-1",</p>
+<p>40                                 Empfänger = k</p>
+<p>41                             };</p>
+<p>42             repo.Store(r);</p>
+<p>43 </p>
+<p>44             r = repo.Load(<strong>"090829-1"</strong>, "Rechnungen");</p>
+<p>45             Console.WriteLine("#{0} für {1}",</p>
+<p>46                         r.Rechnungsnummer,</p>
+<p>47                         r.Empfänger.Name);</p>
+<p>48 </p>
+<p>49             k = <strong>repo.Load("4", "Kunden");</strong></p>
+<p>50             Console.WriteLine(k.Name);</p>
+<p>51         }</p>
+<p>52     }</p>
+<p>53 }</p>
+<p>Kunde und Rechnung implementieren nun das ILoungeRepoEntityIdentity Interface und liefern dem Repository darüber ihre Identitäten. Den Kunden habe ich zur Demonstration so ausgelegt, dass ihm die Id bei Erzeugung zugewiesen werden muss, die Rechnung entnimmt sie ihrer Rechnungsnummer. Beide enthalten jedoch eine fest verdrahtete Partition.</p>
+<p>Die Rechnung wird wie erwartet auch jetzt wieder mit ihrem Kunden geladen, darüber hinaus kann der Code jedoch auf den Kunden auch direkt zugreifen, wie Zeile 49 zeigt.</p>
+<p>Das ist im Grunde alles, was es zum Laden und Speichern zu sagen gibt. Sie müssen keine Vorbereitungen treffen, aber Entities sollten gekennzeichnet sein. Alle nicht gekennzeichneten Objekte sind für das Repository Value Objects.</p>
+<p>Objektgraphen, d.h. Objekthierarchien und –netzwerke – auch solche mit Zyklen – werden korrekt gespeichert/geladen, d.h. Entitäten wandern in je eigene Dateien. Wie Sie Objektverweise aufbauen, ist Ihnen überlassen. Sie können einzelne Referenzen halten wie die Rechnung auf ihren Empfänger. Oder Sie benutzen Arrays oder Collections, um mehrere Referenzen zu verwalten.</p>
+<p>The Lounge Repository persistiert alle Felder der Objekte, die ihm zur Speicherung übergeben werden. Immer. Es findet (derzeit) kein change tracking statt. Wollen Sie ein Feld ausschließen, dann setzen Sie darüber das [NonSerialized] Attribut, das Sie von der .NET-Serialisierung kennen.</p>
+<p>Dass Sie Entitäten auch löschen können, ist selbstverständlich. Rufen Sie Delete() auf dem LoungeRepository unter Angabe der Identität auf.</p>
+<p>Zum Schluss bleibt nur noch eine Frage: Kann man eigentlich auch Entitäten durch Queries ermitteln? Ja, man kann. Das Lounge Repository sammelt alle Entitäten eines Typs in einem sog. Extent. Das ist nichts weiter als eine lange Liste von Objekten, die das Repository als IEnumerable anbietet. Deshalb können Sie darauf mit Linq in gewohnter Weise zugreifen:</p>
+<p>33 static void Main()</p>
+<p>34 {</p>
+<p>35     using(ILoungeRepository repo = new LoungeRepository())</p>
+<p>36     {</p>
+<p>37         Kunde k = new Kunde {Id="4", Name="Maria"};</p>
+<p>38         Rechnung r = new Rechnung</p>
+<p>39                             {</p>
+<p>40                                 Rechnungsnummer = "090829-1",</p>
+<p>41                                 Empfänger = k</p>
+<p>42                             };</p>
+<p>43         repo.Store(r);</p>
+<p>44 </p>
+<p>45         r = new Rechnung</p>
+<p>46                     {</p>
+<p>47                         Rechnungsnummer = "090715-2",</p>
+<p>48                         Empfänger = k</p>
+<p>49                     };</p>
+<p>50         repo.Store(r);</p>
+<p>51 </p>
+<p>52         k = new Kunde { Id = "5", Name = "Dennis" };</p>
+<p>53         r = new Rechnung</p>
+<p>54                     {</p>
+<p>55                         Rechnungsnummer = "090803-3",</p>
+<p>56                         Empfänger = k</p>
+<p>57                     };</p>
+<p>58         repo.Store(r);</p>
+<p>59 </p>
+<p>60 </p>
+<p>61         var mariasRechnungen =</p>
+<p>62             from rg in <strong>repo.GetExtent()</strong></p>
+<p>63                 where rg.Empfänger.Name == "Maria"</p>
+<p>64                 select rg;</p>
+<p>65 </p>
+<p>66 </p>
+<p>67         foreach (Rechnung mariasRg in mariasRechnungen)</p>
+<p>68             Console.WriteLine("#{0} für {1}",</p>
+<p>69                 mariasRg.Rechnungsnummer,</p>
+<p>70                 mariasRg.Empfänger.Name);</p>
+<p>71     }</p>
+<p>72 }</p>
+<p>Die Zeilen 37 bis 58 bauen eine kleine Datenbasis an persistenten Entities auf. Und die Zeilen 61 bis 64 fragen sie mit einer Linq-Query ab. repo.GetExtent() liefert dafür die Grundlage in Form einer Liste aller Rechnung-Entities, die geladen oder gespeichert wurden.</p>
+<p>Hier liegt z.Z. noch eine Begrenzung des Lounge Repository: Extents enthalten zunächst nur Objekte, die das Repository “gesehen” hat. Objekte, die auf der Platte im Repository liegen, aber vom Repository weder direkt oder indirekt geladen wurden, sind (noch) nicht in dessen Cache enthalten und tauchen daher nicht im Extent auf.</p>
+<p>Das können Sie jedoch ausbügeln, indem Sie zu Beginn einer Sitzung den internen Cache mit allen persistenten Entities populieren. Ja, so laden Sie zwar die ganze Datenbank in den Hauptspeicher, aber das macht nichts. The Lounge Repository ist (zunächst) genau für solche Szenarien gedacht, in denen Sie eben nicht Gigabytes an Daten verwalten. Selbst einige Hundert Megabytes in den Hauptspeicher zu laden auf einem 4 GB Laptop sollte allerdings den Kohl nicht fett machen.</p>
+<p>Für einen solchen sog. “prefetch” binden Sie einfach die Assembly LoungeRepo.Core.Extensions ein und importieren Sie den gleichnamigen Namensraum. Dann sind alle Entities über ihre Extents zu erreichen:</p>
+<p>5 <strong>using LoungeRepo.Core.Extensions;</strong></p>
+<p>6 </p>
+<p>7 namespace BlogSample</p>
+<p>8 {</p>
+<p>9     …</p>
+<p>32     class Program</p>
+<p>33     {</p>
+<p>34         static void Main()</p>
+<p>35         {</p>
+<p>36             using(ILoungeRepository repo = new LoungeRepository())</p>
+<p>37             {</p>
+<p>38                 <strong>repo.PrefetchAllEntities();</strong></p>
+<p>39                 …</p>
+<p>63                 var mariasRechnungen =</p>
+<p>64                     from rg in repo.GetExtent()</p>
+<p>65                         where rg.Empfänger.Name == "Maria"</p>
+<p>66                         select rg;</p>
+<h2>Ausblick</h2>
+<p>The Lounge Repository ist “a work in progress”. Ich habe mir damit eine Spielwiese angelegt, auf der ich Ideen zum schemalosen Umgang mit Daten und anderem ausprobieren kann. Das Projekt ist Open Source und Sie finden es bei CodePlex in seiner vollen “clean beauty”: <a rel="noopener" href="http://loungerepo.codeplex.com/">http://loungerepo.codeplex.com/</a></p>
+<p>Laden Sie den Quellcode runter und spielen Sie damit. Wenn Sie Fragen oder Einfälle haben, lassen Sie uns bei CodePlex darüber diskutieren. In der Projektmappe finden Sie auch eine kleine Aufgabenliste, die ich führe. Da sehen Sie, dass noch einiges zu tun ist am Lounge Repository. Und auch darüber hinaus habe ich schon Ideen, z.B. wie ein solche Repository verteilt und asynchron betrieben werden kann.</p>
+<p>Einstweilen mag The Lounge Repository Datenbanken wie SQL Server oder selbst CouchDB nicht ersetzen. Aber ich würde mich freuen, wenn in ihm ein Keim läge, der es in einigen Szenarien zu einer Alternative zum default RDBMS machte. Prototypen, kleine Anwendungen… dort, wo Sie Entitäten identifizieren und “schnell mal persistieren wollen” ohne Schemaaltlasten, hat The Lounge Repository (bzw. eine der anderen “alternativen Datenbanken”) es sicher verdient, berücksichtigt zu werden.</p>
+<p>Ich bin gespannt auf Ihr Feedback.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2009-08-30):</p>
+<p>Das klingt sehr interessant. Beim Lesen des Artikels habe ich mich nur die ganze Zeit gefragt, wo genau die Daten auf der Platte gespeichert werden. Kann man das konfigurieren?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-08-31):</p>
+<p>@Anonym: Die Daten liegen per default im Verzeichnis der Anwendung. Wenn sie woanders liegen sollen, kann man einen Pfad zu einem anderen Verzeichnis beim Instanzieren von LoungeRepository mitgebene.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2009-08-31):</p>
+<p>Ich finde das auch sehr interessant, habe dazu aber noch ein paar Fragen:</p>
+<p>(1) Wie reagiert das System bei Änderungen in den zu persistierenden Klassen? Ich kann mir vorstellen, dass nicht mehr benötigte Felder und Änderungen in der Reihenfolge der Felder bei einigen Serializern Probleme bereiten kann. Ich bin mir nicht sicher, glaube mich aber noch an eine Situation erinnern zu können wo der XmlSerializer Objekte nicht mehr deserialisieren konnte, weil ich die Reihenfolge der Properties geändert hatte. Ich glaube das war aber noch .NET 1.0, ob das mittlerweile behoben wurde kann ich aber nicht sagen.</p>
+<p>Auch umbennenen von Klassen etc. könnte Probleme bereiten, hier gibt es aber zumindest die ILoungeRepoEntityIdentity Schnittstelle.</p>
+<p>(2) Gibt es die Möglichkeit Felder zu indizieren? z.B. über ein Attribut mit dessen Hilfe dann eine seperate Datei erstellt wird in der alle Indizes stehen? Ich kann mir gut vorstellen, dass dies deutliche Vorteile bringt, wenn ich über viele Daten suchen möchte. Allerdings auch ein deutlicher Overhead. Über einen eigenen Linq Provider wird man dann wohl nicht mehr drum herum kommen.</p>
+<p>(3) Ist schon ein Service in Planung? Mit einer REST Schnittstelle und einer entsprechenden .NET API wäre das eine tolle Sache für kleinere Anwendungen oder Prototypen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-08-31):</p>
+<p>@Anonym: Das sind interessante und wichtige Fragen. Mein derzeitiger Gedankenstand dazu:</p>
+<p>1) Aktuell ist intern eine binäre Serialisierung im Einsatz. Aber die macht kein Problem, weil sie die Entities nicht direkt serialisiert, sondern sog. normalisierte Entities (NEntities).</p>
+<p>Das Repo wandelt eine Entity in eine Hierarchie von normalisierten Objekten (NObjekts) um. Alles, was kein primitiver Typ ist (oder ein Array davon) wird in ein NObjekt gewandelt. NEntities sind nur ein bisschen besondere NObjekte, weil sie noch id/partition haben.</p>
+<p>NObjekte enthalten eine Liste von Name-Wert-Paare für jedes Feld ihres Ursprungsobjekt. Und eine Info über den Typ des Ursprungsobjektes.</p>
+<p>Dieser Normalisierungsschritt ist nötig, weil ich sonst nicht wissen kann, welche Entities in einem Entity Graphen stecken.</p>
+<p>Entity-Referenzen werden in den NObjects durch spezielle Referenzobjekte ersetzt.</p>
+<p>Das erkläre ich hier, damit klar ist, wo der Ansatzpunkt für dein Problem ist: in der Normalisierung und nicht in der Serialisierung.</p>
+<p>Wenn du den Normalisierer austauschst (intelligenter machst), dann kann er auch Schemaänderungen bis zu einem gewissen Grad bewältigen. Umbenennungen von Feldern lassen ihn heute noch husten; verschobene Felder machen ihm aber nichts aus. Gelöschte Felder sind auch ok. Neue Felder lassen ihn wieder husten.</p>
+<p>2) Bisher habe ich an Optimierungen wie das Indizieren von Felder nicht gedacht. Es geht um das Ausprobieren des grundlegenden Programmiermodells. Wenn es dabei mal etwas länger dauert bei einer komplexen Query, dann find ich das ok. Wie gesagt: The Lounge Repo soll grad nicht SQL Server für die Verwaltung von 10 Millionen Kundendaten ersetzen ;-) Im Augenblick ist das Repo auch 100% Caching ausgerichtet. Das ist die Prämisse.</p>
+<p>Da also alle Daten im Hauptspeicher sind, werden Queries auch nicht so lange dauern, würd ich mal sagen.</p>
+<p>Indizierung ist also eine Optimierung, die irgendwann mal kommen kann - aber grad eben nicht oben auf meinem Zettel steht. Ich würd sagen: Zeig mir dein Szenario, wo das Fehlen einer Indizierung ein Problem ist. Dann reden wir weiter :-)</p>
+<p>3) The Lounge Repo als echten Server aufzusetzen ist hingegen durchaus schon in der Planung. Erst will ich intern Asynchronizität einführen. Dann verteilen. Denn ohne intern bessere Skalierbarkeit macht Verteilung nicht so recht Sinn. Der Sinn von Verteilung ist ja, eine höhere Last zu schultern.</p>
+<p>An welcher Stelle ich das Repo dafür auseinander schneide, weiß ich aber noch nicht. Ich glaube aber, dass es wohl erstmal zwischen Serialisierung und Persistenz sein wird. Da ists am einfachsten. Das Protokoll ist in jedem Fall ganz einfach: PUT=Store, GET=Load, DELETE=Delete. Den Extent würd ich erstmal wohl nur lokal lassen.</p>
+<p>Bei einem solchen Schnitt wären serverseitige Queries allerdings nicht möglich. Der Server würde nicht mal normalisierte Objekte kennen. Erst die haben ja erkennbare Felder. Vielleicht also auch nach der Normalisierung ein Schnitt? Würde das Prokoll kaum ändern, glaub ich. Aber serverseitige Queries müssten dann "von Hand" programmiert werden, weil die Objekte auf dem Server nicht "im Original" vorliegen. Das möchte ich nämlich vermeiden, sonst musst du nämlich die Assemblies mit den Typen der Objekte auch auf dem Server haben.</p>
+<p>Mit normalisierten Objekten wären aber Queries auch möglich. Ist dann nur mehr Aufwand. Wenn ich also mal viel Zeit habe... :-)</p>
+<p>Vorher deshalb die einfachere Verteilung, denke ich.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Stefan Koelle</strong> (2009-08-31):</p>
+<p>Hallo, Ralf,</p>
+<p>es freut mich, dass du unsere StupidDB auch angesehen hast. Deine Implementierung sieht sehr interessant aus, loest aber nicht die Probleme, die wir mit StupidDB zu loesen versucht haben. Hierzu vielleicht ein paar Gedankengaenge zum weiterdiskutieren:</p>
+<ol>
+<li>Intelligente Aufteilung der Daten</li>
+</ol>
+<p>Idee hinter StupidDB waren die Speicherung von Userdaten. Pro User eine Partition. Wenn ich bei LoungeRepository mal tausende Partitionen habe, dann wird es im Filesystem schnell recht voll bei dir. Du legst ja pro Partition immer wieder ein neues Directory an. Daher unser Hashing der Partitions und die Angabe der erwarteten Anzahl von Partition.</p>
+<ol start="2">
+<li>Langfristig Aufteilung auf verschiedene Speicherserver</li>
+</ol>
+<p>Gleich mit dem Hashing der Partitions hat man langfristig folgene Moeglichkeit. Ueber eine spezielle Verteilung koennte man Partitions ueber verschiedene physikalische Speicherorte verteilen, also Shards bilden. Somit ist man auch skalierbar falls die Performance des Filesystems mal nachlassen sollte.</p>
+<p>Diese beiden Punkte waeren jedoch leicht auch bei LoungeRepository moeglich zu implementieren.</p>
+<ol start="3">
+<li>List von Partitions</li>
+</ol>
+<p>Wie gesagt, Userdatenspeicherung war unser Kerngedanke. Somit moechte ich auch dem User alle hochgeladenen Daten anzeigen. Ist bei LoungeRepository nur ueber den Cache derzeit moeglich. Da sieht man wohl auch die unterschiedliche Intention. StupidDB soll selten benutzte Daten einfach und simpel speichern, daher auch kein Cache, aber das in grosser Menge. LoungeRepository soll wenig Daten speichern, dies aber effizient und schoen speichern.</p>
+<ol start="4">
+<li>Revisions</li>
+</ol>
+<p>In StupidDB kann man relativ einfach Revisionen von Objekten anlegen.</p>
+<p>Gruss
+Stefan Koelle</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-08-31):</p>
+<p>@Stefan: Danke für deine Klärungen und Einwände. Der Ausgangspunkt von StupidDB und Lounge Repository ist sicher ein anderer. Insofern ist das LoungeRepo auch keine Kritik an StupidDB, sondern ein Weiterdribbeln nach Aufnahme der Vorlage... ;-)</p>
+<p>Zu deinen Punkten:</p>
+<p>1) Wieviele Partitionen eine Anwendung anlegt, ist ihr überlassen. Wer nur eine Partition pro User anlegen will, der kann das gern tun.</p>
+<p>Das StupidDB wg des Partitionshandlings aber auch große Datenmengen ausgelegt sein soll, verstehe ich nicht. Gerade wenn "nur" User eine Partition anlegen, sind es ja vergleichsweise wenige Partitionen. Die meisten Anwendungen haben höchstens nur hunderte Benutzer. Oder geht es um Web-Anwendungen mit Millionen?</p>
+<p>Aber davon abgesehen: Die Zahl der Partitionen halte ich immer für viel kleiner als die der Entities. Insofern sehe ich kein Problem bei einer mehr oder weniger großen Zahl von Partitionsverzeichnissen. Es kommt eher auf die Frage der Datendateien an. Und da unterscheidet sich StupidDB nicht vom LoungeRepo: es wird eben zunächst mal pro Objektgraph 1 Datei angelegt.</p>
+<p>The Lounge Repository enthält vom Konzept her also StupidDB: Wenn ich nur die Wurzeln als Entities auslege, wird jeder Objektgraph wirklich nur als 1 Datei persistiert. StupidDB kann es nicht anders. The Lounge Repository will es aber anders können. Das ist der Unterschied.</p>
+<p>Die Zahl der Partitionen vorhersehen zu müssen, halte ich für eine unnötige Einschränkung. Sozusagen premature optimization. Selbst hunderte Verzeichnisse machen ja kein Problem. Wenn man sie schachtelt noch weniger. Da setze ich mal auf die Effizienz der Dateisysteme.</p>
+<p>2) Bisher habe ich mich tatsächlich auf einen Verzeichnisast auf der Platte beschränkt. Aber ich habe schon ein Feature in Planung, um Partitionen unterschiedlichen Verzeichnissen bzw. Shares zuweisen zu können.</p>
+<p>Und wenn ich dann noch Zeit und Lust habe, soll man mit Partitionen auch unterschiedliche Stores verbinden können, z.B. Partition A auf Fileserver SA, Partition B bei S3, Partition C bei Amazon mit SimpleDB, Partition D mit FTP auf Server SD usw. Dafür müssten nur Store-Adapter geschrieben werden. Das sind heute jeweils 3 Methoden.</p>
+<p>Weiter bei Teil II der Antwort...</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-08-31):</p>
+<p>Teil II:</p>
+<p>3) Den Cache habe ich nur für die Extents und damit für Queries eingebaut. Da hab ich zwei Fliegen mit einer Klappe geschlagen. Zugriff über inhaltliche Abfrage sehe ich als ein Muss an.</p>
+<p>Für eine inhaltliche Abfrage muss ich aber auch den Typ kennen. Also bietet The Lounge Repository Extents (d.h. nach Typen zusammengefasste Daten) und nicht Partitionen als Basis für Listen.</p>
+<p>Die Einschränkung der Extents nach Partitionen wäre aber auch kein Problem. Das liegt recht nahe, z.B. repo.GetExtent&lt; Person &gt;("FilialeB").Where(...)</p>
+<p>Umgekehrt ist auch die Listung von Entities nach Partitionen kein Problem, würde jedoch nicht die Typgleichheit garantieren. Darüber wären nur schwer Abfragen zu fahren. Deshalb hab ich das erstmal gelassen.</p>
+<p>4) Revisions habe ich ganz bewusst ausgelassen. Eine Möglichkeit dafür bietet eine transparente Replikation z.B. mit Dropbox. Dropbox verwaltet Revisionen - allerdings kann ich darauf nicht von Lounge Repo zugreifen.</p>
+<p>Wenn ich Revisionen jedoch "richtig" einbauen will, dann habe ich beim Lounge Repository ein Problem. StupidDB legt alles in einer Datei ab. Die kann leicht komplett versioniert werden. Aber The Lounge Repository zerlegt die Daten in mehrere Dateien. Wenn ich Entity A speichere, die auf Entity B verweist, und A hat sich geändert, soll ich dann für A und B neue Versionen anlegen? Oder nur für A?</p>
+<p>Im Augenblick - und das scheint mir die größere Frage zu sein - schaut The Lounge Repository ja auch noch gar nicht darauf, ob sich eine Entity überhaupt verändert hat. Ein Objektgraph wird immer komplett gespeichert. Ist das wirklich gut? Nein, auf die Dauer darf das so nicht bleiben. Ein change tracking muss her oder zumindest eine Info, ob eine Entity irgendwie "dirty" ist.</p>
+<p>Revisionen "ganz einfach", sind natürlich auch ganz einfach. Für eine Entity sich ein "Backup" zu wünschen, ist schnell eingebaut. Aber ist es das, was man für Entities will? Hm... da möchte ich nicht so tief in die Glaskugel schauen. YAGNI lauert überall ;-)</p>
+<p>Bottom line: Klar, es ist zu sehen, dass StupidDB einen spezielleren Ausgangspunkt hatte. Ihr habt für ein konkretes Problem eine simple Lösung gesucht.</p>
+<p>Das hat The Lounge Repository aus einem anderen Blickwinkel aufgenommen. Deshalb ist manches gleich (und damit anders als bei CounchDB) und manches eben auch anders. StupidDB gibt es ja schon; ich wollte sie ja nicht nochmal entwickeln :-) Mein Problem ist allerdings ein allgemeineres - das ich ebenfalls und inspiriert durch CouchDB und StupidDB versuche, ganz einfach anzugehen.</p>
+<p>Herausgenommen habe ich mir dabei ganz bewusst vor allem nur eines: die Annahme, dass die Daten in den Hauptspeicher passen. Das wird auch erstmal so bleiben, glaub ich. Für das Laden/Speichern/Löschen einzelner Entities mit ihren drunterhängenden Bäumen ist das nicht wichtig. Aber für Queries. Denn für die möchte ich nicht in absehbarer Zeit eine Queryengine schreiben, die auf persistenten Daten läuft. Um das Programmiermodell für Entities mit einem schemalosen Store auszuprobieren, wäre das Overkill, glaube ich.</p>
+<p>Soviel mal als Antwort und Hintergrundinfo. Vielleicht sehen wir uns ja auf den .NET Open Space in Leipzig. Dann plaudern wir dort ausführlicher oder machen gar eine Session zum Thema schemalose Datenbanken ;-)</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Stefan Koelle</strong> (2009-09-01):</p>
+<p>Hallo, Ralf,</p>
+<p>ich sehe dein LoungeRepo auch sicher nicht als Kritik, sondern eine Basis zum weiterdiskutieren.</p>
+<p>Ich freu mich schon auf Leipzig, da koennen wir ja die Diskussion von hier ja evtl. fortfuehren.</p>
+<p>Kurz aber noch zu den Partitionen. Mit User sind WebBenutzer in grosser Zahl gemeint, bei uns &gt; 0,5 Mio. Pro User legen wir eine Partition an und dort Informationen, Objekte und Files zum User. Das verschachteln des Dateisystems berechnen wir durch die Zahl der Partitionen. Die Spruenge sind da gewaltig, daher muss man nicht zuviel ueberlegen. Die Spruenge sind 256 Partitionen, 65536 Partitionen, 16 Mio Partitionen, usw.</p>
+<p>Ich finde es jedenfalls spannend mal eine alternative Implementierung in .NET zu sehen.</p>
+<p>Gruesse
+Stefan</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-09-01):</p>
+<p>@Stefan: Aha, so ist das mit den Partitionen gedacht. Da verstehen wir schon Unterschiedliches drunter. Dann hat StupidDB einen große Zahl von Partitionen, die durch die Nutzerzahl bestimmt ist. Beim Lounge Repository bestimmt sie eher die Problemdomäne - oder irgendein beliebiger anderer Grund. Partitionen können hier auch nach Gusto geschachtelt werden.</p>
+<p>Dann warten wir mal Leipzig ab...</p>
+<p>Cheerio!</p>
+<p>Ralf</p>
+<hr />
+<p><strong>Thomy</strong> (2009-09-23):</p>
+<p>Nur eine Idee: Wenn man das darueberliegende Programmiermodell (ganz schicker Ansatz) von der Persistenz entkoppelt werden wuerde, koennte das ganze meines Erachtens auch auf dem Entlib Caching Block laufen und so auch auf distributed Caches wie Velocity (http://tinyurl.com/yw55tm).</p>
+<p>Dann waeren auch (vermutete) Probleme wie concurrent Zugriff auf das Repository von mehreren Prozessen in dieser Schicht geloest.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-09-23):</p>
+<p>@Thomy: Das ist ein interessanter Gedanke! Entitätsgraphen müssten zwar immer noch traversiert werden, um die Entitäten zu finden und separat in den Cache zu hängen. Aber die Persistenz (oder auch Replikation) wäre an die Cache-Infrastruktur delegiert.</p>
+<p>Darüber werd ich mal nachdenken... Danke für den Input!</p>
+<hr />
+<p><strong>Ronald Schlenker</strong> (2010-02-21):</p>
+<p>Sehr interessant. Wir verfolgen mit dem <a rel="noopener" href="http://blog.technewlogic.de/StaticContent/Pages/ObjectLounge_Main.aspx">Object Lounge Framework</a> einen ähnlichen Ansatz. Das Ziel ist, Domänenmodelle mit möglichst wenig Aufwand zu persistieren, d.h. Wegfall von Mappings / Schematagenerierung, etc, jedoch mit den von RDBMS gewohnten Features wie Isolation, Transaktionen, usw. Ich muss gestehen, dass ich diesen Post nur überflogen habe und werde ihn mir demnächst genauer anschauen, denn es ist bestimmt sehr interessant, die beiden Ansätze gegenüberzustellen. Jedenfalls schön zu sehen, dass andere Leute auf ähnliche Ideen kommen :)</p>
+<p>Ronald</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-02-21):</p>
+<p>@Ronald: Die ObjectLounge sieht cool aus. Das Tutorial-Beispiel ist vielleicht ein wenig groß geraten, weil alles in einem Modell dargestellt werden sollte - aber die Features sind cool. Transaktionalität kommt gut.</p>
+<p>Über das Lounge Repository habe ich inzw. in der dotnetpro 3/2010 geschrieben. Und 4/2010 wird noch ein wenig unter die Haube schauen.</p>
+<p>Aber ich hänge nicht am Lounge Repo. Ich freue mich über jede Initiative, die gleiche Einfachheit mit etwas mehr Leistung bringt. Und Transaktionalität ist sicher etwas, das ich nicht einbauen werde. Dafür fehlt mir dann doch die Zeit.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Ronald Schlenker</strong> (2010-02-22):</p>
+<p>Danke für die Kritik am Tutorial; ja, um sich einen groben Überblick zu schaffen erschlägt es einen vielleicht etwas, das muss ich mal ändern. Wie vieles andere ist Schreiben eben auch die Kunst der Kürze :)</p>
+<p>Wären denn Transaktionen beim Lounge Repository überhaupt notwendig? Für mich sieht es so aus, als spiele sich die Interaktion in relativ isoloerten Statements ab; d.h. es wird doch ohnehin kein Entity-bezogener State über einen längeren Zeitraum gehalten, und die Entities sind ja mehr oder weniger disconnected, wenn sie einmal geladen sind. Somit fällt die Notwendigkeit, Rollbacks auf bereits instanziierten Entities machen zu müssen meines Erachtens weg, da sie im Store ja unangetastet sind und sie sich im Bedarfsfall wieder "unangetastst" holen lassen. Lediglich atomicity hinsichtlich des Store müsste gewährleistett sein. Korrigiere mich, wenn ich falsch liege...</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-02-22):</p>
+<p>@Ronald: Hm... sind die Entities im Lounge Repo "disconnected"? Würd ich nicht sagen. Im Gegenteil! Die dürfen ja eben connected sein und werden trotzdem separat gespeichert.</p>
+<p>Atomizität ist natürlich kein Konzept für das Lounge Repo, weil es keine Tx unterstützt. An einer Entity kann man in sovielen Schritten wie gewünscht herumändern. Stürzt das Programm vor einem Store() ab, dann sind die Änderungen weg. Und stürzt es beim Store() ab, dann ist Atomizität auch nicht gewährleistet. Oder doch... hm... das Store() ist am Ende ja sehr simpel. Zumindest pro Entity ist das Speichern atomisch. Aber nicht für einen Objektgraphen.</p>
+<p>Wie gesagt: Ich kann beim Lounge Repo ohne Tx leben. Es ist eben für "die kleine Persistenz zwischendurch" gedacht. Mit noch ein Stück weniger Aufwand als bei der ObjectLounge.</p>
+<p>So kann sich jeder seine Persistenz schneidern, wie er will: StupidDB, Lounge Repo, Object Repo, Persistor.Net, O/R Mapper...</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Thinker</strong> (2010-05-27):</p>
+<p>Hallo Ralf,</p>
+<p>Was passiert, wenn ich Produkte lösche, die bereits Bestellungen zugeordnet sind?</p>
+<p>Gibts da sowas wie ein OnDelete Cascade ?</p>
+<p>Oder muss ich dann jede Bestellung durchsuchen nach genau diesem Produkt und dies Produkt rauslöschen?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-05-27):</p>
+<p>@Thinker: Nix Event. Das Lounge Repo ist eine gaaanz einfache Persistenzbibliothek. Konsistenz musst du selbst herstellen.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-07-27):</p>
+<p>Hallo Ralf.
+Ich teste derzeit Dein Repository bei einem privaten PRojekt von mir. In diesem Zusammenhang bin ich darüber gestolpert, daß die Daten der Base Klasse meiner zu speichernden Klasse nicht serialisiert werden. Sprich wenn ich diese wieder lade, sie die Werte der Base Klasse nicht da.
+Wo liegt der Fehler ?
+Wenn ich meine Klasse direkt Binär serialisiere geht alles.</p>
+<p>Grüße Gregor</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-07-27):</p>
+<p>@Gregor: Derzeit ist es so, dass private Felder in Basisklassen nicht (de)normalisiert werden vom Lounge Repo.</p>
+<p>Reflection liefert via abgeleiteter Klasse diese Felder nicht einfach zurück.</p>
+<p>Werde mir gelegentlich mal anschauen, was ich dagegen machen kann, wie aufwändig eine Lösung ist.</p>
+<p>-Ralf</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

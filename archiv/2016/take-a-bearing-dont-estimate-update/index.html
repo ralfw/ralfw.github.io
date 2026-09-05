@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Take a bearing, don&#x27;t estimate - Update — ralfw.de Archiv</title>
+<meta name="description" content="I believe forecasting software development using the Monte Carlo method is even easier than I thought. In my previous article I used averages of past cycle times to come up with an">
+<link rel="canonical" href="https://ralfw.de/archiv/2016/take-a-bearing-dont-estimate-update/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Take a bearing, don&#x27;t estimate - Update — ralfw.de Archiv">
+<meta property="og:description" content="I believe forecasting software development using the Monte Carlo method is even easier than I thought. In my previous article I used averages of past cycle times to come up with an">
+<meta property="og:url" content="https://ralfw.de/archiv/2016/take-a-bearing-dont-estimate-update/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-01)"></span>ralfw.de</p>
+    <h1>Take a bearing, don&#x27;t estimate - Update</h1>
+    <div class="doc-meta"><span>3. Dez. 2016</span><span>Erstveröffentlichung: ralfw.de</span><span><a href="https://ralfw.de/take-a-bearing-dont-estimate-update/" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2016/take-a-bearing-dont-estimate-update/</code></span></div>
+    <div class="art"><p><img loading="lazy" alt="" src="/assets/01-ralfw.de/c3c3e7af93355ed9.png" /></p>
+<p>I believe forecasting software development using the Monte Carlo method is even easier than I thought. In <a rel="noopener" href="https://ralfw.de/take-a-bearing-dont-estimate/">my previous article</a> I used averages of past cycle times to come up with an idea of how much effort future tasks would take.</p>
+<p>This was my basic data set: a log of cycle times of 14 tasks already accomplished, each belonging to some category.</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/c7abbdb906c29334.png" /></p>
+<p>As a very simple way to calculate an expected effort for future tasks A (UI), K (DOM), E (DA), V (DOM), R (DA), X (UI) I suggested to use the average task cycle time per category. This would lead to A (5h), K (13.75h), E (7.33h), V (13.75h), R (7.33h), X (5h) = 52.17h in total.</p>
+<p>That’s easily done. No problem. And if you just have a pocket calculator around you might want to go with this.</p>
+<p>But if you happen to have Excel handy, then you should try do not calculate the expected effort, but do a simulation. I did that using the <a rel="noopener" href="https://en.wikipedia.org/wiki/Monte_Carlo_method">Monte Carlo method</a>.</p>
+<p>Today, though, I’m not satisfied anymore with my approach how I used the Monte Carlo method. I had some qualms already while I wrote the article. I wanted to use the real distribution of the data points to base the simulation on - but somehow didn’t see how to do it. So I again used the average category values with some random variation.</p>
+<p>But now I know better, I guess. Had to let it sink in, take a shower, go for a walk… ;-)</p>
+<p>Here’s my new approach. Hope you’ll find that even simpler.</p>
+<h2><strong>Using the Category Distributions</strong></h2>
+<p>First group the data points according to their categories:</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/12fd6c09fe98b001.jpg" /></p>
+<p>As you can see, their distributions differ somewhat:</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/390e3a80a18fe5d4.png" /></p>
+<p>This is what should show up in the simulation. The aggregated distribution should mirror the de facto skew of the original distributions matching future task categories.</p>
+<h3>An even easier Monte Carlo simulation</h3>
+<p>As it turns out this is very simply done: for each future task I just have to pick a random task from its category. That’s it. The random index lies in the range of 1..n with UI(n=4), DOM(n=4), DA(n=6).  As long as the random indexes are evenly distributed the cycle times picked will follow the original distribution. Why didn’t I think about that earlier?</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/93c3f9ac7094a7e4.jpg" /></p>
+<p>The total expected cycle time of course still is the sum of the randomly calculated cycle times for each of the future tasks. But no averages are used anymore, no standard deviation is added/subtracted. It’s just a plain random picking of logged values.</p>
+<p>After 5000 runs of this calculation the resulting distribution looks like this:</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/c3c3e7af93355ed9.png" /></p>
+<p>Compared to the previous approach it’s not normally distributed anymore which is great. To me that suggests it’s truly mirroring the underlying distributions. As you can see above those seem to be skewed somewhat to lower numbers - which is the case for the simulation, too.</p>
+<p>Not using averages now gives a different picture of expected efforts. The average of the total over all simulation runs is 50.73h which is somewhat lower than before (52.31h) - as expected. But more importantly, when you look at the curve, you see that the 90% threshold is now higher: 60.82h compared to 58.45h before! The same is true for the 80% threshold, but not the 66% threshold. That’s somewhat unexpected, isn’t it? But I like it ;-)</p>
+<p>If you want a 0.9 probability for a total expected effort for six new tasks with certain categories you should plan a budget of 60.82 hours. This is some 20% more than the average. Before the difference was only 11%.</p>
+<p>To me this sounds much more reasonable. I’m glad I gave it another thought. The simulation is now easier, more straightforward, and the results are matching my intuition better.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

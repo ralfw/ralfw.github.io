@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gemeine Kenntnislücken — ralfw.de Archiv</title>
+<meta name="description" content="In der dotnetpro 5/2010 habe ich in meiner Sandbox-Kolumne beklagt, dass viele .NET-Entwickler heute nicht vertraut sind mit Lambda-Funktionen oder der Funktionsweise von yield ret">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/gemeine-kenntnislucken/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Gemeine Kenntnislücken — ralfw.de Archiv">
+<meta property="og:description" content="In der dotnetpro 5/2010 habe ich in meiner Sandbox-Kolumne beklagt, dass viele .NET-Entwickler heute nicht vertraut sind mit Lambda-Funktionen oder der Funktionsweise von yield ret">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/gemeine-kenntnislucken/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Gemeine Kenntnislücken</h1>
+    <div class="doc-meta"><span>15. April 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/04/gemeine-kenntnislucken.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/gemeine-kenntnislucken/</code></span></div>
+    <div class="art"><p>In der dotnetpro 5/2010 habe ich in meiner <a rel="noopener" href="http://www.dotnetpro.de/articles/onlinearticle3303.aspx">Sandbox-Kolumne</a> beklagt, dass viele .NET-Entwickler heute nicht vertraut sind mit Lambda-Funktionen oder der Funktionsweise von <em>yield return</em> (C# Iteratoren). Daraufhin bekam ich folgende Zuschrift eines Lesers:</p>
+<blockquote>
+<p>“[I]n deiner neusten Sandbox ziehst du ja ganz schön über uns Entwickler her! Ich bin der Meinung, dass das ziemlich gemein ist.”</p>
+</blockquote>
+<p>Das hat mich schon ein wenig getroffen. Denn “gemein” möchte ich ja nicht sein. Gemein findet der Leser es, dass ich die Unkenntnis von Jahre alten und grundlegenden Features des Hauptwerkzeugs von .NET-Entwicklern kritisiere, denn…</p>
+<blockquote>
+<p>“Wenn ich meine tägliche Arbeit als Entwickler reflektiere, bin ich der Meinung das [m]an fast keine Change hat sich <em>in alle neuen Technologien</em> einzuarbeiten. Der tägliche Projektablauf ist halt mehr auf Codegenerierung ausgelegt. Es gibt halt von Seiten des Managements oft keine Toleranz für Weiterbildung oder <em>den Einsatz von neuen Technologien</em>.”</p>
+</blockquote>
+<p>Leider liegt hier ein Missverständnis vor. Ich habe eben nicht gesagt, dass <em>“man”</em> (also jeder Entwickler) sich in <em>“alle neuen Technologien”</em> einarbeiten muss. Ich habe vielmehr geschrieben: “Zugegeben, niemand muss alles beherrschen. Und niemand kann alles beherrschen.” Und selbstverständlich habe ich Verständnis dafür, wenn im Projektdauerstress Veränderungen an Konzepten und Technologien nicht sofort nachvollzogen werden. Das kennen wir ja auch alles schon. Ja, ich weiß, lieber Leser:</p>
+<blockquote>
+<p>“Es gibt halt von Seiten des Managements oft keine Toleranz für Weiterbildung oder den Einsatz von neuen Technologien.”</p>
+</blockquote>
+<p>Deshalb habe ich ja eben auch nicht über die neueste Mode gesprochen und schon gar nicht über VS2010/.NET 4. Es ging mir um Features, die Jahre (!) alt sind. Es ging mir um Features des Haupt(!)werkzeugs. Nix Esoterisches.</p>
+<p>Eine Analogie mag helfen: Wer einen Klempner trifft, in dessen übervollen Werkzeugkasten eine Bohrmaschine liegt, dessen Knöpfe er nicht erklären kann, der wird sicherlich Zweifel an der Professionalität des Klempners haben. Eine Bohrmaschine gehört zu dessen wichtigsten Werkzeugen (nehme ich an ;-). Die muss er auf dem Effeff beherrschen. Ist es dann gemein, wenn diese Unkenntnis hervorhebt und beklagt?</p>
+<p>Nein. Natürlich ist das nicht gemein. Ich kann alles mögliche Verständnis dafür haben, warum der Klempner in den vergangenen 5 Jahren keine Zeit hatte, die Bohrmaschinenknöpfe kennenzulernen. Immer soviel zu tun. (Oder eher sowenig?) Ja, ja, schon schlimm die Auftragslage.</p>
+<p>Doch das ändert nichts daran, dass er sein Werkzeug nicht beherrscht. Und damit frage ich mich, ob er für mich einen guten Job machen kann. Kann er die Löcher in bester Weise bohren, wenn er die Schlagbohrfunktion nicht kennt? Hm… wahrscheinlich nicht immer.</p>
+<p>Jetzt zurück zur Softwareentwicklung. Hier ein Beispiel für die Arbeit eines Entwicklers, der nicht firm in der Verwendung von Lambda-Funktionen ist:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c2d13f827ad3945e.png" /></p>
+<p>Ist das gut lesbar? Kaum.</p>
+<p>Hier der Code lesbarer gemacht:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/83b07bc8bbcc242b.png" /></p>
+<p>Und jetzt überlege man einmal, wie viel es ein Unternehmen jedes Mal kostet, wenn Entwickler Änderungen an schwer lesbarem Code vornehmen sollen. Dauert das 5% länger oder 10% oder gar 50%? In jedem Fall dauert es jedes, jedes Mal messbar länger.</p>
+<p>Natürlich kostet es auch Zeit, sich mit Lambda-Funktionen auseinander zu setzen. Vielleicht 1-2 Tage. Das ist allerdings Zeit, die nur einmal anfällt. Danach stehen die Kenntnisse zur Verfügung und können helfen, Code z.B. lesbarer zu machen.</p>
+<p>Stehen Sie nicht zur Verfügung, dann ist es ein Fass ohne Boden, wie oft Mehraufwand zu treiben ist. Das misst zwar keiner – aber es ist viel, viel teurer. Und es wird beklagt. Keine Sorge. “Warum dauert das schon wieder so lange mit dem neuen Feature?” ist (allermeistens) eine indirekte Klage darüber, dass Code unstrukturiert oder unlesbar ist. Dem, der klagt, fehlt zwar das Verständnis für den Kausalzusammenhang. Aber die Ursache ist dennoch dieselbe: mangelnde Werkzeugkenntnis. Ist das gemein? Ja, ich würde sagen, das ist gemein. Denn der, der klagt, ist wahrscheinlich gleichzeitig der (Mit)Verursacher der Unkenntnis.</p>
+<p>Und nochmal: Ich rede nicht über exotische Features der Workflow Foundation. Ich rede über “Brot und Butter” Features des Hauptwerkzeuges jedes Programmierers: seine Programmiersprache. Man werfe mir also bitte nicht Gemeinheit vor, wenn ich darüber (schon wieder) den Kopf schüttele.</p>
+<p>Eigentlich kann es mir ja sogar egal sein. Wenn ein Entwickler 5 Jahre oder mehr</p>
+<blockquote>
+<p>“[…] Erkenntnisse  nicht in der Praxis einsetzen kann/darf hat man” und so “ irgendwann nur noch ein "Halbwissen"” hat,</p>
+</blockquote>
+<p>dann ist es ja nicht mein Problem, wenn der Code schwerer als nötig lesbar ist oder er einen Job wie diesen nicht annehmen könnte:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/51bf57179b5884ec.png" /></p>
+<p>Denn wenn dort schon TDD und Scrum im Titel stehen, dann wird man erwarten, dass der Bewerber sein Hauptwerkzeug selbstverständlich kennt. Denn TDD ohne Lambda-Funktionen ist kaum denkbar, wenn man moderne Mock-Frameworks einsetzen will.</p>
+<p>Wer “irgendwann nur noch ein Halbwissen” hat und als Grund die mangelnde “Toleranz für Weiterbildung” beim Management anführt, der begibt sich in gefährliche Abhängigkeit. Denn wenn sich das Management in ähnlicher Weisheit wie in Bezug auf die Fortbildung entschließt, es einmal ohne den halbwissenden Entwickler zu probieren, dann wird der nächste Job kaum besser.</p>
+<p>Gegen das Halbwissen hilft kein Händeringen und kein hoffender Blick zum Management. Halbwissen ist – das klingt hart, ist aber deshalb nicht minder wahr – im Wesentlichen selbstverschuldet. Heute noch mehr als gestern. Denn die Zeiten der verlässlichen Institutionen, die für uns die Lebensplanung übernehmen, ist vorbei. Unwiederbringlich. Verlässlichkeit und weise, gütige, wissende Lehrer, Beamte, Manager, Firmenpatriarchen oder was auch immer finden sich eher nur noch im Geschichtsbuch.</p>
+<p>Die wahre Gemeinheit besteht also in den Kenntnislücken, die Entwicklern nicht nur das Entwickeln schwerer als nötig machen, sondern ihnen auch Freiheitsgrade bei der Gestaltung ihres Lebens nehmen.</p>
+<p>Was dagegen tun? Am Ball bleiben. Braucht es dafür immer Freizeit? Nein. Einfach unter der Woche in der Arbeitszeit jeden Tag 30 Minuten hinsetzen und lesen. Oder etwas in Visual Studio ausprobieren. Wer soll denn da kommen und das verbieten? Der unverständige Manager? “Hey, was programmieren Sie denn da? Gehört das zum Feature X?” Und selbst wenn er es fragt, dann lautet die Antwort eben “Ja, das gehört dazu. Ich muss etwas ausprobieren.” Oder die Antwort auf einen Kommentar zum Lesen währen der Arbeit: “Ich muss etwas nachlesen, damit ich die Aufgabe besser erfülle.”</p>
+<p>In welchem Land leben wir denn, wo nicht nur private Emails während der Arbeitszeit untersagt werden, sondern auch noch die Fortbildung? Wie viel Mikrokontrolle will denn Management ausüben?</p>
+<p>Also, lieber Leser, es hilft nichts. Die Gemeinheit liegt nicht bei mir. Einen Missstand hervor zu heben, ist nicht gemein. Gemein ist der, der ihn herstellt – vor allem, wenn er womöglich weiß, dass er “das Personal dumm hält.”</p>
+<p>16 Stunden in stickiger Luft und mit krummem Rücken müssen wir nicht mehr arbeiten. Gut so. Aber in einer der schnellsten Branchen zu arbeiten ohne Chance, sich durch kontinuierlichen Wissenserwerb unabhängig von einem Arbeitgeber zu halten, ist kaum besser. Das physische Leid ist vergangen. Präsent ist die aber anscheinend noch die existenzielle Abhängigkeit. Und das in einer Zeit, wo der, von dem man sich abhängig macht, überhaupt keine Garantie mehr geben kann, dass er für den Abhängigen auch angemessen sorgen kann.</p>
+<p>Davon, dass der sinkende Wissenspegel (im Verhältnis zum Relevanten) nicht nur dem Entwickler, sondern sogar dem ignoranten Management schadet, mal ganz zu schweigen. Wo z.B. 19.000 Zeilen Code unwidersprochen in einer Klasse stehen können – ja, das habe ich neulich gesehen –, da kann mir niemand erzählen, dass irgendeinen Vorteile hätte. Das hat nur Nachteile, die viel, viel Geld kosten. Und das, weil der, der den Code geschrieben hat, mit “Halbwissen” zufrieden war. Das ist schlicht unprofessionell – und nicht nur auf Seiten des Entwicklers. Da hat das Management auch seine “Aufsichtspflicht” verletzt.</p>
+<p>Und jetzt? Ran an den Ball. VS2010 und .NET 4 sind draußen. Auch ich muss mir das für mich Relevante jetzt drauf schaffen. Manchmal würde ich lieber mit dem Altbekannten weiter mokeln. Doch ich bin ja auch Teil der Branche und kann mich daher nicht vom Lernen ausnehmen. Wir sitzen alle im selben Boot.</p>
+<p>Schaffe ich das mit dem Lernen übrigens komplett in dem, was ein Angestellter als seine Arbeitszeit ansehen würde? Nein. Aber es hilft nichts. Wenn ich gerade als Freiberufler weiter gefragt sein will, dann darf ich da nicht so genau sein. Zum Glück macht mir das Lernen allerdings Spaß. Ich fühle mich in dieser Branche gut aufgehoben.</p>
+<p>PS: Bevor ich´s vergesse: Als Kritiker des allgemein nicht so rosigen Standes der Branche stehe ich nicht allein. Man lese mal <a rel="noopener" href="http://www.semat.org/bin/view">hier</a> bei SEMAT:</p>
+<blockquote>
+<p>Software engineering is gravely hampered today by immature practices.</p>
+</blockquote>
+<p>“Immature practices” – darum geht es. Das bezieht sich genauso auf das (oft abwesende) Vorgehensmodell wie auf die Abwesenheit von Fortbildungsplanung wie auf die Unkenntnis von zentralen Konzepten der Informatik (denn nichts anderes sind Iteratoren und Lambda-Funktionen), die präsent sind im Hauptwerkzeug eines Entwicklers.</p>
+<h2>Kommentare</h2>
+<p><strong>RHS</strong> (2010-04-15):</p>
+<p>Aus der Seele gesprochen. Realistisch und gut so.
+Nur eins fällt mir ein:
+Lernen ist auf jeden Fall mit Arbeit verbunden. Man benötigt also schon eine gewisse Motivation. Wenn die Motivation auf Arbeit nicht vorhanden ist (Stress und was es so alles gibt), und wenn das neue Wissen zumindest mittelfristig nicht abgefragt wird, dann hat man auch wenig Lust zum Lernen.</p>
+<hr />
+<p><strong>Unknown</strong> (2010-04-15):</p>
+<p>Einfach nur: Danke dafür! :-)</p>
+<hr />
+<p><strong>Mathias</strong> (2010-04-15):</p>
+<p>Volle Zustimmung!</p>
+<p>Wenn ich bei einem Arbeitgeber arbeiten würde, der mir überhaupt keine Gelegenheit zur Weiterbildung gibt, würde ich kündigen. Mit jedem Tag, an dem ich mich nicht weiterbilde, sinkt mein "Marktwert" als Entwickler ein kleines Stück.</p>
+<p>Dann gibt es ja auch noch die Sorte Entwickler, die gar kein Interesse daran haben, etwas neues zu lernen. Man hat es ja schon immer sonundso gemacht, und das hat doch schon immer so funktioniert, warum also etwas ändern und neues ausprobieren? Entwickler mit so einer Einstellung würde ich in meinem Unternehmen nicht haben wollen. In unserer Branche gehört es einfach zum Alltag, dass man sich ständig weiterbilden muss. Wenn man keine Lust dazu hat und keinen Spaß daran, neues zu entdecken, dann ist Softwareentwickler einfach der falsche Job.</p>
+<hr />
+<p><strong>Thomas</strong> (2010-04-16):</p>
+<p>Hallo Ralf und alle anderen hier,</p>
+<p>ich bin gerade hier hängen geblieben weil ich etwas suchte und habe deshalb den Artikel gelesen. Um es kurz zu machen, der Artikel entspricht der Warheit. Ich bin selbst Entwickler und habe das Problem, das ich nicht die Möglichkeit habe mich in neue Dinge einzuarbeiten. Da ich der einzige Entwickler bin in unserem Unternehmen und zwei Softwareprodukte "gleichzeitig" programmiere und nebenbei auch noch Kundenbetreuung mache, bleibt leider irgend etwas auf der Strecke. Und Mathias hat Recht, dass man sich weiterbilden muss. Nur muss man auch mal die Frage stellen, ob man das immer in seiner Freizeit machen muss und sollte. Ich kenne auch das Problem, dass man auf seine "alten" Programmierstrukturen besteht bzw. diese weiter nutzen muss. Teilweise liegt dies aber nicht am Entwickler, sondern weil man manche Technik nicht ausprobieren oder einsetzen kann, weil es z.B. vom Kunden oder Vorgesetzten nicht gewünscht ist. Ich glaube deshalb, dass genau solche Probleme vielfach auch den Spaß an der Softwareentwicklung verringern.</p>
+<hr />
+<p><strong>Daniel</strong> (2010-04-16):</p>
+<p>Ich muss zu meiner Schande gestehen, ich habe den Artikel in der dotnetpro noch nicht gelesen.
+Aber ich werde das ganz bestimmt mal nachholen.</p>
+<p>Neue Technologien bedeuten für uns alle einen großen Lernaufwand. Es gibt wieder einiges Neues zu entdecken.</p>
+<p>Nur meistens ist es der Fall, dass wir das Alte noch gar nicht beherrschen.</p>
+<p>Woran liegt das?</p>
+<p>Ich würde genauso wie Ralf den Entwicklern selbst die Schuld geben. Ich muss ihm da leider zustimmen.
+Die meisten Entwickler sind einfach zu faul.
+Deshalb wäre mein Titel für diesen Beitrag auch "Faule Kenntnislücken" gewesen.
+Weiterbildung ist ein wichtiger Punkt den man nicht unterschätzen darf. Sich hier auf die Firma auszureden ist völliger Schwachsinn.
+Ich glaube nicht, dass es irgendeine Firma auf dieser Welt gibt, die etwas dagegen hat, wenn der Mitarbeiter was lernt. Dies muss auch nicht immer in der Freizeit sein.</p>
+<p>Wenn man mal um die Zeit bittet sich etwas näher anzuschauen, wird bestimmt keiner "Nein!" sagen, denn die investierte Zeit wird auch bald ihre Vorteile bringen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-04-17):</p>
+<p>@Daniel: So einfach will ich "den Entwicklern" ja nicht "die Schuld geben". Letztlich ist für mich aber natürlich jeder selbst verantwortlich für seinen Lebensweg.</p>
+<p>Wenn Entwickler für Unternehmen arbeiten, dann ist das eine Partnerschaft. In einer Partnerschaft haben die Verantwortung dafür, dass die Partnerschaft fruchtbar ist im Sinne eines gemeinsamen Ziels - und auch, dass keiner dem andere schadet.</p>
+<p>Wenn Unternehmen dann ihren Entwicklern keine Zeit zur Weiterbildung (in der Arbeitszeit) geben, dann widerspricht das dieser Definition. Sie schaden damit nämlich sowohl dem gemeinsamen Ziel wie auch dem Entwickler.</p>
+<p>Unternehmen haben also auch eine Schuld an der Misere des Halbwissens.</p>
+<p>Auf der anderen Seite ist der Entwickler nicht nur der Partnerschaft bzw. dem Unternehmen verpflichtet, sondern auch sich selbst. Er hat damit mindestens 2 Gründe, warum er sich mit Halbwissen nicht zufrieden geben sollte.</p>
+<p>Halbwissen schadet dem gemeinsamen Ziel der Partnerschaft. Und das weiß der Entwickler. Deshalb muss er es seinem Partner immer wieder sagen.</p>
+<p>Halbwissen schadet ihm selbst. Das weiß er - und falls nicht, dann ist das Dummheit.</p>
+<p>Dass hier "Wissen" nicht absolut gesehen werden kann, ist klar. "Wissen" ist auch nur ein Werkzeug zum Überleben bzw. zur Bedürfnisbefriedigung. Es zu beschaffen, kostet Energie. Anderes kostet auch Energie und befriedigt Bedürfnisse. Wo Energie eingesetzt werden soll, will deshalb abgewogen sein. Da kann die Entscheidung auch mal gegen Wissensbeschaffung ausfallen.</p>
+<p>In dem Ausmaß und der Systematik, wie Energie in der Branche eben nicht in die Wissensbeschaffung investiert wird, halte ich es für pathologisch.</p>
+<p>Es mangelt einfach an einem gesunden Selbstbild der Softwareentwickler. Sie haben nicht gelernt, sich gegen die fordernde Umwelt abzugrenzen. Deshalb sind sie mit allem zufrieden, was man von ihnen verlangt und auch was man ihnen nicht gibt.</p>
+<p>"Ihr entwickelt ohne TDD!" ist genauso ok wie "Bei uns darf man während der Arbeitszeit nicht lernen."</p>
+<p>Die Haltung ist kleinmütig und fatalistisch. "Is halt so. Was soll ich machen?"</p>
+<p>Bei aller gegenseitigen Verantwortung in Partnerschaften ist daher das Halbwissen am Ende doch selbstverschuldet. Sich als "Opfer des Systems" zu sehen, bringt nichts.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-04-18):</p>
+<p>Da hast du etwas wichtiges und richtiges angesprochen.</p>
+<p>Du hast mich damals auch zum Umdenken bewogen und ich denke dieser Artikel aus der dotnetpro wird auch noch weitere zum umdenken ihrer Gewohnheiten verhelfen.</p>
+<p>Wichtig ist aber für dich zu verstehen, dass die meisten Entwickler nicht die richtige Kontrolle haben ihr Wissen zu überprüfen.</p>
+<p>Du schreibst in deinen Blog, in die Zeitschriften und schulst Personen mit dem wissen was du dir anlernst. Um so etwas zu machen muss man das Thema verstehen und spätestens wenn man etwas nicht erklären kann, weis man dass es einem selbst nicht klar ist.
+Ein Vorteil der nicht zu unterschätzen ist, aber jeder Entwickler kann es dir gleich tun :-)</p>
+<p>Ausführlich habe ich zum Thema jetzt auch etwas beigetragen http://bit.ly/d6FoKa</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-04-18):</p>
+<p>@Dennis: Den Satz "Solche Entscheidungen diskutiert man nicht mit seinem Chef, schließlich bezahlt er mich dafür solche Entscheidungen selbständig zu treffen und mein Kunde erwartet das sowieso von mir." in deinem Blog finde ich sehr, sehr passend. Es gehört eben zum Job eines Softwareentwicklers zu lernen.</p>
+<p>Das erwarten wir ja von jedem Künstler. Wenn wir eine Vorstellung besuchen und er kann seinen Text nicht, dann fragen wir uns, was er denn eigentlich den ganzen Tag gemacht hat? Die 2 Std Vorstellung am Abend sind ja nur ein Bruchteil seiner Arbeitszeit. Den Rest - so erwarten wir - verbringt er mit dem Üben dessen, was er uns abends vorstellt. Beim Künstler gehört das Üben also zur Arbeitszeit, damit (!) er auf der Bühne Höchstleistung erbringt.</p>
+<p>Wir sollen auch Höchstleistung erbringen? Wunderbar. Dann müssen wir üben. Immer wieder. Und zwar während der Arbeitszeit. Das gehört zum Job jedes Höchstleisters. Künstler, GSG9, Chirurg? Alles müssen üben. (Der Arzt ist zur Fortbildung gezwungen!)</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Carsten</strong> (2010-04-20):</p>
+<p>Sie müssen so etwas schreiben, da Sie Ihr Geld damit verdienen anderen Leuten Technologien beizubringen, die sie überwiegend gar nicht brauchen.
+Ihr Beispiel lässt sich auch ohne Lamda in punkto allgemeiner Lessbarkeit verbessern.
+Dahinter steht ein Technologieverstaendnis nach Hausfrauenmanier: je mehr Features eine Sprache hat, desto besser wird die Software. Ich wage das Gegenteil zu behaupten: Ein Framework kann gar nicht genug Funktionen bereitstellen, eine Sprache hingegen sollte sich beschränken.
+Des Weiteren erwecken Sie den Eindruck, ein guter Entwickler sei derjenige, der die meisten Features kennt deren Funktionsweise selbst auf Compilerebene erklären kann. Widerspruch: Ein guter Entwickler ist der, der sein Handwerk verstehet und die Fähigkeit und das Interesse besitzt, Probleme einer ihn fremden Domäne zu verstehen und zu durchdringen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-04-20):</p>
+<p>@Carsten: Pauschale, polemische Kritik verdient eine pauschale, polemische Antwort:</p>
+<ol>
+<li>
+<p>Ich verdiene mein Geld gerade nicht (!) damit, anderen Leuten Technologien beizubringen. Ich vermittle Konzepte.</p>
+</li>
+<li>
+<p>Ob die anderen Leute diese Konzepte brauchen oder nicht, entscheidest zum Glück nicht du von deinem Schreibtisch, sondern der Entwickler in seiner Arbeit. Ich kann nur Vorschläge machen und Anregungen geben. Was er umsetzt, was nützt, findet er durchaus selbst heraus. Interessanter Weise ist dass Feedback dann aber so, dass die Meisten das Meiste für wertvoll erachten.</p>
+</li>
+</ol>
+<p>Aber niemand wird gezwungen. Auch du nicht. Jeder darf arbeiten, wie er will. Am Ende zählt die persönliche Zufriedenheit und die der Kunden.</p>
+<ol start="3">
+<li>Wenn du mir überhaupt ein Verständnis zubilligst, dann bitte das eines "Hausmannes". In dem ist jedoch nicht eingeschlossen, dass ich "umso mehr" für "umso besser" halte. Ich behaupte auch nicht, dass jeder immer Lambda Funktionen einsetzen sollte. Ich behaupte nur, dass man sie solide kennen sollte, um sie ggf. einzusetzen, wenn es passt.</li>
+</ol>
+<p>Wenn du sie nicht kennst, dann kannst du sie nicht einsetzen. So einfach ist das. Damit hast du schlicht weniger Möglichkeiten. Damit darfst du natürlich zufrieden sein.</p>
+<p>Und ich bin auch offen dafür, dass du hier klar darlegst, wie ohne Lambda Funktionen das Codebeispiel ähnlich lesbar gestaltet werden kann. Schreib doch in deinem bisher ungenutzten Blog dazu einen Artikel. Wir sind alle gespannt. Denn schon Goethe sagte: "Besser machen, nicht nur tadeln, soll den rechten Meister adeln." Vielleicht ist dir ein Klassiker ja Anlass für solche Aktivität.</p>
+<ol start="4">
+<li>Definiere "sein Handwerk verstehen". Ich habe eine solche Definition (implizit) abgegeben: "Guter Handwerker" setzt voraus, dass einer seine Werkzeuge kennt - insb sein Hauptwerkzeug - und angemessen zum Nutzen des Kunden einsetzt.</li>
+</ol>
+<p>Und nun kommst du.</p>
+<ol start="5">
+<li>Der wille, eine Problemdomäne zu durchdringen und Lösungen zu produzieren, gehört sicher auch zu einem "guten Handwerker". Aber leider ist "gut gewollt" noch nicht "gut gekonnt". Das zeigen leider viele Softwaresysteme, die sich durch guten Willen in die Unwartbarkeit entwickelt haben.</li>
+</ol>
+<p>Wenn du frei von solchem Brownfieldcode bist dadurch, dass du dein Handwerk soviel besser verstehst als andere, dann wäre das gleichfalls Blogbeiträge bei dir wert. Wir würden alle an deinen Zeilen kleben und deine Tipps aufsaugen.</p>
+<p>Carsten, bitte erhelle uns. Befreie uns von der "Hausfrauenmanier".</p>
+<p>Wartend grüßt</p>
+<p>Ralf</p>
+<hr />
+<p><strong>Carsten</strong> (2010-04-20):</p>
+<p>Gut und pronto zurueckgebruellt, Loewe!
+Aus Deiner Antwort ist erkenntlich, dass Du in Deiner Software-Guru-Ehre verletzt bist. Du vermittelst also Konzepte. Ach so. Entschuldigung.
+Worum es mir geht, ist das derlei neue Sprachfeatures von der Community aufgesogen werden und dann wir fleißig drauflos programmiert. Ich bezweifle, dass dies zur Qualität von Software beiträgt: http://www.codeproject.com/KB/dotnet/FastInvoke.aspx?display=Print
+Stattdessen, bleibt es merklich still, dass folgendes nicht funktioniert:</p>
+<pre><code>public abstract class A
+{
+    public abstract string Name { get; }
+}
+public class B : A
+{
+    private string name;
+    public override string Name
+    {
+        get { return "Name"; }
+        set { name = value; }
+    }
+}
+</code></pre>
+<p>Stichwort Handwerker: Mir ist ein Tischler, der mit dem Hammer umgehenen kann lieber, als einer der einen pralleren Werkzeugkoffer hat und die Naegel schief einschlaegt.
+Die Kritik bezueglich besser machen ist berechtigt. Schick mir doch den Code, dann werde ich auch Konzepte bloggen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-04-20):</p>
+<p>@Carsten: Was soll ich zu deinem vorwerfenden Beispiel sagen? Du meinst also, wenn eine Sprache Features vermissen lässt, die du gern hättest, aber die einem wesentlichen Prinzip der Objektorientierung widersprechen, dann ist das doof? Naja, ist dein gutes Recht.</p>
+<p>Andere sind aber vielleicht froh, dass Microsoft endlich (?) mal was sauber macht. Schau doch mal, was ich damit mein. Es geht um das Liskov Substitution Principle.</p>
+<p>Du siehst also: Ich bin nicht für "drauflos programmieren". Ich bin dafür, sich mit Prinzipien auseinander zu setzen. Das ist für mich gutes Handwerk.</p>
+<p>Ebenso ist für mich gutes Handwerk, wenn einer mit seinem Hammer gut umgehen kann, wenn er nur einen hat.</p>
+<p>Leider tendiert der Handwerker, der nur einen Hammer hat dazu, dass für ihn alle Probleme mit dem Hammer lösbar sind. Er will ja Geld verdienen mit seinem Hammer. Also kann er nicht sagen: "Achso, ne, das kann ich mit dem Hammer nicht machen. Dazu brauchen Sie einen Handwerker mit einem Werkzeugkoffer." Den Handwerker will ich sehen, der nicht so reagiert. Ne, ne, der Hammerwerker wird zuschlagen - und dann womöglich etwas zimmern, was irgendwie geht... Er hat sich ja auch alle Mühe mit der Einarbeitung in die Domäne gegeben.</p>
+<p>Ein Frankfurter Messeturm ist nicht mit einem Hammer allein gebaut. Mache große Software allerdings schon. Zusammengekloppt. Ich habe es gesehen. Immer wieder. Dazu muss man allerdings die Haube aufmachen. Und da kommt dann ne Menge Qualm und Gestank zum Vorschein. Trotz aller Domänenkenntnis.</p>
+<p>Es braucht halt mehr als einen Hammer und guten Willen. Kenntnis von Prinzipien zum Beispiel.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Carsten</strong> (2010-04-20):</p>
+<p>Mein Punkt war doch: man braucht, um die Lesbarkeit Deines Codefragments zu erhöhen keine Lamba Ausdrücke. Meine Gegenthese war: wenn man die gleiche verbesserte Lesbarkeit mit herkömmlichen Sprachmerkmalen herstellen kann, dann sollte man derlei Sexy-Features doch tunlichst weglassen.</p>
+<p>Ich erlaubte mir zudem die Meinung zu kritisieren, ein guter Entwickler beherrsche alle neuen Features, die sich die Firma Microsoft so ausdenkt und es sei derjenige ein schlechter, der nicht genau wisse, was yield return nun genau intern veranstaltet.</p>
+<p>Ich argwöhne, dass wir alle (ich will mich da nicht gänzlich ausschließen) erwarten, dass wenn .Net 4.0 erscheint, Microsoft mit einer Menge neuer, toller Sachen daherkommen muss. Was für Frameworkelemente gilt, gilt aber nicht für die Sprache: Das Überladen einer Sprache mit neuen Elementen führt eben nicht dazu, dass die Entwicklergemeinde besseren Code erzeugt. Schlimmstenfalls führt es dazu, dass die Sprache ihre fundamentalen Charakteristika einbüsst. Das finde ich nicht nur doof, sondern auch grob fahrlässig.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-04-20):</p>
+<p>@Carsten: Man braucht eine Menge Zeugs nicht. Objekte vor allem nicht. Geht auch heute alles noch in Cobol und C.</p>
+<p>Ich verstehe solche Argumentation nicht. Tut mir leid. Und ich bin mir sicher, dass du noch keine Tests mit Attrappen und einem Mock-Framework geschrieben hast. Denn sonst hättest du am eigenen Leibe gespürt, wie schmerzhaft es ist, keine Lambda Ausdrücke zu haben.</p>
+<p>Es steht dir frei, soviele Features wie du willst zu lernen. Du kannst auch bei Goto stehenbleiben und dich nicht mit neumodischem Kram wie foreach beschäftigen. Und am Ende hast du ja Recht - ist ja auch meine Meinung -, dass sowieso niemand alles lernen kann. Das ist seit min. 10 Jahren vorbei.</p>
+<p>Aber ich rede - da wiederhole ich mich - eben nicht über exotisches Zeugs. Punkt. Die Programmiersprache ist das (!) zentrale Tool. Sozusagen ein Handwerkerhammer. Wer da nicht echt Bescheid weiß... Sorry, dafür hab ich dann kein Verständnis mehr.</p>
+<p>Sprachentwicklung ist natürlich eine sensible Sache. Dessen ist sich Microsoft auch bewusst - was nicht heißt, dass sie alles richtig machen. Aber das Codebeispiel, das du mit der Vererbung gebracht hast, ist dafür keine Exempel. Da geht es um die Einhaltung von Prinzipien.</p>
+<p>Mit allen Sprachneuerungen bin ich auch nicht glücklich in C# 4. Das habe ich auch gerade in einem heise developer Artikel beschrieben (kommt demnächst raus). Deshalb setze ich für die Zukunft vermehrt auf F#. Die Sprache ist frisch, noch näher an ihrem Kern. Mittelfristig ist es aber wohl so, dass eben keine eine Sprache alles reißt. Dann werden dennoch viele weiter mit einer Sprache allein weiterarbeiten. Das ist auch ok - nur darf man sich dann eben nicht wundern, wenn Code zuweilen umständlich ist (also mehr Aufwand braucht als eigentl nötig) oder schwer lesbar. Die Aspektorientierung hat das auch erfahren müssen. Vieles geht mit AOP einfacher - aber trotz Verfügbarkeit eines simplen Tools wie PostSharp schreiben sich Entwickler immer wieder einen Wolf und machen ihren Code quasi bewusst unleserlich. Schade.</p>
+<p>"Selbst Schuld" würd ich sagen, wenn da nicht der Ruf der Branche ein Stück auf dem Spiel stünde. Wir setzen uns mit solcher Lernträgheit in ein schlechtes Licht.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Carsten</strong> (2010-04-21):</p>
+<p>Entschuldigung, aber das ist doch jetzt Unfug: Wenn ich die Lesbarkeit meines Programmcodes zu verbessern suche und ich das Ergebnis ohne den Einsatz neuer Features auch erreichen kann, dann empfinde ich es als vernünftig, diese Features wegzulassen, da deren Einführung die Komplexität des Systems erhöhen.
+Ein anderer Aspekt Deiner Ausführungen hingegen ist interessant: Du vermittelst den Eindruck, dass Leute die sich heute noch mit Cobol oder C (letztere immerhin Platz 1 in der Hitliste der am meisten verwendeten Programmiersprachen) beschäftigen, konservative Dumpfnasen seien, wohingegen wir C#per und insbesondere Du as F#per zur Avantgarde gehören und alle anderen irgendwo in den 70ger Jahren stehen geblieben sein.
+Nun plaudere ich einmal aus dem Nähkästchen: wir haben in unserem Konzern (und wir sind nicht die Einzigen) ein altes Mainframe System. Das hat mittlerweile – ich glaube – insgesamt fünf Versuche überlebt, es abzulösen. Da der letzte, ergebnislose Versuch ein wenig teuer war, hat man nun entschieden, dass das alte System einfach bleibt und nun strategische Plattform ist.
+Wenn Du diesen Cobol Jungs mit Referaten über Ko- und Kontravarianz kommst, schrecken die nicht mehr ehrfurchtsvoll zurück. Im Zweifelsfalle werden sie sagen: Ach, schau mal, wieder so ein Spinner.
+Du kannst natürlich auch weiterhin diese Leute doof finden, weil Goto ja pfui ist, weiterhin Deinen akademischen Dogmatismus pflegen und Dich von der Community als Konzept-Tank feiern lassen, nur weiterbringen wird uns das nicht.
+Wir können es ja noch mal versuchen, denn nun haben wir ja F#. Das war’s, was uns gefehlt hat! Das ist frisch und neu und außerdem total nebenläufig. Ich ruf gleich mal an und frag nach noch mal 50 Millionen.
+Es ist Zeit, von seinem elfenbeinernen Turm herabzusteigen und die Welt um sich herum mit ein wenig Demut zu betrachten und zu lernen.
+Was haben wir falsch gemacht?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-04-21):</p>
+<p>@Carsten: Wie gesagt: Wir sind alle gespannt auf deine lesbare Lösung meines Beispiels ohne Lambda Ausdrücke. Fang doch damit mal dein Blog an. Den Ursprungscode findest du ja auch in meinem Posting, also kannst du nach Herzenslust refaktorisieren. Wie wirst du wohl die Separation of Concerns lösen? Zeigs uns!</p>
+<p>Zu den "Cobol Dumpfnasen": Ich habe nicht behauptet, dass Leute, die C/Cobol erfunden haben, Dumpfnasen waren. Und ich habe nicht behauptet, dass einer, der heute damit lebt, eine ist.</p>
+<p>Aber:</p>
+<p>Erstens muss es ja doch irgendeinen Grund geben, warum wir überhaupt erst C, dann C++, dann Java, dann C# entwickelt haben. (Ich hab jetzt mal nur die C-Sprachfamilien rausgegriffen. Für andere gilt das auch.)</p>
+<p>Warum programmieren wir nicht mehr in Assembler? Die Features der immer höher steigenden Hochsprachen haben offensichtlich - so mal meine laienhafte Deutung - für genügend viele Leute einen spürbaren Vorteil gebracht. Sun und Microsoft und Millionen Softwareentwickler sind nämlich auch keine "Dumpfnasen" - als die du sie hinstellen willst -, wenn sie Geld in Features wie Iteratoren oder Delegaten oder Attribute investieren. Das machen die nicht aus Jux und Dollerei, sondern weil es einen Vorteil nicht nur verspricht, sondern de facto bringt.</p>
+<p>Nochmal: Nicht jedes Feature einer Sprache ist immer und überall zwanghaft einzusetzen. Aber kennen sollte ich mein Hauptwerkzeug (!). Das ist ein handwerklicher Anspruch. Wenn ich dann damit unzufrieden bin, ist das auch ok. Aber kennen sollte ich es. Und offen dafür, dass ich über meine Unzufriedenheit bei neuer Erkenntnislage oder Domäne hinwegspringe. Das ist ein Anspruch an Erwachsenheit.</p>
+<p>Zweitens kannst du daraus, dass ein Uraltsystem nicht mit finanziell vertretbarem Aufwand abgelöst werden kann, nicht (!) ableiten, dass daran irgendetwas vorteilhaft sei. Ich verkehre das sogar mal ins Gegenteil: Das System, das du beschreibst, ist so verquarzt, dass es keine Alternative gibt. Es muss zum strategischen Kern werden durch Erhaltung, weil man sich so in die Ecke gepinselt hat. Es spricht womöglich sogar gegen die Qualifikation derjenigen, die es entwickelt haben. Denn Ziel jeder Software darf ja eben nicht sein, unersetzbar zu werden. Solche existenzielle Abhängigkeit von einer bestimmten Ausprägung von Software ist absolut kontraproduktiv. Da wird Kohle ohne Ende versenkt in uraltes Zeugs. Und ich bin sicher: der CIO in dem Unternehmen verflucht es jeden Tag, dass er so alternativlos ist.</p>
+<p>Damit mache ich keine Aussage über die heutigen Entwickler an dem System. Die müssen ja mit einem Matschfeld zurecht kommen, dass ihnen andere bereitet haben. Wenn sie da keine Chance sehen, von Neuerungen zu profitieren... nun, dann können sie über Neuerungen lachen oder traurig sein. Mir egal.</p>
+<p>Ich halte es nur für untauglich, ein Brownfield hochzustilisieren zu einem Beweis, dass die Entwicklung von Hochsprachen Tinnef sei.</p>
+<p>Wenn du magst, kannst du dir ja aber so ein Projekt für dich suchen. Warum willst du eigentl mit neumodischem Krams wie C# arbeiten? Warum liest du mein Blog? Was hast du von EBCs oder TDD? Und morgen schreibe ich womöglich über Code Contracts oder Duck Typing. Features über Features. Beame dich doch zurück in die gute alte Mainframe-Zeit. Da gibt es noch viele solche unersetzbaren Systeme zu warten. Und du musst dich nicht mit einem wie mir abgeben, der irgendwelche Ansprüche an Professionalität hat, weil er meint, zum Job des Softwareentwicklers würde das ständige Lernen gehören. Bei Cobol und C und Fortran ist alles in trockenen Tüchern. Keine relevante Entwicklung (wenn du mal Object Cobol ausnimmst), nehme ich an. Stillstand. Ruhe. Frieden.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Carsten</strong> (2010-04-21):</p>
+<p>Kritik beherzigt, Blog begonnen. Hab allerdings darauf verzichtet, den Code aus dem Bildchen abzupinseln. Hoffe, dass dies auf  Verständnis stoesst.</p>
+<p>Ich bin gekränkt, denn das was Du interpretierst habe ich weder so geschrieben noch so gemeint: Ich möchte nicht zurück zu Lochkartendruckern und Telefonen mit Wählscheibe. Ich will auch ein iPad.</p>
+<p>Ich versuche nur darüber nachzudenken, was zum Teufel wir in den letzten 20 Jahren falsch gemacht haben, dass es uns nicht gelingt, diese Systeme mit vertretbarem finanziellem Aufwand abzulösen. Im Übrigen bin ich einer dieser CIOs und ja, ich finde es erbärmlich in diese vor Stolz glühenden Cobol Gesichter zu blicken, die mir erklären wollen, dass es doch so einfach sei, auf den Mainframe zu migrieren.</p>
+<p>Die Anstrengungen, derlei System abzulösen, scheitern allesamt nicht am Migrationsprozess sondern eher an der funktionalen Abbildung und sind also mithin kein Problem des verquarzten Altsystems, wie Du sagst.</p>
+<p>Ich glaube, dass wir über unsere Branche und unser Selbstverständnis nachdenken sollten. Aber das ist eine Glaubens- und Haltungsfrage und demnach von jedem selber zu entscheiden.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-04-21):</p>
+<p>@Carsten: Ich freue mich, dass du dein Blog begonnen hast. Bin gespannt...</p>
+<p>Und ich freue mich, dass dir das strategische Projekt auch ein Dorn im Auge ist. Strategien sollten auf Inhalte gerichtet sein und nicht auf überkommene Formen, von denen man abhängig ist.</p>
+<p>Wie konnte es soweit kommen? Niemandem soll böse Absicht angelastet werden. Aber auch ohne böse Absicht entsteht nicht immer nur Gutes. Außerdem sind wir halt später immer schlauer. Daher ist das Wichtigste: Zeugs so bauen, dass man Wissenszuwachs auch einfach anbringen kann.</p>
+<p>Und da scheint mir nun doch eine Sünde in der Vergangenheit (und auch heute noch) begangen worden zu sein: Man hat eben nicht darauf geachtet, dass man so entwickelt, dass leicht verstanden und migriert und erweitert werden kann.</p>
+<p>Das ist ein allgegenwärtiges Phänomen. 19.000 Zeilen VB.NET Code in einer Klasse sind genauso schlimm wie Millionen Zeilen von Cobol-Verhau.</p>
+<p>Und das hat nur begrenzt mit Features der Sprache zu tun. Hier geht es - wie du sagst - um Grundhaltung und Selbstverständnis. Deshalb habe ich die Clean Code Developer Initiative mitgegründet. Damit versuchen wir, etwas bei der Grundhaltung in der Branche zu bewegen. Sensibel machen für zeitlos wirksame Prinzipien und Praktiken.</p>
+<p>Das heißt aber nicht, dass Sprachen sich nicht weiter entwickeln sollen. Iteratoren, Linq, Lambda Funktionen, Code Contracts, Tupel, dyamische Typen... ja, es darf, soll, muss weitergehen. Und das muss man als Entwickler beobachten - auch wenn manches am Ende ein Irrweg ist.</p>
+<p>Es ist wie in der Werbung: 50% des Geldes ist falsch eingesetzt. Das weiß man hinterher. Aber vorher nicht - also muss man 100% investieren.</p>
+<p>So auch bei Features von C#. Lernen, beherrschen - und dann schauen, was sich im Alltag bewährt. Manche Best Practices entstehen auch erst mit der Zeit.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Carsten</strong> (2010-04-21):</p>
+<p>Ok. Meinetwegen jetzt mit Code:</p>
+<p>Warum geht Dein Beispiel nicht so?</p>
+<pre><code>    private void Execute(Message command, UploadValueWasWeissIchEventHandler handler)
+    {
+        Authenticate(message);
+        Encrypt(message);
+        SendAsync(message, handler);
+    }
+</code></pre>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-04-21):</p>
+<p>@Carsten: Ähm... das geht so nicht, weil damit der Concern "Logging" nicht implementiert wäre. Der ist im ursprünglichen Code drin; und ich wüsste grad nicht, warum ich auf den verzichten sollte.</p>
+<p>Im Rahmen einer noch größeren Refactorisierung ließe sich darüber vielleicht nachdenken, ihn in die "Umwelt" von Execute() zu verlagern. Doch das wäre nicht dasselbe, würd ich mal sagen. Es ist ein berechtigter Wunsch, dass eine Methode selbst entscheiden kann, wann/wie sie logging betreibt. Also steckt das Logging in Execute(). (Das wäre auch noch der Fall, wenn ich den Aspekt als AOP Attribut darauf notieren würde. Doch das wäre ja noch mehr neumodischen Krams und vor allem nicht mehr so recht eine Sache der Sprache C#.)</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Carsten</strong> (2010-04-21):</p>
+<p>Aber das Logging kann dann doch in jeder Methode erfolgen.</p>
+<hr />
+<p><strong>Carsten</strong> (2010-04-21):</p>
+<p>private void Execute(Message command, UploadValueWasWeissIchEventHandler handler)
+{
+ Authenticate(message);
+ Encrypt(message);
+ SendAsync(message, handler);
+}</p>
+<p>...
+private void Authenticate(Message message)
+{
+ view.ShowStatus(".....");
+ ....
+}</p>
+<p>...</p>
+<p>private void SendAsync(...)
+{
+ string jsonString = String.Empty;
+ try
+ {
+  ....
+ }
+ catch( Exception ex)
+ {
+  view.ShowStatus(...)
+  thorw new Exception(ex.Message + jsonString);
+ }
+}</p>
+<p>meinetwegen auch so:</p>
+<p>private void Execute(Message command, UploadValueWasWeissIchEventHandler handler)
+{
+ view.ShowStatus("Starting request " + message);
+ Authenticate(message);
+ Encrypt(message);
+ SendAsync(message, handler);
+}</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-04-21):</p>
+<p>@Carsten: Antwort 1: Ja, kann, soll aber nicht. Warum die Funktionsweise des Codes in solcher Weise verändern? Das führt auch zu mehr Code.</p>
+<p>Antwort 2: Von mir aus. Damit verschiebst du aber nur die Vermischung der Aspekte. Der Code widerspricht also weiterhin dem Prinzip "Separation of Concerns" (SoC). Und das ist ein ganz untechnisches, das hat nix mit Features zu tun.</p>
+<p>Also: Wie machst du den Code sauber. Auf jeder Ebene. Wie stellst du eine SoC her? Damit sind wir wieder bei deinem Ableitungsbeispiel. Das folge auch einem Prinzip nicht.</p>
+<p>Natürlich kann ich auf Sprachfeatures verzichten, wenn ich bestimmte Ansprüche an die innere Qualität nicht habe. Wenn Code nicht verständlich sein muss, nicht wartbar, nicht performant usw. dann kann ich auf viele neumodische Features wie Linq oder Generics oder Lambda Funktionen verzichten.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-04-21):</p>
+<p>@Carsten: Danke für deine weiteren Versuche. Aber die lösen das Problem immer noch nicht.</p>
+<p>Dein zweites Execute() sichert nicht zu, dass es eine Logmessage im Fehlerfall gibt.</p>
+<p>Und dein SendAsync ist eben unleserlich, weil darin zwei Aspekte vermischt sind. Darum geht es ja. Du hast - wie schon gesagt -, das Problem nur verschoben.</p>
+<hr />
+<p><strong>Carsten</strong> (2010-04-21):</p>
+<p>Es scheint mir ein wesentlicher Aspekt der Klasse zu sein, seinen internen Verarbeitungszustand an einen View zu vermelden.</p>
+<p>Insofern kann ich nicht erkennen, warum die private Methode „Authenticate“ vom Concern des Protokollierens befreit werden sollte. Es gehört zu ihr und sie sollte die Freiheit behalten, auch andere Dinge zu vermelden als lediglich die Tatsache ausgeufert zu sein.</p>
+<p>Jetzt muss ich aber wirklich auch mal wieder arbeiten.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-04-21):</p>
+<p>@Carsten: Wie du es auch drehst: "Vermelden" ist was anderes als tun. Und "melden an ein Log" ist noch mehr etwas anderes. Das nennt man dann Concern/Aspekt. Und sowas sollte man nach SoC von der Domänenlogik trennen. Das tut deine Lösung nicht wirklich. Meine auch nicht vollständig - das Logging steht ja noch in meinem Execute() irgendwie drin - aber eben soweit wie möglich mit Sprachmitteln.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Sebastian Jancke</strong> (2010-04-22):</p>
+<p>Zustimmung! Selbiges gilt ebenso für die Java-Welt. Grundlegends abseitz imperativer Programmierung und Vererbung wird oft nicht beherscht oder ist nicht bekannt.</p>
+<p>Wohl ein Grundsatz-Problem unserer Branche? Ich denke dagegen hilft nur Training, Training, Training! Und das auf allen Kanälen: Schulungen, Pair-Programming, Kaffee-Theke, etc.</p>
+<hr />
+<p><strong>Carsten</strong> (2010-04-23):</p>
+<p>@Sebastian: Java ist ein gutes Beispiel: Die Firma SUN (man weiß ja nicht wie das bei Oracle wird), war stets sehr restriktiv bei der Einführung neuer Sprachmerkmale. Properties, beispielsweise, findet man dort nicht.</p>
+<p>Vor einiger Zeit las ich einen Artikel zur Einführung der generischen Typen in .Net von einem bloggenden Chefentwickler bei Microsoft: In .Net, weil laufzeittypsicher, sei das alles viel besser als bei Java.
+Leider, ist es nun aber nicht möglich, eine Zeichenkettenliste zu einer Objektliste to casten. Und das ist nun wirklich nicht nur ärgerlich. Diesen groben Schnitzer muss man jetzt nun, folgend dem Anspruch laufzeittypsicher zu sein, mit der Einführung von Ko- und Kontravarianzen ausgleichen. Es gereicht jedem zu Ehre, das Ersetzungsprinzip zu kennen, nur denke ich, dass es lange braucht damit dies zum allgemeinen Gedankengut wird.</p>
+<p>Ich bekenne, ein Sympathisant der SUN Philosophie zu sein, sprachliche Evolutionen zu bündeln (Java 1.5) und ansonsten eher einen gesunden Konservatismus walten zu lassen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-04-23):</p>
+<p>@Carsten: Ich wäre vorsichtig, der Entwicklung von Java einen "gesunden Konservatismus" zu bescheinigen. Der Unterschied zu Starrköpfigkeit, Ignoranz, Lethargie, Arroganz ist da nämlich nicht immer groß. Frag mal im Java-Lager nach, ob man dort breit mit der Entwicklung und dem Entscheidungsprozess zufrieden war.</p>
+<p>Ich will den Entwicklungsprozess bei C# nicht idealisieren. Da läuft nicht alles glatt. Bei manchem kann man sich fragen, warum das so ist oder warum etwas fehlt. Tja. So ist das halt. Sprachen werden von Menschen gemacht. Die sind am Ende oft klüger oder müssen Ressourcen balancieren. Deshalb brauchen wir ja Weiterentwicklung.</p>
+<p>Einstweilen bleibe ich dabei: Missstände in einer Sprache sind keine Entschuldigung dafür, ihre zentralen (!) Features nicht mal zu kennen.</p>
+<p>-Ralf</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

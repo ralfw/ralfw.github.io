@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Holarchie – Event-Based Components für natürliche Softwaremodellierung — ralfw.de Archiv</title>
+<meta name="description" content="Software ist eine Holarchie, d.h. eine Hierarchie von Teilen, die gleichzeitig Ganzes sind. Das hatte ich während der Modellierung von Software mit “traditionellen” Komponenten sch">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/holarchie-event-based-components-fur/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Holarchie – Event-Based Components für natürliche Softwaremodellierung — ralfw.de Archiv">
+<meta property="og:description" content="Software ist eine Holarchie, d.h. eine Hierarchie von Teilen, die gleichzeitig Ganzes sind. Das hatte ich während der Modellierung von Software mit “traditionellen” Komponenten sch">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/holarchie-event-based-components-fur/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Holarchie – Event-Based Components für natürliche Softwaremodellierung</h1>
+    <div class="doc-meta"><span>1. April 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/04/holarchie-event-based-components-fur.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/holarchie-event-based-components-fur/</code></span></div>
+    <div class="art"><p>Software ist eine Holarchie, d.h. eine Hierarchie von Teilen, die gleichzeitig Ganzes sind. Das hatte ich während der Modellierung von Software mit “traditionellen” Komponenten schon fast wieder vergessen. Aber neulich schrieb mich jemand zu meiner <a rel="noopener" href="http://weblogs.asp.net/ralfw/archive/tags/Software+Cells/default.aspx">Blogserie über das Softwareuniversum</a> an, weil er Parallelen zu <a rel="noopener" href="http://primordion.com/Xholon/index.html">seiner Arbeit</a> sah. Da habe dann versucht, meinen derzeitigen Ansatz der Event-Based Components (EBC) die damaligen Gedanken anzuschließen.</p>
+<p>So sah 2005 eines meiner Diagramme für <strong>die grundsätzliche Struktur von Software</strong> aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/794e0e0780c9a984.png" /></p>
+<p>Die Frage heute: Bin ich diesem “Ideal” nun mit EBCs ein Stück näher gekommen?  Ich will die Antwort anhand eines Beispiels versuchen, für das ich zwei Architekturen entwickle. Eine mit “traditionellen” Komponenten, eine mit EBCs.</p>
+<p><strong>Das Szenario</strong> ist simpel: Der Kunde wünscht sich einen Funktionsplotter. Er möchte also ein kleines Programm haben, in das er eine Formel eingeben kann – z.B. <em>x^2+2x-3</em> oder <em>Sqrt(Sin(x)</em>Cos(x))* –, für die dann ein Graph am Bildschirm geplottet wird.</p>
+<h2>Traditionelle Komponentenarchitektur</h2>
+<p>Wie hätte ich eine Architektur für den Funktionsplotter vor einigen Monaten geplant? Ich kann mich kaum erinnern ;-) EBCs haben sich schon so in meinem Denken breit gemacht, dass ich kaum noch ohne kann. Aber ich versuche es einmal.</p>
+<p>Am Anfang stünde eine Softwarezellen bzw. ein System-Umwelt-Diagramm:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/b50c0381e9163efd.png" /></p>
+<p>Eine Anwenderrolle greift auf die ganze Anwendung zu. Der Anwender ist abhängig von der Anwendung. Das System-Umwelt-Diagramm ist also ein Abhängigkeitsdiagramm.</p>
+<p>Im nächsten Schritt würde ich die Softwarezelle zerlegen in Funktionseineiten. Nach dem <em>Separation of Concerns</em> Prinzip fielen mir da mindestens zwei ein: eine Funktionseinheit für die Interaktion mit der Benutzerrolle, ein Portal, und eine für den Rest, d.h. die Domänenlogik.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/60daa1a92251dc7c.png" /></p>
+<p>Bei genauerem Nachdenken würde ich dann natürlich das Portal weiter zerlegen. Eine eigene Funktionseinheit für das Plotten schiene mir angezeigt. Und auch die Logik zerfiele in mindestens zwei Funktionseinheiten:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/4fa8a77cfd416fe8.png" /></p>
+<p>Sollte ich es dabei bewenden lassen? Im Frontend ja. Aber die Logik… Nein, die ist noch zu grob. Ein Formelübersetzer ist – so nehme ich mal für dieses Beispiel an – keine so einfache Sache. Die will sauber in drei Pässe gegliedert sein. Es geht ja um nicht weniger als die Übersetzung von Quellcode (Formel) in Code (ausführbare Funktion). Da soll auch die kleine Plotteranwendung in puncto Systematik nicht hinter einem richtigen Compiler zurückstehen.</p>
+<p>Und auch die vorgeschaltete Funktionseinheit scheint nicht sauber. Sie hat noch ein “und” in der Bezeichnung, sie tut also noch zweierlei. Zum einen veranlasst sie etwas (Übersetzung), zum anderen tut sie etwas (Funktionswerte berechnen). Das ist im Sinne des <em>Single Responsibility Principle</em> nicht schön.</p>
+<p>Wenn ich diese Gedanken in die Architektur einfließen ließe, würde sie sich so weiter entwickeln:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/57fe23e20592fed5.png" /></p>
+<p>Zwei Funktionseinheiten stechen darin heraus, das Rechenwerk und der Compiler. Beide haben eigentlich keine richtige Aufgabe im Sinne der Geschäftslogik. Sie sind nur Fassaden, die Details rechts von ihnen gegenüber ihren Clients verbergen. Allenfalls koordinieren sie noch die Arbeit der Funktionseinheiten, von denen sie abhängig sind. Das Rechenwerk lässt erst den Compiler die Formel übersetzen und übergibt sie dann an die Funktionswertberechnung. Der Compiler fordert zuerst den Scanner auf, die Formel in Symbole zu zerlegen. Die reicht er weiter an den Parser. Der erzeugt einen abstrakten Syntaxbaum, den der Codegenerator übersetzt.</p>
+<p>Im Rahmen “traditioneller” Komponentenorientierung ist das völlig normal. Auf Rechenwerk und Compiler zu verzichten, würde nämlich zu ganz unschönen Abhängigkeiten führen, z.B.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/eba5db8d00403fac.jpg" /></p>
+<p>Rechenwerk und Funktionswertberechnung hingen nun zusammen und würden nur den Parser ansteuern. Der lieferte ultimativ auch die übersetzte Funktion – aber natürlich nur unter Zuhilfenahme des Parsers, der wiederum den Codegenerator brauchte.</p>
+<p>Nein, das sieht ungut aus. Warum soll ein Scanner den Parser kennen und am Ende sogar etwas mit dem generierten Code zu tun haben? Und warum sollte eine Funktionsberechnung einen Scanner kennen? Der ist ein Detail einer bestimmten Compilerimplementation.</p>
+<p>Die Funktionseinheiten Rechenwerk und Compiler wären nötig in einer “traditionellen” Komponentenorientierung.</p>
+<p>Und wo sind die Komponenten nun? Ich würde sagen, alle Funktionseinheiten verdienen es, als Komponenten realisiert zu werden. Z.B. Compiler, Scanner, Parser und Codegenerator in einer Komponente zusammen zu fassen, würde die Möglichkeit zur Parallelentwicklung begrenzen. Denn neben klaren Grenzen zwischen Funktionseinheiten geht es darum bei der Komponentenorientierung: hohe Produktivität, durch gleichzeitige Arbeit an Funktionseinheiten. Rechenwerk und Compiler sind dann zwar recht simple Komponenten, weil sie nur andere integrieren. Doch das macht nichts. Wenn sich z.B. der Ansatz zur Compilation ändert, dann kann wieder mehr Verantwortung in den Compiler wandern. Ihn als Verantwortlichkeit ausdrücklich zu definieren, trägt zur Evolvierbarkeit bei.</p>
+<h2>Fazit “traditionelle” Komponentenarchitektur</h2>
+<p>Was gibt es hervorzuheben an einer “traditionellen” komponentenorientierten Architektur? Was gibt es womöglich zu kritisieren? Das ist gar nicht so leicht zu sagen, wenn man tief drin steckt in dem Denken. Denn dann ist vieles ganz natürlich – was eigentlich Ballast ist. Und was fehlt, erkennt man nicht so genau.</p>
+<p>In meinem <a rel="noopener" href="http://ralfw.blogspot.com/2010/02/event-based-components-der-nachste.html">ersten Posting zu EBCs</a> habe ich fünf Aspekte “traditioneller” Komponenten genannt, mit denen ich mich schwer tue. Für das obige Beispiel möchte ich drei davon herausgreifen:</p>
+<ul>
+<li>Komponenten haben Abhängigkeiten. Abhängigkeiten machen das Entwicklerleben schwer. Wo Abhängigkeiten ins Spiel kommen, wird allemal das Testen schwieriger.<ul>
+<li>Spezifikationen sind nicht kompakt. Die Spezifikation des Compilers besteht z.B. aus seinem eigenen exportierten Kontrakt sowie den importierten Kontrakten der drei Komponenten, von denen er abhängig ist.</li>
+<li>Die Schachtelung von Komponenten ist schwierig oder gar unmöglich.</li>
+</ul>
+</li>
+</ul>
+<p>Insbesondere die letzten beiden Punkte machen mich bei der obigen Architektur unglücklich. Ich finde es sehr unhandlich, einen Compiler nur implementieren zu können, wenn ich insgesamt vier Kontrakte zur Hand habe. Und warum sollte eine Client-Komponente den ganzen Kontrakt einer Service-Komponente kennen, wenn sie selbst davon nur einen Ausschnitt selbst braucht? Wer ist schon so konsequent und betreibt Interface Segregation, um jedem “Kunden” einer Service-Komponente nur den für ihn passenden Ausschnitt zur Verfügung zu stellen?</p>
+<p>Viel schlimmer aber noch ist, dass die finale Architektur nur noch eine Abstraktionsebene im Code enthält. Die Komponenten liegen alle auf demselben Niveau. Ein Betrachter des Codes hat damit keine Möglichkeit, unterschiedliche Betrachtungsabstände einzunehmen, um sich Überblick zu verschaffen oder Details zu betrachten.</p>
+<p>Zwar habe ich mich in mehreren Schritten an diese “Blattebene” herangeschlichen. Doch die Funktionseinheiten auf darüber liegenden Abstraktionsniveaus sind nicht mehr sichtbar. Sie existieren nur noch auf einem Blatt Papier – und das ist bekanntlich geduldig.</p>
+<p>Aber vielleicht sehen Sie es auch anders und meinen, die Architektur würde immer noch mehrere Abstraktionsebenen enthalten. Scanner, Parser und Codegenerator gehören dann zur untersten Ebene, Compiler liegt darüber und mit der Funktionswertberechnung gleich auf. Darüber dann das Rechenwerk, darüber das GUI. Ja, so könnte man das sehen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d17e2d68a7594060.jpg" /></p>
+<p>Aber ist das wirklich plausibel und hilfreich? Liegt ein GUI auf einem höheren Abstraktionsniveau als ein Compiler? Ist das Abstraktionsniveau von einem Aufgabenbereich oder gar Belang abhängig? Nein, nein, damit kann ich mich gar nicht anfreunden. Außerdem würde das bedeuten, dass Kommunikation nie zwischen Funktionseinheiten auf demselben Abstraktionsniveau abliefe, sondern immer über Niveaus hinweg: der Compiler auf Level n spräche mit dem Scanner auf Level n+1 usw.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/88ea9a9f4e62ed20.png" /></p>
+<p>Das fühlt sich gar nicht gut an.</p>
+<p>Abhängigkeiten definieren einen Baum. Entlang der Äste verläuft die Kommunikation. Schwer verständliche Schachtelung ist damit das Fundament der “traditionellen” Komponentenorientierung. Grauslich! Da hilft dann auch keine Dependency Injection.</p>
+<p>Das führt übrigens auch dazu, dass so sinnlose Komponenten wie der Compiler oder das Rechenwerk auftauchen. Die tun nichts anderes, als die Kommunikation zwischen anderen Komponenten zu ermöglichen. Vom Standpunkt der Domänenlogik aus gesehen ist das nicht nötig. Aber die vertikalen Abhängigkeiten erzwingen das. Scanner, Parser und Compiler liegen auf demselben Abstraktionsniveau – und kennen sich daher nicht. Widersinnig, oder? Und wenn sie sich kennen wie in der verworfenen Architektur, dann ist das auch nicht glücklich. Denn warum sollte ein Scanner von einem Parser abhängen? Oder von mir aus auch umgekehrt: Warum sollte ein Codegenerator von einem Parser abhängen und der von einem Scanner?</p>
+<p>Ein Codegenerator leistet etwas auf einem Input: er verwandelt einen Abstrakten Syntaxbaum (AST) in lauffähigen Code. Diese Leistung hat nichts, aber auch gar nichts mit der Erzeugung eines solchen AST zu tun. Warum sollte also ein Codegenerator die anstoßen?</p>
+<p>Also muss ein übergeordneter Compiler her. Der tut nichts anderes, als die Kommunikation zwischen Scanner, Parser und Codegenerator angemessen herzustellen. Aber er ist eine Komponente mit vielen Abhängigkeiten. Er ist vergleichsweise schwierig zu testen und dabei so gar nicht durch die Problemdomäne motiviert. Eine unbefriedigende Situation. Koordinationskomponenten verrauschen das Architekturbild.</p>
+<p>Ein Abhängigkeitsdiagramm ist einfach nicht genug, um eine Architektur zu beschreiben. Es ist nötig, um die vielen Kontrakte klar zu kriegen und die Abhängigkeiten sauber zu definieren. Aber wie die Kommunikation läuft, ist daraus nicht ersichtlich. Dafür brauchen wir mindestens einen zweiten Diagrammtyp. Z.B. ein Aktivitätsdiagramm oder ein Datenflussdiagramm müssen die Lücke füllen.</p>
+<p>Meine bottom line: Eine unbefriedigende Situation. “Traditionelle” Komponenten sind besser als gar keine Komponenten. Sie befördern die Produktivität, die Flexibilität und die Korrektheit. Doch es bleibt ein Nachgeschmack.</p>
+<h2>Event-Based Component Architektur</h2>
+<p>Wie kann es mit der Architektur besser werden als mit “traditionellen” Komponenten? Ich versuche dasselbe Szenario mal mit Event-Based Components (EBC) zu beschreiben. Am Anfang steht wieder ein Systen-Umwelt Diagramm:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/118f4987c8353964.png" /></p>
+<p>Das sieht der “traditionellen” Komponentenorientierung noch sehr ähnlich. Allerdings: Beachten Sie, dass auch hier schon von Nachrichten gesprochen wird und keine Abhängigkeit vorhanden sind. Die Anwendung als ganzes wird als Komponente gesehen, die asynchron gegenüber ihrer Umgebung läuft.</p>
+<p>Das System-Umwelt Diagramm ist die höchste Abstraktionsstufe. Es besteht ja nur aus einer Funktionseinheit. Diese Funktionseinheit ist natürlich zu groß, um sie einfach so zu implementieren. Also muss ich sie zerlegen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/7f9ef39b2af2373a.png" /></p>
+<p>Wenn ich die Applikation “aufmache”, dann finde ich zwei Funktionseinheiten: ein Frontend für die Interaktion mit dem Benutzer und ein Rechenwerk, dass die Formel im angegebenen Wertebereich berechnet. Das ist immer noch eine Ebene, die ein Laie versteht. Eine Benutzeroberfläche ist etwas anderes als die Funktionalität, die Formeln berechnet.</p>
+<p>Im Hintergrund habe ich noch die darüber liegende Hierarchieebene “durchscheinen lassen”. Sie soll uns erinnern, dass die beiden Funktionseinheiten Verfeinerungen sind.</p>
+<p>Jetzt zur nächsten Ebene hinab steigen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/1010802c7ac60831.png" /></p>
+<p>Jede Funktionseinheit der vorherigen Ebene ist verfeinert worden, d.h. zerlegt in mehrere Funktionseinheiten mit spezifischeren Verantwortungen. Diese Subfunktionseinheiten sind den übergeordneten eingeschrieben. Funktionseinheiten können also Container sein. Nicht physische Container, sondern logische, sozusagen “Verantwortungscontainer”.</p>
+<p>Das ist ein Aspekt, der mir wichtig geworden ist. Mit EBCs ist echte Schachtelung möglich. Aber das ist keine physische Schachtelung. Wie Implementierungen von Funktionseinheiten physisch geschachtelt sind, halte ich inzwischen für einen ganz anderen Concern. Darüber muss man nachdenken – aber es hat nichts mit der Funktionalität einer Anwendung zu tun. Wie Funktionseinheiten physisch versammelt und geschachtelt werden, ist eine Sache des Entwicklungsprozesses. Darauf wirken vor allem Fragen der Parallelität von Entwicklung, von Risiko, Unsicherheit oder Komplexität/Entwicklungsdauer ein.</p>
+<p>Aber nun weiter mit der Modellierung. Das Frontend ist abgeschlossen, doch beim Rechenwerk muss der Compiler noch zerlegt werden:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/8289b1ff5799333b.png" /></p>
+<p>In dieser Abbildung sind nun alle Abstraktionsebenen ganz natürlich ineinander geschachtelt zu sehen. Je dunkler eine Komponente, desto niedriger ihr Abstraktionsniveau. Echte Domänenfunktionalität enthalten nur die Blätter, d.h. die Funktionseinheiten mit dem niedrigsten Abstraktionsniveau.</p>
+<p>Der Schachtelungsbaum dazu sieht so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f5763a6002075379.png" /></p>
+<p>Abhängigkeiten verlaufen in der Vertikalen. Sie sind im Architekturdiagramm implizit. Wenn Komponenten andere enthalten, dann sind sie von ihnen abhängig. Wichtiger ist jedoch, dass die Kommunikation hier horizontal verläuft. Das Architekturdiagramm legt den Schwerpunkt nicht auf Abhängigkeiten, sondern darauf, wie die Funktionseinheiten miteinander kommunizieren.</p>
+<p>Wo bei “traditionellen” Komponenten zwei Diagramme nötig sind, reicht bei EBCs ein Diagramm.</p>
+<h2>Fazit Event-Based Component Architektur</h2>
+<p>Vergleichen Sie selbst die Diagramme für die “traditionelle” Komponentenarchitektur und die EBC-Architektur. Welches finden Sie aussagekräftiger, verständlicher?</p>
+<p>Die Vorteile der EBC-Architektur scheinen mir auf der Hand zu liegen:</p>
+<ul>
+<li>Der Fokus liegt hier ganz eindeutig auf den Blättern. In denen “spielt die Musik”, dort steckt die Domänenlogik, sie mögen komplex sein. Aber sie haben keine Abhängigkeiten. Deshalb sind sie gut zu testen. Und deshalb lassen sie sich auch vergleichsweise gut wiederverwenden.<ul>
+<li>Abhängig sind “Zwischenebenen” oder “Platinen”. Sie sind von den eingeschachtelten Funktionseinheiten abhängig. Aber das macht nichts. Diese Abhängigkeiten sind sehr einfach. “Platinen” lassen sich aus der Beschreibung der Verbindungen zwischen ihren “Bauteilen” generieren. Das macht ihre Tests sehr einfach.</li>
+<li>Die Abhängigkeiten sind implizit. Sie verwirren nicht das Verständnis. Die wichtigeren Kommunikationswege stehen im Vordergrund. Die Kommunikation ist horizontal zwischen Funktionseinheiten innerhalb eines “Containers” auf derselben Abstraktionsebene.</li>
+<li>Last but not least: Die Ebenen, die eine schrittweise Verfeinerung durchläuft, bleiben in der Architektur physisch, d.h. in Form von Artefakten (“Platinen”) erhalten. Das trägt sehr zum Verständnis der Architektur bei. Zoom-in/out ist nicht nur möglich, sondern bezieht sich auf realen Code und nicht nur “Ideen”.</li>
+</ul>
+</li>
+</ul>
+<p>EBC-Architekturen manifestieren für mich die konzeptionelle Holarchie des ersten Bildes oben. Software ist ein System mit beliebig vielen Ebenen. Auf jeder Ebene arbeiten beliebig viele Funktionseinheiten zusammen. Aus Input produzieren sie Output. Sie kennen einander nicht und sind ganz regelmäßig aufgebaut. Das erleichtert ihre Produktion (“Platinen” können generiert werden, Blätter werden parallel handcodiert). Das erleichtert die Komposition von Architektur mit ihnen. Und das ermöglicht den Einsatz von Standardkomponenten.</p>
+<p>Nach meinem Empfinden sind wir mit EBCs der lang erprobten Arbeitsweise von Elektrotechnikern und Maschinenbauern so nah wie nie zuvor. Software ist natürlich immer noch anders als physische Bauteile; aber warum soll sie nicht von denen lernen?</p>
+<p>Ich jedenfalls kann quasi schon gar nicht mehr anders denken als in EBCs. Und mit jeder Architektur, die ich so entwerfe, wird es einfacher.</p>
+<p>Mit EBCs sehe ich Software als Sammlung von Prozessen. Einfachen und komplizierten. Die bestehen aus Verantwortlichkeiten, die zusammen etwas verarbeiten und produzieren. Diese Verantwortlichkeiten und ihre Kooperation beschreiben EBCs.</p>
+<p>Objekte und “traditionelle” Komponenten werden dadurch nicht überflüssig. Sie bekommen aber einen anderen Platz. Auch das macht die Architektur einfacher.</p>
+<h2>Verfeinerung der EBC-Architektur</h2>
+<p>Zum Schluss noch ein Detail, über das Sie sich keine Gedanken gemacht haben mögen. In der EBC-Architektur ist noch eine kleine Unstimmigkeit, die ich der Einfachheit halber bisher überspielt habe. In das Rechenwerk kommt eine Berechnungsanforderung rein. Die besteht aus einer Formel und einem Wertebereich, auf den die Formel angewandt werden soll, z.B. Formel “2*x” und Wertebereich 0 bis 10 in 100 Schritten.</p>
+<p>Durch die Blätter des Rechenwerks fließt bisher nur ein Datenstrom. Das bedeutet, jede Funktionseinheit muss den Wertebereich bis zur Funktionswertberechnung durch schleifen. Was aber soll z.B. ein Scanner mit diesem Wertebereich?</p>
+<p>Die Architektur für das Rechenwerk sähe daher besser wie folgt aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/7f3193dd8eec568b.png" /></p>
+<p>Split und Join sind Standard-EBCs. Sie werden in den Nachrichtenstrom eingesetzt, um Nachrichten zu transformieren und damit passend für folgende Funktionseinheiten zu machen. Das erhöht die composability (Komponierbarkeit) von Architekturen. Funktionseinheiten können leichter wiederverwendet werden, wenn sie ihren Kontrakt nicht an ihre Umgebung anpassen müssen, sondern umgekehrt kleine Standardadapter die Umgebung an eine Komponente anpassen.</p>
+<p>Hier noch zwei Ideen, wie solche Standardkomponenten helfen könnten:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/64aa32dabb3e6cc5.png" /></p>
+<p>Zunächst: Bemerken Sie, wie einfach es ist, die Flughöhe zu wechseln? Im vorhergehenden Bild waren wir im Rechenwerk. Jetzt ist das Rechenwerk eine Black Box; wir fliegen höher, sehen ein bigger picture. Das Abstraktionsniveau ist gestiegen.</p>
+<p>Auf diesem Level habe ich nun Standardkomponenten eingefügt, die die Performance und Reaktionsfähigkeit des Systems steigern sollen. Ein Cache ist zwischen Frontend und Rechenwerk geschaltet, um zu vermeiden, dass Übersetzungen und Berechnungen, die schon gelaufen sind, nochmal zeitaufwändig ausgeführt werden. Für das Frontend macht dieser Einschub keinen Unterschied. Es ist ja unabhängig von anderen Komponenten. Und auch das Rechenwerk merk davon nichts. Das ist AOP at its best ;-)</p>
+<p>Dasselbe gilt für die Asynchronizität. Das Rechenwerk läuft nun auf einem anderen Thread als das Frontend. Berechnungen finden dem gegenüber also im Hintergrund und asynchron statt. Der Benutzer kann im Frontend andere Funktionen aufrufen, während das Rechenwerk seine Arbeit leistet. Das Frontend friert nicht ein.</p>
+<p>Falls im Hintergrund ein Fehler auftritt, wird der als eigene Nachricht auf dem Frontend-Thread zurück gemeldet. Und Ergebnisse kommen auch auf dessen Thread an, weil sie ein Synchronization Context Switch aus dem Hintergrund in den Vordergrund holt.</p>
+<p>Fühlen Sie die Eleganz des EBC-Ansatzes? Keine der Komponenten kennt/braucht eine andere. Die Verbesserung der nicht funktionalen Eigenschaften des Systems waren deklarativ ohne Veränderung auch nur einer existierenden Komponente möglich.</p>
+<p>Und falls sich herausstellt, dass die Kombination Cache+Async öfter nützlich ist, kann sie ganz einfach mit einer “Platine” für die Wiederverwendung zu einer neuen Komponente zusammengeschnürt werden:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/42bd30e4c100314f.png" /></p>
+<p>Wieder würde sich für die anderen Komponenten nichts ändern. Nur die Verdrahtung wäre betroffen, d.h. die “Platine”, die die Komponenten verbindet. Mit einem Architekturtool wäre das aber wohl nur eine Kleinigkeit. Eine simple und typische Refaktorisierung, z.B. “Komponenten zu Platine zusammenfassen”.</p>
+<p>Im Sinne des SLA-Prinzips würde ich dann jedoch noch einen Schritt weitergehen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/5e2af4300938305f.png" /></p>
+<p>Jetzt ist wieder alles auf demselben Abstraktionsniveau: ein Frontend ist verbunden mit einem Rechenwerk. Wie das genau funktioniert, ist egal. Wen das interessiert, der zoomt in das asynchrone Rechenwerk hinein.</p>
+<p>Irgendwie geht das alles natürlich auch mit “traditionellen” Komponenten. Aber elegant finde ich es nicht mehr. Warum sollte ich mir auch nur eine Sekunde lang Gedanken über Abhängigkeiten machen? Warum sollte ich mir eine Sekunde lang Gedanken über die Größe von Interfaces machen?</p>
+<p>Ob eine EBC-Komponente “zu groß” ist, sehe ich in einer EBC-Architektur viel leichter als in einer “traditionellen”. Ich muss nur die Input-/Output-Pins zählen. Die geben viel detailliertere und sichtbarere Auskunft über die Verantwortlichkeitsbreite einer Komponente, als ein simpler Pfeil in einem Abhängigkeitsdiagramm.</p>
+<p>So, nun aber genug für heute. Lassen Sie sich die Diagramme einmal auf der Zunge zergehen. Ich hoffe, Sie schmecken es, wieviel einfacher, regelmäßiger, verständlicher echt holarchische Software mit EBCs sein kann.</p>
+<h2>Kommentare</h2>
+<p><strong>Frank Striegel</strong> (2010-04-09):</p>
+<p>Gratulation, so werden auch komplexe Architekturen beherrschbar. Das ist ein echter Fortschritt! Freue mich bereits auf das erste Projekt, das ich so umsetzen darf.</p>
+<p>Gruss
+Frank</p>
+<hr />
+<p><strong>Laurin Stoll</strong> (2010-04-11):</p>
+<p>Sehr cool. Du redest mir direkt aus dem Herzen! Genau diese Koordinierenden Fassaden in der klassischen Komponentenorientierung, mit denen konnte ich mich nie anfreunden!
+Ich finde hinter EBC steckt enormes Potential. Man denke schon nur mal wie simpel das Testing wird.
+Hirne viel daran rum, wie man das Tooling noch besser hinkriegen könnte. So wies jetzt ist, ist EBC sehr angenehm zu entwickeln - in den einzelnen Komponenten. Für den Benutzer einer EBC Komponente finde ich es allerdings noch etwas umständlich:</p>
+<p>Instanzieren aller EBC's
+Verdrahten der EBC's
+Event für Resultat behandeln
+Anstossen der ersten EBC</p>
+<p>Das finde ich noch etwas umständlich.
+Genial wiederum ist aber, wie EBC beim Verdrahten aber eigentlich den Programmfluss beschreiben. Überlege mir die ganze Zeit, ob man das nicht irgendwie gut in ein FluentInterface kriegt, damit es einfach ein wenig angenehmer anzusehen ist.</p>
+<p>After(reader.OnReadCompleted).Then(validator.Validate)
+Naja... ne vielleicht ist das auch nicht besser....
+mal sehen was EBC in unseren Köpfen noch so für Wellen schlägt :-)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-04-11):</p>
+<p>@Laurin: Wen meinst du mit Benutzer einer EBC-Komponente? Es gibt keinen. Keine Komponente benutzt irgendeine andere :-) Das ist ja der Trick.</p>
+<p>Aber es gibt natürlich einen, der andere kennt, das ist die Platine. Die verdrahtet und das ist, wenn man es von Hand tut, etwas umständlich. Zugegeben.</p>
+<p>Die Platine instanziert jedoch nicht, sondern bekommt ihre Komponenten reingereicht (DI).</p>
+<p>Es gibt auch kein Problem mit "Event als Resultat" und "Anstoßen".</p>
+<p>Resultate sind ja Output und werden verdrahtet.</p>
+<p>Die Erzeugung von Komponenten ist Sache des Host, also dem Programm, das gestartet wird. Dort benutzt man einen DI Container um das Mapping aufzubauen. Wie üblich. Und dann wird nur eine "Wurzelplatine" (Mainboard) instanziert. Dadurch wird das ganze System dann aufgebaut. Und auf der Wurzelplatine wird ein Event angestoßen, sowas wie Run(args). Fertig.</p>
+<p>Auch wenn die Verdrahtung etwas mühsam ist, halte ich den Gesamtgewinn für so groß, dass ich diese Mühe gern auf mich nehme. Und irgendwann haben wir Tools, die es uns einfacher machen. Keine Sorge.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Laurin Stoll</strong> (2010-04-11):</p>
+<p>@Ralf:
+Ich dachte jetzt an eine Form die ein Button hat und dann was macht. Hier mal ein kleines EBC Sample mit welchem ich gerade rumspiele.
+Schau mal - ich habe das jetzt in dem Sample mal frech in den Eventhandler gemacht. Klar könnte ich das in einen Presenter respk. von da noch in eine 'Platinenklasse' auslagern.
+Aber das Prinzip ist ja das gleiche. Und irgendwo muss am Ende ja was rauskommen und das ist dann der Event mit einem Resultat. Den kann ich ja nicht weiter verdrahten - muss das Zeug ja nehmen und in die UI schmeissen.
+Oder verstehe ich da was grundsätzlich falsch?</p>
+<p>So in etwa sieht das jetzt mal aus in einem ganz kleinen Sample:</p>
+<p>private void button1_Click(object sender, EventArgs e)
+        {
+            PackageReader reader = new PackageReader();
+            PackageValidator validator = new PackageValidator();
+            validator.OnContentValidated += b =&gt; MessageBox.Show(b.ToString());</p>
+<pre><code>        PackageValidatorPlatine.Compose(reader, validator);
+
+        reader.ReadFile("myPackage.pac");
+    }
+</code></pre>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-04-11):</p>
+<p>@Lauring: Nein, nein, so würde ich das nicht machen.</p>
+<ol>
+<li>Keine statische Methode fürs Verdrahten. Platinen sind Objekte.</li>
+<li>Warum diese ad hoc Verdrahtung? Warum soll das Formular den Reader und den Validator kennen? Das halte ich für unsaubere Strukturierung.</li>
+</ol>
+<p>Ich formuliere mal alternativ: Formular und Platine sind auf dem selben Abstraktionsniveau. Die Platine steckt einen Reader und einen Validator zusammen.</p>
+<p>class YourForm : Form, IPortal
+{
+  void button1_click(...)
+  {
+    this.Out_LoadFile("mypackage.pac");
+  }</p>
+<p>public void In_ValidationResult(VResult b)
+  {
+    MessageBox.Show(b.ToString());
+  }
+}</p>
+<p>class PacValidatorBoard : IPacValidatorBoard
+{
+  private IPackageReader rd;</p>
+<p>public PacValidatorBoard(IPackageReader rd, IValidator val)
+  {
+    this.rd = rd;
+    val.In_Validate = rd.Out_PackageLoaded;
+    val.Out_Validated += b =&gt; this.Out_ValidationResult(b);
+  }</p>
+<p>public void In_LoadFile(string filename)
+  {
+    this.rd.In_ReadFile(filename);
+  }</p>
+<p>public Action Out_ValidationResult;
+}</p>
+<p>Das sind die beiden Komponenten auf Augenhöhe. Und darum gibt es noch ein MainBoard:</p>
+<p>public class MainBoard : IWinFormsMainBoard
+{
+  private IPortal portal;</p>
+<p>public MainBoard(IPortal p, IPacValidationBoard pvb)
+  {
+    this.portal = p;
+    p.Out_LoadFile = pvb.In_LoadFile;
+    pvb.Out_ValidationResult = p.In_ValidationResult;
+  }</p>
+<p>public void Run(string[] args)
+  {
+    Application.Run((Form)this.portal);
+  }
+}</p>
+<p>Und darum gibt es noch den Host:</p>
+<p>static void Main(string[] args)
+{
+  IUnityContainer uc = ...;
+  uc.RegisterType<IPortal, YourForm>(...); // als Singleton
+  uc.RegisterType<IPackageReader, PackageReader>();
+  uc.RegisterType<IValidator, PackageValidator>();
+  uc.RegisterType<IMainBoard, MainBoard>();</p>
+<p>var mb = uc.Resolve<IMainBoard>();
+  mb.Run(args);
+}</p>
+<p>(Ich hoffe, das stimmt alles so; ich habs hier im Kommentarfeld einfach zusammenfabuliert.)</p>
+<p>Siehst du die Ebenen?</p>
+<ol>
+<li>Host - der nimmt das Mapping vor und baut letztlich durch Instanzierung der Root alles zusammen</li>
+<li>MainBoard - verdrahtet auf der obersten Abstraktionsebene</li>
+<li>YourForm und PacValidatorBoard - werden vom MainBoard zusammengestöpselt; sie stellen die nächste Abstraktionsebene dar</li>
+<li>PacValidatorBoard - ist nochmal eine Platine mit zwei Bauteilen, dem Reader und dem Validator; die hätte aus Sicht der Form nicht Not getan, dient aber vielleicht dem Verständnis der Anwendung</li>
+</ol>
+<p>Wichtig: Im Button findet keine Verdrahtung und keine Instanzierung statt. Da wären wir ja keinen Schritt weiter gegenüber früher.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Laurin Stoll</strong> (2010-04-11):</p>
+<p>Danke für die Erläuterungen Ralf.
+Ich lasse das mal auf mich wirken und spiele damit noch ein wenig rum. Ja ist klar - sieht auch sinnig aus. Wirkt einfach nach ein wenig viel 'Overhead' - wobei hier die Frage wäre wie sich Overhead definiert. Lustig ja in der Softwareentwicklung, dass fast immer wenn man etwas gut strukturieren möchte man relativ viel Overhead hat. Pfuschen ist halt schneller....</p>
+<p>Ich meld mich wieder - ist hochspannend - ich denke das kann ein Meilenstein in Sachen wirklicher Komponentenorientierung und behrrschbarer Komplexität werden. Ganz besonders daran fasziniert mich, dass es die Weichen für viele brisante Themen stellt (eines davon z.B. Parallel computing).</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-04-12):</p>
+<p>@Laurin: Overhead... Das ist ein Begriff aus dem Effizienzdenken. Aus Sicht der Effizienz (Welche? Entwicklungsgeschwindigkeit oder Laufzeitperformance) ist jede Indirektion (also auch eine virtuelle Methode oder der Stack) ein Overhead.</p>
+<p>Aber Effizienz ist eben nicht alles. Wir müssen auch verstehen und planen, was da was leisten soll. Deshalb brauchen wir noch was anderes, z.B. Flexibilität und Verständlichkeit.</p>
+<p>Die bringen Abstraktionen und Indirektionen. Beispiel Methodensignatur. Die erzeugt Overhead im generierten Maschinencode. (Naja, heut nicht mehr, aber früher.)</p>
+<p>Genauso nun EBCs. Ein Modell, mit dem sich einfacher planen lässt und das Flexibilität erzeugt. Aber bei der Übersetzung in Code kommt halt Overhead heraus.</p>
+<p>Ist der schlimm? Ne. Von der Laufzeitperformance her sind EBCs kein spürbarer Nachteil. (Zumindest bis mir einer per Messung zeigt, dass eben durch EBCs etwas so langsam wird, dass der Kunde nicht damit leben kann.) Und von der Entwicklungsperformance her ist das nur so lange etwas nervig, solange ein gescheitest Tooling fehlt.</p>
+<p>Dasselbe galt für DI ohne DI Container. Dasselbe galt für Parameterübergabe via Stack ohne Hochsprachen.</p>
+<p>Also: Wenn wir die Abstraktion von EBCs mögen, dann sollten wir uns um Tools kümmern.</p>
+<p>-Ralf</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

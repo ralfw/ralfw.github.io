@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Improving the Event-Based Components Desktop Calculator — ralfw.de Archiv</title>
+<meta name="description" content="In my previous article I designed and implemented a small desktop calculator using Event-Based Components. That was fun and went smoothly – but in the end I was in a hurry and miss">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/improving-the-ebc-desktop-calculator/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Improving the Event-Based Components Desktop Calculator — ralfw.de Archiv">
+<meta property="og:description" content="In my previous article I designed and implemented a small desktop calculator using Event-Based Components. That was fun and went smoothly – but in the end I was in a hurry and miss">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/improving-the-ebc-desktop-calculator/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>Improving the Event-Based Components Desktop Calculator</h1>
+    <div class="doc-meta"><span>26. Juli 2010</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2010/07/26/improving-the-event-based-components-desktop-calculator.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/improving-the-ebc-desktop-calculator/</code></span></div>
+    <div class="art"><p>In my previous article I designed and implemented a small desktop calculator using Event-Based Components. That was fun and went smoothly – but in the end I was in a hurry and missed a bug and a feature. In the meantime I found some time to fix both.</p>
+<h2>Final architecture</h2>
+<p>Let me take the opportunity to show you the application architecture in its entirety. The missing feature – Clear calculation - has already been added.</p>
+<p>This is the high level view. All activities except one are so simple, no further detail is needed. Calculate, though, deserves some refinement. So let´s quickly zoom in.</p>
+<p>That´s it. An application defined on two levels of abstractions. No class diagrams needed, no component diagrams, no packet diagrams. Just some kind of activity diagrams with a clear set of rules for translating them into C# code.</p>
+<p>The beauty of it – as I see it – is that you can draw EBC diagrams on as many levels of abstraction and you´ll find all of them in your code. Model and code are always in sync.</p>
+<p>And what about classes? Sure, there are classes. But mind you: they do not depend on each other. That´s the power of events. The classes are either manifestations of activities (e.g. Calculate) and thus do not depend on other´s by definition. An activity does not depend on another activity to be performed; it just uses input and produces output (or a side effect). Or the classes are aggregations of activities and thus also do not need to depend on others.</p>
+<h2>Bug fixed</h2>
+<p>The bug to fix was, that the calculator did not deliver a correct result if after a "=" an operator was clicked and then another number entered, e.g. 1+2=+4= did not deliver 7 as the result.</p>
+<p>The solution to that was a bit tricky. But in the end I managed to implement it without a major architectural change. I only needed to make the current number a nullable type:</p>
+<pre><code class="language-csharp">class NumberAggregator
+{
+    private double? currentNumber;
+    ...
+
+    public void ExtendNumber(char c, Action&lt;double?&gt; out_currentNumber)
+    {
+        if (c == '.')
+        {
+            ...
+        }
+        else
+        {
+            if (this.currentNumber == null) this.currentNumber = 0.0;
+            ...
+        }
+
+        out_currentNumber(this.currentNumber);
+    }
+...
+</code></pre>
+<p>That way the CalculatorEngine can distinguish between an operator clicked after entering a number and an operator clicked after "=":</p>
+<pre><code class="language-csharp">public void In_ApplyOperation(Tuple&lt;char, double?&gt; input, Action&lt;double&gt; out_result)
+{
+    double result = 0.0;
+
+    if (input.Item2 != null)
+    {
+        if (this.operation == '=') this.operands.Clear();
+        this.operands.Push(input.Item2.Value);
+        result = Calculate();
+    }
+    else
+        if (this.operands.Count &gt; 0)
+            result = this.operands.Peek();
+    this.operation = input.Item1;
+
+    out_result(result);
+}
+</code></pre>
+<p>It made me quite happy that no change to the overall design diagram was needed to accomodate the bug fix. I took it as a sign of a good design ;-)</p>
+<h2>Summary</h2>
+<p>Event EBC designs don´t protect you from forgetting stuff and writing buggy code. But still I think they improve my coding. They narrow my focus, because the domain stuff happens mostly in leaf activities.</p>
+<p>Depending on your level of detail those atomic activities are comparatively simple.</p>
+<p>Composite activities on the other hand seem complicated – but they are not. I even think they could be automatically generated from an EBC design. For now, however, I´ll stick to hand crafting my EBC code ;-)</p>
+<h2>Models</h2>
+<p>Since EBC diagrams do not show implementation details like classes, objects, interfaces they are true models to me. They abstract from a concrete platform. You could translate them to C#, Java, Ruby, F#, C++ etc. That I also find quite important. You don´t want to get stuck in implementation details during the design phase.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

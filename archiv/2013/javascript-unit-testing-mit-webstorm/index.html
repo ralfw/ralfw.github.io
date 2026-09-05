@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JavaScript Unit Testing mit WebStorm Schritt für Schritt — ralfw.de Archiv</title>
+<meta name="description" content="JavaScript tut Not. Es hilft halt nichts. Lieber würde ich mich zwar mehr mit F beschäftigen, doch dringender scheint mir JavaScript-Fingerfertigkeit. Denn mit JavaScript kann ich ">
+<link rel="canonical" href="https://ralfw.de/archiv/2013/javascript-unit-testing-mit-webstorm/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="JavaScript Unit Testing mit WebStorm Schritt für Schritt — ralfw.de Archiv">
+<meta property="og:description" content="JavaScript tut Not. Es hilft halt nichts. Lieber würde ich mich zwar mehr mit F beschäftigen, doch dringender scheint mir JavaScript-Fingerfertigkeit. Denn mit JavaScript kann ich ">
+<meta property="og:url" content="https://ralfw.de/archiv/2013/javascript-unit-testing-mit-webstorm/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>JavaScript Unit Testing mit WebStorm Schritt für Schritt</h1>
+    <div class="doc-meta"><span>28. Mai 2013</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2013/05/javascript-unit-testing-mit-webstorm.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2013/javascript-unit-testing-mit-webstorm/</code></span></div>
+    <div class="art"><p>JavaScript tut Not. Es hilft halt nichts. Lieber würde ich mich zwar mehr mit F# beschäftigen, doch dringender scheint mir JavaScript-Fingerfertigkeit. Denn mit JavaScript kann ich meine Reichweite vergrößern in Richtung Web und Mobile. Bisher bin ich ja eher der “Desktop GUI Guy” ;-) Und mit JavaScript kann ich coole Entwicklungen schneller mitmachen im Bereich Backend, z.B. node.js oder Cloud APIs. .NET Bindings werden da ja eher stiefmütterlich behandelt.</p>
+<p>F# brächte mir zwar Vorteile bei der Strukturierung von Geschäftslogik. Doch da bin ich weniger Unzufrieden mit C# als bei Reichweite und Modernität.</p>
+<p>Also mehr JavaScript. Hier ein bisschen, da ein bisschen. Vor allem aber auch gern testgetrieben.</p>
+<p>Als Entwicklungsumgebung habe ich mir mal <a rel="noopener" href="http://www.jetbrains.com/webstorm/">WebStorm</a> von JetBrains angeschafft. Das war sehr preisgünstig beim letzten Cyber Monday und schien ordentlich.</p>
+<p>Damit geht auch testgetriebene Entwicklung – nur ist die nicht so einfach zu starten, wie bei VS mit ReSharper. Deshalb hier ein Spickzettel zunächst einmal für mich selbst:</p>
+<ol>
+<li>Verzeichnisse einrichten: In einem WebStorm Projekt zwei Verzeichnisse einrichten, eines für den Produktionscode, eines für Testcode.</li>
+</ol>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/df509fc7052e166d.png" /></p>
+<p>Wie die Verzeichnisse heißen, ist eigentlich egal. Ihre Namen müssen nur korrekt im nächsten Schritt referenziert werden.</p>
+<ol start="2">
+<li>Konfigurationsdatei angelegen: Bei .NET findet ein Testrunner die Tests automatisch in den Assemblies eines Projektes. Bei JavaScript muss man dafür jedoch eine Konfigurationsdatei anlegen. (Zumindest für den <a rel="noopener" href="https://code.google.com/p/js-test-driver/">JavaScript Test-Driver</a>, der mit WebStorm ausgeliefert wird.) Der Name der Datei ist nicht so wichtig, die Extension muss allerdings <em>.jstd</em> sein:</li>
+</ol>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9e9b7e14833fb1e7.png" /></p>
+<p>Die Konfiguration ist simpel: Sie enthält die Adresse des Testrunners, der in einem Browser läuft. Und sie listet die Quellen für Produktionscode (<em>load:</em>) und Tests (<em>test:</em>):</p>
+<p>server: <a rel="noopener" href="http://localhost:9876">http://localhost:9876</a></p>
+<p>load:
+  - src/*.js</p>
+<p>test:
+  - tests/*.js</p>
+<p>Die Quellen nehmen Bezug auf die oben angelegten Verzeichnisse.</p>
+<ol start="3">
+<li>Tests werden im Testverzeichnis angelegt. Am besten zur weiteren Konfiguration des Testframeworks einen Probeweisen Test anlegen. Im ersten Schritt sieht der nur so aus:</li>
+</ol>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/10af6bec9a413752.png" /></p>
+<p>Wichtig ist, dass angeboten wird, die Bibliotheksdateien des Testframework zu laden. Das sollte mit dem Shortcut getan werden. Dann sieht das Projekt so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/4332ebfae5831138.png" /></p>
+<p>Durch die Referenzierung dieser Dateien steht für Tests Intellisense zur Verfügung:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e9eb386bf0a25ef3.png" /></p>
+<p>Achtung: Tests müssen den Präfix “Test” haben!</p>
+<ol start="4">
+<li>Leider läuft der Probetest jetzt noch nicht einfach so. Es muss erst noch eine Laufzeitkonfiguration für das Projekt angelegt werden:</li>
+</ol>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/51d01682da9627e5.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/1c74ab4bad63952c.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/7b40a0b639bb9841.png" /></p>
+<p>Hier wird die <em>.jstd</em>-Datei referenziert! Und der Name der Konfiguration taucht dann im Run-Menü auf:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a6dd7c9d4c9ead6e.png" /></p>
+<ol start="5">
+<li>Jetzt den Probetest ausführen lassen. Falls das nicht funktioniert, läuft der Testserver wahrscheinlich nicht. Der wird im Browser gehostet. Gestartet werden kann er über die IDE:</li>
+</ol>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/bd8c6174d222e406.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2a2e8c54efe4d44f.png" /></p>
+<p>Durch Klick auf ein Browser-Icon wird der Testrunner-Server als Seite im Browser geöffnet:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d4d48e6cb3fd604c.png" /></p>
+<p>Und nun – Wunder der Technik! – wird auch der Test über Run ausgeführt. Die IDE erstrahlt in frischem Grün:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/17e83fb1d62a528b.png" /></p>
+<p>Das war´s. Jetzt, da ich das Setup nochmal Schritt für Schritt durchlaufen bin, ist es gar nicht mehr so undurchsichtig. Aber wer weiß… Wenn ich mal wieder längere Zeit JavaScript nicht in die Hand nehmen sollte, hilft mir diese Erläuterung bestimmt, schneller wieder reinzukommen.</p>
+<p>Und es bewahrheitet sich der alte Spruch, dass man durch Lehren, also Erklären, am besten lernt.</p>
+<h2>Kommentare</h2>
+<p><strong>tze</strong> (2013-05-29):</p>
+<p>Hallo,
+hier noch was das mit sehr gut gefallen hat :)
+http://www.typescriptlang.org/ und http://tsunit.codeplex.com/ .</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

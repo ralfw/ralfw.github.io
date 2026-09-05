@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Synchronizität - Die gläserne Decke der Softwareentwicklung — ralfw.de Archiv</title>
+<meta name="description" content="Im Grunde kann man alle Probleme durch synchrone und sequenzielle Verarbeitung lösen. Das dauert dann manchmal zwar ein wenig, aber es geht. So bringt es uns auch jeder Programmier">
+<link rel="canonical" href="https://ralfw.de/archiv/2008/synchronizitt-die-glserne-decke-der/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Synchronizität - Die gläserne Decke der Softwareentwicklung — ralfw.de Archiv">
+<meta property="og:description" content="Im Grunde kann man alle Probleme durch synchrone und sequenzielle Verarbeitung lösen. Das dauert dann manchmal zwar ein wenig, aber es geht. So bringt es uns auch jeder Programmier">
+<meta property="og:url" content="https://ralfw.de/archiv/2008/synchronizitt-die-glserne-decke-der/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Synchronizität - Die gläserne Decke der Softwareentwicklung</h1>
+    <div class="doc-meta"><span>24. Juni 2008</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2008/06/synchronizitt-die-glserne-decke-der.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2008/synchronizitt-die-glserne-decke-der/</code></span></div>
+    <div class="art"><p>Im Grunde kann man alle Probleme durch synchrone und sequenzielle Verarbeitung lösen. Das dauert dann manchmal zwar ein wenig, aber es geht. So bringt es uns auch jeder Programmierkurs bei. Ein Befehl folgt auf den anderen. Ein Unterprogramm ruft das nächste und wartet auf dessen Ergebnis, bevor es selbst weitermacht. Unterprogramme sind insofern fast nur <em>syntactic sugar,</em>denn ihr Code könnte auch am Aufrufort eingesetzt stehen. Compiler tun auch genau das, wenn es ihnen angemessen erscheint. Das heißt dann <em><a rel="noopener" href="http://en.wikipedia.org/wiki/Inline_expansion">Inlining</a></em>.</p>
+<p>Was aber, wenn so eine sequenzielle Verarbeitung zu langsam ist? Na, dann macht man sie halt schneller, indem man den Algorithmus verbessert (z.B. Quick Sort statt Bubble Sort) oder einen schnelleren Prozessor kauft. Das ist dann so, als würde man einen schmächtigen Maurer ins Fitnessstudio schicken, damit er in Zukunft schneller Steine schleppen kann. Oder man ersetzt ihn gleich durch ein Förderband.</p>
+<p>Wie effizient kann eine Implementation aber werden? Irgendwann ist der beste sequenzielle Algorithmus implementiert. Wie schnell können Prozessoren werden? Irgendwann ist da eine physikalische Grenze erreicht - wie es gerade so um die 3-6 GHz zu sein scheint.  Genauso ist es mit der Kraft bei Maurern und der Schnelligkeit von Föderbändern. Da gibt es einfach ein Ende der Fahnenstange. Dann hilft nicht mehr Quantität. Nein, dann muss sich die Qualität ändern.</p>
+<p>Angekommen ist das in der Programmierausbildung aber eher noch nicht, würde ich sagen. Denn es herrscht immer noch das Denken in synchronen und sequenziellen Abläufen vor, die man eben versucht durch quantitative Einflussnahme zu beschleunigen. Weniger Instruktionen oder schnellere Prozessoren stehen als Wunschvorstellung hinter den Klagen darüber, dass mal wieder der Aufbau eines Fensters zu lange dauert oder die Datenbank zu langsam ist.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a664cef0b5cbb0ba.png" /></p>
+<p>Dabei wussten schon die alten Ägypter, dass man Pyramiden nicht schneller baut, indem man die Arbeiter erstmal ins Bodybuilding-Studio schickt. Die Pyramiden wurden von normalen Einwohnern Ägyptens gebaut. Genauso wie der Otto Versand vor allem Durchschnittsmenschen zur Bewältigung aller durch Menschen durchzuführenden Tätigkeiten einstellt. Sowohl die Ägypter wie der Otto Versand müssen halt damit leben, dass es vor allem normale Menschen gibt. Das liegt in der Definition von normal. Exzeptionelle Menschen - besonders starke, schnelle oder kluge - gibt es nur vergleichsweise wenige. Man kann sie daher nicht in größerer Menge rekrutieren und schon gar nicht bezahlen.</p>
+<p>Die Lösung für Geschwindigkeitsprobleme liegt daher nicht im <em>scale-up</em>, in der Effizienzsteigerung von etwas Einzelnem, d.h. einem Arbeiter, einem Förderband, einem Rechner.</p>
+<p>Die wahre Lösung liegt vielmehr in der Parallelisierung. "Normale" Ressourcen gleichzeitig an einer Aufgabe arbeiten zu lassen - z.B. viele normale Ägyptische Bauern an einer Pyramide oder Hamburger Bürger beim Otto Versand -, ist letztlich der weiter führende Weg, um dauerhaft schnell zu sein.</p>
+<p>Beim <em>scale-out</em> stehen viele billige Ressourcen nebeneinander und arbeiten parallel an der Bewältigung einer Gesamtaufgabe. Statt viel Zeit in die Optimierung von Algorithmen zu stecken oder viel Geld in eine noch schnellere Hardware, sollten Sie überlegen, inwiefern die abzuarbeitenden Schritte in Ihrer Software parallelisierbar sind.</p>
+<p>Das geht nicht, glauben Sie, weil Sie keine riesige ERP-Software für komplexe Geschäftsprozesse schreiben? Sie entwickeln doch nur ein kleines CRM - bei dem allerdings der Programmstart und auch der Wechsel zwischen Bearbeitungsmaske und Suchdialog an Performance zu wünschen übrig lassen.</p>
+<p>Aber warum soll den nicht auch in solcher Software, die scheinbar nur aus sequenziellen, synchronen Verarbeitungsschritten besteht, etwas Parallelität möglich sein?</p>
+<ul>
+<li>Beispiel Programmstart: Alles, was beim Programmstart nicht visuell ist (z.B. das Laden von Lookup-Daten), kann parallel zur Anzeige eines ersten Dialogs im Hintergrund passieren.  Beispiel Suchen: Abfragen können im Hintergrund laufen, während das User Interface weiterhin bedienbar bleibt. Abfrageergebnisse können häppchenweise ans UI geliefert werden; niemand sollte darauf warten müssen, dass auch noch der tausendste Datensatz dem Grid hinzugefügt ist, bevor er weiterarbeiten kann.  Beispiel Bearbeitungsende: Wenn am Ende der Bearbeitung Daten zu speichern sind, dann kann das parallel zur weiteren Bedienung geschehen. Warum sollte ich als Anwender darauf warten, dass die Daten auch vollständig und korrekt in der Datenbank angekommen sind? Das ist doch selbstverständlich.</li>
+</ul>
+<p>Falls Sie diese Beispiele nicht überzeugen, biete ich an, dass ich Ihre Anwendung daraufhin untersuche, wo es Parallelisierungspotenzial gibt. Ich bin sicher, da gibt es einiges zu entdecken.</p>
+<p>Warum nutzen wir das große scale-out Potenzial denn aber nicht in unseren Anwendungen? Gelegentlich mag es daran liegen, dass sich ein Algorithmus nicht so leicht parallelisieren lässt. Das halte ich aber für ein Detailproblem. Vor allem sehe ich den Grund nämlich in einem Mangel an 1. Bewusstsein und 2. einfacher (!) Technologie.</p>
+<p>Sie können Programmteile heute selbstverständlich parallel machen. Asynchronizität ist natürlich möglich. Aber sie ist trotz aller Bemühungen der .NET-Framework-Entwickler noch nicht wirklich, wirklich einfach. Auch sind die Lösungen verteilt: ein bisschen steckt in System.Threading, ein bisschen in der CCR, ein bisschen in WCF usw.</p>
+<p>Ich halte daher eine Konsolidierung für geboten. Das, was an Technologieschnipseln vorhanden ist, sollte unter einem intuitiven, einfach einzusetzenden Dach zusammengefasst werden. Dazu müsste dann aber wohl noch etwas Theorie kommt. Wir müssen Software erstmal aus grundsätzlich asynchronen Bausteinen zusammengesetzt denken.</p>
+<p><a rel="noopener" href="http://geekswithblogs.net/theArchitectsNapkin"></a> Aber ich sehe Licht am Horizont... :-) Mit einem Architekturansatz wie <a rel="noopener" href="http://geekswithblogs.net/theArchitectsNapkin">"Systemorientierten Programmierung"</a> (SOP) und einer Zusammenführung von <a rel="noopener" href="http://en.wikipedia.org/wiki/Dependency_injection">DI Frameworks</a> mit <a rel="noopener" href="http://en.wikipedia.org/wiki/Enterprise_Service_Bus">Enterprise Service Bus</a> (ESB) und <a rel="noopener" href="http://en.wikipedia.org/wiki/Space-based_architecture">Space Based Computing/Architecture</a> (SBC/SBA) könnte es besser werden. Bei SOP stehen Softwarezellen als asynchrone und verteilte Codeeinheiten am Anfang, so dass das Denken in Richtung mehr Parallelität und flexibler Architekturen geleitet wird. Und eine Vereinigung von EDA-Konzepten (<a rel="noopener" href="http://en.wikipedia.org/wiki/Event_Driven_Architecture">Event Driven Architecture</a>) könnte das Hosting und die Kommunikation von Softwarezellen vereinfachen - im Großen wie im Kleinen (innerhalb von Prozessen).</p>
+<p>Aber davon ein andermal... Einstweilen Achtung vor der gläsernen Decke "Synchronizität"! Synchrone Verarbeitung durch scale-up zu beschleunigen, führt nicht immer so weit, wie Sie denken mögen.</p>
+<h2>Kommentare</h2>
+<p><strong>Haggy</strong> (2008-06-24):</p>
+<p>Hallo Ralf</p>
+<p>im wesentlichen triffst du da einen sehr wichtigen Punkt.</p>
+<p>Sehr oft stelle ich auch fest, dass bei Entwicklern eine Art unterbewusste Abneigung gegen Paralellität in der Software
+herrscht.</p>
+<p>Die Begründungen sind meistens Dinge wie: "Das ist zu schwierig" , "Man kann nicht mehr richtig debuggen" usw..</p>
+<p>Wenn man das aber etwas hinterfragt stellt man oft fest es fehlt einfach etwas Background und die Erfahrungswerte.</p>
+<p>Vermittelt man diese steigt auch die Akzeptanz zum Entwicklen von Paralellelen Operationen.</p>
+<p>Eine Zeitgemäße GUI benötigt IMO definitiv eine GUI welche Paralelle vorgänge erlaubt, das Suchenbeispiel von dir ist gerade zu ein Paradebeispiel. Auch der Aufbau von Listen und Grids auf einer Maske kann z.T. asyncrhon erfolgen denn welcher user will sofort dutzende Zeilen einer Liste lesen ?</p>
+<p>Allerdings muss man an manchen Stellen auch vorsichtig sein. Gerade z.bsp. bei Datenbank zugriffen, denn leider sind nicht alle DBMS so gut uns zuverlässig wie z.bsp. der MSSQL Server.
+Wir haben hier eine FoxPro Datenbank als ein DBMS von vielen im Einsatz und dort ist es nicht selbstverständlich, dass man immer wenn man möchte Datensätze anlegen kann. So bleibt es manchmal nur übrig dem User mit zu teilen "Hey versuche das speichern in 5 Minuten nochmal"
+Gerade bei Datenbanken könnten ebenfalls Pufferungsprobleme zustande kommen die einen UserMerge oder ähnliche Aktionen benötigen.</p>
+<p>Auf der anderen Seite sind einige ThirdParty Controls leider auch nicht von sich aus Threadsafe und müssen demnach von aussen synchronisiert werden.</p>
+<p>Diese Probleme führen dazu, dass man die Stellen die Parallel laufen sollen gut plant und testet, insbesondere wenn fremde Libraries im Spiel sind.</p>
+<p>Wer aber diese Aufgaben sorgfältig erledigt hat die Chance seine Anwendung auf ein neues Level zu heben.</p>
+<p>Ich denke gerade diese Dinge sind mit eine Ursache warum eine gewisse Verunsicherung bei der Parallelität herrscht und vielen dieses Thema erledigen und sich statt dessen in die 500. Optimierung eines SQL Statements stürzen um es von einer 20ms auf eine 19ms Laufzeit zu bringen.</p>
+<p>Oft wird auch vergessen, dass in einigen Szenarien es auch einfach hilft sich Gedanken übre die "gefühlte Performance" Gedanken zu machen und in diesem Bereich Verbesserungen einzubauen damit die  Wartezeit einfach subjektiver kürzer wirkt.</p>
+<p>Ein tolles Beipsiel ist der LoadScreen von Fifa08, bei dem man sich während die Anwendung das Spiel lädt mit einem Spieler schonmal bewegen und Tricks ausprobieren kann.
+Bei der Spiele Industrie findet dieses System immer mehr Einzug allerdings gibt es für Businessapplikationen momentan kaum ideen was man dem User alles anbieten könnte während er wartet.</p>
+<p>Boas</p>
+<hr />
+<p><strong>(anonym)</strong> (2008-06-24):</p>
+<p>SOP, SBA, DI, ESB und noch ein wenig EDA dazu? Wow, das ist eine beeindruckende Buzzworddichte :-)</p>
+<p>Meiner Meinung nach würde SBA allein schon völlig ausreichen. Oder was fehlt darin für eine effiziente Parallelisierung?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2008-06-24):</p>
+<p>@Stefan: Naja, die buzzwords hab ich mal so gedropt, weil ich möglichst vielen Lesern erstmal einen Bezugspunkt geben wollte. Sie sollten sich in der Vision wiederfinden.</p>
+<p>Am Ende jedoch... da ich auch der Meinung, dass DI Container + soetwas wie SBA ausreicht. Aber bis dahin ist es noch ein Weg. Und auf dem Weg kann man etwas von ESB und herkömmlichem EDA lernen.</p>
+<p>DI Container/Component Host Application Space sind das Gewinnerpaar für die Zukunft. Und sie müssen toootal einfach zu bedienen sein. Und sie müssen skalieren: vom Multithreading bis zu Kommunikation through the cloud.</p>
+<p>Denn ohne Einfachheit und solche Reichweite, gibt es keine breite Akzeptanz. Erst dann wird die Kombo disruptiv, würd ich sagen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2008-06-24):</p>
+<p>@Boas: Schön, dass wir einer Meinung sind ;-)</p>
+<p>Allerdings: Warum macht dir "So bleibt es manchmal nur übrig dem User mit zu teilen 'Hey versuche das speichern in 5 Minuten nochmal'" ein Problem?</p>
+<p>Genau das ist doch ein Szenario, wo asynchrone Verarbeitung Hilfe bringt. Denn damit muss der Anwender es eben nicht in 5 Min wieder versuchen, sondern das tut das System automatisch. Die Speicherung läuft ja eh im Hintergrund.</p>
+<p>Ich meine, genau solche Stolpersteine gibt es zuhauf in Anwendungen. Und alle suchen Workarounds und drehen an der synchronen Performance. Aber die viiiel leichter wäre alles, wenn man denn vom ausgetrampelten Pfad abweichen würde. Statt es nochmal und nochmal synchron zu probieren, besser mal konsequent asynchron!</p>
+<hr />
+<p><strong>Haggy</strong> (2008-06-25):</p>
+<p>@Ralf : ja da muss ich mal drüber nachdenken es klingt zumindest nicht verkehrt.</p>
+<p>Wenn sozusagen der Layer als komplett eigene Zelle läuft und dann Queue ähnlich mit den Daten umgeht.</p>
+<p>Ich werde mal ein Testprojekt von mir auf diese Strategie umstellen, denke du hast mal wieder bei mir eine gedankliche Tür geöffnet ;)</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

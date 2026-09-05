@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mein aktuelles Steckenpferd: Software Transactional Memory — ralfw.de Archiv</title>
+<meta name="description" content="Früher hatte Vati die elektrische Eisenbahn als Steckenpferd. Und heute? Heute hat Vati einen Windows Media Edition PC, der ihn nicht mehr zur Ruhe kommen lässt ;-) Nur ich tanze d">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/mein-aktuelles-steckenpferd-software/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Mein aktuelles Steckenpferd: Software Transactional Memory — ralfw.de Archiv">
+<meta property="og:description" content="Früher hatte Vati die elektrische Eisenbahn als Steckenpferd. Und heute? Heute hat Vati einen Windows Media Edition PC, der ihn nicht mehr zur Ruhe kommen lässt ;-) Nur ich tanze d">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/mein-aktuelles-steckenpferd-software/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Mein aktuelles Steckenpferd: Software Transactional Memory</h1>
+    <div class="doc-meta"><span>6. Juli 2007</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2007/07/mein-aktuelles-steckenpferd-software.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/mein-aktuelles-steckenpferd-software/</code></span></div>
+    <div class="art"><p>Früher hatte Vati die elektrische Eisenbahn als Steckenpferd. Und heute? Heute hat Vati einen Windows Media Edition PC, der ihn nicht mehr zur Ruhe kommen lässt ;-) Nur ich tanze da wohl aus der Reihe. Aber ich habe ja auch kein Auto. Die Media Edition interessiert mich nicht, dafür aber <a rel="noopener" href="http://en.wikipedia.org/wiki/Software_transactional_memory">Software Transactional Memory</a> (STM). Das (!) ist cool. Viel cooler als an einem PC rumzuschrauben :-)</p>
+<p>Und was soll so ein STM? Der macht z.B. die Programmierung mit mehreren Threads einfacher. Statt den Zugriff auf gemeinsame in-memory Ressourcen durch ausgeklügelte Sperren zu synchronisieren, arbeiten Sie einfach mit Transactionen. Genau: Transactionen wie bei Datenbanken - nur eben nicht auf persistenten Daten, sondern im Hauptspeicher!</p>
+<p>Wem das aber noch nicht cool genug erscheint, der kann damit auch ohne Multithreading Undo-Lösungen basteln. Und das nicht nur auf einer Ebene, sondern auch echt geschachtelt. Das kann nicht mal SQL Server :-)</p>
+<p>Und wer das noch nicht cool findet, der kann auch verteilte Transaktionen fahren: Mit System.Transactions eine Transaction öffnen, auf SQL Server zugreifen und Veränderungen im STM vornehmen - und am Ende alles zusammen committen oder zurückrollen.</p>
+<p>Hier das kanonische Beispiel für Transaktionen mit dem .NET Software Transactional Memory (NSTM) realisiert: Überweisung eines Betrags von einem Konto auf ein anderes.</p>
+<p>1 INstmObject myAccount;</p>
+<p>2 INstmObject yourAccount;</p>
+<p>3 </p>
+<p>4 myAccount = NstmMemory.CreateObject(1000);</p>
+<p>5 yourAccount = NstmMemory.CreateObject(500);</p>
+<p>6 </p>
+<p>7 using (INstmTransaction tx = NstmMemory.BeginTransaction())</p>
+<p>8 {</p>
+<p>9     double amountToTransfer = 150;</p>
+<p>10 </p>
+<p>11     myAccount.Write(myAccount.Read() - amountToTransfer);</p>
+<p>12     yourAccount.Write(yourAccount.Read() + amountToTransfer);</p>
+<p>13 </p>
+<p>14     tx.Commit();</p>
+<p>15 }</p>
+<p>16 </p>
+<p>17 Console.WriteLine("My account balance: {0}", myAccount.Read());</p>
+<p>18 Console.WriteLine("Your account balance: {0}", yourAccount.Read());</p>
+<p>In Zeile 16 hat der Transfer entweder komplett geklappt oder gar nicht. Inkonsistenzen, die durch einen Fehler in der Verarbeitung (Zeilen 9 bis 12) auftreten könnten, haben keine Chance, nach außen "durchzulecken". Wie gesagt: das ist wie mit Transaktionen bei Datenbanken. Wer sich den Code genau ansieht, wird das feststellen und auch sehen, dass er sehr dicht an Code ist, den man mit "normalen" Variablen geschrieben hätte.</p>
+<p>NSTM ist mein Versuch der Implementation von STM, nachdem ich von dem Konzept neulich gehört hatte. Da war ich fasziniert und hab ne Menge drüber gelesen. Aber dann musste ich es einfach ausprobieren. Allemal, da die verfügbaren Implementationen alle irgendwie hinken. Entweder in Java realisiert oder unter Zuhilfenahme von Unmanaged Code oder nur für Haskell oder irgendwie nicht dem "normalen" Programmiermodell entsprechend, das wir von Transaktionen kennen. Also hab ich das gemacht, was alle Entwickler gern tun: ich habe meine eigene Infrastruktur gebastelt. Und es hat Spaß gemacht :-)  Aber dafür ist ein Steckenpferd ja auch da.</p>
+<p>Wer mehr über NSTM erfahren will, kann in meinem englischen Blog <a rel="noopener" href="http://weblogs.asp.net/ralfw/archive/tags/Software+Transactional+Memory/default.aspx">eine ausführliche Darstellung</a> lesen. Das Thema hab ich für international interessant gehalten und deshalb dort zuerst darüber geschrieben. Man sehe es mir in der deutschen Community nach.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2007-08-22):</p>
+<p>Na, hier tut sich ja fast garnichts mehr. Schade, denn ich stöbere gerne in Deinem Blog, Ralf...</p>
+<p>Liebe Grüsse,
+Marc</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2007-08-22):</p>
+<p>@Marc: Du hast Recht, im Augenblick ist es etwas still in meinem deutschen Blog. Manchmal muss ich halt auch arbeiten... ;-) Und manchmal muss ich auch etwas in meinem englischen Blog schreiben, so wie für NSTM. So ein Projekt geht über die deutschsprachige Community hinaus.</p>
+<p>Aber keine Sorge: Es wird sich wieder etwas tun in meinem deutschen Blog.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2007-09-17):</p>
+<p>Hallo Ralf,</p>
+<p>die Diskussion in http://www.mycsharp.de/wbb2/thread.php?threadid=8764 könnte dich interessieren, weil es da im Prinzip auch um STM geht, auch wenn der Begriff dort nie verwendet wird.</p>
+<p>herbivore</p>
+<hr />
+<p><strong>(anonym)</strong> (2007-09-22):</p>
+<p>Hallo ich muss sagen, dass ich auf Thema gerade erst gestoßen bin und erstmal wissen will in wie fern die Transaktionen gekapselt sind? Bedeutet  STM auf wenn ich z.B. einen Filereader benutze erst auf die Ressourcen (File) zugegriffen wird wenn ich ein commit machen? Sorry ist mit Sicherheit eine recht triviale Frage aber wie gesagt bin gerade erste auf das Thema gestoßen und versuche es einzuordnen Danke</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2007-09-22):</p>
+<p>@Anonym: Ein STM verwaltet Speicher. Mehr nicht. Genauso wie eine DB Speicher verwaltet. Bei der DB liegt der auf der Platte, bei einem STM im Hauptspeicher.</p>
+<p>STM wie DB machen den Umgang mit diesem Speicher transaktional. "Speichereinheiten" (Datensätze, Objekte) kann man innerhalb einer Tx ganz oder gar nicht (atomic, isolated) verändern.</p>
+<p>Das war´s. Kontrolle über den Zugriff auf Dateien oder Bildschirm übt ein STM nicht aus.</p>
+<p>-Ralf</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flow im Unternehmen – Teil 3 – Engpass Programmierung — ralfw.de Archiv</title>
+<meta name="description" content="Wenn die Softwareproduktion insgesamt besser werden soll, dann muss am Engpass angegriffen werden. Das ist die Programmierung, die Anforderungen in Release Candidates transformiert">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/flow-im-unternehmen-teil-3-engpass/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Flow im Unternehmen – Teil 3 – Engpass Programmierung — ralfw.de Archiv">
+<meta property="og:description" content="Wenn die Softwareproduktion insgesamt besser werden soll, dann muss am Engpass angegriffen werden. Das ist die Programmierung, die Anforderungen in Release Candidates transformiert">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/flow-im-unternehmen-teil-3-engpass/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Flow im Unternehmen – Teil 3 – Engpass Programmierung</h1>
+    <div class="doc-meta"><span>29. März 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/03/flow-im-unternehmen-teil-3-engpass.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/flow-im-unternehmen-teil-3-engpass/</code></span></div>
+    <div class="art"><p>Wenn die Softwareproduktion insgesamt besser werden soll, dann muss am Engpass angegriffen werden. Das ist <a rel="noopener" href="http://ralfw.blogspot.com/2011/03/flow-im-unternehmen-teil-2-qualitat.html">die Programmierung</a>, die Anforderungen in Release Candidates transformiert.</p>
+<p>Ober genauer formuliert: Auf einer bestimmten Detaillierungsstufe ist die Programmierung der Engpass. Tritt man weiter zurück, dann ist es die gesamte Softwareentwicklung bestehend aus Programmierung und Qualitätssicherung. Und tritt man näher heran, dann wird sich der Engpass sicher noch präzisieren lassen.</p>
+<p>Wie sieht also die Programmierung im Detail aus? Welche Schritte sind nötig, um aus Anforderungen Release Candidate Code zu machen? Ich denke mir das so:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/587beafcb78c1768.png" /></p>
+<p>Softwareentwicklung ist offensichtlich mehr als “code slinging”. Code entsteht nicht einfach so, sondern sollte das Ergebnis eines systematischen Vorgehens sein. Dazu gehören die Schritte:</p>
+<ul>
+<li>Anforderungsanalyse: Definierte Anforderungen müssen von der Programmierung verstanden werden, bevor sie sie umsetzt. Die Anforderungsdefinition ist dafür nicht zuständig; sie formuliert nur Wünsche der Marktes in einer Weise, dass die Programmierung überhaupt einen Ansatzpunkt hat. Erst in der Anforderungsanalyse machen sich dann die Entwickler die Anforderungen zu eigen.</li>
+</ul>
+<p>Anforderungsdefinition und Anforderungsanalyse bilden den Übergang von Außenwelt (Kunden-/Anwendersicht) zu Innenwelt (Entwicklersicht). Den in zwei Schritte mit unterschiedlichem Schwerpunkt zu splitten, halte ich für notwendig, um Anforderungen in top Qualität zu bekommen. Denn sonst wird der ultimative Engpass nicht optimal genutzt.  Sind die Anforderungen verstanden, muss die Implementierung geplant werden. Von Anforderungen “in den Code zu springen”, ist kein geeignetes Vorgehen. Es führt zu mittelfristig schlechter Qualität der Codebasis und nutzt die ultimativ knappe Ressource nicht optimal.   Den Anfang der Planung macht der Architekturentwurf. Er definiert die Grobstruktur des Codes (und der Daten) in Bezug auf die nicht-funktionalen Anforderungen. Hier werden auch die wesentlichen Technologieentscheidungen getroffen.  Im Rahmen des Architekturentwurfs entwirft der nächste Schritt ein Modell des Codes zur Erfüllung der funktionalen Anforderungen. Das Team definiert die nötigen Funktionseinheiten in einer codeunabhängigen Form, um sich nicht in Details zu verlieren. Hier ist auch nochmal Gelegenheit, Technologieentscheidungen zu treffen.  Sind Architektur und Modell für eine Menge an Anforderungen entworfen, ist die Arbeit zu ihrer Umsetzung zu organisieren. Dass alle Teammitglieder optimal im Sinne des Ganzen eingesetzt werden, ergibt sich nicht von selbst. Die Arbeitsorganisation ist mithin die abschließende Maßnahme, um den Engpass mit Input in höchster Qualität zu versorgen.</p>
+<ul>
+<li>Schließlich folgt die Implementierung der mit Architektur und Modell formalisierten Anforderungen. Hier liegt der wahre Engpass der Softwareentwicklung, denn hier werden die ursprünglichen Wünsche in Code fixiert. Das kostet im Verhältnis zu den anderen Schritten am meisten Entwicklerkapazität pro Wunsch, weil dieser Schritt das abstrakteste Resultat produziert und höchster technologischer Kompetenz bedarf. Jeder Entwickler ist bei der Implementierung auch auf sich allein gestellt; das Fehler-/Fehlentscheidungspotenzial ist hier in verschiedener Hinsicht am größten.  Zur Qualitätssicherung der Implementierung folgt ihr ein Review. Denn wie auf höherer Ebene klar geworden ist, muss die Softwareentwicklung bzw. die Programmierung als Engpass top Qualität liefern, um nicht durch vermeidbare Nachbesserungen belastet zu werden.</li>
+</ul>
+<p>Wenn insbesondere die Prozessdetaillierung für Sie wie ein Wasserfall aussieht, dann verstehe ich das. Aber es wäre ein Missverständnis, bei Anblick eines Flows zu denken, dass am Anfang nur ein Input hineinginge, der dann in einem Durchfluss zu einem Komplettergebnis führen würde.</p>
+<p>Der Produktionsprozess macht vielmehr keine Aussage darüber, wie oft er durchlaufen wird und wie groß insbesondere der ursprüngliche Input-Happen ist. Die für die Agilität zentrale Schleife des iterativen Vorgehens ist vielmehr in diesem Prozess von Anfang an enthalten: der Markt bzw. der Kunde steht am Beginn und am Ende des Prozesses.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c3bf66add3a6c964.png" /></p>
+<p>Wasserfall und agiles Vorgehen (oder auch nur iterative Entwicklung, die es ja schon in den 1980ern gab) unterscheiden sich mithin eigentlich nur in der Zahl der Durchläufe durch den Prozess. Und die hängen davon ab, wie groß die Wünsche am Anfang und wie zahlreich die Release am Ende sind.</p>
+<ul>
+<li>Wasserfall: 1 Wunsch und wenige Releases  Agilität: Viele Wünsche und viele Releases</li>
+</ul>
+<h3>Geschachtelte Engpässe</h3>
+<p>Ich habe es schon angedeutet: Einen Engpass gibt es in Bezug auf die Abstraktionsebene eines Prozesses. Wenn der Produktionsprozess nun schrittweise verfeinert verschiedene Abstraktionsebenen hat, dann gibt es sozusagen mehrere Engpässe – die allerdings ineinander stecken.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/6c9ec3d60d1c7313.png" /></p>
+<p>Wer die Softwareentwicklung nun verbessern will, der muss zweierlei tun:</p>
+<ul>
+<li>Die Engpässe auf allen Ebenen ausreizen, d.h. die Implementierung von allem befreien, was nicht zu ihrer Kernaufgabe gehört: Code für neue Wünsche produzieren, die Implementierung topfit machen in puncto Codegenerierung, die Implementierung Code von top Qualität herstellen lassen. Und dann die Programmierung als umfassenden Produktionsschritt ausreizen. Und dann die Softwareentwicklung als noch umfassenderen Schritt ausreizen.  Die Qualität des Input für die Engpässe im Rahmen des Möglichen maximieren. Das sind zum einen die Anforderungen und zum anderen die “Arbeitspakete” für die Implementierung. Das heißt, Input und Output der Planung sind das A und O für eine top Implementierung.</li>
+</ul>
+<p>Klingt eigentlich ganz normal, oder? Wer etwas Gutes herstellen will, der braucht erstens eine gute Vorstellung davon, was das sein soll (Anforderungen).</p>
+<p>Und der braucht zweitens einen guten Plan, wie das Ergebnis effizient hergestellt werden und wie es aussehen soll. Bei all der Diskussion um agiles Vorgehen ist das nur, so scheint es, in Vergessenheit geraten. Da meinen viele, gerade die Planung sei überflüssig. Hauptsache, die Anforderungen schnell in Code gießen und ab damit zum Kunden.</p>
+<p>Doch weit gefehlt! Aus der <a rel="noopener" href="http://de.wikipedia.org/wiki/Theory_of_Constraints">Theory of Constraints</a> (TOC) können wir ableiten, dass dann der Engpass heiß läuft. Denn wo nicht auf Qualität geachtet wird, kehrt der Code mit Macht zurück und belastet den Engpass mit Nachbesserungen. Der kommt dann immer weniger dazu, seinen eigentlichen Job zu machen. Die TOC sagt also das voraus, was immer wieder in Softwareunternehmen zu sehen ist: überlastete Entwickler, die mit der Lieferung von neuen Features nicht hinterherkommen.</p>
+<h3>Besser leben mit dem Engpass</h3>
+<p>Was im Detail ausmacht, dass der Engpass nicht mal seine grundsätzliche Kapazität für neue Wünsche an den Start bringen kann, ist erstmal gar nicht so wichtig. Viel wichtiger ist die Anerkennung, dass es erstens überhaupt einen Engpass gibt. Und zweitens dass der für das Wichtigste freigehalten werden muss, das er dann mit Qualität produzieren muss. Also nicht nur überhaupt produzieren, sondern eben mit Qualität, innerer Qualität.</p>
+<p>Für Entscheider ergeben sich daraus vor allem vier Fragen:</p>
+<blockquote>
+<ol>
+<li>Wie halte ich den Engpass frei für das Wesentliche?</li>
+<li>Wie sichere ich hohe Qualität für den Output des Engpasses?</li>
+</ol>
+</blockquote>
+<p>Beide betreffen das Ausreizen des Engpasses (exploiting the constraint). Dazu kommt dann noch die Frage, was zu tun ist an den Nicht-Engpass Prozessschritten (subordination of non-constraints). Denn die müssen nicht mehr auf Volllast laufen.</p>
+<blockquote>
+<ol start="3">
+<li>Wie steigere ich die Qualität des Outputs vor dem Engpass?</li>
+</ol>
+</blockquote>
+<p>Und schließlich:</p>
+<blockquote>
+<ol start="4">
+<li>Wie steigere ich die Kapazität des Engpasses?</li>
+</ol>
+</blockquote>
+<p>Verbesserungsmaßnahmen lassen sich diesen Fragen zuordnen und somit priorisieren. Meine Rangfolge sieht so aus:</p>
+<blockquote>
+<ol>
+<li>Qualität des Inputs für den Engpass erhöhen. Weniger Garbage in bedeutet weniger Garbage out – und insofern weniger Nachbesserungen. Die Qualität vor dem Engpass zu erhöhen, ist einfacher als im Engpass, weil die Schritte vor ihm ohnehin mehr Kapazität haben. Upstream Prozessschritte sollten Sie von Engpass-überlastenden Ausstoßmengen umstellen auf höhere Qualität. 2. Den Engpass frei halten für das Wesentliche. Das ist auch noch relativ einfach möglich, weil dafür meist keine Investitionen nötig sind, sondern nur die Veränderung von kontraproduktiven Grundsätzen.</li>
+</ol>
+</blockquote>
+<p>Nach Maßnahmen dieser beiden Kategorien kann sich der Engpass mit seinen – womöglich beschränkten - Kompetenzen und Methoden zumindest voll auf die Umsetzung qualitativ hohen Inputs konzentrieren. Er tut das Wichtigste so gut er eben kann.</p>
+<blockquote>
+<ol start="3">
+<li>Die Qualität des Engpass-Outputs erhöhen. Mit der Kapazität, die dem Engpass nun zur Verfügung steht, sollte er unbedingt bemüht sein, die inzwischen hohe Qualität seines Input zu halten. 4. Die Produktivität des Engpass steigern. Am Schluss stehen Maßnahmen, die die vorhandenen Ressourcen stärken oder die Ressourcenzahl vergrößern. Das lohnt jetzt erst, da andere Probleme sonst nur kaschiert würden.</li>
+</ol>
+</blockquote>
+<p>Und was sind nun Maßnahmen in diesen Kategorien? Wie lässt sich konkret mit dem Engpass umgehen? Mir fallen da einige Maßnahmen ein, von denen manche üblich und manche eher selten sind:</p>
+<h4>Input-Qualität erhöhen</h4>
+<h5>Anforderungen</h5>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d7ac086de09934c4.png" /></p>
+<p>Anforderungen können in zweierlei Hinsicht verbessert werden.</p>
+<p>Als erstes ist dazu die Frage zu stellen: “Braucht der Kunde das wirklich?” Der sagt reflexartig natürlich, “Klar! Das will ich haben.” Doch die Anforderungsdefinition sollte sich davon nicht beirren lassen. Jede Reduktion oder besser Fokussierung von Anforderungen hilft, den Engpass zu entlasten. Dazu gehört auch die Priorisierung. Wenn es denn wirklich wahr ist, das der Kunde etwas haben möchte, dann gleich nachhaken, “Ist das sehr wichtig, muss es sofort sein – oder kann es warten?” Dazu gehören auch Überlegungen, ob ein Wunsch komplett realisiert werden muss oder ob zumindest manches weggelassen oder niedriger priorisiert werden kann.</p>
+<p>Als zweites ist dann für jede Anforderung die tatsächlich, tatsächlich an die Softwareentwicklung gehen soll eine absolute Präzisierung (im Rahmen des Möglichen) vorzunehmen. Unsicherheit des Kunden ist dabei wieder ein Zeichen dafür, dass die Anforderung abgelehnt werden sollte. Das ist ihm klar zu machen. Wenn er dennoch darauf besteht, dann nachhaken und Akzeptanztestfälle einfordern. Eingabe/Interaktionen und erwartete Ausgaben/Seiteneffekte sind zu protokollieren. Je maschinenlesbarer desto besser.</p>
+<p>Requirements Engineering ist die Kunst der Anforderungsdefinition. Nicht umsonst hat sich diese Disziplin herausgebildet. Es ist schwer, Anforderungen von hoher Qualität aus dem Kunden herauszubekommen. Aber es ist nötig, um den Engpass zu schonen. Hier schlummert enormes Verbesserungspotenzial in den meisten Projekten; denn üblich ist es, sich mit Schwammigem zufrieden zu geben, weil es einen (unausgesprochenen) Grundsatzengpass gibt der lautet, man solle sich nicht solange damit aufhalten und lieber das Codieren anfangen. Und außerdem dürfe man den Kunden nicht so mit penetranten Fragen nerven oder gar Wünsche ablehnen, denn es sei ja der König Kunde, mit dem man es zu tun habe.</p>
+<p>Bitte verstehen Sie mich richtig: Mir geht es hier um die Qualität (!) der Anforderungen, nicht die Quantität. Aus dem Produktionsprozessdiagramm leitet sich nicht ab, dass man zuerst alle Anforderungen und auch noch in höchster Qualität sammeln müsse. Im Gegenteil. So wenige Anforderungen wie möglich sollten gesammelt werden; nur soviele, bis die Architektur halbwegs festgezurrt werden kann und nur soviele bis ein erster nicht trivialer Nutzen für den Kunden produzierbar ist. Dafür sind immer wieder erstaunlich wenige Anforderungen nötig, wenn man es ausnutzt, das die ja auch auf verschiedenen Abstraktionsniveaus formuliert sein können.</p>
+<p>Mit der Erfahrung lernen Sie aber, zwischen wichtig und weniger wichtig zu unterscheiden. Und Sie werden mutiger, mit einer kleineren Menge zu beginnen, wenn Sie wissen, dass Sie in der Programmierung Methoden einsetzen, die Strukturen produzieren, die leicht angepasst werden können.</p>
+<p>Denn eines ist zu erkennen: Möglichst viele Anforderungen wollen nur die erheben, die Angst haben, sich mit weniger in eine Code-Ecke zu pinseln, aus der sie dann nicht mehr herauskönnen. Je korrekter und evolvierbarer Ihre Codebasis jedoch ist, desto weniger Angst müssen Sie in dieser Hinsicht haben. Je höher die Qualität der Arbeit der Programmierung, desto fitter wird sie für kleine, hochqualitative Anforderungen.</p>
+<p>Gut verdaubar ist der Input von der Anforderungsdefinition für die Softwareentwicklung also auch, wenn er in kleinen Happen ankommt. Das ist der inhärenten, durch keine noch so peinliche Kundenbefragung zu vermeidenden Unschärfe auch ansonsten hochqualitativer Anforderungen geschuldet. Kunden können Anforderungen nicht besser formulieren als sie ihre Wünsche selbst kennen – und das ist oft nicht sehr genau. Anforderungen sorgen daher immer für ein gewisses Maß an Nachbesserung. Ohne iterative Annäherung an die Kundenzufriedenheit geht es nicht. Je kürzer die Feedbackschleife, desto besser.</p>
+<h5>Aufgaben</h5>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e5e5ebe03e9f2c98.png" /></p>
+<p>Was produziert schneller ein Ergebnis, die Verteilung von mehreren Aufgaben auf mehrere pseudo-gleichzeitige Threads auf einem Prozessor oder die echt gleichzeitige die Bearbeitung einer Aufgabe auf mehreren Prozessorkernen? Die Antwort sollte klar sein: Die Multi-Core-Verarbeitung einer Aufgabe ist schneller.</p>
+<p>Multithreading macht Sinn, um Latenz zu verbergen. Wenn der Anwender eine langdauernde Verarbeitung anstößt, soll das UI nicht einfrieren bis zum Ergebnis. Also wird die Verarbeitung in einen Hintergrundthread ausgelagert. Dass die Verarbeitung lange dauert, ist dem Anwender somit verborgen. Stößt er mit der gewonnen Bewegungsfreiheit dann aber noch eine und noch eine Verarbeitung im Hintergrund an, dann laufen all die Bearbeitungen nur pseudo-parallel (auf einem Prozessor). Jede einzelne dauert viel zwei- oder dreimal länger als wäre sie das einzige, mit dem sich der Prozessor beschäftigt.</p>
+<p>Gegenüber dem Kunden ist es jedoch kontraproduktiv, die Dauer der Implementierung zu verbergen. Gerade angesichts der nicht auszuräumenden Unsicherheit, die auch in hochqualitativen Anforderungen steckt, ist es wichtig, jede Anforderung so schnell wie möglich zu codieren. Latenz darf nicht verborgen, sondern muss reduziert werden.</p>
+<p>Die Aufgaben, die die Planung an die Implementierung weitergibt, müssen deshalb so formuliert sein, dass das Implementierungsteam sie mit höchster Geschwindigkeit in Code transformieren kann. Nur so fließt zügig etwas zurück zum Kunden, zu dem er Feedback geben kann.</p>
+<p>Das bedeutet, die Aufgaben müssen möglichst alle Teammitglieder parallel (!) an einer (!) Anforderung (bzw. einer Anforderungsscheibe) zum Einsatz bringen. Das ist sozusagen Multi-Core-Implementierung in action. Alle Ressourcen ziehen dann an einem Strang, um eine Anforderung umzusetzen.</p>
+<p>Wenn Aufgaben das ermöglichen, ist das allerdings nur eine Facette hoher Qualität. Eine andere, nicht zu vernachlässigende ist, dass Aufgaben keine Implementierungsunsicherheiten enthalten sollten. Als Aufgabe sollte ans Implementierungsteam nur gehen, wofür 100%ige Kompetenz existiert. Ausprobieren, Lernen, Forschen: das sind keine Tätigkeiten im Produktionsschritt Implementierung. Wenn Anforderungen Elemente enthalten, die über die technische/methodische Kompetenz des Implementierungsteams hinausgehen, dann dürfen daraus (noch) keine Aufgaben gemacht werden.</p>
+<p>Unsicherheiten und fehlende Kompetenz sind in einem separaten Prozess auszugleichen. <a rel="noopener" href="http://jamesshore.com/Agile-Book/spike_solutions.html">Spike Solutions</a> oder Prototypen sind ein probates Mittel, um Technologien wie Lösungsansätze für konkrete Anfordeurgen zu evaluieren, bevor sie an die Implementierung gehen. In die Planung im obigen Diagramm habe ich sie jedoch nicht eingezeichnet, um das Verständnis des Hauptproduktionsflusses zu erleichtern.</p>
+<h4>Konzentration auf das Wesentliche</h4>
+<p>Wenn die Input-Qualität am Engpass stimmt, dann gilt es, den Engpass ballastfrei zu machen. Er soll sich volll auf seine Aufgabe konzentrieren. Das ist die Transformation von Anforderungen in Code.</p>
+<p>Tun das Softwareentwickler denn aber nicht den ganzen Tag? Nein. Ich kenne keinen Entwickler, der sich nicht in seiner Transformationsarbeit gestört fühlt. Es gibt keinen, der seine acht täglichen Arbeitsstunden voll den Tätigkeiten dieser Kette von Transformationsschritten im Sinne der Produktion neuer Features widmet:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/3f7f1348d282e499.png" /></p>
+<p>Die Störungen fallen für mich in drei Kategorien:</p>
+<ul>
+<li><strong>Unterbrechungen</strong>: Jede Form von Unterbrechung behindert den Engpass. Selbst wenn der Grund der Unterbrechung zur Engpasstätigkeit gehören sollte, reduziert sie seine Kapazität. Unterbrechungen, d.h. ein nicht selbstbestimmter Fokuswechsel, haben einfach zur Folge, dass anschließend Zeit zur Refokussierung aufgewandt werden muss. Mentaler Zustand lässt sich nicht einfach auf einen Stack legen wie aktuelle Parameter einer Methode. Der unterbrochene Entwickler muss also mindestens Aufwand treiben, um “wieder reinzukommen” in was auch immer er vor der Unterbrechung getan hat.</li>
+</ul>
+<p>Leider herrscht an vielen Arbeitsplätzen eine "Unterbrechungskultur”. Jeder kann jederzeit “reinschneien” und die Arbeit anderer unterbrechen. Ein deutliches Symptom dafür sind Entwickler, die mit Kopfhörer arbeiten oder besonders früh/spät anwesen sind, “um endlich mal in Ruhe arbeiten zu können.”</p>
+<p>Die Agilitätsbewegung mag sogar dazu beigetragen haben, Hemmschwellen bei Unterbrechungen abzutragen. Denn wer echt agil arbeiten will, der steckt alle Entwickler in einen Raum, den Team Room. Informationen können dort maximal frei fließen.</p>
+<p>Das ist wahr – hat aber seinen Preis. Ob der aber immer im Blick ist? Der Preis ist Defokussierung und damit eine Vergrößerung der Wahrscheinlichkeit, dass sich Fehler einschleichen. Denn ungestörte Konzentration ist ein wesentlicher Bestandteil hoher Qualität.</p>
+<p>Aber auch die übliche hierarchische Struktur in Unternehmen sorgt gern für Unterbrechungen. Ein Vorgesetzter darf ja schließlich jederzeit Auskunft verlangen oder die Arbeit dirigieren. Die Steigerung ist dann die Unterbrechung durch den ultimativen Vorgesetzten: den Kunden. Wenn der Support auf die Softwareentwicklung durchgreifen kann, ist oft kein Halten; Unterbrechungen, die bis zur Änderung der aktuellen Aufgabe führen, sind dann möglich.</p>
+<p>Gemeinschaftliche Arbeit, ein Team sein und Unterbrechungsfreiheit stehen in einem Spannungsverhältnis. Beides ist nötig. Mir scheint jedoch, dass aus Gründen der Mitarbeiterführung und falsch verstandener Methodik derzeit das Pendel zur Seite einer “Unterbrechungskultur” ausschlägt. Wo alle in einem Raum sind und jederzeit unterbrochen werden kann, da kann kontrolliert werden. Hinzu kommt, dass größere Räume für viele Entwickler kostengünstiger sind als individuelle Büroräume für einen oder max. zwei Entwickler.</p>
+<p>Aber es gibt auch löbliche Gegenbeispiele. Von Microsoft kann man halten, was man will, aber erfolgreich ist das Unternehmen. Und es hat einen ungeheuren Ausstoß. Begründet ist der auch im Umgang mit den Mitarbeitern, die (in den USA) alle ihr eigenes Büro haben – egal wie klein das ist –, in dem sie sich einrichten können, wie sie mögen.</p>
+<p>Andere Maßnahmen gegen Unterbrechungen sind “Bitte nicht stören”-Schilder am “Entwicklerraum” zumindest für einige Stunden pro Tag. Oder die Möglichkeit, Homeoffice-Tage einzulegen. Oder die Einhaltung eines minimalen Prozesses, der verhindert, das Vorgesetzte jederzeit ihr persönliches Informationsbedürfnis bei jedem Entwickler befriedigen können. Oder ausdrückliche Supportzeiten, wenn denn der Support durch Entwickler nicht zu vermeiden ist.</p>
+<p>Unterbrechungen sind ein weit unterschätzter Kapazitäts- und Qualitätsfresser. Tun Sie etwas dagegen am Engpass. Nur so kommen Sie in die Nähe seiner theoretisch verfügbaren Kapazität für geldbringendes Neues.</p>
+<ul>
+<li><strong>Wiederholung</strong>: Wer etwas wiederholt, der schafft währenddessen nichts Neues. Entwickler sollen aber möglichst viel Neues schaffen – deshalb sollten sie sich nicht in Wiederholungen ergehen.</li>
+</ul>
+<p>Tätigkeiten, die mehr als drei Mal manuell ausgeführt werden, sollten auf den Prüfstand. Sind sie wirklich nötig, gar in Wiederholung? Wenn ja, lassen Sie sich automatisieren?</p>
+<p>Der Vorteil einer Automatisierung ist sogar dreifach: Nicht nur setzt die Automatisierung Entwicklerkapazität frei für Neues, sie reduziert auch die Fehlerträchtigkeit der Tätigkeit. Und das ist gut, weil Fehler zu Nachbesserungen führen, von denen ja nun hinreichend klar ist, dass sie unbedingt zu vermeiden sind.</p>
+<p>Automatisierbar ist viel. Tests auf allen Ebenen (vom Unit Tests bis zum Akzeptanztests); darüber gibt es hinlänglich Literatur. Aber auch das “Zusammenbauen” von Softwaresystem (Continuous Integration) und das Deployment (Continuous Delivery).</p>
+<p>Viele Softwareteams hängen da allerdings noch weit hinter dem Machbaren hinterher. Ein Release ist oft noch eine periodisch wiederkehrende Drohung für alle Mitglieder, die womöglich sogar mit Urlaubssperre belegt ist.</p>
+<p>Der dritte Vorteil der Automatisierung besteht in der Unabhängigkeit von bestimmten Personen. Sie löst Wissensmonopole auf. Jeder Vorgesetzte sollte schon deshalb daran interessiert sein, soviel wie möglich zu automatisieren, weil er sich damit unabhängig macht von den Grillen einzelner Entwickler.</p>
+<p>Automatisierung bedeutet allerdings nicht immer, dass eine Tätigkeit in Software gegossen wird. Auch die Delegation ist eine Form von Automatisierung. Wenn ein Ablauf so vereinfacht wird, dass ihn nicht mehr der teure Entwickler im Engpass, sondern vielleicht eine Hilfskraft oder gar eine anonyme Crowd-Sourcing-Menge durchführen kann, dann ist das ebenfalls ein Gewinn.</p>
+<p>Gegen die Automatisierung spricht für viele Entwickler und Entscheider, dass die selbst ja Zeit und damit Geld kosten würde. Das ist natürlich richtig erkannt – aber sie deshalb nicht in Angriff zu nehmen, ist zu kurz geschlossen. Wer mit dem spitzen Bleistift rechnet, der sollte richtig rechnen. Richtig bedeutet hier jedoch: auf das Gesamtsystem bezogen und nicht lokal optimierend. Dazu aber mehr in einem anderen Blog-Artikel. Die TOC hat einiges zum Thema Geld zu sagen unter dem Stichwort <a rel="noopener" href="http://en.wikipedia.org/wiki/Throughput_Accounting">Durchsatzrechnungswesen (Throughput Accouting)</a>. Und danach kostet eine Stunde Entwicklerkapazität, die in eine Wiederholung geht, also den Entwickler für Geldbringendes blockiert, mehr als den Entwicklerstundenlohn. Viel mehr!</p>
+<p>Doch einstweilen mögen zumindest die Vorteile in Bezug auf Qualität und Personenunabhängigkeit dem Skeptiker Prozessoptimierungsfutter sein.</p>
+<ul>
+<li><strong>Abweichung</strong>: Wenn Programmierer gerade nicht unterbrochen werden oder sich in Wiederholungen ergehen, dann sind sie immer noch nicht notwendig mit dem Wesentlichen befasst. Ein noch größeres Übel als die beiden bisher behandelten Störungen sind Abweichungen vom Wesentlichen. Entwickler tun einfach häufig, was nichts mit der Produktion von Neuem zu tun hat. Das wird ihnen durch einen Grundsatzengpass aufgedrückt – oder sie wählen es selbst.</li>
+</ul>
+<p>Beispiele für verordnete Abweichungen sind Dokumentationsaufgaben, Support, allgemeine Besprechungen, Statusreports, minutiöse Zeiterfassung oder anderer “Formularkram”.</p>
+<p>Jede einzelne Abweichung hat für irgendwen irgendwann natürlich mal Sinn ergeben. Allemal in Summe sind die in den meisten Unternehmen jedoch parasitär. Sie rauben wertvolle Kapazität am Engpass. Hier eine Minute für eine Umständlichkeit, dort eine Stunde im unproduktiven Meeting… das summiert sich. Neulich hatte ich im Clean Code Developer Training eine Reihe von Entwicklern aus einem großen Unternehmen, die zwischen zwei Trainingsblöcken quasi nicht entwickelt haben, sondern nur dokumentiert. Das ist pure Verschwendung der Engpassressource.</p>
+<p>Doch nicht immer ist “das System” schuld an Abweichungen. Entwickler tendieren dazu, sich selbst vom Wesentlichen abzulenken. Typisch sind dafür in Make-or-Buy-Situationen Entscheidungen für Make.</p>
+<p>Statt ein Tool, eine Bibliothek von der Stange zu nehmen, wird selbst entwickelt. Typisch sind objektorientierte Datenzugriff-Frameworks oder Logging-Infrastruktur oder spezielle GUI-Steuerelemente, die 90% von dem replizieren, was Telerik &amp; Co schon bieten, um 10% angeblich Wichtiges, nein, Zentrales, Unabdingbares für den Kunden hinzuzufügen.</p>
+<p>Immer wieder verschwenden Entwickler Ihre Kapazität in dem Glauben, es doch besser machen zu können (und zu brauchen), als auf eine Problemstellung fokussierte Anbieter am Markt. Das wird dann begründet mit einer Flexibilität und Unabhängigkeit, von der niemand weiß, ob sie überhaupt je relevant wird. Oder es wird mit Kundenwünschen begründet, die so unabdingbar wie exotisch seien, dass nur eine Eigenentwicklung sie abdecken könnte.</p>
+<p>Mein Gefühl ist jedoch, dass hier oft rationalisiert wird. Der wahre Grund für Make-Entscheidungen sind ein Gefühl von Kontrollverlust mangels Methode. Oder schlicht eine “Opferhaltung” gegenüber dem Kunden, die jedes “Widerwort” verbietet. Oder es herrscht Unkenntnis über die Möglichkeiten der kaufbaren Lösungen am Markt.</p>
+<p>Make-Entscheidungen verweisen mithin oft auf tieferliegende Probleme. Ihnen kann zum Beispiel entgegengewirkt werden mit besseren Anforderungen, die deutlicher Unterscheiden, was wirklich, wirklich essenziell ist und was nur nice-to-have. Die Anforderungsanylse in der Planung kann hier auch aufklärend tätig sein, indem sie aufzeigt, wie teuer Make wirklich ist. Denn nicht nur kostet Make fast immer mehr Zeit als Buy, es folgt aus Make auch die Notwendigkeit zur Pflege einer größeren Codebasis. Engpass-Kapazität wird damit doppelt abgezogen.</p>
+<p>Im Zweifelsfall sollte daher die Entscheidung für Buy und eine systematisch geplante Codestruktur fallen, die es erlaubt, die Entscheidung ggf. zu revidieren. Anfangen mit dem eingekaufen Persistenzframework – und zur Not später ersetzen, falls sich herausstellt, dass die Leistung nicht ausreicht. Saubere Separation of Concerns lautet der Name eines probaten Mittels gegen die Angst vor irreversiblen Entscheidungen.</p>
+<p>Abweichungen vom Wesentlichen, d.h. der Produktion von Neuem, lauern überall. Seien Sie sensibel dafür und schieben Sie ihnen einen Riegel vor. Das setzt ungeahnte Kapazität im Engpass frei.</p>
+<p>Nur wenn der Engpass sich auf seine Hauptaufgabe konzentriert, kann er effizient etwas mit der hohen Qualität anfangen, die ihm geliefert wird. Zum Glück ist das nicht so schwer. Störungen der beschriebenen Art zu vermeiden, sollte im Grunde wenig bis gar nichts kosten. Das Unternehmen muss nur das Störende sein lassen. Das mag diejenigen schmerzen, die störende Grundsätze aufgestellt haben – doch als Gewinn winkt freigesetzte, fokussierte Kapazität, mit der Neues produziert werden kann.</p>
+<h4>Output-Qualität erhöhen</h4>
+<p>Was soll ein Engpass tun, der mit höchster Input-Qualität beliefert wird und darauf seine Kapazität störungsfrei anwenden darf? Er soll Qualität produzieren. Wie das?</p>
+<h5>Review Release</h5>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/b8749e2ce96dd7c6.png" /></p>
+<p>Von innen nach außen betrachtet ist der erste Engpass die Implementierung. Sie transformiert als Aufgaben formulierte Anforderungen in Code. Ihr Output ist ein Review Release. Die Implementierung muss bei ihrer Transformationsarbeit zweierlei sicherstellen:</p>
+<ul>
+<li><strong>Schadlosigkeit</strong>: Egal, was die Implementierung tut, ihre oberste Priorität muss sein, nicht zu schaden. Das heißt, sie darf funktionierenden Code nicht kaputt machen. D.h. die vornehmste Aufgabe der Implementierung ist es, Regressionsprobleme zu vermeiden. Code darf durch sie nicht in einen schlechteren Zustand zurückfallen. Und schlechter ist jeder Zustand, bei dem vormals Funktionierendes nicht mehr funktioniert. Das ist unter allen Umständen zu vermeiden, nicht nur weil es zu Nachbesserungen führt, sondern weil jede Regression am Vertrauen nagt, das Anwender gefasst haben.</li>
+</ul>
+<p>Anwender leben mit vielem. Sie leben sogar mit Bugs. Aber noch frustrierender als Bugs sind Bugs dort, wo vorher keine waren. Die untergraben jedes Gefühl von Verlässlichkeit, das sich eine Software mühevoll erarbeitet haben mag.</p>
+<p>Die Schadlosigkeit von Veränderungen lässt sich nur nachweisen, wenn die Software anschließend in allen Bereichen betestet wird. Funktionale Abhängigkeiten ziehen sich weit durch ein Softwaresystem, so dass nicht triviale Änderungen kaum vorhergesagt werden kann, auch welche Teile sie sich auswirken. Es ist daher am besten, schlicht immer alles wieder und wieder zu testen.</p>
+<p>Das ist natürlich nur ökonomisch machbar mit automatisierten Tests und automatisierter Integration. Der Hauptzweck von automatisierten Tests ist mithin nicht die Feststellung der Fehlerfreiheit neuen Codes, sondern die Regressionsfehlerfreiheit alten Codes zu “beweisen”.</p>
+<p>Hier ist eindeutig der Implementierer gefragt. Er stellt den Code her, also ist er für dessen Qualität zuständig. Regressionstest auf eine Qualitätssicherung (oder gar den Kunden) zu verlagern, ist falsch im Sinne sauberer Produktion.</p>
+<ul>
+<li><strong>Nützlichkeit</strong>: Veränderungen sind nur nützlich, wenn sie nicht nur die funktionalen wie nicht-funktionalen Anforderungen erfüllen, sondern das auch noch fehlerfrei tun. Dass bekannt ist, was diese Anforderungen sind, dafür sorgen hochqualitative Anforderungsdefinition und Planung. Die Implementierung muss sie dann “nur” noch in Code gießen.</li>
+</ul>
+<p>Das ist natürlich immer noch eine anspruchsvolle Aufgabe. Bei aller Planung bleibt für die Implementierung selbstverständlich Kreativitätsfreiraum. Code Cowboys sind dort jedoch fehl am Platze. Wer schneller Produktionscode raushaut als sein Schatten ziehen kann, ohne die Korrektheit solide geprüft zu haben, der dient nur bedingt der Nützlichkeit.</p>
+<p>Für die Nützlichkeit sind deshalb solides Domänenwissen unabdingbar, um die Anforderungen optimal zu verstehen. (Achtung: Die Domäne muss nicht unbedingt die Geschäftsdomäne des Softwaresystems sein! Auch Security oder Verteilte Systeme sind Domänen, in denen erheblicher Code nötig sein kann.) Dazu kommt solides Technologiewissen, um die Anforderungen/Aufgaben optimal umzusetzen. Und schließlich ist zu prüfen, dass diese Umsetzung tatsächlich gelungen ist. Fehlerfrei.</p>
+<p>Implementierer testen deshalb gegen aufgabenbezogene Akzeptanzkriterien, die von der Planung als Vorstufe der Implementierung geliefert werden müssen. Wenn ein Implementierer Code weiterreicht an den nächsten Prozessschritt, soll er ruhig und gewiss sein, dass er nicht nur für Funktionalität, sondern auch für Korrektheit gesorgt hat. Und zwar automatisiert, denn seine Tests müssen als Regressionstests zukünftig wiederholt werden können (s.o.).</p>
+<p>Im Implementierer als Kernengpass müssen Smartness und Sorgfalt vereint sein. Sie befähigen ihn, das Gewollte zu verstehen, es effizient und effektiv umzusetzen – und das auch noch fehlerfrei.</p>
+<p>Technologiekompetenz spielt dabei nur ein untergeordnete Rolle. Sie lässt sich vergleichsweise schnell erwerben (s.u. Produktivität steigern). Wichtiger ist eine Persönlichkeit mit schneller Auffassungsgabe und Verantwortungsbewusstsein. Wie Joel Spolsky schon sagte: <a rel="noopener" href="http://www.joelonsoftware.com/articles/GuerrillaInterviewing3.html">“smart and getting things done”</a>, so sollen Implementierer sein.</p>
+<p>Sollte es an solchen gut organisierten smarten Entwicklern im Team noch mangeln, dann kann Pair Programming helfen. Indem zwei Entwickler an einer Maschine sitzen, wird jeder einzelne entlastet. Innere und äußere Codequalität können durch zwei Personen repräsentiert werden, die jede für sich darauf achtet, dass ihre Werte Beachtung finden.</p>
+<p>Das dient dann nicht nur der Nützlichkeit, sondern auch dem Teamgeist sowie der Ausbildung. Ohne formale Instruktion kann hier Wissen weitergegeben werden.</p>
+<h5>Release Candidate</h5>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/6161cb927828c1de.png" /></p>
+<p>Die Programmierung ist der die Implementierung umfassende Engpass. Sie wandelt Anforderungen in Release Candidates um. Was sie verlässt, könnte aus ihrer Sicht zum Kunden gehen. Dessen ist sie sich zunächst einmal sicher, weil sie ihren Input einer Qualitätskontrolle unterzieht (Anforderungsanalyse) und die eigentliche Transformation durch die Implementierung sorgfältig vorbereitet.</p>
+<p>Dennoch könnte der Transformationsoutput suboptimal ausfallen. Nicht unbedingt im Hinblick auf die (nicht) funktionalen Anforderungen, sondern in Bezug auf die innere Qualität. Die Fixierung von Anforderungenn in Code ist so essenziell, dass sie nicht einfach der Implementierung überlassen werden kann. Bei aller Sorgfalt soll die ja nicht die Aufgaben der Planung in Frage stellen. Dort aber können sich Unsauberkeiten oder gar Fehler eingeschlichen haben, die erst durch die Implementierung sichtbar werden.</p>
+<p>Deshalb sollte die Programmierung im Anschluss an die Implementierung überprüfen, ob deren Output den Qualitätsansprüchen in jeder Hinsicht genügt. Nicht nur Fehlerfreiheit, sondern Konformität mit der Planung und Eignung der Planung vertragen einen genauen Blick. Die Umsetzung der Planung lässt sich auch nicht anders sicherstellen; den Code müssen sich Menschen anschauen.</p>
+<p>Das Mittel dafür sind Codereviews. Hier sitzen Implementierer und Planer zusammen über der Frage, ob die Transformation den Erwartungen entspricht. Hält sie unmittelbar, was sie soll, d.h. ist sie funktional und korrekt? Und hält sie langfristig, was sie soll, d.h. ist sie evolvierbar. Reviews zurren die Qualität von innen fest, bevor der Code an den Kunden geht.</p>
+<p>Darüber hinaus sind Reviews ideale Orte, um Wissen im Team zu verteilen. Technologieverständnis, Grundsätze, Konventionen breiten sich durch Reviews ganz natürlich aus. Reviews sind also nebenbei eine kostenlose Fortbildungsmaßname.</p>
+<h5>Release</h5>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c6af3b88acc3693c.png" /></p>
+<p>Wenn die Programmierung mit dem Code zufrieden ist, dann ist das schon eine gute Sache. Aber ob ein Release Candidate wirklich reif für den Kunden ist, sollten nicht Programmierer festlegen. Dafür braucht es vielmehr den Blick einer codeunabhängigen Instanz.</p>
+<p>Die Programmierung hat die Qualität des Code von innen festgezurrt. Der Markt (vertreten durch den Vertrieb) ist daran allerdings nur zum Teil interessiert. Er blickt von außen auf die Software. Deshalb sollte die Qualität auch noch von außen festgezurrt werden. Das ist die Aufgabe der Qualitätssicherung (QS).</p>
+<p>Ihre Leistung besteht darin, einen schon grundsätzlich nützlichen Code daraufhin zu prüfen, ob er wirklich den Ansprüchen des Marktes genügt. Die misst den Code daher nochmal ganz anders an den Anforderungen. Hier geht es um Usability, flüssige Installation, Integration mit anderen Systemen, oder “Extremfälle” der Bedienung.</p>
+<p>Die Programmierung hat nur einen begrenzten Horizont was den realen Einsatz ihres Codes bei den Anwendern angeht. Das ist notwendig so, weil Entwickler keine Anwender, keine Geschäftsdomänenexperten sind. Das sollen sie auch nicht sein. Dennoch oder gerade deshalb muss durch deren Brille eine Qualitätssicherung stattfinden - im Haus der Softwareentwicklung und nicht erst beim Kunden.</p>
+<p>Die QS ist verbunden mit der Anforderungsdefinition. Beide sitzen im Grunde auf derselben Abstraktionsebene als Klammern um die Programmierung herum. Was vorne gefordert wird, muss hinten erfüllt sein. Das prüft die QS mittels möglichst automatisierter Tests. Dabei repliziert sie natürlich nicht alle Tests, die schon in der Implementierung gelaufen sind. QS-Tests sind Integrationstests. Sie checken, dass die Teile gut zusammen funktionieren.</p>
+<p>Die QS braucht andere Kompetenz als die Programmierung. Deshalb sollten Programmierer nicht gleichzeitig QS-Beauftragte sein. Es ist auch zu vermeiden, dass sich durch Personalunion die QS “etwas in die Tasche lügt”. In gewisser Weise sind Programmierung und QS eher Antagonisten.</p>
+<p>Während die Implementierung Unit Testing Frameworks einsetzt, benutzt die QS Tools wie <a rel="noopener" href="http://ralfw.blogspot.com/2011/03/fit-fur-fitnesse.html">FitNesse</a>, <a rel="noopener" href="http://www.ranorex.com/">Ranorex</a> oder Scripting. Oder sie lässt sich von der Implementierung einen <a rel="noopener" href="http://ralfw.blogspot.com/2011/01/software-prufstande-das-fehlende-glied.html">Prüfstand</a> einrichten. In jedem Fall hat sie den Code nur Zugriff von außen.</p>
+<h4>Intermezzo: Qualitätsschalen</h4>
+<p>Der Engpass Softwareentwicklung ist kompliziert. Das liegt gar nicht mal so an der reinen Codierung, d.h. der Transformation von Anforderungen in textuellen Quellcode und dann lauffähige Software. Die Welt ist voll von Code, der Anforderungen erfüllt – irgendwie.</p>
+<p>Die Herausforderung besteht darin, Code so herzustellen, dass er gleichzeitig den expliziten funktionalen wie nicht-funktionalen Anforderungen von außen dient – wie den impliziten Anforderungen von innen. Werden erstere erfüllt, kann der Vertrieb mit der Software heute Geld verdienen. Doch nur wenn letztere ebenfalls erfüllt sind, kann dieses Geld erstens zügig und zweitens auch noch morgen verdient werden. Erinnern Sie sich: Das Ziel eines Unternehmens ist es, gutes Geld heute und in Zukunft (!) zu verdienen.</p>
+<p>Dass das mit Code auch in Zukunft geht, ist kein Selbstgänger. Das ist nur möglich, wenn die Implementierung verlässlich schadlos arbeitet und das, was sie produziert eine Form hat, die sich dem stetigen Fluss des Neuen anpassen lässt. Damit das der Fall ist, darf ein Implementierer auch nicht direkt mit dem Kunden die Anforderungen aufnehmen und sofort in Code gießen. Das Ergebnis zeigen die vielen durch RAD unwartbar gewordenen Anwendungen. Erstes Symptom sind Massen an Code in GUI-Eventhandlern.</p>
+<p>Nein, für das komplexe Geschäft der Softwareentwicklung ist – wenn es nachhaltig betrieben werden soll – eine systematischere Überführung von Wünschen in Code nötig. Mir scheint das Bild von Qualitätsschalen passend:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/5265ef6fd392525b.png" /></p>
+<p>Die äußere Schale kümmert sich darum, dass Vorschläge in eine Software überführt werden, die dem Kunden Freude macht. Dafür prüft sie die Vorschläge und formalisiert sie in Form von Anforderungen; und am Ende prüft sie den Code aus Sicht des Kunden in der Qualitätssicherung. Die äußere Schale steht für eine reine Außensicht auf die Software</p>
+<p>Eingeschachtelt in die äußere Schale ist eine Schale, deren Thema die Strukturierung der Software ist. Sie leitet aus den Anforderungen einen Architektur- und Modellrahmen ab, sie konzeptioniert die Lösung. Und am Ende prüft sie, ob das Konzept vom Code eingehalten wird. Diese Schale bildet den Übergang von äußerer Sicht zu innerer Sicht. Sie steht unter Spannung, weil sie unmittelbare Qualität für den produzieren und gleichzeitig die Nachhaltigkeit der Programmierung sichern soll. Diese Spannung existiert immer; nur durch eine Schale jedoch, die dafür konzipiert ist, sie auszuhalten, verhindert die Softwareproduktion, sich daran aufzureiben. Die mittlere Schale ist sozusagen Schmierstoff zwischen Außensicht und Innensicht, die in entgegengesetzte Richtungen rotieren.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e5e30df3dc7eb787.png" /></p>
+<p>Im Kern steht schließlich die Codierung. Sie bewegt sich im Architektur- und Modellrahmen und ist nach innen gewandt. Ja, sie muss sich in einem solchen Rahmen bewegen, um effizient zu sein, ohne die Korrektheit und Evolvierbarkeit aus den Augen zu verlieren. Der Architektur- und Modellrahmen isoliert sie von der ewig unverständigen Außenwelt – und umgekehrt isoliert der Rahmen die Außenwelt von vom unverständlichen Code.</p>
+<p>Die Außenwelt ist volatil, Code ist – trotz seiner Unstofflichkeit – vergleichsweise starr. Wenn also nur “irgendwie” Vorschläge in Code gegossen werden, dann befriedigt das höchstens kurzfristig das Kundenbedürfnis. Langfristig jedoch zerreibt sich das System ohne Schmiermittel an der Gegenläufigkeit Spähren von Kunde und Implementierer.</p>
+<p>Wenn Software unwartbar geworden ist, dann ist das eigentlich ein Ergebnis mangelnder Entkopplung zwischen Anforderungen und Code.</p>
+<h4>Kapazität steigern</h4>
+<p>Wenn die Input-Qualität beim Engpass stimmt, kommt es darauf an, wie der seine Kapazität einsetzt.</p>
+<p>Wenn der Engpass seine Kapazität störungsfrei einsetzen kann, kommt es darauf an, dass er das Richtige tut.</p>
+<p>Wenn er das Richtige tut, kommt es darauf an, wieviel Kapazität überhaupt vorhanden ist.</p>
+<p>Es kann dann sein, dass der Engpass immer noch zuwenig Kapazität dafür hat, das Richtige mit hochqualitativem Input in ausreichender Menge zu tun. Extrembeispiel: Ein schlecht ausgebildeter langsamer Entwickler hat weniger Kapazität als 5 gut ausgebildete schnelle Entwickler.</p>
+<p>Um den Engpass endgültig aus seiner Rolle herauszuheben, sind also womöglich weitere Maßnahmen nötig. Im einfachsten Fall bestehen die darin, dem Engpass mehr Personal zuzuordnen. Das trifft allemal zu, wenn ein Prozessschritt bisher gar nicht besetzt ist, z.B. keine Qualitätssicherung betrieben wird. Die schiere Nichtexistenz eines Schrittes macht ihn per definitionem zum Engpass.</p>
+<p>Sobald jedoch Personal im Engpass arbeitet, lautet die Frage, wie dessen Kapazität erhöht werden kann. Als erstes mögen da Anreize in den Sinn kommen. Würden Implementierer nicht das Richtige schneller erledigen, wenn man ihnen einen Bonus für frühere Auslieferung verspricht? Wie die Forschung der letzten 50 Jahre zeigt, funktioniert das leider nicht für kreative/problemlösende Tätigkeite. Jedem Entscheider sei zu diesem Thema dieses Buch empfohlen: <a rel="noopener" href="http://www.amazon.de/Drive-Was-Sie-wirklich-motiviert/dp/3902404957">Drive</a> von Dan Pink. Oder zum Schnuppern im Thema dieses Video:</p>
+<p>Nein, mehr Produktivität beim Richtigen gibt es nicht so einfach. Weder Zuckerbrot noch Peitsche helfen bei einer Arbeit wie der Softwareentwicklung.</p>
+<p>Unterm Strich helfen wohl nur zwei Strategien: Scale-Out und Scale-Up. Mehr Entwickler oder bessere Entwickler sind der Weg zu mehr Kapazität.</p>
+<h5>Scale-Out</h5>
+<p>Scale-out bedeutet, mehr Personen in der Softwareentwicklung zu beschäftigen. Ob die dann im Hause sitzen oder in einem fernen und viel billigeren Land, ist erstmal egal. Voraussetzung ist in jedem Fall, dass die Planung es hergibt, dass mehr Entwickler auch mehr wegschaffen.</p>
+<p><a rel="noopener" href="http://en.wikipedia.org/wiki/Brooks">Brooks´ Law</a> sagt, dass es kontraproduktiv sei/sein kann, Manpower einem Projekt hinzuzufügen. Die zusätzlichen Personen wollen koordiniert sein und erzeugen zusätzliche Kommunikation. Das ist selbstverständlich ganz grundsätzlich wahr – doch es gibt Regler, mit denen ein nachteiliger Effekt zumindest gemildert, wenn nicht auch bis zu einem gewissen Grad ganz vermieden werden kann.</p>
+<p>Mehr Entwickler konflikfrei und nutzbringen zu beschäftigen, so dass sie den Engpass wirklich weiten, ist nicht unmöglich. Allerdings ist dafür Planung notwendig. Wer die Kapazität mit Scale-out erhöhen will, tut daher gut daran, den Entwicklungsprozess zu systematisieren und eine entsprechende Arbeitsorganisation vorzunehmen.</p>
+<p>Die meisten Projekte sind in dieser Hinsicht noch schlecht aufgestellt. Sie planen die Softwarestrukturen nur ungenügend und allemal nicht mit Blick auf ein Scale-out. Deshalb fällt es ihnen schwer, diesen Weg zur Kapazitätserhöhung gehen zu können.</p>
+<p>Ohne vernünftige Architektur, Modellierung und darauf basierend eine Arbeitsorganisation für “Multi-Core-Entwicklung” nutzt mehr Entwicklerpersonal wirklich kaum oder ist gar hinderlich.</p>
+<p>Scale-out scheint so einfach zu sein. In Wirklichkeit ist Scale-out jedoch nur für fortgeschrittene Teams, die ihre Produktion systematisch betreiben und im Griff haben. Beim Hausbau mögen doppelt soviele Maurer ganz einfach die Bauzeit verkürzen. Bei der Softwareentwicklung geht es nicht so direkt – ist jedoch nicht prinzipiell unmöglich.</p>
+<p>Prozessschritte, die noch nicht besetzt sind, sollten besetzt werden. Darüber hinaus allerdings Zurückhaltung beim “Entwicklerkauf”.</p>
+<h5>Scale-Up</h5>
+<p>Vor dem Zukauf von Kapazität steht die Entwicklung der vorhandenen Kapazität. Statt mehr Entwickler lieber die vorhandenen besser machen. Das hat übrigens einen zwiefachen Effekt: Nicht nur erhöht sich damit die Kapazität der Entwickler, so dass dieselben mehr verkaufbares Neues pro Zeiteinheit schaffen können. Es erhöht sich auch die Motivation und damit die Bindung ans Unternehmen. Und das ist unschätzbar, da Fluktuation einer der größten Geldverschwendungsposten ist. In einer nicht trivialen Domäne kostet der Verlust eines eingearbeiteten Entwicklers schnell 100.000 EUR und mehr.</p>
+<p>Man rechne also einmal: Wenn alle 2 Jahre ein Entwickler geht, dann kostet es im Schnitt pro Jahr 50.000 EUR, einen neuen Entwickler einzuarbeiten. Falls irgendeine Maßnahme nun dafür sorgt, dass nur noch alle 4 Jahre ein Entwickler das Team verlässt, dann kostet sein Ersatz im Schnitt nur noch 25.000 EUR pro Jahr. Jede Maßnahme, für die weniger als 25.000 EUR pro Jahr aufgewandt werden muss, um die Fluktuationsfrequenz von 2 auf 4 Jahre zu senken, ist damit ihr Geld wert.</p>
+<p>Entwickler besser zu machen, ist so eine Maßnahme, sogar eine mit doppeltem Effekt. Verbesserung sollte also ganz oben auf der Prioritätenliste jedes Entscheiders stehen. Die Mittel dazu sind vielfältig. Manche kosten gar nichts oder wenig, andere kosten mehr. Am Ende macht es der Mix. Regelmäßige Fachlektüre gehört dazu wie der regelmäßige Austausch mit anderen Entwicklern (online in Diskussionsgruppen oder offline bei User Groups), ebenso der Besuch von Konferenzen und Trainings.</p>
+<p>Trainings für Methoden sind hierbei solchen für Technologien vorzuziehen. Der Grund: Technologien lassen sich leichter allein lernen, da das Feedback, ob man es schon gelernt hat, unmittelbar von der Maschine kommt. Entweder hat man WPF, WCF, WF usw. richtig bedient oder nicht. Bei Methoden jedoch, bei neuen Verhaltensweisen, da ist solches Feedback schwerer oder nur verzögert zu erhalten. Autodidaktentum hilft in diesen Fällen nur begrenzt. Besser ist es, wenn man sich von Erfahrenen/Lehrern in das Thema einführen und beobachten lässt.</p>
+<p>Fortbildung allein ist aber nicht alles. Die legt nur den Samen für Kapazitätswachstum. Zur Fortbildung müssen Spielräume (im doppelten Sinne) treten. Eigentlich soll die Softwareentwicklung eines: performen. Das ist wie die Aufführung für einen Künstler. Da darf es keine Patzer geben.</p>
+<p>Aber natürlich kann das ein Entwickler genauso wenig wie ein Künstler aus dem Stand. Also ist wie beim Künstler auch Übung notwendig. Wer performen soll, der muss Zeit zum Üben bekommen; allemal Neues muss erst geübt werden, bevor es in der Produktion für den Kunden zum Einsatz kommt. Wer top fit sein und bleiben will, für den ist Freiraum zum Lernen wichtig; ein Raum, in dem Fehler gemacht werden können und sollen. Nur so kann am Engpass die nötige Leistung gebracht werden.</p>
+<p>Aber Achtung: Es wäre ein Fehlschluss zu glauben, dass Fortbildung unnötig sei, wenn man mit geringerer Performance zufrieden ist. Fehlende Kompetenz führt nämlich nicht einfach nur zu geringerer Geschwindigkeit, sondern auch noch zu geringerer Qualität. Fehlende Kompetenz ist eine doppelte Bremse. Ein halb so guter Entwickler ist nicht nur halb so schnell, sondern unterm Strich wahrscheinlich nur ein viertel so schnell wie ein guter Entwickler.</p>
+<p>Ich behaupte daher mal: Es gibt eine inverse Korrelation zwischen Fortbildungskultur und Druck im Team. Wird Fortbildung groß geschrieben, dann ist der Druck eher gering – und umgekehrt. Dazu fällt mir ein, <a rel="noopener" href="http://www.amazon.de/Wenn-eilig-hast-gehe-langsam/dp/3593376652">“Wenn du es eilig hast, gehe langsam.”</a> Wer ein hochperformantes Team will, der muss Zeit für Fortbildung und anschließendes Üben einräumen, auch wenn das die so wertvolle Kapazität des Engpasses scheinbar reduziert.</p>
+<p>Investition in Verbesserung ist kontraintuitiv: Da wird Geld ausgegeben für Zeit, die bei der Produktion von Nützlichem fehlt und am Ende ist dann alles besser?</p>
+<p>Ja. Definitiv. So ist das (Aus)Bildung. Erst stecken wir in Kinder und Jugendliche ja auch mehr als ein Jahrzehnt an Ausbildung, bevor Unternehmen mit ihnen Geld verdienen. Und danach hört der Kausalzusammenhang zwischen “mehr Bildung” und “mehr Wertschöpfung” ja nicht einfach auf. Das kann nur glauben, wer auch glaubt, dass die Softwareentwicklung ein eher statisches Geschäft ist, vielleicht wie die Maurerei oder die Arbeit an der Brötchentheke. Das Gegenteil ist jedoch der Fall. Also kann die Konsequenz nur lauten: Wer auch nur gut bleiben will, muss eine Lernkultur im Unternehmen etablieren. Lernen darf nicht zum Privatvergnügen verkommen.</p>
+<p>Doch nicht nur Fortbildung sorgt für Kapazitätssteigerung. Jede Reduktion von Gängelung weckt Kapazitätspotenziale bei Entwicklern. Denn wer unter Druck steht – und das tut der Engpass ja ständig –, der kann damit besser umgehen, wenn er im Gegenzug Autonomie bekommt, um zu entscheiden, wie er mit dem Druck am bekömmlichsten umgeht.</p>
+<p>Kontraproduktive Gängelungen sind z.B. die Fixierung von Ort und Zeit für die Arbeit für alle. “Gearbeitet wir in diesem Büro zu diesen Konditionen in diesen Zeiträumen.” Das ist normal, deshalb aber nicht der Motivation förderlich. Warum sollen Entwickler sich nicht selbst organisieren in Bezug auf Arbeitszeit und Ort – solange die Resultate stimmen? Dieser Gedanke ist nicht neu, seine Gefolgschaft unter dem Banner <a rel="noopener" href="http://en.wikipedia.org/wiki/ROWE">ROWE</a> wächst. Es winken mehr Produktivität und größere Zufriedenheit.</p>
+<p>Oder wie wäre es, die Softwareentwicklung nicht mehr in ein Budget zu zwingen? Es ist eine vergleichsweise preiswerte Anreizmaßnahme, Entwicklern zuzugestehen, dass sie alles, was sie meinen, für ihre Arbeit zu brauchen, auch anschaffen dürfen. Ja, alles. Wer meint, 3 Monitoren seien besser als 2 für seine Tätigkeit, der sollte darüber nicht lange diskutieren müssen. ReSharper für alle? Klar. Eine Lavalampe als Signal für den Buildprozesserfolg? Kein Problem. Laptops mit 256 GB SSD für jeden? Absolut. Noch ein Fachbuch, noch eine Fachzeitschrift? Immer her damit.</p>
+<p>Vertrauen Sie darauf, dass der Engpass diese Befreiung nicht ausnutzt. Ich habe noch keinen Entwickler gesehen, der den Bogen überspannt hat. Allemal als Experiment sollte jedes Unternehmen sich darauf einmal einlassen.</p>
+<p>Wie gesagt, es winkt doppelter Gewinn für die Reduktion von Gängelungen: nicht nur stärkere Bindung entsteht – Wer würde nicht um alles in der Welt in einem Unternehmen arbeiten wollen, in dem er arbeiten kann wann und wo er will und auch noch alle Gadgets/Tools bekommt, die er sich erträum? –, nicht nur wird das Unternehmen attraktiver und zieht bessere Leute an, es steigt einfach die Motivation und damit der Arbeitseinsatz in der vorhandenen Zeit.</p>
+<p>Boni sind untaugliche Anreize; aber ein Milieu, eine Kultur der Autonomie, der Selbstorganisation, der Orientierung am Resultat ist sehr reizvoll. Echte Wertschätzung in Form von Vertrauen ist am Ende billiger und bindender als jeder Bonus.</p>
+<h3>Zwischenstand</h3>
+<p>Puh, das ist ein langer Artikel geworden. Aber irgendwie hängt alles zusammen am Engpass. Ich habe keine rechte Sollbruchstelle gesehen, wo ich ihn hätte auftrennen können.</p>
+<p>Wer seine Softwareentwicklung verbessern will, der muss am Engpass ansetzen. Meist ist das die Softwareentwicklung. Also, was tun, vor allem, wenn der Engpass auf unterschiedlichen Abstraktionsebenen existiert? Es gibt eine Menge Ansatzpunkte.</p>
+<p>Als erstes sind alle Produktionsschritte zu besetzen. Das ist in den meisten Teams die vordringlichste Aufgabe. Wo kein Entwurf, kein Review, keine Qualitätssicherung existiert, da muss überhaupt mal die Produktionsmaschine angeworfen werden.</p>
+<p>Aber danach geht es los mit der Verbesserung des Input für den Engpass, seiner Ausnutzung, seiner Qualität und schließlich der Kapazitätssteigerung.</p>
+<p>Bleibt nur die Frage, was sich dann am meisten lohnt? Und wie das alles bezahlen? Verbesserungen kosten doch erstmal Geld. Dazu beim nächsten Mal mehr. Dann binde ich den Produktionsfluss an das liebe Geld an. Denn ultimativ muss sich jede Veränderung am Geld messen. Jede Veränderung muss ja dem Ziel des Unternehmens dienen: Geld verdienen heute und in der Zukunft.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e773cdfec4daf1b9.gif" /></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

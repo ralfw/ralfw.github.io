@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wider die Geißeln zukunftsfähiger Software: Abhängigkeiten und Synchronizität — ralfw.de Archiv</title>
+<meta name="description" content="Was macht Software so schwer zu evolvieren? Abhängigkeiten. Was beschränkt den Nutzen morgiger Prozessorgenerationen für heutige Software: Synchronizität.">
+<link rel="canonical" href="https://ralfw.de/archiv/2009/wider-die-geieln-zukunftsfahiger/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Wider die Geißeln zukunftsfähiger Software: Abhängigkeiten und Synchronizität — ralfw.de Archiv">
+<meta property="og:description" content="Was macht Software so schwer zu evolvieren? Abhängigkeiten. Was beschränkt den Nutzen morgiger Prozessorgenerationen für heutige Software: Synchronizität.">
+<meta property="og:url" content="https://ralfw.de/archiv/2009/wider-die-geieln-zukunftsfahiger/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Wider die Geißeln zukunftsfähiger Software: Abhängigkeiten und Synchronizität</h1>
+    <div class="doc-meta"><span>20. Juni 2009</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2009/06/wider-die-geieln-zukunftsfahiger.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2009/wider-die-geieln-zukunftsfahiger/</code></span></div>
+    <div class="art"><p>Was macht Software so schwer zu evolvieren? Abhängigkeiten. Was beschränkt den Nutzen morgiger Prozessorgenerationen für heutige Software: Synchronizität.</p>
+<p>Funktionseinheiten, die von anderen abhängig sind, die insofern einen bestimmten Kontext voraussetzen, lassen sich mühsamer weiterentwickeln als solche, die frei und unabhängig sind. Möglichkeiten zur Abhängigkeit gibt es natürlich viele und nicht alle lassen sich immer kappen. Aber das Streben nach immer geringerer Kopplung lohnt sich - wenn Evolvierbarkeit gefragt ist. Wo hingegen zweifelsfrei Effizienz nötig ist, da müssen womöglich Kopplungen eng bleiben oder gar enger werden. Im Zweifelsfall bin ich jedoch der Meinung, dass unsere Software heute eher unter zu engen, als zu losen Kopplungen leidet.</p>
+<p>Funktionseinheiten, die synchron arbeiten, arbeiten notwendig auch sequenziell. Von einer steigenden Zahl an Prozessorkernen können sie nicht profitieren. Die nützen ja nur, wenn es auch etwas parallel auszuführen gibt.</p>
+<p>Abhängigkeiten und Synchronizität stehen uns also im Weg bei unserer Reise in eine glücklichere Softwarezukunft. Was tun? Ich beschreibe mal ein paar Gedanken anhand eines Beispiels. Hier etwas synchroner und abhängiger Code:</p>
+<blockquote>
+<p>class MyBusinessLogik : IBusinessLogik
+{
+    IDatenquelle dq;
+    IDatensenke ds;
+    IValidator v;     public BusinessLogik(IDatenquelle dq, IDatensenke ds, IValidator v)
+    {
+        this.dq = dq;
+        this.ds = ds;
+        this.v = v;
+    }     public int Aktualisiere(Parameter p)
+    {
+        v.Validiere(p);
+        Datencontainer dc = this.datenquelle.LadeDaten(p.Query);
+        int n = AktualisiereDaten(dc, p.Request);
+        this.datensenke.SpeichereDaten(dc);
+        return n;
+    }    private int AktualisiereDaten(Datencontainer dc, Aktualisierungsanfrage req) { ... }
+}</p>
+</blockquote>
+<h5>Statische und dynamische Abhängigkeiten</h5>
+<p>Der Code ist statisch und dynamisch abhängig von anderen Funktionseinheiten:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/3ec01a846cd52b58.png" /></p>
+<p>Diese statischen Abhängigkeiten der Businesslogik sind statisch in der Businesslogik-Implementation verdrahtet. Das ist ein Punkt, den es deutlich herauszustellen gilt. Ausdruck der statischen Abhängigkeiten sind die Felder der Klasse MyBusinessLogik und die Aufrufe von Methoden auf deren Instanzen.</p>
+<p>Die dynamischen Abhängigkeiten hingegen, sind nicht in der Businesslogik-Implementation zu finden. Sie kennt nur abstrakte Dienstleister wie IDatenSenke oder IValidator. Die zur Laufzeit relevanten Implementationen, werden ihre hingegen über den Ctor injiziert.</p>
+<p>In puncto Abhängigkeiten hat also schon eine gewisse Separation of Concerns (SoC) stattgefunden: die laufzeitrelevante Bindung übernimmt eine andere Codeeinheit.</p>
+<p>Vollständig ist die SoC allerdings nicht. Denn - wie gesagt - die BusinessLogik hat neben ihrer funktionalen Aufgabe auch noch eine nicht-funktionale: die statische Bindung. Ihr dienen die Felder und die Aktualisiere()-Methode. Ihre funktionale Aufgabe erfüllt AktualisiereDaten().</p>
+<p>Während der Code also durch Injektion konkreter Abhängigkeiten gegenüber der früheren Praktik evolvierbarer geworden ist, weil er nicht mehr an Implementationen gebunden ist. So ist die Kopplung noch nicht wirklich lose. Die statischen Abhängigkeiten halten ihn starr. Das schränkt seine Evolvierbarkeit ein.</p>
+<h5>Synchronizität und Sequenzialität</h5>
+<p>Dass die BusinessLogik synchron und sequenziell ist, liegt auf der Hand. Ohne Hilfsmittel kann sie in C# nicht definiert werden. Ein Aufrufer von Aktualisiere() muss also auf das Ergebnis warten. Und während Aktualisiere() läuft, kann ein Prozessor nichts anderes tun; andere Aufgaben, andere Programme müssen auch warten. (Preemptives Multitasking lasse ich hier außen vor. Damit kann zwar doch quasi-parallel weiteres geschehen, aber jede zusätzliche Aufgabe verlangsamt alle schon laufenden.)</p>
+<p>Auf innerhalb der BusinessLogik gibt es keine Parallelität. Mehrere Prozessorkerne bringen hier überhaupt keinen Nutzen. Es könnte ja sein, dass Laden, Verarbeiten und Speichern der Daten im Rahmen der Aktualisierung zumindest überlappen dürfen. Während noch Daten geladen werden, kann die Verarbeitung schon beginnen. Und während die Verarbeitung noch läuft, können erste Ergebnisse schon gespeichert werden.</p>
+<p>Die synchrone Notation einer Sprache wie C# lässt das jedoch ohne Hilfsmittel nicht zu. Und weil wir letztlich "in C# denken", kommen wir auch nicht so recht auf die Idee, dass es auch anders sein könnte. Die beschränkten Ausdrucksmttel von C# stehen für uns zu sehr im Vordergrund. Das objektorientierte, synchrone Programmierparadigma ist wie ein Korsett um unsere Vorstellungen.</p>
+<p>Das schränkt den Nutzen ein, den die Software, zu der die BusinessLogik gehört, aus der zukünftig wachsenden Zahl an Prozessorkernen ziehen kann.</p>
+<h5>Ausweg Asynchronizität</h5>
+<p>Ich glaube nun, dass uns ein anderes Paradigma einen Weg aus dieser beschränkten Zukunftsfähigkeit weisen kann. Durch asynchrone Programmstrukturen können wir beide Fliegen mit einer Klappe schlagen. Und das geht so:</p>
+<h6>1. Abhängigkeiten beseitigen</h6>
+<p>Im ersten Schritt schütteln wir auch noch die statischen Abhängigkeiten ab. Oder genauer: Wir separieren den Aufbau von Abhängigkeiten komplett von der problemdomänenorientierten Funktionalität. Dazu führe ich mal den Begriff "Prozessdefinition" ein. Ich trenne die Abfolge von Arbeitsschritten ganz klar von den Arbeitsschritten selbst. Alle Arbeitsschritte werden damit frei von Abhängigkeiten:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c9478178d0c1cf45.png" /></p>
+<p>Die BusinessLogik v2 enthält jetzt nur noch die Funktionalität von AktualisiereDaten()! Aufgabe der Prozessdefinition ist es nun, die Arbeitsschritte ohne Abhängigkeiten in eine nützliche Reihenfolge zu bringen. Dass sie selbst viele Abhängigkeiten enthält, ist nicht schlimm. Sie ist im Vergleich zu den Arbeitsschritten trivial.</p>
+<p>Dynamische und statische Abhängigkeiten stehen damit auf derselben Stufe: sie sind separierte Concerns.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/776221fff6dc7ddd.png" /></p>
+<p>Die Konsequenz solcher Beseitigung von Abhängigkeiten ist, dass Funktionalität nicht mehr geschachtelt ist. Funktionalität der Problemdomäne wie die BusinessLogik oder auch Infrastrukturfunktionalität wie eine Datenquelle sind Blätter im Abhängigkeitsbaum. Ergebnisse reichen sie also nicht tiefer hinunter in einem Aufrufbaum. Unter ihnen gibt es ja keine Ebene mehr. Stattdessen sind Ergebnisse immer Rückgabewerte in irgendeiner Form. Nur wer die Funktionalität aufruf bzw. sie zusammengesteckt hat, weiß ja, was weiter mit Ergebnisse geschehen soll. Die Wiederverwendbarkeit ist damit gestiegen.</p>
+<h6>2. Vom Callstack zum Fluss</h6>
+<p>Wenn nun alle Funktionalitäten ohne Abhängigkeiten sind, dann sind wir plötzlich sehr frei, was ihre Verschaltung angeht. Müssen wir sie denn wirklich noch synchron "ineinanderstecken"?</p>
+<p>Hier aber zunächst ein erster Schritt. Ich nehme die refaktorisierten Funktionalitäten 1:1 und füge sie zu einem Prozess zusammen. Eine Funktion scheint mir da der passende Ausdruck für einen Prozess. In den geht etwas hinein und am Ende kommt etwas heraus.</p>
+<blockquote>
+<p>class Prozessdefinition
+{
+    public Func</p>
+</blockquote>
+<p>Prozess { get; private set; }     public Prozessdefinition(IDatenquelle dq, IDatensenke ds, IValidator v, IBusinessLogikV2 blv2)</p>
+<blockquote>
+<p>{
+        this.Prozess = new Func(p =&gt;
+           {
+               v.Validiere(p);
+               Datencontainer dc = dc.LadeDaten(p.Query);
+               int n = blv2.AktualisiereDaten(dc, p.Request);
+               ds.SpeichereDaten(dc);
+               return n;
+           });
+    }
+}</p>
+</blockquote>
+<p>Soweit das synchrone Programmierparadigma. Um weiter zu kommen, ist nun eine Richtungsänderung nötig. Asynchrones Denken und codieren ist nötig. Dafür zunächst eine etwas andere Darstellung der Funktionseinheiten:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/adf300a4e5db8ed6.png" /></p>
+<p>Die Funktionseinheiten haben immer noch keine Abhängigkeiten untereinander. Aber es ist ihnen nun deutlich anzusehen, was reingeht und was rauskommt. Eine implementationsunabhängige Darstellung im Sinne von EVA (Eingabe-Verarbeitung-Ausgabe).</p>
+<p>Das bisherige Abhängigkeitsdiagramm war nicht so detailliert. Darin war nur zu sehen, ob eine Funktionalität von einer anderen abhängig ist. Indem nun die Funktionalitäten aber darstellen, wie man von ihnen abhängig sein kann, ist Klarheit gewonnen. (Dass ich Ausgaben bei Validator und Datensenke eingeführt habe, ist hier vernachlässigbar. Sie machen den späteren asynchronen Prozess etwas einfacher.)</p>
+<p>Die Prozessdefinition ist nun nicht mehr in einer Black Box eingeschlossen, sondern kann im Grunde das trivial gewordene Abhängigkeitsdiagramm ersetzen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/76920426198ff6c7.png" /></p>
+<p>Diese Grafik zeigt nicht nur die grundsätzlichen Zusammenhänge der Funktionsbausteine, sondern auch den Zweck, zu dem sie zusammenhängen: die Abarbeitungen eines Prozesses. Und bitte im Hinterkopf behalten: Die Funktionsbausteine haben keine statischen Abhängigkeiten mehr. Ihre dynamische Zusammenarbeit im Prozess sieht man ihnen selbst nicht an. Die ist Sache des Prozesses.</p>
+<p>Jetzt der Trick: Wenn der Prozess erstmal so dargestellt ist und eben nicht sofort als Code wie in der obigen ersten Prozessdefinition, dann... ja, dann ist es leicht, von einer synchronen Kopplung abzusehen. Warum sollte ich dies:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/df5fe0e28c53f6bd.png" /></p>
+<p>übersetzen in jenes:</p>
+<blockquote>
+<p>if (v.Validiere(p))
+{
+    Datencontainer dc = dq.LadeDaten(p.Query);
+    ...</p>
+</blockquote>
+<p>Das Prozessdiagramm ist aber nicht zu verwechseln mit einem simplen Flowchart, das auch ein Kind des synchronen Programmierparadigmas ist. Es ist allgemeiner als Fluss zu verstehen: Die Funktionseinheiten sind verbunden zu einem Fluss, auf dem Daten zwischen ihnen als Verarbeitungsstationen fließen.</p>
+<h6>3. Asynchrone Flüsse</h6>
+<p>Die Darstellung eines Prozesses bietet nun die Chance, das Paradigma zu wechseln. Die Frage ist nur, wie kann solch bisher synchroner, sequenzieller Code in asynchronen, sequenziellen oder parallelen Code gewandelt werden?</p>
+<p>Der Schlüssel liegt in expliziten Verbindungsstücken!</p>
+<p>Bei der üblichen synchronen Programmierung sind die Funktionsbausteine quasi aneinandergeschweißt. Die ursprüngliche BusinessLogik war untrennbar verbunden mit einem Validator usw. Sie bildeten eine Einheit - auch wenn die konkreten Abhängigkeiten erst zur Laufzeit dynamisch eingespritzt wurden.</p>
+<p>Das ist zwar effizient - aber eben auch inflexibel. Und es ist synchron. Damit steht solche Verschweißung der Evolvierbarkeit im Wege.</p>
+<p>Ganz anders das Bild, wenn die Funktionsbausteine nicht verschweißt, sondern verschraubt sind. Mit expliziten Verbindungsstücken - wieder eine Separation of Concerns - können Beziehungen viel flexibler aufgebaut werden.</p>
+<p>Ein Mittel dafür sind die Ports der <a rel="noopener" href="http://msdn.microsoft.com/en-us/library/bb648752.aspx">Microsoft Concurrency Coordination Runtime (CCR)</a>. Mit ihnen ließe sich ein Prozess ganz anders beschreiben. Aus den bisherigen synchronen Methoden</p>
+<blockquote>
+<p>interface IValidator
+{
+    bool Validiere(Parameter p);
+} interface IDatenquelle
+{
+    Datencontainer LadeDaten(string query);
+}</p>
+</blockquote>
+<p>könnten solche werden:</p>
+<blockquote>
+<p>void Validiere(Parameter p, Port output) {...} void LadeDaten(string query, Port output) {...}</p>
+</blockquote>
+<p>Ich habe sie aus zwei Gründen nicht in eine Klasse oder ein Interface eingetragen: Zum einen möchte ich an dieser Stelle keine bestimmte Lösung jenseits explizit verbundener Funktionsbausteine vorschlagen. Auch die CCR Ports sind nur eine mögliche Variante für explizite "Schraubverbindungen". Zum anderen sollen die beiden freigestellten Routinen unterstreichen, dass Funktionale Programmierung - also die Konzentration auf Funktionen statt Klassen - einen Beitrag leisten kann, um Software zukunftsfähig zu machen.</p>
+<p>Die Übersetzung einer bisher synchronen Methode könnte mit Ports also geradlinig sein: Eingabeparameter bleiben, Rückgabewerte werden ersetzt durch einen Output-Port. Der ist mit der nächsten Verarbeitungsstation verbunden. Zu jeder Methode gehört also ein Port für die Eingabe. Für die obige Methode Validiere() könnte das in vereinfachter und roher Form so aussehen:</p>
+<blockquote>
+<p>Port pOutput = ...; var pValidiere = new Port</p>
+</blockquote>
+<p>();</p>
+<blockquote>
+<p>pValidiere.ReceiveSequentially(p =&gt; Validiere(p, pOutput));</p>
+</blockquote>
+<p>Der Port für die Ausgabe, der gehört dann zum nächsten Arbeitsschritt im Prozessfluss.</p>
+<p>Die Methode ReceiveSequentially() ist eine Extension Method für Ports, die ich mir ausgedacht habe. Sie bindet einen Eventhandler so an einen Port, dass immer nur ein Element zur Zeit verarbeitet wird. Das sichert eine sequenzielle, allerdings asynchrone Verarbeitung durch die Stationen in einem Prozessfluss zu. Bei Bedarf können Stationen aber natürlich auch parallel verarbeiten. Ihre vielen Ergebnisse müssen dann nur auch wieder eingesammelt werden. <a rel="noopener" href="http://de.wikipedia.org/wiki/MapReduce">Map-Reduce</a> ist dafür ein berühmtes Beispiel.</p>
+<p>Viel wichtiger als Parallelität ist jedoch die Asynchronizität. Dadurch, dass Arbeitsschritte jetzt explizit über puffernde Ports gekoppelt sind, geben sie immer wieder ihre Prozessorressource (Thread auf einem Kern) frei. Das skaliert wunderbar. Es ist kooperatives Multitasking, das alle Kerne oder potenziell auch viele Maschinen überspannt.</p>
+<p>Damit ist das eingangs beschriebene Ziel im Grunde erreicht: Die Abhängigkeiten sind minimiert, der Umgang mit ihnen ist herausfaktorisiert. Und die Asynchronizität ist eingeführt. Damit ist der Code zukunftsfähiger geworden:</p>
+<ul>
+<li>Viele Flüsse können in dieser Weise gut skalierbar abgehandelt werden und nutzen dabei alle Prozessorkerne. (Und falls es mal nicht viele Flüsse durch die Last auf einem Rechner zu bearbeiten geben sollte, dann zeige ich in einem späteren Blog-Posting, wie so ein unterforderter Rechner anderen seine Leistung anbieten kann.)  Abhängigkeitsfreie Funktionseinheiten lassen sich viel einfacher weiterentwickeln und neu kombinieren.</li>
+</ul>
+<h5>Technische Umsetzung mit Notationsschwierigkeiten</h5>
+<p>Jetzt aber noch kurz konkret zur Umsetzung des obigen Prozesses:</p>
+<ul>
+<li>Es kommen Parameter an, die in mehreren sequenziellen Schritten durch einen Prozess laufen sollen.  Am Anfang werden die Parameter validiert. Nur wenn die Validation erfolgreich ist, werden sie zum Laden von Daten weitergeschickt. Ein Fork-Station spaltet die Daten dafür auf: sie werden gleichzeitig zur Validation und zu zwei Joins weitergeleitet.  Der erste Join führt das Ergebnis der Validation und die Query in den Parametern zusammen und leitet die Query weiter an die Datenbeschaffung - aber natürlich nur, wenn die Validation erfolgreich war. Validation und Datenbeschaffung laufen also nicht parallel, sondern immer noch sequenziell.  Nach der Datenbeschaffung führt ein weiterer Join deren Ergebnis (Datencontainer) und die Parameter zusammen und leitet beide weiter an die eigentliche Geschäftslogik.  Die Geschäftslogik verändert die Daten und reicht sie weiter zum Speichern. Gleichzeitig erzeugt sie ein Ergebnis (z.B. Anzahl veränderter Datensätze), das jedoch nur am Ende aus dem Prozess herauskommt, wenn auch die Datenspeicherung erfolgreich war.</li>
+</ul>
+<p>Dieses Szenarion mit Ports zu bauen, ist nicht schwierig. Es ist nur etwas umständlich. Eine wirklich gute textuelle Notation oder ein Fluent Interface, dass gerade diese Fork-Join-Kombinationen plastisch macht, ist mir noch nicht eingefallen.</p>
+<p>Ohne Fork-Join oder auch Scatter-Gather oder Select/Choice und andere Muster, bei denen mehrere Ports beteiligt sind, wäre es einfach. Mit Pipes könnte ein vereinfachter Fluss ohne Fork-Join so aussehen:</p>
+<p>Validator | Datenquelle | BusinessLogikv2 | Datensenke</p>
+<p>Jede Station würde ihre Ergebnisse einfach nur weiterschieben an die nächste. Allerdings müsste z.B. der Validator alle Parameter weitergeben und nicht nur sein boolean-Resultat, weil ja nachfolgende Stationen davon mehr oder weniger für ihre Arbeit brauchen.</p>
+<p>Etwas realistischer ließe sich so ein Fluss auch mit einem Fluent Interface beschreiben, z.B.</p>
+<blockquote>
+<p>new Stage</p>
+</blockquote>
+<p>(Validiere)</p>
+<blockquote>
+<p>.Stage&gt;(LadeDaten)
+    .Stage, Tupel&gt;(Aktualisieren)
+    .Stage, int&gt;(SpeichereDaten);</p>
+</blockquote>
+<p>Dabei stehen die generischen Typparameter von Stage für den Typ des Input- und des Output-Ports. Als Verarbeitungsschritt wird dann Action erwartet.</p>
+<p>Die Schwierigkeit der Notation - nicht der Technologie! - beginnt jedoch, wenn Flüsse sich teilen und wieder zusammenfließen.</p>
+<p>Die Fork am Anfang des obigen Prozesses ließe sich so formulieren:</p>
+<blockquote>
+<p>var fork = new Fork</p>
+</blockquote>
+<p>(</p>
+<blockquote>
+<p>(i, o0, o1, o2) =&gt; {oo.Post(i); o1.Post(i.Query); o2.Post(i);});</p>
+</blockquote>
+<p>Der erste Typparameter definiert den Input-Typ, die weiteren die Typen für die Output-Ports, d.h. die Input-Ports der nachfolgenden Schritte. Die Aufgabe des Lambda-Funktion ist also die Aufspaltung oder Verteilung des Input auf die Outputs.</p>
+<p>Die einzelnen Verarbeitungsschritte sind ebenfalls für sich genommen leicht zu formulieren:</p>
+<blockquote>
+<p>var val = new Stage</p>
+</blockquote>
+<p>(Validiere);</p>
+<blockquote>
+<p>var laden = new Stage(LadeDaten);
+var akt = new Stage,
+                                          Datencontainer, int&gt;(Aktualisieren);
+var speichern = new Stage, int&gt;(SpeichereDaten);</p>
+</blockquote>
+<p>Und wie die Joins formulieren, die Zusammenführungen von mehreren Flussarmen?</p>
+<blockquote>
+<p>var joinFürLaden = new Join((i0, i1, o0) =&gt; oo.Post(i1)); var joinFürLogik = new Join&gt;(
+    (i0, i1, oo) =&gt; oo.Post(new Tupel(i0, i1))); var joinFürEnde = new Join((i0, i1, oo) =&gt; oo.Post(i1));</p>
+</blockquote>
+<p>Zum Schluss noch die Prozessschritte "zusammenstöpseln":</p>
+<blockquote>
+<p>fork.Output[0] = val;
+fork.Output[1] = joinFürLaden.Input[1];
+fork.Output[2] = joinFürLogik.Input[1]; val.Output = joinFürLaden.Input[0]; joinFürLaden.Output = laden; laden.Output = joinFürLogik.Input[0]; joinFürLogik.Output = akt; akt.Output[0] = speichern;
+akt.Output[1] = joinFürEnde.Input[1]; speichern.Output = joinFürEnde.Input[0];</p>
+</blockquote>
+<p>Der Input geht dann in den Prozess bei fork.Input hinein und das Ergebnis kommt bei joinFürEnde.Output heraus. Das ist technologisch nicht kompliziert - aber die vorstehende Formulierung ist sicher nicht so gut zu lesen wie die synchrone Variante ganz am Anfang.</p>
+<p>Was tun? Hier ist wahrscheinlich eine DSL angezeigt. Eine textuelle könnte schon ein wenig Erleichterung bringen; am Ende geht es aber wohl nicht ohne Diagramme. Ja, das wäre doch mal was: Eine grafische DSL mit einem hübschen Designer, die aus solchen Prozessdiagrammen eine Assembly produziert, die wir nur noch mit Prozessschritten parametrisieren müssen, wenn das nicht schon der Designer getan hat, weil wir ihm Referenzen auf Prozessschritte übergeben haben.</p>
+<p>Ist das dann nicht aber die Microsoft Workflow Foundation neu erfunden? Nein. Die Prozesse, von denen ich hier geschrieben habe, sind leichtgewichtiger. Sind sollen nicht lange laufen. WF scheint mir da Overkill.</p>
+<p>Und vielleicht... findet sich ja doch auch noch eine textuelle Beschreibung z.B. in Form eines Fluent Interface? Das würde mir sehr gefallen.</p>
+<p>Aber all dessen ungeachtet ist mir an dieser Stelle wichtig gezeigt zu haben (oder zumindest laut gedacht zu haben), dass asynchrone explizite Kopplung mit soetwas wie CCR Ports hilft, Software zukunftsfähig in zweierlei Hinsicht zu machen. Wer asynchrone Prozesse denkt, der geht anders mit Abhängigkeiten um und macht Software fit für Mehrkernprozessoren. Da müssen wir gar nicht erst auf Axum &amp; Co warten. Das geht hier und heute.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2009-06-22):</p>
+<p>und schon sehr lange ...
+http://erlang.org/  :-)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-06-22):</p>
+<p>@Anonym: Klar. Aber Erlang hilft nicht so recht, wenn man tief im .NET-Code steckt.</p>
+<p>Ich beschäftige mich auch mit Erlang - aber für eine Interop mit .NET sehe ich nicht so die breite Basis. Es geht, aber ist nicht massentauglich.</p>
+<p>Danach suche ich jedoch: massentauglich zukunftsfähige Software herstellen können.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Laurin Stoll</strong> (2009-07-17):</p>
+<p>Das klingt sehr spannend. Aber ist, wie du selbst sagst, noch nicht massentauglich. Ich finde die Leserlichkeit hat doch arg gelitten. Da lieber synchron und langsam, dafür lesbar und verständlich. Das Prinzip ist bestechend, aber einfach noch nicht gut zu realisieren.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

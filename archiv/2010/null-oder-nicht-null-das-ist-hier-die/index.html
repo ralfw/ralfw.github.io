@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Null oder nicht Null, das ist hier die Frage — ralfw.de Archiv</title>
+<meta name="description" content="Sollte man Null als Ergebnis einer Abfrage zurückgeben oder nicht? Diese Frage ergab sich anlässlich eines Blogartikels von Thomas Bandt, der in ein Problem gelaufen war, seiner Ge">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/null-oder-nicht-null-das-ist-hier-die/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Null oder nicht Null, das ist hier die Frage — ralfw.de Archiv">
+<meta property="og:description" content="Sollte man Null als Ergebnis einer Abfrage zurückgeben oder nicht? Diese Frage ergab sich anlässlich eines Blogartikels von Thomas Bandt, der in ein Problem gelaufen war, seiner Ge">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/null-oder-nicht-null-das-ist-hier-die/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Null oder nicht Null, das ist hier die Frage</h1>
+    <div class="doc-meta"><span>1. Mai 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/05/null-oder-nicht-null-das-ist-hier-die.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/null-oder-nicht-null-das-ist-hier-die/</code></span></div>
+    <div class="art"><p>Sollte man Null als Ergebnis einer Abfrage zurückgeben oder nicht? Diese Frage ergab sich anlässlich eines <a rel="noopener" href="http://blog.thomasbandt.de/39/2331/de/blog/kleiner-helper-fuer-linq-to-sql-tolistordefault-update.html">Blogartikels</a> von Thomas Bandt, der in ein Problem gelaufen war, seiner Gewohnheit folgen zu können, eine Query-Methoden eines Repositories Null zurückliefern zu lassen:</p>
+<blockquote>
+<p>“[Ich] erwarte […] von jeder Methode null als Rückgabewert für den Fall, dass keine Daten in der Datenbank gefunden wurden. Nun ist mir aber beim Testen meiner Repositories […] aufgefallen, dass Folgendes niemals null zurückliefert: […] <em>return […].Select(…).ToList();</em> […]”</p>
+</blockquote>
+<p>Letztlich hat Thomas zwar eine Lösung für sein Problem gefunden, doch ein Nachgeschmack bleibt. Ist das vielleicht nur eine Symptomkur? Ich würde sagen, ja.</p>
+<p>Ob man <em>nie</em> Null zurückgeben darf oder nicht, will ich nicht entscheiden. Solche Allaussagen sind auch selten hilfreich. Soweit stimme ich mit einigen Kommentatoren des Blogartikels überein. Wie steht es allerdings in diesem Fall? Lässt sich im Konkreten doch vielleicht eine saubere Entscheidung treffen?</p>
+<p>Für mich steht außer Zweifel, dass im Falle von Thomas´ Repositories die Entscheidung eindeutig für den Verzicht auf Null als Rückgabewert ausfallen sollte. Als Erklärung vier unterschiedliche Ansätze:</p>
+<ul>
+<li><strong>Philosophisch/Logischer-Blickwinkel:</strong> Eine Liste mit Resultaten und Null gehören unterschiedlichen Kategorien an. Eine Liste ist ein <em>Container</em>, Null ist… nichts oder nur ein generischer Wert, jedenfalls kein Container.<strong>Dass aber eine Methode Ergebnisse aus zwei Kategorien zurückliefert, halte ich für kategorisch falsch.</strong>
+Eine Liste mit Resultaten und eine Liste ohne Resultate (leere Liste) hingegen gehören beide derselben Kategorie <em>Container</em> an.
+<strong>In diesem Fall ist Null ganz kategorisch also nicht erlaubt.</strong> Anders mag das sein, wo eine Funktion <em>object</em> als Resultattyp hat. Der ist so allgemein, dass eine Zeichenkette, eine Zahl, eine Liste oder eben auch Null in seiner Hinsicht derselben Kategorie <em>Wert</em> angehörten.<ul>
+<li><strong>Praktikscher Blickwinkel:</strong> Wer Thomas´ Repository-Query-Methoden benutzt, muss im Code eine Fallunterscheidung treffen. Falls eine Abfragebedingung keine Ergebnisse liefert, muss es zwangsläufig anders weitergehen als mit Resultaten, auch wenn vielleicht nur die Resultate gelistet werden sollen und eine leere Liste am Bildschirm für den Benutzer völlig ok wäre. <strong>Thomas´ Muster für Query-Rückgabewerte macht also im Zweifelsfall mehr Aufwand – ohne einen Gewinn zu bringen.</strong> Falls leere Liste und gefüllte Liste unterschiedlich behandelt werden sollten, ist die Prüfung auf Null und die auf Länge 0 gleich aufwändig.</li>
+<li><strong>Prinzipieller Blickwinkel:</strong> Ich würde sagen, <strong>ein Null-Ergebnis widerspricht dem Principle of Least Astonishment.</strong> Denn wenn ich eine Signatur sehe, die eine Liste als Rückgabewert definiert und dann kommt keine Liste, sondern Null zurück, dann bin ich erstmal ziemlich überrascht. Nicht, dass der Gedanke dahinter kompliziert wäre, nicht dass Thomas das nicht in einem XML-Kommentar erklären könnte – aber eine Überraschung bleibt es und deshalb auch ein zusätzlicher Dokumentationsaufwand.
+Auch ist eine Abfrage mit leerer Ergebnismenge keine Besonderheit. Sie rechtfertigt aufgrund ihrer Erwartbarkeit keine Sonderbehandlung durch Null oder gar eine Exception.</li>
+<li><strong>Analogischer Blickwinkel:</strong> Wenn ein Räuber mich zur Übergabe meines Geldes auffordert, dann gebe ich ihm besser mein Portemonais. Falls im Portemonais kein Geld ist, mag er zwar frustriert sein, doch er kann mich zumindest keines Widerstandes bezichtigen. Hätte ich hingegen geantwortet “Ich habe kein Geld.”, dann würde die Szene in jedem Fall sehr unschön werden, denke ich. Allemal würde er mir ohnehin nicht glauben.
+Die Moral von der Geschicht: <strong>Versuche der Aufforderung eines Räubers nicht differenziert nachzukommen. Antworte platt so, wie er es sich wünscht und du gleichzeitig klar machst, dass deine Antwort ehrlich ist.</strong> Er soll dann selbst aus dem Ergebnis etwas machen.</li>
+</ul>
+</li>
+</ul>
+<p>Soweit mal meine im Grunde doch einfache Lösung des Null-oder-nicht-Null-Problems. Im Zweifelsfall eher auf Null verzichten. Null ist eher “böse” so wie Goto “böse” ist. Und wer das nicht glauben mag, weil Null doch so einfach zu gebrauchen ist, der höre dazu den Erfinder von Null, Tony Hoare, mit seinem <a rel="noopener" href="http://www.infoq.com/presentations/Null-References-The-Billion-Dollar-Mistake-Tony-Hoare">Vortrag “Null References: The Billion Dollar Mistake”</a>.</p>
+<p><a rel="noopener" href="http://www.infoq.com/presentations/Null-References-The-Billion-Dollar-Mistake-Tony-Hoare"></a></p>
+<h2>Kommentare</h2>
+<p><strong>Ilker Cetinkaya</strong> (2010-05-01):</p>
+<p>Ralf,</p>
+<p>ich teile Deine Ansichten bzgl. "Nullified Results" weitestgehend. Ich finde es auch gut, dass Du das aus mehreren Blickwinkeln durchleuchtet hast. Es ist leider oft so, dass NULL nicht mit genug bedacht angewendet wird.</p>
+<p>Ich denke auch, dass es allgemein nicht von Schaden sein kann, NULL zu meiden. In der heutigen Softwareentwicklung ist das auch durchaus mit einer gewissen Stringenz machbar.</p>
+<p>Dennoch möchte ich das <em>kategorische</em> "Nein" hier nicht stehen lassen. Es kann durchaus erwünscht und sinnvoll sein, NULL als Rückgabe oder Zuweisung anzuwenden. Nämlich genau dann, wenn es zu einer nicht mehr annehmbaren Ausnahmesituation kommt. Das ist die erste adequate Anwendung von NULL gewesen.</p>
+<p>Man mag mir entgegnen, dass es heutzutage Exceptions gibt. Ja, gibt es. Aber bitte Ralf, NULL ist ein Konstrukt in C# und kann (wenn auch bitte, bitte nicht oft und unbedacht) angewendet werden.</p>
+<p>Die Anwendung von NULL eignet sich z.B. für intensives traversieren von komplexeren Bäumen oder Abbilden volatiler Kompositionen.</p>
+<p>Dennoch möchte ich nochmal betonen: Ja, du hast Recht, es sollte vermieden werden und es ist im Allgemeinen auch als "böse" einzustufen.</p>
+<p>Ich durfte die Ausführungen von Sir Tony Hoare auf der QCon'9 erleben und denke, dass Null nicht der milliardenschwere Fehler gewesen ist, den Tony Hoare so plakativ und äußerst spannend in seiner Session erklärt hat. Doch das ist eine andere - längere - Geschichte.</p>
+<p>Alles in Allem sehr gut zusammengefasst. Danke!</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-05-01):</p>
+<p>@Ilker: Ich denke, wir meinen eigentlich dasselbe.</p>
+<p>Aber:</p>
+<p>-Ich habe mich nicht kategorisch gegen Null im Allgemeinen gewandt, sondern im konkreten Fall.</p>
+<p>-Klar, auch ich verwende Null für nicht vorhandene Äste in einem Baum. Aber das tue ich eher aus alter Gewohnheit denn aus einer Notwendigkeit heraus. Es ist genauso einfach, statt Null einen well-known "EmptyNode" o.ä. dort einzutragen, wo kein anderer Knoten vorhanden ist. Auch das macht Code am Ende nicht komplizierter, sondern sogar in manchen Fällen einfacher. Denn so ein "EmptyNode" kann als echtes "neutrales Element" für Operationen auf einem Baum fungieren. (So wie 0 das neutrale Element für +/- ist.)</p>
+<p>Um der Diskussion willen sage ich deshalb mal: In 80% der Fälle, wo mir jmd sagt, seine Verwendung von Null sei nun aber wirklich unumgänglich, kann ich zeigen, dass es ohne Null nicht schlechter, sondern eher besser ist.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Thomas</strong> (2010-05-01):</p>
+<p>Meine Antwort:</p>
+<p>http://blog.thomasbandt.de/39/2333/de/blog/null-verstaendnis.html</p>
+<p>Grüße</p>
+<hr />
+<p><strong>Dejan Siedle</strong> (2010-05-01):</p>
+<p>In F# gibt es einen sogenannten Option - Type. Diesen kann man sich in C# nachbilden. Das Arbeiten mit dem Option - Type ist deutlich angenehmer, auch wenn man die NULL nicht ganz vermeiden kann. Möchte diesen Typen nicht mehr missen :-)</p>
+<p>Danke für die Gedanken.</p>
+<p>Viele Grüße</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-05-01):</p>
+<p>@Dejan: Ja, der Option-Typ in F# ist cool. Wäre eine Alternative zu speziellen "Empty-Objekten".</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Unknown</strong> (2010-05-02):</p>
+<p>Ralf,</p>
+<p>Wir haben zwar bei vielen Dingen bzgl. Architektur von großen und verteilten Systemen andere Ansichten, aber hier bei der Null-Thematik teile ich deine Sichtweise komplett. Vor allem der erste und der dritte Blickwinkel sind für mich die Hauptargumentationspunkte ...</p>
+<p>-Ingo</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-05-02):</p>
+<p>@Ingo: Freut mich, dass wir einer Meinung sind.</p>
+<p>Und wenn wir in anderen Themen anderer Meinung sind, dann sollten wir das vielleicht mehr diskutieren? Öffentlich? So dass ein Diskurs ensteht? Ich geb ja "Angriffsfläche" hier in meinem Blog.</p>
+<p>Das kann mir was bringen - oder auch dir ;-) Und allemal "den Umstehenden", weil sie zwei Seiten hören.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Gerhard</strong> (2010-05-04):</p>
+<p>Hallo Ralf,</p>
+<p>als Erstes muss ich bemerken, dass NULL keine Kategorie ist, sondern einfach NICHTS (steht damit als Meta-Wert über den Kategorien??).</p>
+<p>Jede "void function" liefert eigentlich NULL als Funktionswert. Eine NULL anstatt eines singulären Funktionswertes ist eigentlich ein klarer Bruch. Die zitierte Option versteckt das nur und ist auch nicht besser.</p>
+<p>Selber entwickle ich über 30 Jahre Software und kenne das Problem. Traue keinem Parameter, er könnte NULL sein - dito für Zeiger.</p>
+<p>Falls eine Funktion eine Collection zurückgibt, da kann ich die NULL elegent umschiffen, indem eine leere Collection geliefert wird.</p>
+<p>Erst heute stand ich vor der alten Frage: Warum geht das mit C# 4.0nicht:</p>
+<p>void Sub(string message = string.Empty) {}</p>
+<p>Aber</p>
+<p>void Sub(string message = null) {}</p>
+<p>mag er.
+Ich verstehe, warum das so ist :-) Müsste aber nicht sein.</p>
+<p>Das zitierte Video streamt gerade zu mir herab, werde ich dann mal anschauen. Es ist mit NULL-References betitelt - wir reden hier über das NULL-Objekt (OK Whats the difference?).</p>
+<p>zurück zum NICHTS</p>
+<p>Software muss lesbar und wartbar sein.  Exceptions sind teuerer als eine NULL im Funktionswert und arbeiten über Nebeneffekte. Eine dokumentierte NULL halte ich für sinnvoller als zusätzliche Klassenkonstrukte, nur um eine NULL zu zu vermeiden. Wo NICHTS ist, ist halt NICHTS.</p>
+<p>Das war keine Argumentation für NULL/NICHTS, ev. nur ein nichtiger Denkanstoß.</p>
+<p>Aber schön, dass dieses Theme diskutiert wird.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

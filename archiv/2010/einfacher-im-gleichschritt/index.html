@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Einfacher im Gleichschritt – Dienstaufrufe mit der CCR synchronisieren — ralfw.de Archiv</title>
+<meta name="description" content="In der dotnetpro 3/2010 gehen Tobias Richling et al. in einem Artikel der Frage nach, wie asynchrone WCF-Dienstaufrufe synchronisiert werden können. Sie überlegen also, wie ein Cli">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/einfacher-im-gleichschritt/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Einfacher im Gleichschritt – Dienstaufrufe mit der CCR synchronisieren — ralfw.de Archiv">
+<meta property="og:description" content="In der dotnetpro 3/2010 gehen Tobias Richling et al. in einem Artikel der Frage nach, wie asynchrone WCF-Dienstaufrufe synchronisiert werden können. Sie überlegen also, wie ein Cli">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/einfacher-im-gleichschritt/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Einfacher im Gleichschritt – Dienstaufrufe mit der CCR synchronisieren</h1>
+    <div class="doc-meta"><span>19. Feb. 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/02/einfacher-im-gleichschritt.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/einfacher-im-gleichschritt/</code></span></div>
+    <div class="art"><p>In der dotnetpro 3/2010 gehen Tobias Richling et al. <a rel="noopener" href="http://dotnetpro.de/articles/downloadpdf.ashx?id=3225">in einem Artikel</a> der Frage nach, wie asynchrone WCF-Dienstaufrufe synchronisiert werden können. Sie überlegen also, wie ein Client, der Service S1 und Service S2 asynchron (!) aufruft, es so einrichten kann, dass er erst weiter macht, wenn beide (!) Services ein Resultat geliefert haben.</p>
+<p>Bei synchronen Aufrufen stellt sich diese Frage nicht. Da geht es ohnehin erst weiter im Client, wenn beide Aufrufe zurückgekehrt sind.  Hier das Beispiel dazu aus dem Artikel:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/8132a423c8eed16e.jpg" /></p>
+<p>Im Client geht es erst nach der letzten Zeile weiter, wenn sowohl <em>GetArticleList()</em> wie auch <em>GetSpecialOfferArticle()</em> synchron aufgerufen wurden.</p>
+<h2>Symptomkur</h2>
+<p>Was aber, wenn beide Aufrufe asynchron sind? Bei Silverlight ist das gar nicht anders möglich. Und bei anderen Client-Plattformen sollten Sie auch darüber nachdenken, denn asynchrone Aufrufe bringen Performancevorteile. Sie laufen ja parallel, egal ob der Client mit einem oder mehreren Prozessorkernen ausgestattet ist.</p>
+<p>Im Artikel sieht ein asynchroner Aufruf mit WCF so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/3c0322780f0b4e12.jpg" /></p>
+<p>Nicht ganz trivial, oder? Und davon gibt es zwei – die dann eben, wenn nacheinander ausgeführt, zum Problem führen: Der Client muss irgendwie dafür sorgen, dass er auf die Ergebnisse von <em>proxy.GetArticleListAsync()</em> und <em>proxy.GetSpecialOfferArticleAsync()</em> wartet, bevor er weiter macht.</p>
+<p>Wie das gehen kann, dazu macht sich der Artikel Gedanken und stellt am Ende eine allgemeine Lösung vor. Mit der sieht das Warten dann so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c99950984ca7007f.jpg" /></p>
+<p>Man registriert einen Eventhandler (<em>AllComplete</em>), der gerufen wird, wenn schließlich beide Dienstaufrufe zurückgekehrt sind, registriert die Dienstaufrufe (<em>AddServiceCall()</em>), die getätigt werden sollen und startet sie schließlich (<em>ExecuteAll()</em>). Das alles macht möglich ein sog. <em>ServiceCallSynchronizer</em>.</p>
+<p>Das sieht auf den ersten Blick doch ordentlich aus. Auf den zweiten schleicht sich bei mir aber zumindest kleines Unbehagen ein, weil die Dienstaufrufe nicht typsicher registriert werden. Die Methodennamen sind als Zeichenketten anzugeben. Ob es eine Methode gibt, stellt sich also erst zur Laufzeit heraus. Ebenso gibt es keine Argumentprüfung zur Compilezeit, weil ja <em>AddServiceCall()</em> nicht weißt, ob und welche Parameter eine Dienstmethode hat. Das ist beides nicht schön.</p>
+<p>Wer mit WCF arbeiten muss, mag den Autoren aber dennoch danken. Sie lösen mit Liebe ein Problem, das ansonsten ein Projekt ins Stocken bringen kann. Immerhin umfasst der allgemeine Aufrufsynchronisierer einige Dutzend Zeilen, über die Sie sich nun nicht mehr den Kopf zerbrechen müssen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/54885926eb4fee8b.png" /></p>
+<p>Wer die Lösung im Detail sehen möchte, der <a rel="noopener" href="http://dotnetpro.de/articles/downloadpdf.ashx?id=3225">lese den Artikel</a>.</p>
+<h2>Das Übel an der Wurzel packen</h2>
+<p>Ich habe nichts gegen WCF – aber dieses Beispiel zeigt mir wieder, dass ich mit WCF nicht direkt arbeiten möchte in meinem Anwendungscode. Ich halte die im Artikel vorgestellte Lösung für eine Symptomkur. Das Symptom: WCF bietet keinen Synchronisationsmechanismus für asynchrone Aufrufe.</p>
+<p>Und was ist das Grundproblem, wenn das nur ein Symptom ist? WCF ist das Grundproblem. Denn WCF ist ein Frameworkbolide, der immer noch in der synchronen Kommunikation verwurzelt ist. Asynchronizität geht zwar auch irgendwie, ist aber nicht der Fokus. Dabei ist Asynchronizität – zumindest aus meiner Sicht – eine unverbrüchliche Bedingung für die Kommunikation in verteilten Anwendungen.</p>
+<p>Aber ich will hier nicht philosophisch werden ;-) Lieber zeige ich einfach, wie aus meiner Sicht das Übel an der Wurzel gepackt werden könnte. WCF will ich dabei gar nicht ersetzen. WCF soll nur für mich als Anwendungsprogrammierer unsichtbar werden.</p>
+<p>Hier meine Lösung:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e31199d2be47283f.png" /></p>
+<p>That´s it.</p>
+<p>Nur eine Kleinigkeit fehlt darin, die ich aber nur ausgelagert habe, um das Abstraktionsniveau einheitlich zu halten. Doch das ist auch nur eine simple Erweiterungsmethode:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2ba9250600265416.png" /></p>
+<p>Sieht das übersichtlich aus? Ist das alles typsicher? War das “out of the box” möglich? Drei Mal Ja.</p>
+<p>Übersichtlich, typsicher und “out of the box” ist das alles, weil ich eben nicht WCF benutze, sondern ein Kommunikationsframework, das konsequent auf Asynchronizität setzt. Das ist der <a rel="noopener" href="http://xcoappspace.codeplex.com/">Xcoordination Application Space</a> (AppSpace), der als Open Source Komponente bei CodePlex liegt und die Verteilung von Anwendungen erlaubt, die mit <a rel="noopener" href="http://msdn.microsoft.com/en-us/library/bb648752.aspx">Microsofts Concurrency Coordination Runtime (CCR)</a> arbeiten.</p>
+<p>Wie funktioniert nun mein Code? Dazu müssen Sie verstehen, wie Dienste im AppSpace aufgerufen werden. Das geschieht immer über sog. Ports. Das sind typisierte Nachrichtenkanäle, die die CCR zur Verfügung stellt.</p>
+<p>Dienste halten Sie also nicht in Form von Methoden in der Hand, sondern als Ports. Sie können AppSpace-Dienste nur indirekt anstoßen vermittels von Nachrichten. AppSpace-Anwendungen haben also immer eine Event-Driven Architecture (EDA), denn Dienste registrieren Eventhandler auf ihren Ports, um an die Nachrichten ihrer Clients zu kommen.</p>
+<p>Einen Dienst einzurichten, ist mit dem AppSpace sehr einfach. Hier die Dienstimplementation:</p>
+<p>public class MyArticleService : PArticleService</p>
+<p>{</p>
+<p>[XcoConcurrent]</p>
+<p>internal void ProcessGetArticleList(GetArticleList query)</p>
+<p>{</p>
+<p>…</p>
+<p>}</p>
+<p>[XcoConcurrent]</p>
+<p>internal void ProcessGetSpecialOfferArticle(GetSpecialOfferArticle query)</p>
+<p>{</p>
+<p>…</p>
+<p>}</p>
+<p>}</p>
+<p>Und hier der Code, mit dem der Dienst gehostet wird, so dass Clients ihn aufrufen können:</p>
+<p>using(var server = new XcoAppSpace("wcf.port=12345"))</p>
+<p>{</p>
+<p>server.RunWorker("TheArticleService");</p>
+<p>…</p>
+<p>Das ist nicht sehr aufwändig, oder? Und ich muss gar nicht auf die Segnungen von WCF verzichten, wie der Konfigurationsstring des AppSpace zeigt. Nur sind mir die ganzen lästigen WCF-Details einerlei. Ich kann mich auf das Wesentliche konzentrieren: Geschäftslogik.</p>
+<p>Und wo sind die ominösen CCR Ports? Die stecken im Kontrakt des Dienstes, denn natürlich hat der AppSpace auch sein ABC: Address, Binding, Contract. Die Adresse des Dienstes ist <em>localhost:12345/TheArticleService</em>. Das Binding ist Net.Tcp von WCF. Und der Contract sieht so aus:</p>
+<p>[Serializable]</p>
+<p>public class Article</p>
+<p>{</p>
+<p>public string description;</p>
+<p>}</p>
+<p>public class <strong>PArticleService</strong> : PortSet</p>
+<p>{</p>
+<p>[Serializable]</p>
+<p>public class GetArticleList</p>
+<p>{</p>
+<p>public Port response;       </p>
+<p>}</p>
+<p>[Serializable]</p>
+<p>public class GetSpecialOfferArticle</p>
+<p>{</p>
+<p>public int forMonth;</p>
+<p>public int forYear;</p>
+<p>public Port response;</p>
+<p>}</p>
+<p>}</p>
+<p>Das sieht für Sie sicher ungewöhnlich aus. Aber im Grunde ist es nicht viel anders als bei WCF. Ein AppSpace-Dienst hat auch eine Schnittstelle. Die besteht aber nicht aus einem <em>interface</em> sondern aus einer Liste von CCR Ports (<em>PArticleService</em>). Auf jedem Port “lauscht” dann ein Eventhandler (s. <em>Process…()</em> Methoden in der Dienstimplementation).</p>
+<p>Ports haben keine Signatur, sondern transportieren nur Nachrichten eines Typs. Deshalb müssen die üblichen Dienstmethodensignaturen in Nachrichtentypen übersetzt werden. Aus</p>
+<p>Article GetSpecialOfferArticle(int forMonth, int forYear);</p>
+<p>wird dann ein Port für <em>GetSpecialOfferArticle</em>-Nachrichten. Und jede Nachricht enthält die ursprünglichen Methodenparameter als Felder. Ein Resultat liefert die Dienstmethode schließlich via einem Antwort-Port (<em>response</em>).</p>
+<p>Das ist anders als bei WCF und Webservices. Aber ich würde sagen, es ist nicht schwer zu verstehen. Vor allem ist es aber 1. symmetrisch und 2. weniger trugschlussbehaftet.</p>
+<p>Die Symmetrie zwischen Client und Service ergibt sich daraus, dass die Kommunikation in beide Richtungen via Ports läuft. Dadurch werden z.B. Notifkationen ein Kinderspiel. Und Sie unterliegen weniger <a rel="noopener" href="http://en.wikipedia.org/wiki/Fallacies_of_Distributed_Computing">Trugschlüssen</a> bzgl. der Kommunikation, weil Sie sofort sehen, dass sie verteilt/asynchron ist, dass sie damit mal länger dauern kann, dass der Dienst auch mal nicht antworten kann usw.</p>
+<p>Der Client holt sich dann einen “Proxy” für einen entfernten AppSpace-Dienst mit <em>ConnectWorker()</em>. Der bietet Ports entsprechend dem Kontrakt, an die der Client seine Nachrichten schickt.</p>
+<p>Und jetzt der Trick mit der Synchronisation: Dafür muss ich keinen Aufwand treiben, weil die CCR einen Synchronisationsoperator bietet, ein <em>Join</em>. Mit ihm kann der Client ganz einfach darauf waren, dass Nachrichten in mehreren Ports angekommen sind. Im Beispiel sind das die Antwort-Ports, die der Client in die Nachrichten an den Dienst gesteckt hat.</p>
+<p>Eine Anweisung (<em>client.Join()</em>) genügt daher, um den Client-Code, der mit den Ergebnissen beider Dienstaufrufe weiter arbeiten sollen, erst dann auszuführen, wenn auch beide Dienste geliefert haben. Egal, in welcher Reihenfolge sie fertig geworden sind.</p>
+<h2>Fazit</h2>
+<p>Ich kann mir nicht helfen, aber ich finde die AppSpace/CCR-Lösung verständlicher, kürzer und “ehrlicher”. Das liegt für mich daran, dass AppSpace/CCR für Asynchronizität gemacht sind. Wo WCF sich strecken muss, um seinem synchronen Erbe zu entwachsen, da sind AppSpace/CCR schon lange angekommen.</p>
+<p>Asynchronen Code zu schreiben, ist ungewohnt. Aber mit ein wenig Übung werden Sie feststellen, dass schon in relativ einfachen verteilten Szenarien dadurch viele Vorteile entstehen. Gerade für den “kleinen Verteilungshunger zwischendurch”, d.h. dort, wo Sie bisher nicht an Verteilung zu denken gewagt haben, da bieten AppSpace/CCR Ihnen eine Plattform, die es Ihnen einfach macht, den Einstieg zu finden. Ob die Kommunikation dann “auf dem Draht” mit WCF (TCP, Named Pipes) oder MSMQ oder Jabber oder Named Pipes läuft, das ist Ihnen egal. Ihr Programmiermodell ist immer gleich. Probieren Sie es mal aus.</p>
+<h2>Kommentare</h2>
+<p><strong>Laurin Stoll</strong> (2010-02-19):</p>
+<p>Hallo Ralf,</p>
+<p>Wiedermal sehr spannend. Sehr gerne würde ich den AppSpace schon lange breiter einsetzen. Leider plagt mich aber immer noch die CCR ein wenig. Habe ich das noch recht in Erinnerung, dass ich die eben nicht einfach verteilen darf? Das ist leider ein sehr grosses Handicap vom AppSpace...</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-02-20):</p>
+<p>@Laurin: Was heißt "nicht einfach verteilen darf"? Die CCR darfst du - wie den AppSpace - so einfach verteilen, wie du ein Telerik Grid oder eine SmartInspect Logging Engine verteilen darfst.</p>
+<p>Wenn du eine Lizenz hast, darfst du verteilen. Manche Lizenz kostet Geld. Ob sie das für die CCR für dich kostet, musst du klären. Das hängt von deiner Anwendung ab. Und davon, ob du eine MSDN Subscription hast.</p>
+<p>Auch der AppSpace ist nicht mehr per se kostenlos. Open Source bedeutet ja nicht zwangsläufig umsonst. Das ist bei PostSharp so, bei db4o und bei vielen anderen auch - und nun ebenfalls beim AppSpace.</p>
+<p>Es gibt eine kommerzielle Lizenz für den AppSpace. Wieviel die allerdings kostet, weiß ich grad gar nicht. Upps :-| Wird aber nicht die Welt sein.</p>
+<p>In jedem Fall sollten selbst einmalig 100 oder 200 EUR dem Einsatz nicht im Wege stehen in einer kommerziellen Software, die du entwickelst. Die ist ja auch nicht umsonst, oder? Warum sollte dann der Einsatz der Entwickler des AppSpace dauerhaft umsonst sein?</p>
+<p>Die Evaluation des AppSpace ist in jedem Fall unbegrenzt kostenlos. Wenn du dann herausgefunden hast, dass dir der AppSpace auch nur 1% deiner Entwicklungszeit spart, dann kannst du ja mal ausrechnen, wieviel das z.B. in einem Jahr an Geld ist. Sollten diese 1% nicht mehr als 200 EUR wert sein, dann wäre das natürlich sehr misslich für dich. Dann solltest du dir einen anderen Job suchen ;-)</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-02-26):</p>
+<p>Hi Ralf,</p>
+<p>Interessanter Artikel. Meines Wissens nach ist das CCR/DSS Framework aber gerade fuer Silverlight (welches Du am Anfang des Artikels erwaehnst) nicht verfuebar?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-02-26):</p>
+<p>@Anonym: Tatsächlich ist die CCR offiziell nicht für Silverlight verfügbar. Es soll Microsoft intern eine Version geben - aber veröffentlicht ist sie nicht.</p>
+<p>Bei meiner Antwort ging es jedoch nicht um Silverlight. Ich habe auch nicht in Abrede gestellt, dass die Lösung in der dnp einen Nutzen darstellt, wenn man denn mit WCF entwickeln muss.</p>
+<p>Was ich zeigen wollte, ist vielmehr, dass es Alternativen zu WCF gibt. Und dass das WCF Problem hausgemacht ist. Synchronisation von async Aufrufen ist nicht per se schwierig, sondern nur dann, wenn man an soetwas bei einem API nicht von vornherein denkt.</p>
+<p>Wer also anders kann, der sollte zweimal überlegen, ob er WCF direkt einsetzen will.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Stefan</strong> (2010-04-04):</p>
+<p>Hallo Ralf,</p>
+<p>Ich nehme trotzdem an, dass WCF in Zukunft zunehmend eingesetzt werden wird, einfach weil es ein Standard von Microsoft ist.</p>
+<p>Ich habe deshalb eine C# Library (<a rel="noopener" href="http://sourceforge.net/apps/mediawiki/asyncwcflib">AsyncWcfLib</a>) ins Netz gestellt, welche Asynchronizität mit WCF vereinfacht und den Konfigurationsaufwand reduziert.</p>
+<p>Wichtig scheint mir auch die Vor- und Rückwärtskompatiblität für Meldungen, die ich in WCF so zum ersten mal von einem grossen SW Hersteller realisiert sehe.</p>
+<p>/Stefan</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-04-04):</p>
+<p>@Stefan: Deine AsyncWcfLib find ich interessant. Darüber solltest du einen Bericht in der dotnetpro schreiben. Schicke mir eine Email und ich setze dich mit dem Chefred in Verbindung.</p>
+<p>Dass WCF eine große Bedeutung hat und behalten wird, steht für mich auch außer Zweifel. Aber TCP Sockets und der Win32 API haben auch immer noch eine große Bedeutung. Nur wir sehen sie nicht mehr. Wir programmieren keine Sockets und keine Win32 API Calls mehr. (Jedenfalls allermeistens.)</p>
+<p>Und genauso will ich WCF nicht sehen. Es soll seinen Dienst tun und alles mögliche ermöglichen. Wunderbar. Der API, den ich in meiner Anwendung sehe, soll das aber alles verbergen. Er soll auf einen höheren Niveau liegen. So wie der CCR Space bzw. der Application Space. Oder auch wie deine Library, die allerdings noch (ganz natürlich) WCF recht verhaftet ist.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Tobias Richling</strong> (2010-06-25):</p>
+<p>Hallo Ralf,</p>
+<p>vielen Dank für den interessanten Artikel. Die Lösung mit CCR sieht schon sehr schlank und elegant aus.</p>
+<p>Mir geht es jedoch so wie vielleicht vielen anderen auch wie Stefan es angesprochen hat: beruflich bin ich auch WCF festgelegt.</p>
+<p>Eine Sache wollte ich noch im Bezug auf deine Besprechung unseres Artikels richtig stellen: der vorgestellte Synchronisationsansatz kann auch mit einem Delegaten aufgerufen werden. Dadurch habe ich dann alle Parameter als auch den Methodennamen typsicher definiert. Nur die Parameterwerte werden noch als Object[] übergeben.</p>
+<p>Ein Beispiel dazu habe ich <a rel="noopener" href="http://thinkexception.blogspot.com/2010/06/synchronizing-multiple-wcf-service.html">hier</a> gepostet.</p>
+<p>Viele Grüße,</p>
+<p>Tobias.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

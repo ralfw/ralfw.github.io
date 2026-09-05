@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abhängige Flüsse — ralfw.de Archiv</title>
+<meta name="description" content="Abhängigkeiten sind ein zentrales Problem in der Softwareentwicklung. Deshalb haben Flow Designs den Anspruch, mit ihnen konsequent aufzuräumen. Wie sich nun herausstellt, ist das ">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/abhangige-flusse/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Abhängige Flüsse — ralfw.de Archiv">
+<meta property="og:description" content="Abhängigkeiten sind ein zentrales Problem in der Softwareentwicklung. Deshalb haben Flow Designs den Anspruch, mit ihnen konsequent aufzuräumen. Wie sich nun herausstellt, ist das ">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/abhangige-flusse/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Abhängige Flüsse</h1>
+    <div class="doc-meta"><span>29. Jan. 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/01/abhangige-flusse.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/abhangige-flusse/</code></span></div>
+    <div class="art"><p>Abhängigkeiten sind ein zentrales Problem in der Softwareentwicklung. Deshalb haben Flow Designs den Anspruch, mit ihnen konsequent aufzuräumen. Wie sich nun herausstellt, ist das zwar möglich – aber manchmal umständlich. Abhängigkeiten auch in Flow Designs integrieren zu können, erscheint deshalb sinnvoll. Hier mein Vorschlag, wie das geschehen könnte.</p>
+<h5>Problem #1: Akteure und Request/Response-Kommunikation</h5>
+<p>Am Anfang des Entwurfs mit Flow Designs (bzw. Event-Based Components) stand die Verbindung von Akteuren als Funktionseinheiten. Beispiel: Ein Frontend fordert Daten von einem Repository. Das konnte entweder mit zwei Drähten ausgedrückt werden…</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/90f7190cef2bba72.png" /></p>
+<p>…oder mit einem Draht, dessen Anfragen einen “ad hoc Antwortpin” mit zum Repository schicken:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/8e54fb29d92f8b10.png" /></p>
+<p>Solche Reques/Response-Kommunikation kann zwar auch mit Flüssen modelliert und implementiert werden, doch das ist umständlich. Frage und Antwort in Input- und Output-Pin zu trennen, fühlt sich nicht intuitiv an.</p>
+<p>Das führte dann dazu, von Akteuren weitgehend auf Aktionen umzustellen. Aktionen kennen per definitionem keine Rückgabewerte. Also stellt sich das Problem einer Request/Response-Modellierung nicht:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/0e6d1fe16035ed68.png" /></p>
+<p>Das funktioniert gut. So lässt sich schneller ein Fluss entwerfen, weil nicht erst aus Anforderungen umständlich ein Akteur ermittelt werden muss; der liegt nämlich nicht so häufig auf der Hand, wie z.B. die Objektorientierung es gern hätte.</p>
+<p>Allerdings wird damit der Bezug zu einer Ressource, wie sie hinter einem Repository steht, auf potenziell viele Funktionseinheiten verteilt:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d1edecab71857a1f.png" /></p>
+<p>Nicht, dass das sehr schlimm wäre. Damit lässt sich leben. Doch “reibungsfrei” fühlt sich das nicht an.</p>
+<p>Und wo ist das Respository im Entwurf? Die drei Funktionseinheiten könnten auf eine Platine gelegt werden. Damit wäre aber wieder ein Akteur im Spiel, der nun zwar nicht das Request/Response-Problem zeigen würde, aber dessen Antworten sich nicht unbedingt Flüssen zuordnen ließen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/ac0c253201755503.png" /></p>
+<p>Das ließe sich durch explizite Lebenszeitverwaltung (Singleton/Multiton) beheben – aber irgendwie fühlt es sich immer noch nicht so richtig gut an. Warum soll ich zwingend die Aktionen in eine Akteur-Platine stecken, um ihren Zusammenhang im Modell zu verdeutlichen? Damit verliere ich einen Verständlichkeitsvorteil von Aktionen.</p>
+<h5>Problem #2: Aktionsübergreifender Zustand</h5>
+<p>Auch wenn ich keinen Drang verspüre, Aktionen zu einem Akteur zusammenzufassen, möchte ich manchmal, dass sie etwas gemeinsam haben: Zustand. Wie drücke ich in einem Flow Design aus, dass Funktionseinheiten, die zu ganz unterschiedlichen Concerns gehören, Zugriff auf denselben Zustand haben? Ich hatte mir dazu schon länger diese Notation ausgedacht:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/5f6b74ec27ac193c.png" /></p>
+<p>Das war ok für mich, fühlte sich jedoch noch nicht rund an. Die Tonnen an den Funktionseinheiten brachen irgendwie aus der Notation aus. Und die Gemeinsamkeit von Zustand war nur über den Namen an den Tonnen ablesbar.</p>
+<h3>Abhängigkeiten als Lösung</h3>
+<p>Ich hätte es nicht gedacht, aber Akteurproblem und der gemeinsame Zustand lassen sich mit demselben Mittel lösen: mit Abhängigkeiten. Und das in ganz einfacher Weise, wie ich finde.</p>
+<p>Funktionale Abhängigkeiten drücke ich in Flow Designs nun so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/91e73c291d2e274f.png" /></p>
+<p>In der UML werden Abhängigkeiten auch mit Pfeilen ausgedrückt. Das vermeide ich hier. Pfeile stehen für mich nur noch für Flüsse in Pfeilrichtung. Trotzdem muss eine Abhängigkeitsverbindung asymmetrisch sein. Abhängige und unabhängige Funktionseinheit müssen klar zu erkennen sein. Deshalb der Punkt am Ende der Abhängigkeitslinie.</p>
+<p>Abhängigkeiten sind damit erstens überhaupt möglich und zweitens nicht im Weg, weil sie orthogonal zum Fluss verlaufen. Mit ihnen vorsichtig umzugehen, versteht sich von selbst. Abhängigkeiten bleiben “böse”. Aber bevor sich Flow Design in den Fuß schießt, um sie ganz zu vermeiden, ist es besser, Abhängigkeiten ausdrücken zu können.</p>
+<p>Die beiden geschilderten Probleme lösen sich mit Abhängigkeitsmodellierung in Wohlgefallen auf, finde ich. In Problem #1 bleiben die Aktionen sichtbar und trotzdem ist zusammengehörige Funktionalität an einem Ort versammelt, in einer Repository-Funktionseinheit. Ob die Aktionen Singletons oder Multitons sind, ist nun nicht mehr wichtig. Das Repository kann aber ganz einfach ein Singleton sein.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9c3442aa938c2622.png" /></p>
+<p>In so einem Diagramm würde ich natürlich Repository nicht um weitere Abhängigkeiten anreichern. Ich sehe die unabhängige Funktionseinheit als Black Box. Wie es da drin aussieht, ob da wieder Flüsse definiert sind oder alles “traditionell” nach OOP funktioniert, das ist mir erstmal egal. Der Vorteil von Flow Designs, aus Abhängigkeitsverhauen zu befreien, darf nicht leichtfertig aufgegeben werden. Also vorsichtig mit solchen Abhängigkeiten.</p>
+<p>Für mich ist auch immer Ziel, solche unabhängigen Funktionseinheiten intern dann soweit wie möglich mit Flows zu modellieren. Die Abhängigkeit würde dann dazu dienen, Flüsse zu entkoppeln.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/314d1ffabc815daa.png" /></p>
+<p>Problem #2 löst sich mit Abhängigkeiten auch ganz einfach. Alle Aktionen hängen vom selben Zustand ab.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/4f0ac4a5e6ff1fb1.png" /></p>
+<p>Die “Zustandstonne” steht dabei für eine generische Funktionseinheit zum Halten von Zustand, z.B. <em>SharedState</em>. Auf so einer Funktionseinheit lassen sich auch sehr schön Funktionen anbringen, die nützlich in UI-Szenarien (MVVM etc.) und bei asynchronen Modellen sind.</p>
+<h3>Abhängigkeiten implementieren</h3>
+<p>Die Übersetzung von Flow-Design-Funktionseinheiten in Interfaces hat sich bewährt. Wie passt dazu die Einführung von Abhängigkeiten. Zunächst schien es, als sollten Abhängigkeiten dazu führen, dass für abhängige Funktionseinheiten keine Interfaces, sondern abstrakte Basisklassen mit Ctor-Injection generiert werden. Das kann man auch machen, wenn man mag – aber ich denke, es ist universeller, Abgängigkeiten über ein Interface auszudrücken. Beispiel zum vorangehenden Bild:</p>
+<p>interface Do_sth_in_concern_A : IDependsOn
+{…}</p>
+<p>interface Do_sth_in_concern_B : IDependsOn
+{…}</p>
+<p>Der Start von Flow-Design-Code bekommt damit eine weitere Phase:</p>
+<ul>
+<li>Build</li>
+<li>Bind</li>
+<li>Inject – Abhängigkeiten via Interface injizieren</li>
+<li>Config</li>
+<li>Run</li>
+</ul>
+<p>Build und Bind laufen eigentlich gleichzeitig ab, wenn Platinen die Verdrahtung im Ctor vornehmen, weil sie die Funktionseinheiten, von denen sie immer schon abhängig waren, per Ctor-Injection bekommen.</p>
+<p>Danach werden die nun modellierbaren funktionalen Abhängigkeiten injiziert. Es müssen lediglich alle Funktionseinheiten darauf geprüft werden, ob sie das Interface implementieren. Dann bekommen sie eine Instanz der unabhängigen Funktionseinheit. Das kann z.B. so geschehen:</p>
+<p>IDependsOn do_sth_in_concern_a = …;
+do_sth_in_concern_a.Inject(diContainer.Create());</p>
+<p>Die Konfigurations- und Run-Phase basieren dann auch auf Interfaces. Aber das ist nichts neues.</p>
+<p>Ich finde, so ergibt sich ein sauberes Bild.</p>
+<p>Und wie sieht so eine unabhängige Funktionseinheit aus? Ganz normal. Sie kann eine traditionelle OO-“Oberfläche” haben, einen ganz üblichen API. Die Flow-Funktionseinheiten, die davon abhängen kapseln den gegenüber dem restlichen Flow.</p>
+<h3>Zusammenfassung</h3>
+<p>Für mich löst sich mit der Möglichkeit, Abhängigkeiten auszudrücken, die derzeit letzte “Holprigkeit” in Flow Designs auf. Erste Erfahrungen mit der Modellierung mit und Übersetzung von Abhängigkeiten fühlen sich gut an. Und auch die Erklärung von Flow Design ist nun noch einfacher. Denn wer eine Hürde sieht, einen traditionellen API in Aktionen umzuformulieren, kann ihn (erstmal) behalten. Das erhöht die Attraktivität von Flow Design für Brownfield-Projekte, würde ich sagen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e773cdfec4daf1b9.gif" /></p>
+<h2>Kommentare</h2>
+<p><strong>Peter Pallhuber</strong> (2011-01-30):</p>
+<p>Du schlägst also so eine Art hybrides Design vor. Die Vorteile von beiden Welten zu verbinden, mag verlockend klingen. Das ist aber trotz der Warnungen, an den du es nicht fehlen lässt, mehr als nur gefährlich. Damit lösen sich alle fünf Vorteile, die du in <a rel="noopener" href="http://ralfw.blogspot.com/2010/02/steckspiele-event-based-components.html">Steckspiele - Event-Based Components verbinden</a> mühsam erarbeitet hast, in Luft auf. Das ist mehr als ein kleiner Schönheitsfehler, das ist schon eine existenzielle Krise.</p>
+<p>Um nur einen Punkt heraus zu greifen: Die in <a rel="noopener" href="http://ralfw.blogspot.com/2010/04/holarchie-event-based-components-fur.html">Holarchie – Event-Based Components für natürliche Softwaremodellierung</a> zu recht gescholtenen Abstraktionsebenen aufgrund von Benutzung sind zurück. Im Code kann man nicht mehr zwischen echter hierarchischer Gliederung und einfacher Benutzung unterscheiden. Der Vorteil, dass der Code die Architektur spiegelt, ist verloren. Denn wenn er das nur an einer Stelle nicht mehr tut, kann man sich an keiner Stelle mehr sicher sein.</p>
+<p>Man kann alle fünf Punkte durchgehen und sieht, dass plötzlich alles in sich zusammenbricht. Abwiegeln reicht nicht. Nur eine echte Lösung kann die Situation bereinigen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-01-30):</p>
+<p>@Peter: Ich freu mich, dass du die Vorteile von Flow Design/EBC so deutlich siehst. Und ich kann auch verstehen, dass du Angst hast, sie könnten verloren gehen. Aber keine Sorge, ich glaube nicht, dass die beschriebenen Abhängigkeiten diesen Effekt haben.</p>
+<ol>
+<li>
+<p>Die Abstraktionsebenen von Flow Designs verschwinden nicht. Platinen gibt es weiterhin.</p>
+</li>
+<li>
+<p>Abhängigkeiten werden klar in ihrer Art unterschieden. Abstraktion geschieht durch Einschachtelung, Nutzung wird durch "Linien mit Knubbel" angezeigt.</p>
+</li>
+<li>
+<p>Der Code spiegelt natürlich weiterhin den Entwurf wider, da ja Abstraktion und funktionale Abhängigkeit darin ganz unterschiedlich ausgedrückt werden. Auch insofern ist ein Interface für die funkt. Abhängigkeit ein Vorteil.</p>
+</li>
+</ol>
+<p>Ich habe mich lange auch gegen funktionale Abhängigkeiten gewehrt. Oder gar nicht mal gewehrt, sondern sie schlicht ausgeblendet.</p>
+<p>Am Ende musste ich jedoch feststellen, dass beim Flow Design immer wieder Friktionen auftraten. Die habe ich im Artikel beschrieben.</p>
+<p>Wenn nun aber bei gegebenem Ansatz immer wieder dieselben Probleme auftreten, dann ist irgendwas mit dem Ansatz noch nicht richtig. Dann muss man drüber nachdenken, wie er nachgebessert werden kann.</p>
+<p>Zumindest für mich haben sich mit den beschriebenen funktionalen Abhängigkeiten nun die wiederkehrenden Probleme gelöst.</p>
+<p>Ich denke nicht, dass damit das grundlegende Paradigma des Flow Design kompromittiert ist. Wie gesagt, die funktionalen Abhängigkeiten sollen ja nicht weitergetrieben werden. Ich sehe nicht, dass in Flow Designs nun großartige Abhängigkeitsbäume auftauchen. Aber hier und da eine Abhängigkeit herstellen, das ist ok. Sozusagen ein Tor in eine andere Dimension - die in einem anderen Diagramm dann weiter beschrieben werden kann.</p>
+<p>Du wirst in der Zukunft Beispiele dafür sehen. Und ich hoffe, dass du mir dann zustimmen kannst, dass die Vorteile diese kleine, scheinbare Unsauberkeit ausgleichen.</p>
+<hr />
+<p><strong>Al3x3</strong> (2011-01-31):</p>
+<p>Interessanter Ansatz. Aber irgendwie fällt es mir schwer so eine "universelle" Funktionseinheit vorzustellen, die unterschiedlich strukturierte Objekte entgegennimmt, versteht und verarbeitet. Was ist mir der Struktur bzw. der Bedeutung der einzelnen Elemente von so einem State? Wird sie von IDependsOn&lt;&gt; vorgegeben? Wozu dann die Trennung zwischen Zustand und Verhalten? Na ja, vielleicht verstehe ich die EBCs auch noch nicht wirklich :) Gibt es eine Beispiel-Applikation die nach diesem Muster implementiert ist (evtl. eine die man direkt mir anderen Mustern wie CQRS/DDD vergleichen kann)?</p>
+<p>-Alex</p>
+<hr />
+<p><strong>Lars</strong> (2011-02-01):</p>
+<p>Zustände innerhalb von Prozess-Flows sind doch eher Variablen oder?</p>
+<p>Also natürlich empfinde ich zumindest den sprachlichen Umgang mit diesem Konstrukt nicht:
+"Die Aktionen: Reingehen, Tür zu machen sind abhängig vom Zustand 'Tür offen'".
+Wenn die grafische Darstellung eher in Richtung gehen würde: "Wenn die Tür offen ist, dann geh rein und mach sie zu", dann könnte man das im letzten Artikel beschriebene "zu doof für OOP-Problem" vielleicht beim Flow-ansatz umgehen.</p>
+<p>Letztendlich ist das auf der unteren Ebene in beiden Fällen ja eine shared-variable...also inhaltlich würde sich ja nichts tun, sondern es würde nur die Natürlichkeit der Entwicklungsmethode vor die theoretisch bessere Variante stellen. Das würde ich für einen guten Tausch halten.</p>
+<p>Ausserdem wäre man in der asyncronen Welt dann auch flexibler, wenn schon jemand anders die Tür nachdem man eingetreten ist geschlossen hätte...</p>
+<p>"IF THEN" ist um längen verständlicher als "Depends on".</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-02-02):</p>
+<p>@Lars: Zustände sind globale Variablen; so könnte man das sagen. Shared state, von aber genau bekannt ist, wer auf ihn kennt. Denn die Abhängigkeiten sind ja im Design explizit.</p>
+<p>Was dich daran stört, verstehe ich leider nicht. Dürfen Aktionen oder allgemein Bauteile keinen Zustand haben? Dürfen sie keinen gemeinsamen Zustand haben?</p>
+<p>Es mag vorzuziehen sein, keinen und vor allem keinen gemeinsamen Zustand zu haben. Aber es lässt sich nicht immer vermeiden. Irgendwo ist der Zustand - zumindest in einem Persistenzmedium oder im Frontend. Ihn von dort immer wieder zu holen oder mitzuschicken, empfinde ich als umständlich. Deshalb sollte gemeinsamer Zustand in Flow Designs erlaubt sein.</p>
+<p>Und wenn er erlaubt ist, dann sollte er so explizit wie möglich sein. Denn dann ist man sich dieser Suboptimalität bewusst.</p>
+<p>Das ist auch von Vorteil in async Szenarien. Wenn ich gemeinsamen Zustand im Design sehe, dann kann ich mir viel besser Gedanken darüber machen, wie der Zugriff darauf koordiniert werden sollte.</p>
+<hr />
+<p><strong>Toni</strong> (2011-02-27):</p>
+<p>Ich bin begeistert von dem Konzept der Software-Platinen. Das kann intuitv entworfen, einfach verstanden und inzwischen soger grafisch umgesetzt werden. Super!</p>
+<p>Aber wie Du selbst erkannt hast: "Frage und Antwort in Input- und Output-Pin zu trennen, fühlt sich nicht intuitiv an." Und mit der vorgeschlagenen Abhängigkeitsmodellierung wird das Systemdesign umfangreicher und damit weniger übersichtlich.</p>
+<p>Aus meiner Sicht bietet die Welt der Hardware-Platinen hier andere interessante Lösungsideen.</p>
+<p>Zum einen werden hier die Platinen (oder externen Komponenten) nicht mit einzelnen Drähten verbunden, sondern mit Kabeln. Die Kabel mit einem männlichen und einem weiblichen Stecker werden an den entsprechenden Buchsen der Platinen eingesteckt. Den Buchsen entsprechen in der Software einem Interface. Eine Platine hat meist mehrere spezialisierte davon. Und das Kabel ist mit seinen Steckern ein einigermaßen komplexes Bauteil, das auch als eigenständiges Software-Bauteil umgesetzt werden sollte. So lange die Stecker in die Buchsen passen, ist es damit möglich, das Kabel durch beliebig komplexe Geräte zu ersetzen, z.B. ein zweipoliges Crossover-Kabel durch das weltweite Netz.</p>
+<p>Zum anderen laufen auf den Hardware-Drähten teilweise höchst komplexe Protokolle, und zwar nicht nur unidirektional. Bei Mikroprozessoren gibt es "Tri-State"-Pins, , deren Ausgänge nicht wie üblich nur zwei (0 und 1), sondern zusätzlich noch einen dritten Zustand annehmen können. (Wikipedia) In diesem dritten Zustand kann der Pin Eingangssignale empfangen. Um bidirektionale Pins und Drähte mit komplexen Protokollen in der Software abzubilden, könnten sich als Alternative zum synchronen EBC vermutlich Delegaten anbieten. Für asynchrone Kommunikation müssen natürlich weiterhin Events verwendet werden, aber das ist wieder intuitiv verständlich.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

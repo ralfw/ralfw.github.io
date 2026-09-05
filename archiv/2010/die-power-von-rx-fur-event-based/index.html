@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Die Power von Rx für Event-Based Components — ralfw.de Archiv</title>
+<meta name="description" content="Ob Event-Based Components (EBC) auch mit den Reactive Extensions, dem Rx Framework von Microsoft implementiert werden könnten, stand als Frage schon länger im Raum. Jetzt hab ich m">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/die-power-von-rx-fur-event-based/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Die Power von Rx für Event-Based Components — ralfw.de Archiv">
+<meta property="og:description" content="Ob Event-Based Components (EBC) auch mit den Reactive Extensions, dem Rx Framework von Microsoft implementiert werden könnten, stand als Frage schon länger im Raum. Jetzt hab ich m">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/die-power-von-rx-fur-event-based/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Die Power von Rx für Event-Based Components</h1>
+    <div class="doc-meta"><span>7. Sept. 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/09/die-power-von-rx-fur-event-based.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/die-power-von-rx-fur-event-based/</code></span></div>
+    <div class="art"><p>Ob Event-Based Components (EBC) auch mit den <a rel="noopener" href="http://bit.ly/9lUvck">Reactive Extensions</a>, dem Rx Framework von Microsoft implementiert werden könnten, stand als Frage schon länger im Raum. Jetzt hab ich mich mal daran versucht.</p>
+<p>Als Beispiel habe ich die FizzBuzz Kata gewählt. Der EBC-Entwurf ist denkbar simpel:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/0b2361917be35937.png" /></p>
+<p>Bisher wurde dann eine EBC-Aktion wie <em>Zahl transformieren</em>so übersetzt:</p>
+<pre><code>   1: class Zahl_transformieren_früher
+</code></pre>
+<pre><code>   2: {
+</code></pre>
+<pre><code>   3:     public void In_Zahl(int zahl)
+</code></pre>
+<pre><code>   4:     {
+</code></pre>
+<pre><code>   5:         ...
+</code></pre>
+<pre><code>   6:     }
+</code></pre>
+<pre><code>   7: 
+</code></pre>
+<pre><code>   8:     public event Action&lt;string&gt; Out_Symbol;
+</code></pre>
+<pre><code>   9: }
+</code></pre>
+<p>Output-Pins von EBC-Aktionen waren Events, Input-Pins Methoden. Das ist eine geradlinige Übersetzung. Funktioniert in der Praxis tadellos.</p>
+<p>Und doch bleibt etwas zu wünschen übrig. Es gibt einfach keine Unterstützung für Operationen auf Folgen von Events, also Nachrichtenströme. Natürlich kann man Aktionen wie Filter in einen Draht “einklemmen” – doch die müssen relativ umständlich erst entwickelt werden.</p>
+<p>Mit Rx geht das jedoch viel einfacher. Damit kann man einen Event-Strom filtern oder verzögern oder zwei Ströme zusammenführen usw. usf. Viele schöne Operationen auf Events – oder eben Observables – gibt es dort. Warum das nicht für EBC nutzen?</p>
+<p>Deshalb hier mein Vorschlag für eine Übersetzung von EBC-Flows mit Rx-Mitteln:</p>
+<ul>
+<li>Ein Output-Pin wird in ein <em>IObservable</em> übersetzt</li>
+<li>Ein Input-Pin wird in einen <em>IObserver</em> übersetzt</li>
+</ul>
+<p>Mit diesen Interfaces kann man dann wunderschöne Sachen machen.</p>
+<p>Aber es sind eben nur Interfaces und so brauchen wir noch Implementationen. Ich nenne die mal <em>OutputPin</em> und <em>InputPin</em>. Ist doch irgendwie naheliegend, oder?</p>
+<pre><code>   1: class Zahl_transformieren
+</code></pre>
+<pre><code>   2: {
+</code></pre>
+<pre><code>   3:     public InputPin&lt;int&gt; In_Zahl { get; private set; }
+</code></pre>
+<pre><code>   4:     public OutputPin&lt;string&gt; Out_Symbol { get; private set; }
+</code></pre>
+<pre><code>   5: 
+</code></pre>
+<pre><code>   6:     public Zahl_transformieren()
+</code></pre>
+<pre><code>   7:     {
+</code></pre>
+<pre><code>   8:         this.In_Zahl = new InputPin&lt;int&gt;(Transform);
+</code></pre>
+<pre><code>   9:         this.Out_Symbol = new OutputPin&lt;string&gt;();
+</code></pre>
+<pre><code>  10:     }
+</code></pre>
+<pre><code>  11: 
+</code></pre>
+<pre><code>  12: 
+</code></pre>
+<pre><code>  13:     private void Transform(int zahl)
+</code></pre>
+<pre><code>  14:     {
+</code></pre>
+<pre><code>  15:         if (IsFizzBuzz(zahl))
+</code></pre>
+<pre><code>  16:             this.Out_Symbol.Post(&quot;fizzbuzz&quot;);
+</code></pre>
+<pre><code>  17:         ...
+</code></pre>
+<pre><code>  18:     }
+</code></pre>
+<p>Um die eigentlichen Transformationsroutine <em>Transform()</em> wird nun ein <em>IObserver</em> gewickelt in Form eines <em>InputPin</em>. Und die Ergebnisse werden an einen <em>OutputPin</em> geschickt, der ein <em>IObservable</em> ist. Den können dann folgende Aktionen abonnieren.</p>
+<p>Die Zahlengenerierung sieht analog aus. Kein Hexenwerk. Beide Aktionen verdrahte ich dann noch in einer Aktionsgruppe zu einem Flow, um die Details der Verarbeitung gegenüber einem Client zu verbergen:</p>
+<pre><code>   1: public class FizzBuzzer
+</code></pre>
+<pre><code>   2: {
+</code></pre>
+<pre><code>   3:     public InputPin&lt;Unit&gt; In_Generate { get; private set; }
+</code></pre>
+<pre><code>   4:     public OutputPin&lt;string&gt; Out_Symbole { get; private set; }
+</code></pre>
+<pre><code>   5: 
+</code></pre>
+<pre><code>   6: 
+</code></pre>
+<pre><code>   7:     public FizzBuzzer()
+</code></pre>
+<pre><code>   8:     {
+</code></pre>
+<pre><code>   9:         var ze = new Zahlen_erzeugen();
+</code></pre>
+<pre><code>  10:         var zt = new Zahl_transformieren();
+</code></pre>
+<pre><code>  11: 
+</code></pre>
+<pre><code>  12:         this.In_Generate = ze.In_Generate;
+</code></pre>
+<pre><code>  13:         ze.Out_Zahl.Subscribe(zt.In_Zahl);
+</code></pre>
+<pre><code>  14:         this.Out_Symbole = zt.Out_Symbol;
+</code></pre>
+<pre><code>  15:     }
+</code></pre>
+<pre><code>  16: }
+</code></pre>
+<p>Dem Input-Pin der Aktionsgruppe kann der Input-Pin von <em>Zahlen erzeugen</em> zugewiesen werden. Sie braucht also keinen eigenen. Dito für den Output-Pin der Aktionsgruppe.</p>
+<p>Und die konsumierende Aktion abonniert die produzierende Aktion, s. Zeile 13. Das entspricht der bisherigen Zuweisung einer Input-Pin Methode als Eventhandler an einen Output-Pin Event.</p>
+<p>Formal ist der Unterschied zwischen bisheriger Übersetzung und der nach Rx minimal, finde ich. Das setzt sich dann bis zum Client fort, der die Aktionsgruppe nutzt:</p>
+<pre><code>   1: var fb = new FizzBuzzer();
+</code></pre>
+<pre><code>   2: 
+</code></pre>
+<pre><code>   3: fb.Out_Symbole.Subscribe(Console.WriteLine);
+</code></pre>
+<pre><code>   4: fb.In_Generate.OnNext(new Unit());
+</code></pre>
+<p>Ein kleinwenig gewöhnungsbedürftig mag allerdings sein, dass Rx keine Kommunikation ohne Wert kennt. Deshalb muss die Zahlengenerierung mit einem Parameter angestoßen werden. Dankenswerterweise gibt es dafür <em>Unit</em>, sozusagen einen “wertlosen” Typ. Er ist der Funktionalen Programmierung entlehnt und findet sich auch in F# wieder.</p>
+<p>Und jetzt zum Gewinn durch eine Umstellung der Übersetzung von EBC mit Rx:</p>
+<pre><code>   1: fb.Out_Symbole
+</code></pre>
+<pre><code>   2:   .Where(s =&gt; s[0] &lt; '@')
+</code></pre>
+<pre><code>   3:   .Select(s =&gt; int.Parse(s))
+</code></pre>
+<pre><code>   4:   .SkipWhile(i =&gt; i &lt; 42)
+</code></pre>
+<pre><code>   5:   .Subscribe(Console.WriteLine);
+</code></pre>
+<p>Wir können ganz leicht in den “Eventfluss” eingreifen. Es gibt viele Standardoperationen dafür, allen voran die bekannten und beliebten Linq-Operatoren.</p>
+<p>Wie klingt das? Ich finde das sehr vielversprechend. Damit experimentiere ich weiter. Mein Gefühl ist, dass mit Rx die Übersetzung noch systematischer wird und gleichzeitig die Möglichkeiten zum Umgang mit Event-Strömen wachsen. Also ein doppelter Gewinn.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2010-09-07):</p>
+<p>I only can read english, however, I have been doing precisely the same experiments of and on for about 4 months with the RX framework.  I think it will be a better solution than using CCR and it works in Silverlight.</p>
+<hr />
+<p><strong>Janek Fellien</strong> (2010-09-07):</p>
+<p>Hallo Ralf,</p>
+<p>die Sache sieht schon recht gut aus. Gerades das "Subsrcibe" gefällt mir.</p>
+<p>Womit ich ein wenig Schwierigkeiten hatte, ist die implizite Syntax in deinem Text. Einige Leute werden mit Aktionsgruppe, Aktion und Flow noch nichts anfangen können. Vielleicht könntest du dazu noch eine kleine Erklärung schreiben.</p>
+<p>Ansonsten entspricht das Konzept dem Gedanken, den wir vor Wochen schon entwickelten, dass Input- und OutputPin "sinnvolle" Objekte sein sollten. Das vereinfacht das Verständnis. Schade nur, dass hier die Events auch wieder das Nachsehen haben und der Begriff EBC wieder einmal in Frage gestellt wird.</p>
+<p>Also werden wir doch ABC-Schützen ;-)</p>
+<p>Jan</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-09-07):</p>
+<p>@Jan: Jo, die Events sind nun weg :-) Es lebe der Stream. Denn nichts anderes ist das, was da aus einem IObservable rauskommt.</p>
+<p>Die Terminologie mit Action und Flow etc. hab ich einfach mal so benutzt. Auch um zu sehen, wie sie mir gefällt.</p>
+<p>Rausgekommen ist für mich: schon ok - aber es fehlt noch was. Die Begriffe gehören dazu. Aber allermindestens fehlt ein Oberbegriff für Action und Action Group. Denn die sind weiterhin von außen nicht zu unterscheiden.</p>
+<p>Component geht aus mehreren Gründen nicht mehr. Also: Wie heißen diese Dinger ganz allgemein, die Pins haben. (Von den Pins komm ich irgendwie nicht weg.)</p>
+<hr />
+<p><strong>Janek Fellien</strong> (2010-09-07):</p>
+<p>Ja Ja, so ist das mit den Pins, man bleibt einfach dran hängen. Ich bin auch gerade dabei dein Beispiel nach zu empfinden und die Pins sind auch bei mir noch da.</p>
+<p>Ich verwende allerdings zum Ausprobieren die in der Google Group angesprochene Struktur und lege mir eine Bibliothek von Actions an, kombiniere die Actions in Activities und verwende diese Activities in der Komponente. Bisher habe ich nicht das ungute Gefühl, für Action und Activity etwas Übergeordnetes zu finden.
+Ich meine, dass Action oder Activity von aussen nicht erkennbar sein müssen, da wir immer vom Prozess oder Flow reden, der aus Aktionen besteht.</p>
+<p>Wofür brauchst du diesen Begriff?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-09-07):</p>
+<p>@Jan: Actions zusammenfassen zu Activities (oder Action Groups): das ist ok.</p>
+<p>Aber eben weil Actions und Activities von außen nicht zu unterscheiden sind, ist ein übergeordneter Begriff nötig.</p>
+<p>Analogie: In einem Unternehmen arbeiten Buchhalter und Manager und Pförtner und viele andere. Es ist gut, die mit spezifischen Berufs/Positionsbezeichnungen unterscheiden zu können.</p>
+<p>Aber es ist genauso wichtig, sie zusammenfassen zu können. Buchhalter wie Manager und Pförtner sind Mitarbeiter oder Angestellte.</p>
+<p>Wenn man eine allgemeine Aussage treffen will, dann sagt man z.B. "Unsere Angestellten sind zufrieden." Das ist simpler als "Unsere Buchhalter und Manager und Pförtner sind zufrieden." Und es ist korrekter als "Unsere Buchhalter sind zufrieden."</p>
+<p>Deine Formulierung "vom Flow reden, der aus Aktionen besteht" ist nämlich falsch. Ein Flow besteht eben nicht nur aus Aktionen (in der derzeitigen Terminologie), sondern aus Aktionen und Aktivitäten. Einfacher wäre es zu sagen: "Ein Flow besteht aus XXX." Aber was ist XXX?</p>
+<p>Von mir aus ist XXX "Aktion". Aber dann müssen die atomaren XXX eine andere Bezeichnung bekommen.</p>
+<hr />
+<p><strong>Janek Fellien</strong> (2010-09-08):</p>
+<p>Hallo Ralf,</p>
+<p>gut, ich verstehe, du benötigst es, um die Dinge zusammenzufassen. Dann würde ich im Deutschen die 'Tätigkeit' vorschlagen. Im Englischen müsste man dann das Wort 'Task' verwenden.</p>
+<p>Tätigkeit ist der allgemeine Begriff für Aktivität. Sie lässt sich delegieren und ist zielgerichtet, sprich es steht immer eine Erfüllung einer Aufgabe dahinter.</p>
+<p>Vielleicht hilft das ja weiter.</p>
+<p>Jan</p>
+<hr />
+<p><strong>Sebastian</strong> (2010-09-09):</p>
+<p>Hallo Ralf,</p>
+<p>interessanter Artikel! Was mich noch interessieren würde: Wie hast du die
+OutputPin und InputPin implementiert?</p>
+<p>Viele Grüße</p>
+<p>Sebastian Betzin</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-09-09):</p>
+<p>@Sebastian: Input und Output Pins beschreibe ich mal in der dotnetpro ;-)</p>
+<p>Aber wer nicht warten will, der kann hier in Sourcen schauen: http://bit.ly/cgzbuQ</p>
+<hr />
+<p><strong>Janek Fellien</strong> (2010-09-09):</p>
+<p>Hallo Sebastian,</p>
+<p>ich hatte auch erst diese Frage im Sinn, bis ich mir Rx mal angeschaut habe und zu folgender extrem vereinfachten Implementierung gekommen bin:</p>
+<p>a.) Post- und Subscribe-Methode am OutputPin:</p>
+<p>public IDisposable Subscribe(IObserver observer) {
+      this._observer = observer;
+      return null;
+   }</p>
+<p>Ja, return null ist gar nicht gut und eigentlich sollte man eine Liste von Observern anlegen, aber zum Probieren funktioniert es erst einmal.</p>
+<p>public void Post(TOutput output) {
+      this._observer.OnNext(output);
+   }</p>
+<p>b.) ctor Injection für das Action Mapping</p>
+<p>private Action _triggeraction;</p>
+<p>public Trigger(Action triggerAction) {
+      this._triggeraction = triggerAction;
+   }</p>
+<p>Es macht dabei keinen Unterschied ob nun Trigger oder InputPin als Name des Pins verwendet wird ;-)</p>
+<p>und c.) Aufruf von OnNext
+   public void OnNext(TMessage value) {
+      this._triggeraction(value);
+   }</p>
+<p>Meine Pins sind generisch, damit ich die Typen der Messages steuern kann. Alle anderen Dinge, die noch implementiert werden müssten, habe ich ert einma links liegen gelassen.</p>
+<hr />
+<p><strong>Janek Fellien</strong> (2010-09-09):</p>
+<p>Ja gut Ralf, deine Version ist sicherlich korrekter...</p>
+<p>Danke für den Link</p>
+<p>Jan</p>
+<hr />
+<p><strong>Sebastian Betzin</strong> (2010-09-09):</p>
+<p>Ok, war gar nicht so schwer. Hier ist meine Version:</p>
+<p>Public Class OutPutPin(Of T)
+    Implements IObservable(Of T)
+    Implements IDisposable</p>
+<pre><code>Private m_Observer As IObserver(Of T)
+Private m_Disposed As Boolean
+
+Public Sub New()
+End Sub
+
+Public Function Subscribe(ByVal observer As IObserver(Of T)) As IDisposable Implements IObservable(Of T).Subscribe
+    m_Observer = observer
+
+    Return Me
+End Function
+
+Public Sub Post(ByVal Value As T)
+    m_Observer.OnNext(Value)
+End Sub
+</code></pre>
+<h1>Region "IDisposable Support"</h1>
+<pre><code>Protected Overridable Sub Dispose(ByVal disposing As Boolean)
+    If Not m_Disposed Then
+        If disposing Then
+            m_Observer = Nothing
+        End If
+    End If
+    m_Disposed = True
+End Sub
+
+Public Sub Dispose() Implements IDisposable.Dispose
+    Dispose(True)
+    GC.SuppressFinalize(Me)
+End Sub
+</code></pre>
+<h1>End Region</h1>
+<p>End Class</p>
+<hr />
+<p><strong>Rainer</strong> (2010-10-18):</p>
+<p>Langsam gefällt mir das ganze. Action und Flow finde ich gut.</p>
+<p>Inputs und Outputs habe ich noch nicht in Frage gestellt. Was ich bisher störend finde ist Wiring!</p>
+<p>Hier machen es andere Programmiersprachen nach meinem Bauchgefühl leicher. Siehe F# und Computation Expressions: http://msdn.microsoft.com/en-us/library/dd233182.aspx
+Das ist aber nur mein Eindruck, da ich mich an EBCs noch nicht ausgetobt habe.</p>
+<p>Das Konzept scheint schlüssig, die Umsetzung gefällt mir persönlich noch nicht. Bin gespannt, was ihr euch da in Zukunft noch einfallen lasst.</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-12-16):</p>
+<p>Hallo Ralf</p>
+<p>Hatte ausnahmsweise etwas Zeit, mir Deine Beiträge zum Thema EBCs zu Gemüte zu führen und mit den verschiedenen Ansätzen herumzuspielen.</p>
+<p>Dieser Ansatz hier mit den Input- und Output-Pin Klassen gefällt mir am besten, mit den Events konnte ich mich irgendwie nicht so recht anfreunden, da habe ich immer so ein ungutes Gefühl von wegen Memory-Leaks.</p>
+<p>Da mich die Parameter vom Type "Unit" gestört haben, implementierte ich noch eine dritte Infrastrukturklasse namens FirePin (mir gingen noch die Namen TriggerPin und StarterPin durch den Kopf, bin noch nicht schlüssig, was der beste Namen ist, und auch nicht, ob es gut ist, noch einen Pin-Typ mehr einzuführen oder ob ich mich selber mal anpassen sollte anstatt den Code...).</p>
+<p>Egal, hier ist er:</p>
+<p>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;</p>
+<p>namespace ebc.infrastructure {</p>
+<pre><code>public class FirePin : InputPin {
+
+    //Constructors
+
+    public FirePin(Action aProcessor)
+        : base(new ProcessorAdapter(aProcessor).OnAction) {
+    }
+
+    public FirePin(Action aProcessor)
+        : base(aProcessor) {
+    }
+
+    public FirePin(IObserver anObserver)
+        : base(anObserver) {
+    }
+
+    //Public Methods
+
+    public void Fire() {
+        OnNext(new Unit());
+    }
+
+    //*********************************************************************
+    // INNER CLASS: ProcessorAdapter
+    //*********************************************************************
+
+    private class ProcessorAdapter {
+
+        //Private Fields
+        private Action _Action;
+
+        //Constructors
+
+        public ProcessorAdapter(Action aProcessor) {
+            _Action = aProcessor;
+        }
+
+        //Public Methods
+
+        public void OnAction(Unit aUnit) {
+            _Action.Invoke();
+        }
+
+    }
+
+}
+</code></pre>
+<p>}</p>
+<p>Danke + Gruess
+Christoph Hafner</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TDD im Flow – Teil 2 — ralfw.de Archiv</title>
+<meta name="description" content="Der dritte Test in meiner Planung bleibt sinnig. Er führt zu Änderungen am Produktionscode.">
+<link rel="canonical" href="https://ralfw.de/archiv/2012/tdd-im-flow-teil-2/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="TDD im Flow – Teil 2 — ralfw.de Archiv">
+<meta property="og:description" content="Der dritte Test in meiner Planung bleibt sinnig. Er führt zu Änderungen am Produktionscode.">
+<meta property="og:url" content="https://ralfw.de/archiv/2012/tdd-im-flow-teil-2/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>TDD im Flow – Teil 2</h1>
+    <div class="doc-meta"><span>27. Jan. 2012</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2012/01/tdd-im-flow-teil-2.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2012/tdd-im-flow-teil-2/</code></span></div>
+    <div class="art"><p>Was bisher geschah:</p>
+<ul>
+<li><a rel="noopener" href="http://ralfw.blogspot.com/2012/01/tdd-im-flow-teil-1.html">TDD im Flow – Teil 1</a></li>
+</ul>
+<h4>Test #2: Ein Worker entnimmt aus mehreren Queues</h4>
+<p>Der dritte Test in meiner Planung bleibt sinnig. Er führt zu Änderungen am Produktionscode.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/946d0e4f5e185027.png" /></p>
+<p>Den Testcode zu zeigen, lohnt nicht. Er entspricht der Skizze im Bild. Aber hier der Produktionscode:</p>
+<p>internal class NotifyingMultiQueue
+{
+    List&gt;&gt; _queues = 
+        new List&gt;&gt;();</p>
+<p>public void Enqueue(T message, string queueName)
+    {
+        var queue = _queues.Where(nq =&gt; nq.Key == queueName)
+                           .Select(nq =&gt; nq.Value)
+                           .FirstOrDefault();
+        if (queue == null)
+        {
+            queue = new Queue();
+            _queues.Add(new KeyValuePair&gt;(queueName,
+                                                           queue));
+        }
+        queue.Enqueue(message);
+    }</p>
+<p>public bool TryDequeue(string workerId, out T message)
+    {
+        var queue = _queues[0];
+        _queues.RemoveAt(0);</p>
+<p>message = queue.Value.Dequeue();
+        return true;
+    }
+    …</p>
+<p>Die “Änderung mit Zukunft” betrifft <em>Enqueue()</em>. Dort werden nun nach Name unterschieden Nachrichten in verschiedene Warteschlangen eingetragen. Dass ich dafür die Warteschlangen in einer Liste statt einem <em>Dictionary</em> organisiere, ist nicht nur einer gewissen Voraussicht geschuldet – ich habe eine Idee, wie ich das Round Robbin Verfahren einfach implementieren kann –, sondern auch dem Wunsch, <em>TryDequeue()</em> für den Moment möglichst einfach zu halten.</p>
+<p>Zwar könnte ich <em>Enqueue()</em> noch simpler mit einem Dictionary arbeiten, doch dann könnte <em>TryDequeue()</em> bei der Entnahme nicht durch die Warteschlangen fortschreiten – und sei es auch nur so simpel wie jetzt. In einem Dictionary gibt es keine verlässliche Reihenfolge der Einträge. Ein Fortschreiten durch verschiedene Warteschlangen ist aber nötig, um hier eine neue Äquivalenzklasse anzugehen. Ansonsten ließe sich das Ergebnis dieses Tests auch mit der bisherigen Implementation erreichen.</p>
+<h4>Test #3: Queuewechsel mit Round Robbin</h4>
+<p>Jetzt wird es spannend. Nachrichten in separate Queues zu stellen, ist einfach. Sie aber im Round Robbin Verfahren daraus zu entnehmen, das ist schon kniffliger. Das muss ich nun angehen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9c8c9faf2fc21e42.png" /></p>
+<p>Dazu müssen auch in den Queues mehrere Nachrichten stehen, weil es ja der Trick beim Round Robbin ist, nicht erst eine Queue abzuarbeiten, sondern für jede Nachricht eine weiter zu rücken.</p>
+<p>Oben habe ich mir Gedanken zu einer Datenstruktur gemacht, mit der das möglich ist. Ein hübscher Plan… den ich nun fallen lasse. Nein, den ich schon mit der vorherigen Implementation habe fallen lassen.</p>
+<p>Ich baue mir nicht selbst eine verkette Liste von Warteschlangen, sondern nehme eine normale Liste, der ich Queues in ihrer Reihenfolge vorne entnehme und hinten wieder anfüge. So wandern sie im Kreis durch das Fenster des Listenkopfs.</p>
+<p>internal class NotifyingMultiQueue
+{
+    List&gt;&gt; _queues =
+        new List&gt;&gt;();</p>
+<p>…
+    public bool TryDequeue(string workerId, out T message)
+    {
+        var queue = _queues[0];
+        _queues.RemoveAt(0);
+        _queues.Add(queue);</p>
+<p>message = queue.Value.Dequeue();
+        return true;
+    }
+    …</p>
+<p>Um diesen Test “ergrünen zu lassen” ist nur eine weitere Zeile Code in <em>TryDequeue()</em> nötig. “Pointergehansel” wie im Datenmodell ist nicht nötig. Das hatte ich geahnt beim vorherigen Test und deshalb eine Liste statt eines <em>Dictionary</em> für die benannten Queues gewählt.</p>
+<p>Hm… man könnte nun argumentieren, dass hier eine Datenstruktur (Liste) zwei Zwecken dient: der Haltung benannter Queues (insb. für <em>Enqueue()</em>) und dem Durchlaufen der Queues in bestimmter Reihenfolge (<em>TryDequeue()</em>). Diesem Hinweis auf das SRP halte ich aber KISS entgegen: für den Moment stellt diese Verquickung kein Problem dar. <em>TryDequeue()</em> wird dadurch nicht komplizierter. Und <em>Enqueue()</em>eigentlich auch nicht. Im Falle des Wechsels der Entnahmestrategie müsste ich ohnehin beide Methoden anfassen.</p>
+<h4>Noch ein Testszenario entfällt</h4>
+<p>Beim nächsten Testszenario muss ich schon wieder feststellen, dass ich übers Ziel hinausgeschossen bin. Es zu erfüllen, bedarf keiner Änderung am Code.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/6d578f2ac9ca7f0b.png" /></p>
+<p>Das erkenne ich aber erst jetzt, da ich die Lösung besser verstehe und schon Code geschrieben habe. Macht nichts. Ein Test weniger fällt mir leicht ;-)</p>
+<p><em><a rel="noopener" href="http://ralfw.blogspot.com/2012/01/tdd-im-flow-teil-3.html">Weiter geht es im nächsten Teil…</a></em></p>
+<p><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY"></a><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY">Spendieren Sie mir doch einen Kaffee, wenn Ihnen dieser Artikel gefallen hat...</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

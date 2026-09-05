@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Was kommt nach WCF? Gedanken über die Grenzen der Nachrichtenorientierung — ralfw.de Archiv</title>
+<meta name="description" content="Um es gleich vorweg zu sagen: Ich find WCF schon toll. Aber - und dieses aber ist mir wichtig - WCF lässt in mir kein Gefühl von &quot;angekommen sein&quot; entstehen.">
+<link rel="canonical" href="https://ralfw.de/archiv/2008/was-kommt-nach-wcf-gedanken-ber-die/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Was kommt nach WCF? Gedanken über die Grenzen der Nachrichtenorientierung — ralfw.de Archiv">
+<meta property="og:description" content="Um es gleich vorweg zu sagen: Ich find WCF schon toll. Aber - und dieses aber ist mir wichtig - WCF lässt in mir kein Gefühl von &quot;angekommen sein&quot; entstehen.">
+<meta property="og:url" content="https://ralfw.de/archiv/2008/was-kommt-nach-wcf-gedanken-ber-die/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Was kommt nach WCF? Gedanken über die Grenzen der Nachrichtenorientierung</h1>
+    <div class="doc-meta"><span>31. Jan. 2008</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2008/01/was-kommt-nach-wcf-gedanken-ber-die.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2008/was-kommt-nach-wcf-gedanken-ber-die/</code></span></div>
+    <div class="art"><p>Um es gleich vorweg zu sagen: Ich find WCF schon toll. Aber - und dieses aber ist mir wichtig - WCF lässt in mir kein Gefühl von "angekommen sein" entstehen.</p>
+<p>Toll an WCF ist die Vereinheitlichung, die es erreicht hat. COM+/Enterprise Services, .NET Remoting, Web Services und MSMQ sind in WCF zu einem konsolidierten Programmier- und Kommunikationsmodell zusammengeflossen. Äußerlich ist der Unterschied zwar marginal - es werden wie seit der Erfindung von RPC immer noch entfernte Funktionen direkt aufgerufen. Doch die konsequente Nachrichtenorientierung ist der Natur entfernter Kommunikation wesentlich angemessener als die bisherigen Versuche der Objektorientierung, ihren Siegeszug bei der in-process Kopplung von Codeeinheiten auch auf die cross-process oder gar cross-platform Kopplung auszudehnen. Corba, EJB, .NET Remoting heißen diese letztlich gescheiterten Versuche. RIP.</p>
+<p>Also: WCF ist toll. Und doch...</p>
+<p>Es will sich bei mir kein wohliges Gefühl der Zufriedenheit einstellen. Die Vereinheitlichung ist mir irgendwie nicht genug. Vereinheitlichung war zwar ein wichtiges Ziel, ebenso der konsequente Abschied von "verteilten Objekten" - aber ist WCF deshalb gleich das Ideal? WCF ist vielleicht der beste vereinheitlichte nachrichtenorientierte API, den es gibt.  Aber wollen wir eigentlich Nachrichtenorientierung? Ist funktionsbasierte Nachrichtenorientierung als einziges Kommunikationsmodell zwischen verteilten Codeeinheiten wirklich das wünschenswerte Abstraktionsniveau?</p>
+<p>Ich werde das Gefühl nicht los, dass "es" noch anders gehen könnte und sollte. Zumindest als Alternative, wenn nicht als pauschaler Ersatz für WCF. Um das Gefühl mal zu konkretisieren, hier einige Punkte, die mir bei WCF aufstoßen. Lobeshymnen hören wir ja häufig genug. Also:</p>
+<ul>
+<li>WCF ist unehrlich  WCF ist anti-autonom  WCF ist kompliziert  WCF ist starr  WCF ist unintuitiv</li>
+</ul>
+<p>So ganz allein stehe ich mit meiner Meinung, dass WCF bzw. allgemeiner die Nachrichtenorientierung irgendwie noch nicht das Ende der Fahnenstange sein kann, wohl auch nicht. Das renommierte Portal "The Service Side" (TSS) hat gerade ein <a rel="noopener" href="http://www.theserverside.com/tt/knowledgecenter-gs/?Offer=TSSkcgiga125">"Space Based Architecture Knowledge Center"</a> eingerichtet und Amazon hat unlängst einen <a rel="noopener" href="http://en.wikipedia.org/wiki/Tuple_space">Tuple Space</a> (<a rel="noopener" href="http://www.amazon.com/b?ie=UTF8&amp;node=342335011">SimpleDB</a>) als Beta in sein SaaS-Angebot gehoben. (Mehr zum Thema SimpleDB in bei meinem Open Source Projekt <a rel="noopener" href="http://code.google.com/p/nsimpledb/">NSimpleDB</a>.)</p>
+<p>Spaces - so die Botschaft von TSS (mithilfe des Infrastrukturanbieters <a rel="noopener" href="http://www.gigaspaces.com/">Gigaspaces</a>) und Amazon - sind eine Alternative zur Nachrichtenorientierung. Spaces und Räume statt der ewigen Röhren. Warum nicht? Dem Gedanken bin ich sehr zugetan. Deshalb bastle ich mit an einem <a rel="noopener" href="http://www.xcoordination.com/">"Space-Angebot"</a> - das aber noch eine Weile bis zum großen Auftritt brauchen wird. Deshalb habe ich das SimpleDB Datenmodell mit <a rel="noopener" href="http://ralfw.blogspot.com/2008/01/amazons-simpledb-at-your-fingertips.html">NSimpleDB auf den Desktop</a> gebracht, um es leichter für Experimente verfügbar zu machen. Denn Experimente sind noch nötig, um die Reichweite des Space-Paradigmas abzustecken. In dieser Linie sehe ich auch dieses Posting: Als ein lautes Nachdenken über Space Based Architecture (SBA) oder Space Based Computing (SBC) oder Space Based Collaboration (SBC), mit dem ich mir selbst wieder ein Stückchen klarer über Nutzen und Grenzen von SBC/SBA werde. Ein probater Anfang ist dafür wie immer, mal die "pain points" zu benennen, wo mich das Existierende sticht.</p>
+<p>WCF ist aus meiner Sicht <strong>unehrlich</strong>, weil ich die Syntax des Methodenaufrufs für das falsche Mittel halte, um einen Auftrag an eine entfernte Codeeinheit zu übermitteln. Einer Anweisung wie</p>
+<p>resp = service.TueEtwas(req);</p>
+<p>kann ich nicht ansehen, ob der Service lokal oder remote läuft. Läuft er aber remote, dann leistet die Syntax den vielzitierten <a rel="noopener" href="http://en.wikipedia.org/wiki/Fallacies_of_Distributed_Computing">"Fallacies of Distributed Computing"</a> massiven Vorschub. Das halte ich für essenziell nachteilig im Hinblick auf Wartbarkei und Verständlichkeit und womöglich auch Skalierbarkeit und Performance. Ausführlich habe ich diesen Gedanken <a rel="noopener" href="http://www.soa-expertenwissen.de/files/SOA-Expertenwissen_Kapitel_27.pdf">in einem Beitrag [PDF]</a> für <a rel="noopener" href="http://www.soa-expertenwissen.de/">"SOA Expertenwissen"</a> dargelegt.</p>
+<p>In dem Beitrag erkläre ich auch, warum diese Form der "Auftragsübermittlung" für mich grundlegend <strong>anti-autonom</strong> ist. Sie formuliert einen Befehl, dessen syntaktische Form danach heischt, sofort ausgeführt zu werden. Sofortigkeit steht jedoch zum Einen im Widerspruch zur physikalischen Realität der Verteilung von Client und Service, zum Anderen ist sie aber auch unvereinbar mit dem simplen Hauptgrund einer Verteilung überhaupt: Autonomität. Verteilte Codeeinheiten sind verteilt, damit sie möglichst autonom über ihre Prozesse und Ressourcen entscheiden können. Wer jedoch autonom ist, der will sich nicht vorschreiben lassen, wann und wie genau er einen Dienstleistungswunsch erfüllt. Solchen Freiraum bietet die Form der Nachrichtenorientierung in WCF jedoch nicht.</p>
+<p>Nun mag man das alles für Haarspalterei halten. Das fände ich zwar schade, weil Form und Funktion, Syntax und Semantik in einem Gleichklang stehen sollten. Wenn sich die Funktionsweise in der Form widerspiegelt, wenn klar erkennbar ist, wie etwas funktioniert, dann ist das Bild kohärent und wirkmächtiger. Dann ist weniger Raum für Missverständnisse.</p>
+<p>Aber sei´s drum. Deshalb hier zwei hoffentlich handfestere Kritikpunkte: Ich finde WCF recht einfach für Allereinfachstes, aber <strong>kompliziert</strong> für sehr Typisches. Typisch sind für mich z.B. die asynchrone Benachrichtigung über Ereignisse in einem Service, typisch sind für mich daraus folgende Aufrufe des Service. Beides ist natürlich mit WCF möglich. Aber ich finde es recht kompliziert. Für eine simple Notifikation muss ich plötzlich über Duplexkommunikation nachdenken und ein Rückrufinterface registrieren. Und wenn ich dann in so einem Event den Service aufrufen möchte, dann geht es plötzlich um Reentrancy. Das kann man alles lernen. Klar. Aber das ist so typisch, dass ich den Lernaufwand und damit die Gefahr, etwas falsch zu machen, für zu groß halte.</p>
+<p>Kompliziert wird es auch, wenn meine Services nicht (nur) an einer Adresse zu erreichen sind. WCF verlangt ja, dass ich die Adresse einer Dienstleistung festlege. Das finde ich <strong>starr</strong>. Reicht das starre Schema aber nicht, weil ich Mobilität oder Fehlertoleranz haben möchte, dann muss ich Klimmzüge machen oder gar orthogonal zu WCF mit Infrastruktur wie Clusterservern anfangen. Geht alles - aber könnte einfacher sein, finde ich.</p>
+<h2>Kollaboration statt Kommandoton</h2>
+<p>Schließlich: Mit WCF kann ich Nachrichten zwischen zwischen Parteien austauschen. Aber ist das Leben denn immer Nachrichtenaustausch, direkter Nachrichtenaustausch? Wer gewohnt ist, im Kommandoton zu sprechen und sofortige Ausführung erwartet, der ist mit Nachrichtenaustausch von oben nach unten in der Befehlshierarchie sicherlich zufrieden. Doch selbst das Militär hat inzwischen erkannt, dass sich mit Gehorsam allein kein Krieg gewinnen lässt. Krieg und Geschäftsleben, beide sind so dynamisch, dass autonome Entscheidungen ohne expliziten Befehl ganz vorne an der Front wichtig sind. Und Kriegsführung wie Geschäftsführung setzen daher auf Kollaboration statt Kommandoton, wenn´s darauf ankommt, wirklich etwas gebacken zu bekommen.</p>
+<p>Kollaboration, d.h. selbstständige Zusammenarbeit an etwas Gemeinsamem, ist auch die natürlichste Arbeitsform. Dabei zwingt nicht der eine Kollaborateur den anderen, ihm - hopp! - einen Dienst zu leisten, sondern wünscht sich das sozusagen indirekt. In der Kollaboration ist Asynchronizität der vorherrschende "Antwortmodus" und Aufgaben werden "ausgeschrieben". Kollaborateure stehen um ein (mehr oder weniger handfestes) Medium herum, auf das sie gemeinsam blicken. Das kann ein Arbeitsplan sein, eine Geländekarte, eine Bauwerk, ein Tisch voll mit CRC-Cards, eine Inbox auf dem Schreibtisch oder auch ein Spielbrett. An diesem Medium arbeiten die Kollaborateure gemeinsam, damit bzw. daran teilen sie sich Aufgaben zu. Jeder behält dabei seine Autonomität, beobachtet das gemeinsame Medium, manipuliert das gemeinsame Medium. Und die von allen anerkannten Regeln, wie mit dem Medium umgegangen werden darf, sorgen dafür, dass die Kollaborateure trotz ihrer Autonomität einem gemeinsamem Ziel zustreben.</p>
+<p>Also: Wo die Aktivitäten von autonomen Einheiten koordiniert werden sollen, geschieht das oft über einen "runden Tisch", ein gemeinsames Medium, um das sich alle versammeln. Da WCF nun eine Technologie ist, die die Zusammenarbeit von Codeeinheiten befördern will, liegt deshalb die Frage nahe, ob WCF jenseits des Kommandotons entfernter Serviceaufrufe auf die Kollaboration mittels gemeinsamen Mediums beherrscht? Die Antwort lautet nein. Für WCF ist die Arbeit an gemeinsamen Datenstrukturen kein Thema. Und genau das halte ich für ein großes Manko. Das macht WCF nämlich <strong>unintuitiv</strong> für den Einsatz in vielen Verteilungsszenarien. Schon ein simpler Chat oder ein verteiltes Spiel sind dafür gute Beispiele: Chat und Spiel (z.B. TicTacToe) sind triviale Kollaborationsaufgaben, bei denen die Beteiligten an einfachen Datenstrukturen gemeinsam arbeiten. Beim Chat ist das eine Liste von Nachrichten, beim Spiel ein zweidimensionales Array (Spielfeld). Von einer Technologie, die die Entwicklung verteilter Anwendungen erleichtern will, erwarte ich nun, dass sie mich auch unterstützt, diese natürliche Sichtweise im Code abzubilden. Das tut WCF aber nicht. Für WCF gibt es keine gemeinsame Liste, kein gemeinsames Spielfeld. WCF sagt: "Sieh zu, wie du es mit gegenseitig zugerufenen Befehlen hinbekommst, dass jeder Beteiligter denkt, es gäbe die gemeinsame Datenstruktur."</p>
+<p>Das ist natürlich absolut legitim. Wenn WCF sich mit gemeinsamen, verteilten Datenstrukturen nicht abgeben will, dann ist das eine klare Aussage. Aber es bleibt dadurch eben auch eine Lücke. Manche oder womöglich <a rel="noopener" href="http://ralfw.blogspot.com/2007/12/oop-2008-was-kommt-nach-oltp-oder-wo.html">eine ständig wachsende Zahl von Anwendungen</a> haben es trotz WCF schwer. Bei ihnen geht es "nur" um Kollaboration und gleich eine Datenbank als gemeinsame Struktur aufzusetzen, wäre für sie Overkill. Kollaborationsinformationen sind oft nur kurzzeitig relevant.</p>
+<h2>Mit mehr Abstraktion in die Zukunft</h2>
+<p>Für mich ergibt sich damit ein "Wunschbild" wie folgt:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a9903549425baf5d.png" /></p>
+<p>Der Stack der Kommunikationstechnologien wäschst weiter. Muss weiter wachsen. Alte Technologien werden nicht einfach ersetzt, sondern in der Relevanz nur zurückgedrängt. Es wird weiterhin Anwendungen geben, die direkt via Sockets kommunizieren müssen. Und das ist ok. Auch wird es Szenarien geben, in denen .NET Remoting Stärken gegenüber WCF ausspielt, d.h. entfernte Objekte gegenüber der  Nachrichtenorientierung einfach Abstraktionsvorteile bieten. Und warum auch nicht? Nachrichtenorientierung mit WCF wird natürlich auch ihren Platz haben. Keine Frage. Aber ich glaube, Nachrichtenorientierung tut gut daran, ihren Alleinherrschaftsanspruch über die Kommunikation in verteilten Anwendungen aufzugeben. Nachrichtenorientierung ist nicht das Gipfelkreuz auf dem Abstraktionsberg, sondern allenfalls ein Lager in großer Höhe.</p>
+<p>Und was kommt nach bzw. oberhalb von WCF? Mein Tipp: Space Based Collaboration. Spaces sind nach 20 Jahren Forschung und kommerziellen Anläufen reif für die breite Masse. Performance und Netzwerkverfügbarkeiten sind hoch genug, um ihre Ansprüche befriedigen zu können. Abstraktion kostet ja immer etwas.</p>
+<p>Aber Abstraktion bringt vor allem immer etwas: weniger Kopfschmerzen. Das halte ich für erstrebenswert. WCF ist gut und notwendig. Aber verteilte Anwendungen der unterschiedlichsten Art und Größe - von cross-thread Kommunikation bis global cross-platform Kommunikation - dürfen gern noch viel einfacher zu bauen sein. Spaces bieten da, meine Meinung nach, ein schönes und überfälliges Daten-/Programmiermodell. Denken in Räumen und Datenstrukturen, statt in Nachrichten und Röhren.</p>
+<p>Tuple Spaces, JavaSpaces, GigaSpaces, SimpleDB... das ist erst der Anfang. Stay tuned!</p>
+<h2>Kommentare</h2>
+<p><strong>Unknown</strong> (2008-01-31):</p>
+<p>Interessante Gedanken äusserst Du da heute in Deinem Denkraum. Da bin ich mal gespannt, ob sich Christian Weyer   äussern wird. ;-)</p>
+<p>Aber jetzt mal im Ernst, wenn man sich in die Grundlagen der Spaces einarbeiten möchte, wenn man herausfinden möchte in wie weit Spaces in täglichen Projekten Sinn machen, kurzum wenn man einen Einstieg sucht - welche Ressourcen würdest Du empfehlen?</p>
+<p>Eine Sache noch am Rande: Du schreibst in diesem Beitrag beispielsweise  "...der beste vereinheitlichte nachrichtenorientierte API" und oft sehe ich in anderen Texten von Dir dass Du zum Beispiel "der .NET Framework" schreibst anstatt "das". Kannst Du mir das erklären? Ich dachte immer es sei das .NET Framework bzw die API. Framework = Rahmenwerk = das Rahmenwerk; API, Interface = Schnittstelle = die Schnittstelle.</p>
+<p>Gruss aus Franken,</p>
+<p>Marc</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2008-01-31):</p>
+<p>@Marc: Zu Spaces findest online etwas. Google mal nach "Tuple Spaces" oder auch "JavaSpaces" oder "Linda". Ansonsten gibt es auch ein Buch zu JavaSpaces; Amazon hilft da gern. Außerhalb des akademischen Bereiches ist es ansonsten aber vergleichsweise dünn mit Infos. Literatur richtet sich ja vor allem nach den de facto im Einsatz befindlichen Technologien. Dazu gehören Spaces (noch) nicht. Nur GigaSpaces machen eigntlich eine Ausnahme. Die haben auch Whitepapers online. Von mir wird in Zukunft aber auch noch etwas kommen :-)</p>
+<p>Zum Geschlecht von Fremdworten: Da gibt es keine wirklich letztgültige Regel. "Rahmenwerk" sächlich ist, also auch "das" Framework? Hm... Mir liegt da (manchmal) "der" Rahmen näher, also "der" Framework.</p>
+<p>Oder Toolbar. Der Toolbar? Oder die Toolbar? An letzterer würde ich eher was trinken gehen :-)</p>
+<p>Die API habe ich allerdings noch gar nicht gehört. Der API oder das API, würd ich sagen, ist üblich.</p>
+<p>Aber wie gesagt: Wirklich letztendgültig ist das nicht geregelt. Duden hilft leider nicht.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2008-02-01):</p>
+<p>Ich finde Deine Ausführungen auch sehr interessant. Ich bin auf Deinen Beitrag gestossen, da ich mich zur Zeit auch mit der WCF beschäftige. Ich erstelle eine einfache Kommunikation zwischen einer Client Anwendung und einem Server. Hier müssen die verschiedenen Clients allerdings voneinander "erfahren"! Es handelt sich also im übertragenen Sinn um eine "Chat" Applikation. Ich habe aus dieser Aufgabe aber die gleichen Schlüsse gezogen wie Du. Ich finde die WCF vor allem zu kompliziert! Über was man sich hier Gedanken machen muss, um solche Standardszenarien abzuhandeln finde ich schon erstaunlich. Ich hatte die WCF gewählt, da mir auch ständig die Lobeshymnen untergekommen sind. Mein Fazit bisher: Ich bin etwas enttäuscht und finde die WCF absolut noch nicht der Weisheit letzter Schluss (hoffentlich!).</p>
+<p>Gruss
+Markus</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

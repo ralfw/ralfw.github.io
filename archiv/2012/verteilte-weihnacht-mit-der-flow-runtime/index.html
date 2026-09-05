@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verteilte Weihnacht mit der Flow Runtime — ralfw.de Archiv</title>
+<meta name="description" content="Für die Freunde des Flow-Designs hier zu Weihnachten eine kleine Überraschung: Flows verteilen mit der Flow Runtime einfach gemacht. Als Beispiel soll Bestellung und &quot;Aufbau eines ">
+<link rel="canonical" href="https://ralfw.de/archiv/2012/verteilte-weihnacht-mit-der-flow-runtime/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Verteilte Weihnacht mit der Flow Runtime — ralfw.de Archiv">
+<meta property="og:description" content="Für die Freunde des Flow-Designs hier zu Weihnachten eine kleine Überraschung: Flows verteilen mit der Flow Runtime einfach gemacht. Als Beispiel soll Bestellung und &quot;Aufbau eines ">
+<meta property="og:url" content="https://ralfw.de/archiv/2012/verteilte-weihnacht-mit-der-flow-runtime/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Verteilte Weihnacht mit der Flow Runtime</h1>
+    <div class="doc-meta"><span>21. Dez. 2012</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2012/12/verteilte-weihnacht-mit-der-flow-runtime.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2012/verteilte-weihnacht-mit-der-flow-runtime/</code></span></div>
+    <div class="art"><p>Für die Freunde des Flow-Designs hier zu Weihnachten eine kleine Überraschung: Flows verteilen mit der <a rel="noopener" href="https://github.com/ralfw/NPantaRhei">Flow Runtime</a> einfach gemacht. Als Beispiel soll Bestellung und "Aufbau eines Weihnachtsbaums dienen.</p>
+<p>Wer kennt das nicht: Vor lauter Weihnachtsfeier- und Jahresendprojektstress wird der Kauf eines Weihnachtsbaums bis zum letzten Tag verschoben. Und dann muss man sehen, was übrig bleibt. Das macht die Familie gar nicht glücklich.</p>
+<p>Aber jetzt gibt es eine Weihnachtsbaumanwendung für den Windows Desktop :-) Mit der kann man sich einen Weihnachtsbaum in verschiedenen Größen bestellen. So siehts aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/7948992a7ad60198.png" /></p>
+<p>Mit dem Slider auf der rechten Seite stellt man die gewünschte Zahl der Äste ein – und schon wird der Weihnachtsbaum hergestellt und “aufgebaut”. Naja… nur auf dem Bildschirm. Aber immerhin. Bevor es gar keinen gibt… ;-)</p>
+<p>Die Herstellung des Weihnachtsbaums übernimmt eine <em>TreeFactory</em>:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/1a175c6db2e05ad7.png" /></p>
+<p>In ihr gibt es drei “Herstellungsstationen”, die ein Baum nacheinander durchläuft. Der Flow dafür sieht so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a23c3101c82f530d.png" /></p>
+<p>Zuerst werden nur die Äste in Form von *-Reihen erzeugt, dann werden diese Reihen so eingerückt, dass das charakteristische Dreieck entsteht, und schließlich kommt darunter ein kleiner I-Stamm.</p>
+<h3>Lokale DIY-Herstellung</h3>
+<p>In der ersten Ausbaustufe wird der Weihnachtsbaum lokal hergestellt, sozusagen <em>xmas tree <a rel="noopener" href="http://szenesprachenwiki.de/definition/fabbing/">fabbing</a></em>. Die <em>TreeFactory</em> läuft in der Desktop-Anwendung im Rahmen eines allgemeineren “Weihnachtsfabrik”-Flusses. Weihnachtsbäume sind ja auch nur eine, was man zum Fest herstellen könnte:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/b44a7ca62857d05f.png" /></p>
+<p>Die Anwendung bestellt beim Start sogleich einen Baum mit 2 Ästen - und danach immer wieder, wenn der Schieberegler bewegt wird. Und das alles <em>from the comfort or your living room</em> :-)</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/fdbc814a065cdbbc.png" /></p>
+<h3>Auslagerung der Produktion</h3>
+<p>Das Weihnachtsbaum <em>fabbing</em> ist hübsch modern. Aber leider kommt dabei nur ein Weihnachtsbaum aus “Plastik” heraus. Ein natürlicher Weihnachtsbaum wäre schöner, oder? Oder einer, bei dem man aus verschiedenen Materialien wählen kann? Jedenfalls scheint eine Auslagerung der Weihnachtsbaumproduktion Vorteile zu bieten.</p>
+<p>Aus der lokalen Weihnachtsbaumproduktion soll deshalb eine entfernte werden. Allerdings ohne große “Off-Shoring-Schmerzen”. Wie kann das mit Flows gehen?</p>
+<p>Aus der Desktop-Anwendung wird ein Desktop-Client und die Produktion wandert in einen Server.</p>
+<p>Dazu wird der Flow <em>xmasfactory</em> in der Anwendung durch eine generische so genannte Stand-In Operation ersetzt:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/4020d18edf09e7a5.png" /></p>
+<p>Die sieht nach außen immer genauso aus wie die Funktionseinheit, die sie ersetzt – intern jedoch leitet sie Input über ein Kommunikationsmedium weiter an die entfernte Funktionseinheit und leitet deren Output zurück in den lokalen Flow. Im Beispiel geschieht das mit WCF als API und TCP als Medium.</p>
+<p>Der Code ändert sich dadurch wie folgt:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a1f0476e96ff0fd6.png" /></p>
+<p>Die <em>WcfStandInOperation</em>bekommt eine lokale Adresse, auf der sie entfernten Output empfängt, und eine entfernte Adresse für die “off-shore” <em>xmasfactory</em>, an die sie Input sendet.</p>
+<p>In der Flow-Definition wird der bisherigen lokalen <em>xmasfactory</em> der Name der Stand-In Operation mit “#” voran gesetzt. Dadurch wird die Stand-In Operation adressiert, behält über die Instanzkennung [1] nach dem “#” aber die Information, welche Funktionseinheit sie ersetzt.</p>
+<p>Die <em>WcfStandInOperation</em> kommt aus der Assembly <em>npantarhei.distribution.wcf</em>, die der Client nun referenzieren muss. Die ist nun Teil des <a rel="noopener" href="https://github.com/ralfw/NPantaRhei">NPantaRhei Repositorys</a>.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/00e41fd653288879.png" /></p>
+<p>Soweit der Client. Er wird im Grunde einfacher. Die Servicefunktionalität entfällt und wird ersetzt durch ein Stand-In.</p>
+<p>Aber keine Sorge, der Server, in dem sie neu aufgehängt wird, ist leicht herzustellen. Der enthält die extrahierte Funktionseinheit nun allein auf oberster Ebene in einem Flow:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/286e720a659e7a08.png" /></p>
+<p>Daran ist keine Veränderung vorzunehmen; sie muss sogar so aussehen, wie zuvor, weil sie sonst nicht durch das Stand-In korrekt repräsentiert würde.</p>
+<p>Allerdings wird die <em>xmasfactory</em> nun direkt über Flow-Ports angesteuert. Wie sollen die heißen, damit sie automatisch bestimmt werden können? Aus <em>xmasfactory.Build_tree</em> wird <em>.Build_tree@xmasfactory</em>.</p>
+<p>Dieser kleine Trick ist nötig, weil in einer Portbeschreibung nur ein Punkt vor dem Portnamen stehen soll. Die Beschreibung <em>.xmasfactory.Build_tree</em> wäre daher ungültig. Also wird der Portname nach vorne gezogen und der Funktionseinheitsname mit “@” dahinter gesetzt. Das ist nicht besonders schön, funktioniert aber erstmal. So können aus der Instanzkennung und dem Portnamen vom Stand-In die serverseitigen Portbeschreibungen bestimmt werden und umgekehrt.</p>
+<p>Damit Requests an den Server zu Input für den Flow werden und Output als Response zum Stand-In zurückfließen kann, wird die Flow Runtime in einem so genannten Operation Host gehalten:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/aa6a6956d5d19ada.png" /></p>
+<p>Der Operation Host empfängt über einen transportmediumspezifischen Transceiver Daten als Input für Flows in der Runtime; und Output aus Wurzelports der Runtime leitet er über den Transceiver dorthin zurück, von wo der zugehörige Input gekommen ist. Den Bezug stellt er über eine out-of-band Correlation-Id her, die er dem Input bei Empfang aufprägt und die über den ganzen Flow erhalten bleibt.</p>
+<p>Was sich vielleicht kompliziert anhört, ist in der Codepraxis aber simpel:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/eddabe5a11152fc7.png" /></p>
+<p>In der Flow-Definition taucht die <em>xmasfactory</em> wie bekannt aus der lokalen Anwendung 1:1 auf. Ansprechbar wird sie gemacht durch die globalen Port des Wurzel-Flows wie oben beschrieben.</p>
+<p>Ansonsten kommt nur der <em>WcfOperationHost</em> dazu, der die Flow Runtime aufnimmt und eine Adresse erhält, auf der er angerufen werden kann.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/6a6aac543702a472.png" /></p>
+<p>Fertig!</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f914a120cf66f1b0.png" /></p>
+<p>Mehr ist nicht zu tun, um eine Funktionseinheit entfernt zu betreiben. Der Flow im Client merkt davon im Grunde nichts. Und die entfernte Funktionseinheit auch nicht. Sie müssen also nicht immer wieder neue Servicedefinitionen vornehmen wie bei WCF. Mit denselben Bausteinen – Stand-In Operation und Operation Host – können Sie jede Funktionseinheit verteilen. Nur die Daten, die über das Transportmedium als Input dorthin und als Output von dort zurück fließen, müssen <em>[Serializable]</em> sein.</p>
+<h3>Fazit</h3>
+<p>Die Verteilung von Flows sollte so einfach wie möglich sein. Ich glaube, das ist nun ganz grundsätzlich der Fall. Die WCF-Bausteine sind dabei nur erste einfache Adapter für ein Transportmedium als Beispiele dafür, wie es geht. Nähere Informationen dazu und auch zur Behandlung von Exceptions in verteilten Flows, in der <a rel="noopener" href="http://www.dotnetpro.de/articles/">dotnetpro 2/2013</a>.</p>
+<p>Ich hoffe, es ist rüber gekommen, dass Sie Flows jetzt lokal entwickeln und testen können – und anschließend einen beliebigen Teil einfach verpflanzen. Dass die Kommunikation dann asynchron wird, ist nicht so schlimm, weil Flows darauf ohnehinn viel besser vorbereitet sind.</p>
+<p>Indem Sie vor der Verteilung zum Beispiel ein Operation im zu entfernenden Flow auf asynchrone Verarbeitung setzen oder den Verarbeitungsmodus der Flow Runtime auf asynchrone Breitenorientierung setzen, können Sie deklarativ ganz einfach simulieren, wie sich die Verarbeitung nach der Verteilung verhalten wird.</p>
+<p>Oder sie betreiben die Flow Runtime für den Client und die Flow Runtime für den Server im selben Adressraum mit einem kleinen Bus verbunden statt über WCF. Dazu finden Sie eine Hilfestellung in der Assembly <em>npantarhei.distribution</em>, auf die <em>npantarhei.distribution.wcf</em> aufbaut.</p>
+<h4>Fußnoten</h4>
+<p>[1] Instanzkennungen sind schon lange ein Feature der Flow Runtime. Sie kommen immer dann zum Einsatz, wenn eine Funktionseinheit in einem Flow an mehreren Stellen mit dem selben Namen benutzt werden soll.</p>
+<p>Das ist bei Stand-In Operationen auch der Fall. Die selbe Stand-In Operation soll für verschiedene entfernte Funktionseinheiten stehen können.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software systematisch wachsen lassen — ralfw.de Archiv</title>
+<meta name="description" content="Mir gefällt die Metapher von der “wachsenden Software”. Ein schöner bildlicher Gegenentwurf zur Hausbaumetapher. Aber bisher hat mir dabei immer etwas gefehlt. Wie funktioniert den">
+<link rel="canonical" href="https://ralfw.de/archiv/2014/software-systematisch-wachsen-lassen/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software systematisch wachsen lassen — ralfw.de Archiv">
+<meta property="og:description" content="Mir gefällt die Metapher von der “wachsenden Software”. Ein schöner bildlicher Gegenentwurf zur Hausbaumetapher. Aber bisher hat mir dabei immer etwas gefehlt. Wie funktioniert den">
+<meta property="og:url" content="https://ralfw.de/archiv/2014/software-systematisch-wachsen-lassen/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Software systematisch wachsen lassen</h1>
+    <div class="doc-meta"><span>14. Aug. 2014</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2014/08/software-systematisch-wachsen-lassen.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2014/software-systematisch-wachsen-lassen/</code></span></div>
+    <div class="art"><p>Mir gefällt die Metapher von der “wachsenden Software”. Ein schöner bildlicher Gegenentwurf zur Hausbaumetapher. Aber bisher hat mir dabei immer etwas gefehlt. Wie funktioniert denn das mit dem Wachsen genau? Software wächst ja nicht von allein, sondern durch unseren Eingriff von außen.</p>
+<p>Das Buch <a rel="noopener" href="http://www.amazon.de/Growing-Object-Oriented-Software-Addison-Wesley-Signature-ebook/dp/B002TIOYVW/">“Growing Object-Oriented Software Guided by Tests”</a> (GOOS) hat versucht, diesen Wachstumsprozess, nein, eher die Wachstumstätigkeit zu konkretisieren. Tests sollen das Wachstum antreiben und ausrichten.</p>
+<p>Das ist sicher richtig, insofern Tests für Anforderungen stehen. Alles beim Wachstum von Software sollte durch konkrete Anforderungen motiviert sein. Doch was tun, nachdem ein Test definiert ist? Die Struktur des Produktionscodes ergibt sich ja nicht von allein, sobald man einen automatisierten Test hat.</p>
+<p>Da greift das Buch bzw. die ganze Metapher bisher für mich zu kurz.</p>
+<p>Heute morgen jedoch ist mir aufgegangen, wie das, was ich bisher als <em>Softwareuniversum</em> bezeichnet habe, eigentlich eine Anleitung zum Wachstum ist, also sozusagen die DNA für einen Softwareorganismus.</p>
+<p>Eine ausführliche Beschreibung des Softwareuniversums finden Sie in meinem Buch <a rel="noopener" href="https://leanpub.com/thearchitectsnapkin-derschummelzettel">The Architect’s Napkin - Der Schummelzettel</a>. Im Weiteren benutze ich die Begriffe aus dem Softwareuniversum ohne ausführliche Erklärung. Ich möchte mich auf ihre Neuordnung konzentrieren.</p>
+<h3>Anforderungen als Nahrung</h3>
+<p>Getrieben wird das Wachstum von Software durch Anforderungen. Doch die sollten nicht allen in einen Topf geworfen werden. Eine differenzierte Sichtweise lohnt sich, denn unterschiedliche Arten von Anforderungen müssen beim Wachsen auch unterschiedlich behandelt werden.</p>
+<p>Ich unterscheide drei Kategorien von Anforderungen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e639d22386aa2a94.jpg" /></p>
+<p>Funktionale Anforderungen beschreiben, <em>was</em> Software tun soll, z.B. rechnen oder Auktionsangebote zugänglich machen. Qualitätsanforderungen geben vor, <em>wie</em> diese Funktionalität vollbracht werden soll, z.B. wie schnell, wie sicher usw.</p>
+<p>Mit diesen Anforderungen werden Sie normalerweise durch den Kunden konfrontiert. Doch es gibt noch eine weitere Kategorie, die dem Kunden wichtig ist, auch wenn er meist dazu schweigt. Er hat nämlich auch noch Anforderungen im Hinblick auf die Investitionssicherheit seiner Software. Er möchte, dass Funktionalität und Qualität sich stets zügig wandeln lässt.</p>
+<p>Wenn wir Software wachsen lassen wollen, müssen wir also darauf achten, dass sie in Richtung aller Anforderungen wächst. Und das systematisch. Und auch noch diskutierbar und kommunizierbar.</p>
+<p>Wie das nur durch eine “guidance by tests” gehen soll, ist mir schleierhaft. Dem GOOS-Ansatz fehlt schlichtweg jedes Meta-Modell.</p>
+<h3>Der Softwarebaum</h3>
+<p>Anders sieht es aus, wenn ich die Dimensionen des Softwareuniversums in Form eines Baumes anordne:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/aea70ce3c21e30b8.jpg" /></p>
+<p>Jetzt gibt es einen klaren Weg. Jetzt gibt es ein big picture. Jetzt gibt es “Wachstumsbausteine”.</p>
+<h4>Der Stamm</h4>
+<p>Am Anfang des Wachstums steht der Stamm. Hier liegen die Anforderungen unmittelbar an. Der Stamm wird im Dialog mit dem Kunden entwickelt. Das ist wichtig, denn auf ihm ruht am Ende die Krone mit all ihren Ästen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c530fc8dcba79b83.jpg" /></p>
+<p>Beim Stamm geht es darum, die Gesamtanforderungen immer feiner zu zerlegen in Inkremente. Das sind kundenrelevante Zuwächse in Form von Durchstichen. Zu denen kann der Kunde klares Feedback geben. Zu denen kann er natürlich auch Akzeptanzkriterien formulieren, die sich (hoffentlich) in automatisierte Tests übersetzen lassen.</p>
+<p>Das größte solche Inkrement ist ein <em>Bounded Context</em>, das kleinste eine <em>Interaktion</em>.</p>
+<p>Im Bild sehen Sie, dass der Stamm aus mehreren Ebenen besteht. Jede beschreibt ein anderes Abstraktionsniveau und besteht wiederum aus Artefakten der nächsten Ebene.</p>
+<h4>Der Funktionalitätsast</h4>
+<p>Aus dem Stamm entwickelt sich als erster Hauptast die Funktionalität. Für jede <em>Interaktion</em> des Stamms wird durch Zerlegung in einer Hierarchie von Datenflüssen bestimmt, wie das gewünschte Verhalten erzielt werden soll.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/78720ae7c1c638cd.jpg" /></p>
+<p>Im Bild steht, dass das zur Codierungszeit geschieht. Das ist insofern richtig, als dass dann mittels des <em>Integration Operation Segregation Principle</em> und des <em>Principle of Mutual Oblivion</em> die Herstellung von Datenflüssen gesichert werden muss. Aber natürlich sollen diese Flüsse vorher (in angemessenem Umfang) entworfen werden.</p>
+<p>Die Länge und Verzweigungstiefe des Funktionalitätsastes ist beliebig. Er wird so ausladend, wie es nötig ist. Die Schachtelungstiefe seiner Funktionseinheiten ist unbegrenzt - wenn auch in der Praxis natürlich sehr endlich ;-) Die Knoten in diesem Teilbaum sind Integrationen, die Blätter Operationen.</p>
+<h4>Der Qualitätsast</h4>
+<p>Auch wenn Funktionalität das erste ist, was sich aus dem Stamm entwickeln soll, ist es weder das Einzige noch das Wichtigste. Software wird ja nicht für Funktionalität gemacht, sondern für Qualität.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/b5baec30dce20fad.jpg" /></p>
+<p>Sobald also die Funktionalität soweit heruntergebrochen ist, dass sie sich in dünnen Inkrementen ausliefern lässt (Produktionseffizienz), und auch noch klar ist, <em>was</em> dann intern passieren muss, ist daran zu denken, <em>wie</em> die Qualitätsanforderungen eingehalten werden können. Es geht dann um Laufzeitcharakteristika wie Performance, Skalierbarkeit oder Robustheit.</p>
+<p>Dazu sind andere Bausteine in den Blick zu nehmen. Bei der Funktionalität ging es im Wesentlichen um Funktionen, bei der Qualität geht es nun um Threads, Prozesse, Geräte usw. Die wiederkehrende Frage lautet: Wie sollten die Funktionen des funktionalen Entwurfs auf diese so genannten <em>Hosts</em> verteilt werden, um die geforderten Qualitäten herzustellen?</p>
+<h4>Der Wandelbarkeitsast</h4>
+<p>Last but not least das Thema Evolvierbarkeit. Auch wenn (oder gerade weil) der Kunde dazu nur eine diffuse Vorstellung hat, müssen Sie sich darum explizit beim Softwarewachstum kümmern.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/eef938783d8819f2.png" /></p>
+<p>Wenn klar ist, welche Funktionen die Funktionalität herstellen und wie die auf <em>Hosts</em> verteilt werden, ist zu überlegen, zu welchen so genannten <em>Containern</em> sie zusammengeschnürt werden sollen.</p>
+<p>Welche Klassen, Bibliotheken, Komponenten, µServices sollte es geben, damit die Wandelbarkeit über lange Zeit erhalten bleibt?</p>
+<p>Kohäsion und Kopplung sind die treibenden Kräfte bei der Containerfindung. Sie ist damit ein Thema der Entwurfszeit.</p>
+<h3>Wachstumsphasen</h3>
+<p>Der Softwarebaum wächst vom Stamm zu den Ästen. Die Reihenfolge dabei ist jedoch nicht so streng zu sehen, wie ich bisher vielleicht suggeriert habe. Je nach Umfang des zu entwickelnden Softwaresystems kann auf den Stamm auch der Qualitätsast folgen und dann erst der Funktionalitätsast. Der Evolvierbarkeitsast jedoch ist meist der letzte, der sprießt.</p>
+<p>Doch auch das geschieht nicht nicht nur einmal, sondern wiederholt. Der Softwarebaum wächst in Phasen: ein bisschen Stamm, dann der Funktionalitätsast, dann der Qualitätsast, dann der Evolvierbarkeitsast - und schließlich geht es wieder von vorne los.</p>
+<p>Wachstum ist mithin im Grunde immer überall am Werk. Stamm und Äste wachsen im Umfang und in der Breite.</p>
+<p>Dass der Softwareorganismus nicht wie ein Schwamm wächst, sondern strukturierter, differenzierter, steckt im Meta-Modell. Das gilt, so denke ich, grundsätzlich für jedes Softwareprojekt. Denn die drei Anforderungskategorien sind ja universell. Und deren systematischer Bearbeitung dient die anatomische Grundstruktur des Softwarebaums. Keine Anforderung darf unter den Tisch fallen.</p>
+<p>Auch wenn die endgültige Architektur einer Software über die Zeit emergieren mag, so sollte das nicht planlos geschehen. Tests können ruhig am Anfang jeder Umsetzung eines Inkrements stehen. Doch wie kommen Sie zu Inkrementen? Sie lassen sie nach dem Schema des Stamms wachsen. Und wie dann weiter, wenn die Tests für ein Inkrement definiert sind? Dann treiben Sie das Wachstum entlang der drei Äste Funktionalität, Qualität und Evolvierbarkeit weiter. Mit klaren Vorstellungen von Bausteinen und Regeln.</p>
+<p>Softwareentwicklung ist keine Sache, die aus dem Handgelenk und intuitiv funktioniert. Da braucht es schon etwas mehr Systematik. Die liefert der Softwarebaum, finde ich. Er verbindet Klarheit und Struktur mit organischer Entwicklung.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

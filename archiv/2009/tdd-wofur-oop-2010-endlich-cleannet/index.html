@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TDD wofür? [OOP 2010] [endlich-clean.net] — ralfw.de Archiv</title>
+<meta name="description" content="Anlässlich einiger Code Katas, die ich in letzter Zeit gemacht habe, hier ein paar Gedanken zu Nutzen und Grenzen von TDD (Test-Driven Development oder Test-Driven Design):">
+<link rel="canonical" href="https://ralfw.de/archiv/2009/tdd-wofur-oop-2010-endlich-cleannet/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="TDD wofür? [OOP 2010] [endlich-clean.net] — ralfw.de Archiv">
+<meta property="og:description" content="Anlässlich einiger Code Katas, die ich in letzter Zeit gemacht habe, hier ein paar Gedanken zu Nutzen und Grenzen von TDD (Test-Driven Development oder Test-Driven Design):">
+<meta property="og:url" content="https://ralfw.de/archiv/2009/tdd-wofur-oop-2010-endlich-cleannet/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>TDD wofür? [OOP 2010] [endlich-clean.net]</h1>
+    <div class="doc-meta"><span>31. Okt. 2009</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2009/10/tdd-wofur-oop-2010-endlich-cleannet.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2009/tdd-wofur-oop-2010-endlich-cleannet/</code></span></div>
+    <div class="art"><p>Anlässlich einiger Code Katas, die ich <a rel="noopener" href="http://ralfw.blogspot.com/2009/09/code-kata-statt-thai-chi-vor-dem.html">in letzter Zeit gemacht</a> habe, hier ein paar Gedanken zu Nutzen und Grenzen von <a rel="noopener" href="http://www.agiledata.org/essays/tdd.html">TDD</a> (Test-Driven Development oder Test-Driven Design):</p>
+<p>Was leistet ein Test? Er prüft die Korrektheit der Funktionsweise einer Codeeinheit. Klingt selbstverständlich. Die Erkenntnis durch TDD liegt für mich aber in der Umkehrung: <strong>Nur, was als eigene Codeeinheit vorliegt, kann auch direkt auf Korrektheit geprüft werden.</strong></p>
+<p>Codeeinheiten sind mehr oder weniger kompliziert. Eine ganz einfache könnte so aussehen:</p>
+<blockquote>
+<p>public int Add(int a, int b)
+{
+    return a-b;
+}</p>
+</blockquote>
+<p>Ist die korrekt? Das stellt ein genauso einfacher Test leicht fest:</p>
+<blockquote>
+<p>[Test]
+public void Adding_two_numbers()
+{
+    var sut = new MyMath();
+    Assert.AreEqual(5, sut.Add(2, 3));
+}</p>
+</blockquote>
+<p>Wenn der Testbalken jetz rot ist, dann lokalisiert eine Codeinspektion schnell den Übeltäter.</p>
+<p>Wie steht es aber mit diesem Code zur <a rel="noopener" href="http://codingdojo.org/cgi-bin/wiki.pl?KataFizzBuzz">FizzBuzz Kata</a>:</p>
+<blockquote>
+<p>IEnumerable FizzBuzz()
+{
+    for(int i=1; i     {
+        if (i%3 == 0)
+           yield return “Fizz”;
+       else if (i%5 == 0)
+           yield return “Buzz”;
+       else if (i%3 == 0 &amp;&amp; i%5 == 0)
+           yield return “FizzBuzz”;
+       else
+          yield return i.ToString();
+    }
+}</p>
+</blockquote>
+<p>Ist der korrekt? Wer kann das auf einen Blick sehen? Vor allem aber, wer kann ihn so einfach runterschreiben? Die Entwicklung geht ja eher schrittweise vor. Genügt da ein Test wie:</p>
+<p>[Test]
+public void Test_FizzBuzzer()
+{
+    var sut = new FizzBuzzer();
+    string expectedValues = new[] string {“1”, “2”, “Fizz”, “4”, “Buzz”, …};
+    int i;
+    foreach(string v in sut.FizzBuzz())
+        Assert.AreEqual(expectedValues[i++], v);
+}</p>
+<p>Mit dem kann man natürlich von Anfang an “draufhauen” auf das <em>system under test</em> (SUT). Aber wenn irgendwas nicht klappt, weiß man nicht so recht, wo es hapert. Die SUT-Codeeinheit ist unübersichtlich und damit der Test sehr pauschal.</p>
+<p>Durch TDD entsteht ein Gefühl dafür, wenn es unübersichtlich wird. Dann testen die Tests nämlich nicht mehr nur eine Funktionalität, sondern mehrere. Im obigen Fall ist der Test sozusagen ein Integrationstest, der sowohl die Generierung von Zahlen wie auch die Transformation einer Zahl prüft. Ob es ein Problem mit den Zahlen gibt oder eines bei der Transformation lässt sich im Zweifelsfall nur schwer sehen. Für mehr Klarheit bietet sich dann der Debugger an.</p>
+<p>Besser ist es jedoch, den Debugger in der Schublade zu lassen. Stattdessen lieber den Code in Teilfunktionen zerlegen. Denn: Nur, was als eigene Codeeinheit vorliegt, kann auch direkt auf Korrektheit geprüft werden.</p>
+<p>Die Teilfunktionen hier im Beispiel: Zahlengenerierung und Transformation. Die könnten mit ihrer Signatur so aussehen:</p>
+<blockquote>
+<p>IEnumerable ErzeugeZahlenreihe() { … }    string TransformiereZahl(int n) { … }</p>
+</blockquote>
+<p>Daraus folgen dann insgesamt drei Tests:</p>
+<ul>
+<li>Prüfe die Zahlengenerierung<ul>
+<li>Prüfe die Transformation</li>
+<li>Prüfe die Integration von Zahlengenerierung und Transformation</li>
+</ul>
+</li>
+</ul>
+<p>Jeder Test ist nun sehr spezifisch und vergleichsweise einfach. Dass das zu etwas mehr Code führt, ist nicht so schlimm, wie sich gleich zeigen wird. Geht etwas schief, ist der Scope jedenfalls klein. Ein Debugger muss nur selten angeworfen werden, um den Fehler darin zu finden. Das erhöht die Entwicklungsgeschwindigkeit wieder.</p>
+<p>Wieviel Rätselraten Sie betreiben wollen, wenn in Ihrem Code etwas schief geht, bestimmen also sie. Der Rätselspaß (oder –ärger?) ist proportional zur Größe Ihrer SUTs.</p>
+<p>Zudem gilt: <strong>Die Integration einzeln getesteter und für korrekt befundener Codeeinheiten zu testen ist weniger aufwändig, als nur die Codeeinheiten verschmolzen zu einem Ganzen zu testen.</strong></p>
+<p>Und jetzt zur zweiten TDD-Erkentnis: Code in einer eigenen Einheit ist prinzipiell austauschbar. Nicht nur lässt er sich gezielt testen und damit kontrolliert verändert werden. Er lässt sich auch gezielt komplett ersetzen.</p>
+<p>In Max Frischs “Andorra” steht – wenn ich mich recht erinnere: “Nur was verzapft ist, geht nicht aus dem Leim.” Ein Satz, der mir irgendwie aus dem Deutschunterricht im Gedächtnis geblieben ist, auch wenn die Lektüre ansonsten keinen bleibenden Eindruck bei mir hinterlassen hat.</p>
+<p>Angelehnt an diesen Satz, möchte ich vor dem TDD-Hintergrund formulieren und hoffen, dass es sich bei Ihnen ebenso einprägt: <strong>“Nur was isoliert testbar ist, kann ersetzt werden.”</strong> Das ist der Grund, warum aus Test-Driven Development über die Zeit Test-Driven Design geworden ist. Denn TDD macht es nicht nur leichter, die Korrektheit von Code zu prüfen, weil es testbare Codeeinheiten “austreibt”. Indem es diese Codeeinheiten motiviert, erzeugt TDD Flexibilität.</p>
+<p>Am Beispiel: Gibt es erstmal eine eigene Codeeinheit für die Zahlengenerierung und die Transformation, dann kann es dafür alternative Implementationen geben. Die Zahlengenerierung könnte heute die natürlichen Zahlen erzeugen und morgen nur Primzahlen oder nur Fibonacci-Zahlen. Die Transformation könnte heute Vielfache von 3 und 5 erkennen und morgen gerade Zahlen oder Primzahlen.</p>
+<p>Direkt und isoliert testbare Codeeinheiten haben immer einen irgendwie gearteten Kontrakt. Für die Zahlengenerierung wäre das z.B. Func&gt;. Solange eine Integration nur auf die Kontrakte der sie konstituierenden Codeeinheiten abhebt, ist sie also frei, jede Implementation, die ihn erfüllt, zu nutzen.</p>
+<p>Ergo: TDD führt nicht nur zu einfacherer Testbarkeit aufgrund kleinerer Codeeinheiten, sondern auch zu größerer Flexibilität.</p>
+<p>Doch damit nicht genug! Ebenfalls segensreich empfinde ich, dass TDD quasi sofort Ergebnisse liefert. Wer erst lange an einer Implementation rumschraubt und am Ende testen will, der verschiebt die Befriedigung eines grünen Testbalkens auf unbestimmte Zeit. <strong>Implementationsperioden ohne Testläufe sind Durststrecken.</strong> TDD ist also eine ganz zeitgemäße “Genuss sofort”-Technik. Warum sich die Befriedigung eines grünen Testbalkens versagen? Aber vor allem: Warum länger als unbedingt nötig im Nebel tappen? Denn je länger Sie ohne Testlauf implementieren, desto tiefer wandern Sie in einen Nebel der Ungewissheit hinein. Ist das, was Sie an Code schreiben, tatsächlich zielführend? Löst Ihr Code wirklich das Problem? Oder schreiben Sie überhaupt den Code, den Sie schreiben wollen? Implementieren Sie tatsächlich Ihr Konzept?</p>
+<p>TDD führt also auch zu häufigem Realitätscheck. Das ist umso wichtiger, je unbekannter die Problemdomäne. Wie sich in CodingDojos auf dem <a rel="noopener" href="http://netopenspace.de/2009">.NET Open Space</a> und der <a rel="noopener" href="http://www.prioconference.de/">prio-Konferenz</a> herausgestellt hat und auch Übungen während <a rel="noopener" href="http://www.prodevcollege.de/produkte-sonsyncdev.html">Clean Code Developer Trainings</a> zeigen, lauert die Unbekanntheit überall. Kaum ein Problem ist so einfach, dass sich TDD erübrigen würde. Nehmen Sie dafür aber nicht mein Wort, sondern probieren Sie es aus. Die <a rel="noopener" href="http://codingdojo.org/cgi-bin/wiki.pl?KataPotter">KataPotter</a> ist dafür ein Beispiel, das schon so manchem einiges Stirnrunzeln gemacht hat. Oder versuchen Sie sich am <a rel="noopener" href="http://www.gmbsg.com/works/index.php?title=MucNetDojo_-_Kata_Minesweeper">Minesweeper</a>. Auch schön ist der Umgang mit <a rel="noopener" href="http://gmbsg.de/works/index.php?title=MucNetDojo_-_Kata_R%C3%B6mische_Zahlen">römischen Zahlen</a>.</p>
+<p>Apropos römische Zahlen: Hier sehe ich allerdings durchaus eine Grenze von TDD. TDD hilft, separate Funktionseinheiten in einer größeren zu erkennen. Wird die größere schwer zu testen, dann liegt eine Zerlegung nahe.</p>
+<p>TDD hilft jedoch nicht weiter, wenn eine Codeeinheit quasi unteilbar ist. Das ist oft nur scheinbar der Fall – am Ende ist jedes Lösung ja aber ein endlicher Baum, dessen Blätter eben die “atomaren” Codeeinheiten sind. Wie solche “atomaren” Codeeinheiten intern aussehen, beantwortet TDD nicht. <strong>TDD ist ein Hilfsmittel zur Strukturierung, nicht für den Algorithmenentwurf.</strong> Ein Bubblesort-Algorithmus lässt sich mittels TDD vielleicht noch entwickeln, weil er sich in naheliegende Codeeinheiten zerlegen lässt; ein Quicksort-Algorithmus jedoch ist jenseits von TDD.</p>
+<p>Die Kata zur Umwandlung von römischen Zahlen profitiert mithin nicht so stark von TDD wie z.B. FizzBuzz oder KataPotter. Sie ist eher algorithmischer, denn struktureller Natur.</p>
+<p>Und so bin ich bei meiner abschließenden Erkenntnis zu TDD: <strong>TDD ist kein Ersatz für Kreativität, Nachdenken und Erfahrung.</strong> Auch mit TDD als Werkzeug im Programmierkoffer lohnt der Einsatz des Gehirns vor dem Programmieren. Nachdenken hilft und verkürzt die Lösungszeit. Angesichts von z.B. der Minesweeper-Kata müssen wir uns nicht dümmer stellen als wir sind. Wir müssen nicht reflexartig in die Tasten hauen und sofort einen Test schreiben. Es lohnt sich, einen Moment über das Problem nachzudenken. <strong>Welche Datenstrukturen sind im Spiel? Welche Algorithmen? Wie könnte eine Grobstruktur der Lösung aussehen, welche Codeeinheiten/Verantwortlichkeiten könnten wie zusammenspielen?</strong></p>
+<p>Wenn Sie dann einen gewissen Plan haben, dann erst legen Sie mit TDD los. Und zwar gehen Sie dann gezielt mit TDD auf die Grobstrukturen los, die Sie durch Nachdenken ermittelt haben. Das erspart unnötigen Refaktorisierungsfrust.</p>
+<p>Zum Schluss eine offene Frage: Erzeugt TDD nicht nur testbare und flexible Strukturen, sondern auch evolvierbaren Code? Ist Testbarkeit bzw. Flexibilität mit Evolvierbarkeit gleichzusetzen? Oder könnte eine Zerlegung, die nicht durch TDD motiviert ist, noch evolvierbarer sein? Hm…</p>
+<p>Einstweilen entscheide ich mich allerdings im Zweifel für den Glauben an TDD gepaart mit Nachdenken. Für die Strukturierung von Komponenten ist das ein sehr hilfreiches Vorgehen.</p>
+<h2>Kommentare</h2>
+<p><strong>Rainer Hilmer</strong> (2009-10-31):</p>
+<p>Ich hatte gerade erst so ein Problem mit einer verschachtelten LINQ Expression und dazu auch einen dreiteiligen Artikel geschrieben. Vielleicht möchtest du ihn ja mal anschauen.
+http://dotnet-forum.de/blogs/rainerhilmer/archive/2009/10/30/linq-lambda-and-testability-issues.aspx</p>
+<p>http://dotnet-forum.de/blogs/rainerhilmer/archive/2009/10/30/testing-a-dismantled-linq-expression.aspx</p>
+<p>http://dotnet-forum.de/blogs/rainerhilmer/archive/2009/10/30/stripping-down-a-convoluted-linq-expression.aspx</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-10-31):</p>
+<p>@Rainer: Danke für die Links. Insb. die Auflösung (im doppelten Sinn) im letzten Beitrag finde ich schön. Dort sieht man, dass deklarativer wie imperativer Code eben aus unterschiedlichen "Verantwortlichkeiten" bestehen kann. Die gilt es zu identifizieren und dann herauszulösen. Das erhöht dann nicht nur die Testbarkeit, sondern auch die Verständlichkeit.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Lukas Burri</strong> (2009-11-03):</p>
+<p>Hallo Ralf</p>
+<p>Deinen Artikel finde ich gut. Allerdings habe ich mit TDD mühe. Überall im Web (Blogs &amp; Co.) werden Artikelchen über die Wichtigkeit von Testroutinen geschrieben. Jedoch habe ich bis jetzt immer "kuschelige" Testbeispiele in der Form "1+1 = 2" gesehen. Im höchsten Fall wird für einen simplen Algorithmus eine Testmethode geschrieben.
+<strong>In der Praxis sehen die Testfälle leider anders aus!</strong> Da ist z.B. von ganzen Importmodulen / Schnittstellen die Rede, wo eine Funktion ein Objekt mit Properties (20 An der Zahl) inkl. Daten bearbeitet z.B. Abhängig von einem Enumerationswert (der auch 10 Zustände annehmen kann und ebenfall an die Routine übergeben wird...) Da nimmt der Aufwand für eine Testroutine dann schon eher exponentiell zu; Und eine Woche später wird dann diese Funktion überarbeitet...</p>
+<p>Die in den meisten TDD Artikeln vorkommenden Algorithmen haben eine andere Natur: Sie stammen in der Regel aus anderen Systemen, in welchen sich diese Algorithmen eben schon bewährt haben. Ein Test dieser Algorithmen wird somit hinfällig.</p>
+<p>In einer kleinen Softwarefirma halte ich es für Überflüssig, solche Alibi-Tests bei einfachen Methoden (wo in der Regel sowieso weniger Fehler auftreten) zu implementieren. Und dies auch nur damit die hübschen Pünktchen im NUNIT auf grün springen und dem Chef glänzende Augen verpassen.</p>
+<p>Von den TDD Propagisten erwarte ich mehr Praxisnähe. Die meisten Software Entwickler schlagen sich mit Alltagsmodulen wie Import, Export, Statistik &amp; Grafik sowie Reporting (Druck) auseinander. Aber da wirds eben nicht so einfach mit den Unit-Tests.</p>
+<p><strong>Folglich sind die meisten Artikel über TDD für Theoretiker und Denker ein heisses Thema aber für den produzierenden Entwickler eben nur heisse Luft.</strong></p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-11-03):</p>
+<p>@Lukas: Zu unterscheiden ist zwischen Unit Tests und TDD. TDD ist eine Spezialform von Unit Testing.</p>
+<p>Wogegen richtet sich deine Kritik? Gegen TDD, also dagegen, Tests zuerst zu schreiben? Ich glaube, nicht.</p>
+<p>Dir geht es "nur" um Unit Tests.</p>
+<p>Golo Roden hat neulich auch einen kritischen Artikel zu Unit Tests geschrieben. Dazu habe ich einen ausführlichen Kommentar geschrieben: http://www.des-eisbaeren-blog.de/post/2009/11/01/Wie-viel-Sinn-machen-Unittests.aspx#comment</p>
+<p>Den möchte ich hier ungern wiederholen. Schau doch mal dort vorbei.</p>
+<p>An dieser Stelle jedoch zumindest soviel: Jedem, der mit Unit Tests unzufrieden ist, kann ich nur die Frage stellen: Was ist die Alternative? Wie stellst du ohne automatisierte Tests (und das sind nicht nur Unit Tests, sondern auch z.B. auch Integrationstests) verlässlich, systematisch und regressionssicher fest, dass deine Software (immer noch) korrekt ist?</p>
+<p>Die Antwort auf diese Frage lautet: "Gar nicht."</p>
+<p>Dass manche Unit Tests schwieriger sind als andere, dass Mickymausbeispiele zuwenig sind: da sind wir uns einig. Aber nur weil es nicht einfach ist, sollte das nicht heißen, es nicht zu tun. Der Schluss sollte vielmehr lauten, sich mehr zu bemühen. Denn ich bin sicher, dass auch dein Code zu 90% automatisiert testbar ist.</p>
+<p>Pass auf, hier ein Angebot:</p>
+<p>Stefan Lieser und ich - Dr. Clean und Dr. Code also ;-) -  kommen zu dir ins Haus und schauen sich deinen Code an. Wenn wir dir keine substanziellen Hinweise geben können, wie du deinen Code mit einer deutlichen Testabdeckung versehen kannst, zahlst du nix. Ansonsten zahlst du unsere Tagessätze.</p>
+<p>Du siehst, wir sind so sicher, dass  wird die Testschwünge am Trapez und den TDD-Salto bei dir ohne Netz wagen würden ;-)</p>
+<p>Wie wäre das?</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Christina</strong> (2009-11-03):</p>
+<p>Hallo Lukas,</p>
+<p>du schreibst "In einer kleinen Softwarefirma halte ich es für Überflüssig, solche Alibi-Tests bei einfachen Methoden (wo in der Regel sowieso weniger Fehler auftreten) zu implementieren. Und dies auch nur damit die hübschen Pünktchen im NUNIT auf grün springen und dem Chef glänzende Augen verpassen."
+Testen hat nichts mit der größe einer Firma sondern mit der größe der Anwendung zu tun, an der ihr arbeitet. Wenn diese Anwendungen größer als sagen wir 10 Dateien sind, dann kann ich mir nicht vorstellen, dass ihr bei neuen Anforderungen immer sicher seid, dass der alte Code weiterhin einwandfrei funktioniert. Und dafür hast du die Tests!
+Ich betreue ein Projekt bei unserer Firma, das bei einem Fehlfunktion hunderte von Fehlern pro Sekunde verursachen würde. Ich kann mich noch an den Zeiten erinnern, wo ich Änderungen ohne Tests veröffentlichen müsste und seit dem gilt es für mich: Tests rules!</p>
+<hr />
+<p><strong>Rainer Hilmer</strong> (2009-11-03):</p>
+<p>@Lukas: In unserer Firma habe ich einen Windows-Dienst geschrieben, der vollautomatisch Emails von einem Exchange Server abholt, in seine Elemente zerpflückt, analysiert, gruppiert, kategorisiert und diese Teile dann in eine SQL-DB persistiert. Ich wüßte gar nicht wie man so etwas ohne TDD und Unit Tests zuverlässig realisieren sollte. Was soll ich dir sagen, der Dienst schnurrt seit dem ersten Tag wie ein Kätzchen. Leider aber muß ich dir den Code schuldig bleiben. Ich habe in meinem Arbeitsvertrag eine Geheimhaltungsklausel unteschrieben. Dafür kann ich dir aber meinen Blog-Post empfehlen. Dort findest du Testmethoden, die über 1+1=2 hinausgehen und konkrete Objekte testen (siehe den zweiten Link in meinem vorherigen Kommentar).</p>
+<hr />
+<p><strong>Lukas Burri</strong> (2009-11-10):</p>
+<p>Danke allen für die Hinweise. Ich sehe, dass dieses Thema auf grosse Resonanz stösst und brandaktuell ist - Danke auch für den Eisbären-Blog-Link.</p>
+<p>Auch sehe ein, dass hinter TDD noch mehr als bei reinen Unit-Tests steckt, da sich der Entwickler vor der eigentlichen Implementierung grundlegende Gedanken zur Softwarestruktur machen muss. Ich möchte die beiden Begriffe schon nicht vermischen.</p>
+<p>Die Wirksamkeit von Software Tests auf die Qualitätsverbesserung des Produkts ist unbestritten. Technische Artikel und Beispiele gibt es zu Hauf. Aber das Wurzelproblem ist ein Organisatorisches sowie auch eine Ideologiefrage.</p>
+<p>Das schreiben von Test bedeutet einen Mehraufwand und dieser kostet Geld. Der Kunde erwartet maximale Qualität zu minimalen Preisen. Die Entwickler (CleanCoders &amp; Co.) wollen möglichst qualitativer Code und gutes Handwerk leisten. <strong>Eingeklemmt dazwischen ist die Geschäftsleitung, welche schon lange keinen richtigen Code mehr geschrieben hat und sich mehr um den Markt und um die Kunden als um Entwicklungsdetails kümmert.</strong> Und genau dieser Punkt leifert Zündstoff für Disskusionen, in denen die Geschäftsleitung das letzte Wort hat.</p>
+<p>Und gerade hierzu wünsche ich mir mehr Artikel von den Technologie-Heads in der dotnetpor und in Blogs :-)</p>
+<p>@Ralf: Ich fände es super wenn du bei uns vorbeikommen würdest - und ich bin mir sicher, dass du mir viele interessante Ansätze zeigen könntest - aber leider wird mein Cheff das nicht bezahlen wollen – garantiert nicht.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-11-10):</p>
+<p>@Lukas: Du triffst den Nagel auf den Kopf: TDD ist kein technisches Problem. TDD leidet auch nicht unter "Mangel an Beweisen".</p>
+<p>TDDs Problem ist nur Disziplin und organisatorischer Wille.</p>
+<p>Die Disziplin muss jeder Einzelne jeden Tag aufbringen. Helfen kann aber natürlich auch eine Team-Disziplin (Stichwort Reviews).</p>
+<p>Am Ende ist der Einzelne aber nichts und das Unternehmensmilieu alles. Eine gewisse Zeit lang kann man mit TDD unter dem Radar fliegen. Am Ende will man aber die Unterstützung der Führung.</p>
+<p>Wenn die uneinsichtig ist... was tun? Ich schlage vor, es dann mit Verhandeln zu probieren. "Chef, lass uns das in diesem Teil der Software für diesen Zeitraum versuchen - und dann schauen wir, was uns das bringt." Sichergestallt muss dann allerdings sein, dass dieser geschützte Raum auch respektiert wird. Und in diesem Raum muss kompetent gearbeitet werden. TDD schlecht zu tun und damit dem Chef Angriffsfläche zu bieten, ist kontraproduktiv.</p>
+<p>Überlege also, wie du beides herstellen kannst: TDD-Raum und Kompetenz.</p>
+<p>-Ralf</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

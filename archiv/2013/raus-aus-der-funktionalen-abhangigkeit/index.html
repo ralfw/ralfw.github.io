@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Raus aus der funktionalen Abhängigkeit — ralfw.de Archiv</title>
+<meta name="description" content="Wenn funktionale Abhängigkeiten so problematisch sind, wie können wir sie denn vermeiden? Ich denke, die Antwort ist ganz einfach:">
+<link rel="canonical" href="https://ralfw.de/archiv/2013/raus-aus-der-funktionalen-abhangigkeit/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Raus aus der funktionalen Abhängigkeit — ralfw.de Archiv">
+<meta property="og:description" content="Wenn funktionale Abhängigkeiten so problematisch sind, wie können wir sie denn vermeiden? Ich denke, die Antwort ist ganz einfach:">
+<meta property="og:url" content="https://ralfw.de/archiv/2013/raus-aus-der-funktionalen-abhangigkeit/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Raus aus der funktionalen Abhängigkeit</h1>
+    <div class="doc-meta"><span>24. April 2013</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2013/04/raus-aus-der-funktionalen-abhangigkeit.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2013/raus-aus-der-funktionalen-abhangigkeit/</code></span></div>
+    <div class="art"><p>Wenn <a rel="noopener" href="http://blog.ralfw.de/2013/04/warnung-vor-der-funktionalen.html">funktionale Abhängigkeiten so problematisch sind</a>, wie können wir sie denn vermeiden? Ich denke, die Antwort ist ganz einfach:</p>
+<p>Wir sollten einfach keine funktionalen Abhängigkeiten mehr eingehen.</p>
+<p>Funktion c() wie Client sollte sich nicht mehr an eine Funktion s() wie Service binden. Denn wenn sie das tut, wenn sie nicht mehr delegiert, dann kann sie sich endlich selbstbestimmt auf ihre einzige Domänenverantwortlichkeit im Sinne des <em>Single Responsibility Principle</em> (SRP) konzentrieren.</p>
+<p>Technisch bieten Funktionen dafür die besten Voraussetzungen. Die Funktion</p>
+<p>int Add(int a, int b) { return a+b; }</p>
+<p>macht ja schon nur ihr Ding. Sie definiert sich komplett selbst. Ihre syntaktische Spezifikation besteht nur aus einer Signatur:</p>
+<p>Func<int,int,int></p>
+<p>Die könnte man mit einer Beschreibung der gewünschten Semantik ("Die Funktion soll zwei Zahlen addieren.") zur Implementation in ein fernes Land geben. Die Entwickler dort müssten nichts weiter berücksichtigen.</p>
+<p>Anders ist das bei einer Funktion wie dieser:</p>
+<p>string ReportGenerieren(string dateiname) {</p>
+<p>string report = "...";</p>
+<p>...</p>
+<p>int[] daten = LadeDaten(dateiname);</p>
+<p>foreach(int d in daten) {</p>
+<p>...</p>
+<p>report += ...;</p>
+<p>...</p>
+<p>}</p>
+<p>...</p>
+<p>return report;</p>
+<p>}</p>
+<p>Deren Spezifikation besteht nicht nur aus:</p>
+<ul>
+<li>
+<p>Func</p>
+</li>
+<li>
+<p>"Funktion, die den Report wie folgt generiert: ..."</p>
+</li>
+</ul>
+<p>sondern auch noch aus der Signatur der Funktion zum Laden der Daten und deren Semantik:</p>
+<ul>
+<li>
+<p>Func</p>
+</li>
+<li>
+<p>"Funktion, die die soundso Daten in folgender Weise als int-Array liefert: ..."</p>
+</li>
+</ul>
+<p>Entwickler in einem fernen Land müssten nun diese Dienstleistungsfunktion entweder ebenfalls entwickeln oder gestellt bekommen oder zumindest als Attrappe bauen. Damit ist die Funktion ReportGenerieren() nicht mehr selbstbestimmt.</p>
+<p>Allgemein ausgedrückt: Bei funktionaler Abhängigkeit besteht die Spezifikation einer Funktion aus 1 + n Signaturen (mit zugehörigen Semantiken). 1 Signatur für die eigentlich zu betrachtende Funktion und n Signaturen für Funktionen, von denen sie funktional abhängig ist.</p>
+<p>Das ist doch kein Zustand, finde ich. So kann es nicht weitergehen, wenn wir zu besser evolvierbarer Software kommen wollen.</p>
+<h3></h3>
+<p>Aufbrechen funktionaler Abhängigkeiten</p>
+<p>Also, wie kommen wir raus aus funktionaler Abhängigkeit? Wir müssen zunächst genauer hinschauen. Funktionale Abhängigkeit besteht aus drei Phasen:</p>
+<ul>
+<li>
+<p>Vorbereitung</p>
+</li>
+<li>
+<p>Aufruf</p>
+</li>
+<li>
+<p>Nachbereitung</p>
+</li>
+</ul>
+<p>int c(int a) {</p>
+<p>// vorbereitung</p>
+<p>int x = ... a ...;</p>
+<p>// aufruf</p>
+<p>int y = s(x);</p>
+<p>// nachbereitung</p>
+<p>int z = ... y ...;</p>
+<p>return ... z ...;</p>
+<p>}</p>
+<p>Jede abhängige Funktion kann man mindestens einmal in diese Phasen zerlegen. Bei mehreren funktionalen Abhängigkeiten können sich Phasen natürlich auch überlagern. Dann mag eine Nachbereitung die Vorbereitung eines weiteren Aufrufs sein.</p>
+<p>Sind diese Phasen aber erkannt, kann man jede in eine eigene Funktion verpacken:</p>
+<p>int c_vorbereitung(int a) {</p>
+<p>return ... a ...;</p>
+<p>}</p>
+<p>int c_nachbereitung(int y) {</p>
+<p>int z = ... y ...;</p>
+<p>return ... z ...;</p>
+<p>}</p>
+<p>Die bisherige abhängige Funktion wird dann zu einer Folge von unabhängigen Funktionen. Die können so zum bisherigen Ganzen zusammengeschaltet werden:</p>
+<p>return c_nachbereitung(s(c_vorbereitung(42)));</p>
+<p>Das ist jedoch schlecht lesbar, wenn auch vielleicht schön knapp formuliert. Besser finde ich es daher wie folgt:</p>
+<p>int x = c_vorbereitung(42);</p>
+<p>int y = s(x);</p>
+<p>return c_nachbereitung(y);</p>
+<p>Oder moderner könnte es in F# auch so aussehen:</p>
+<p>42 |&gt; c_vorbereitung |&gt; s |&gt; c_nachbereitung</p>
+<p>Da ist doch sonnenklar, wie die Verantwortlichkeit, für die das ursprüngliche c() stand, erfüllt wird, oder? Das kann man lesen wie einen Text: von links nach rechts und von oben nach unten.</p>
+<p>Bitte lassen Sie es sich auf der Zunge zergehen: Keine der Funktionen hat nun noch eine funktionale Abhängigkeit mehr. [1]</p>
+<p>c_vorbereitung() ruft keine Funktion auf und weiß nichts von s() und c_nachbereitung(). Dito für s() und c_nachbereitung(). Keine Funktion weiß von einer anderen. Das nenne ich "gegenseitige Nichtbeachtung" (engl. mutual oblivion). Und wenn man sich so bemüht zu codieren, dann folgt man dem <em>Principle of Mutual Oblivion</em> (PoMO).</p>
+<p>Funktionen sind ein Mittel, um Funktionseinheiten so zu beschreiben, dass sich nicht um Vorher oder Nachher scheren. Es gibt aber auch andere Mittel. Methoden können mit Continuations versehen werden oder Klassen können mit Events ausgestattet werden.</p>
+<p>Egal wie das Mittel aber aussieht, die Funktionseinheit beschreibt immer nur sich selbst. Ihr Interface/ihre Signatur ist rein selbstbestimmt. Bei Funktionen fällt das gar nicht so sehr auf. Deren Ergebnisse sind sozusagen anonym. Anders sieht das aus, wenn Continuations ins Spiel kommen:</p>
+<p>void c_vorbereitung(int a, Func<int,int> ???) {</p>
+<p>???(... a ...);</p>
+<p>}</p>
+<p>Wie sollte die Continuation ??? heißen? Sollte sie vielleicht s genannt werden? Nein! Dann würde c_vorbereitung() wieder eine semantische Abhängigkeit eingehen. Die Prozedur würde eine bestimmte Dienstleistung erwarten, die ihr übergeben wird.</p>
+<p>??? muss vielmehr rein auf die Prozedur bezogen sein. Die Continuation könnte neutral result oder continueWith betitelt sein. Oder sie könnte sich auf den produzierten Wert beziehen:</p>
+<p>void c_vorbereitung(int a, Func<int,int> on_x) {</p>
+<p>on_x(... a ...);</p>
+<p>}</p>
+<p>Einen Vorteil hat eine Continuation gegenüber einem Funktionsergebnis sogar: damit können beliebig viele Ergebnisse zurückgeliefert werden, ohne eine Datenstruktur aufbauen zu müssen.</p>
+<h3></h3>
+<p>Vorteile der Vermeidung funktionaler Abhängigkeiten</p>
+<p>Inwiefern dient das PoMO aber nun der Vermeidung der <a rel="noopener" href="http://blog.ralfw.de/2013/04/warnung-vor-der-funktionalen.html">durch funktionale Abhängigkeit aufgeworfenen Probleme</a>?</p>
+<p><strong>ad Problem #1</strong>: Es gibt keine Abhängigkeit, also muss auch keine Bereitstellung erfolgen. Die Frage nach statischer oder dynamischer Abhängigkeit stellt sich nicht einmal. Um c_vorbereitung() oder c_nachbereitung() zu testen, sind keine Attrappen nötig. Von <em>Inversion of Control</em>(IoC) oder <em>Dependency Injection</em> (DI) ganz zu schweigen.</p>
+<p><strong>ad Problem #2</strong>: Es gibt keine Abhängigkeit, also gibt es auch keine topologische Kopplung. Ob s() auf dem einen oder auf dem anderen Interface definiert ist, interessiert c_vorbereitung() und c_nachbereitung() nicht.</p>
+<p><strong>ad Problem #3</strong>: Das Wachstum von Funktionen wird ganz natürlich begrenzt. Wann immer eine Funktion eine Dienstleistung benötigt, muss sie beendet werden. Sie bereitet sozusagen nur vor. Für die Nachbereitung ist eine weitere Funktion zuständig. Überlegen Sie, wie lang Funktionen dann noch werden, wenn sie nur noch von einer Delegation bis zur nächsten reichen dürfen. Ich würde sagen, dass es kaum mehr als 10-20 Zeilen sein können, die Sie guten Herzens ohne Verletzung eines anderen Prinzips anhäufen können.</p>
+<p><strong>ad Problem #4</strong>: Ohne funktionale Abhängigkeit gibt es zumindest keine direkte syntaktische Abhängigkeit. Wenn sich die Form des Output von s() ändert, muss c_nachbereitung() nicht zwangsläufig nachgeführt werden. Es könnte auch eine Transformation zwischen s() und c_nachbereitung() eingeschoben werden:</p>
+<p>...</p>
+<p>Tuple t = s(x);</p>
+<p>int y1 = t.Item1;</p>
+<p>return c_nachbereitung(y1);</p>
+<p>Das mag nicht immer möglich sein, doch zumindest sinkt das Risiko, dass sich Änderungen an s() ausbreiten.</p>
+<p>Dito für eine Änderung der Form der Parameter von s(). Auch hier könnte eine Transformation zwischen c_vorbereitung() und s() die Veränderung abpuffern.</p>
+<p><strong>ad Problem #5</strong>: Semantische Änderungen, also logische Kopplungen, haben am ehesten weiterhin eine Auswirkung auf Vorbereitung bzw. Nachbereitung. Doch auch hier ist Pufferung möglich, z.B.</p>
+<p>Vorher:</p>
+<p>int[] sortierteDaten = s(...);</p>
+<p>return c_nachbereitung(sortierteDaten);</p>
+<p>Nachher:</p>
+<p>int[] unsortierteDaten = s(...);</p>
+<p>int[] sortierteDaten = unsortierteDaten.Sort();</p>
+<p>return c_nachbereitung(sortierteDaten);</p>
+<h3></h3>
+<p>Fazit</p>
+<p>Die Auflösung funktionaler Abhängigkeit ist immer möglich. Das ist kein technisches Hexenwerk.</p>
+<p>Das mag hier und da (zunächst) mühsam sein - doch der Gewinn ist groß. Und wenn man ein bisschen Übung darin hat, dann kann man quasi nicht mehr anders denken. Glauben Sie mir :-) Ich mache das jetzt seit vier Jahren so und es geht inzwischen mühelos.</p>
+<p>Sollten funktionale Abhängigkeiten immer aufgelöst werden? Nein. Das wäre Quatsch. Man würde auch in einen infiniten Regress hineinlaufen. Die Frage ist also, wann auflösen und wann nicht? Doch davon ein anderes Mal.</p>
+<p>Für heute ist mir nur wichtig, eine Lösung der aufgeworfenen Probleme aufgezeigt zu haben. Die sind aber natürlich gegen andere Werte abzuwägen. Evolvierbarkeit als eine Form von Flexibilität hat ja immer den Gegenspieler Effizienz.</p>
+<h4></h4>
+<p>Endnoten</p>
+<p>[1] Falls Sie einwenden wollen, dass doch nun irgendwie auf einer höheren Ebene eine Funktion von drei anderen abhängig geworden sei, dann halten Sie den Einwand bitte noch ein bisschen zurück. Sie haben ja Recht. Doch darauf möchte ich in einem späteren Blogartikel eingehen.</p>
+<p>Nehmen Sie für heute einfach hin, dass das, was c() mit seiner funktionalen Abhängigkeit war, aufgelöst wurde in drei unabhängige Funktionen.</p>
+<h2>Kommentare</h2>
+<p><strong>Carsten</strong> (2013-04-24):</p>
+<p>In F# könnte man
+42 |&gt; c_vorbereitung |&gt; s |&gt; c_nachbereitung
+schreiben, würde man aber nicht.
+Viel eher erkennt man, dass es sich hier um eine Komposition handelt und würde entweder eine Funktion definieren:
+let F = c_vorbereitung &gt;&gt; s &gt;&gt; c_nachbereitung
+und dann F 42 schreiben oder eher sowas:
+c_vorbereitung 42
+|&gt; s |&gt; c_nachbereitung
+die Version mit der Konstanten first sieht zu hässlich aus.</p>
+<p>BTW: es wird immer deutlicher, dass hier der Denkprozess in die Richtung geht, die FP schon von Anfang an vertritt (kleine, reine Funktionen und die Komposition derren, statt verwobene, schwerfällige Methoden, die man häufig nicht mal benennen kann)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-04-24):</p>
+<p>@Carsten: Dass du da ne Composition siehst, ist schon klar. Ist ja auch so - nur habe ich sie unsichtbar gelassen.</p>
+<p>An der grundsätzlichen Notation von links nach rechts ändert &gt;&gt; vs |&gt; aber nichts. Der Fluss wird halt deutlich.</p>
+<p>Dass ich hier in Richtung FP argumentiere, ist klar.</p>
+<p>Aber dabei wird es nicht bleiben :-) Denn in FP steckt das nächste Prinzip, das ich näher betrachten werde, nicht drin. Das muss auch ein FPler willentlich anwenden.</p>
+<p>Und - wie du weißt - bin ich ganz offen für zustandshaltende Funktionseinheiten. Durch Reifen springen, nur um Zustand, der ganz natürlich irgendwo verortet ist, in Fluss zu bringen, ist nicht mein Ding. Da möchte ich mehr Flexibilität.</p>
+<p>Was FP mir da bietet mit immutability und dem Hinweis auf async/parallel, ist mir zuviel Effizienz in eine Richtung, wenn ich sie nicht brauche.</p>
+<hr />
+<p><strong>Jürgen</strong> (2013-04-25):</p>
+<p>Ich bin noch nicht überzeugt. Gerade das in [1] vertagte Problem macht mir Sorge.
+In deinem Ansatz erkenne ich die Vorgehensweise des TDD - Arrange, Act, Assert - wieder. Aber eine Lösung aller Probleme sehe ich nicht:</p>
+<h1>1: Die Funktionen wissen nichts voneinander, dies war bei deinem Beispiel aber auch schon so:</h1>
+<p>Die Vorbereitung (string report = "..."; ...) wusste nichts von LadeDaten oder von der Nachbereitung (foreach …). Ich sehe hier nur die Verlagerung und nicht die Lösung des Problems.</p>
+<h1>2: Wie gesagt Verlagerung, statt c(){ B.s(); } wird es class A { .. c(){ s(); } … s() { B.s(); } …}</h1>
+<p>c ist nicht mehr abhängig, aber die Klasse A bleibt es, das Problem hat nun die Funktion s.</p>
+<h1>3: Klar, es gibt nur noch die 3xA, plus die von dir genannten Transformer.</h1>
+<h1>4: Ich beziehe mich auf dein Beispiel; würde es nicht mehr Sinn machen den Transformer in der Funktion s() anzuwenden oder besser in s_nachbereitung()? c() wäre eine Änderung von der Logik in s unabhängig und würde keiner Änderung bedürfen.</h1>
+<p>Ich bin gespannt auf den "späteren Blogartikel".</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-04-25):</p>
+<p>@Jürgen: Das Problem aus [1] wird noch behandelt.</p>
+<p>Im Beispiel gibt es nur eine abhängige Funktion ReportGenerieren(). Die kennt LadeDaten(). Der Rest ist Teil von ReportGenerieren(). Dass du da von "Nichtwissen" bei "string report = ..." sprichst, macht keinen Sinn. Das ist ja Teil der Problemfunktion.</p>
+<p>Solange es Interfaces gibt (also Sammlungen von Funktionen), solange gibt es auch noch die topologische Kopplung. Ob das Interface explizit oder implizit ist, ist egal. Deshalb: auf funktionale Abhängigkeit verzichten.</p>
+<p>Die Transformer in s() zu verstecken, ist das übliche Vorgehen. Damit wird dann aber s() verändert. Das willst du nicht. Du willst am liebsten keine Funktionseinheit je verändern :-) Das sagt das OCP ganz klar.</p>
+<p>Ohne Veränderung geht es ja aber nicht. Fragt sich also, wo? Zwischen c_vorbereitung() und s() in der gezeigten Weise ist es ungefährlicher. Dazu aber später mehr.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

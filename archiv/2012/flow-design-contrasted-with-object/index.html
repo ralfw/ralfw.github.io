@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flow-Design contrasted with Object-Oriented Design — ralfw.de Archiv</title>
+<meta name="description" content="In a recent post Carlo Pescio provided his “true” object-oriented solution to a problem. I´d like to take this as an opportunity to contrast it with the Flow-Design approach to sof">
+<link rel="canonical" href="https://ralfw.de/archiv/2012/flow-design-contrasted-with-object/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Flow-Design contrasted with Object-Oriented Design — ralfw.de Archiv">
+<meta property="og:description" content="In a recent post Carlo Pescio provided his “true” object-oriented solution to a problem. I´d like to take this as an opportunity to contrast it with the Flow-Design approach to sof">
+<meta property="og:url" content="https://ralfw.de/archiv/2012/flow-design-contrasted-with-object/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Flow-Design contrasted with Object-Oriented Design</h1>
+    <div class="doc-meta"><span>20. Juli 2012</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2012/07/flow-design-contrasted-with-object.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2012/flow-design-contrasted-with-object/</code></span></div>
+    <div class="art"><p>In a recent post <a rel="noopener" href="http://www.carlopescio.com/2012/03/life-without-controller-case-1.html">Carlo Pescio provided his “true” object-oriented solution</a> to a problem. I´d like to take this as an opportunity to contrast it with the Flow-Design approach to software design.</p>
+<p>To bring yourself up to speed regarding the problem scenario, please quickly head over to Carlos article. As a teaser just let me show you his diagram to describe the overall situation where a small program is supposed to help:</p>
+<p><a rel="noopener" href="http://www.carlopescio.com/2012/03/life-without-controller-case-1.html"></a></p>
+<p>After briefly presenting the problem, Carlo jumps right into drawing class diagrams. Here´s his final solution:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f3164efdf6a427d9.png" /></p>
+<p>Unfortunately I can´t glean from it, how his solution is supposed to function ;-) His presentation of the solution is just a static diagram, i.e. a depiction of some structure. However, software mainly is a dynamic beast. It´s supposed to do work, to process data.</p>
+<p>This is, why I prefer to do software design differently. So let me explain how I´d tackle the problem.</p>
+<h3>Abstract problem depiction</h3>
+<p>I think it´s prudent to speculate about programming language artifacts as late as possible. Wielding classes is programming, is rolling in the dirt of the concrete. Designing, on the other hand is approaching a problem first on a higher level, leaving out details – in order to move forward more quickly and to not fall into the trap of premature optimization.</p>
+<p>Yes, in the end all lofty design needs to be attached to nitty-gritty code. But why limit ourselves in such a way right from the start?</p>
+<p>Also just a drawing, Carlo´s problem depiction is very concrete. I find it hard to jump to any conclusion from that, like which classes there should be. So I like to first draw the system to design (STD) in a more abstract manner. Here´s my system-environment diagram for the sump problem domain:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a32660051a60f116.png" /></p>
+<p>As you can see, I introduced a user role: the operator. Carlo did not talk about it, but I think it´s necessary to have at least one user in the picture. Otherwise it´s not clear why there is a STD at all. Someone has to benefit from it, need it for some purpose. Maybe there should be even more users, like the personnel of a plant who depend on the alarm to sound? But I leave them to the imagination of the reader, to not overcrowd the picture ;-)</p>
+<p>The operator is not the only relevant “entity” in the environment of the system. There are sensors and actuators the system has to deal with. I call them resources. Whereas a user role depends on the STD, the STD depends on resources. That´s why the lollypop line ending points away from the STD.</p>
+<h3>Wrapping the environment</h3>
+<p>Once I identified the basic dependency relationships, I like to remind me that each should be encapsulated in some way. The innards of the STD should not depend directly on the environment, or to be more precise: on infrastructure APIs to communicate with the environment. This would make the system hard to test.</p>
+<p>So I put small symbols in my drawing representing user roles and resources as mere aspects of the solution. Aspect to me means “a set of properties that can change independently of others”.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/86ab4a8c009b6ab5.png" /></p>
+<p>And even though you might not be able to imagine the API of the pump might ever change… there is at least one other kind of pump other than the real pump I want the system to be able to communicate with: a mock-up pump.</p>
+<p>When testing the most important parts of the STD, I don´t want to be forced to always connect them to a real pump or any other user role/resource. So there needs to be a way to replace any environmental “entity” with a mock-up. This can be readily accomplished by encapsulating all environmental dependencies in some way.</p>
+<p>The rectangles and triangles show me, what I need to do: define an interface for each user role/resource, which then can be implemented by a real API wrapper as well as a mock-up. (If you like to use an abstract class instead, you´re welcome to do so.)</p>
+<p>Here are the interfaces for sensors a to e as well as for the pump and the alarm:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/45994e326f2b036d.png" /></p>
+<p>Yes, I think only two interfaces are required. All actuators behave the same: the pump needs to be started and stopped, the alarm needs to be started and stopped. And all sensors deliver their current value when asked. That´s the simplest wrapping I can come up with. And that´s an important point for me here: environmental entities should be wrapped as thinly as possible. This is to make it most easy to implement mock-ups and also to make testing usage of the environment APIs as easy as possible.</p>
+<p>Carlo differentiates between digital and analog sensors – which nevertheless look the same on the interface level – and then further refines them into gas level sensors and level sensors. I would not have done so – at least not at this point, I guess –, but it´s ok with me. What´s important is that these refinements use composition over inheritance:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9ac8dd1ab42b700e.png" /></p>
+<p>Each threshold sensor instance has its own <em>ISensor</em> instance assigned to it – probably by injection upon construction. It´s configured with an appropriate min/max value and the wrapper around the physical sensor:</p>
+<p>var a_sensor = new ThresholdSensor(…, new ASensor());</p>
+<p>Other than Carlo my classes would be more concrete the closer they are to the iron: I´d go for a <em>ASensor</em>, <em>BSensor</em> etc. classes implementing the simplest interface (<em>ISensor</em>). That way the least mount of code would be in there, i.e. testing would be as simple as can be.</p>
+<p>Carlo on the other hand differentiates on a pretty high level of abstraction: a <em>COSensor</em> is a <em>ThresholdGasSensor</em> is a <em>GasSensor</em>[1]. I don´t get, why I should do that – at least not in light of the given requirements. They tell me, there are different sensors. That´s obvious even from Carlo´s first diagram. So what I can speculate about is, whether those different sensors are talked to using the same or different APIs. From that I would derive whether to implement the <em>ISensor</em> interface in a more general manner (e.g. <em>GasSensor</em>) or very specifically for each sensor type (e.g. <em>ASensor</em> etc.).</p>
+<p>Beyond that, though, I don’t see there is a difference between sensors. Even the <em>ThresholdSensor</em> class is a convenience class ;-) It makes the common sensor interaction more specific, it introduces a sensor abstraction to gloss over differences. So I´d say, on this level of abstraction all the different sensors are the same. That´s the whole purpose of this class. One logic to rule all specific sensor API wrappers of a certain kind.</p>
+<h3>Architectural assumptions</h3>
+<p>Architecture to me is design with regard to non-functional requirements. After getting a view from 30,000 ft on the problem with the system-environment diagram, some thoughts on architecture might be in order. So what are non-functional requirements of Carlo´s sump scenario? And how do they influence structuring the system?</p>
+<p>Well, as it seems, nothing much relevant to architecture is imparted by the requirements description. Performance, scalability, usability, security, robustness… no information on these and many other aspects. No details on the sensors or pump or alarm.</p>
+<p>So I´m making two aspects up to become a bit more concrete. This is necessary to actually move forward. System structure is a solution to a concrete problem. That means, as long as the problem is not very concrete there is not really a right or wrong structure. Anything goes.</p>
+<p>The assumptions I´m going to make are:</p>
+<ul>
+<li>The STD is supposed to run as a service on some computer attached to the sensors. Once the computer is switched on the STD will start doing its work. It will monitor the sump, start/stop the pump as necessary, and issue an alarm in an emergency situation.</li>
+<li>Polling the sensors periodically is enough to deal with changes in gas concentrations and water level. Whether that is every 100 msec or every 60 sec is not that important, I think – as long as processing the data does not take longer than the polling interval.</li>
+<li>Sensor and actuator APIs can actually be wrapped as to conform to the resource interfaces described above. I explicitly neglect any configuration or startup/shutdown ceremony.</li>
+<li>Actuators are wrapped in an idempotent way: switching on a pump that´s already running does not make a difference.</li>
+</ul>
+<p>This is how I imagine the setup:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/77aa01340aa38415.png" /></p>
+<h3>Modeling the solution</h3>
+<p>Now for the fun part. How should the whole system work? Carlo´s talking about this, but when I look at his blog article I don´t see it. The result of all his work is, well, just a structural diagram. All explanations about functionality are lost.</p>
+<p>I deem it no virtue to be able to “reverse engineer” a class diagram to get an idea how things are working. If that´s all you have, a class diagram, well, then you have to do it. But my approach to software design and programming is, to avoid this kind of extra work. Develop software so it can be understood and changed easily. That requires to make functionality, i.e. how things play together, a first class citizen of the design.</p>
+<p>This is, why I view software as a set of interactions with its environment. Yes, I´m modelling functionality using interactions or behaviors, not objects. At least objects as “bags of behaviors” are not where I start. My reason is simple: it´s notoriously hard to find such objects in the requirements. Except… yes, except for requirements dealing with real world things. In so far I´d say Carlo´s cheated a bit ;-) when he chose his scenario to demonstrate his object-oriented approach. The scenario makes is particularly easy to arrive at a class decomposition of the problem. For many, many developers, though, it´s not that easy because they deal with totally different stuff.</p>
+<p>However, required behavior is always present. Software as a whole is always supposed to do something. So why not start from there? Start with one “thing” a software should upon request from a user role. Whatever has to be done thus is always triggered by some event in the environment. For the sample scenario that´s trivial: the operator starts the sump monitoring service by switching on the computer.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2723424d8ba97a0b.png" /></p>
+<p>About this picture I can talk with the customer or a user. It´s dead simple. I can ask them, if that´s all to the interaction “Start program” – on this level of abstraction. The program is started with no further information. From then on it just runs…</p>
+<p>If everyone agrees I can drill down. What does “Monitor the sump” mean?</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/ba1b945e65a39532.png" /></p>
+<p>It means, this should be done periodically done. That´s a non-functional requirement. So it should show up in my model somewhere.</p>
+<p>What has to be done periodically? Reading the sensors aka polling – and then acting on the data read from the sensors. That means the pump has to be switched on/off as necessary. And in case of an emergency the alarm has to be switched on.</p>
+<p>I guess I could talk with a user on this level of abstraction, too. He could tell me, if I understood the problem domain correctly. And if´d be interested we could drill down further:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/91a8fc43ff695cc5.png" /></p>
+<p>Reading the sensors could be done in parallel. They are independent of each other. And once all the readings are in, they can be packed up in a <em>SensorData</em> structure for consumption by the “domain logic”.</p>
+<p>Note the drums next to the process steps. They signify a dependency. The process step depends on a resource, it accesses the resource in some way.</p>
+<blockquote>
+<p>Ah, by the way: did you notice how I “stepped into” process steps. The previous diagram refines the process step “Read sensors” of the diagram above it. And that diagram refines the process step “Monitor the sump” of one diagram before. So what I´m doing here is truly modeling on different levels of abstractions. No, I´m not using the L-word here. I don´t care much about layers. I never draw a layer diagram to start a software design. It simply does not help me in any way. It´s either trivial to state which layers there are – or limits my freedom in designing a solution.</p>
+</blockquote>
+<p>Now comes the interesting part. How does the monitoring software actually do anything with the sensor data?</p>
+<p>There are two “things” in the environment to control: the pump and the alarm.</p>
+<p>The pump has to be switched on/off depending on the water level. However, if the methane sensor signals a certain value, the pump needs to be switched off regardless of the water level[2]. Both situations are assessed separately. The combined result then is evaluated to finally decide whether the pump needs to be switched on/off [3].</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/80b7d422d4f9a1a3.png" /></p>
+<p>Whereas the “Read *” process steps do not add anything to the basic interface methods of the sensors, “Switch pump” contains some logic on top of calling the pump interface. But that does not hurt. The functional unit for “Switch pumpt” is easy to test due to IoC. It just knows an actuator interface and thus can be made to work on a mock-up during testing.</p>
+<p>And now for the final refinement:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a9ebcfc989fbe210.png" /></p>
+<p>Straightforward, isn´t it? Assessing the gas readings is pure “domain logic”. Does is matter it also gets water level sensor data? No, I don´t think so. That´s trivial excess information. To separate sensor data to deliver it in a more fine grained manner, would not add much at this point. It´s an optimization, if need be.</p>
+<h3>Abstracting classes from the model</h3>
+<p>The modeling diagrams show how the solution is going to work. I´d say they can be understood pretty much even by a user, not to speak of a developer. To me they make clear where and when certain decisions are made. And they do so on many levels of abstraction, so I can explain/learn about the system at my pace/according to my needs. No reverse-engineering, no code archaeology necessary.</p>
+<p>And the best part is: what you see above is the code to be executed. Almost. And of course on just a high level of abstraction. But nevertheless it´s code.</p>
+<p>But how can such bubbles be executed? Well, I´m gonna show that in a future post, I guess :-) For now I´d like to focus on just what Carlo has provided: the model.</p>
+<p>To live up to that, though, I need to do one more step. I need to show you the classes my design approach leads to.</p>
+<p>Please note: For me classes don´t stand a the beginning of the design process. Rather they are the closing bracket matching the opening bracket of the system-environment diagram. Some classes might be easily gleaned from the requirements. Well, if that´s the case, write them down. Great – but be careful. They´re still lacking justification, until you assigned them functionality. (With the exception of pure data classes.)</p>
+<p>That´s why I leave classes out as long as possible. They are abstractions, they are grouping constructs. They bundle “stuff” that belongs closes together than other stuff. So why should I start think about classes before I know what my “stuff” is?</p>
+<p>The “stuff” of software is functionality. Or in more technical terms it´s functions, procedures, that means methods. That´s why I start by compiling the methods I need to deliver certain functionality. I do that top-down. And I do it in a cross-cutting way.</p>
+<p>So what I´ve presented you so far is an assembly of methods. Each ellipsis can be translated into a method, sometimes a function, sometimes a procedure.</p>
+<p>But here´s the trick: only leafs of the tree the above diagrams are spanning need to become methods; the are the actual operations of the software system. Any darkly colored ellipsis stands for such a leaf. The intermediate nodes of the flow network need not be encoded in any 3GL programming language. Their sole purpose is integration.</p>
+<p>Here´s an overview of the whole model with operations colored according to class:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/3018ac9a3fccfd6f.png" /></p>
+<p>As you can see, I cam up with six different classes as work horses for the software system. That is, four of them are in addition to the basic wrapper classes for resources.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9bbb5c24ba9d1cd2.png" /></p>
+<p>Now let me direct your attention to what´s missing: dependencies.</p>
+<p>See how the classes each stand pretty much on their own? In Carlo´s class diagram there are so many lines of different kinds going in all directions. Some signify abstractions, some composition. It´s – sorry to say, Carlo – a bowl of spaghetti.</p>
+<p>I dare to say that on the other hand the classes I came up with are not less focused in their responsibilities – but less entangled and thus much easier to understand. And there is no controller class either – which was the whole purpose of Carlo´s exercise ;-) Each method in the classes will be small, i.e. easy to test, easy to understand.</p>
+<p>The classes are so little connected, I hardly need a class diagram at all. Why should it tell me anyway except for, well, the structure of data? But since the problem scenario hasn´t to do much with data, there is no need for a class diagram. I´m perfectly fine with the above data flow diagram annotated maybe with class names to make it a bit easier to find the methods in the code base.</p>
+<h3>Inevitable extensions</h3>
+<p>Two extensions I´ll leave open for now. This article has already gotten quite long.</p>
+<ul>
+<li>Logging</li>
+<li>Pump failure detection</li>
+</ul>
+<p>I´d say, as long as it´s easy to add these requirements later on, my design could be considered at least reasonable. We´ll see…</p>
+<h3>Critique</h3>
+<p>One argument I can foresee: “What you do, Ralf, is just functional decomposition like in the 1970s. And we know that´s not gonna work.”</p>
+<p>Well, yes, that´s a kind of functional decomposition. And I don´t see what´s wrong with that. Since software is about actions, process, behavior, “functions” are what we should be looking for. That´s the very stuff, software is build out of.</p>
+<p>That said, I´m not opposed to object-oriented concepts and languages features. Right to the contrary. That´s all nice and well – where it´s appropriate.</p>
+<p>As you can see I make use of interfaces. And I like to encapsulate data. And of course what belongs together should go together into a class. Or a component. Or an assembly. Or a process.</p>
+<p>But I´m not on the outlook for small virtual machines. Encapsulation of details (state, logic) is great. But it´s an optimization. Trying to start software design with classes thus to me more or less is premature optimization.</p>
+<p>If you´re serious about the term “class” then don´t just understand it as a schema. Also view it as an abstraction of functionality, i.e. a name for a group of methods. And like any other class of stuff software classes then are the result of collecting stuff first. Then classifying it. That´s what Linné did. That´s what we as software designers should do.</p>
+<p>Some classes might be obvious. But more classes are not, I´d say. They need to be abstracted from functionality. That´s what I´m doing. But because of this approach I´m not doing plain procedural programming.</p>
+<p>There´s also another telling trait of my approach: data flow. Procedural programming never used data flows. Flow-charts or structograms relied on global data, not data flowing from step to step. But that´s what I favor. It keeps dependencies local. And it makes it more obvious what´s happening.</p>
+<h3>Summary</h3>
+<p>So much for my plea for Flow-Design :-)</p>
+<p>This was fun. I finally was able to contrast my approach with a “true” OO approach. The result is looking different in many regards – but at the core there is some overlap. Of course. Carlo and I agree on the need to wrap resources behind interfaces.</p>
+<p>However, we view the software world structured differently. He starts with a vision of small virtual machines (objects) whereas I view software as a bunch of processes (integration) made up of smaller and smaller steps (operations).</p>
+<p>Now it´s your turn to compare and assess the two approaches. Looking forward to some discussion – if you like.</p>
+<h3>Footnotes</h3>
+<p>[1] I´m aware Carlo also ponders the possibility to have just three instances of <em>ThresholdGasSensor</em>. But he seems to favor more specific classes. That´s at least what he chose to depict and thus make his final solution more complicate.</p>
+<p>[2] To me it seems Carlo´s design not really caters to this requirement. For him a gas sensor signals either a critical state or not. I have followed him in this so far. But if I think more closely about it, the critical level for an alarm and for switching off the pump might be different. The <em>GasSensor</em> interface might be too limited. But the requirements are not precise on this. So I´ll leave it at that.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2012-07-21):</p>
+<p>Versucht Er jetzt auch noch, international groß rauszukommen? Ts ts ts...lächerlich</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-07-21):</p>
+<p>Hm... wahrscheinlich sollte ich mich über den selbstverständlich anonymen Troll freuen. Beweist solche Trollerei - da hilft dann auch keine typografische Ehrerbietung - doch, dass mein Blog weithin gelesen wird. Denn Trolle stellen sich nur dort ein, wo sie glauben, ein Publikum zu haben.</p>
+<p>Ich nehme das also mal zum Anlass, hier auf meine langjährigen anderen englischen Blogs aufmerksam zu machen:</p>
+<p>http://geekswithblogs.net/thearchitectsnapkin/Default.aspx - dies ist aktuelle. Dort schreibe ich gelegentlich, um mein Englisch nicht einrosten zu lassen.</p>
+<p>http://weblogs.asp.net/ralfw/ - dies ist nicht mehr aktuell. Dort habe ich von 2003 bis ca. 2006 einiges geschrieben. Aber für manche Gedankengänge ist dort der Ausgangspunkt, z.B. das Thema Softwarezellen.</p>
+<p>Hat das Schreiben auf Englisch mit internationaler Großherauskommerschaft zu tun? Ach, ach... da hat einer meine Arbeit nicht verfolgt. Sonst wüsste er, dass ich schon vor 10 Jahren aktiv auf internationalen Konferenzen (US, England) und in internationalen online Publikationen (xml.com) war. Bin ich deshalb groß rausgekommen? Habe ich das deshalb getan? Ne. Hat einfach Laune gemacht. Bezahlt in die USA reisen? Super Sache. Da würd ich mal sagen: Nur kein Neid, Herr (?) Anonym.</p>
+<p>Ist ein Posting auf Englisch lächerlich? Wenn meine Sprachkenntnisse unter aller Kanone wären, vielleicht. Aber ich denke, es ist durchaus vorzeigbar. Dann halte ich ein Posting auf Englisch nicht für lächerlich, sondern für anschlussfähiger als eines auf Deutsch. Und warum ich dieses auf Englisch verfasst habe, sollte klar sein: weil es eine konkrete Bezugnahme auf ein englischsprachiges ist.</p>
+<p>Ich denke nicht, dass ich deutschen Entwicklern damit vor den Kopf stoße. Sie werden damit zurecht kommen. Aber ich ermögliche es nicht deutschsprachigen Entwicklern, die Carlos Posting kennen, eine andere Sichtweise zu erfahren.</p>
+<p>Warum habe ich ein englisches Posting in diesem Blog geschrieben und nicht in meinem aktuellen englischen Blog? Weil mir das Thema zu wichtig war, als dass ich es außerhalb meines "Hauptstroms" von Artikeln platzieren wollte.</p>
+<p>Zum Abschluss nochmal kurz zum Trollen: Ich habe mit mir gerungen, ob ich den Kommentar löschen soll. Er ist polemisch, anonym, destruktiv. Er trägt zu keiner sachlichen Diskussion bei.</p>
+<p>Bisher habe ich es dann doch nicht getan. Ich versuche, mich in Toleranz auch solcher Nutzlosigkeit zu üben.</p>
+<p>Aber ich behalte mir vor, das in Zukunft anders zu handhaben. Also: Nicht wundern, wenn ich Trolliges lösche. Und nicht wundern, wenn ich anonyme Kommentare nicht mehr zulasse. Bei allem Willen für die grundsätzliche Möglichkeit, im Netz anonym unterwegs sein zu können, ziehe ich bei Diskussionen in meinem Blog vor, Kommentatoren "ins Auge sehen zu können". Ich bin ja auch nicht anonym. Und so wünsche ich mir, dass jeder hier nur äußert, was er dem anderen auch direkt ins Gesicht sagen würde. Ein bisschen Höflichkeit darf schon sein, oder?</p>
+<hr />
+<p><strong>Christian Vogt</strong> (2012-07-21):</p>
+<p>Hallo Ralf,</p>
+<p>es trollt so früh bei Nacht und Wind ... das Problem hat man doch immer. Lass den Troll Troll sein, er | sie wird vermutlich mit stolz geschwellter Brust herumlaufen, einen "sooooo" wichtigen Kommentar auf Deinen Seiten hinterlassen zu habem.
+Englisch sollte für jeden Softwareentwickler die "zweite Muttersprache" sein, und vielleicht liegt da das Problem des armen Kerlchens ;-)
+Nicht ärgern, nicht löschen, lachen ist IMHO die Devise.</p>
+<p>VG Christian</p>
+<hr />
+<p><strong>Troll von Trollhausen</strong> (2012-07-21):</p>
+<p>polemisch und destruktiv bist Du auch gerne. Anstatt zu löschen, schreibst Du eben seitenweise heisse Luft unter Pseudonym, um unangenehme Kommentare im Rauschen untergehen zu lassen. Und von Pseudonym zu anonym ist der Weg nicht weit. Fragt sich, wer hier der Troll ist.</p>
+<hr />
+<p><strong>Carlo Pescio</strong> (2012-07-22):</p>
+<p>Hello Ralf,
+Your post is offering a great chance to talk more about architectural styles, design choices, the consequences of those choices, etc.</p>
+<p>I've got a hectic week ahead, so I'll have to postpone writing till next week-end.</p>
+<p>I guess I'll reply in my own blog as it's gonna need some space, pictures, etc. Of course, I'll post a link here too for reference.</p>
+<p>Cheers</p>
+<p>Carlo</p>
+<hr />
+<p><strong>McZ</strong> (2012-07-23):</p>
+<p>Hi Ralf!</p>
+<p>Interesting piece, a testament to the power of Flow Design. The flow is much more comprehensive to almost everyone but the common OO-developer, who tends to be obsessed with state.</p>
+<p>In your example, you are simply using a clock, which periodically looks at the sensors. You made clear, that you made the assumption, which is fine for educational purposes.</p>
+<p>Still, this problem of assumption making is a recurring problem. I cannot count the occasions where I have reviewed company-internal code with major assumptions factored in. If I have luck, they can be found in some comments. But rarely, they are correct. Changing this code is much easier than in OO or in monolithic controllers, but still a mess.</p>
+<p>It will make us scratch our heads, when one of the sensors is posting real-time IP-signals. Or, worse, if its API blocks its call until a signal is given. Then, we will find out, that a sensor can have it's own individual control flow and trigger source. We will find out, that testing is still complicated.</p>
+<p>Result: the 'listener'-code would need a major rewrite (zero problem with FD). Anything consuming SensorData will remain stable (thats the power of FD).</p>
+<p>But still, IMO, we need a mindset to identify problems in our assumptions. And we need to find them early. Carlo is spot on, when he tries to seek centers of gravity.</p>
+<p>I have made good results defining an "optimal behaviour" paradigm for FD-systems. The parts that are key to optimal behavior are local centers of gravity. They should always be abstract and - IMO - asynchronous. In this particular case, it's clearly ISensor.</p>
+<p>Or maybe we should have much simpler guidelines? Such as 'any IO is asynchronous'!</p>
+<p>Sincerely, Markus</p>
+<p>P.S. noch'n Gedicht</p>
+<p>Des Sockenträgers liebstes Kind
+das ist und bleibt der Troll
+er findet ständig etwas schlimm
+und findet sich ganz toll.</p>
+<p>Vor allen wohl gefeilte Dinge
+die sucht er mit Entzücken
+Da kann man sich, ganz mühelos
+mit fremden Federn schmücken!</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-07-23):</p>
+<p>@Anonym:
+Versteh' mich nicht falsch, aber was hast du denn für ein Problem (mit Ralf)? Rüttelt er zu sehr an deinem Weltbild bezüglich der Softwareentwicklung, dass du dich so angegriffen fühlst und trollen musst?</p>
+<p>@Ralf:
+That's a nice article and I'm looking forward, how your concrete implementation may look like in C#.
+Because, I'm a bit confused about your resulting classes, since they look not so flow-design typical to me as it is described there: <a rel="noopener" href="http://geekswithblogs.net/theArchitectsNapkin/archive/2011/03/20/flow-design-cheat-sheet-ndash-part-ii-translation.aspx">Flow-Design Cheat Sheet – Part II, Translation</a>.</p>
+<p>kind regards,
+Christian</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-07-23):</p>
+<p>@McZ: Hübsches Gedicht :-)</p>
+<p>Assumption: Not only for educational purposes I made clear what my assumption was. I simply find it necessary to become explicit about such things (non-functional requirements).</p>
+<p>Any aspect in the requirements (ie. any group of attributes likely to change independent of others) should always manifest itself distinctly and visibly in the design by means of a functional unit. This is true for functional as well as non-functional requirements.</p>
+<p>I don´t think all I/O need to be async. But I´m sure all I/O needs to be wrapped in a functional unit since it is always an aspect in itself.</p>
+<p>Whether the sensors actually can be polled or send notifications of their own... I don´t care. Both can be hidden behind the interface of the sensor adapter. If it´s just 3 LOC or 300 LOC to talk to the sensors... I don´t care in the design. (Of course I leave out any further considerations in this direction because the problem scenario does not provide any details on this.)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-07-23):</p>
+<p>@Christian Götz: My class design differs from the cheat sheet descriptions because I had the Flow Runtime at the back of my head when I sketched the translation of the model.</p>
+<p>The model itself is independent of any translation (just methods, EBC, Flow Runtime).</p>
+<hr />
+<p><strong>Carlo Pescio</strong> (2012-07-30):</p>
+<p>Ralf, as promised, here is a commentary on what you said: http://www.carlopescio.com/2012/07/no-controller-episode-3-inglorious.html</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Asynchrone Architekturen einfacher machen - Umriss eines Application Space — ralfw.de Archiv</title>
+<meta name="description" content="In meiner vorherigen Posting habe ich ja eine Lanze für mehr Asynchronizität gebrochen. Die halte ich für wünschenswert und notwendig - aber einfach herzustellen ist sie heute noch">
+<link rel="canonical" href="https://ralfw.de/archiv/2008/asynchrone-architekturen-einfacher/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Asynchrone Architekturen einfacher machen - Umriss eines Application Space — ralfw.de Archiv">
+<meta property="og:description" content="In meiner vorherigen Posting habe ich ja eine Lanze für mehr Asynchronizität gebrochen. Die halte ich für wünschenswert und notwendig - aber einfach herzustellen ist sie heute noch">
+<meta property="og:url" content="https://ralfw.de/archiv/2008/asynchrone-architekturen-einfacher/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Asynchrone Architekturen einfacher machen - Umriss eines Application Space</h1>
+    <div class="doc-meta"><span>25. Juni 2008</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2008/06/asynchrone-architekturen-einfacher.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2008/asynchrone-architekturen-einfacher/</code></span></div>
+    <div class="art"><p>In meiner <a rel="noopener" href="http://ralfw.blogspot.com/2008/06/synchronizitt-die-glserne-decke-der.html">vorherigen Posting</a> habe ich ja eine Lanze für mehr Asynchronizität gebrochen. Die halte ich für wünschenswert und notwendig - aber einfach herzustellen ist sie heute noch nicht. Man kann es, es gibt viele "Splittertechnologien", aber die sind nicht "at our fingertips".</p>
+<p><strong>Bezüglich asynchroner Architekturen sind wir noch in einer "vor-bequemen Zeit", also etwa wie bei der Persistenz so um 2002 herum.</strong> Da gab es noch keine O/R Mapper für .NET und kein noch einfacher zu nutzendes <a rel="noopener" href="http://www.db4o.com">db4o</a> oder <a rel="noopener" href="http://persistor.net/">Persistor.Net</a>.</p>
+<p>Der ThreadPool, der AsyncOperationManager, die CCR, WCF... diese und andere Technologien machen es uns heute schon einfacher, asynchron sowohl lokal wie verteilt zu arbeiten. Dennoch: insgesamt sind sie mir noch zu kompliziert. Das liegt zum Teil an den APIs - die wollen jeder für sich one-size-fits-all Lösungen sein -, andererseits liegts am Konzept dahinter. WCF mag zwar nachrichtenorientiert sein - sehen tut man das aber nicht wirklich. Da helfen auch keine Data Contracts.</p>
+<p><strong>Um die gläserne Decke der Synchronizität nicht zu durchbrechen, sondern sie schlicht auf dem Weg zu mehr Performance und Skalierbarkeit zu umgehen, wünsche ich mir deshalb eine Infrastruktur, die Asynchronizität viel einfacher macht.</strong> Hier mal ein paar Punkte, die sie für mich minimal erfüllen müsste:</p>
+<ul>
+<li>Einfache lokale Kommunikation zwischen Komponenten; Stichworte: Contract-first Design, Dependency Injection und Microkernel  Einfache verteilte Kommunikation; Stichworte: Nachrichtenorientierung, Event-Driven Architecture, "Datenstrukturorientierung" statt Serviceorientierung  Einfache Änderung der Topologie von Netzen verteilter Komponenten; Stichworte: Service Discovery, Unterstützung verschiedener Transportprotokolle, location transparency  Einfache Verteilung "in the cloud"; Stichworte: Tunnelung von NAT und Firewalls  Einfaches Hosting von Komponenten in unterschiedlichen AppDomains  Einfache Verteilung der Arbeit auf mehrere Threads</li>
+</ul>
+<p>Dahinter stehen für mich ein paar Ansprüche, wie ich arbeiten/denken können möchte:</p>
+<ul>
+<li>
+<p><strong>Ich glaube, dass echte Komponentenorientierung durch Infrastruktur unterstützt werden muss.</strong> Sie stellt sich nicht von allein ein, sondern muss quasi durch Technologie "nahegelegt" werden. Visual Studio oder der .NET Framework tun das bisher nicht.</p>
+</li>
+<li>
+<p>Eine komponentenorientierte Infrastruktur soll das Laden von Komponenten einfach machen und auch die Kommunikation zwischen Komponenten.</p>
+</li>
+<li>
+<p>Bei der Komponentenorientierung möchte ich zunächst nicht zwischen lokalen und entfernten Komponenten unterscheiden. Beide sollten also durch dieselbe Infrastruktur unterstützt werden.</p>
+</li>
+</ul>
+<p><a rel="noopener" href="http://www.soa-expertenwissen.de/files/SOA-Expertenwissen_Kapitel_27.pdf"></a> - <strong>Für die Kommunikation zwischen Komponenten glaube ich allerdings fest daran, dass sie erstens zwischen lokalen und verteilten Komponenten ganz anders (!) aussehen sollte</strong>(s. dazu auch <a rel="noopener" href="http://www.soa-expertenwissen.de/files/SOA-Expertenwissen_Kapitel_27.pdf">meinen Beitrag</a> in "SOA Expertenwissen"). Und zweitens glaube ich, dass sie für verteilte Komponenten viel einfacher und einheitlicher werden sollte, als mit .NET Remoting oder auch WCF der Fall. Diese Einheitlichkeit und Einfachheit mag dann nicht 100% aller Probleme lösen, aber 80% sollten damit viel leichter zu erschlagen sein.</p>
+<ul>
+<li>
+<p><strong>Verteilte Komponenten möchte ich genauso einfach auf verschiedenen Threads wie in verschiedenen AppDomains oder auf verschiedenen Rechnern laufen lassen.</strong> Selbst wenn das Internet - the cloud - zwischen ihnen stehen sollte, darf sich nichts an ihrer Kommunikation ändern.</p>
+</li>
+<li>
+<p>Für einfache Verteilung ist es auch wichtig, dass ich die Wahl habe zwischen Push und Pull, um an Informationen zu kommen. <strong>Ich möchte selbst Last ganz einfach verteilen können, also nicht auf eine Cluster-Infrastruktur angewiesen sein.</strong> Warum kann ich nicht einfach heute einen Rechner als Server irgendwo in der Welt hinstellen und morgen 2, 3, 4 weitere irgendwo anders in der Welt - und alle teilen sich die Last? Klar, das geht schon... aber nicht so einfach. Da kann ich nicht nur schnell mal 'nen Service Contract mit WCF aufsetzen. Solche Flexibilität möchte ich aber haben.</p>
+</li>
+</ul>
+<p>Bottom line: Für mich müssen "Komponentendenke", Verteilung auf kurze und weite Distanz und Parallelität in einem einfachen 80%-Werkzeug zusammenkommen. <strong>Dabei gehts nicht darum, ein Rad neu zu erfinden, sondern vorhandene Ränder (endlich) zu einem Auto für jedermann zusammenzustecken.</strong> Bekanntes, Vertrautest, Bewährtes soll in Synergie zusammenarbeiten und in der Summe mehr sein, als die Teile vermuten lassen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/6a388d0afee68ca4.png" /></p>
+<p><strong>Alles beginnt dabei mit... Einfachheit.</strong> Wir brauchen heute nicht leistungsfähigere Technologien, sondern vor allem einfachere. Sonst bleiben zuviele Entwickler zurück. Sie haben nicht die Zeit, sich in Kompliziertes einzuarbeiten. Kommen die Aspekte Komponentenorientierung, Verteilung und Parallelität nicht zusammen, dann nutzen nur wenige das Potenzial, das in Multi-Core Prozessoren und dem universalen Internet steckt.</p>
+<p>Mit einem <em>Application Space</em> (<strong>AppSpace</strong>) wie oben skizziert, sähe das jedoch anders aus. (Ich könnte ihn auch <em>Integration Space</em> oder <em>Component Space</em> nennen. Application Space klingt für mich aber im Augenblick handlicher, weniger out-spaced ;-) <strong>Er wäre für komponentenorientierte, asynchrone Software das, was db4o für die Persistenz ist</strong>: ein "Ermöglicher" (enabler), der für viele erstmals etwas in Reichweite rückt, was ihnen bis dahin akademisch oder schwierig erschienen oder gar unbekannt war.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

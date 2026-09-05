@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abstracting functionality — ralfw.de Archiv</title>
+<meta name="description" content="What is more important than data? Functionality. Yes, I strongly believe we should switch to a functionality over data mindset in programming. Or actually switch back to it.">
+<link rel="canonical" href="https://ralfw.de/archiv/2014/abstracting-functionality/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Abstracting functionality — ralfw.de Archiv">
+<meta property="og:description" content="What is more important than data? Functionality. Yes, I strongly believe we should switch to a functionality over data mindset in programming. Or actually switch back to it.">
+<meta property="og:url" content="https://ralfw.de/archiv/2014/abstracting-functionality/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>Abstracting functionality</h1>
+    <div class="doc-meta"><span>22. Aug. 2014</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2014/08/22/abstracting-functionality.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2014/abstracting-functionality/</code></span></div>
+    <div class="art"><p>What is more important than data? Functionality. Yes, I strongly believe we should switch to a functionality over data mindset in programming. Or actually switch back to it.</p>
+<h2>Focus on functionality</h2>
+<p>Functionality once was at the core of software development. Back when algorithms were the first thing you heard about in CS classes. Sure, data structures, too, were important - but always from the point of view of algorithms. (Niklaus Wirth gave one of his books the title "Algorithms + Data Structures" instead of "Data Structures + Algorithms" for a reason.)</p>
+<p>The reason for the focus on functionality? Firstly, because software was and is about doing stuff. Secondly because sufficient performance was hard to achieve, and only thirdly memory efficiency.</p>
+<p>But then hardware became more powerful. That gave rise to a new mindset: object orientation. And with it functionality was devalued. Data took over its place as the most important aspect. Now discussions revolved around structures motivated by data relationships. (John Beidler gave his book the title "Data Structures and Algorithms: An Object Oriented Approach" instead of the other way around for a reason.)</p>
+<p>Sure, this data could be embellished with functionality. But nevertheless functionality was second.</p>
+<p><em>(Diagram not captured)</em></p>
+<p>When you look at (domain) object models what you mostly find is (domain) data object models. The common object oriented approach is: data aka structure over functionality. This is true even for the most modern modeling approaches like Domain Driven Design. Look at the literature and what you find is recommendations on how to get data structures right: aggregates, entities, value objects.</p>
+<p>I´m not saying this is what object orientation was invented for. But I´m saying that´s what I happen to see across many teams now some 25 years after object orientation became mainstream through C++, Delphi, and Java.</p>
+<p>But why should we switch back? Because software development cannot become truly agile with a data focus. The reason for that lies in what customers need first: functionality, behavior, operations.</p>
+<p>To be clear, that´s not why software is built. The purpose of software is to be more efficient than the alternative. Money mainly is spent to get a certain level of quality (e.g. performance, scalability, security etc.). But without functionality being present, there is nothing to work on the quality of.</p>
+<p>What customers want is functionality of a certain quality. ASAP. And tomorrow new functionality needs to be added, existing functionality needs to be changed, and quality needs to be increased.</p>
+<p>No customer ever wanted data or structures.</p>
+<p>Of course data should be processed. Data is there, data gets generated, transformed, stored. But how the data is structured for this to happen efficiently is of no concern to the customer.</p>
+<p>Ask a customer (or user) whether she likes the data structured this way or that way. She´ll say, "I don´t care." But ask a customer (or user) whether he likes the functionality and its quality this way or that way. He´ll say, "I like it" (or "I don´t like it").</p>
+<h2>Build software incrementally</h2>
+<p>From this very natural focus of customers and users on functionality and its quality follows we should develop software incrementally. That´s what Agility is about.</p>
+<p>Deliver small increments quickly and often to get frequent feedback. That way less waste is produced, and learning can take place much easier (on the side of the customer as well as on the side of developers).</p>
+<p>An increment is some added functionality or quality of functionality.</p>
+<p>So as it turns out, Agility is about functionality over whatever. But software developers' thinking is still stuck in the object oriented mindset of whatever over functionality. Bummer. I guess that (at least partly) explains why Agility always hits a glass ceiling in projects. It´s a clash of mindsets, of cultures.</p>
+<p>Driving software development by demanding small increases in functionality runs against thinking about software as growing (data) structures sprinkled with functionality. (Excuse me, if this sounds a bit broad-brush. But you get my point.)</p>
+<h2>The need for abstraction</h2>
+<p>In the end there need to be data structures. Of course. Small and large ones. The phrase functionality over data does not deny that. It´s not functionality instead of data or something. It´s just over, i.e. functionality should be thought of first. It´s a tad more important. It´s what the customer wants.</p>
+<p>That´s why we need a way to design functionality. Small and large. We need to be able to think about functionality before implementing it. We need to be able to reason about it among team members. We need to be able to communicate our mental models of functionality not just by speaking about them, but also on paper. Otherwise reasoning about it does not scale.</p>
+<p>We learned thinking about functionality in the small using flow charts, Nassi-Shneiderman diagrams, pseudo code, or UML sequence diagrams.</p>
+<p>That´s nice and well. But it does not scale. You can use these tools to describe manageable algorithms. But it does not work for the functionality triggered by pressing the "1-Click Order" on an amazon product page for example.</p>
+<p>There are several reasons for that, I´d say.</p>
+<p>Firstly, the level of abstraction over code is negligible. It´s essentially non-existent. Drawing a flow chart or writing pseudo code or writing actual code is very, very much alike. All these tools are about control flow like code is.</p>
+<p>In addition all tools are computationally complete. They are about logic which is expressions and especially control statements. Whatever you code in Java you can fully (!) describe using a flow chart.</p>
+<p>And then there is no data. They are about control flow and leave out the data altogether. Thus data mostly is assumed to be global. That´s shooting yourself in the foot, as I hope you agree.</p>
+<p>Even if it´s functionality over data that does not mean "don´t think about data". Right to the contrary! Functionality only makes sense with regard to data. So data needs to be in the picture right from the start - but it must not dominate the thinking. The above tools fail on this.</p>
+<p>Bottom line: So far we´re unable to reason in a scalable and abstract manner about functionality.</p>
+<p>That´s why programmers are so driven to start coding once they are presented with a problem. Programming languages are the only tool they´ve learned to use to reason about functional solutions.</p>
+<p>Or, well, there might be exceptions. Mathematical notation and SQL may have come to your mind already. Indeed they are tools on a higher level of abstraction than flow charts etc. That´s because they are declarative and not computationally complete. They leave out details - in order to deliver higher efficiency in devising overall solutions.</p>
+<p>We can easily reason about functionality using mathematics and SQL. That´s great. Except for that they are domain specific languages. They are not general purpose. (And they don´t scale either, I´d say.) Bummer.</p>
+<p>So to be more precise we need a scalable general purpose tool on a higher than code level of abstraction not neglecting data.</p>
+<p>Enter: Flow Design.</p>
+<h2>Abstracting functionality using data flows</h2>
+<p>I believe the solution to the problem of abstracting functionality lies in switching from control flow to data flow.</p>
+<p>Data flow very naturally is not about logic details anymore. There are no expressions and no control statements anymore. There are not even statements anymore. Data flow is declarative by nature.</p>
+<p><em>(Diagram not captured)</em></p>
+<p>With data flow we get rid of all the limiting traits of former approaches to modeling functionality.</p>
+<p>In addition, nomen est omen, data flows include data in the functionality picture.</p>
+<p>With data flows, data is visibly flowing from processing step to processing step. Control is not flowing. Control is wherever it´s needed to process data coming in.</p>
+<p>That´s a crucial difference and needs some rewiring in your head to be fully appreciated.</p>
+<p>Since data flows are declarative they are not the right tool to describe algorithms, though, I´d say. With them you don´t design functionality on a low level. During design data flow processing steps are black boxes. They get fleshed out during coding.</p>
+<p>Data flow design thus is more coarse grained than flow chart design. It starts on a higher level of abstraction - but then is not limited. By nesting data flows indefinitely you can design functionality of any size, without losing sight of your data.</p>
+<p>Data flows scale very well during design. They can be used on any level of granularity. And they can easily be depicted. Communicating designs using data flows is easy and scales well, too.</p>
+<p>The result of functional design using data flows is not algorithms (too low level), but processes. Think of data flows as descriptions of industrial production lines. Data as material runs through a number of processing steps to be analyzed, enhances, transformed.</p>
+<p>On the top level of a data flow design might be just one processing step, e.g. "execute 1-click order". But below that are arbitrary levels of flows with smaller and smaller steps.</p>
+<p>That´s not layering as in "layered architecture", though. Rather it´s a stratified design à la Abelson/Sussman.</p>
+<p>Refining data flows is not your grandpa´s functional decomposition. That was rooted in control flows. Refining data flows does not suffer from the limits of functional decomposition against which object orientation was supposed to be an antidote.</p>
+<h2>Summary</h2>
+<p>I´ve been working exclusively with data flows for functional design for the past 4 years. It has changed my life as a programmer. What once was difficult is now easy. And, no, I´m not using Clojure or F#. And I´m not a async/parallel execution buff.</p>
+<p>Designing the functionality of increments using data flows works great with teams. It produces design documentation which can easily be translated into code - in which then the smallest data flow processing steps have to be fleshed out - which is comparatively easy.</p>
+<p>Using a systematic translation approach code can mirror the data flow design. That way later on the design can easily be reproduced from the code if need be.</p>
+<p>And finally, data flow designs play well with object orientation. They are a great starting point for class design. But that´s a story for another day.</p>
+<p>To me data flow design simply is one of the missing links of systematic lightweight software design.</p>
+<hr />
+<p><em>Footnotes: There are also other artifacts software development can produce to get feedback, e.g. process descriptions, test cases. But customers can be delighted more easily with code based increments in functionality. No, I´m not talking about the endless possibilities this opens for parallel processing. Data flows are useful independently of multi-core processors and Actor-based designs. That´s my whole point here. Data flows are good for reasoning and evolvability. So forget about any special frameworks you might need to reap benefits from data flows. None are necessary. Translating data flow designs even into plain of Java is possible.</em></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

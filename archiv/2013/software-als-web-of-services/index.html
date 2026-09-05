@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software als Web of Services — ralfw.de Archiv</title>
+<meta name="description" content="Für mehr Evolvierbarkeit von Software wie Team müssen wir Software grundsätzlich anders aufgebaut denken, glaube ich. Derzeit stehen Objekte im Vordergrund. Das halte ich für eine ">
+<link rel="canonical" href="https://ralfw.de/archiv/2013/software-als-web-of-services/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software als Web of Services — ralfw.de Archiv">
+<meta property="og:description" content="Für mehr Evolvierbarkeit von Software wie Team müssen wir Software grundsätzlich anders aufgebaut denken, glaube ich. Derzeit stehen Objekte im Vordergrund. Das halte ich für eine ">
+<meta property="og:url" content="https://ralfw.de/archiv/2013/software-als-web-of-services/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Software als Web of Services</h1>
+    <div class="doc-meta"><span>6. März 2013</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2013/03/software-als-web-of-services.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2013/software-als-web-of-services/</code></span></div>
+    <div class="art"><p>Für mehr Evolvierbarkeit von Software wie Team müssen wir Software grundsätzlich anders aufgebaut denken, glaube ich. Derzeit stehen Objekte im Vordergrund. Das halte ich für eine überholte Sichtweise. Sie entstammt einer Zeit, da Software weniger umfangreich war und nur mit knappen Ressourcen betrieben wurde.</p>
+<p>Historisch hat alles mit einem bunten Gemisch von Anweisungen und Daten innerhalb eines Betriebssystemprozesses angefangen. Der Prozess spannt die Laufzeitumgebung für den Code auf.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/4f08414bb681474e.png" /></p>
+<p>Unterprogramme entstanden erst, als Programme umfangreicher wurden. Sie sind ein erster Schritt zur Kapselung von Code. Die Zahl der Anweisungen konnte durch sie weiter steigen, ohne dass die Übersichtlichkeit drastisch gesunken wäre.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/7b42763a0bb37e0e.png" /></p>
+<p>Als nächstes entwickelte man Container für Daten. Sie sollten zu größeren Einheiten zusammengefasst werden. Die Sprache C spiegelt diesen Entwicklungsstand wider: sie bietet Unterprogramme (Prozeduren und Funktionen) sowie Strukturen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/67bfe263bba0fada.png" /></p>
+<p>Anschließend gab es einen letzte Schritt: die Objektorientierung. Sie hat Strukturen und Unterprogramme zu Klassen zusammengefasst. Dadurch wurde Software nochmal etwas grobgranularer, so dass sich mehr Anweisungen innerhalb eines Prozesses übersichtlich handhaben ließen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/5684b17c98d127e0.png" /></p>
+<p>Parallel gab es eine Entwicklung von Bibliotheken. Zuerst wurden in ihnen Unterprogramme und Strukturen zusammengefasst, später Klassen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c92e2fdf7f770f21.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/8e29b1e0d57c66f5.png" /></p>
+<p>Doch auch wenn Bibliotheken schon lange existieren, sind sie aus meiner Sicht nie zu einem gleichwertigen Container neben Klassen aufgestiegen. Sie werden nicht konsequent zur Strukturierung und Entkopplung im Sinne der Evolvierbarkeit eingesetzt. Ihr Hauptzweck ist es, Wiederverwendung zu ermöglichen. Sie sind die Auslieferungseinheiten für Code, der in unterschiedlichen Zusammenhängen genutzt werden können soll.</p>
+<p>Die hauptsächliche Strukturierung von Software befindet sich mithin auf dem Niveau der 1990er, als die Objektorientierung mit C++, Delphi und dann Java ihren Siegeszug angetreten hat.</p>
+<p>Die Bausteine, aus denen Software zusammengesetzt wird, sind unverändert feingranular; es sind die Klassen. Der Umfang von Software ist seitdem jedoch kontinuierlich gestiegen. Mehr Hauptspeicher macht es möglich. Früher waren es 640 KB oder vielleicht wenige MB; heute sind es 4 GB und mehr.</p>
+<p>Nur eine weitere Veränderung hat sich noch ergeben. Die Zahl der Prozesse pro Anwendung ist gewachsen, weil die Zahl der beteiligten Maschinen gewachsen ist. Das Ideal ist zwar immer noch, so wenige Prozesse wie möglich laufen zu haben, doch Mehrbenutzeranwendungen erfordern für Performance und Skalierbarkeit oft mindestens zwei Prozesse, einen für den Client und einen für den Server.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/62ecd3043241600d.png" /></p>
+<p>Im Vergleich zur Zahl der in einer Anwendung involvierten Bibliotheken und vor allem der Klassen, ist die Zahl der Prozesse jedoch verschwindend klein. Prozesse sind heute keine Mittel zur Strukturierung von Software im Sinne der Evolvierbarkeit. Sie werden als notwendige Übel betrachtet, um andere nicht-funktionale Anforderungen zu erfüllen.</p>
+<h3>Komponenten für industrielle Softwareentwicklung</h3>
+<p>Bibliotheken sind Konglomerate von Klassen. Die gehören inhaltlich zwar zusammen, nur ist ihre Leistung nicht sehr klar definiert. Ihr Angebot, der Kontrakt, ist implizit.</p>
+<p>Das ändert sich erst mit Komponenten.<strong>Komponenten sind Bibliotheken mit explizitem und separatem Kontrakt.</strong></p>
+<p>Mit Komponenten ist es möglich, Software industriell zu entwickeln. An allen Komponenten kann gleichzeitig gearbeitet werden, auch wenn sie gegenseitig Leistungen nutzen. Die Abhängigkeit zur Entwicklungszeit bezieht sich ja nur auf den Kontrakt.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/ae97218bc2d22c3a.png" /></p>
+<p>Idealerweise würde Software also mit Komponenten statt Bibliotheken strukturiert. Erstens ist die Kopplung zwischen Komponenten durch den expliziten Kontrakt geringer als zwischen Bibliotheken. Implementationen lassen sich dadurch leichter austauschen [1]. Zweitens steigt durch Komponenten die Produktionseffizienz.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/55899f780b93ebe3.png" /></p>
+<p>Komponenten verändern gegenüber Bibliotheken allerdings nicht die Granularität von Software. Sie ziehen eher kein neues Abstraktionsniveau ein, wie es Bibliotheken in Bezug auf Klassen und Klassen in Bezug auf Methoden getan haben.</p>
+<p>Außerdem verlangen Komponenten wie Bibliotheken und Klassen für eine Zusammenarbeit Übereinstimmung in der Plattform. .NET-Komponenten können .NET-Komponenten nutzen und Java-Komponenten können Java-Komponenten nutzen. Aus meiner Sicht gibt es keine breit praktikable Lösung, um universell plattformübergreifend Komponenten zu koppeln.</p>
+<p>Das soll den Wert von Komponenten nicht schmälern. Sie sind sehr hilfreich und weit unterschätzt. Dennoch sollten wir auch noch einen Schritt weiter denken.</p>
+<h4>Services für Flexibilität</h4>
+<p>Der Betriebssystemprozess ist heute immer noch die Funktionseinheit, mit der wir am natürlichsten und einfachsten Code entkoppeln. Er spannt einen eigenen Adress- und Sicherheitsraum auf. Und er läuft autonom auf mindestens einem eigenen Thread.</p>
+<p>Darüber hinaus ist der Prozess aber auch die Funktionseinheit, die wir mit einer Entwicklungsplattform assoziieren. Ob der Code eines Prozesses mit C, C++, C# oder Ruby oder Python oder Perl oder in Assembler geschrieben wurde, sehen wir dem Prozess nicht an. Von Prozess zu Prozess kann die Plattform wechseln.</p>
+<p>Damit wird der Prozess für mich interessant im Sinne der Evolvierbarkeit. Denn die ist begrenzt, solange die Plattform <a rel="noopener" href="http://blog.ralfw.de/2012/12/pervertierte-dienerschaft.html">eine systemrelevante Größe</a> ist. Wer sein ganzes Team auf unabsehbare Zeit an eine Entwicklungsplattform bindet, wer den Plattformwechsel also nicht vom ersten Tag an als (wünschenswerte) Möglichkeit im Auge behält, der begibt sich auf einen unglücklichen Pfad von <a rel="noopener" href="http://blog.ralfw.de/2012/09/vorsicht-co-evolution.html">Co-Evolution von Software und Team</a>: beide erstarren im Verlauf von 4-8 Jahren. Nicht nur wird es immer schwieriger, neue Funktionalität in die Codebasis einzupflegen; es wird auch immer schwieriger, echte Innovationen denken zu können und neue Leute ins Team zu holen.</p>
+<p>Am Ende wacht dann ein Team nach Jahren auf und findet sich abgehängt. Die Kunst hat sich weiterentwickelt – nur kann man davon nicht profitieren. Weder hat sich das Team kontinuierlich Kenntnisse angeeignet, noch konnten Kenntnisse in die Codebasis einfließen.</p>
+<p>Ohne Komponenten gibt es kaum Codeeinheiten, an denen etwas hinter einer Barriere einfach mal ausprobiert werden könnte, wenn die Plattform neue Features hergibt.</p>
+<p>Und selbst mit Komponenten gibt es keine Codeeinheiten, an denen eine vielversprechende Plattform ausprobiert werden könnte. Oder ein vielversprechender Bewerber, dessen Plattformkenntnisse leider nicht so tief sind – der aber Experte auf einer anderen Plattform ist.</p>
+<p>Der Code ganzer Prozesse ist heute gewöhnlich zu groß, um solche Veränderung zu erlauben. Auf der anderen Seite sind Prozesse die Codeeinheiten, mit denen solche Veränderungen auf Plattformebene einzig möglich sind.</p>
+<p><strong>Deshalb plädiere ich dafür, Software aus mehr, viel mehr Prozessen zusammenzusetzen als heute üblich.</strong></p>
+<p>Der Zweck dieser Prozesse ist aber ein anderer als der heutige. Heute dienen sie vor allem kundenrelevanten nicht-funktionalen Anforderungen wie Skalierbarkeit oder Sicherheit. Ich möchte sie nun ja aber zu einem Mittel der Flexibilität, der Evolvierbarkeit von Code und Team erheben. Deshalb nenne ich die Prozesse, um die es mir geht, Services.</p>
+<p><strong>Ein Service ist für mich ein Prozess mit einem expliziten und separaten und vor allem plattformneutralen Kontrakt.</strong></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f821654be5ffeef7.png" /></p>
+<p>Ein Service ist mithin eine Kombination aus Komponente und Betriebssystemprozess. Er definiert ganz genau und unabhängig von jeder Implementation, was er leistet. Und er ist autonom, d.h. ausgestattet mit eigenem Adressraum und asynchron gegenüber anderen Services.</p>
+<p>Das macht einen Service zu einer vergleichsweise schwergewichtigen Funktionseinheit. Aber ich behaupte, das macht nichts. Es lassen sich in jedem Prozess jeder Anwendung Aspekte finden, die in Services verpackt mit einander arbeiten können, ohne dass dadurch ein Performanceproblem entstünde.</p>
+<p>Mein Bild von Software sieht damit so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/4ebe3ae49b9f44d4.jpg" /></p>
+<p>Die Services innerhalb eines Prozesses können in einer Hierarchie zu einander stehen. Eher sehe ist sie aber auf derselben Ebene, verbunden in einem Netzwerk: a web of services.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/dd902db532ca17ca.jpg" /></p>
+<p>Jenachdem, wie der plattformneutrale Kontrakt eines Services aussieht, kann er auch einfach von einem Prozess in einen anderen bewegt werden. Am Ende sind die umschließenden Prozesse nur Hosts für Services, leisten aber nichts selbst für die Domäne. Sie werden quasi unsichtbar.</p>
+<p>Software besteht damit aus Services. Und Services können zusammenarbeiten, auch wenn sie auf verschiedenen Entwicklungsplattformen implementiert sind. Innerhalb eines Host-Prozesses können Services geschrieben in C#, Java, Ruby und Python kooperieren.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/eb0cdb29ad16bb31.jpg" /></p>
+<p>Solche Vielfalt muss nicht sein. Aber sie kann sein! Es ist möglich, eine Software, deren Services zunächst mit nur einer Plattform implementiert sind, schrittweise zu überführen. Service für Services wird einfach neu geschrieben. Das ist bezahlbar, solange ein Service keine systemrelevante Größe hat. Wenn man es sich nicht leisten kann, einen Service (oder zunächst einmal eine Komponente) neu zu schreiben, falls es schwierig wird mit Veränderungen und Refactoring… dann hat man sich in die Ecke gepinselt. Dann ist die Software wahrlich zum Monolithen erstarrt.</p>
+<p>Sie mögen nun einwänden, die Kommunikation zwischen Services sei doch viel zu langsam. Aber wissen Sie das? Haben Sie es ausprobiert, ob Sie höhere Geschwindigkeit brauchen? Ein Roundtrip mit TCP braucht ca. 0,125msec, einer über die I/O-Streams 0,1msec, einer über einen embedded Web-Server wie Nancy im schlechtesten Fall 0,55msec – und ein direkter Aufruf nur 0,00065msec, d.h. er ist rund 500 Mal schneller.</p>
+<p>Ja, so ist das. Aber diese im Vergleich schlechteren Werte für cross-service Kommunikation im Vergleich zu cross-component Kommunikation sagt nichts darüber aus, ob cross-service für Ihren konkreten Fall wirklich zu langsam wäre. Haben Sie das überhaupt schon einmal in Erwägung gezogen und ausprobiert? Wahrscheinlich nicht.</p>
+<p>Genau dazu möchte ich Sie aber ermuntern. Ich möchte Sie einladen, ein web of services auszuprobieren. Experimentieren Sie damit – denn es gibt etwas zu gewinnen. Sie gewinnen all die Vorteile, die das Internet für seine Evolution und die der an ihm beteiligten Services schon nutzt.</p>
+<p>Falls Sie glauben, ich sei der einzige mit solch einer spinnerten Idee, dann schauen Sie einmal bei infoq.com vorbei: Der Vortrag <a rel="noopener" href="http://www.infoq.com/presentations/Micro-Services">“Micro Services: Java, the Unix Way”</a> bricht ebenfalls eine Lanze für diese Denkweise.</p>
+<p>Ich bin überzeugt, wir müssen diesen evolutionären Schritt gehen. Wir müssen ein nächstes Abstraktionsniveau für Funktionseinheiten erschließen. SOA ist mir da schon zuviel. Aber Actors sind mir zuwenig.</p>
+<p>Ich glaube mit “einfacheren” Services, die keinen weiteren Anspruch haben als einen separaten plattformneutralen Kontrakt für Funktionalität in einem eigenen Prozess, kann das funktionieren. Technisch ist das kein Hexenwerk. Jeder kann ein web of services aufziehen. REST sehe ich in dieser Hinsicht nicht als hübschen Ansatz für Web-Anwendungen, sondern als grundsätzliches Paradigma der Servicekopplung auch im Kleinen. Für REST braucht es keinen Web-Server; Sie können REST auch mit Service implementieren, der Requests per Standard-Input entgegen nimmt und Responses auf dem Standard-Output liefert.</p>
+<p>Es ist vielmehr eine Frage des Willens, so zu denken. Es ist eine Frage Ihres Wertesystems: Was schätzen Sie höher ein? Garantiert bessere Evolvierbarkeit durch Plattformflexibilität – oder vermeintlich benötigte höhere Kommunikationsgeschwindigkeit?</p>
+<p><strong>Das ist für mich der Weg für die effizientere Herstellung von evolvierbarer Software: Funktionalität in Komponenten kapseln für bessere Entkopplung innerhalb einer Plattform; Funktionalität in Services kapseln für bessere Entkopplung in plattformneutraler Weise.</strong></p>
+<p>Und wenn Sie dadurch nebenbei auch noch Ihre Prozessorkerne besser ausnutzen und die Verteilbarkeit von Code steigt und Sie auf einen größeren Pool von Entwicklern zurückgreifen können bei Neueinstellungen… dann ist das auch nicht schlecht, oder?</p>
+<h4>Endnoten</h4>
+<p>[1] Es gibt mindestens zwei Gründe, Funktionseinheiten durch einen expliziten Kontrakt leicht komplett austauschbar zu halten.</p>
+<p>Der erste ist leichtere Testbarkeit. Auch wenn es nur eine Implementation des Kontraktes für Produktionszwecke je geben wird, kann es für Tests sehr hilfreich sein, ganz einfach eine Attrappe hinter dem Kontrakt anfertigen zu können.</p>
+<p>Der zweite Grund ist die Möglichkeit zur Neuentwicklung. Hinter einem Kontrakt kann die gesamte Implementation ausgetauscht werden, ohne dass Kontraktnutzer davon tangiert würden.</p>
+<p>Beispiel: Wenn eine Komponente den Datenbankzugriff kapselt, dann wollen Sie in Tests von abhängigen Komponenten, nicht immer auch tatsächlich auf die Datenbank zugreifen. Also entwickeln sie z.B. eine Attrappe, die Datenbankzugriffe durch Zugriffe auf das Dateisystem simuliert.</p>
+<p>Und auch wenn Sie nie beabsichtigen, ein anderes Datenbanksystem als MySQL zu benutzen, kann es Ihnen helfen, die gesamte Implementation der Datenbankzugriffskomponente <a rel="noopener" href="http://blog.ralfw.de/2012/09/form-follows-feasibility.html">einfach wegzuschmeißen und neu zu schreiben</a>. Denn Refactoring kann sich irgendwann als zu aufwändig herausstellen.</p>
+<p>Ganz zu schweigen davon, dass es mit einer Komponente für den Datenbankzugriff einfach ist, von MySQL umzusteigen auf Oracle oder SQL Server alternativ zu MySQL anzubieten. Doch diese Art der Austauschbarkeit sowie die Möglichkeit zur Wiederverwendung sind für mich eher die geringeren Gründe, mit Komponenten zu arbeiten.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2013-03-06):</p>
+<p>Was ist neu an diesen Gedanken? Forschung im Bereich Service/Komponenten-Matching gibt es schon seit vielen Jahren.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-03-06):</p>
+<p>Herzlich Willkommen zu Webservices und SOA (Service-orientierte Architektur).</p>
+<p>Bisher habe ich noch nie so eine einfache und gute Darstellung gesehen. Deine Heranführung ist sehr schön anschaulich und bildhaft erklärt. :-)</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-03-06):</p>
+<p>Genau das setzen wir z.B. mit http://toolstack.io seit über einem Jahr konsequent um.
+Schön, dass es mal jemand niedergeschrieben hat ;-)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-03-06):</p>
+<p>@Anonym1: Um Matching dreht es sich hier nicht, sondern um Granularität und Entkopplung. Und es ist auch unwesentlich, ob die Forschung forsch forscht. Solange davon wenig in der Praxis ankommt, ist die Forschung nicht genug.</p>
+<p>Darum geht es mir aber: einen Impuls für die Praxis geben. Einen Ansatz plastisch machen.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-03-08):</p>
+<p>Danke, genau dieser Denkanstoß könnte die Lösung eines aktuellen Problems sein.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Was ist mit Bob? – Verwirrung anlässlich einer Code Kata — ralfw.de Archiv</title>
+<meta name="description" content="Wollte mich heute mal zur Entspannung mit einer Code Kata beschäftigen. Meine Wahl fiel auf die &quot;Bowling Game Kata&quot; von unser aller Onkel Bob. Das PPT dazu sieht hübsch strukturier">
+<link rel="canonical" href="https://ralfw.de/archiv/2009/was-ist-mit-bob-verwirrung-anlasslich/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Was ist mit Bob? – Verwirrung anlässlich einer Code Kata — ralfw.de Archiv">
+<meta property="og:description" content="Wollte mich heute mal zur Entspannung mit einer Code Kata beschäftigen. Meine Wahl fiel auf die &quot;Bowling Game Kata&quot; von unser aller Onkel Bob. Das PPT dazu sieht hübsch strukturier">
+<meta property="og:url" content="https://ralfw.de/archiv/2009/was-ist-mit-bob-verwirrung-anlasslich/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Was ist mit Bob? – Verwirrung anlässlich einer Code Kata</h1>
+    <div class="doc-meta"><span>23. Aug. 2009</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2009/08/was-ist-mit-bob-verwirrung-anlasslich.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2009/was-ist-mit-bob-verwirrung-anlasslich/</code></span></div>
+    <div class="art"><p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/8c81c7d04d9665cb.png" /></p>
+<p>Wollte mich heute mal zur Entspannung mit einer <a rel="noopener" href="http://codekata.pragprog.com/2007/01/code_kata_backg.html">Code Kata</a> beschäftigen. Meine Wahl fiel auf die <a rel="noopener" href="http://butunclebob.com/ArticleS.UncleBob.TheBowlingGameKata">"Bowling Game Kata"</a> von unser aller <a rel="noopener" href="http://www.objectmentor.com/omTeam/martin_r.html">Onkel Bob</a>. Das <a rel="noopener" href="http://butunclebob.com/files/downloads/Bowling%20Game%20Kata.ppt">PPT</a> dazu sieht hübsch strukturiert aus:</p>
+<ul>
+<li>Am Anfang werden die Regeln für die Punktezählung bei einem Bowling Game erklärt. Da besteht ein Spiel z.B. aus 10 Sätzen (Frame), innerhalb derer mehrere Würfe (Roll) gemacht werden dürfen, um zu einem Punktestand (Score) für den Satz zu kommen. Die Gesamtpunktezahl für ein Spiel ist dann die Summe der Punkte der Sätze.<ul>
+<li>Dann wird eine Sollklasse als Anforderung formuliert. Die ist in der Kata per TDD zu implementieren. Ich formuliere sie mal als Interface für C#:</li>
+</ul>
+</li>
+</ul>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/ea1d45742b865fc1.png" /></p>
+<p>interface IGame
+{
+    void Roll(int pins);
+    int Score { get; }
+}</p>
+<p>Mit den Regeln und der formalen Anforderung in der Tasche kann es dann losgehen.</p>
+<p>Oder man linst mal auf die weiteren Folien der Katabeschreibung - immerhin sind es mehr als 50. Da erklärt Meister Bob nämlich sein Vorgehen.  Aber, wer hätte das gedacht: Statt mit TDD loszulegen, macht Onkel Bob eine Design Session!</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/17db784cafb180f9.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/34a260a03c11c4c2.png" /></p>
+<p>Was ist mit Bob? Da gibt es nicht nur eine Klasse <em>Game</em>, sondern auch eine Klasse <em>Frame</em> und <em>Roll</em>. Hört sich ja auch plausibel an, wenn man die Regeln liest. Darin tauchen diese Begriffe als Substantive auf. Aber warum müssen die denn in ein Design einfließen? Ist es ausgemacht, dass man sie für die Implementation wirklich braucht?</p>
+<p>Oder besser: Ist es aus den Anforderungen ablesbar, dass diese Klassen gebraucht werden? Ich glaube, das kann man nicht. Denn ich habe meine Implementation der Anforderung “Implementiere eine Klasse Game wie folgt…” strickt mit TDD begonnen. Für so ein kleines Beispiel habe ich schlicht keine ausdrückliche Design Session für nötig gehalten. Und ich habe auch gedacht, genau das sei eben der Sinn solcher kleinen Katas: dass man eben vor allem den TDD-Prozess einübt mit seiner Schrittfolge red-green-refactor. Das Design soll iterativ und absolut bedarfsgetrieben evolvieren. Und dann sowas von Bob?!</p>
+<p>Bei meinem TDD-Vorgehen konnte ich keine Notwendigkeit erkennen, Klassen jenseits von <em>Game</em> zu implementieren. Den Grund halte ich für ganz naheliegend: Die Anforderung (!) enthält aber auch gar keinen Bezug zu Sätzen und Würfen.</p>
+<p>Die Regeln sagen zwar, dass man pro Satz nur soundsoviele Würfe machen darf und bestimmte Wurferfolge Zusatzwürfe (Bonus) gestatten. Doch die Punktezählung ist am Ende nur eine schlichte Addition aller Wurferfolge (Pins).</p>
+<p>Darüber hinaus abstrahiert die Klasse Game von all diesen Details, indem auf ihr einfach immer nur wieder <em>Roll()</em> aufgerufen werden soll:</p>
+<p>game.Roll(5);
+game.Roll(3);
+game.Roll(7);
+game.Roll(9);
+…
+Console.WriteLine(game.Score);</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/b58f1a0dc70bdf32.png" /></p>
+<p>Was, bitte, hat das noch mit Sätzen zu tun? Ob ein Wurf ein Bonuswurf ist, entscheidet nicht die Klasse <em>Game</em>. Das steht jedenfalls nicht in den Anforderungen. Auch ist nicht erwähnt, ob irgendwie die Einhaltung der Regeln geprüft werden soll. Oder warum die Einschränkung, <em>Score</em> nur am Ende aufzurufen? Es macht keinen Unterschied, wann man <em>Score</em> befragt, da die Gesamtpunktezahl immer nur eine Addition aller per <em>Roll()</em> gemeldeten Wurfergebnisse ist.</p>
+<p>Was ist also mit Bob? Wie kommt es, dass er eine so merkwürdige Aufgabe stellt und sich letztlich nicht an die eigenen Prinzipien hält? Explizites Design statt TDD – was hat ihn bei der Aufgabengröße denn da geritten?</p>
+<p>Oder habe ich da etwas übersehen, falsch verstanden? Ist mir in der Spieldefinition etwas entgangen? Ist mir der tiefere Sinn der Anforderung an die Klasse <em>Game</em> entgangen? Ich bitte um Aufklärung.</p>
+<h2>Empfehlung für Katas</h2>
+<p>Egal, ob ich etwas nicht richtig verstanden habe oder in der Aufgabenstellung der Wurm ist, ich denke, eine Lehre lässt sich in jedem Fall ziehen: keine Code Kata ohne Akzeptanztests!</p>
+<p>Alles wäre leichter, wenn Bob der Kata eine Datei in einem einfachen Format beigegeben hätte, die Sollergebnisse enthält. Schon folgendes hätte gereicht:</p>
+<p>7,2,5,4,…,103
+3,4,10,7,…134
+…</p>
+<p>Wobei jede Zahl einen Wurf repräsentiert und die letzte den Score.</p>
+<p>Wer also Code Katas sucht, der sollte darauf achten, dass ihr “Abnahmetests” beiliegen. Und wer Code Katas beschreiben will, dem sei empfohlen, ein bisschen Mühe auf die Definition von “Abnahmetests” zu verwenden. Sie steigern den Wert der Code Kata – oder machen sie erst überhaupt durchführbar.</p>
+<h2>Kommentare</h2>
+<p><strong>Thomas Vidic</strong> (2009-08-23):</p>
+<p>Hallo Ralf,</p>
+<p>soweit ich die Regeln auf der zweiten Folie verstehe gibt es Bonuspunkte für Spare und Strike. Daher ist die Gesamtpunktzahl für ein Spiel u.U. mehr als die Summe der einzelnen Würfe.</p>
+<p>Übrigends kommt auch Martin in seiner Implementierung ohne Frame oder Roll Klasse aus, ich würde das UML-Diagram (obwohl die Folien das so nicht sagen) daher eher als "Analysemodell" statt als Modell für das Programmdesign sehen.</p>
+<p>Grüße,
+Thomas</p>
+<hr />
+<p><strong>Unknown</strong> (2009-08-23):</p>
+<p>Hallo Ralf,</p>
+<p>wie Thomas schon geschrieben ist die Gesamtpunktzahl nicht nur die Summe der Würfe, sondern etwas komplexer zusammengesetzt. Das wird aber auch so weit von der Spielbeschreibung auf Seite 2 dargestellt. Der von dir vermisste Akzeptanztest ist eigentlich auch vorhanden und zwar verbirgt er sich auch auf der zweiten Seite direkt unter der Überschrift. Dort ist ein komplettes Spiel mit den Würfen und den Punktzahlen abgebildet. Für jemanden, der noch nicht gebowlt hat, ist die Darstellung aber nicht unbedingt sofort und selbsterklärend als solche erkennbar.</p>
+<p>Das ist wieder ein schönes Beispiel dafür, welch große Bedeutung Kontext allgemein und in diesem Fall kultureller Kontext haben. In den Staaten gibt es wahrscheinlich nicht sehr viele, die das nicht sofort als Bowlingspielblatt identifiziert hätten.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-08-24):</p>
+<p>@Thomas, Mario: Aus der Spielbeschreibung erkenne ich nicht, dass die Gesamtpunktzahl "komplexer zusammengesetzt" ist. Ja, es gibt Bonuswürfe nur in bestimmten Zusammenhängen, aber es sind eben auch nur Würfe, die mit Roll() gemeldet werden. An Roll() kann man nicht ablesen, dass ein Wurf ein Bonuswurf ist und auch nicht, dass der nächste einer sein sollte. Das verwirrt mich und ich denke, ich übersehe etwas.</p>
+<p>Beispiel:</p>
+<p>Roll(4), Roll(5), Roll(10), Roll(1), Roll(2) = 2 Sätze mit 22 Punkten.</p>
+<p>Roll(4), Roll(5), Roll(3), Roll(6), Roll(4) = 3 Sätze mit 22 Punkten.</p>
+<p>Es werden also einfach nur die Punktezahlen addiert. Oder?</p>
+<p>Auf Seite 2 findet sich eine kryptische Grafik. Die wird nicht wirklich erklärt und ist nicht maschinenlesbar. Das ist leider kein wirklicher Akzeptanztest.</p>
+<p>Tatsächlich ist das ein wunderbares Beispiel für Kontextwissen. Daraus ergeben sich zwei Ableitungen:</p>
+<p>-Wir sehen, wie wichtig es ist, darüber zu reflektieren, was man selbst weiß und was die Leser eines Textes vermutlich wissen.
+-Wir sehen, wie wichtig es ist, nachfragen zu können, wenn man Anforderungen liest. Wäre Bob als "ProductOwner" immer verfügbar, dann könnten wir bei Unverständnis gleich nachfragen oder er würde schon sehr bald bei Ablieferung einer der ersten Iterationen merken, dass ein Missverständnis vorliegt.</p>
+<p>Dass Bob selbst keine Frame/Roll Klassen implementiert ist - wie man es auch wendet - ein schlechtes Beispiel:</p>
+<p>-Entweder begeht er die BDUF-Sünde und nutzt dann noch nicht einmal seine Erkenntnisse aus dem Design. Das wäre Informationsverlust und Geldverschwendung in einem realen Projekt.</p>
+<p>-Oder er lässt den Code leichtfertig schwerer als nötig verständlich. Sein Score() macht für mich die Bowlingregeln nicht sehr klar.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2009-08-24):</p>
+<p>lustig, jetzt weiß ich wo <a rel="noopener" href="http://www.realdevelopers.com/let-me-in/lets-go.html">die hier</a> die Idee für den "einstellungstest" her haben...</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-08-24):</p>
+<p>@anonym: Nicht nur die haben ihren Einstellungstest von Bob. Auch bei den Software Craftsmen berichten manche davon, dass sie damit bei Gesprächen konfrontiert wurden.</p>
+<p>Die Beschreibung bei dem zitierten Website ist allerdings besser. Ich sehe jetzt mein Missverständnis. Die Gesamtpunktzahl ist nicht einfach nur eine Addition. Manchmal wird eben doppelt gezählt. Ich konnte mir eigentl auch nicht vorstellen, dass die Aufgabe sooo einfach ist. Aber bis jetzt hab ichs eben nicht gesehen.</p>
+<p>Beispiel mit 3 Würfen: 10, 3, 4.</p>
+<p>Frage: Was ist die Gesamtpunktzahl? 17 hatte ich gedacht weil: 1 Frame mit 1 Wurf (10) und zwei Bonuswürfe (3, 4) für den Strike. Ist aber falsch.</p>
+<p>Es liegen 2 Frames vor? Frame 1=10, Frame 2=3 und 4. Nun der Trick: Zum Ergebnis von Frame 1 werden die nächsten beiden Würfe aus Frame 2 gerechnet. Das sind also keine zusätzlichen Würfe, wie mir der Begriff "Bonuswurf" suggeriert hat.</p>
+<p>Wenn ich mit diesem Wissen nun nochmal in Bobs Code schaue, dann wird der aber leider auch nicht besser. Da wird z.B. das Feld rolls[] mit frameindex indiziert. Wie intuitiv ist das denn??? [Kopfschütteln]</p>
+<p>Ich setze mich also mal hin und versuche mich an einer Alternative, jetzt da ich die Regeln verstehe.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Marc Wittke</strong> (2009-08-26):</p>
+<p>Ralf, besorg Dir mal ne Wii mit Wii Sports. Da lernt man's recht schnell ;-)</p>
+<p>Aber Du hast recht. Ich hab das Problem damals auch erst als recht einfach empfunden (die Wii haben wir erst seit 4 Wochen) und erst beim zweiten hinschauen das Problem erkannt. Trotzdem wollten die mich nicht - meine Lösung war anscheinend zu wenig "TestDriven", was allerdings nicht in der Anforderung steht. Auch waren "zu viele Strukturen enthalten, die nichts mit dem Problem zu tun haben" - war mir auch bewusst, aber wenn die schreiben, dass ich dabei ein wenig Spaß haben soll, heißt das für mich, dass ich mal was neues ausprobiere, z.B. die Business-Logik als WCF Service zu implementieren und einen Forms-Client Message-basiert drauf zugreifen zu lassen. Naja, wer nicht will der hat schon...</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

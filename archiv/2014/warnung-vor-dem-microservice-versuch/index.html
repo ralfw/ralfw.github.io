@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warnung vor dem Microservice – Versuch einer Definition — ralfw.de Archiv</title>
+<meta name="description" content="Services sind wieder im Trend. Jetzt unter der Bezeichnung Microservice oder kurz: µService. Das empfinde ich grundsätzlich als Fortschritt. Schon vor einer “Moore-Periode” :-) (al">
+<link rel="canonical" href="https://ralfw.de/archiv/2014/warnung-vor-dem-microservice-versuch/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Warnung vor dem Microservice – Versuch einer Definition — ralfw.de Archiv">
+<meta property="og:description" content="Services sind wieder im Trend. Jetzt unter der Bezeichnung Microservice oder kurz: µService. Das empfinde ich grundsätzlich als Fortschritt. Schon vor einer “Moore-Periode” :-) (al">
+<meta property="og:url" content="https://ralfw.de/archiv/2014/warnung-vor-dem-microservice-versuch/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Warnung vor dem Microservice – Versuch einer Definition</h1>
+    <div class="doc-meta"><span>17. Aug. 2014</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2014/08/warnung-vor-dem-microservice-versuch.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2014/warnung-vor-dem-microservice-versuch/</code></span></div>
+    <div class="art"><p>Services sind wieder im Trend. Jetzt unter der Bezeichnung <em>Microservice</em> oder kurz: <em>µService</em>. Das empfinde ich grundsätzlich als Fortschritt. Schon vor einer “Moore-Periode” :-) (also 18 Monaten) habe ich das als konsequente Entwicklung beschrieben unter dem Titel <a rel="noopener" href="http://blog.ralfw.de/2013/03/software-als-web-of-services.html">“Software als Web of Services”</a>. Und noch weiter zurück, im Jahr 2005, hatte ich mir in einer Artikelserie unter der Überschrift <a rel="noopener" href="http://weblogs.asp.net/ralfw/403986">“Software Cells”</a> Gedanken über eine grundsätzliche Anatomie von Software bestehend aus autonomen Einheiten gemacht, die heute aus einem gewissen Blickwinkel auch µService genannt werden könnten.<a href="#fn:1">[1]</a></p>
+<p>Dennoch bin ich nicht ganz glücklich mit dem aktuellen Trend. Hatten vor 10 Jahren Services unter der Überschrift “Service Oriented Architecture” (SOA) etwas Politisches und schienen vor allem Sache von Managern und teuren Beratern. So sind Services heute als µServices demgegenüber eine Bewegung an der Softwareentwicklerbasis; nicht Manager interessieren sich dafür, sondern Geeks. Und damit ist der Schwerpunkt von der Politik zur Technologie geschwungen.</p>
+<p>Das finde ich misslich. Denn so läuft die eigentlich gute Idee Gefahr, zu einem <a rel="noopener" href="http://de.wikipedia.org/wiki/Cargo-Kult">Cargo-Kult</a> zu verkommen: Wenn es noch nicht recht klappt mit den Microservices, dann muss man nur noch RESTfuller werden oder mehr Netflix Open Source Infrastruktur zum Einsatz bringen. Oder?</p>
+<p>Nein, mir scheint eine gewisse Warnung vor dem Microservice-Konzept angebracht. Es ist ein Werkzeug - und wie mit jedem Werkzeug kann man es zu Nutzen oder Schaden einsetzen. Die Gefahr, sich damit gehörig in den Fuß zu schießen, ist groß.</p>
+<p>Es lohnt sich deshalb - wie so oft im Leben - vor dem enthusiastischen Einsatz ein bisschen nachzudenken.</p>
+<h3>Warum Microservices?</h3>
+<p>Als erstes stelle ich mal die Frage: Warum überhaupt µServices? Was bezwecken Netflix, otto.de, thoughtworks und andere damit?</p>
+<p>Wenn ich <a rel="noopener" href="http://martinfowler.com/articles/microservices.html">Martin Fowler zum Thema</a> lese, dann steht da zum Beispiel:</p>
+<blockquote>
+<p>In short, the microservice architectural style is an approach to developing a single application as a suite of small services, each running in its own process and communicating with lightweight mechanisms, often an HTTP resource API. These services are built around business capabilities and independently deployable by fully automated deployment machinery.</p>
+</blockquote>
+<p>Ah, es ist ein Architekturstil. Ja, aber warum? Der weitere Text redet viel über alles Mögliche - von Conway´s Law über Bounded Contexts bis “RESTish protocols” -, aber ich finde darin keine knackige Aussage zum <em>Warum</em>, d.h. zum Hauptantrieb hinter der Bewegung.</p>
+<p>Hier und da kann man etwas heraushören wie hier:</p>
+<blockquote>
+<p>Monolithic applications can be successful, but increasingly people are feeling frustrations with them - especially as more applications are being deployed to the cloud. Change cycles are tied together - a change made to a small part of the application, requires the entire monolith to be rebuilt and deployed. Over time it’s often hard to keep a good modular structure, making it harder to keep changes that ought to only affect one module within that module. Scaling requires scaling of the entire application rather than parts of it that require greater resource.</p>
+</blockquote>
+<p>Aber was ist auf den Punkt gebracht der Hauptzweck? Oder anders: Welche Anforderungen des Kunden sollen µServices lösen helfen? Denn wie RDBMS, OOP, XML, MVC, WPF, Agilität usw. haben auch µService nur eine Berechtigung, wenn sie dem Kunden dienen.</p>
+<p>Mein Unwohlsein mit der aktuellen µService-Diskussion rührt vor allem daher, dass mir genau dieser Punkt nicht geklärt zu sein scheint. Viele Köche rühren mit unterschiedlichen Vorstellungen am µService-Brei herum. Das ist kein Rezept für einen Erfolg der Idee, würde ich sagen.</p>
+<p>Was Kunden wollen, hat für mich immer drei Aspekte:</p>
+<ul>
+<li>Funktionalität, d.h. korrekte Operationen</li>
+<li>Qualität, z.B. Performance, Skalierbarkeit, Usability, Security</li>
+<li>Investitionssicherheit, d.h. hohe Produktivität des Teams und hohe Wandelbarkeit des Codes</li>
+</ul>
+<p>Ausführlich habe ich das in meinem Buch <a rel="noopener" href="https://leanpub.com/thearchitectsnapkin-derschummelzettel">“The Architect’s Napkin - Der Schummelzettel”</a> und ein der Artikelserie <a rel="noopener" href="http://geekswithblogs.net/theArchitectsNapkin/archive/2014/05/24/the-incremental-architectacutes-napkin---1---itacutes-about-the.aspx">“The Incremental Architect’s Napkin”</a> erklärt.</p>
+<p>Welchem dieser Aspekte sollen nun µServices dienen? Geht es um Qualität, sollen durch µServices nicht-funktionale Anforderungen wie Skalierbarkeit, Robustheit, Verfügbarkeit besser erfüllt werden? Oder geht es um Investitionssicherheit, indem µServices Code wandelbarer und Teams produktiver durch Wiederverwendbarkeit machen?</p>
+<p>Mir ist das nicht klar nach dem, was ich bisher in der µService-Diskussion gehört habe. Deshalb glaube ich, dass es dazu keine einhellige Meinung gibt. Wahrscheinlich sind sich die meisten Diskutanten darüber selbst nicht klar.</p>
+<p>Na gut, wenn das so ist, dann mache ich mal klar, was aus meiner Sicht der Zweck von Microservices sein sollte. Das kann nämlich nur einer sein. Auch als Konzept sollten µServices dem Single Responsibility Principle folgen.</p>
+<p><strong>Der Zweck von µServices ist, die Wandelbarkeit von Software zu erhöhen.</strong></p>
+<p>That´s it. Nicht mehr, nicht weniger. Vor allem: nur dies.</p>
+<p>Microservices sollen es einfacher machen, Software über lange Zeit an neue Anforderungen anzupassen. Der Kunde mag sich neue Funktionalität oder bessere Qualität wünschen. Technologien mögen sich wandeln und sollen Eingang finden in eine Software. Der Arbeitsmarkt mag sich ändern. All diesen Fluktuationen soll Software möglichst leicht nachgeführt werden. Dabei sollen µServices helfen.</p>
+<p>Eingegrenzt wird die Zweckerfüllung natürlich durch andere Anforderungen. Wie immer µServices aussehen mögen, sie dürfen Funktionalität und Qualitäten nicht einschränken. Denn eine wunderbar wandelbare Software, die entscheidende Operationen nicht beherrscht oder die zu langsam oder unsicher ist, wird kaum Gnade finden beim Kunden.<a href="#fn:2">[2]</a></p>
+<p>µService dienen der Wandelbarkeit. Das bedeutet umgekehrt: <strong>µService sollten nicht zum Einsatz kommen, wenn es um Qualitäten geht.</strong> Wer z.B. denkt, “Die Skalierbarkeit unserer Web-Anwendung sollte besser werden. Lass uns doch mal µServices ausprobieren.”, ist aus meiner Sicht also auf dem besten Weg, sich mit µServices in den Fuß zu schießen.</p>
+<p>Wenn zufällig und als Nebeneffekt durch Microservices auch noch eine Qualität steigt, dann ist das natürlich willkommen. Ziel sollte das jedoch nicht sein. Im <a rel="noopener" href="http://blog.ralfw.de/2014/08/software-systematisch-wachsen-lassen.html">“Softwarebaum”</a> befinden sich µServices auf dem Evolvability Branch.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/3623ad2ce06fb505.png" /></p>
+<p>Sie sind <em>Container</em>, die zur vor allem dazu da sind, Code zur Entwicklungszeit zu kapseln. Dass sie auch noch gleichzeitig als Betriebssystemprozesse <em>Hosts</em> sind, also irgendwie im Quality Branch auftauchen… das ist halt so. Das muss dann auch bei der Erfüllung von Qualitätsanforderungen berücksichtigt werden. Wie gesagt, denen dürfen µServices nicht im Weg stehen.</p>
+<h3>Definitionsversuch</h3>
+<p>Nun da - aus meiner Sicht - geklärt ist, <em>was</em> Microservices eigentlich sollen, kann die Frage angegangen werden, <em>wie</em> sie ihre Aufgabe erfüllen können. Was sind die Charakteristika von µServices, wie lautet ihre Definition?</p>
+<p>Aus dem Zweck leitet sich dafür eine Prämisse ab: Alle Microservice-Merkmale sollen dem Zweck dienen. Wer sagt, zu einem µService gehöre Merkmal X, der muss klar machen, wie X hilft, Wandelbarkeit zu erhöhen, ohne Qualitäten (über Gebühr) zu kompromittieren.</p>
+<p>Wie am Softwarebaum abzulesen, sind Microservices nicht allein. Es gibt weitere Container, von denen sie sich unterscheiden müssen. Diese Container sollte jeder Entwickler auch im Blick haben, um abwägen zu können, ob sich µServices schon lohnen, oder Wandelbarkeit mit weniger Aufwand herstellen lässt. Denn soviel sollte schon jetzt klar sein: µServices sind technologisch keine Kleinigkeit und können leicht unerwünschten Einfluss auf Qualitäten haben. Warnung also davor, µServices “einfach mal” und “nebenbei” einzuführen. Mit ihnen angemessen umzugehen bedarf Übung. Und üben sollte man nicht am Produktionscode und nicht am Produkt, sondern in einem Übungsraum. Das <a rel="noopener" href="http://ccd-school.de/coding-dojo/#applicationkatas">Coding-Dojo der Clean Code Developer School</a> bietet dafür eine Menge Aufgabenstellungen.</p>
+<p>Die Container des Wandelbarkeitsastes sind für mich in wachsener “Größe”:</p>
+<ul>
+<li>Funktion</li>
+<li>Klasse</li>
+<li>Bibliothek</li>
+<li>Komponente</li>
+<li>µService</li>
+</ul>
+<p>Klassen enthalten Funktionen, Bibliotheken enthalten Klassen usw. Jede “Größenordnung” unterscheidet sich dabei von kleineren durch ein Merkmal. Bibliotheken z.B. sind opaque (oder gar binär), während Klassen noch als Quellcode vorliegen. Dadurch wird die Wiederverwendbarkeit stark erhöht. Komponenten hingegen haben wie Bibliotheken einen Kontrakt, doch der ist separat. Das ermöglicht quasi industrielle Arbeitsteilung bei der Entwicklung.</p>
+<p>Und inwiefern gehen µServices über Komponenten hinaus? Der Kern der Definition von µServices sieht für mich so aus:</p>
+<p><strong>µServices sind Komponenten mit plattformneutralem Kontrakt.</strong></p>
+<p>Es sind also opaque Container (wie Bibliotheken) mit einem separaten Kontrakt (wie Komponenten), der aber eben auch noch plattformneutral ist.</p>
+<p>Komponentenkontrakte sind plattformspezifisch. Eine CLR-Komponente kann eine andere CLR-Komponente benutzen, eine JS-Komponente kann eine andere JS-Komponente benutzen. Aber eine JVM-Komponente kann keine Ruby-Komponente benutzen.</p>
+<p>Mit Komponenten zu arbeiten, bietet schon eine gehörige Portion Wandelbarkeit und Produktionseffizienz durch die Separation der Kontrakte von der Implementation. Solche Kontrakte entkoppeln mehr als die impliziten von Bibliotheken. Und sie ermöglichen eine parallele Implementation auf beiden Seiten des Kontrakts.</p>
+<p>µServices gehen darüber hinaus. Indem die Kontrakte plattformneutral gehalten werden, können Client wie Server, Producer wie Consumer mit unterschiedlichen Plattformen entwickelt werden. Ein CLR-Microservice kann einen JVM-Microservice benutzen, ein JS-Microservice kann einen Ruby-Microservice aufrufen.</p>
+<p>Plattformneutrale Kontrakte entkoppeln noch weitergehend. Sie eröffnen mehr Optionen für die Implementierung eines Containers. Plattformen und Sprachen können nach Zweckmäßigkeit, Toolverfügbarkeit, Frameworkangebot usw. gewählt werden. Oder man entscheidet sich nach Arbeitskräftelage dafür.</p>
+<p>Alle µServices eines Softwaresystem können heute auch mit derselben Plattform realisiert sein - und erst im Laufe der Zeit wird man hier und da polyglott. In anderen Fällen mag man gleich z.B. auf der CLR mit C# und F# beginnen.</p>
+<p>Ein plattformneutraler Kontrakt ist natürlich keine C++ .h-Datei und keine CLR Assembly mit Interfaces darin. Aber eine REST-Schnittstelle, über die Json-codierte Daten fließen, die ist plattformneutral. Oder eine WSDL-Servicedefinition. Oder eine Protokolldefinition wie SMTP oder POP3.</p>
+<p>Ist das nun aber schon die ganze µService-Definition? Hm… ich würde sagen, ja. Alles andere ist Kommentar und Auslegung.</p>
+<h3>Kommentare</h3>
+<h4>Kommentar #1: µServices sind Prozesse</h4>
+<p>Dass µServices in eigenen Betriebssystemprozessen laufen, ist eine Folge der Definition. Über Plattformen hinweg kann nicht im selben Prozess kommuniziert werden. Insofern sind µServices relevant für den Qualitätsast des Softwareuniversums.</p>
+<p>Auf Qualitäten Einfluss zu nehmen, ist nicht der Zweck von µServices, aber es lässt sich auch nicht vermeiden. Von einer Komponentenarchitektur, die (zumindest konzeptionell) neutral in Bezug auf Qualitäten ist, zu einer µService-Architektur überzugehen, ist also kein Selbstgänger.<a href="#fn:3">[3]</a></p>
+<p>Weil µServices Prozesse sind, muss natürlich dafür gesorgt werden, dass die überwacht werden. Und bei Bedarf neu gestartet. Und einfach zu deployen sind. Doch Achtung! Das ist kein Selbstzweck, sondern nur eine Folge der Form von µServices, die wiederum eine Folge ihres Zweckes ist.</p>
+<p>µServices dienen dazu, monolithische Software aufzubrechen. Wo heute vielleicht ein Fat Client mit einem Fat Backend spricht, reden morgen ein Dutzend µServices im Frontend und Backend miteinander. Aus geringer Verteilung von Code wird hohe Verteilung von Code. Das bedeutet, auch wenn bisher die <a rel="noopener" href="http://de.wikipedia.org/wiki/Fallacies_of_Distributed_Computing">Fallacies of Distributed Computing</a> noch kein großes Thema gewesen sein mögen, dann werden sie es jetzt. Wieder: Achtung! µServices sind kein Kinderspielzeug, sondern eine geladene Waffe.</p>
+<h4>Kommentar #2: Kontrakthürden</h4>
+<p>Besonderes Augenmerk verdient der Kontrakt von µServices. Er repräsentiert ihren “Zuschnitt”. Er definiert, wie oft in welchem Umfang Daten fließen. Das hat unmittelbare Auswirkung auf die Änderungsanfälligkeit und die Performance. Kein Wunder also, dass schon gebeten wird, <a rel="noopener" href="https://rclayton.silvrback.com/failing-at-microservices">“Please avoid our mistakes!”</a>.</p>
+<p>Wer bisher keine Erfahrung hat, mit verteilten Systemen, wer bisher keine Erfahrung hat mit expliziten Kontrakten… der wird keinen schmerzfreien Einstieg in µServices-Architekturen finden.</p>
+<p>Soviel lässt sich über µService-Kontrakte sagen: sie sind zentrale Erfolgsfaktoren. Eines lässt sich jedoch aus meiner Sicht nicht sagen, dass es dringend RESTful-Kontrakte sein sollten oder dass Json oder Atom zu Einsatz kommen müssten. Und ich gehe noch weiter: Auch die Kommunikation über TCP halte ich nicht für definitionsrelevant.</p>
+<p>Es ist Vorsicht geboten, bei der Diskussion über und der Planung von konkreten µService-Architekturen nicht über Bord zu gehen angesichts technologischer Wellen. Technologien oder gar Produkte sollten keine Triebfedern für µServices sein. <strong>Auch bei Microservices gilt: Keep it simple, stupid.</strong></p>
+<p>µServices sind Mittel zur Erhöhung von Wandelbarkeit. Dieser Zweck darf nicht durch Spaß am technologischen Feuerwerk vereitelt werden.</p>
+<h4>Kommentar #3: Asynchrone Kommunikation</h4>
+<p>µServices sollten asynchron kommunizieren, heißt es hier und da. Das sehe ich ähnlich. Es ist für mich eine Folge ihrer Form als Prozess. Zwischen Threads (auf denen Prozesse basieren) kann nur asynchron kommuniziert werden. Da sollte man ehrlich bis in den API sein.</p>
+<p>Allerdings gefällt mir der technologische Unterton bei diesem Merkmal nicht. Deshalb ist Asynchronizität für mich derzeit auch nur ein Kommentar und Teil der Definition. Wichtiger noch als Asynchronizität finde ich auch Messaging, d.h. die Kommunikation über Einwegnachrichten zwischen unabhängigen Funktionseinheiten.</p>
+<p>Zwischen µServices gibt es keinen Kontrollfluss mehr, sondern nur Datenfluss. Jeder µService läuft ja in einem anderen Prozess, hat also seinen eigenen Kontrollfluss in seinem Thread. Das sollte sich im Schnitt der µServices und damit in ihren Kontrakten niederschlagen. Ansonsten droht schnell eine Verletzung von Martin Fowlers <a rel="noopener" href="http://martinfowler.com/articles/distributed-objects-microservices.html">First Law of Distributed Objects</a>, vor der er selbst im Zusammenhang mit µServices warnt.</p>
+<p>In diesem Zusammenhang stellt sich auch die Frage, was eigentlich der Unterschied zwischen µServices und den guten alten Servern ist. Bisher haben wir Client/Server-Anwendungen geschrieben - mit zunehmender Zahl an Servern. Sind µServices nicht einfach Server mit neuem Titel?</p>
+<p>Nein. Das wäre eine Kategorienvermischung. Server gehören zur Kategorie der Hosts - jedenfalls in meiner Vorstellung vom Softwarebaum. Server dienen der Herstellung von Qualitäten. µServices hingegen sind Container und dienen der Herstellung von Wandelbarkeit.</p>
+<p>Server und µServices passen aber gut zusammen: µService sind die Bausteine von Servern (und Clients). Um Qualitäten zu erfüllen, wird für gegebene Funktionalität im Rahmen des Architekturentwurfs zunächst bestimmt, wie die auf Hosts zu verteilen ist. Ist eine Verteilung überhaupt erforderlich, wenn ja, auf wieviele Server?</p>
+<p>Erst anschließend sollte darüber nachgedacht werden, ob und welche Clients bzw. Server in µServices zerlegt werden. Nur dann ist sichergestellt, dass µServices nicht die Erfüllung von Qualitätsanforderungen behindern. Der Rahmen für Container sind immer Hosts. Der Softwarebaum wächst mithin nicht in alle Richtungen gleichzeitig, sondern in Phasen, die über seine Äste laufen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d3a6b497998c8f2c.jpg" /></p>
+<h4>Kommentar #4: Einfaches Deployment</h4>
+<p>Schon mit Bibliotheken wird die physische Codebasis auseinandergerissen. Es entstehen mehrere separat deploy- und versionierbare Einheiten. Komponenten machen das deutlicher. µServices legen hier nochmal nach. “Nur” möchte ich sagen, denn das Problem ist ja nicht neu. Deshalb gehört “easy deployment” auch nicht zur Definition von µServices.</p>
+<p>“Easy deployment” von einzelnen sich immer öfter wandelnden Containern ist eine Folge ihres Zwecks und ihrer Definition. Hierin besteht ein Teil des Preises, den man für mehr Wandelbarkeit zahlen muss. “Easy deployment” von µServices ist technologisch aufwändiger als das von Komponenten, allemal, wenn womöglich dafür das Gesamtsystem nicht offline genommen werden soll. Also: Achtung!</p>
+<p>Welcher Deployment-Aufwand rechtfertigt welchen Wandelbarkeitsnutzen?</p>
+<p>Das ist sicherlich auch eine Infrastruktur und Plattformfrage. Wenn es im .NET-Ökosystem dafür weniger Unterstützung gibt als im JVM-Ökosystem, dann fällt bei CLR-Softwaresystemen die Entscheidung für µServices vielleicht schwerer. Aber lohnt deshalb ein Umstieg auf JVM? Oder ist die JVM-Welt später eine Hürde für weitere Flexibilisierung, weil die dortige Infrastruktur es schwer macht, sie noch weiter zu öffnen für non-JVM Sprachen in der Zukunft?</p>
+<p>µServices sind eine Waffe zur Bekämpfung und Vermeidung von systemrelevanten Größen. Keine Sprache, keine Plattform, keine Datenbank, keine Technologie, kein Konzept usw. soll so groß und mächtig werden, dass sinnvolle Veränderung behindert wird. Also Vorsicht beim enthusiastischen Wechsel von Plattform A zu Plattform B, weil dort heute µServices irgendwie besser gehen. Der Wechsel kostet Zeit - Jahre womöglich - und wer weiß, wer dann den Preis für die beste Plattform hält.</p>
+<p>Jede Form von Plattformfokus steht für mich im Widerspruch zur Grundbotschaft von Microservices. Wer sich für µServices also plattformmäßig strategisch einschränkt, läuft Gefahr, das Ziel zu verfehlen.</p>
+<h4>Kommentar #5: Die Größe von Microservices</h4>
+<p>Am Anfang der Diskussion stand der Umfang von µServices als ein Definitionskriterium. Sie sollten - sagen manche - nicht länger als 100 LOC sein.</p>
+<p>Ich finde ein solches hartes Kriterium nicht hilfreich. Es fördert den Cargo-Kult. Besser gefällt mir “fits inside your head”. Damit wird nämlich betont, dass es um eine Sinneinheit geht.</p>
+<p>Eine solche Umfangbeschreibung ist andererseits zu schwammig, um in die Definition aufgenommen werden. Stattdessen also Kommentar: Wenn Wandelbarkeit <a rel="noopener" href="http://blog.ralfw.de/2014/06/klein-ist-okonomisch.html">durch geringen Codeumfang begünstigt</a> wird, dann sollten µServices natürlich nicht zu groß werden.</p>
+<p>Aber wie groß? Verständlichkeit ist ein Kriterium. Ein anderes ist für mich der Aufwand, um einen µService komplett neu zu schreiben.</p>
+<p>Wir haben ein Problem mit Software, wenn wir mehr und mehr refaktorieren müssen, um Änderungen anzubringen. Refaktorierung zeigt an, dass ein Sauberkeitsleck existiert. Das ist wie mit einem Speicherleck.</p>
+<p>Darauch kann man auf zweierlei Weise reagieren. Man kann das Leck versuchen zu stopfen: Einfürallemal den Code korrigieren, der dafür sorgt, dass Speicher nicht wie gewünscht freigegeben wird. Einfürallemal die Unsauberkeit beheben und dann am besten nie wieder dreckigen Code schreiben.</p>
+<p>Oder man kann auf das Stopfen verzichten und startet das Programm periodisch neu, bevor der Speicher “ausgelaufen” ist. In Bezug auf die Sauberkeit bedeutet das, man schreibt den unsauberen Code neu.</p>
+<p>Wenn ich mich nicht irre, ist es Netflix, die ihre Hosts herunterfahren und neu starten, um gar nicht erst in Speicherlecks zu laufen. Sie anerkennen, dass es “irgendwie” immer wieder zu Speicherlecks kommen kann - in eigenem Code oder Infrastruktur - und dass es sehr teuer sein kann, diese Lecks zu stopfen. Viel teurer, als Hosts gelegentlich neu zu starten.<a href="#fn:4">[4]</a></p>
+<p>Insofern glaube ich, dass wir zu Architekturen kommen müssen die uns erlauben, öfter Code neu zu schreiben: <em>rewrite over refactor</em>. Dafür sind µServices nicht nötig, das kann man auch schon mit Komponenten erreichen. Doch µServices fügen dem noch ein Level an Flexibilität hinzu. Denn mit µServices gibt es noch mehr Freiheit beim Rewrite. Und die Neuentwicklung kann zur Laufzeit in das System eingebracht werden.</p>
+<p>Ein Rewrite kostet natürlich auch Geld. Wie groß kann ein µService also werden, damit ein Rewrite noch möglich ist? Das hängt von vielen Faktoren ab: Entwicklerkompetenz, Domänenkomplexität, Budget usw.</p>
+<p>Ich glaube aber, dass eine gewisse Obergrenze bei einem Aufwand von 1–2 Monaten liegt. Für diesen Zeitraum kann ein Projekt zur Not mal die Füße still halten. Dabei bedenke man: Was in dieser Zeit neu geschrieben werden kann, hat wahrscheinlich 2 bis 10 Mal soviel Aufwand in der Erstentwicklung inklusive aller Refaktorisierungen gekostet. Und der resultierende Umfang ist 30% bis 80% geringer.</p>
+<p>Rewrites sind aus meiner Sicht das beste Mittel, um die LOC einer Software zu reduzieren. Nur müssen dafür abgeschlossene Einheiten vorhanden sein, die man eben neu schreiben kann mit überschaubarem Aufwand. Das sind µServices.</p>
+<p>Refactoring wird damit nicht verschwinden. Ein Rewrite soll ja nicht bei jeder kleinen Änderungen stattfinden. Das halte ich auch für unökonomisch. Bis zum Rewrite mag es mehrere Refactorings geben. Aber immer gibt es die Option, alternativ neu zu schreiben. Diesen Freiheitsgrad hat ein Projekt normalerweise nicht, weil es immer als Ganzes betrachtet wird. Mit µServices jedoch wird ein Horizont eingezogen, innerhalb dessen es sich anbietet, anders zu verfahren als auf das Ganze gesehen.</p>
+<p>Und Refactoring wandert natürlich auf eine höhere Ebene. Das Gesamtsystem bestehend aus allen µServices lässt sich immer noch nicht neu schreiben. Das Zusammenspiel der µServices ist deshalb über die Zeit sicherlich zu refaktorisieren.</p>
+<p>Es ist wie bei einem Organismus: Der ist ein Ganzes, dessen Struktur sich immer wieder anpasst (Refaktorisierung) und dessen Teile ständig ausgetauscht werden (Zelltod, Zellteilung).</p>
+<p>Mit µServices bleiben Anwendungen als Ganzes bestehen, passen sich an - bestehen nach einer gewissen Zeit jedoch nicht mehr aus denselben Teilen wie zu Anfang. µServices unterliegen einer ständigen Erneuerung. Eine gewisse Zeit werden sie gepflegt; dann “sterben” sie und werden ersetzt durch eine komplett neu geschriebene Version.</p>
+<p>Wie gesagt, das geht auch grundsätzlich schon mit Komponenten. Microservices bringen aber eben noch eine Portion Entkopplung und Autonomie mit - die auf der anderen Seite ihren Preis hat.</p>
+<h4>Kommentar #6: Scope</h4>
+<p>Was soll die Aufgabe von µServices sein? Ist sie dieselbe wie die von bisherigen Servern? Das kann nicht sein, weil µServices Bausteine von Servern sind (s.o.). Ein Teil kann nicht das Ganze sein.</p>
+<p>Client/Server-Beziehungen werden aus Gründen der Qualitätssteigerung eingeführt. In µServices muss Software hingegen aus anderen Gründen zerschnitten werden. Ihr Zweck ist ja die Steigerung der Investitionssicherheit. Es geht vor allem um Wandelbarkeit. Deren Kernvoraussetzung ist Entkopplung.</p>
+<p>Bei µServices müssen daher zwei Dinge zusammenkommen: 1. Der Schnitt durch die Anforderungen muss so gesetzt sein, dass ein mehr an Wandelbarkeit entsteht. 2. Der Schnitt muss so verlaufen, dass der erhöhte Kommunikationsaufwand zur Laufzeit insb. die primären Qualitäten Performance und Skalierbarkeit nicht beeinträchtigt.</p>
+<p>Für mich folgt daraus, dass µServices Inkremente sind. µServices stehen für Interaktionen (im Sinne des Softwarebaums) oder für Use Cases (als Gruppen von Interaktionen) oder für Features, d.h. anwenderrelevante Aspekte von Interaktionen.</p>
+<p>In jedem Fall repräsentiert ein µService eine Untermenge des Anwendungsscope. Er stellt ein vertikales Teilstück dar, eine Scheibe - womöglich sogar einen “kopflosen” Durchstich.</p>
+<p>Damit ist ein µService eben kein Server. Denn Server sind horizontale Schichten. Schichten werden übereinander gelegt, um Inkremente herzustellen. Mit einer Schicht allein, kann ein Anwender nichts anfangen. Dazu kann ein Kunde kein Feedback geben. Schichten interessieren Kunden nicht, Scheiben hingegen schon.</p>
+<p>Server im Sinne von Schichten als <em>tiers</em>, also als verteilte Funktionseinheiten, sind Sache der Qualitätsherstellung. Server sind Hosts. µServices sind keine Hosts, sondern Container. Als solche könnten sie zwar grundsätzlich auch als Schicht gedacht sein. Denn das Schichtenmodell ohne Verteilung war als Architekturmuster als Hilfe zur Steigerung der Wandelbarkeit gedacht. Doch ich glaube, dass das eben nicht die Aufgabe von µServices sein darf. Dafür gibt es Komponenten. Nein, µServices sollten für weitergehende Entkopplung vertikale Teilstücke einer Software repräsentieren.</p>
+<p>Zwischen schichten gibt es vielfältige funktionale Abhängigkeiten. Zwischen Inkrementen jedoch sind die funktionalen Abhängigkeiten viel geringer oder gar ganz abwesend. Die Abhängigkeit zwischen Inkrementen wie Dialog, Interaktion und Feature reduzieren sich womöglich auf logische Abhängigkeiten, die sich in Daten manifestieren.</p>
+<p>Deshalb ist es interessant, µServices nicht einmal von denselben physischen Daten abhängig sein zu lassen. Jeder µService kann sein eigenes Domänenmodell haben oder gar seine eigene Datenbank. Das führt zu Redundanz - aber deren Preis ist langfristig womöglich kleiner als der hoher Abhängigkeiten von einem gemeinsamen Modell und einer zentralen Datenbank.</p>
+<p>Das eine Domänenmodell und die eine Datenbank sind im Grunde die Hauptsymptome von monolithischer, d.h. schwer wandelbarer Software. Wenn der Zweck von µServices darin besteht, die Wandelbarkeit nach vorne zu bringen, dann sollten sie es also genau in dieser Hinsicht anders machen.</p>
+<p>Zum Datenmodell gehört auch das Thema Zustand im allgemeinen und Session im Speziellen. Dürfen µServices Zustand und/oder Sessions haben?</p>
+<p>Ich sage Ja. Warum nicht? Unter einer Bedingung: Zustand und Session sollten die Wandelbarkeit nicht beeinträchtigen. Tun sie das, dann raus damit oder den µService anders schneiden.</p>
+<p>Wenn über Zustand und Sessions gemeinhin kritisch nachgedacht wird, dann nicht mit Blick auf die Anforderung Wandelbarkeit. Es normalerweise um Qualitäten, d.h. Merkmale von Hosts. Sessions wirken sich z.B. negativ auf die Skalierbarkeit aus.</p>
+<p>Wenn über µServices nachgedacht wird, sollten solche Fragen jedoch schon geklärt sein. µServices strukturieren Software im Rahmen von Hosts.</p>
+<p>Was aber, wenn die Verteilung eines Host auf mehrere µServices neuerlich Qualitätsfragen aufwirft? Dann muss man sie in Balance bringen mit dem Zweck von µServices.</p>
+<p>Das gilt für alle Fragen nach dem Motto “Darf/soll ein Microservice so und so aussehen?” Es ist immer sofort zurückzufragen: Widerspräche das dem Zweck von µServices? Widerspräche es der Definition von µServices?</p>
+<h3>Ableitungen</h3>
+<p>Was geeignete Schnitte durch den Scope eines Softwaresystems sind, muss im Einzelfall ausgetüftelt werden. Der Rahmen für die Schnitte ist nun jedoch klar:</p>
+<ul>
+<li>Was herausgetrennt und zu einem µService gemacht wird, darf nur so groß sein, dass es sich vergleichsweise schnell immer wieder neu schreiben lässt.</li>
+<li>Es soll ein Inkrement darstellen, das Hoheit über seine eigenen Datenmodelle hat.</li>
+<li>Es muss per Messaging in das große Ganze eingebunden werden können.</li>
+<li>Seine Autonomität als Prozess darf Performance und Skalierbarkeit des Ganzen nicht beeinträchtigen.</li>
+</ul>
+<p>Das sind für mich Ableitungen aus der Zweck und Definition. Dass die möglichst simpel und klar gehalten werden, ist aus meiner Sicht sehr wichtig. Wir verlieren sonst Freiheitsgrade und laufen Gefahr, technikverliebt durch die Gegend zu entwickeln.</p>
+<p>Dass simple Definitionen nicht immer einfach umzusetzen sind, steht auf einem anderen Blatt. Auch über ganz Simples lässt sich lange trefflich streiten. So kommt es dann zu Kommentaren, Auslegungen und unterschiedlichen Schulen. Im Kern sollten sich jedoch alle einig sein. Deshalb sollte der Kern klein und leicht fasslich sein.</p>
+<p>Hier ist mein Vorschlag für einen Kern des µService-Konzepts:</p>
+<ul>
+<li>Der Zweck von µServices besteht darin, die Wandelbarkeit von Software zu erhöhen. Sie gehen dabei über andere Container wie Komponenten hinaus.</li>
+<li>Ein µService liegt formal vor, wenn ein opaquer Container durch einen separaten plattformneutralen Kontrakt beschrieben ist.</li>
+</ul>
+<p>Der Rest ergibt sich… Aber immer Vorsicht: µServices haben ihren Preis.</p>
+<hr />
+<ul>
+<li>Seitdem hat sich allerdings meine Vorstellung von Softwarezellen weiterentwickelt. Ihre Struktur ist detaillierter geworden, ihr Einsatzgebiet für den Entwurf von Software spezifischer. Und insgesamt sind sie “untechnologischer” als das, worüber in der µService-Diskussion gesprochen wird. <a href="#fnref:1">↩</a></li>
+<li>Anders herum ist es jedoch scheinbar kein Problem für Kunden: Software, die funktional, performant, skalierbar usw. auf Kosten der Wandelbarkeit ist, findet sich überall. Ich möchte fast sagen, sie ist die Norm. Warum das so ist, darüber lässt sich trefflich diskutieren. Aber es ist so und dem muss etwas entgegengesetzt werden - allerdings ohne denselben Fehler wieder zu begehen. Nur mit Balance lässt sich zukunftsfähige Software langfristig ökonomisch bauen. Die Anforderungsaspekte müssen sich in der Implementation die Waage halten. Auch deshalb: Vorsicht beim Aufspringen auf den µService-Trendzug. <a href="#fnref:2">↩</a></li>
+<li>Dass viele Teams Erfahrung mit Komponentenarchitekturen haben, bezweifle ich. Das Denken in solchen Containern ist nicht weit verbreitet. Selbst Bibliotheken werden vergleichsweise selten eingesetzt, um Softwaresysteme mehr aus Black Boxes zusammenzusetzen. Insofern bin ich skeptisch, dass landauf-landab schon bald µServices mit Erfolg eingesetzt werden. Da hilft auch alle Open Source Infrastruktur nicht. Es fehlt einfach an Architektursystematik. <a href="#fnref:3">↩</a></li>
+<li>Von außen betrachtet gibt es keinen Unterschied zwischen einem periodischen Neustart und einem Crash oder einer Nichtverfügbarkeit aufgrund von Leitungsproblemen. Die Gesamtarchitektur muss ohnehin darauf ausgelegt sein. Warum also diesen Umstand nicht nutzen, um ein Problem pragmatisch zu lösen? Softwareentwicklung ist eben eine ökonomische Tätigkeit. Wer Perfektion sucht, ist auf dem sicheren Pfad zu Frust. <a href="#fnref:4">↩</a></li>
+</ul>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2014-09-30):</p>
+<p>Vielen Dank für diesen sehr informativen Artikel :-)</p>
+<p>In dem Unternehmen in dem ich arbeite sind wir selbst gerade an dem Scheidepunkt, ob wir in Zukunft auf Microservices setzen wollen oder nicht, daher hat mir ihr Beitrag sehr weitergeholfen.</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-04-28):</p>
+<p>Sehr hilfreich. Vielen Dank!</p>
+<hr />
+<p><strong>(anonym)</strong> (2015-08-10):</p>
+<p>Hallo Ralf,</p>
+<p>du schreibst, dass die Skalierbarkeit unter einer MSA leiden würde.
+Mich würde interessieren wie du das begründest. Grade durch MS's ist man doch in der Lage an den richtigen Stellen zu skalieren. Wie kommt die Kugel also in meinen Fuß? :)</p>
+<p>Gruß
+arcos</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2015-08-10):</p>
+<p>@Arcos: Hm... Danke für die Herausforderung. Ich habe jetzt nochmal nachgedacht und komme zu einer neuen Position:</p>
+<p>Ich bleibe dabei, dass der Zweck von Microservices die Erhöhung der Evolvierbarkeit ist. Und das kann im Widerspruch zu anderen Qualitäten stehen.</p>
+<p>Allerdings scheint mir die Skalierbarkeit eine besondere Qualität zu sein. Sie hat auch mit Evolvierbarkeit zu tun. Wenn eine Anwendung skalierbar ist, dann ist sie fähig, auf Veränderungen zu reagieren. Heute wird soviel von ihr gefordert, morgen doppelt soviel. Das bringt sie nicht aus der Ruhe.</p>
+<p>Evolvierbarkeit hat dann sozusagen drei Level:</p>
+<ol>
+<li>Eine Software lässt sich leicht verändern, weil es neue Anforderungen gibt. Man schreibt den Code um und deployt. Während des Deployments kann nicht mit der Software gearbeitet werden.</li>
+<li>Eine Software wird verändert, weil es neue Anforderungen gibt. Man schreibt den Code um und deployt live. Während des Deployments kann mit der Software gearbeitet werden. Höchstens einzelne Teile sind kurzzeitig down.</li>
+<li>Eine Software wird nicht verändert, weil es keine neuen Anforderungen gibt. Man schreibt den Code nicht um. Aber deployt wird trotzdem etwas live, um mit unveränderter Software, aber anderer "Konfiguration" auf eine Veränderung zu reagieren.</li>
+</ol>
+<p>Clean Code/Komponentenorientierung konzentrieren sich auf 1. Microservices habe ich bei Level 2 gesehen. Aber du hast recht, Microservices können auch Level 3.</p>
+<p>Manche Veränderungen in der Umwelt brauchen eine Anpassung des Quellcodes (1 &amp; 2). Aber manche Veränderungen brauchen eben keine - und trotzdem muss etwas verändert werden. Das ist dann die Laufzeitkonfiguration (Level 3).</p>
+<p>Bei monolithischen Anwendungen gibt es nur eine Sicht: die Konfiguration zur Entwicklungszeit. Auch wenn da eine Verteilung drin ist, ist sie so starr, dass nicht zwischen Laufzeit und Entwicklungszeit unterschieden werden kann/muss.</p>
+<p>Aber mit Microservices gibt es nun sozusagen zwei Quellcodes :-) Einen Entwicklungszeitquellcode und einen Laufzeitquellcode, die Konfiguration. Es gibt intra-Code Beziehungen und inter-Code Beziehungen. Beide müssen evolvierbar sein. Microservices machen durch ihre geringe Größe es einfacher, die intra-Code Beziehungen zu verändern. Und weil es plötzlich eben viele Teile gibt zur Laufzeit, gibt es auch inter-Code Beziehungen. Die machen Microservices auch leichter zu verändern. Und das ist dann nötig, wenn eine Last zur Laufzeit steigt.</p>
+<p>Ja, ich glaube, so kann ich mich mit der Skalierbarkeit anfreunden :-)</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

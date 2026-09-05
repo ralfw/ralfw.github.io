@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bound in Space - Skizze der Kommunikation in einem Application Space — ralfw.de Archiv</title>
+<meta name="description" content="Komponenten verteilen, Komponenten parallel arbeiten lassen und überhaupt Software aus Komponenten aufbauen sollte viel, viel einfacher werden. Denn nur dadurch würden sich diese K">
+<link rel="canonical" href="https://ralfw.de/archiv/2008/bound-in-space-skizze-der-kommunikation/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bound in Space - Skizze der Kommunikation in einem Application Space — ralfw.de Archiv">
+<meta property="og:description" content="Komponenten verteilen, Komponenten parallel arbeiten lassen und überhaupt Software aus Komponenten aufbauen sollte viel, viel einfacher werden. Denn nur dadurch würden sich diese K">
+<meta property="og:url" content="https://ralfw.de/archiv/2008/bound-in-space-skizze-der-kommunikation/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Bound in Space - Skizze der Kommunikation in einem Application Space</h1>
+    <div class="doc-meta"><span>26. Juni 2008</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2008/06/bound-in-space-skizze-der-kommunikation.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2008/bound-in-space-skizze-der-kommunikation/</code></span></div>
+    <div class="art"><p>Komponenten verteilen, Komponenten parallel arbeiten lassen und überhaupt Software aus Komponenten aufbauen sollte viel, viel einfacher werden. Denn nur dadurch würden sich diese Konzepte breiter durchsetzen. Und nur dadurch würde Software in größerer Menge performanter, skalierbarer, testbarer, evolvierbarer. Dafür habe ich in <a rel="noopener" href="http://ralfw.blogspot.com/2008/06/asynchrone-architekturen-einfacher.html">meinem gestrigen Posting</a> eine Lanze gebrochen.</p>
+<p><strong>Heute möchte ich zu dieser Vision eines Application Space (AppSpace) ein Bild zeichnen.</strong> Ich stelle mir vor, dass Software in Zukunft sehr einheitlich und ganz grundsätzlich so organisiert sein sollte:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/aaf448ca642b5a3a.png" /></p>
+<p><strong>Die Grundbausteine von Software sind Komponenten.</strong>(Klassen sind auch wichtig, aber unterhalb der Wahrnehmungsschwelle von Softwarearchitekten.) Definieren wir sie einfach mal als binäre Codeeinheiten mit separater Leistungsbeschreibung (Kontrakt). Wenn Sie jetzt "Assembly" denken, liegen Sie nicht falsch.</p>
+<p><strong>Diese Komponenten "leben und arbeiten" in etwas, das ich mal <em>Compartment</em> nennen.</strong> Solche "Abteile" teilen einen Raum, deshalb finde ich den Begriff ganz passend in Bezug auf die Raum-Metapher, die hinter Application Space steht.</p>
+<p>Wie diese Komponenten in den Abteilen aufgehängt sind, ist zunächst einmal nicht so wichtig. Hauptsache, sie haben erstmal ein "Zuhause", in dem manche "zusammen leben" und andere eben in anderen "Zuhauses". (Hm... vielleicht wäre "Appartment" besser als "Compartment"? Dann könnten Komponenten in einer WG leben :-)</p>
+<p><strong>Innerhalb der Compartments können Komponenten direkt miteinander kommunizieren, einfach über Methodenaufruf.</strong>Sie liegen im selben "Abteil" dicht beisammen (im selben Adressraum) und können daher den Stack nutzen. Alles ist, wie Sie es kennen und lieben. Einzig, <strong>die Verbindung zwischen zwei Komponenten wird durch einen DI Framework bzw. Microkernel hergestellt.</strong> Den bietet das Compartment als komponentenumfassender Kontext; das ist eine seiner Infrastrukturleistungen.</p>
+<p>Wie Sie Compartments auf Prozesse oder Maschienen oder gar Netzwerke verteilen, ist zunächst einmal unerheblich. Das sind Feinheiten des Deployments. In einem AppSpace gilt: Was in einem Compartment gehostet wird, liegt nah beieinander in einem Adressraum, der direkte Kommunikation erlaubt. Deshalb können Sie auch entscheiden, ob Compartments das noch durch eigene AppDomains unterstreichen sollen. Kann sein, muss aber nicht.</p>
+<p>Fangen Sie mit 3 Compartments in einem Prozess an und verteilen Sie sie später auf 3 Prozesse. Oder führen Sie Redundanz ein, indem Sie sie auf 7 Prozesse verteilen. Welcher Art die Prozesse sind - also IIS oder NT Service oder Console EXE usw. - ist dabei nicht so wichtig. <strong>Diese Compartment Hosts müssen einfach zum Zweck der darin "lebenden" Komponenten passen.</strong></p>
+<p>Wegen dieser Flexibilität fehlen im obigen Bild auch Prozesse und Maschinen und Netzwerke. Denn das Credo des AppSpace ist, dass diese Deploymenteinheiten zweitrangig sind. <strong>Erstrangig ist hingegen, ob eine Komponente synchron und nah bei anderen läuft oder asynchron und fern von anderen.</strong> Darüber gibt ein AppSpace-Diagramm jedoch Auskunft.</p>
+<p>Synchrone Komponenten sind einfach - selbst wenn Sie DI benutzen. Asynchrone Komponenten jedoch... da wird es knifflig. Wie sollen die miteinander kommunizieren? Die Asynchronizität beginnt schon, wenn zwei Objekte auf separaten Threads laufen. Sie wird schlimmer, wenn diese Objekte in verschiedenen AppDomains hängen und noch übler wird´s, wenn sie durch Prozesse, Maschinenen oder Netzwerke getrennt sind.</p>
+<p>Heute stehen dafür eine Reihen unterschiedlicher Technologien zur Verfügung. Da gibt es eine Pallette von Möglichkeiten, Parallelität einzuführen. Wenn Ihre Anwendung in mehrere Prozesse zerlegt ist, ergibt sich die ganz natürlich. Ansonsten können Sie Threads aber auch von Hand auf die eine oder andere Weise erzeugen. Aber Achtung: nicht zuviele, sonst ist die ganze Asynchronizität kontraproduktiv.</p>
+<p>Vielfältiger sind die Möglichkeiten für die Kommunikation zwischen den Threads. Die kann über´s Dateisystem laufen oder gemeinsame Objekte (shared memory), rohe TCP Sockets funktionieren genauso wie WCF.</p>
+<p><strong>Diese Vielfalt der Kommunikationsmedien, so verständlich sie ist, halte ich nun inzwischen für nachteilig.</strong> Niemand kennt sich mehr aus. Ich plädiere daher für eine radikale Vereinfachung durch Vereinheitlichung, mit der sich vielleicht 80% aller verteilter Kommunikation lösen lässt. Nein, nicht 100%, aber ich sag mal optimistisch 80%. <strong>Mir liegt daran, Asychronizität "den Massen" nahezubringen und nicht wirklich jedem zu jeder Zeit die Entscheidung zwischen vielen Optionen aufzubürden.</strong></p>
+<p>Die Technologievielfalt kann und soll also erhalten bleiben - unter der Haube. Wer sie braucht, um im Einzelfall mal performanter zu sein, hat sie dann. Aber der allgemeine Fall wird durch Abstraktion einfacher. So wie es schon viele Male in der Geschichte der Softwareentwicklung geschehen ist. Beispiel SQL, Beispiel O/R Mapping, Beispiel GDI+ usw. usf.</p>
+<p>Wie soll nun diese Vereinfachung der Kommunikation zwischen asynchronen Komponenten aussehen? Das obige Bild zeigt es: <strong>Neben der direkten Kommunikation innerhalb eines Compartments gibt es die indirekte (!) zwischen Compartments. Indirekt ist sie immer, wenn Komponenten asynchron zu anderen laufen.</strong> (Insofern kann auch innerhalb desselben Compartments indirekt kommuniziert werden.)</p>
+<p>Indirekte Kommunikation bedeutet, dass eine Client-Komponente nicht (!) direkt mit einer Service-Komponente spricht. Client und asynchroner Service sind vielmehr immer (!) durch einen Vermittler verbunden. <strong>Im einfachsten Fall ist dieser Vermittler eine Warteschlange, eine Queue. Aber das ist nur der einfachste oder übliche Fall</strong>. Ein AppSpace ist nicht darauf beschränkt. Zwischen Client und Service können alle möglichen Vermittlerformen stehen: Queue, Stack, Baum, relationale Tabelle, Liste, Array, Dictionary... you name it.</p>
+<p><strong>Gemeinsam ist allen Vermittlern nur, dass sie Datenstrukturen sind. Die eine Komponente manipuliert sie, die andere beobachtet sie.</strong> Und dann können die Rollen wechseln. Beobachtung ist entweder aktiv (polling) oder passiv (Ereignisgesteuert, Stichwort: EDA).</p>
+<p><strong>Diese Datenstrukturen existieren virtuell im AppSpace und sind für alle Komponenten in allen Compartments grundsätzlich zugänglich.</strong> Deshalb liegen die Winkel der asynchronen Kommunikation im obigen Bild im Space.</p>
+<p>Implementationstechnisch sieht das jedoch anders aus. Da liegen die Vermittlerdatenstrukturen ebenfalls in Compartments, sozusagen in einem Gürtel um sie herum.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a8d63cdb7b1b1e43.png" /></p>
+<p><strong>Letztlich ist es aber egal, wo genau diese Datenstrukturen, die <em>Container</em> hängen</strong>. Sie können nach dem Prinzip "write remote, read local" immer beim asynchronen Service angesiedelt sein (also im Compartment der Pfeilspitze einer Verbindung zwischen zwei Komponenten). Oder sie können auch in einem ganz anderen Compartment liegen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/ae618d5a55fbc4c9.png" /></p>
+<p>Container werden im AppSpace gegenüber Anwendungscode nicht durch eine Adresse repräsentiert, sondern durch einen AppSpace-globalen Namen.</p>
+<p><strong>Der AppSpace macht Komponenten insofern nicht nur durch DI implementationsunabhängig voneinander, sondern auch unabhängig in Bezug auf Ort und Zeit.</strong> Durch Container als Vermittler stehen Komponenten nicht mehr direkt in Kontakt, d.h. beide müssen nicht mehr gleichzeitig "anwesend" sein im AppSpace. Und AppSpace-weite Containernamen verbergen den genauen Ort (Compartment, AppDomain, Prozess, Maschine, Netzwerk), an dem eine asynchrone Komponente "lebt".</p>
+<p>Nach der grundlegenden Entscheidung, ob Komponenten synchron oder asynchron kommunizieren sollen, kann die Topologie sich bei asynchronen Komponenten sehr weitreichend ändern, d.h. wechselnden Bedürfnissen anpassen, ohne dass Client-Anwendungscode davon betroffen wäre.</p>
+<p><strong>Der AppSpace soll also die Vorteile von EDA verallgemeinern</strong> (nicht nur Queues, sondern auch andere Datenstrukturen, auf die man lauschen kann) <strong>und mit Komponentenorientierung wie Computing in/via the Cloud verschmelzen.</strong> Ich sehe ihn als Aggregat vieler existierender Technologien, die er unter einer Abstraktionsdecke versteckt.</p>
+<p><strong>Insofern bietet ein AppSpace einen schönen Migrationspfad:</strong>Ich kann mit ihm anfangen und erstmal nur Komponenten in einem Compartment verbinden. Dann kann ich in die Asynchronizität klein einsteigen, indem ich mal im selben Compartment eine Komponente asynchron mache. Und dann kann ich die Asynchronizität ausdehnen auf mehr Komponenten. Und dann kann ich diese Komponenten verteilen. Schließlich laufen sie auf vielen Rechnern übers LAN oder gar Internet verteilt. Ohne, dass mein Applikationscode davon etwas merken würde. Denn sobald ich einmal mit der asynchronen, containervermittelten Kommunikation angefangen habe, skaliert die von der cross-thread bis zur cross-firewall Kommunikation. Das Geheimnis liegt darin, dass sie nicht nur nachrichtenorientiert, sondern eben datenstrukturvermittelt ist.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

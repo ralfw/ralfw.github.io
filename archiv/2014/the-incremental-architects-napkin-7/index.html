@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Incremental Architect&#x27;s Napkin - #7 - Nest flows to scale functional design — ralfw.de Archiv</title>
+<meta name="description" content="You can design the functionality of any Entry Point using just 1D and 2D data flows. Each processing step in such flows contains logic to accomplish a smaller or larger part of the">
+<link rel="canonical" href="https://ralfw.de/archiv/2014/the-incremental-architects-napkin-7/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Incremental Architect&#x27;s Napkin - #7 - Nest flows to scale functional design — ralfw.de Archiv">
+<meta property="og:description" content="You can design the functionality of any Entry Point using just 1D and 2D data flows. Each processing step in such flows contains logic to accomplish a smaller or larger part of the">
+<meta property="og:url" content="https://ralfw.de/archiv/2014/the-incremental-architects-napkin-7/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>The Incremental Architect&#x27;s Napkin - #7 - Nest flows to scale functional design</h1>
+    <div class="doc-meta"><span>13. Sept. 2014</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2014/09/13/the-incremental-architectacutes-napkin---7---nest-flows-to.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2014/the-incremental-architects-napkin-7/</code></span></div>
+    <div class="art"><p>You can design the functionality of any Entry Point using just 1D and 2D data flows. Each processing step in such flows contains logic to accomplish a smaller or larger part of the overall process.</p>
+<p>To benefit most from Flow Design, the size of each such step should be small, though.</p>
+<p>Now think of this scenario: You have a program with some 100,000 lines of code (LOC). It can be triggered through 25 Entry Points. If each started a flow of maybe 5 processing steps that would mean, functional units would contain around 800 LOC on average. In reality some probably would be just 50 LOC or 100 LOC - which would require others to contain 1,500 LOC or even more.</p>
+<p>Yes, I mean it: Think of the whole functionality of your software being expressed as flows and implemented in functional units conforming to the Principle of Mutual Oblivion (PoMO). There´s no limit to that - even if you can´t imagine that right now yet;-)</p>
+<p>What should be limited, however, is the length of the implementations of the functional units. 1,500 LOC, 800 LOC, even 400 LOC is too much to easily understand. Logic of more than maybe 50 LOC or a screenful of code is hard to comprehend. Sometimes even fewer LOC are difficult to grog.</p>
+<p>Remember the #1 rule of coding: Keep your functions small. Period. (Ok, I made up this rule just now;-) Still I find it very reasonable.)</p>
+<p>The #1 rule of Flow Design then could be: Don´t limit the number of processing steps. Use as many as are required to keep the implementation in line with the #1 rule of coding.</p>
+<p>Flow processing steps turning into functions of some 50 LOC would be great. For 100,000 LOC in the above scenario that would mean 2000 functional units spread across 25 Entry Point flows, though. With each flow consisting of 80 processing steps. On average.</p>
+<p>That sounds unwieldy, too, doesn´t it? Even if a flow is a visual representation of functionality it´s probably hard to understand beyond maybe 10 processing steps.</p>
+<p>The solution to this dilemma - keep function size low and at the same time keep flow length short - lies in nesting. You should be able to define flows consisting of flows. And you are.</p>
+<p>I call such flows three dimensional (3D), since they add another direction in which to extend them. 1D flows extend sequentially, "from left to right". 2D flows extend in parallel by branching into multiple paths. 3D flows extend "vertically".</p>
+<p><em>(Diagram not captured)</em></p>
+<p>In 3D flows a 1D/2D flow is contained in a higher level processing step. These steps integrate lower level functional units into a whole which they represent. In the previous figure the top level functional unit w integrates s and t. One could say s and t form the w process.</p>
+<p>s in turn integrates a, d, and f on the bottom level. And t wires-up b, c, and e to form a flow.</p>
+<p>a through f are non-integrating functional units at the bottom level of this flow hierarchy.</p>
+<p>Showing such nesting relationships by actually nesting notational elements within each other does not scale.</p>
+<p>This might be the most authentic depiction of nested flows, but it´s hard to draw for more than three levels and a couple of functional units per level.</p>
+<p>A better choice is to draw nested flows as a "tree" of functional units:</p>
+<p>In this figure you see all levels of the process as well as how each integration wires-up another nested flow. Take the triangles as a rough depiction of the pinch gesture on your smartphone which you use to zoom in on a map for example. It´s the same here: each level down the diagram becomes more detailed.</p>
+<p>Most of the time, though, you don´t need to draw deeply nested 3D flows. Usually you start with a top level flow on a napkin or flip chart and then drill down one level. If deeper nesting is needed, you take a new napkin or flip chart and continue there.</p>
+<p>Here´s an example from a recent workshop. Never mind the German labels on the processing steps:</p>
+<p><em>(Diagram not captured)</em></p>
+<p>It´s a functional design on three levels also including the class design. But that´s a topic for another time.</p>
+<p>What I´d like you to note here is the sketchy character of the design. It´s done quickly without much ado about layout and orderliness. It´s a "living document", a work in progress during a design session of a team. It´s not a post-implementation depiction (documentation), but a pre-implementation sketch. As that it´s not supposed to have much meaning by itself outside the group of people who came up with the Flow Design.</p>
+<p>But it can be taken to explain the design to another person. In that the diagram would be taken as a map to point to and follow along with a finger while explaining what´s happening in each processing step on each level.</p>
+<p>And of course it´s a memory aid. Not only talking about a (functional) design but actually keeping visually track of it helps to remember the overall software structure. A picture is worth a thousand words.</p>
+<p>Back to LOC counting: With nested flows 80 functional units per Entry Point should not sound unwieldy anymore. Let´s put 5 functional units into a sub-flow for integration by its own functional unit on a higher level. That would lead to 16 such integrating processing steps. They would need another 3 functional units for integration on yet another higher level. So what we end up with is 1 + 3 + 16 + 80 = 100 functional units in total for some 4,000 LOC of logic code. That does not sound bad, I´d say. Admittedly it´s an overhead of 25% on functions - but it´s only maybe around 5% more LOC within functions. As you´ll see, integration code is simple. A small price to pay for the benefit of small functions throughout the code base.</p>
+<h2>Integration vs operation</h2>
+<p>You might think, nested flows are nothing more than functional decompositions of the past. Functions calling functions calling functions... But it´s not.</p>
+<p>Yes, it´s "functions all the way down". Those functions are not created equal, though. They fundamentally differ in what their responsibilities are:</p>
+<ul>
+<li>Integrating functional units just do that: they integrate. They do not contain any logic.</li>
+<li>Non-integrating functional units just contain logic. They never integrate any other functional units. That´s Operations.</li>
+</ul>
+<p>I call this the Integration Operation Segregation Principle (IOSP). It´s the Single Level of Abstraction (SLA) principle taken to the extreme. Here´s a flow hierarchy reduced to its dependencies:</p>
+<p><em>(Diagram not captured)</em></p>
+<p>There is any number of integration levels, but only one level of Operations. Operations are the leafs of the dependency tree. Only they contain logic. All nodes above them do not contain logic.</p>
+<p>That´s what makes decomposition in Flow Design so different from earlier functional decomposition. That plus Flow Design being about data flow instead about control flow.</p>
+<p>Or let me say it more bluntly: I strongly believe that "dirty code" is a result of not containing logic in a systematic manner like this. Instead in your code base logic is smeared all over the de facto existing functional hierarchies across all sorts of classes.</p>
+<p>This subtly but fundamentally violates the SRP. It entangles the responsibility of whatever the logic is supposed to do (behavior) with the responsibility to integrate functional units into a whole (structure). "Pieces of" logic should not be functionally dependent on other "pieces of" logic. That´s what the PoMO is about. That´s what Object Orientation originally was about: messaging.</p>
+<p>To fullfil functional or quality requirements, logic itself does not need any separation into functions. That means as soon as functions are introduced into code, functional dependencies can be built which entail a new responsibility: Integration.</p>
+<h2>The beauty of Operations</h2>
+<p>In the beginning there was only logic. There were expressions, control statements, and some form of hardware access. And all this logic produced some required behavior.</p>
+<p>Then the logic grew. It grew so large that it became hard to understand on a single level of abstraction.</p>
+<p>Also in the growing logic patterns started to appear. So the question arose, why pattern code should be repeated multiple times?</p>
+<p>Thus were invented subroutines (functions, procedures). They helped to make programming more productive. Patterns stashed into subroutines could be re-used quickly all over the code base. And they helped to make code easier to understand, because by calling a subroutine details could be folded away.</p>
+<p>Before:</p>
+<pre><code>var x = a +...;
+var y = x *...;
+var z = y /...;
+</code></pre>
+<p>After:</p>
+<pre><code>var x = a +...;
+var y = f(x);
+var z = y /...;
+</code></pre>
+<p>The change looks innocent. However it´s profound. It´s the birth of functional dependencies.</p>
+<p>The logic transforming a etc. into z is not fully in place anymore but dependent on some function f. There is more than one reason to change it:</p>
+<ul>
+<li>When the calculation of x or z changes.</li>
+<li>Or when something in the subroutine changes in a way that affects dependent logic, e.g. the subroutine suddenly does not check for certain special cases anymore.</li>
+</ul>
+<p>Even though the logic and the subroutine belong closely together they are not the same. They are two functional units each with a single responsibility. Except that it´s not true for the dependent functional unit which has two responsibilities now:</p>
+<ol>
+<li>Create some behavior through logic (Operation)</li>
+<li>Orchestrate calls to other functions (integration)</li>
+</ol>
+<p>To avoid this conflation the IOSP suggest to bundle up logic in functions which do not call each other.</p>
+<p>Subroutines are a great tool to make code easier to understand and quicker to produce. But let´s use them in a way so they don´t lead to a violation of the fundamental SRP.</p>
+<p>Bundle logic up in functions which do not depend on each other. No self-made function should call any other self-made function.</p>
+<p>That makes Operation functions easy to test. There are no functional dependencies that need to be mocked.
+That will naturally lead to small and thus easy to understand functions. The reason: How many lines of logic can you write before you feel the urge to stash something away in a subroutine? My guess it´s after some 100 or 200 LOC max. But what if no functional dependencies are allowed? You´ll finish the subroutine and create another one.</p>
+<p>That´s the beauty of Operations: they are naturally short and easy to test. And it´s easy to check, if a given function is an Operation.</p>
+<h2>The beauty of Integrations</h2>
+<p>Once you start mixing logic and functional dependencies code becomes hard to understand. It consists of different levels of abstraction. It might start with a couple of lines of logic, then something happens in another function, then logic again, then the next functional dependency - and on top this all is spread across several levels of nested control statements.</p>
+<p>Let´s be honest: It´s madness. Madness we´re very, very used to, though. Which does not makes it less mad.</p>
+<p>We´re burdening ourselves with cognitive dissonance. We´re bending our minds to follow such arbitrary distribution of logic. Why is some of it readily visible, why is some of it hidden? We´re building mental stacks following the train of control. We´re reversing our habitual reading direction: instead from top to bottom and from left to right, we pride ourselves to have learned to read from right to left or from inner levels of nesting to outer and from bottom to top. What a feat!</p>
+<p>But this feat, I´d say, we should always subtitle with "Don´t try this at home!" It´s a feat to be performed on stage, but not in the hurry of every day work.</p>
+<p>So let´s stop it!</p>
+<p>Let´s try to write code just consisting of function calls. And I mean not just function calls, but also function calls in sequence, not nested function calls.</p>
+<p>Don´t write</p>
+<pre><code>a(b(c(x)));
+</code></pre>
+<p>instead write</p>
+<pre><code>var y = c(x);
+var z = b(y);
+a(z);
+</code></pre>
+<p>Let´s try to tell a readily comprehensible story with out code. Here´s the story of converting CSV data into a table:</p>
+<p>Developer A: First the data needs to be analyzed. Then the data gets formatted.</p>
+<p>Developer B: What do you mean be "analyzing the data"?</p>
+<p>Developer A: That´s simple. "Analysis" consists of parsing the CSV text and then finding out, what´s the maximum length of the values in each column.</p>
+<p>Developer B: I see. Before you can rearrange the data, you need to break the whole chunk of CSV text up. But then... how exactly does the rearrangement work, the formatting?</p>
+<p>Developer A: That´s straightforward. The records are formatted into an ASCII table - including the header. Also a separator line is build. And finally the separator is inserted into the ASCII table.</p>
+<p>That´s the overall transformation process explained. There´s no logic detail in it, just sequences of what´s happening. It´s a map, not the terrain.</p>
+<p>And like any story it can be told on different levels of abstraction.</p>
+<p>High(est) level of abstraction:</p>
+<p>Developer A: CSV data is transformed into an ASCII table.</p>
+<p>Medium level of abstraction:</p>
+<p>Developer A: First the data is analyzed, then it´s formatted.</p>
+<p>Low level of abstraction:</p>
+<p>Developer A: First the data is parsed, then the maximum length of values in each columns is determined, then the records are formatted into an ASCII table - including the header. At the same time a separator line is build. And finally the separator is inserted into the ASCII table.</p>
+<p>Finally the bottom level of abstraction or no abstraction at all would be to list each step of logic. That wouldn´t be an abstract process anymore, but raw algorithm.</p>
+<p>At the bottom it´s maximum detail, but it´s also the hardest to understand. So we should avoid as much as possible to dwell down there.</p>
+<p>Without logic details we´re talking about Integration. Its beauty is the abstraction. Look at the code for the above story about CSV data transformation:</p>
+<p><em>(Code sample not captured)</em></p>
+<p>Each function is focused on Integration. Each function consists of an easy to understand sequence of function calls. Each function is small.</p>
+<p>Compare to this to a pure Operation:</p>
+<p><em>(Code sample not captured)</em></p>
+<p>Now, which solution would you like to maintain?</p>
+<p>Yes, Integration functions depend on others. But it´s not a functional dependency. Integration functions don´t contain logic, they don´t add "processing power" to the solution which could be functionally dependent. Their purpose is orthogonal to what logic does.</p>
+<p>Integration functions are very naturally short since their building blocks (function calls) are small and it´s so cheap to create more, if it becomes hard to understand them.</p>
+<h2>Testing</h2>
+<p>Testing Operations is easy. They are not functionally dependent by definition. So there is no mocking needed. Just pass in some input and check the output.</p>
+<p>Sometimes you have to setup state or make a resource available, but the scope you´re testing is still small. That´s because Operations cannot grow large. Once you start following the PoMO and IOSP you´ll see how the demand for a mock framework will diminish.</p>
+<p>Testing Integrations is hard. They consist of all those function calls. A testing nightmare, right?</p>
+<p>But in reality it´s not. Because you hardly ever test Integration functions. They are so simple, you check them by review, not automated test.</p>
+<p>As long as all Operations are tested - which is easy - and the sequence of calls of Operations is correct in an Integration - which can be visually checked -, the Integration must be correct too.</p>
+<p>But still... even if all Operations are correct and the Integration functions represent your Flow Design correctly the behavior of the whole can be unexpected. That´s because flows are just hypothesizes. You think a certain flow hierarchy with correct logic at the bottom will solve a problem. But you can be wrong.</p>
+<p>So it´s of course necessary to test at least one Integration: the root of a 3D flow.</p>
+<p>Interestingly that´s what TDD is about. TDD always starts with a root function and drives out logic details by adding tests. But TDD leaves it too your refactoring skills to produce a clean code structure.</p>
+<p>Flow Design starts the other way round. It begins with a functional design of a solution - which is then translated into clean code. IOSP and PoMO guarantee that.</p>
+<p>And you can test the resulting code at any level you like. Automated tests for the root Integration are a must. But during implementation of the Operation functions I also write tests for them, even if it´s private functions - which I throw away at the end. I call those "scaffolding tests". For more on this approach see my book.</p>
+<h2>Stratified Design</h2>
+<p>You´re familiar with layered design: presentation layer, business logic layer, data access layer etc. Such layered design, though, is different from 3D flows.</p>
+<p>In a layered design there is no concept of abstraction. A presentation layer is not on a higher or lower level of abstraction compared to the business logic layer or the data access layer. Only the combination of all layers forms a whole.</p>
+<p>That´s different for abstractions. On each level of abstraction the building blocks form the whole. A layered design thus describes a solution on just one level of abstraction.</p>
+<p>Contrast this with the 3D Flow Design for the CSV data transformation. The whole solution is described on the highes level of abstraction by Format. One functional unit to solve it all.</p>
+<p>On the next lower level of abstraction the whole solution is described by Analyze + Format_as_ASCII_table.</p>
+<p>On the next lower level of abstraction the whole solution is described by Parse + Determine_col_widths + Format_records + Format_separator + Build_table.</p>
+<p>Below that it´s the level of logic. No abstraction anymore, only raw detail.</p>
+<p>How do you call those levels of abstraction? They are not layers. But just "level" would be too general.</p>
+<p>To me they look like what Abelson/Sussman called "stratum" when they talked about "stratified design".</p>
+<p>Each stratum solves the whole problem - but in increasing detail the deeper you dig into the flow hierarchy. Each stratum consists of a Domain Specific Language (DSL) on a certain level of abstraction - and always above the logic statements of a particular programming language.</p>
+<p>Fortunately these DSLs don´t need to be build using special tools. Their syntax is so simple just about any programing language (with functions as first class data structures) will do. The meta syntax/semantics for all such DSLs is defined by IOSP and PoMO. They are always data flow languages with just domain specific processing steps.</p>
+<p>Here´s another scenario:</p>
+<p>An application displays CSV data files as ASCII tables in a page-wise manner. When it´s started it asks for a file name and then shows the first page.</p>
+<p>Here´s a 3D Flow Design for this (see the accompanying Git repository for an implementation). See how the solution to the former problem now is part of the larger solution?</p>
+<p><em>(Diagram not captured)</em></p>
+<p>Vertically it´s strata put on top of each other. The deeper you go the more detail is revealed.</p>
+<p>At the same time, though, there are the elements of a layered design. They stretch horizontally.</p>
+<p>Colors denote responsibilities:</p>
+<ul>
+<li>Integrations are white,</li>
+<li>presentation layer Operations are green (Ask for filename, Display table),</li>
+<li>data access layer Operations are orange (Load data),</li>
+<li>business logic Operations are light blue (all else).</li>
+</ul>
+<p>In stratified Flow Design, though, functional units of different layers are not depending on each other. Thus layering loses its meaningfulness. It´s an obsolete concept. What remains, of course, is the application of the SRP. User interaction is different from file access or table formatting. Hence there need to be distinct function units for these aspects/responsibilities.</p>
+<h2>In closing</h2>
+<p>The quest for readable code and small functions can come to an end. Both can be achieved by following two simple principles: the Principle of Mutual Oblivion (PoMO) and the Integration Operation Segregation Principle (IOSP).</p>
+<p>That´s true for greenfield code where you might start with a Flow Design. But it´s also true for brownfield code. Without a design look at a function and see if it´s an Operation or an Integration. Mostly you´ll find it´s a hybrid. That means you should refactor it according to PoMO and IOSP. Clean up by making it an Integration and pushing down any logic into lower level functions. Then repeat the process for all functions integrated.</p>
+<p>I suggest you try this with a code kata. Do the bowling game kata or roman numerals or whatever. Use TDD first if you like. But in the end apply PoMO and IOSP rigorously.</p>
+<p>In the beginning you´ll be tempted to keep just a few control statements in Integration functions. Don´t! Push them down into Operations. Yes, this will mean you´ll get function units with several outputs. But that´s ok. You know how to translate them into code using continuations or events.</p>
+<p>Even if the resulting integration might look a bit awkward do it. You´ll get used to it. Like you got used to reversing your reading direction for nested function calls. But this time you´re getting used to a clean way of writing code;-) That´s like getting sober. Finally.</p>
+<p>Organizing code according to PoMO and IOSP is the only way to scale readability and understandability. We need abstractions, but we need them to be of a certain form. They need to be clean. That´s what IOSP does by introducing two fundamental domain independent responsibilities: Integration and Operation.</p>
+<p>The beauty of this is, you can check for conformance to the SRP without even understanding the domain. Integration and Operation are structural responsibilities - like containing data ist. You can review the code of any of your colleagues to help them clean it up.</p>
+<hr />
+<p><em>Footnotes: Remember my definition of logic: it´s expressions, control statements and API-calls (which often stands for hardware access of some kind). I know, you´ve tried hard for years to keep the number of lines in your functions low. Nevertheless there are these monster functions of 5,000 LOC in your code base (and you´ve heard about 100,000 LOC classes in other projects). Despite all good intentions it just happens. At least that´s the code reality in many projects I´ve seen. But fear not! You´re about to learn how to keep all your functions small. Guaranteed. I promise. Just follow two principles. One you already know: the Principle of Mutual Oblivion.</em></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

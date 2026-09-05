@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aspekttrennung im GUI — ralfw.de Archiv</title>
+<meta name="description" content="Mich wundert, dass es bisher noch niemand bemerkt zu haben scheint: Der WinForms-Designer (und auch der WPF-Designer) vermischt zwei Aspekte bei der GUI-Programmierung. Das sind di">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/aspekttrennung-im-gui/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Aspekttrennung im GUI — ralfw.de Archiv">
+<meta property="og:description" content="Mich wundert, dass es bisher noch niemand bemerkt zu haben scheint: Der WinForms-Designer (und auch der WPF-Designer) vermischt zwei Aspekte bei der GUI-Programmierung. Das sind di">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/aspekttrennung-im-gui/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Aspekttrennung im GUI</h1>
+    <div class="doc-meta"><span>4. Jan. 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/01/aspekttrennung-im-gui.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/aspekttrennung-im-gui/</code></span></div>
+    <div class="art"><p>Mich wundert, dass es bisher noch niemand bemerkt zu haben scheint: Der WinForms-Designer (und auch der WPF-Designer) vermischt zwei Aspekte bei der GUI-Programmierung. Das sind die Aspekte Gestaltung und Funktionalität. Dass er das tut, finden wir natürlich alle irgendwie bequem. Doch mich beschleicht das Gefühl, dass hier zuviel des Guten getan wird.</p>
+<p>Ein Beispiel ein kleines Formular zum Addieren zweier Zahlen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/025e9326054595a2.png" /></p>
+<p>Da steckt etwas Gestaltung drin –  Steuerelemente wollten ausgewählt und angeordnet werden – und Funktionalität – Ereignisbehandlungsroutinen wollten hinter die Steuerelemente gestellt werden.</p>
+<p>Die Programmierung war ganz einfach: Steuerelemente auf das Formular ziehen (Gestaltung), Doppelklick auf ein Steuerelement, um einen Eventhandler zu schreiben (Funktionalität). So weit, so gut. Das möchte ich kaum anders haben.</p>
+<p>Wenn ich genau hinschaue, stört mich aber das Ergebnis dieser einfachen Programmierung im Code. Das sieht nämlich so aus:</p>
+<p>public partial class WinDoTheMath : Form</p>
+<p>{</p>
+<p>public WinDoTheMath()</p>
+<p>{</p>
+<p>InitializeComponent();</p>
+<p>}</p>
+<p>private void button1_Click(object sender, EventArgs e)</p>
+<p>{…}</p>
+<p>private void textBox1_Validating(object sender, CancelEventArgs e)</p>
+<p>{…}</p>
+<p>}</p>
+<p>Ganz normal – aber subtil verstörend. Denn was mir hier fehlt, das ist eine Zuordnung der Ereignisbehandlungsroutinen. Die “stehen im Code nur so rum”. Ich muss mir anhand der im Methodennamen steckenden Hinweise zusammenreimen, wie/wann sie zum Einsatz kommen.</p>
+<p>Das finde ich inzwischen irgendwie umständlich – oder anders ausgedrückt: Der Zwang zum Zusammenreimen erhöht für mich die Komplexität des Codes. Ich sehe einfach nicht die Abhängigkeiten bzw. Zusammenhänge. Die hat der Designer nämlich im code behind versteckt:</p>
+<p>private void InitializeComponent()</p>
+<p>{</p>
+<p>…</p>
+<p>//</p>
+<p>// textBox1</p>
+<p>//</p>
+<p>this.textBox1.Location = new System.Drawing.Point(12, 12);</p>
+<p>this.textBox1.Name = "textBox1";</p>
+<p>this.textBox1.Size = new System.Drawing.Size(55, 20);</p>
+<p>this.textBox1.TabIndex = 0;</p>
+<p>this.textBox1.Validating +=</p>
+<p>new System.ComponentModel.CancelEventHandler(this.textBox1_Validating);</p>
+<p>//</p>
+<p>// textBox2</p>
+<p>//</p>
+<p>this.textBox2.Location = new System.Drawing.Point(121, 12);</p>
+<p>this.textBox2.Name = "textBox2";</p>
+<p>this.textBox2.Size = new System.Drawing.Size(55, 20);</p>
+<p>this.textBox2.TabIndex = 1;</p>
+<p>this.textBox2.Validating +=</p>
+<p>new System.ComponentModel.CancelEventHandler(this.textBox1_Validating);</p>
+<p>//</p>
+<p>// button1</p>
+<p>//</p>
+<p>this.button1.Location = new System.Drawing.Point(202, 9);</p>
+<p>this.button1.Name = "button1";</p>
+<p>this.button1.Size = new System.Drawing.Size(75, 23);</p>
+<p>this.button1.TabIndex = 2;</p>
+<p>this.button1.Text = "Add";</p>
+<p>this.button1.UseVisualStyleBackColor = true;</p>
+<p>this.button1.Click += new System.EventHandler(this.button1_Click);</p>
+<p>…</p>
+<p>Sehen Sie die Zusammenhänge? Die stecken in der jeweils letzten Zeile der Codeblöcke für die Steuerelemente. Dort wird der Eventhandler dem Control zugewiesen. Da geht es um Funktionalität. Und was steht davor? Das geht es um die Gestaltung.</p>
+<p>Gestaltung und Funktionalität sind im code behind vermischt. Das ist gut gemeint vom Designer – aber ich finde das nicht mehr verständnisfördernd. Früher war das genial; heute fühle ich mich dadurch verwirrt. Liegt das am Alter? ;-) Nein, ich glaube, das liegt am durch <a rel="noopener" href="http://www.clean-code-developer.de">Clean Code Developer</a> geschärften Blick für Verständlichkeit und Abhängigkeiten.</p>
+<p>Wo Zusammenhänge nicht sofort klar werden, da regt sich ein ungutes Gefühl bei mir. Und unklar sind sie, wenn ich nicht dort, wo ich Code lese – also im “foreground code” –, mich leicht darüber informieren kann, wer die beteiligten Parteien sind und wie sie zusammen hängen. Weder weiß ich dort, welche Steuerelemente es gibt, noch weiß ich, wie daran Ereignisbehandlungsroutinen geknüpft sind. Das finde ich unschön.</p>
+<p>Ich werde daher in Zukunft nicht mehr einfach auf Steuerelementen doppelklicken, um mir Eventhandler generieren zu lassen! Stattdessen schreibe ich die von Hand. Dabei kann ich dann auch wählen, wie ich sie implementiere: ob als eigenständige Methode oder doch nur als Lambda Funktion:</p>
+<p>public partial class WinDoTheMath : Form</p>
+<p>{</p>
+<p>public WinDoTheMath()</p>
+<p>{</p>
+<p>InitializeComponent();</p>
+<p><strong>this.textBox1.Validating += ValidateNumberEntered;</strong></p>
+<p><strong>this.textBox2.Validating += ValidateNumberEntered;</strong></p>
+<hr />
+<p><strong>this.button1.Click += (s, e) =&gt;</strong></p>
+<p><strong>{</strong></p>
+<p><strong>var sum = int.Parse(textBox1.Text) + int.Parse(textBox2.Text);</strong></p>
+<p><strong>MessageBox.Show(string.Format("Sum: {0}", sum));</strong></p>
+<p><strong>};</strong></p>
+<p>}</p>
+<p>private void ValidateNumberEntered(object sender, CancelEventArgs e)</p>
+<p>{</p>
+<p>int i;</p>
+<p>e.Cancel = !int.TryParse(((TextBox) sender).Text, out i);</p>
+<p>this.errorProvider1.SetError((Control)sender,</p>
+<p>e.Cancel ? "Input is not an integer!" : "");</p>
+<p>}</p>
+<p>}</p>
+<p>Jetzt habe ich alles auf einen Blick in der Codeansicht: die wirklich relevanten Steuerelemente mit ihrer Funktionalität.</p>
+<p>Und ich habe die beiden Aspekte Gestaltung und Funktionalität sauber getrennt. Der Designer ist jetzt wirklich nur noch für die Gestaltung zuständig. Die schaue ich mir im Design View an – und der Code dafür liegt irgendwo verborgen, weil er mich für die Funktionalität, mit der ich sonst beschäftigt bin, nicht interessiert.</p>
+<p>Das finde ich sauber. Wer noch?</p>
+<h2>Kommentare</h2>
+<p><strong>Andreas Adler</strong> (2010-01-04):</p>
+<p>Hallo Ralf,</p>
+<p>mich hat diese Eigenheit von C# und dem Winforms-Designer auch immer gestört. Deine Lösung trägt zur Verständlichkeit natürlich bei, aber der Bequemlichkeit ist ja leider nicht mehr gedient. ;)</p>
+<p>Finde daher die Lösung in VB sehr elegant, einer Methode per Handles-Klausel direkt verschiedene Ereignisse zuordnen zu können. :)</p>
+<p>Grüße,</p>
+<p>Andreas</p>
+<hr />
+<p><strong>Rico</strong> (2010-01-04):</p>
+<p>Interessant finde ich hier wie VB.Net das handhabt. Hier gibt es das "Handles" Schlüsselwort.</p>
+<p>Mit Hilfe von Handles bleibt die Definition des Events auch auf Logischer Ebene.</p>
+<p><em>Public Class Form1
+    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+        MessageBox.Show("Hallo")
+    End Sub
+End Class</em></p>
+<p>Empfehlenswert ist hier sich den daraus entstandenen Code im Reflector mal anzusehen...</p>
+<hr />
+<p><strong>mohk</strong> (2010-01-04):</p>
+<p>Da hat aber jmd das Refactoring noch nicht so ganz abgeschlossen:
+Grober Verstoss gegen <em>Single Level of Abstraction</em>.
+Sprich den ganzen Code in <em>InitializeComponentsWithOwnCode()</em> und ich nicke den Artikel durch, so aber nicht!</p>
+<p>Christian</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-01-05):</p>
+<p>@Christian: Ich reagiere auf deinen knappen Code jetzt mal auf drei Weisen. Such dir daraus eine raus, die dir passt:</p>
+<p>Antwort 1: Ja, du hast recht. Das ist aus CCD-Sicht noch nicht ganz sauber. Ich sollte die Bindung von Controls und Eventhandlern nicht einfach so im Ctor stehen lassen. Dort sollte vielmehr ein BindEventhandlersToControls() aufgerufen werden, das die Eventhandlerzuweisung enthält.</p>
+<p>Deinen Methodennamen finde ich nicht passend, weil er nicht den eigentlichen Zweck des Codes beschreibt. (In dem Sinne ist auch InitializeComponents() natürlich suboptimal. Die Methode hieße bei konsequenter Aspekttrennung besser z.B. InitializeLayout().)</p>
+<p>Antwort 2: Ja, du hast recht. Aber ich finde die Auslagerung für mein Beispiel unnötig. Sie würde das Wesentliche ein Stück in den Hintergrund rücken. Denn so wie von mir codiert sieht man ja ganz deutlich, welcher Code wo stehen sollte.</p>
+<p>Nicht nur Code sollte dem SRP folgen, sondern auch ein Blogposting. Dessen Zweck ist nun nicht "perfektes CCD", sondern Demonstration der Aspekttrennung. So habe ich mich gegen eine Refaktorisierung entschieden, um diesen Zweck deutlich zu machen. Angesichts der Übersichtlichkeit des Code, halte ich das für passend. (Bei längerem Code z.B. zu einem dotnetpro Artikel sehe ich das allerdings anders. Der soll zwar meistens nur einen inhaltlichen Zweck erfüllen, braucht dafür aber eher auch eine CCD-gemäße Form. Sonst ist er unverständlich - und gibt denn tatsächlich qua Größe ein falsches Bild davon, wie man Software schreiben sollte.)</p>
+<ol start="3">
+<li>Ich stimme dir nicht zu. Refaktorisierung ist kein Selbstzweck. Sie sollte nicht per se vorgenommen werden, sondern bei Bedarf. Bedarf ergibt sich aber erst, wenn ein nächstes Feature realisiert werden soll. Ich bin mit dem Code jedoch am Ende und er ist so übersichtlich, dass eine Herauslösung keinen Gewinn für den Zweck des Artikels brächte.</li>
+</ol>
+<p>Das TDD-Mantra red-green-refactor ist für mich aus dem Zusammenhang gegriffen. Erst wenn es nach refactor noch weiter geht, macht es Sinn. Also red-green-refactor-red-green-.... Und dann kannst du dir eine Klammer so denken: red-green-(refactor-red-green-(...)).</p>
+<p>Wer refactoring "einfach so am Ende" betreibt, der folgt zwar einem löblichen Gedanken (und sicherlich soll man auch "seinen Arbeitsplatz" aufräumen), läuft jedoch Gefahr, YAGNI und KISS zu widersprechen.</p>
+<p>Hoffe, bei den Antworten ist was dabei für dich - und die anderen Leser.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Golo Roden</strong> (2010-01-05):</p>
+<p>FULLACK. Mehr kann ich dazu eigentlich nicht sagen.</p>
+<p>Interessant ist: Wer an der von Dir vorgeschlagenen Trennung zweifelt, soll sich nur einmal an seine ersten Tage mit Windows Forms zurückerinnern, und sich fragen, wie lange er damals gebraucht hat, um einen Eventhandler sauber zu entfernen, der an einem nicht mehr existenten Control hing ...</p>
+<hr />
+<p><strong>Boas</strong> (2010-01-05):</p>
+<p>Der Artikel trifft in der tat einen blinden Fleck den wohl viele haben.</p>
+<p>Der generierte Eventhandler code ist einfach grausam. Genauso aber auch Zustandsinformationen welche z.bps. den Standardzustand ausdrücken.</p>
+<p>Wer schonmal an einem Projekt gearbeitet hat, welches schon länger als 1,2 Jahre existiert, sieht in welche Wucherungen das ganze enden kann...</p>
+<p>Der nächste logische Schritt finde ich aber mindestens genauso wichtig:</p>
+<p>Nämlich dass jeder  Button egal was er macht, ein externes Behavior oder wie bei WPF ein ICommand antriggert (oder bindet) und gar nichts mehr selbst (vorallem auch nichtdurch seine  Container (Forms)oder ähnliches) <em>selbst tut</em></p>
+<p>Also:
+        this.button1.Click += (s, e) =&gt;
+              {               ShowSumCommand.Execute()
+              };</p>
+<p>oder eben ein CommandBinding.</p>
+<p>So erreicht man eine wesentlich größere Testbarkeit.</p>
+<p>Ausserdem interessiert es jemanden in seiner Rolle als Entwickler wirklich, ob ein Button oder ein ContextMenü eine Funktion auslöst ?</p>
+<p>Ich denke nicht. Es geht ja mehr darum dass wenn eine Funtion X eine MessageBox mit der Summe zur Folge haben soll.</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-01-11):</p>
+<p>Hallo,</p>
+<p>ich finde diesen Ansatz auch sehr interessant.
+Daher möchte ich alle Interessierten hier auf die "Presentation Patterns" von Jeremy D. Miller, die er auch in seinem Storyteller anwendet, aufmerksam machen (http://codebetter.com/blogs/jeremy.miller/archive/2009/08/08/the-presentation-patterns-wiki-is-live.aspx)</p>
+<p>Gruss Jan</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-01-26):</p>
+<p>Zitat: <em>...läuft jedoch Gefahr, YAGNI und KISS zu widersprechen...</em>
+Hm, aber wenn er es nicht tut, läuft er Gefahr gegen die Pfadfinderregel zu verstoßen... ;-)</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

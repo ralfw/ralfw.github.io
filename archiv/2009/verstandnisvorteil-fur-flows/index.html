@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verständnisvorteil für Flows – Funktionale Programmierung lässt grüßen — ralfw.de Archiv</title>
+<meta name="description" content="Flows sind verständlicher als Schachtelungen, glaube ich inzwischen. Und zwar nicht nur asynchrone Flows, sondern auch synchrone.">
+<link rel="canonical" href="https://ralfw.de/archiv/2009/verstandnisvorteil-fur-flows/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Verständnisvorteil für Flows – Funktionale Programmierung lässt grüßen — ralfw.de Archiv">
+<meta property="og:description" content="Flows sind verständlicher als Schachtelungen, glaube ich inzwischen. Und zwar nicht nur asynchrone Flows, sondern auch synchrone.">
+<meta property="og:url" content="https://ralfw.de/archiv/2009/verstandnisvorteil-fur-flows/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Verständnisvorteil für Flows – Funktionale Programmierung lässt grüßen</h1>
+    <div class="doc-meta"><span>19. Juli 2009</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2009/07/verstandnisvorteil-fur-flows.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2009/verstandnisvorteil-fur-flows/</code></span></div>
+    <div class="art"><p>Flows sind verständlicher als Schachtelungen, glaube ich inzwischen. Und zwar nicht nur asynchrone Flows, sondern auch synchrone.</p>
+<p><a rel="noopener" href="http://ralfw.blogspot.com/2009/06/wider-die-geieln-zukunftsfahiger.html">Hier</a> hatte ich ja schonmal über Flows sinniert. Inzwischen habe ich dann auch eine kleine Bibliothek für asynchrone Flows gebaut, die CCR Flows (<a rel="noopener" href="http://ccrflows.codeplex.com">http://ccrflows.codeplex.com</a>). Doch neulich hat ein Engagierter Entwickler mit darauf hingewiesen, dass solche asynchronen Flows womöglich bei kleineren Aufgaben einen Performanceoverhead durch die Asynchronizität erzeugen, der gegen sie spricht. Da war ich erstmal ein wenig geknickt. Ja, das stimmt wohl. Es ist wie bei der Verteilung von Code. Verteilung erzeugt auch einen Overhead bei der Kommunikation gegenüber dem lokalen Stack. Doch ab einer gewissen Aufgabengröße überwiegen die Vorteile von Verteilung und Asynchronizität natürlich auch. Bis dahin ist synchrone lokale Programmierung vorzuziehen. Klar.</p>
+<p>Machen deshalb aber Flows ebenfalls bis dahin keinen Sinn? Dazu habe ich ein wenig experimentiert. Hier mein Szenario:</p>
+<blockquote>
+<p>Eine Textdatei mit Zeilen bestehend aus Worten ist umzuformatieren. Es soll eine neue Textdatei mit anderer Zeichenzahl pro Zeile erzeugt werden. Die Worte müssen also neu umgebrochen werden.</p>
+</blockquote>
+<h2>Übliche synchrone Lösung</h2>
+<p>Wenn ich für dieses Szenario mal eine Lösung einfach so hinschreibe, dann sieht sie z.B. so aus:</p>
+<p>using(var sr = new StreamReader("quelldatei.txt", Encoding.Default))</p>
+<p>using(var sw = new StreamWriter("zieldatei.txt", false, Encoding.Default))</p>
+<p>{</p>
+<p>LineBuilder lb = new LineBuilder(sw, 40);</p>
+<p>while(!sr.EndOfStream)</p>
+<p>{</p>
+<p>string line = sr.ReadLine();</p>
+<p>foreach (var word in line.Split(' '))</p>
+<p>lb.Add(word);</p>
+<p>}</p>
+<p>lb.Emit();</p>
+<p>}</p>
+<p>Das ist nicht super clean, aber ja auch nicht so umfangreich. Quelldatei zeilenweise lesen, Zeilen in Worte splitten, neue Zeilen aus den Worten zusammebauen und in Zieldatei schreiben.</p>
+<p>Für den Zusammenbau und das Wegschreiben lohnt eine Hilfsklasse, finde ich. Über die Worte hinweg muss etwas Zustand gehalten werden (die neue Zeile). Das würde mir den obigen Code zu sehr aufblähen. Die Aufgabe scheint mit eine genügend große Verantwortlichkeit, um eine eigene Klasse dafür zu rechtfertigen:</p>
+<p>class LineBuilder</p>
+<p>{</p>
+<p>private StreamWriter sw;</p>
+<p>private int max_line_length;</p>
+<p>private StringBuilder line = new StringBuilder();</p>
+<p>public LineBuilder(StreamWriter sw, int max_line_length)</p>
+<p>{</p>
+<p>this.sw = sw;</p>
+<p>this.max_line_length = max_line_length;</p>
+<p>}</p>
+<p>public void Add(string word)</p>
+<p>{</p>
+<p>if (line.Length + word.Length + 1 &gt; max_line_length)</p>
+<p>Emit();</p>
+<p>if (line.Length &gt; 0) line.Append(" ");</p>
+<p>line.Append(word);</p>
+<p>}</p>
+<p>public void Emit()</p>
+<p>{</p>
+<p>this.sw.WriteLine(this.line);</p>
+<p>this.line = new StringBuilder();</p>
+<p>}</p>
+<p>}</p>
+<p>Mit 60-70 Zeilen habe ich also eine Lösung für das Problem. Die sieht “normal” aus, finde ich. Ist sie aber deshalb auch verständlich? Hm… joa, so “normal verständlich”, oder?</p>
+<h2>Flow-basierte synchrone Lösung</h2>
+<p>Jetzt dagegen eine Lösung auf der Basis von synchronen Flows:</p>
+<p>var flow = new SyncFlow(SplitFileIntoLines)</p>
+<p>.Do(SplitLineIntoWords)</p>
+<p>.Do(new LineBuilder(40).AddWord)</p>
+<p>.Do(new FileAssembler("zieldatei.txt").WriteLine);</p>
+<p>flow.Execute("quelldatei.txt");</p>
+<p>Wie ist das? Ist finde es viel besser verständlich. Die Verantwortlichkeiten sind deutlicher getrennt. Das Abstraktionsniveau ist einheitlicher. Klar, das wäre irgendwie auch “normal” gegangen, aber auf dem “normalen” Weg muss ich dafür mehr Selbstdisziplin aufbringen, finde ich.</p>
+<p>Die Flow-basierte Lösung hingegen zwingt mich dazu, die einzelnen Schritte zu verpacken und damit zu “entwirren”. In der synchronen Lösung sind Lesen und Splitting und Zeilenerzeugung miteinander stark verwoben. Hier hingegen stehen sie sauber nacheinander gelistet als “Stages” in einem Flow. Mit einer anderen Sprache hätte ich vielleicht auch so schreiben können:</p>
+<p>“quelldatei.txt” | SplitFileIntoLines | SplitLineIntoWords
+      | new LineBuilder(40).AddWord | new FileAssembler("zieldatei.txt").WriteLine</p>
+<p>Aber mit C# geht das halt nicht. Die obige Formulierung finde ich allerdings auch nicht so schlimm. Die Do&lt;&gt;()-Aufrufe verbergen den generellen Fluss des Prozesses nicht.</p>
+<p>Insgesamt brauche ich für diese Flow-Lösung zwar ein paar mehr Zeilen Code. Aber das finde ich vernachlässigbar. Hier der Rest:</p>
+<p>IEnumerable SplitFileIntoLines(string filename)</p>
+<p>{</p>
+<p>using (var sr = new StreamReader(filename, Encoding.Default))</p>
+<p>{</p>
+<p>while (!sr.EndOfStream)</p>
+<p>yield return sr.ReadLine();</p>
+<p>yield return null;</p>
+<p>}</p>
+<p>}</p>
+<p>IEnumerable SplitLineIntoWords(string line)</p>
+<p>{</p>
+<p>if (line == null)</p>
+<p>yield return null;</p>
+<p>else</p>
+<p>foreach (var word in line.Split(' '))</p>
+<p>yield return word;</p>
+<p>}</p>
+<p>class LineBuilder</p>
+<p>{</p>
+<p>private int max_line_length;</p>
+<p>private StringBuilder line = new StringBuilder();</p>
+<p>public LineBuilder(int max_line_length)</p>
+<p>{</p>
+<p>this.max_line_length = max_line_length;</p>
+<p>}</p>
+<p>public IEnumerable AddWord(string word)</p>
+<p>{</p>
+<p>if (word == null)</p>
+<p>{</p>
+<p>yield return this.line.ToString();</p>
+<p>yield return null;</p>
+<p>}</p>
+<p>else</p>
+<p>{</p>
+<p>if (line.Length + word.Length + 1 &gt; max_line_length)</p>
+<p>{</p>
+<p>yield return this.line.ToString();</p>
+<p>this.line = new StringBuilder();</p>
+<p>}</p>
+<p>if (line.Length &gt; 0) line.Append(" ");</p>
+<p>line.Append(word);</p>
+<p>}</p>
+<p>}</p>
+<p>}</p>
+<p>class FileAssembler</p>
+<p>{</p>
+<p>private StreamWriter sw;</p>
+<p>public FileAssembler(string filename)</p>
+<p>{</p>
+<p>this.sw = new StreamWriter(filename, false, Encoding.Default);</p>
+<p>}</p>
+<p>public void WriteLine(string line)</p>
+<p>{</p>
+<p>if (line == null)</p>
+<p>{</p>
+<p>this.sw.Close();</p>
+<p>}</p>
+<p>else</p>
+<p>this.sw.WriteLine(line);</p>
+<p>}</p>
+<p>}</p>
+<p>Der entscheidende Vorteil liegt für mich in dem Zwang zur Strukturierung der Lösung. Flows geben mir ein Denkmodell: Formuliere jeden Arbeitsschritt so, dass er keine Abhängigkeiten hat. Verlasse dich in einem Arbeitsschritt nur auf den Input und den eigenen Zustand.</p>
+<p>Ich denke, das ist Funktionale Programmierung. Und damit habe ich für mich nun verstanden, glaube ich, wo deren Vorteil liegt. Die Zustandslosigkeit finde ich da gar nicht so wichtig. Die ist nett insbesondere für eine Parallelisierung. Unmittelbar relevanter und hilfreicher finde ich jedoch den Flow-Gedanken, den Funktionale Programmiersprachen nahelegen. F# enthält nicht umsonst den |&gt; Operator.</p>
+<p>Doch wer will schon auf F# umsteigen müssen, um Verarbeitung mit Flows leichter verständlich zu strukturieren? Wie der Code oben zeigt, geht es auch mit C#. Dafür ist etwas Umdenken nötig – aber es winken höhere Verständlichkeit und auch bessere Evolvierbarkeit als Gewinn auch schon für synchrone Programme.</p>
+<h2>Kommentare</h2>
+<p><strong>Schimpanski</strong> (2009-07-19):</p>
+<p>Das ist tatsächlich einer der Vorteile funktionaler Programmierung.</p>
+<p>Ein anderer Vorteil funktionaler Programmiersprachen, der hier nicht vorhanden sein dürfte, ist Performancesteigerung ohne explizit beschriebene Optimierungen: Dies geschieht über die sogenannte Lazy Evaluation funktionaler Sprachen. Und die wiederum setzt Zustandslosigkeit voraus.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-07-19):</p>
+<p>@Schimpanski: Lazy Eval... hm... ja, das mag die Performance verbessern. Aber insofern halte ich es für eine Optimierungstaktik, die ich erstmal nicht aus der Kiste holen würde.</p>
+<p>Lazy Eval macht Programme schwerer zu verstehen. Effekte die ich an einem Ort erwarte (auch wenn sie negativ sein mögen), treten dann an einem anderen Ort auf. Steht für mich insofern durchaus gegen das Prinzip vom Least Astonishment.</p>
+<p>-Ralf</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

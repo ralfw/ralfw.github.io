@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Das Domänobjektmodell anders gedacht [OOP 2010] — ralfw.de Archiv</title>
+<meta name="description" content="Mit der vorherrschenden Sichtweise, was ein Domänenobjektmodell sein soll, bin ich nicht einverstanden. Meine Kritik habe ich in diesem Posting geäußert. Wie soll es denn aber sons">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/das-domanobjektmodell-anders-gedacht/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Das Domänobjektmodell anders gedacht [OOP 2010] — ralfw.de Archiv">
+<meta property="og:description" content="Mit der vorherrschenden Sichtweise, was ein Domänenobjektmodell sein soll, bin ich nicht einverstanden. Meine Kritik habe ich in diesem Posting geäußert. Wie soll es denn aber sons">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/das-domanobjektmodell-anders-gedacht/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Das Domänobjektmodell anders gedacht [OOP 2010]</h1>
+    <div class="doc-meta"><span>23. Aug. 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/08/das-domanobjektmodell-anders-gedacht.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/das-domanobjektmodell-anders-gedacht/</code></span></div>
+    <div class="art"><p>Mit der vorherrschenden Sichtweise, was ein Domänenobjektmodell sein soll, bin ich nicht einverstanden. Meine Kritik habe ich in <a rel="noopener" href="http://ralfw.blogspot.com/2010/08/leiden-am-domanenobjektmodell-oop-2010.html">diesem Posting</a> geäußert. Wie soll es denn aber sonst gehen?</p>
+<p>Um meine Vorstellung von einem Domänenobjektmodell zu beschreiben, versuche ich am besten, Jimmy Nissons Beispiel auf meine Weise umzusetzen. In <a rel="noopener" href="http://www.amazon.de/Applying-Domain-Driven-Design-Patterns-Examples/dp/0321268202">“Applying Domain-Driven Design and Patterns: With Examples in C# and .NET”</a> hat er auf Seite 118f dieses Szenario beschrieben…</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/1c86dc24c0778985.png" /></p>
+<p>…und im Anschluss in einem solchen Domänenobjektmodell umgesetzt:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/af4703652f04b457.png" /></p>
+<p>Mein Stein des Anstoßes sind die Operationen auf <em>Customer</em> und <em>Order</em>, die über die Konsistenzwahrung des Datenmodells hinausgehen. <em>Customer.HasOkCreditLimit()</em>, <em>Order.IsOkAccordingToSize()</em> und <em>Order.IsOkAccordingToCredit()</em> sind Funktionen, die nicht nur auf den Daten im Domänenobjektmodell operieren, sondern weitere Services benötigen. Das halte ich für falsch verstandene Kapselung.</p>
+<p>Aber wie würde ich es nun besser machen?</p>
+<h3>Bessere Anforderungen</h3>
+<p>Am Anfang einer besseren Lösung stehen bessere Anforderungen. Ich glaube inzwischen, dass die Vorstellungen vom Domänenobjektmodell so sind wie sie sind, weil seine Proponenten es als Framework sehen. Sie leiden damit unter denselben Symptomen wie z.B. übliche Datenzugriffschichten: ihre Entwürfe sind sehr allgemein, weil sie keine konkrete Vorstellung davon haben, wie wo wann von wem der Code genutzt wird.</p>
+<p>Ich glaube, dass die Domänenmodelle, die uns in der Literatur vorgestellt werden, Ergebnisse von bottom-up Design im Sinne eines Schichtenmodells sind. Sie stellen Versuche dar, die Domäne ganz allgemein abzubilden, sozusagen universell und für alle möglichen Anforderungen in der Zukunft.</p>
+<p>Löblich, dass sie damit nicht bei der Datenzugriffsschicht beginnen. Aber der Einstieg in die Modellierung bei der Geschäftslogikschicht ist am Ende nicht besser. Gerade wo die Domäne unbekannt ist, muss das auf Irrwege führen. Der Bezug zu dem, was ein Anwender ganz konkret will, fehlt. Und zwar solange wie Eigenheiten von Klassen nicht ganz klar einem Ursache-Wirkungszusammenhang zugeordnet werden können, der für den Benutzer Wert hat.</p>
+<p>Jimmy hat nun im Buch zwar Anforderungen genannt – aber ohne rechten Zusammenhang. Das sind keine User Stories, sondern viel allgemeinere Formulierungen. Schon der Satz “We define the limit when the customer is added initially […]” klingt nach technologischer, d.h. User-Story-unabhängiger Sicht. Dito z.B. “[…] the solution needs to decide on the versioning  unit for customers and for orders.” Anforderungen und Lösung sind einfach nicht klar getrennt. Und das – so scheint mir – führt dann schnell zu Lösungen, die entkoppelt sind – allerdings entkoppelt von der Welt der Anwender. Damit ist die Entkoppelung schlecht, weil sie sich einschleicht (YAGNI und KISS werden da schnell vergessen). Niemand weiß, ob sie überhaupt gebraucht wird.</p>
+<p>Mein Ansatz ist da anders. Für mich muss sich jedes Artefakt, jede Eigenart aus dem Bezug nicht nur zu einem Feature ergeben, sondern zu einer Interaktion der Anwendung mit einem Anwender (einem Menschen oder einer anderen Anwendung). Was sich nicht auf solche “Trigger” zurückführen lässt, steht unter Verdacht, überflüssig oder zumindest suboptimal geschnitten zu sein. Wer YAGNI und KISS und damit den Geldbeutel des Kunden ernst nimmt, kann nicht anders entwerfen. Alles Entwerfen muss vom Frontend ausgehen. Und genau das kann ich bei den Domänenobjektmodellen der Literatur nicht erkennen.</p>
+<p>Aber darauf näher einzugehen, mag Thema für einen weiteren Artikel werden. Hier möchte ich es einfach mal tun, um zu zeigen, zu welch anderem Modell man damit kommt. Um Jimmys Anforderungen spinne ich daher mal ein paar User Stories, von denen ich dann ausgehen. Die decken nicht alles ab, was Jimmy erreichen will, aber zumindest das, was zu den kritisierten Funktionen führt.</p>
+<h2>Eine User Story für Jimmys Szenario</h2>
+<blockquote>
+<p><em>Als Vertriebler möchte ich Aufträge erfassen. Am Telefon spreche ich mit meinen Kunden – Bestandskunden und neuen – über ihre Bedürfnisse und trage ihre Bestellungen gleich in einen Auftrag ein.</em> <em>Bei Bestandskunden überprüfe ich im Gespräch die Stammdaten, z.B. seine Adresse. Bei Neukunden erfasse ich diese Daten erstmalig.</em> <em>Sind die Kundendaten abgeglichen, geht es an den eigentlichen Verkauf. Was kann ich für den Kunden tun? Es kann sein, dass er schon auf meinen Anruf gewartet hat und gleich mit einer Bestellung loslegt. Es kann aber auch sein, dass es sich im Laufe des Gespächs erst herausstellt, dass er das eine oder andere Produkt bestellen will oder sollte. Ich kenne ja sein Business und kann ihn da beraten.</em> <em>Am Ende des Gesprächs gehe ich dann nochmal alle Bestellpositionen mit dem Kunden durch. Wenn alles korrekt aufgenommen ist, schließe ich die Bestellung ab; der Kunde bekommt sie dann per Email zugeschickt und gleichzeitig läuft sie weiter zum Fulfillment.</em> <em>Wenn es ein “normaler” Kunde ist, läuft das so. Dann gibt es keine Probleme. Bei manchen Kunden müssen wir jedoch aufpassen. Die haben eine schlechte Zahlungsmoral. Oder wir kennen sie noch nicht gut. Dann passen wir ihr Kreditlimit an. Jeder Kunde hat so ein Limit, das angibt, wie hoch der Gesamtbetrag aller noch nicht komplett bezahlten Bestellungen sein darf.</em> <em>Hat ein Kunde z.B. ein Kreditlimit von 5000 EUR, dann darf die Bestellung, die ich mit ihm zusammenstelle, keinen höheren Warenwert haben. Oder der muss sogar noch geringer sein, wenn der Kunde frühere Bestellungen noch nicht vollständig bezahlt hat. Sind noch Bestellungen im Wert von z.B. 2000 EUR offen, dann darf die neue Bestellung Wert von 5000-2000=3000 EUR nicht überschreiten.</em> <em>Zusätzlich hat haben wir im Unternehmen ein allgemeines Limit für den Bestellungswarenwert. Unter dem müssen alle Bestellungen liegen unabhängig vom Kreditlimit des Kunden. Das können z.B. 10000 EUR sein. Ein Kunde mit dem Kreditlimit von 15000 EUR dürfte also auch pro Bestellung für maximal 10000 EUR ordern.</em> <em>Während des Gesprächs mit einem Kunden sollte dessen Kreditlimit für mich klar zu sehen sein; dann kann ich ihn z.B. darauf ansprechen, dass wir über eine Neubestellung reden, obwohl andere noch nicht vollständig bezahlt sind.</em> <em>Aber ich möchte das Limit nicht ständig selbst im Blick haben müssen. Das Programm soll mich automatisch warnen, wenn die Bestellung durch Veränderung an Bestellpositionen an Grenzen stößt (Kreditlimit oder Bestellwarenwertlimit).</em></p>
+</blockquote>
+<p>Ah, ein Kontext. Hieraus lässt sich eine Ubiquitous Language ableiten, die Begriffe wirklich in Beziehung setzt. Und hieraus lässt sich auch erkennen, wann was warum an Domänenlogik gebraucht wird. Natürlich muss man dafür nachfragen beim Kunden. Aber so eine User Story schafft viel besser ein Bild im Kopf als die Punkte in Jimmys Aufzählung.</p>
+<h2>Featureliste</h2>
+<p>Die Diskussion über die User Story lasse ich hier mal aus und spule schnell vor. Für mich ergeben sich folgende für die Domänenmodelldiskussion relevanten Features:</p>
+<ul>
+<li>Die User Story beginnt mit einem Dialogfenster, in dem die Kundenstammdaten zu sehen sind. Das sind Kundennummer, Name, Kreditlimit, Adresse.
+Gegenüber dem Benutzer wird an dieser Stelle nicht mehr zwischen einem Bestandskunden und einem Neukunden unterschieden.
+Wie der Anwender dahin kommt, ist nicht Teil der User Story. Er könnte z.B. den Kunden aus einer Liste ausgewählt haben.  Im Dialogfenster kann der Anwender die Stammdaten bearbeiten – und speichern.  Beim Speichern wird geprüft, ob das Kreditlimit problematisch ist. Das ist der Fall, wenn es verringert wurde und nun kleiner als die Summe unbezahlter Aufträge ist. Gespeichert werden die Stammdaten trotzdem – allerdings bekommt der Anwender einen Hinweis angezeigt.  Wenn das Kreditlimit des Kunden ausgeschöpft ist, ist eine Auftragserfassung nicht möglich. Das gilt nach dem Speichern, falls durch Änderung des Kreditlimits dieser Zustand eintritt, oder auch sofort nach Öffnen des Dialogfensters.  Nach Überprüfung der Kundenstammdaten kann ein neuer Auftrag erfasst werden.  Angezeigt werden während der Auftragserfassung Kundenname, Kreditlimit, Auftragsnummer, Auftragsdatum, Auftragssumme und Auftragsstatus.  Die Auftragsnummer wird automatisch vergeben und muss nur über alle Aufträge hinweg streng monoton aufsteigend sein.  Der Anwender fügt dem Auftrag Auftragspositionen hinzu. Dazu wählt er ein Produkt aus einer Liste und gibt die Menge ein, in der der Kunde es haben möchte.  Nach jeder Auftragspositionserfassung wird die Auftragssumme aktualisiert.  Am Ende des Kundengesprächs wird der Auftrag storniert, wenn der Kunde nichts bestellen will.  Am Ende des Kundengesprächs wird der Auftrag platziert, wenn der Kunde zufrieden ist.  Beim Platzieren des Auftrags wird geprüft, ob er im Rahmen des Kreditlimits des Kunden liegt. Falls nicht, wird der Auftrag nicht platziert, sondern der Anwender informiert.  Beim Platzieren des Auftrags wird geprüft, ob er im Rahmen des Bestellungswarenwertlimits liegt. Falls nicht, wird der Auftrag nicht platziert, sondern der Anwender informiert.</li>
+</ul>
+<p>Natürlich ist diese Liste nicht vollständig. Aus der User Story kann man im Gespräch noch viel mehr rausholen. Doch für den hiesigen Zweck sollte das reichen.</p>
+<h2>Datenmodell</h2>
+<p>Jimmys Domänenobjektmodell liegt ein Datenmodell zugrunde. Dass er das nicht explizit gezeigt hat, halte ich auch für ein Problem. Zwar ist sein Klassendiagramm dem sehr ähnlich – doch es führt ganz selbstverständlich darüber hinaus. So ist das mit Klassendiagrammen. Das sollen sie – aber ist das auch gut?</p>
+<p>Selbst wenn am Ende alles mit Klassen implementiert wird, finde ich es wichtig, sich im Sinne des Single Responsibility Principle zunächst zu konzentrieren. Deshalb habe ich für mein Datenmodell die <a rel="noopener" href="http://www2.cs.uregina.ca/~bernatja/crowsfoot.html">Crow’s Foot Notation</a> benutzt:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/fb94f8c762287cb9.png" /></p>
+<p>Nicht alles, was im “Datenanteil” von Jimmys Klassendiagramm enthalten ist, findet sich allerdings darin wieder. Für die Diskussion der Art der Modellierung der Domänenfunktionalität ist es aber genug.</p>
+<p>Zwei Hinweise jedoch:</p>
+<ul>
+<li>Die Auftragssumme taucht im Datenmodell nicht auf, weil es eben ein abstraktes Datenmodell ist und kein Klassendiagramm. In ein Klassendiagramm würde ich die Auftragssumme als Property aufnehmen. Seine Summe zu berechnen halte ich für ganz legitime Funktionalität eines <em>Auftrag</em>-Domänenobjektes. Dafür ist nur auf die Daten im Domänendatenobjektmodell zuzugreifen.  Die Hinweise auf die Services zur Prüfung der Limits fehlen selbstverständlich, weil dies ausschließlich ein Datenmodell ist. Egal, wie die Limits geprüft werden, das kann nicht sichtbar sein in diesem Modell.</li>
+</ul>
+<p>Das Datenmodell ist das Ergebnis einer Analyse. Es beschreibt den Ist-Zustand. Diese Daten gibt es heute und so hängen sie zusammen.</p>
+<h2>GUI-Modell mit Triggern</h2>
+<p>Aus Anforderungen lässt sich gewöhnlich recht einfach ein Datenmodell ableiten. Daten und ihre Beziehungen sind auch vergleichsweise stabil. Damit haben Sie zumindest schonmal eine Grundlage für das weitere Nachdenken.</p>
+<p>Das bedeutet nicht, dass es für immer so bleiben wird. Im Laufe des Entwurf und der Implementierung können sich immer Erkenntnisse ergeben, die eine Veränderung nahelegen. Aber irgendwo müssen Sie ja anfangen. Da ist ein Datenmodell kein schlechter Start. Vermeiden Sie jedoch den Drang zur Perfektion.</p>
+<p>Ein weiterer Startpunkt ist das Frontend. Wie Anwender mit der Software umgehen wollen, lässt sich auch recht gut aus den Anforderungen ableiten. Vermeiden Sie dabei ebenfalls den Drang zur Perfektion. Meine Frontend-Entwürfe mache ich deshalb entweder am Whiteboard oder mit <a rel="noopener" href="http://balsamiq.com/">Balsamiq Mockups</a>. Da kommt der Kunde nicht auf die Idee, die Software sei fertig, weil er ja schon irgendwo draufklicken kann.</p>
+<p>Hier ein Frontend für meine Interpretation von Jimmys Szenario:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e7986d2373560ee0.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/27b072c12748cf46.png" /></p>
+<p>Ein Dialog mit zwei Tabs. Auf dem ersten werden die Kundenstammdaten überprüft. Auf dem zweiten erfasst der Anwender den Auftrag. Die Pfeile bezeichnen “Trigger”, die Prozesse anstoßen, die ein “Feature produzieren”. Die Trigger sind also Ursachen, die zu nutzerrelevanten Wirkungen führen.</p>
+<p>Es gibt natürlich noch mehr Trigger wie z.B. Scrollen im Grid oder Auswahl eines Landes aus der Combobox. Doch die zeichne ich nicht ein, weil sie in einer dünnen Schicht GUI-Code automatisch behandelt werden.</p>
+<p>Darstellungswürdige Trigger sind für mich nur die, bei denen Code jenseits des GUI gefordert ist. Bei gegebenen Features besteht die Herausforderung nun darin, aus ihnen diese Trigger herauszuarbeiten.</p>
+<p>Hier die Matrix mit der Zuordnung von Features zu Triggern:</p>
+<pre><code>Trigger/Feature
+</code></pre>
+<p>1</p>
+<p>2</p>
+<p>3</p>
+<p>4</p>
+<p>5</p>
+<p>6</p>
+<p>7</p>
+<p>8</p>
+<p>9</p>
+<p>10</p>
+<p>11</p>
+<p>12</p>
+<p>13</p>
+<p>Öffnen</p>
+<p>X</p>
+<p>X</p>
+<p>Schließen</p>
+<p>X</p>
+<p>Zum Auftrag</p>
+<p>X</p>
+<p>X</p>
+<p>Speichern</p>
+<p>X</p>
+<p>X</p>
+<p>X</p>
+<p>Zu Kundenstamm</p>
+<p>Produkt wählen</p>
+<p>X</p>
+<p>X</p>
+<p>Menge eingeben</p>
+<p>X</p>
+<p>X</p>
+<p>Platzieren</p>
+<p>X</p>
+<p>X</p>
+<p>X</p>
+<p>Interessanterweise benötigt kein Feature den Trigger “Zu Kundenstamm wechseln”. Nichts muss getan werden, wenn der Anwender den Reiter “Kundenstamm” anklickt. Bei Klick auf den Reiter “Auftrag” hingegen muss geprüft werden, ob die Kundenstammdaten verändert wurden und das Kreditlimit es gestattet, den Auftrag zu bearbeiten.</p>
+<p>Noch interessanter ist jedoch, dass die Features 6 und 7 keinen Trigger haben. Wie kann das sein? Feature 6 wird schon durch das Layout des GUI befriedigt. Und Feature 7 fällt in die Zuständigkeit des Codes, der den Dialog anstößt. Der versorgt ihn mit Kundenstammdaten und einem leeren Auftrag inkl. Auftragsnummer.</p>
+<h3>Modellierung</h3>
+<p>Mit dem Datenmodell und den Frontend-Triggern in der Hand kann es jetzt endlich losgehen mit der Modellierung einer Lösung. Sie spannen einen Kontext auf, in den ein Domänenobjektmodell eingepasst werden kann.</p>
+<h2>Domänenprozesse</h2>
+<p>Irgendwie muss ich von den Anforderungen zu einem Modell für die Anwendung kommen. Der Begriff des Modells ist mir dabei sehr wichtig. Modell bedeutet nämlich nicht Code, sondern eben “nur” Modell, d.h. eine Abstraktion von Code. Erst in einem späteren Schritt wird das Modell in Code übersetzt.</p>
+<p>Klassen, Komponenten oder Pakete (Namensräume) sind für mich allerdings keine Modellelemente. Die UML definiert für mich insofern kein Metamodell. Klassen, Komponenten und Pakete sind Artefakte einer Implementationsplattform. Deshalb taugen sie zur Modellierung nicht.</p>
+<p>Ich versuche also nicht, aus Anforderungen Klassen “herauszulesen”. OOAD und auch Jimmys Variante von DDD sieht das anders. Für sie sind Klassen Modellierungsmittel. Und das funktioniert auch am Anfang gerade bei Literaturbeispielen oft ganz passabel. Zum einen, weil diese Beispiele klein sind. Zum anderen, weil der Leser nicht sieht, wie lang der Autor darüber nachgedacht hat.</p>
+<p>Zwar kann ich Ihnen auch nicht wirklich zeigen, wie lang ich über das folgende Modell nachgedacht habe. Aber mein Anspruch ist, diese Zeit zu minieren. Mein Ansatz dafür: Ich beginne mit dem Wichtigsten und dem Deutlichsten, was die Anforderungen enthalten.</p>
+<p>Das sind nämlich nicht (!) die Daten. Es sind die Prozesse, die auf den Daten ablaufen. Daten sind nur statische Bits, wenn sie nicht von Prozessen verarbeitet werden. (Umgekehrt gilt natürlich, dass die schönsten Prozesse nichts nützen ohne Daten. Dennoch haben die Prozesse für mich Priorität. Und sei es, weil sie dazu tendieren, volatiler zu sein als Datenstrukturen.)</p>
+<p>Wenn wir also über Domain Driven Design sprechen, dann sollten wir mit den Domänenprozessen beginnen. Welche sind das? Ganz einfach: Jeder Trigger steht für einen Domänenprozess. Deshalb bin ich ja der Meinung, dass sie so einfach aus den Anforderungen abzulesen sind:</p>
+<ul>
+<li>Sie verstehen die Anforderungen.  Sie leiten aus den Anforderungen ein Frontend ab.  Sie definieren zusammen mit dem Kunden die zu den Features gehörenden Trigger im Frontend.  Für jedes Trigger modellieren Sie den Domänenprozess.</li>
+</ul>
+<p>Oben sehen Sie Anforderungen/Features und Frontend mit Triggern. Die Schritte 1 bis 3 bin ich also schon durchlaufen. Nachstehend nun die Domänenprozess für die wesentlichen Trigger. (<em>Schließen</em> und <em>Zum Auftrag</em> habe ich ausgelassen, da sie im Frontend abgehandelt werden können.)</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/959733747c2c8430.jpg" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/94bdab2e71161f39.jpg" /></p>
+<p>Als Metamodell habe ich <a rel="noopener" href="http://ralfw.blogspot.com/search/label/Event-based%20Components">Event-Based Components</a> (EBC) benutzt, d.h. jeder Kasten steht für eine Aktivität/Aktion und die Pfeile für Daten, die von Aktion zu Aktion fließen.</p>
+<p>Mit Ausnahme vom Domänenprozess <em>Öffnen</em> beginnen alle Prozesse beim Frontend und enden auch dort wieder. Das Frontend ist Quelle und Senke für Prozessparameter bzw. Ergebnisse. Ohne Initiation durch das Frontend kein Prozessablauf.</p>
+<p>Beim <em>Öffnen</em> habe ich den Initiator offen gelassen. Er liegt außerhalb von Jimmys Szenario.</p>
+<p>An dieser Stelle möchte ich nicht näher auf EBC eingehen. Zweierlei verdient jedoch eine nähere Betrachtung:</p>
+<p><strong>Ubiquitous Language</strong>: Ihnen mögen beim Datenfluss Begriff wie <em>Bonitätsabfrage</em> oder <em>Warenlimitstatus</em> aufgefallen sein. Die finden sich nicht direkt in den Anforderungen. Aus meiner Sicht gehören Sie jedoch zur Problemdomäne, weil sie domänenspezifische Kommunikation beschreiben. Selbst wenn das Problem durch einen Prozess bestehend aus Menschen gelöst würde, wäre z.B. zu Fragen, aufgrund welcher Daten derjenige, der eine Bonitätsprüfung vornimmt, arbeitet. Wie heißt das “Dings”, was er entgegennimmt, um die Prüfung durchzuführen? Wie heißt das “Dings”, das er als Ergebnis produziert? Ich habe ersteres <em>Bonitätsabfrage</em> genannt und letzteres <em>Bonitätsstatus</em>. Mit diesen Begriffen kann ich nun präzise über die Problemdomäne mit Domänenexperten sprechen. Sie gehören aus meiner Sicht zur Ubiquitous (UL) Language von DDD. Und deshalb müssen Sie quasi auch im Modell auftauchen.</p>
+<p>Enthält das Modell Begriffe, die nicht Teil der UL sind, dann ist die UL unterspezifiziert – oder das Modell technisch.</p>
+<p>Enthält die UL Begriffe, die nicht im Modell auftauchen, dann läuft sie Gefahr, überspezifiziert zu sein – oder das Modell passt noch nicht zur Domäne.</p>
+<p><strong>Kontextobjektmodelle</strong>: Im Modell sehen Sie Daten, deren Namen auf <em>D, </em>VM und <em>Cmd enden, z.B. </em>AuftragD<em>, </em>AuftragVM<em>, </em>AuftragCmd*. Die Suffixe stehen dabei für unterschiedliche Kontexte, in denen dieselben Daten benutzt werden.</p>
+<p>Der D-Kontext ist der Domänenkontext. <em>AuftragD</em> ist das Objektmodell, auf dem die Domänenlogik arbeitet. Es entspricht am ehesten dem Datemodell.</p>
+<p>Der VM-Kontext ist das Frontend. Anders als bei Jimmy arbeitet es für mich nicht (!) auf dem Objektmodell des Domänenkontext. Ein Frontend hat ganz andere Bedürfnisse als die Domäne. Während z.B. für die Domäne das Objektmodell nur eine Form hat, ist das Frontned an immer wieder anderen Objektmodellen interessiert. Das Frontend bietet Sichten auf die Daten – und die will es nicht selbst produzieren, sondern geliefert bekommen. Zum Frontend fließen daher View Models (VM) des Objektmodells der Domäne. Während <em>AuftragD</em> recht tief geschachtelt ist, wie das Datenmodell nahelegt, muss das z.B. für <em>AuftragVM</em> nicht gelten. In <em>AuftragVM</em> könnten z.B. Auftragspositionen und Produkte in einem Objekt zusammengefasst werden.</p>
+<p>Für den VM-Kontext kann sogar das <em>DataSet</em> zu neuen Ehren kommen. Ich bin da schmerzfrei. Warum sollte nicht <em>AuftragVM</em> als <em>DataSet</em> mit 2 Tabellen realisiert werden? Ein <em>DataSet</em> bietet viel, was ein Frontend braucht, z.B. Bindbarkeit, Changetracking.</p>
+<p>Der Cmd-Kontext schließlich bezieht sich auf die Speicherung von Änderungen. Wie Änderungen am D-Objektmodell gespeichert werden, sollte nämlich unabhängig von der Domäne sein. Im Extremfall bedeutet das, es fließen von der Domäne keine Datenobjekte wie es bei einer Persistenz mit O/R Mapping der Fall wäre, sondern Kommandoobjekte. Sie beschreiben, welche Änderungen an den persistenten Daten vorgenommen werden müssen.</p>
+<p>Wer hier an CQRS denkt, der ist auf der richtigen Fährte. Eine nähere Beschäftigung damit möchte ich jedoch vertagen. An dieser Stelle ist mir nur wichtig zu bemerken, dass sich CQRS gut mit dem EBC-Metamodell verträgt.</p>
+<h2>Domänendaten</h2>
+<p>Die Domänenprozess stehen am Anfang meiner Modellierung. Nur eine Nasenlänge dahinter folgen jedoch die Daten. Für sie entwerfe ich ein Domänendatenmodell. Das Datenmodell (s.o.) ist dafür ein guter Anfang.</p>
+<p>Hinzu kommen jedoch Datentypen, die während der Prozessmodellierung aufgetreten sind wie <em>Bonitätsabfrage, Warenlimitstatus</em>oder <em>AuftragCmd.</em></p>
+<p>Insgesamt ist die Domänendatenobjektmodellierung jedoch vergleichsweise einfach. Ich muss mir ja keine Gedanken um komplizierte Domänenlogik machen. Die steckt in den Domänenprozessen.</p>
+<p>Datenbezogene Operationen hingegen darf und soll das Domänendatenobjektmodell haben. Ein Beispiel dafür wäre eine Funktion/Property <em>Auftragssumme()</em> auf <em>Auftrag</em>. Eine weitere wäre eine Methode <em>AddProduct(ProductD product, int qty)</em>, die nicht nur eine Auftragsposition erzeugen würde, sondern ggf. eine bestehende für das Produkt um die Menge erweiterte, falls nicht mehrere Auftragspositionen sich auf dasselbe Produkt beziehen sollten.</p>
+<p>Insgesamt ist das Domänendatenmodell relativ unspannend, finde ich. Daher detailliere ich es hier nicht. Technische Herausforderungen enthält es zwar, aber die sind insb. von der Ausprägung der Kontexte Frontend und Persistenz abhängig. Sie haben nichts mit DDD im engeren Sinn zu tun.</p>
+<h3>Domänenprozessobjektmodell</h3>
+<p>Und wo sind nun die Klassen? Ohne Klassen, könnte ich ja nicht mit der Implementierung loslegen. Die Domänendaten sind einfach in Klassen und andere Typen zu übersetzen. Was aber ist mit den Domänenprozessen? Wie werden aus Aktivitäten/Aktionen-Kästchen Komponenten, Klassen, Methoden?</p>
+<p>Klassen gehören zur Implementierung, Prozesse mit ihren Aktionen sind das Modell. Dass muss nun in Code übersetzt werden. Aus Kästchen müssen Methoden, Klassen, Komponenten werden. Wie das?</p>
+<p>Ich den folgenden Bildern habe ich zunächstmal inhaltlich Zusammengehöriges farblich markiert:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/484208298c8aa5bf.jpg" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c83a4b3f0ec3a4c5.jpg" /></p>
+<p>Die Prozessschritte scheinen drei Bereichen anzugehören:</p>
+<ul>
+<li>Da ist zum einen die “Verwaltung” des Datenobjektmodells mit Auftrag, Positionen, Kunde usw.</li>
+<li>Dann gibt es die Prüfung der Bonität und des Warenwertlimits.</li>
+<li>Und schließlich müssen die Daten geladen und gespeichert werden.</li>
+</ul>
+<p>Diese Bereiche fasse ich nun zu Komponenten zusammen. Das sind für mich die Akteure zu den Aktionen. Sie sind die Verantwortlichen, die Substantive, für die bisher nur ihre Taten modelliert waren als Verben (oder Verbphrasen).</p>
+<p>Statt meinen Entwurf mit der Suche nach solchen Akteuren zu beginnen – was ich für schwer halte –, habe ich die naheliegenden Aktionen aus den Anforderungen abgeleitet. Das war eine Analysephase, eine Zerlegung. Jetzt folgt darauf eine Synthesephase, in der ich Muster erkenne und zu Akteuren zusammenfasse. Das halte ich für leichter.</p>
+<p>Hier nun meine Komponenten:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/18369b4a04ad4649.jpg" /></p>
+<p>Zwei Komponenten für die Businesslogik, eine für die Persistenz. Die Bonitätsprüfung ist im Grunde nur ein (zustandsloser?) Service, das Repository ebenfalls.</p>
+<p>Die Kernfunktionalität steckt im Aggregat. Es ist zustandsbehaftet und verwaltet einen Objektgraphen des Domänendatenobjektmodells. Als UML-Skizze sähe das so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/22172bf9fb5a022f.jpg" /></p>
+<p>Dazu kämen noch weitere Klassen wie <em>AuftragVM</em> oder <em>KundeCmd</em>, aber die lasse ich mal außen vor. Das sind eher Nachrichtenklassen.</p>
+<p>Die Arbeitspferde sind die hier gezeigten: Aggregat, Repository und Prüfer sind EBC-Komponenten in Form von Akteuren. <em>AuftragD</em>, <em>KundeD</em> usw. sind Datenmodellklassen, die soweit Funktionalität enthalten, wie sie für die Sicherung eines konsistenzen Umgangs mit den Daten sinnvoll erscheint.</p>
+<p>Selbstverständlich hat die Umgebung des Aggregats keinen Zugriff auf seinen Zustand. Das ist der Trick dieser Modellierung. Damit werden weitreichende Abhängigkeiten vom Datenmodell vermieden. Entkopplung ist das Zauberwort.</p>
+<p>Andererseits enthält das Aggregat diese Daten und kennt sie genau. Es ist abhängig von der Hierarchie. Aber das macht nichts, weil <em>Auftrag Aggregat</em> und <em>AuftragD</em> usw. eng zusammengehören. Sie sind die zwei Seiten der Domänene: Daten und Operationen. Sauber getrennt und doch vereint durch Composition. Kohäsion ist das Zauberwort.</p>
+<p>Im vorletzten Bild ist übrigens sehr schön die Gewichtung der Komponenten zu erkennen. Zentral ist das Aggregat mit seinen vielen EBC-Pins. Dort spielt die Musik. Da steckt die Domänenlogik drin. Da ist´s dann auch erlaubt, dass es viele Verbindungen gibt. Das Repository ist eher ein Anhängsel, weil Persistenz halt sein muss. Also hat es wenige Pins. Und der Prüfer ist simpel in seinen Interaktionen, auch wenn er zur Domäne gehört, weil er ein Dienst mit sehr spezieller Aufgabe ist.</p>
+<h3>Zusammenfassung</h3>
+<p>Puh, jetzt ist dieses Posting doch länger geworden als gedacht. Und sicher ist es in einigen Punkten zu skizzenhaft, um den Ansatz gleich nachzuprogrammieren. Dennoch war es mir wichtig, es erstmal so “rauszulassen”, um dem Thema Domänenobjektmodell eine schließende Klammer zu geben.</p>
+<p>Was ist der Unterschied zwischen Jimmys Ansatz und meinem? Zentral ist die Trennung von Operationen und Daten. Die ist gerade im letzten Bild mit den Klassen deutlich.</p>
+<p>Mein Ansatz geht darüber jedoch hinaus, als dass er das Prinzip der Kapselung noch rigoroser anwendet. Das Aggregat verbirgt wahre Struktur der Daten. Es reicht zwar Daten raus, doch das sind nur Sichten auf die das Domänendatenobjektmodell. Wie das aussieht, ist niemandem bekannt. Und das ist gut so. Denn wenn es sich ändert, dann schlagen diese Änderungen nicht notwendig durch auf andere Bereiche der Anwendung.</p>
+<p>Vielleicht entscheidet jemand, die Adresse in den Kunden mit hineinzunehmen. Dann kann das ViewModel für den Auftrag immer noch so aussehen wie zuvor. Und auch das <em>KundenCmd</em> muss sich nicht zwangsläufig verändern.</p>
+<p>Bei Jimmy ist das Domänenobjektmodell so “aufgeladen”, dass es in weiten Teilen der Anwendung benutzt werden kann und soll. All diese Anwendungsteile können sich dann an Operationen, Daten und Beziehungen binden. Ändert sich einer dieser Aspekte… dann beginnt eine Kette von Dominosteinen zu kippen.</p>
+<p>Vom Standpunkt der Prinzipien SRP, SoC, LoD, Lose Kopplung/Hohe Kohäsion, Information Hiding halte ich daher meinen Ansatz für sauberer – wenn auch vielleicht nicht so objektorientiert, wie OOAD-Hardliner es mögen. Doch das ist mir egal. Nicht OOAD ist ein verfolgenswertes Ziel, sondern Evolvierbarkeit. Und die beruht auf Prinzipien.</p>
+<h2>Kommentare</h2>
+<p><strong>Frank Striegel</strong> (2010-08-24):</p>
+<p>Vielen Dank für diesen Beitrag.</p>
+<p>Eine Frage habe ich allerdings, um das Beispiel besser zu verstehen. Sind Objekte wie AuftragD ausserhalb des Auftrag Aggregat sichtbar? Ich frage deshalb, da in der Skizze mit den EBC-Pins eine Methode Initialize(AuftragD) auftaucht. Daraus schliesse ich, dass die Klassen, welche das Domänenmodell implementieren ausserhalb der Business-Logik sichbar sind. Dann ist aber die Frage, wie der Zustand des Auftrag-Aggregat versteckt werden kann, wenn das AuftragD-Objekt ausserhalb verwendet werden kann und dieses evtl. einen Teil des Status des Aggregat-Objektes darstellt?</p>
+<p>Gruss
+Frank</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-08-24):</p>
+<p>@Frank: Ja, AuftragD etc. muss sichtbar sein, weil die Objekte ja nicht vom Aggregat hergestellt werden. Das macht eine Factory oder das Repository. Ist nur im Beispiel nicht gezeigt.</p>
+<p>AuftragD wie AuftragVM wie AuftragCmd sind letztlich Nachrichtenobjekte. Sie fließen zwischen EBC Aktionen.</p>
+<hr />
+<p><strong>Frank Striegel</strong> (2010-08-24):</p>
+<p>Ist das tatsächlich so, dass Objekte von AuftragD oder auch ProduktD "nur" Nachrichtenobjekte sind? Speichert das AuftragD-Objekt und Anhang (das bei Initialisiere(%) übergeben worden ist) nicht auch den aktuellen Zustand des Auftrages? Das wäre nicht der Fall, wenn Auftrag-Aggregat intern ein eigenes AuftragD-Objekt verwendet um den aktuellen Status des Auftrages abzubilden. Sonst wäre der Status des Auftrages (und somit auch, oder zumindest ein Teil, des Status von Auftrag-Aggregat) von aussen sichtbar.</p>
+<p>Wird allerdings intern in Auftrag-Aggregat ein eigenes AuftragD-Objekt zur Abbildung des aktuellen Auftrages verwendet so ist doch zu hinterfragen, ob ein AuftragD-Objekt als Nachrichtenobjekt legitim ist und hier nicht etwa ein nicht-domänenrelevantes Objekt verwendet werden sollte.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-08-24):</p>
+<p>@Frank: AuftragD et al. sind nicht nur Nachrichtenobjekte. Wie das abschließende Klassendiagramm zeigt, hat das Aggregat eine Referenz auf ein AuftragD-Objekt.</p>
+<p>Natürlich enthält AuftragD et al. den aktuellen Zustand des Auftrags. Das ist der Zweck des Domäendatenobjektmodells.</p>
+<p>Das kennt allerdings in allen Details nur das Aggregat in diesem Beispiel. Niemand anderes ist also davon abhängig.</p>
+<hr />
+<p><strong>Frank Striegel</strong> (2010-08-25):</p>
+<p>Ich bin ganz auf Ihrer Linie. Die Trennung von Domänenobjekte und Logik, die in diesen Objekten nichts zu suchen hat, finde ich gut.</p>
+<p>Auftrag-Aggregat allerdings zeigt für mich zwei unterschiedliche Eigenschaften, die meiner Ansicht nach getrennt werde müssten. Einmal beinhaltet es die Logik für bestimmte Domänenobjekte (hier Auftrag et. al.) - was ja den Service-Objekten aus Evans DDD entsprechen würde. Allerdings zeigt es aber auch Eigenschaften von Applikationslogik, die ich bisher immer gern getrennt von sog. Domänenlogik gesehen habe. Ist die "Vermischung" gewollt? Klar bei EBC spielt dies keine so grosse Rolle mehr, da direkte Abhängigkeiten nicht mehr existieren, aber trotzdem finde ich es gut in Kategorien wie Domänenlogik, Applikationslogik etc. zu denken und diese nicht zu vermischen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-08-25):</p>
+<p>@Frank: Was ist denn die Applikationslogik im Aggregat?</p>
+<hr />
+<p><strong>Frank Striegel</strong> (2010-08-25):</p>
+<p>Der Teil, der das AuftragVM (ich nehme an VM bedeutet ViewModel) hinausreicht. Oder StammdatenÄndern, das ein VM entgegen nimmt.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-08-25):</p>
+<p>@Frank: Das Mapping zwischen Domänendatenmodell und View auf Domänendatenmodell kann nicht außerhalb des Aggregats stattfinden. Das ist seine Aufgabe, denn nur das Aggregat soll vom konkreten Domänendatenmodell abhängen.</p>
+<p>Wie ein Aggregat nun realisiert ist, ist eine zweite Frage. Wenn du es als Komponente siehst, dann findet das Mapping womögl in einer anderen Klasse statt als die Erzeugung der Änderungskommandos für die Persistierung.</p>
+<p>Aber aus der Flughöhe, aus der die letzten beiden Bilder aufgenommen sind, ist das Mapping im Aggregat.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

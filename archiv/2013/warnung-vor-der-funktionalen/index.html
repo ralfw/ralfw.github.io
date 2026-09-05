@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warnung vor der funktionalen Abhängigkeit — ralfw.de Archiv</title>
+<meta name="description" content="Immer noch bin ich dem Gefühl auf der Spur, warum funktionale Abhängigkeiten &quot;böse&quot; sind. Sie sind so natürlich, so naheliegend - und doch beschleicht mich immer wieder Unwohlsein.">
+<link rel="canonical" href="https://ralfw.de/archiv/2013/warnung-vor-der-funktionalen/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Warnung vor der funktionalen Abhängigkeit — ralfw.de Archiv">
+<meta property="og:description" content="Immer noch bin ich dem Gefühl auf der Spur, warum funktionale Abhängigkeiten &quot;böse&quot; sind. Sie sind so natürlich, so naheliegend - und doch beschleicht mich immer wieder Unwohlsein.">
+<meta property="og:url" content="https://ralfw.de/archiv/2013/warnung-vor-der-funktionalen/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Warnung vor der funktionalen Abhängigkeit</h1>
+    <div class="doc-meta"><span>21. April 2013</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2013/04/warnung-vor-der-funktionalen.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2013/warnung-vor-der-funktionalen/</code></span></div>
+    <div class="art"><p>Immer noch bin ich dem Gefühl auf der Spur, warum funktionale Abhängigkeiten "böse" sind. Sie sind so natürlich, so naheliegend - und doch beschleicht mich immer wieder Unwohlsein. Ich versuche schon lange, sie zu vermeiden. Deshalb betreibe ich Flow-Design. Doch einem Gefühl allein will ich mich da eigentlich nicht hingeben. Es mag als Auslöser für eine Veränderung alter Gewohnheiten sehr nützlich sein, nur ist es schwer, rein aufgrund eines Gefühls diese Veränderung weiter zu tragen. Deshalb will ich noch Mal genauer hinschauen. Gibt es eine rationale Erklärung für mein Gefühl? Ich habe dazu schon Anläufe hier im Blog genommen. Doch jetzt will ich es mehr auf den Punkt bringen.</p>
+<h3></h3>
+<p>Funktionale Abhängigkeit</p>
+<p>Für mich besteht eine funktionale Abhängigkeit, wenn...</p>
+<ul>
+<li>
+<p>eine Funktion c() wie Client eine Funktion s() wie Service aufruft und</p>
+</li>
+<li>
+<p>c() selbst die Parameter für s() durch Berechnungen vorbereitet und</p>
+</li>
+<li>
+<p>c() selbst das Ergebnis von s() selbst in Berechnungen weiterverarbeitet.</p>
+</li>
+</ul>
+<p>Wenn c() in dieser Weise s() benutzt, dann braucht c() s().</p>
+<p>int c(int a) {</p>
+<p>int x = ... a ...;</p>
+<p><strong>int y = s(x);</strong></p>
+<p>int z = ... y ...;</p>
+<p>return ... z ...;</p>
+<p>}</p>
+<p>c() ist funktional abhängig, weil c() Logik enthält, die auf s() abgestimmt ist. Allemal sind das die Berechnungen, die auf den Aufruf von s() folgen.</p>
+<p>Wie gesagt, so zu arbeiten, ist ja total normal. Am Ende können und wollen wir auch nicht ohne. Nur ist mein Gefühl, dass wir zu oft in diesem Stil arbeiten. Zu gedankenlos gehen wir die Probleme ein, die er mit sich bringt. Das Resultat: Code, der sich alsbald nur noch schwer verändern lässt. So werden Brownfields produziert.</p>
+<h3></h3>
+<p>Problem #1: Bereitstellungsaufwand</p>
+<p>Das erste Problem mit solcher funktionalen Abhängigkeit scheint ein Feature - ist aber ein "Bug". Es besteht darin, dass c() überhaupt auf s() zugreifen muss. Das kann in statischer Weise geschehen: c() bzw. die Klasse, zu der c() gehört, kennt die Klasse, zu der s() gehört. Also wird bei Bedarf eine Instanz der unabhängigen Serviceklasse erzeugt:</p>
+<p>int c(int a) {</p>
+<p><strong>U u = new U();</strong></p>
+<p>...</p>
+<p>int y = u.s(x);</p>
+<p>...</p>
+<p>}</p>
+<p>Ok, dass das "böse" ist, wissen wir inzwischen alle. Bestimmt tun Sie das schon lange nicht mehr, sondern folgen dem Prinzip <em>Inversion of Control</em> (IoC) und benutzen <em>Dependency Injection</em> (DI).</p>
+<p>class A {</p>
+<p>IU _u;</p>
+<p>public A(IU u) { _u=u; }</p>
+<p>public int c(int a) {</p>
+<p>...</p>
+<p>int y = _u.s(x);</p>
+<p>...</p>
+<p>}</p>
+<p>}</p>
+<p>Die abhängige Klasse A von c() kennt nur eine Abstraktion der unabhängigen Klasse U von s(), z.B. in Form des Interface IU. Jedes A-Objekt bekommt dann ein Objekt irgendeiner Klasse injiziert, die IU implementiert. Das kann eine Instanz von U sein, aber auch eine Attrappe.</p>
+<p>Aus der statischen Abhängigkeit ist somit eine dynamische geworden. Die Kopplung zwischen c() und s() ist gesunken. c() ist besser testbar. Wunderbar. Und dennoch...</p>
+<p>Das Problem besteht für mich darin, dass wir uns überhaupt um so etwas Gedanken machen müssen. IoC/DI sind nur Symptomkuren. Ohne funktionale Abhängigkeit würde sich die Frage nach statischer oder dynamischer Kopplung nicht einmal stellen.</p>
+<p>Wer das <em>Single Responsibility Principle</em> (SRP) ernst nimmt, der muss doch sehen, dass A hier zwei Verantwortlichkeiten hat. Da ist zum einen die Hauptverantwortlichkeit von A, seine Domäne, in der c() eine Funktionalität bereitstellt.</p>
+<p>Darüber hinaus leistet A aber auch noch auf eine technischen Ebene etwas. A stellt s() bereit. Auf die eine oder andere Weise. Dass c() überhaupt Zugriff auf s() haben kann, ist eine eigenständige Leistung, die nicht zur "Geschäfts"domäne von A gehört.</p>
+<p>Funktionale Abhängigkeit vermischt zwei Aspekte. Das wird noch deutlicher beim zweiten Problem, das ich sehe:</p>
+<h3></h3>
+<p>Problem #2: Topologische Kopplung</p>
+<p>Die Vermischung der Domäne mit dem "Bereitstellungsaspekt" mag für Sie quasi schon unsichtbar sein. Sie ist total normal und scheint unvermeidbar. Aber das ist noch gar nichts. Es wird noch subtiler.</p>
+<p>Nehmen wir an, c() ist funktional abhängig von zwei Funktionen, s1() und s2().</p>
+<p>class A {</p>
+<p>IU _u;</p>
+<p>public A(IU u) { _u=u; }</p>
+<p>public int c(int a) {</p>
+<p>...</p>
+<p>int y1 = _u.s1(x);</p>
+<p>...</p>
+<p>int y2 = _u.s2(z);</p>
+<p>...</p>
+<p>}</p>
+<p>}</p>
+<p>Was passiert, wenn Sie in einem Anfall von SOLIDer Programmierung das <em>Interface Segregation Principle</em> (ISP) anwenden und sich entscheiden, s1() und s2() auf verschiedene Interfaces zu legen?</p>
+<p>Sie müssen A ändern. Obwohl sich an der Domäne von A nichts geändert hat. Das ist ein klarer Widerspruch zum SRP, das "once [business] reason to change" zur Einhaltung fordert.</p>
+<p>Die gut gemeinte Refaktorisierung nach dem ISP zieht so einiges nach sich für A:</p>
+<p>class A {</p>
+<p>IU1 _u1;</p>
+<p>IU2 _u2;</p>
+<p>public A(IU1 u1, IU2 u2) { _u1=u1; _u2=u2; }</p>
+<p>public int c(int a) {</p>
+<p>...</p>
+<p>int y1 = _u1.s1(x);</p>
+<p>...</p>
+<p>int y2 = _u2.s2(z);</p>
+<p>...</p>
+<p>}</p>
+<p>}</p>
+<p>A muss den Änderungen an der Verteilung der Servicefunktionen auf Interfaces nachgeführt werden, weil A nicht nur von s1() und s2() abhängig ist, sondern auch daran gekoppelt ist, wo (!) diese Funktionen definiert sind. A ist an die Topologie ihrer Umgebung gekoppelt.</p>
+<p>Auch das scheint alles ganz normal und unvermeidbar. Dafür gibt es Refaktorisierungswerkzeuge, oder?</p>
+<p>Könnte man so sehen. Aber ich finde es besser, sich gar nicht erst in den Fuß zu schießen, als die Wunder der modernen Medizin loben zu müssen.</p>
+<p>Interessanterweise wird die topologische Kopplung zu einem umso größeren Problem, je sauberer Sie mit funktionalen Abhängigkeiten programmieren wollen. Denn desto mehr Klassen bekommen Sie (SRP) und desto mehr Interfaces auf diesen Klassen wird es geben (ISP). Der Anteil an "Bereitstellungsinfrastruktur" in den abhängigen Klassen wird immer größer.</p>
+<h3></h3>
+<p>Problem #3: Grenzenloses Wachstum</p>
+<p>Umfangreiche Funktionen kennen Sie bestimmt auch. Ich habe schon welche mit 10.000 Lines of Code (LOC) gesehen. Sie kennen auch die Empfehlungen, den Funktionsumfang zu begrenzen. Manche sagen, Funktionen sollten nur 10 oder 20 oder 50 LOC enthalten. Andere sagen, sie sollten nicht länger als eine Bildschirmseite sein. Wieder andere beziehen sich nicht auf die LOC, sondern auf die "Komplexität" des Codes in Funktionen (die mit der Zahl der möglichen Ausführungspfade durch ihn zu tun hat).</p>
+<p>An guten Ratschlägen mangelt es wahrlich nicht, das uralte Problem der beliebig umfangreichen Funktionen in den Griff zu bekommen. Nützen tun sie aber offensichtlich wenig. Denn bei allem guten Willen wachsen Funktionen auch bei Ihnen wahrscheinlich weiterhin. Sie mögen das Wachstum bewusster verfolgen, es in Code Reviews immer wieder diskutieren, Maßnahmen zur Eindämmung ergreifen (Refaktorisierung)... Doch am Ende ist jede Metrik dehnbar. Ihre besten Absichten können und werden Sie aussetzen, wenn eine andere Kraft nur stark genug ist.</p>
+<p>Das ist so. Darüber sollten wir uns nicht grämen. Es bleibt nämlich so. Unser Fleisch ist schwach. Der Nahkampf mit dem Code im Tagesgeschäft ist dreckig.</p>
+<p>Trotzdem, nein, deshalb lohnt eine Frage nach der Ursache solchen grenzenlosen Wachstums. Wie kann es dazu überhaupt kommen? Das passiert ja nicht einfach. Wir tun es. Aber warum?</p>
+<p>Wie lassen Funktionen grenzenlos wachsen, weil wir es können.</p>
+<p>So einfach ist das.</p>
+<p>Und das, was es uns möglich macht und motiviert, Funktionen wachsen zu lassen, das ist die funktionale Abhängigkeit.</p>
+<p>Ja, so einfach ist das, glaube ich.</p>
+<p>Alles beginnt mit etwas Logik in c():</p>
+<p>int c(int a) {</p>
+<p>int x = ... a ...;</p>
+<p>return ... x ...;</p>
+<p>}</p>
+<p>Dann kommt eine funktionale Abhängigkeit dazu:</p>
+<p>int c(int a) {</p>
+<p>int x = ... a ...;</p>
+<p><strong>int y = s(x);</strong></p>
+<p>return ... x ...;</p>
+<p>}</p>
+<p>Und dann kommt noch eine dazu:</p>
+<p>int c(int a) {</p>
+<p>int x = ... a ...;</p>
+<p><strong>int y = s(x);</strong></p>
+<p>int z = ... y ...;</p>
+<p><strong>int k = t(z);</strong></p>
+<p>return ... k ...;</p>
+<p>}</p>
+<p>Und dann kommt noch eine dazu:</p>
+<p>int c(int a) {</p>
+<p>int x = ... a ...;</p>
+<p><strong>int y = s(x);</strong></p>
+<p>int z = ... y ...;</p>
+<p><strong>int k = t(z);</strong></p>
+<p>int l = ... k ...;</p>
+<p><strong>int m = v(l);</strong></p>
+<p>return ... m ...;</p>
+<p>}</p>
+<p>Das geht so weiter, weil nach dem Funktionsaufruf vor dem Funktionsaufruf ist.</p>
+<p>Die eigentliche Logik von c() kann beliebig fortgeführt werden, weil ja bei Bedarf immer wieder die Berechnung von Teilergebnissen durch Delegation (funktionale Abhängigkeit) eingeschoben werden kann.</p>
+<p>Klingt normal. Dafür sind Funktionsaufrufe ja da. Das möchte ich ganz grundsätzlich auch nicht missen.</p>
+<p>Aber wir müssen erkennen, dass genau diese Möglichkeit dazu führt, dass abhängige Funktionen grenzenlos wachsen.</p>
+<p>Dem können wir dann zwar mit SOLIDem Denken und Refaktorisierungen entgegenwirken - doch das sind eben Maßnahmen, die angewandt werden können oder auch nicht. Ob das SRP noch eingehalten ist, ob eine Methode schon zu lang ist und refaktorisiert werden sollte... das entsteht im Auge des Betrachters. Darüber kann man sich trefflich streiten in einem Code Review. Und im Zweifelsfall lässt man die Finger von der Veränderung laufenden Codes.</p>
+<h3></h3>
+<p>Problem #4: Syntaktische Kopplung</p>
+<p>Wenn c() die Funktion s() aufruft, dann muss c() wissen, wie genau das zu geschehen hat. c() muss die Form, die Syntax von s() kennen. Wenn s() einen int-Parameter brauch und sein Ergebnis als int zurückliefert, dann muss c() sich darauf einstellen.</p>
+<p>Was aber, wenn die Form von s() sich ändert? Parameter könnten zusammengefasst werden, Parameter könnten Typ oder Reihenfolge ändern... Dann muss c() sich dieser Änderung beugen.</p>
+<p>c() muss sich mithin also ebenfalls ändern, wenn sich "nur" an der Form von s() etwas ändert. Und das hat mit der Domäne, der single responsibility von c() nicht unbedingt etwas zu tun.</p>
+<h3></h3>
+<p>Problem #5: Semantische Kopplung</p>
+<p>Wenn c() die Funktion s() braucht, um anschließend mit deren Ergebnissen weiter zu rechnen, dann ist c() von der Semantik von s() abhängig.</p>
+<p>Wenn s() z.B. heute eine Liste von sortierten Daten produziert, die c() weiterverarbeitet, dann kann es eine für c() relevante semantische Veränderung sein, dass s() morgen diese Liste nicht mehr sortiert zurückliefert.</p>
+<p>Syntax und Semantik sind orthogonal. An der Syntax kann sich etwas verändern ohne Semantikveränderung. Genauso kann sich die Semantik ohne Syntaxveränderung verschieben. In jedem Fall hat c() nicht die Hoheit über seine innere Ausprägung, sondern muss sich s() beugen. Weil s() "in c() eingebettet ist".</p>
+<h3></h3>
+<p>Fazit</p>
+<p>Das scheinen mir fünf sehr rationale Gründe für mein Unwohlsein in Bezug auf funktionale Abhängigkeiten. Das ist alles nichts Neues, würde ich sagen. Damit leben wir täglich. Und wenn die Probleme uns nicht so explizit bewusst sind, so leiden wir dennoch an ihnen. Sie verursachen uns Schmerzen beim Ändern oder Verständnis von Code.</p>
+<p>Jedes einzelne Problem erscheint vielleicht klein. Und die Auswirkungen sind ja auch unterschiedlich nach Domäne von c() und Form und Semantik von s1(), s2() usw. In Summe jedoch machen diese Probleme aus scheinbar simplen funktionalen Abhängigkeiten eine große Last, glaube ich.</p>
+<p>Wir werden nicht ohne funktionale Abhängigkeiten auskommen. Ich möchte die Möglichkeit, sie einzugehen, auch nicht abschaffen. Sie sind ein Mittel zur effizienten Lösung von Problemen. Das wollen wir in unserem Programmierhandwerkszeugkasten haben.</p>
+<p>Dieses Mittel darf nur kein Selbstzweck sein. Und es darf sich nicht als alternativlos darstellen. Programmierung mit funktionalen Abhängigkeiten gleichzusetzen, würde sie auf ein unverdientes Podest heben.</p>
+<p>Mir geht es deshalb um eine Bewusstmachung und eine Begrenzung. Bindungen bewusst eingehen und immer wieder fragen, ob sie noch ihren Zweck erfüllen, ist wichtig. Je größer die potenziellen Probleme durch Bindungen, desto mehr sollte auch geprüft werden, ob es Alternativen gibt. Denn oftmals werden Bindungen enger geschnürt als nötig. Weil man nicht weiß, wie es anders gehen könnte oder weil man die Notwendigkeit größerer Nähe überschätzt (<em>Premature Optimization</em>).</p>
+<p>Mit diesen fünf guten Gründen habe ich also jetzt zumindest für mich geklärt, was mein Gefühl ausmacht, dass funktionale Abhängigkeiten "böse" sind. Ich halte sie für ausreichend, um meine Praxis der Minimierung funktionaler Abhängigkeiten fortzuführen. Denn es gibt Möglichkeiten, sie zu vermeiden.</p>
+<h2>Kommentare</h2>
+<p><strong>pvblivs</strong> (2013-04-21):</p>
+<p>Irgendwie sehe ich keine 5 Probleme. Zum Teil klingen sie so, als wenn ich sage "Problem#6: Ich muss atmen um zu leben". Das kann ich als Problem in verschiedenen Situationen sehen oder es ist eben so. Embrace breathing!</p>
+<p>Ist semantische Kopplung, technische Kopplung nicht der Kern einer jeden technischen Realisierung von Semantik?</p>
+<p>Ja, ich verstehe schon, das hast Du ja auch so gesagt: Du willst funktionale Abhängigkeit nicht abschaffen, eher das Bewusstsein schärfen. Aber trotzdem bin ich mit der Art und Weise wie Du das Thema schärfst, nicht ganz einverstanden.</p>
+<p>Im Grunde, wenn man mal die Fokussierung auf die Probleme funktionaler Abhängigkeit bei Seite lässt, wirfst Du eine Designfrage auf. Vielleicht sogar die Designfrage schlechthin: Wenn ich zwei technische Komponenten habe, die jeweils ihre Aufgabe erfüllen, wie gestalte ich die Schnittstelle zwischen den beiden - und warum?</p>
+<p>Aus solchen Fragen wurden genau Prinzipien wie das SRP oder Ziele wie hohe Kohäsion und niedrige Kopplung abgeleitet. Solche Fragen spiegeln sich sogar in Mensch-Maschine-Schnittstellen wieder. Muss der Nutzer die ganze Semantik der Waschmaschine verstehen oder reicht heutzutage mit genug Computing-Power auch ein einfacher Knopf, wenn das Ergebnis das selbe ist? Eigentlich eine einfache Frage, denkt man. Viele Menschen wollen aber die Transparenz und die Klarheit. Sie wollen wissen, dass am Ende geschleudert wird und auch mit welcher Drehzahl, sie vielleicht sogar einstellen, auch wenn sie am Ende immmer "800" auswählen.</p>
+<p>Wie gesagt, ich verstehe Deine Probleme. Aber ich bin nicht mit ihnen einverstanden. Sie das heiße Problem herum. Und das ist: Es gibt keine beste Designlösung. Design ist immer abwägen, immer redigieren, immer Geschmacksfrage. Was nun guter Geschmack ist - darüber hast Du ja schon eine Menge geschrieben ;-)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-04-21):</p>
+<p>@pvblivs: Schönes Beispiel das mit dem Atmen :-)</p>
+<p>Es stimmt, wir müssen atmen. Und es stimm, wir kommen ohne funktionale Abhängigkeit nicht aus.</p>
+<p>Ist deshalb jedes Atmen aber auch gut? Kaum. Geh mal zum Kundalini Yoga oder zu einem Atem-Sprech-und-Stimmtherapeuten und du wirst sehen: vergiss dein Atmen, wie du es bisher betrieben hast.</p>
+<p>Genau so meine ich das mit der funktionalen Abhängigkeit.</p>
+<p>Vergiss, die bisherige unbewusste Anwendung dieser Notwendigkeit.</p>
+<p>Und wenn Design immer Geschmacksfrage wäre... Dann hätten wir ein echtes Problem. Dann wäre Softwareentwicklung nämlich nicht lehrbar. Und dann könnten wir uns jedes Gerede über Prinzipien sparen.</p>
+<p>Nein, Design ist keine Geschmacksfrage, sondern eine Frage von Heuristiken und der Abwägung. Nur dafür muss man überhaupt etwas haben, zwischen dem man abwägen kann. Und das habe ich hiermit und mit dem nächsten Posting geliefert.</p>
+<hr />
+<p><strong>Stelzi79</strong> (2013-04-21):</p>
+<p>Ich sehe das auch so ungefähr wie pvblivs.</p>
+<p>Problem 1 und 2 sind ohnehin nur der derzeitig in Mode gekommen Implementierungen von objektorientierten Programmierung geschuldet. Schon alleine der Umstand, dass hier mit keinem Wort die Möglichkeit genannt wird, einfach ausgelagerte Funktionalität in der gleichen Klasse reinzuschreiben, zeigt wie abstrakt dieses Thema anscheinend aufbereitet werden muss. Einfache in sich selbst abgeschlossene Funktionalität, die nur von der Klasse selbst konsumiert wird, gehört in die Klasse selbst rein. In sich selbst abgeschlossene Funktionalität, die von mehreren verschiedenen Klassen konsumiert werden soll, muss in einer statischen Funktionalitäten-Sammlungs-Klasse als statische Methode rein geschrieben werden. Da braucht es auch keinen irren Klassen-Instanziierungs-Wahnsinn und womöglich auch noch mit Interfaces. Jeder Programmierer, der für so was Interfaces benutzt, muss nahegelegt werden, dass doch lieber in eine anderes Berufsfeld wechseln soll, denn außer dem starren Befolgen von in Mode gekommen Programmier-Dogmen, hat er keine logischen Problemlösungs-Möglichkeiten.</p>
+<p>Zu Problem 3: Sollte nicht gerade die Auslagerung von Funktionalitäten die Übersicht von immer Umfangreicher werdenden Funktionen sicher stellen? Und was hat dieses Problem kausal mit funktionale Abhängigkeiten und einer möglichen Warnung solcher zu tun? Bei solchen "Problemen" fällt mir dann immer die Situationen im FastFoodRestaurant ein, wo sich zuerst ein Kunde über zu wenig Salz in den Pommes beschwert und dann wenn diese nach gesalzen werden, diese dann auf einmal versalzen sind.</p>
+<p>Problem 4 und 5: Wenn ein Programmierer oder ein Team einfach so Methoden so dermaßen verändern, dass auch der Aufrufer davon betroffen ist und abgeändert werden muss, der hat ohnehin andere Probleme als das hier die Ursache für das Problem in der funktionalen Abhängigkeit gesucht werden müsste. Das wäre hierbei ohnehin nur ein Symptom und keine Ursache.</p>
+<p>Grundsätzlich muss ich ja Anmerken, dass funktionale Abhängigkeiten immer in Anwendungen vorkommen müssen, außer man drückt sämtliche Funktionalität einer Anwendung in einer einzigen Main-Methode rein und da wären wir wieder beim Problem 3. Nur wenn funktionale Abhängigkeiten nicht linear von Oben nach Unten durch strukturiert werden, ist höchste Gefahr geboten. In einem Punkt werden wir uns doch einig sein, dass wenn eine aufgerufene Funktion s() von einer aufrufenden Funktion c() Bescheid wissen muss, ist wirklich Feuer am Dach und dann werden solche funktionalen Abhängigkeiten wirklich böse.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-04-21):</p>
+<p>@Wolfgang: Find ich ja schön, dass hier solcher Gegenwind bläst :-) Zeigt mir, wie tief die Verdrängung dieser Probleme sitzt. Das ist, wie Übergewicht als normal zu akzeptieren. Weil alle Erwachsenen um einen herum 150 kg wiegen, ist das so und muss auch nicht geändert werden :-)</p>
+<p>Problem 1: Hat natürlich nichts mit OOP zu tun. Wo eine Funktion s() bekannt sein muss, da muss sie bekannt sein. Und entweder kennt man sie direkt (statische Abhängigkeit) oder man kennt eine Indirektion (dynamische Abhängigkeit).</p>
+<p>Problem 2: Ja, das ist ein Problem der OOP. Und damit ist es wohl für die Majorität der Entwickler relevant. Das ist keine Modeerscheinung, sondern Mainstream seit 20 Jahren.</p>
+<p>"Ausgelagert" ist auch keine Funktionalität in der eigenen Klasse. Klassen mit 100.000 LOC (habe ich gesehen!) sind genauso unwartbar wie Methoden mit 1.000 LOC.</p>
+<p>Und ob man nun jemandem, der nicht in statische Klassen auslagert, einen Berufswechsel nahelegen sollte, oder umgekehrt, jemandem, der das tut... das lasse ich mal dahingestellt. Ich empfehle da mal den Besuch unterschiedlicher Veranstaltungen, um zumindest festzustellen, dass nicht alle dieselbe Auffassung von Professionalität haben.</p>
+<p>Problem 4 und 5 gehen nicht weg, wenn man Entwickler, die solche Änderungen vornehmen müssen, wiederum als unprofessionell tituliert.</p>
+<p>Dass s() c() kennt, habe ich nicht thematisiert. Das kann ich nicht mal denken ;-) Aber sicherlich: solche zirkuläre Referenz ist natürlich "böse".</p>
+<hr />
+<p><strong>pvblivs</strong> (2013-04-21):</p>
+<p>Design ist natürlich nicht nur eine Geschmacksfrage. Aber doch ein wichtiger Teil davon.</p>
+<p>Ich stimme Dir zu, dass die Software-Entwicklung immer stark unter Broken Windows leidet. Software Entwicklung hat generell sehr geringe Hemmschwellen oder Aktivierungsenergie um irgendetwas zu machen. Alles was es braucht ist Zeit, Willen und einen Kopf. Aber einfach schnell was reinzuschweinern ist noch viel einfacher, ist so sensationell billig, dass unter großem Druck oft genau das passiert: Das Design geht "flöten". Es skaliert nicht mit der Software mit, solange bis die Software unwartbar wird.</p>
+<p>Zurück zum Design also. Wenn man die zerbrochenen Fenster zuerst außen vor lässt, dann enden gute Entwickler oft in (manchmal lokalen) Optima, die von Design-Standpunkt nicht sehr stabil sind. Man diskutiert dann, ob man die Methode noch auslagert, ob die Klasse noch zu viel macht - oder ob die Logik jetzt zu sehr verteilt ist und damit die Klarheit nicht verloren geht - oder ob man noch eine Generalisierungsstufe höher gehen sollte - oder ob die Generalisierung nicht den Blick für das Wesentliche trübt. Da ist dann oft Geschmack im Spiel. Ja, es sind auch viele andere Erfahrungen dabei, aber die habe ich einfach mal vorausgesetzt. Außer Dein Post richtet sich an "Anfänger". Das hatte ich so nur nicht abgelesen.</p>
+<p>Was mir dabei einfällt, was ich in meinem ersten Post vergessen hatte, ist ein Thema, dass mir in letzter Zeit sehr wichtig ist: Wie kann ich einen Prozess oder eine Software so designen, dass glasklar ist, wie es weitergeht. Dass die Broken Window Theorie zwar eintreffen könnte, aber so offensichtliche Geschmacksverirrungen offenbaren würde, dass man sich lieber an das Design hält.
+Das halte ich allerdings noch für sehr hypothetisch. Erstens ist gerade eine wichtige Eigenschaft von Design seine Einfachheit, damit man nicht das Unknown Unknown von morgen versucht durch unnötige Verkomplizierungen zu verhindern. Und zweitens sollte Design sich eben auch den Gegebenheiten anpassen und nicht statisch sein.</p>
+<p>Die Bottom Line für mich ist, dass klassisches Projekt-Denken gefährlich ist (fester Beginn, fester Abschluss). Man sollte sich darüber im Klaren sein, dass nur die wenigsten Projekte wirklich ein absehbares Ende haben und auch genau so an Softwareentwicklung herangehen. Jegliche Software braucht Betrieb und Wartung und oft sind noch viele Änderungen nötig, durch Fehler oder durch den Wandel der Zeit. Nach dem Hauptteil des Projektes sollte man versuchen Leute mit Schlüssel-Know-How nicht zu verlieren und in der Mitte des Projektes nicht plötzlich aus Zeitdruck irrational viele Entwicklermengen dazupacken.</p>
+<p>Wenn ich also Deinen initialen Post nochmal nehme und die Probleme streiche und stattdessen hinschreibe "ich fordere Zeit für Reflektion beim Design", passt es dann auch? ;-)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-04-21):</p>
+<p>@pvblivus: Da steckt jetzt ne Menge drin, wozu ich auch nicken würde.</p>
+<p>Auf "ich fordere Zeit zur Reflexion" würde ich mein Posting allerdings nicht zusammenstreichen. Ne, so allgemein will ich hier nicht sein. Mir geht es wirklich um Probleme. Ganz spezifische. Genau die, die ich beschrieben habe.</p>
+<p>Und das sind auch keine Anfängerprobleme. Das sind eher die Probleme derjenigen, die schon glauben, mit IoC/DI und ISP und noch einer Prise SRP alles getan zu haben.</p>
+<p>Die basteln dann nämlich munter Klassenmodelle mit vielen kleinen Klassen, die munter in tiefen Nutzungshierarchien stehen. Das brodelt es dann nur vor funktionalen Abhängigkeiten. Aber Dank IoC/DI sind die kein Problem? Ne, das sehe ich anders. Mockup-Frameworks sind keine Lösung, sondern ein Symptom eines mit anderen Mitteln fortgesetzten Problems. (Ich brauche sie übrigens schon lange nicht mehr.)</p>
+<p>SRP ist gut. Keine Frage. Aber damit entsteht nicht nur das Problem der Benennung einer zunehmenden Zahl kleiner Klassen. Es entsteht auch ein Abhängigkeitsproblem. Um genau das geht es mir.</p>
+<p>"Anfängern" kann man das übrigens viel leichter austreiben als "Profis". "Anfänger" sind noch nicht so verdorben, d.h. tief drin in Glaubenssätzen. Denn darum geht es hier: um Glaubenssätze. Wir müssen etwas dringend so weiter tun, wie in der Vergangenheit - auch wenn es uns schmerzt. Wahrscheinlich tun wird es einfach nur noch nicht gut genug. Also mehr davon. Funktionale Abhängigkeiten mit IoC/DI nur noch ein bisschen einfacher machen und noch ein Tool oben drauf. Dann wird es schon.</p>
+<p>Sorry, daran glaube ich nicht mehr. Nicht "mehr vom Selben" hilft, sondern mal was anderes.</p>
+<p>Funktionale Programmierung geht da schon in eine gute Richtung. Aber das PoMO haben die auch noch nicht so deutlich im Blick. Doch denen fällt es leichter, es einzuhalten.</p>
+<p>Aber PoMO ist noch nicht genug. Denn funktionale Abhängigkeiten lassen sich zwar zurückdrängen, nicht jedoch ganz abschaffen. Also muss noch etwas dazu kommen. Davon ein andermal :-)</p>
+<p>"Mehr Zeit für Design" wäre natürlich gut. Was aber, wenn es die nicht gibt? Dann müssen "hard and fast rules" her, um eine Grundsicherung in Sachen Evolvierbarkeit herzustellen. Das PoMO gehört in diesen Grundsicherungskasten. Also: Nicht so lange schnacken, sondern anwenden :-)</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-04-22):</p>
+<p>Lassen sich viele Probleme nicht leichter vermeiden, wenn man sich stärker am Client orientiert?
+Das genannte Beispiel für ISP würde so nicht entstehen, da man ein für c() ppassendes Interface definieren würde.
+Eine stärkere Ausrichtung am Client hat auch zur Folge, dass Änderungen eher aus Clientsicht getrieben werden und somit häufiger "von oben" statt "von unten" implementiert werden.
+Die im Artikel vorausgesetzte Freiheit von s(), sich zu ändern und dadurch auch c() zu Änderungen zu zwingen, würde somit minimiert, wenn nicht sogar umgekehrt werden.
+Verschiedene Designprobleme lassen sich oft leichter lösen, wenn man den Client im Auge behält... Das funktioniert dann sogar bis hin zum menschlichen Client, der letztlich in 90% der Fälle der einzige Auslöser für Änderungen, Fehlerkorrekturen, Erweiterungen usw. ist.
+Anders formuliert: c() sollte definieren, wie s() aussieht oder sich verhält. c() sollte die gewünschte Syntax und die notwendige Semantik vorgeben.
+Sicherlich klappt das nicht immer. Für diese Fälle kann ich zu einem Großteil dem Artikel in seiner Essenz zustimmen: Designe unter entwickle bewusster!</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-04-22):</p>
+<p>@Tobias: Klar, APIs sollten vom Client getrieben werden.</p>
+<p>Sollten.</p>
+<p>Werden sie aber nicht immer. Immer wieder gibt es andere Kräfte, die an ihnen zerren. Das beginnt schon, wenn es nicht nur ein c() als Client von s() gibt. s() wäre Diener mehrerer Herren. Und dann?</p>
+<p>Wo keine funktionale Abhängigkeit besteht, da gibt es dann keinen Ansatzpunkt. So einfach ist das.</p>
+<p>Und wie weit willst du das ISP treiben? Solange du mehr als eine Funktion auf einem Interface hast, hast du auch topologische Kopplung. Und wenn du nur noch eine Funktion pro Interface hast... dann hast du FP :-) Auch schön.</p>
+<p>Bewusster Entwickeln ist ne gute Sache. Wenn ich aber nur das hätte sagen wollen, hätte ich einen anderen Artikel geschrieben. Wie schon erwähnt: Ich meine es ernst mit dem PoMO. Ist ja auch nicht das erste Mal, dass ich drüber schreibe. Mit diesem Artikel wollte ich meine Argumente nur zuspitzen.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-04-23):</p>
+<p>Grrr, Immer diese Abkürzungen... was zum Henker ist PoMO?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-04-23):</p>
+<p>Wer googeln kann, ist klar im Vorteil :-) Suche nach "pomo one man think tank" und finde.</p>
+<p>Aber das wird im nächsten Artikel auch nochmal erklärt.</p>
+<hr />
+<p><strong>Hannes Preishuber</strong> (2013-04-30):</p>
+<p>ich bin mal Grundehrlich. Ich les das, (nein überflieg das), verstehe jedes Wort, kenne jedes Akronym und kann den Sinn nicht erfassen bzw. suche die Relevanz für mein Leben und finde sie nicht.</p>
+<hr />
+<p><strong>Ralf Peine</strong> (2013-04-30):</p>
+<p>Ich habe in den letzten 20 Jahren, insbesondere in den letzten 3en, mit genau diesen Problemen und Mocking-Frameworks gekämpft. Besonders in grossen Systemen mit mehreren eigenen Produkten sind die Probleme nur durch Entkopplung zu lösen.</p>
+<p>Schon wegen der besseren Testbarkeit habe ich immer "Funktionale-", "Daten-" und "Builder"-Klassen implementiert. "Integrative" Klassen werden jetzt noch dazukommen.</p>
+<p>Da ich auch viel in ungetypten Sprachen wie Perl programmiere, habe ich keine Probleme z.B. mit loser Kopplung.</p>
+<p>Lose Kopplung wähle ich immer für die Verbindung von "fernen" Klassen, d.h. die inhaltlich voneinander unabhängig sind oder aus anderen Bereichen (Libs/Appl.) stammen.</p>
+<p>Die Verwendung von Interfaces erzeugt eine enge Kopplung, daher verwende ich das nur in den Fällen, wo die Kopplung inhaltlich eh schon vorhanden ist und auf keinen Fall Lib-/App-übergreifend.</p>
+<p>Zur Zeit entwickle ich das PerlOpenReportFramework, indem die Funktionalität erst nachträglich durch anonyme Subs (Actions, C#: Delegates, Lambdas) eingefügt wird.</p>
+<p>Der Zugriff auf die Daten erfolgt nur über anonyme Subs, dadurch gelingt es, den Report vollständig unabhängig von Art und Struktur eines einzelnen Datensatzes zu implementieren, indem der Anwender des Reports den Zugriff konfiguriert. Daher ist nur eine (integrative) Klasse für den Report notwendig. Siehe dazu auch http://www.jupiter-programs.de/prj_public/erg/index.htm</p>
+<p>VG Ralf.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

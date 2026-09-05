@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mehr Klarheit für die Objektorientierung - Klassendiagramme entzerren — ralfw.de Archiv</title>
+<meta name="description" content="So, zum Jahresende muss ich eines noch loswerden: Klassendiagramme mag ich nicht. Oder genauer: so wie sie üblicherweise benutzt werden. Lange habe ich darüber gegrübelt, woran das">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/mehr-klarheit-fr-die-objektorientierung/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Mehr Klarheit für die Objektorientierung - Klassendiagramme entzerren — ralfw.de Archiv">
+<meta property="og:description" content="So, zum Jahresende muss ich eines noch loswerden: Klassendiagramme mag ich nicht. Oder genauer: so wie sie üblicherweise benutzt werden. Lange habe ich darüber gegrübelt, woran das">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/mehr-klarheit-fr-die-objektorientierung/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Mehr Klarheit für die Objektorientierung - Klassendiagramme entzerren</h1>
+    <div class="doc-meta"><span>30. Dez. 2007</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2007/12/mehr-klarheit-fr-die-objektorientierung.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/mehr-klarheit-fr-die-objektorientierung/</code></span></div>
+    <div class="art"><p>So, zum Jahresende muss ich eines noch loswerden: Klassendiagramme mag ich nicht. Oder genauer: so wie sie üblicherweise benutzt werden. Lange habe ich darüber gegrübelt, woran das liegt. Jetzt weiß ich es! Sie sind undurchsichtig, weil sie zweierlei vermischen. Sie widersprechen damit einem Grundsatz zur Bewältigung von Komplexität, dem "Separation of Concerns".</p>
+<p>So wie UML Klassendiagramme üblicherweise benutzt werden, vermischen sie "Verwandtschaftsbeziehungen" mit "Arbeitsbeziehungen". Sie mengen Vererbungshierarchien mit Assoziationen/Aggregationen zusammen. Hier als Beispiel die übliche Darstellung des "Decorator" Entwurfsmusters:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/1ec482b0b1be7760.png" /></p>
+<p><em>Quelle:</em><a rel="noopener" href="http://www.dofactory.com/Patterns/PatternDecorator.aspx">http://www.dofactory.com/Patterns/PatternDecorator.aspx</a></p>
+<p>Wer steigt da zügig durch? Erkennen Sie auf Anhieb, was Sie zu implementieren haben? Sehen Sie gleich, wer wen nutzt? Ich nicht. Ich brauche immer eine ganze Zeit, um mich darin zurechtzufinden. Und das finde ich schlicht falsch. Ein Diagramm soll für einfache Zusammenhänge - und einfach ist das "Decorator" Pattern - auch einfach zu lesen sein.</p>
+<p>Seitdem ich nun verstanden habe, was mich an den üblichen Klassendiagrammen stört, betreibe ich auch bei ihnen strikte Zwecktrennung oder "Separation of Concerns". Hier zur Erläuterung meine Version des "Decorator" Entwurfsmusters:</p>
+<h2>1. Arbeitsbeziehungen darstellen</h2>
+<p>Am wichtigsten finde ich es, die Arbeitsbeziehungen zwischen Klassen bzw. ihren Instanzen darzustellen. Welche Objekte brauchen welche anderen? Welche Objekte enthalten (aggregieren) welche anderen? Und das alles mit den richtigen Mengenangaben (Beziehungskardinalitäten: 1:1, 1:n, n:m).</p>
+<p>Darauf zunächst reduziert sieht das "Decorator" Pattern so schön einfach aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/25db46b19990b584.png" /></p>
+<p>Alles klar? Ich hoffe! Applikationscode ruft entweder Instanzen einer "Simple Class" direkt auf oder nutzt Objekte von "Enhanced Class", hinter denen jeweils eine "Simple Class"-Objekt steht.</p>
+<p>Da Klassen bzw. Vererbung nicht einmal zum Kern der Objektorientierung gehören, ist die Darstellung von Vererbungsbeziehungen auch nicht essenziell. In Bezug auf den "Decorator" bedeutet das: Wesentlich ist nicht, welche Klassen hier gemeinsame "Vorfahren" haben, sondern dass der "Decorator" (Enhanced Class) genauso aussieht (!) wie das zu Dekorierende (Simple Class). Das lässt sich aber schon an den gleichen Methodennamen ablesen.</p>
+<h2>2. Zusammenarbeit beschreiben</h2>
+<p>Wenn die Darstellung der Arbeitsbeziehungen bzw. des Objektgeflechts noch Fragen offen lässt, dann untermauere ich sie mit einem Sequenzdiagramm. Die Nutzung eines Decorators sieht dann zum Beispiel so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/39479f9589e68ef2.png" /></p>
+<p>Alles klar? Ich hoffe! Denn auch hier liegt der Fokus auf dem, was am Nutzungsort in der Applikation relevant ist. Dort hat der Code mit dem Decorator und dem Dekorierten zu tun - und nicht mit irgendwelchen möglichen Basisklassen.</p>
+<h2>3. Verwandtschaftsbeziehungen darstellen</h2>
+<p>Erst ganz zum Schluss dokumentiere ich dann die Verwandtsschaftsbeziehungen zwischen den funktional relevanten Klassen. Dann geht es um Ableitungen oder Implementationen von Interfaces. Und dann beschreibe ich womöglich sogar Alternativen. Bei "Decorator" Pattern sind das z.B. diese:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2b0661e918a139ba.png" /></p>
+<p>Alles klar? Ich hoffe! Denn eine solche Darstellung, die sich auf Vererbung konzentriert, ist doch leicht zu verstehen.</p>
+<p>In der Literatur findet sich übrigens nur die untere Ableitungsstruktur. Aber ich denke, eine Basisklasse für alle Decorators ist nicht nötig. Wesentlich ist lediglich, dass Domänenklasse/zu Dekorierendes und Decorator eine gemeinsame Herkunft haben. Die macht sie für den Applikationscode dynamisch austauschbar.</p>
+<h2>Fazit</h2>
+<p>Nachdem ich meine Software-Detailentwürfe von "vermengenden" Klassendiagrammen auf "separierte" Klassendiagramme umgestellt habe, machen mir objektorientierte UML-Darstellungen wieder deutlich mehr Spaß. Ich kann Ihnen also nur empfehlen, grundsätzlich Verschiedenes wie Arbeitsbeziehungen und Verwandtsschaftsbeziehungen ebenfalls zu so zu trennen. Sie machen Ihre Objektemodell viel besser verständlich.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2008-02-12):</p>
+<p>Wie gehen denn aktuell UML-Designer oder konkret Model-Driven-Designer mit dieser Dualität um? Die wenigsten können doch MDD und UML2 gleichzeitig - da neige ich zu Schwarzmalerei.</p>
+<p>Hast Du Erfahrungen mit MDD gesammelt?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2008-02-12):</p>
+<p>Wie gehen Tools mit der Dualität um? Sie unterscheiden nicht. Zumindest nicht, dass ich wüsste. Das beklage ich ja gerade. Die Dualität und Wichtigkeit von Ableitungen steckt auch viel zu tief in OOP drin.</p>
+<p>Aber ich gehe halt bei meinen Entwürfen nicht streng nach OOP vor. Mich interessieren Klassen da erst sehr spät. Und möchte ich halt trennen - und tue es auch.</p>
+<p>Von MDD halte ich nicht viel. Große Vision - zu große Vision für mich.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2008-12-26):</p>
+<p>Ich finde das Klassenmodel des "Decorator" Entwurfsmusters in Ordnung. Dagegen kann ich dem nicht zustimmen, dass das reduzierte Klassenmodel zu dem "Decorator" Entwurfsmuster die Komplexität einschränkt, im Gegenteil es eliminiert wichtige Informationen wie Vererbungshierarchie der Klassen untereinander weg!</p>
+<p>Die Aussage: "Da Klassen bzw. Vererbung nicht einmal zum Kern der Objektorientierung gehören, ist die Darstellung von Vererbungsbeziehungen auch nicht essenziell" würde ich nochmal überdenken, denn ohne die Vererbung wäre nicht mal die Verwendung von Interfaces möglich gewesen. Selbstversätndlich gehört die Verwerbung zum Kern der OOP.</p>
+<p>Viele Grüße</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2008-12-26):</p>
+<p>@Gabriele: Jede Abstraktion lässt Details außen vor. Das ist ja ihr Sinn. Eine Landkarte ist nicht die Landschaft.</p>
+<p>Gerade weil die Vermischung von Vererbung und sonstigen Beziehungen soviele Details enthält, halte ich eine Separation für angezeigt (außer in trivialen Fällen).</p>
+<p>Ob Vererbung zur Kern der Objektorientierung gehört, habe ich schon überdacht. Interfaces haben damit auch nichts zu tun. Interfaces beschreiben "hat"- oder "verhält sich wie"-Beziehungen. Vererbung beschreibt eine "ist ein"-Beziehung. Schon deshalb sind die beiden Konzepte orthogonal.</p>
+<p>Die Formulierung "eine Klasse erbt ein Interface" ist insofern umgangssprachlich und nicht korrekt. Sie ist - meiner Meinung nach - das Resultat einer Homonymie: Ableitung (von einer Klasse) und Implementation (eines Interfaces) werden mit demselben sprachlichen Mittel ausgedrückt. Ein ":" trennt Klassenname von Basisklasse wie auch Interface und suggeriert insofern "Ererbung" von einem Interface. Das ist in der Sache aber falsch. Erben kann man nur, was man ist (Genotyp) und nicht, wie man aussieht (Phänotyp).</p>
+<p>Davon abgesehen halte ich Vererbung immer noch nicht zum Kern von OOP gehören. Zwar ist sie in allen OO-Sprachen enthalten, wenn ich mich nicht irre, aber das bedeutet noch nicht, dass sie zum Kern des Paradigmas gehört. Alle OO-Sprachen bieten auch Parameter oder for-Schleifen. Diese Features gehören deshalb auch nicht zum OO-Paradigma.</p>
+<p>Oder ein anderes Beispiel: Heute GPL sind alle Turing complete Sprachen. Sie haben alle eine for-Anweisung. Gehört die for-Anweisung zur Turing completeness? Nein. Sie ist ein convenience feature.</p>
+<p>Auf derselben Ebene sehe ich die Vererbung. Sicherheit geben  mir dabei die Worte der Warnung bzw. die Betonung anderer Konzepte bei der GoF. Und ich habe neulich James Gosling persönlich danach gefragt, ob er "beim nächsten Mal" Java wieder mit Vererbung ausstatten würde. Seine Antwort war sehr zurückhalten bis ablehnend gegenüber der Vererbung.</p>
+<p>Insofern: Wenn diese Autoritäten die Vererbung so konservativ bis ablehnend bewerten, warum sollte ich also meine Meinung nochmal überdenken?</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2008-12-26):</p>
+<p>Vererbung und Interfaces sind nicht das gleiche, das ist klar.</p>
+<p>Das Konzept der Vererbung ist historisch länger in OOP Sprachen enthalten (seit Smalltalk), mit Java kam erst das Konzept der Interfaces.</p>
+<p>Damals lies sich das Konzept des Subtypings durch die Technik der Vererbung realisieren.</p>
+<p>Das war als ein Denkanstoß gedacht.</p>
+<p>Tschüß</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

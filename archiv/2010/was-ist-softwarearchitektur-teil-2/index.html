@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Was ist Softwarearchitektur – Teil 2 — ralfw.de Archiv</title>
+<meta name="description" content="Softwarearchitektur ist eine der beiden Entwurfsdisziplinen der Softwareentwicklung. Ihr Ergebnis ist die fundamentale Struktur einer Software im Hinblick auf die nicht-funktionale">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/was-ist-softwarearchitektur-teil-2/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Was ist Softwarearchitektur – Teil 2 — ralfw.de Archiv">
+<meta property="og:description" content="Softwarearchitektur ist eine der beiden Entwurfsdisziplinen der Softwareentwicklung. Ihr Ergebnis ist die fundamentale Struktur einer Software im Hinblick auf die nicht-funktionale">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/was-ist-softwarearchitektur-teil-2/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Was ist Softwarearchitektur – Teil 2</h1>
+    <div class="doc-meta"><span>6. Dez. 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/12/was-ist-softwarearchitektur-teil-2.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/was-ist-softwarearchitektur-teil-2/</code></span></div>
+    <div class="art"><p>Softwarearchitektur ist <a rel="noopener" href="http://ralfw.blogspot.com/2010/12/was-ist-softwarearchitektur-teil-1.html">eine der beiden Entwurfsdisziplinen der Softwareentwicklung</a>. Ihr Ergebnis ist die fundamentale Struktur einer Software im Hinblick auf die nicht-funktionalen Anforderungen.</p>
+<p>Das ist für mich schon eine recht präzise Definition – allerdings eine allgemeine. Sie beantwortet noch nicht alle Fragen in der Praxis. Gehört die Entscheidung für IIS und gegen NT Service eine Architekturentscheidung? Ist die Entscheidung für eine Aufteilung der Rechtschreibprüfung in Textzerlegung und Wortprüfung eine Architekturentscheidung? Oder ist die Entscheidung für die Zusammenfassung von Funktionalität zu einer Komponente eine Architekturentscheidung?</p>
+<p>Um diese und andere Fragen zu beantworten, müssen Sie erstens mein allgemeines Verständnis von Struktur kennenlernen und zweitens meine Vision davon, wie Architektur Strukturen konkretisiert.</p>
+<h3>Was ist eine Struktur?</h3>
+<p>Als Struktur verstehe ich “etwas”, das aus <strong>Elementen</strong> besteht, die in <strong>Beziehung</strong> zu einander stehen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/bcf324f7d9b22b96.png" /></p>
+<p>Strukturen mit vielen Elementen und/oder Beziehungen sind unübersichtlich. Deshalb gehört zu Struktur auch noch die Abstraktion. Ein System wie im Bild beschreibt eine Struktur also nur auf einer <strong>Abstraktionsebene</strong>, andere können darunter/darinnen liegen…</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/6e3e1f93df917ada.png" /></p>
+<p>oder darüber/darum…</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/5672e5cd40b612a7.png" /></p>
+<p>Wer eine Struktur entwirft, muss sich also drei Fragen stellen:</p>
+<ul>
+<li>Welche Abstraktionsebenen hat die Struktur?  Welche Elemente enthält eine Abstraktionsebene (innerhalb eines womöglich umschließenden Elements einer höheren Abstraktionsebene)?  Wie sind die Elemente in einer Abstraktionsebene verbunden?</li>
+</ul>
+<h3>Die Abstraktionsebenen und Strukturelemente der Softwarearchitektur</h3>
+<p>Mit einem allgemeinen Strukturverständnis bewaffnet können Sie nun verstehen, dass Softwarearchitektur als Entwurf auf verschiedenen Ebenen betrieben werden sollte. Ohne diese Ebenen ist die Kompliziertheit eines Systems nicht in den Griff zu kriegen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/237c84efd733ddb0.png" /></p>
+<p>Die Abstraktionsebenen der Softwarearchitektur sind für mich diese:</p>
+<ul>
+<li>Das gesamte Anwendungssystem  Bounded Contexts  Partitionen/Apps  (Virtuelle) Maschinen  Betriebssystemprozesse  Belange/Concerns</li>
+</ul>
+<p>Ein paar Worte zu den Ebenen:</p>
+<h5>Anwendungssystem</h5>
+<p>Ein Entwicklungsauftrag wird gewöhnlich auf der Ebene des Anwendungssystems erteilt: “Schreiben Sie mir eine Software, die dies und jenes kann.” Das kann eine Warenwirtschaft sein, ein TicTacToe-Spiel oder eine Textverarbeitung. Wenn implementiert, erfüllt das Anwendungssystem alle Anforderungen.</p>
+<h5>Bounded Contexts</h5>
+<p>Das Gesamtsystem zerlegt der Architekt in Bounded Contexts, d.h. funktionale Untermengen, die unterschiedliche Datenmodelle haben. Sie gehören innerhalb des Gesamtsystems, der Anwendungsdomäne verschiedenen Sub-Domänen an. Bei einem Faktura-Anwendungssystem könnten das Rechnungslegung und Rechnungsverfolgung und Stammdatenverwaltung sein.</p>
+<p>In jedem Bounded Context können Daten anders persistiert werden. Das drückt die kleine Tonne im Bild aus.</p>
+<p>Nicht-funktionale Anforderungen, die auf dieser Ebene vor allem bedient werden: Evolvierbarkeit, Skalierbarkeit, Sicherheit</p>
+<h5>Apps</h5>
+<p>Innerhalb eines Bounded Context kann die Funktionalität weiter aufgeteilt werden auf Partitionen oder – neuerdings von mir so genannt – Apps. Jede App steht für eine klar umrissene Funktionalität, die durch ein spezifisches Userinterface bedient wird. iPhone/iPad Apps spiegeln diesen Gedanken sehr schön wider, finde ich. Oder die vielen kleinen Tools unter Unix.</p>
+<p>Alle Apps in einem Bounded Context benutzen dieselbe Datenbasis.</p>
+<p>Nicht-funktionale Anforderungen, die auf dieser Ebene vor allem bedient werden: Usability, Evolvierbarkeit</p>
+<h5>Maschinen</h5>
+<p>Jede App läuft auf mindestens einer Maschine – vom Server über den Desktop bis zum Smartphone –, kann aber auch mehrere Maschinen überspannen wie bei einer Web-Apps, die sowohl im Browser wie im IIS wie in einem Application Server wie in der Datenbank Codeteile hat.</p>
+<p>Nicht-funktionale Anforderungen, die auf dieser Ebene vor allem bedient werden: Skalierbarkeit, Performance, Sicherheit, Verfügbarkeit, Robustheit</p>
+<h5>Prozesse</h5>
+<p>Auf jeder Maschine einer App läuft deren Code mindestens in einem Prozess, es können aber auch mehrere sein. Zum Beispiel könnten ein Application Server und ein Reporting Server auf derselben Maschine betrieben werden.</p>
+<p>Nicht-funktionale Anforderungen, die auf dieser Ebene vor allem bedient werden: Skalierbarkeit, Performance, Evolvierbarkeit, Flexibilität</p>
+<h5>Concerns</h5>
+<p>Die Zerlegung des Anwendungssystems bis in Prozesse führt zu autonomen Funktionseinheiten. Die arbeiten jede für sich vor sich hin. Jede läuft auf mindestens einem eigenen Thread. Die Kommunikation ist mithin ganz fundamental nur asynchron zwischen ihnen möglich.</p>
+<p>Diese autonomen Funktionseinheiten zu identifizieren, ist die vornehmste Aufgabe des Architekten.</p>
+<p>Als Vorbereitung für die Modellierung und Implementierung ist das allerdings noch nicht genug, finde ich. Einen Schritt weiter sollte der Architekt noch gehen. Er sollte innerhalb der Prozesse auch noch die grundsätzlichen Concerns herausarbeiten, d.h. Bereiche, die gezielt nicht-funktionale Anforderungen realisieren. Das sind z.B. Frontend, Persistenz, Kommunikation, Sicherheit, Domänenlogik.</p>
+<p>Die Modellierung hat es dann einfacher, zu einem Entwurf zu kommen, weil die Concerns eine Grundeinteilung für die Funktionseinheiten des Modells vorgeben. Wenn das Modell sich um Funktionalität kümmert, dann muss es wissen, um welche Funktionalität es geht. Domänenfunktionalität ist nicht die einzig zu modellierende.</p>
+<h3>Beziehungen in Abstraktionsebenen</h3>
+<p>Auf welchen Abstraktionsebenen der Architekturentwurf stattfindet, ist geklärt. Die wesentlichen Strukturelemente sind Bounded Context, App, Maschine und Prozess. Aber wie werden die mit Beziehungen innerhalb einer Ebene zu einem System verwoben? Ich denke, das sollte auch definiert sein, denn dann lassen sich weitere Fragen leichter beantworten.</p>
+<h5>Bounded Context</h5>
+<p>Bounded Contexts sind durch <strong>Datensynchronisationen</strong> miteinander verbunden. Sie teilen weder Datenbanken noch Datenmodelle, also müssen die Daten explizit zwischen Bounded Contexts synchronisiert werden. Das dauert natürlich seine Zeit. Deshalb ist über Bounded Contexts hinweg nur <a rel="noopener" href="http://de.wikipedia.org/wiki/Eventual_consistency">Eventual Consistency</a> zu erwarten.</p>
+<p>Fragen für die Kommunikation: Wie soll die Datensynchronisation implementiert werden? Gibt es Tools (Stichwort <a rel="noopener" href="http://en.wikipedia.org/wiki/Extract,_transform,_load">ETL</a>)? Wie groß das die maximale Verzögerung sein? Kann es Konflikte geben, wie werden die behandelt?</p>
+<h5>Apps</h5>
+<p>Apps müssen nicht direkt miteinander kommunizieren, sondern teilen sich eine <strong>Datenbasis</strong>. Sie ist das Bindeglied. Zentral für die Apps eines Bounded Context ist daher <em>das eine Datenmodell</em>.</p>
+<p>Fragen für die Kommunikation: Welche Persistenztechnologie soll verwendet werden (RDBMS, Dokumentendatenbank, Graphendatenbank, Dateisystem usw.)? Wie sieht das Schema aus?</p>
+<h5>Maschinen</h5>
+<p>Maschinen sind über (virtuelle) Leitungen miteinander verbunden; sie teilen keinen physischen Adressraum. Die Kommunikation kann daher nur <strong>nachrichtenorientiert und asynchron</strong> ablaufen. Und ich würde noch hinzufügen: Die Kommunikation sollte zwischen Maschinen auch immer als asynchron in der Implementierung zu sehen sein.</p>
+<p>Fragen für die Kommunikation: Welche Kommunikationstechnologie soll zum Einsatz kommen, insb. wenn die Maschinen mit unterschiedlichen Betriebssystemen betrieben werden? Wie sollen Leitungsunterbrechungen behandelt werden?</p>
+<h5>Prozesse</h5>
+<p>Prozesse laufen zwar im selben physischen Adressraum, werden vom Betriebssystem darin jedoch sauber getrennt. Die Kommunikation kann zwischen ihnen kann daher auch nur <strong>nachrichtenorientiert</strong> sein. Allerdings ist zu erwarten, dass Prozesse in der selben Maschine verlässlicher vorhanden/erreichbar sind als solche in anderen Maschinen. Deshalb ist zu überlegen, ob die Kommunikation zwischen Prozesse in derselben Maschine die Kommunikation immer als asynchron in der Implementierung zu sehen sein muss. Im Augenblick tendiere ich dahin, meine Position, dass das immer so sein muss, zu lockern. Das bedeutet jedoch: Wenn ein Architekt sich für eine synchrone Kommunikation zwischen Prozessen entscheidet, weil er sie auf derselben Maschine laufen sieht, dann können diese Prozesse später nicht auf verschiedenen Maschinen deployt werden. Denn die sollen asynchron kommunizieren (s.o.). Soviel Grundsatz sollte sein, finde ich.</p>
+<p>Fragen für die Kommunikation: Welche Kommunikationstechnologie soll zum Einsatz kommen? Welche Hosts für den Code sollen benutzt werden (z.B. IIS, Desktopanwendung, NT Service)?</p>
+<h5>Concerns</h5>
+<p>Concerns sind funktionale Bereiche innerhalb von Prozessen. Sie kommunizieren also im selben Adressraum synchron via <strong>Stack oder globale Speicherbereiche</strong>.</p>
+<h3>Fragen an die Architektur</h3>
+<p>Mit diesen Konkretisierungen lassen sich die obigen Fragen und andere beantworten. Ist die Entscheidung für IIS oder NT Service eine Architekturentscheidung? Das ist natürlich eine Architekturentscheidung auf Prozessebene.</p>
+<p>Wer sich über WCF vs NServiceBus unterhält, unterhält sich ebenfalls über Architektur. REST vs SOAP? Auch ein Architekturthema – mindestens auf Maschinenebene. Was ist mit OAuth? Ein Architekturthema. Was ist mit NoSql? Ein Architekturthema. Was ist mit WPF? Nur insofern ein Architekturthema als dass WPF auf bestimmten Devices (nicht) möglich sein könnte. Was ist mit Bubblesort vs Quicksort? Kein Architekturthema, auf wenn es um die nicht-funktionale Anforerung Performance gehen mag; denn die Unterscheidung ist keiner Abstraktionsebene der Architektur zuzuordnen. Code im Application Server oder im Datenbankserver laufen lassen? Ein Architekturthema.</p>
+<p>Architektur hat mit der Verteilung von Funktionalität zu tun, um nicht funktionale Anforderungen zu erfüllen. Wenn Funktionalität verteilt wird, dann stellen sich Fragen dazu, wie die Funktionalität an ihren Orten gehostet werden soll und wie die verteilten Teile miteinander kommunizieren sollen.</p>
+<p>Verteilt wird Funktionalität in zwei Weisen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/58b3be4805416458.png" /></p>
+<p>Architektur macht zunächst auf den Abstraktionsebenen <strong>Bounded Context</strong> und <strong>App</strong> Längsschnitte durch das Anwendungssystem. Architektur schneidet es in dünne Scheiben. Die sind vollständig insofern, als dass sie vom Frontend bis zum Backend reichen.</p>
+<p>Der Entwurf beginnt also damit zu überlegen, wie die gesamten Anforderungen in überschaubare Happen zerlegt werden können. Welche für den Anwender sinnvollen Subsysteme lassen sich finden, um nicht sofort und immer alles umsetzen zu müssen? Bounded Contexts und Apps sind daher auch fundamental für die Entkopplung von Code. Sie dienen unmittelbar der Evolvierbarkeit.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c510e8294446e1ee.png" /></p>
+<p><strong>App</strong>, <strong>Maschine</strong> und <strong>Prozess</strong> zerlegt die Architektur dann transversal weiter. Die funktionalen Scheiben werden “gewürfelt”, um insbesondere Skalierbarkeit, Performance und Verfügbarkeit zu erreichen. Jedes Teil stellt dann nicht mehr für sich einen Anwendernutzen her, sondern trägt nur dazu bei. (Hier ist die klassische Schichtenarchitektur anzusiedeln.)</p>
+<h3>Zusammenschau</h3>
+<p>Meine Erfahrung mit der Definition von Architektur in dieser Weise ist, dass sie sich leicht erklären lässt und Fragen beantwortet, bei denen zumindest ich früher “rumgeeiert bin”. Ich behaupte nicht, dass diese Definition vollständig ist; ich empfinde sie lediglich als pragmatisch-praktisch-gut ;-) Nützlichkeit sowie Kommunikationsfähigkeit stehen für mich hier höher als formale Reinheit.</p>
+<h2>Kommentare</h2>
+<p><strong>Frank Striegel</strong> (2010-12-07):</p>
+<p>Sie definieren oben Bounded Context als "... Bounded Contexts, d.h. funktionale Untermengen, die unterschiedliche Datenmodelle haben."</p>
+<p>Was genau verstehen Sie hierbei unter "unterschiedliche Datenmodelle"? Als Beispiel führen Sie (evtl. etwas altmodisch ausgedrückt) Programmbereiche eines Faktura-Anwendungssystems an. Bedeutet dies nun, dass Bounded Contexts Aggregate des Domain Model abbilden?</p>
+<p>Gruss
+Frank Striegel</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-12-07):</p>
+<p>@Frank: In einer Faktura spielen Rechnungen die zentrale Rolle. Darüber sind sich alle einige.</p>
+<p>Aber fragt man die Rechnungslegung/Verkauf, dann sieht eine Rechnung anders aus als bei der Buchhaltung.</p>
+<p>Die Rechnungslegung sieht eine Rechnung als Dokument mit Adressat, Positionen, die sich auf Produkte beziehen, Zahlungsziel, führenden und schließenden Texten. Für die Persistenz kann sich eine Dokumentendatenbank oder gar das Dateisystem empfehlen, weil darin die hierarchischen Daten ganz einfach gespeichert und von dort als Ganzes wieder abgerufen werden können.</p>
+<p>Die Buchhaltung hingegen interessiert sich nur für eine Kundennummer, das Rechnungsdatum, Nettobetrag und MwSt und das Zahlungsziel. Damit kann sie Zahlungseingänge verbuchen und Mahnungen schreiben. Als Persistenzmedium empfiehlt sich hier vielleicht ein RDBMS, weil es schlicht um tabellarische Daten geht.</p>
+<p>Rechnungslegung und Buchhaltung werden daher am besten als verschiedene Bounded Contexts angesehen. So kann die Datenhaltung optimiert werden für den jeweiligen Zweck. Das verringert die Kopplung.</p>
+<p>Das Gegenteil wäre ein universelles Datenmodell und ein einziges Persistenzmedium. Das geht natürlich; so wird es meist getan. Aber die Probleme sind vielfältig. Der impact von Änderungen ist kaum abschätzbar, weil die Beziehungen so kompliziert sind; Denormalisierungen sind an der Tagesordnung und verwirren zusätzlich.</p>
+<p>DRY und SRP und KISS sind allemal verletzt.</p>
+<hr />
+<p><strong>Frank Striegel</strong> (2010-12-07):</p>
+<p>Dann würde man die Bounded Contexts Rechnungslegung und Buchaltung auch dermassen getrennt implementieren, selbst wenn es zwei Programmbereiche in derselben Applikation (exe) sind?</p>
+<p>Klar ich sehe die Vorteile. Aber, was ist, wenn beide Bounded Contexts in Teilen einer Rechnung dasselbe verstehen? DRY würde doch nun erfordern, dass es in einem gemeinsamen Basis-Modell zusammengeführt ist (s. Core-Domain/Shared Kernel by Evans DDD). Natürlich kann man dann argumentieren, dass die Schnittmenge der beiden Datenmodelle kleiner ist als wenn beide ein universelles Datenmodell verwenden. Aber der Aufwand um beide Datenmodelle der BCs auf das Basis-Modell zu synchronisieren ist auch nicht zu unterschätzen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-12-07):</p>
+<p>@Frank: Nein, es wären keine getrennten "Programmbereiche" in derselben EXE. Bounded Contexts bestehen mindestens je aus einer App. Und App kannst du vereinfacht als EXE ansehen.</p>
+<p>DRY ist hier bewusst nicht berücksichtigt! Das ist ganz wichtig zu verstehen. DRY steckt im "Normalisierungszwang" von RDBMS. Aber Normalisierung führt zu Kopplung. Und die soll möglichst niedrig sein. Das ist der Sinn von Bounded Contexts.</p>
+<p>Datenduplikation ist hier eine Tugend!</p>
+<hr />
+<p><strong>Frank Striegel</strong> (2010-12-08):</p>
+<p>Ok, so weit so gut.</p>
+<p>Ich überlege mir nur gerade, ob es nicht auch sinnvoll ist, innerhalb einer App so etwas wie Bounded Contexts einzuführen, wenn die einzelne Programmbereiche einer App sehr unterschiedliche Sichten auf die Domäne benötigen.</p>
+<p>Der Gedanke, einzelne Programmbereiche dermassen stark voneinander zu trennen, finde ich nicht ohne, denn manchmal (habe dies schon bei mind. zwei Problemdomänen erlebt) sind selbst innerhalb einer App die Sichten unterschiedlicher Programmbereiche auf Domänenobjekte sehr verschieden, und man hat wirklich Mühe diese unterschiedlichen Belange in einem universellen Modell zu vereinen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-12-08):</p>
+<p>@Frank: Wenn du an weitere Entkopplung innerhalb einer App denkst, dann ist das natürlich schön. Das Mittel der Wahl sind dann Komponenten.</p>
+<p>Bounded Contexts können aber nicht gehen, weil sie per definitionem in der Zerlegungshierarchie oberhalb von Apps stehen.</p>
+<p>Bounded Contexts bestehen aus Apps. Deshalb können Apps nicht aus Bounded Contexts bestehen.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

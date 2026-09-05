@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bei Anforderung vorgehen – Teil 1 — ralfw.de Archiv</title>
+<meta name="description" content="Neulich ging es ja hoch her in den Kommentaren zu meinem Schätz-Beitrag. Deshalb hier eine Aufgabe, anhand der ich ein wenig Licht auf mein Vorgehen beim Umgang mit Anforderungen w">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/bei-anforderung-vorgehen-teil-1/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bei Anforderung vorgehen – Teil 1 — ralfw.de Archiv">
+<meta property="og:description" content="Neulich ging es ja hoch her in den Kommentaren zu meinem Schätz-Beitrag. Deshalb hier eine Aufgabe, anhand der ich ein wenig Licht auf mein Vorgehen beim Umgang mit Anforderungen w">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/bei-anforderung-vorgehen-teil-1/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Bei Anforderung vorgehen – Teil 1</h1>
+    <div class="doc-meta"><span>18. Dez. 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/12/bei-anforderung-vorgehen-teil-1.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/bei-anforderung-vorgehen-teil-1/</code></span></div>
+    <div class="art"><p>Neulich ging es ja hoch her in den Kommentaren zu meinem <a rel="noopener" href="http://ralfw.blogspot.com/2010/12/widerspruch-gegen-das-schatzen.html">Schätz-Beitrag</a>. Deshalb hier eine Aufgabe, anhand der ich ein wenig Licht auf mein Vorgehen beim Umgang mit Anforderungen werfen möchte. Die Aufgabe stammt von einem Entwickler aus einer Email-Kommunikation rund um das Schätzen:</p>
+<blockquote>
+<p><em>Der Kunde stellt Kaffeemaschinen her, deren Komponenten der Besteller individuell zusammenstellen kann. Auf Grund eines Lieferantenwechsels muss ein Teil (z.B. die Tassenheizplatte) durch ein leicht modifiziertes anderes Teil ersetzt werden. Ob das Teil verbaut ist, hängt von der konkreten Bestellung ab.
+Der Kunde benötigt nun eine Software, mit der er zu jeder Zeit feststellen kann, bis zu welcher Bestellung sein Lagerbestand des alten Teils noch reicht und ab welcher das neue verbaut werden muss.
+Außerdem sagt der Kunde: Die Bestellungen bekommt man aus dem System XY- DB, Tabelle soundso, die Information welche Teile bei welchen Komponenten verbaut werden, kann man in der Applikation soundso nachsehen (z.B. bei einem SOA-Service oder einem Mainframe).</em></p>
+</blockquote>
+<p>Und nun kommt ihr :-) Wer mag, überlegt mal, wie er die Anforderungen umsetzen würde. Dabei geht es nicht um die Implementation (“Wie kann ich mit .NET auf einen Mainframe zugreifen?”), sondern um die Planung(sschritte) und die Interaktion mit dem Kunden. Wann sieht der Kunde welche Funktionalität?  Welche Phasen würdet ihr durchlaufen? Wie käme Schätzen ins Spiel? Wann wäre Auslieferung?  Klar, die Anforderungen sind sehr allgemein; deshalb können eure Überlegungen auch nur sehr pauschal sein. Dennoch könnt ihr etwas draus machen und hier vielleicht in Kommentaren skizzieren, wie das aussähe. Ich stelle dann in den nächsten Tagen meinen Ansatz vor.</p>
+<h2>Kommentare</h2>
+<p><strong>Golo Roden</strong> (2010-12-19):</p>
+<p>Da noch niemand reagiert hat, mache ich mal den Anfang:</p>
+<p>Um ehrlich zu sein, erster Schritt wäre, den Kunden zu bitten, mir das Problem noch mal genauer zu schildern, das hab ich nämlich nicht verstanden, beziehungsweise es gibt ein paar Unklarheiten, mir ist das zu durcheinander formuliert.</p>
+<p>Meine spontane Antwort wäre: Wenn Teil x durch x1 ersetzt wird, dann genügt mein Bestand von x für so viele Aufträge, wie von x noch vorhanden ist (wenn für jeden Auftrag jeweils ein x gebraucht wird).</p>
+<p>Also: Noch 27 x da, dann reicht das noch für 27 Aufträge, danach brauche ich x1.</p>
+<p>Aber so simpel wird's ja wohl nicht sein ;-).</p>
+<p>Ich habe das Problem also offensichtlich noch nicht verstanden. Aber bevor ich das nicht habe, kann ich nicht sinnvoll schätzen oder gar sagen, was ich in welcher Reihenfolge liefern würde.</p>
+<p>Insofern die Bitte um nochmalige, etwas ausführlichere Erklärung ;-).</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-12-19):</p>
+<p>@Golo: Netter Versuch, nicht mit einer Beschreibung deiner Schritte beginnen zu müssen ;-) Aber tu es trotz deiner Unsicherheit mal. Sie über die Lücken hinweg. Ich tue es auch. Es wird keine Verfeinerung der Anforderungen geben. Friss sie - oder lass es.</p>
+<p>Ich bin überzeugt, man kann hier sehr wohl auf allgemeinem Niveau Schritte aufzeigen. Das werde ich auch tun.</p>
+<hr />
+<p><strong>Golo Roden</strong> (2010-12-20):</p>
+<p>Zweiteilige Antwort:</p>
+<p>a) In einem "Real-World-Szenario" würde ich es an genau der Stelle lassen. Wenn der Kunde nicht bereit ist, mir die Anforderung so zu erklären, dass ich sie verstehe, kann ich nur raten, was er will - und das will ich nicht, weil ein positives Ergebnis dann bestenfalls ein Glücksfall ist. Dazu müssen nicht alle Details vorliegen, aber ich muss das Grundproblem verstanden haben.</p>
+<p>b) Wenn ich darüber mal hinwegsehe (was ich wohlgemerkt nur deshalb mache, weil es rein fiktiv ist und als Beispiel dienen soll), dann wäre mein Vorgehen auf Basis der genannten unscharfen Anforderungen ungefähr folgendes:</p>
+<ul>
+<li>Rollen identifizieren (Kunde, Entwicklung, Materialplaner, ...)</li>
+<li>Wissen identifizieren (Welche Rolle weiß was worüber, welche Resourcen speichern Wissen)</li>
+<li>Bedürfnisse identifizieren (Welche Rolle will welches Ziel erreichen)</li>
+</ul>
+<p>Auf dieser Basis kann ich dann Stories schreiben, welche Rolle welches Ziel erreichen will, und an wen oder was sie dazu herantreten muss. Anders formuliert:</p>
+<ul>
+<li>Gewünschte Stories identifizieren (WER will WAS, WOZU)</li>
+<li>Akzeptanzkriterien und Testfälle definieren</li>
+</ul>
+<p>Diese Aktionen müssen so weit aufgesplittet werden, dass sie unabhängig voneinander sind, testbar, dass ihre Umsetzung klar messbar ist an Hand der Akzeptanzkriterien, und sie müssen jeweils einen Wert für den Auftraggeber darstellen - es gibt also kein rein technisch motiviertes Feature.</p>
+<p>Als nächstes ist die Frage, welches Abrechnungsmodell vereinbart wurde. Wird ein Fixpreis oder eine Fixzeit verlangt, muss ich zunächst schätzen, um sagen zu können, ob ich das gewünschte in der Zeit und zu dem Preis liefern kann. Wird nur Fixscope verlangt, muss ich nicht zwingend schätzen, da dann einfach gilt: "It's done when it's done". Natürlich kann ich dann trotzdem schätzen, wenn der Auftraggeber denn gerne mal zwischendurch eine Abschätzung hätte, ich muss es aber nicht vorher durchführen.</p>
+<p>Als nächstes:</p>
+<ul>
+<li>Stories mit dem Auftraggeber besprechen</li>
+<li>Auftraggeber priorisiert</li>
+</ul>
+<p>Dann geht die "eigentliche" Arbeit los, sprich, die Implementierung (wobei ich mit "Implementierung" nicht nur das reine Codieren meine, sondern auch Architektur, Planung, UI-Entwürfe, Tests, ...).</p>
+<p>Während ich an einer Story arbeite, kann der Auftraggeber die übrigen nach Belieben umpriorisieren - nur die eine, an der ich gerade arbeite, die ist fix und wird durchgezogen (und nicht mittendrin abgebrochen).</p>
+<p>Zu Deinen Fragen:</p>
+<ul>
+<li>
+<p>Wann sieht der Kunde welche Funktionalität: Das kann er selbst entscheiden, indem er entsprechend priorisiert, was ihm am wichtigsten ist (wie er das macht, ob er nach Business Value, nach Risiko, oder nach sonstwas geht, ist mir dabei egal).</p>
+</li>
+<li>
+<p>Welche Phasen würde ich durchlaufen: Grob gesagt - Rollen identifizieren / Resourcen identifizieren / Bedürfnisse identifizieren / Stories schreiben / Akzeptanzkriterien und Tests schreiben / (Schätzen) / Stories priorisieren lassen / Iterativ umsetzen</p>
+</li>
+<li>
+<p>Wann wäre Auslieferung: Wenn der Kunde sagt, dass er ausliefern will. Nach jeder Story muss ein auslieferbares Produktinkrement vorliegen. Stichwort Continuous Deployment.</p>
+</li>
+</ul>
+<p>So, ich hoffe mal, dass ich nichts vergessen habe, aber ungefähr so würde mein Vorgehen aussehen.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

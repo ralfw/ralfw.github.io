@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IronMQ – Simple Warteschlangen in den Wolken — ralfw.de Archiv</title>
+<meta name="description" content="Wie können Sie Anwendungsteile kommunizieren lassen, wenn sie allemal über Netzwerke verteilt sind. Klar, irgendwie geht das mit WCF und Azure… Aber warum so kompliziert?">
+<link rel="canonical" href="https://ralfw.de/archiv/2012/ironmq-simple-warteschlangen-in-den/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="IronMQ – Simple Warteschlangen in den Wolken — ralfw.de Archiv">
+<meta property="og:description" content="Wie können Sie Anwendungsteile kommunizieren lassen, wenn sie allemal über Netzwerke verteilt sind. Klar, irgendwie geht das mit WCF und Azure… Aber warum so kompliziert?">
+<meta property="og:url" content="https://ralfw.de/archiv/2012/ironmq-simple-warteschlangen-in-den/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>IronMQ – Simple Warteschlangen in den Wolken</h1>
+    <div class="doc-meta"><span>22. Juni 2012</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2012/06/ironmq-simple-warteschlangen-in-den.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2012/ironmq-simple-warteschlangen-in-den/</code></span></div>
+    <div class="art"><p>Wie können Sie Anwendungsteile kommunizieren lassen, wenn sie allemal über Netzwerke verteilt sind. Klar, irgendwie geht das mit WCF und Azure… Aber warum so kompliziert?</p>
+<p><a rel="noopener" href="http://lieser-online.de/">Stefan Lieser</a> und ich verbringen gerade einige Tage in unserem jährlichen <a rel="noopener" href="http://clean-code-advisors.de/">Clean Code Advisors</a> Retreat, um das vergangene Jahr zu reflektieren und das nächste zu skizzieren. Neben viel Zeit zum Reden und Denken darf da aber natürlich auch die Programmierung nicht zu kurz kommen. Also haben wir uns eine Application Kata ausgedacht: AppZwitschern. Dabei geht es darum, Tweets mit einem Desktop (oder Mobile) Client zu erfassen und erst zu einem späteren Zeitpunkt zu versenden. Selbstverständlich muss der Client dafür nicht offen gehalten werden. Die terminierte Versendung übernimmt ein Server.</p>
+<p>Das ist eine schöne Aufgabe, in der wir die neue Flow Runtime <a rel="noopener" href="http://geekswithblogs.net/theArchitectsNapkin/archive/2012/05/05/catch-exceptions-in-concurrent-flows-using-causalities.aspx">NPantaRhei</a> einsetzen. Macht Spaß, funktioniert gut. Darüber hinaus kommen einige Technologien zum Einsatz, z.B. Twitter, bit.ly, NCron und auch eine Kommunikationstechnologie. Die Clients müssen ja dem Server die Tweets zur späteren Versendung schicken.</p>
+<p>Zuerst haben wir dafür Amazon SQS benutzt. Das ist Cloud Queue-Service. Der funktioniert. Unsere verteilte App zwitschert damit verlässlich und skalierbar. Alle Clients schreiben in dieselbe SQS Queue. Und beliebig viele Server-Instanzen verarbeiten die Versandaufträge. Perfektes scale-out.</p>
+<p>Aber Amazon SQS hat einen recht umständlichen API. Und interessanterweise sichert SQS nicht zu, die Nachrichten in einer Warteschlange in der Reihenfolge abzuliefern (dequeue), in welcher sie eingestellt wurden (enqueue). Das ist zwar für unser Szenario nicht so wichtig, dennoch irgendwie merkwürdig. Lohnt sich da wirklich eine nähere Beschäftigung mit diesem Service?</p>
+<p><a rel="noopener" href="http://www.iron.io/products/mq"></a>Auch wenn wir für AppZwitschern nicht mehr Leistung brauchen, habe ich dann aber mal geschaut, ob es Alternativen gibt. Und tatsächlich, die gibt es. Hängengeblieben bin ich ganz schnell bei <a rel="noopener" href="http://www.iron.io/products/mq">IronMQ</a> von iron.io.</p>
+<p>Attraktiv war deren Anspruch an Einfachheit:</p>
+<ul>
+<li>Einfache Anmeldung ohne Kreditkartenangabe, da 250.000 Nachrichten pro Monat ohnehin frei sind. Sie wollen es Interessenten also leicht machen, IronMQ auszuprobieren.</li>
+<li>Einfacher API auf für .NET. Der ist als Quelle bei github zu finden: <a rel="noopener" href="https://github.com/iron-io/iron_mq_dotnet">iron_mq_dotnet</a>. Unter <a rel="noopener" href="https://github.com/iron-io/iron_mq_dotnet/downloads">downloads</a> findet sich allerdings auch eine binäre Version.</li>
+</ul>
+<p>Und IronMQ bietet, was SQS nicht hat: echte FIFO-Semantik.</p>
+<p>Also habe ich alternativ zu unseren SQS-Operationen für die AppZwitschern-Flows welche für IronMQ aufgesetzt. Das war in 20 Minuten gemacht. Hier unser IronMQ-Adapter, der simples Enqueue und Dequeue so anbietet, das es leicht bei der Flow Runtime zu registrieren ist:</p>
+<pre><code>public class IronMQOperations
+{
+    private readonly Client _client;
+    private readonly Queue _queue;
+
+    public IronMQOperations(string queueName, string projectId, string token)
+    {
+        _client = new Client(projectId, token);
+        _queue = _client.queue(queueName);
+    }
+
+    public void Enqueue(string data)
+    {
+        _queue.push(data);
+    }
+
+    public void Dequeue(Action&lt;string&gt; onDataReceived)
+    {
+        do
+        {
+            var msg = _queue.get();
+            if (msg == null) break;
+
+            onDataReceived(msg.Body);
+
+            _queue.deleteMessage(msg);
+        } while (true);
+
+        onDataReceived(null);
+    }
+}
+
+</code></pre>
+<p>Ich würde sagen, einfacher gehts kaum. Mit den paar Zeilen ist eine verlässliche Kommunikation via Cloud möglich. Die braucht ihre Zeit; Performance wie mit TCP im lokalen Netz ist da nicht zu erwarten. Aber das spielt für unser Szenario und viele andere keine Rolle. Es geht darum, serverseitig skalieren zu können.</p>
+<p>Der SQS-Adapter hat knapp doppelt soviele LOC – und bietet eben nicht das, was man von einer Queue erwartet.</p>
+<p>Nun bin ich gespannt auf die .NET Bindings für die anderen iron.io Dienste: den Key-Value-Store (Cache) und serverseitige Prozesse (Worker). Einstweilen habe ich in meinem Köcher einen no-brainer für die Verteilung von Arbeitspaketen.</p>
+<p>PS: Der Support bei iron.io ist gut. Ich habe ein paar Fragen gehabt und den angebotenen Live Chat benutzt. Da war zu jeder Tageszeit jemand zu erreichen, der entweder Auskunft geben konnte oder dafür gesorgt hat, dass mir später geholfen wurde. I like that.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

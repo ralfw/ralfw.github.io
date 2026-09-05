@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verbindungsstücke – Event-Based Components abhören — ralfw.de Archiv</title>
+<meta name="description" content="Auf zum vorläufigen Endspurt mit den Event-Based Components (EBC). Wie die grundsätzlich definiert werden, habe ich hier beschrieben. Dann ging es darum, wie sie grundsätzlich zusa">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/verbindungsstucke-event-based/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Verbindungsstücke – Event-Based Components abhören — ralfw.de Archiv">
+<meta property="og:description" content="Auf zum vorläufigen Endspurt mit den Event-Based Components (EBC). Wie die grundsätzlich definiert werden, habe ich hier beschrieben. Dann ging es darum, wie sie grundsätzlich zusa">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/verbindungsstucke-event-based/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Verbindungsstücke – Event-Based Components abhören</h1>
+    <div class="doc-meta"><span>23. Feb. 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/02/verbindungsstucke-event-based.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/verbindungsstucke-event-based/</code></span></div>
+    <div class="art"><p>Auf zum vorläufigen Endspurt mit den Event-Based Components (EBC). Wie die grundsätzlich definiert werden, habe ich <a rel="noopener" href="http://ralfw.blogspot.com/2010/02/event-based-components-der-nachste.html">hier</a> beschrieben. <a rel="noopener" href="http://ralfw.blogspot.com/2010/02/steckspiele-event-based-components.html">Dann</a> ging es darum, wie sie grundsätzlich zusammengesteckt werden. Und schließlich <a rel="noopener" href="http://ralfw.blogspot.com/2010/02/mustergultig-event-based-components.html">galt es</a>, die Kommunikation noch etwas zu vereinfachen. Um mit EBC zu arbeiten, ist jetzt alles auf dem Tisch.</p>
+<p>Aber es kommt noch besser! Denn bisher haben Sie nur gesehen, wie EBC das leisten, was “traditionelle” Komponenten auch leisten. Die EBC tun das natürlich architekturell sauberer, finde ich, aber funktional haben sie keinen Vorsprung. Das möchte ich nun ändern. Dazu müssen wir uns nochmal ansehen, wie EBC “zusammengesteckt” werden.</p>
+<p>Ein ganz einfaches Szenario soll da genügen. Komponente <em>Quelle</em> verschickt eine Nachricht <em>Output</em> und Komponente <em>Senke</em> empfängt sie.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/164b14078d778d01.png" /></p>
+<p>Hier die Kontrakt-Interfaces und die Nachricht:</p>
+<p>interface IQuelle</p>
+<p>{</p>
+<p>event Action OnOutput;</p>
+<p>}</p>
+<p>interface ISenke</p>
+<p>{</p>
+<p>void ProcessOutput(Output msg);</p>
+<p>}</p>
+<p>class Output</p>
+<p>{…}</p>
+<p>Die Bindung im Rahmen einer “Software-Platine” geschieht dann so:</p>
+<p>// Build</p>
+<p>IQuelle q = new Quelle();</p>
+<p>ISenke s = new Senke();</p>
+<p>// Bind</p>
+<p>q.OnOutput += s.ProcessOutput;</p>
+<p>Anschließend kann die Quelle angestoßen werden und kommuniziert mit der Senke:</p>
+<p>((Quelle) q).Run("hello");</p>
+<p>…</p>
+<p>class Quelle : IQuelle</p>
+<p>{</p>
+<p>public void Run(string text)</p>
+<p>{</p>
+<p>this.OnOutput(new Output {Text = ""});</p>
+<p>}</p>
+<p>public event Action OnOutput;</p>
+<p>}</p>
+<p>Alles easy. Nichts neues, wenn Sie die bisherigen Blogartikel zu EBC verfolgt haben. Jetzt halten Sie sich aber fest…</p>
+<h2>Nachrichten abfangen</h2>
+<p>Haben Sie schon mal versucht, die Kommunikation zwischen “traditionellen” Komponenten zu verfolgen? Vielleicht ist eine komponentenorientierte Anwendung mal nicht so gelaufen, wie Sie wollten, und Sie haben gedacht, wenn Sie wüssten, mit welchen Argumenten die Komponenten sich gegenseitig aufrufen, dann könnten Sie leicht heraus finden, wo es hakt, ohne zum Debugger zu greifen.</p>
+<p>Ich jedenfalls möchte so ein Tracing in Anwendungen einschalten können. Natürlich ohne dafür eine Änderung in meinem Quellcode vornehmen zu müssen. Das funktioniert auch mit einem DI Container wie Structure Map und automatisch generierten Proxies. <a rel="noopener" href="http://lieser-online.de/">Stefan Lieser</a> hat das mal für die Anwendungen gemacht, die wir innerhalb der <a rel="noopener" href="http://www.prodevcollege.de/produkte-sonsyncdev.html">Clean Code Developer Seminare</a> mit den Teilnehmern entwickeln. Dafür war allerdings schon einiges Spezialwissen nötig.</p>
+<p>Mit EBC geht das hingegen ganz einfach. Wenn Sie auf einer Verbindung zwischen zwei EBC lauschen wollen, um z.B. den Nachrichtenfluss zu protokollieren, dann tun Sie das ganz einfach so:</p>
+<p>// Bind</p>
+<p>q.OnOutput += o =&gt; Console.WriteLine("tracing {0}", o);</p>
+<p>q.OnOutput += s.ProcessOutput;</p>
+<p><strong>Registrieren Sie einen zweiten Event-Handler am Output-“Pin” einer EBC. Der empfängt alle Nachrichten wie die eigentliche Zielkomponente für die Nachrichten.</strong> Schließlich sind Events multi-cast Delegaten.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/bf0ea5e940dfa8af.png" /></p>
+<p>Wenn Sie den Lauscher vor der Zielkomponente registrieren, bekommt er zuerst die Nachrichten. Registrieren sie ihn hinterher, dann bekommt er die Nachrichten erst, wenn die Zielkomponente schon fertig ist. Das können Sie auch dynamisch zur Laufzeit tun. Stellen Sie das Abfangen für jeden Output-“Pin” separat ein und aus, wenn Sie mögen.</p>
+<p>Nix Reflection, keine dynamischen Proxies, kein Hexenwerk… <strong>alles ganz einfach mit dem Abfangen von Nachrichten bei EBC (Interception).</strong> <strong>EBC schenkt Ihnen sozusagen Aspektorientierte Programmierung (AOP) für manche Szenarien.</strong></p>
+<h2>Verbindungsstücke</h2>
+<p>Denken Sie das noch ein Stück weiter: Die Verbindung zwischen Quelle und Senke ist explizit für jede Nachricht. Output-“Pin” wird mit Input-“Pin” “verdrahtet”… <strong>Wer sagt da eigentlich, dass diese “Drähte” direkt zwischen den Komponenten verlaufen müssen?</strong></p>
+<p>Sie könnten ein Tracing in Form einer generischen Funktionseinheit als Zwischenstück in die Verbindung zwischen Quelle und Senke einsetzen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/5985c5a08b464ae8.png" /></p>
+<p>Das ist bei der Bindung ja leicht möglich:</p>
+<p>q.OnOutput += Tracer.Create(s.ProcessOutput);</p>
+<p>Der Tracer ist dann nichts als eine Indirektion zwischen Output-“Pin” und Input-“Pin”:</p>
+<p>class Tracer</p>
+<p>{</p>
+<p>public static Action Create(Action processor)</p>
+<p>{</p>
+<p>return t =&gt;</p>
+<p>{</p>
+<p>Console.WriteLine("tracing: {0}", t);</p>
+<p>processor(t);</p>
+<p>};</p>
+<p>}</p>
+<p>}</p>
+<p>Wo hier <em>Console.WriteLine()</em> steht, können Sie natürlich beliebig viel Aufwand für ein generisches Tracing treiben – oder Sie delegieren die Aufgabe an <a rel="noopener" href="http://logging.apache.org/log4net/">log4net</a> oder <a rel="noopener" href="http://www.gurock.com/smartinspect/">SmartInspect</a>.</p>
+<p>Oder überlegen Sie ein anderes Szenario für ein Zwischenstück. Wie wäre es, wenn Sie Nachrichten zur Laufzeit aufhalten wollen, bis eine Senke sie (wieder) aufnehmen kann? <strong>Sie könnten ein Ventil zwischen Quelle und Senke einsetzen.</strong></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/7891d575a0a2abc5.png" /></p>
+<p>Das ist bei der “Verdrahtung” ganz einfach:</p>
+<p>var valve = new Valve();</p>
+<p>q.OnOutput += valve.Register(s.ProcessOutput);</p>
+<p>Weder Quelle noch Senke merken etwas davon, dass der Fluss zwischen ihnen über das Ventil gesteuert werden kann:</p>
+<p>((Quelle)q).Run("1");</p>
+<p>valve.Close();</p>
+<p>((Quelle)q).Run("2");</p>
+<p>((Quelle)q).Run("3");</p>
+<p>valve.Open();</p>
+<p>Die Nachrichten “2” und “3” werden erst bei Aufruf von <em>Open()</em> an die Senke weitergeleitet. Und die Implementation eines solchen Ventils ist trivial:</p>
+<p>class Valve</p>
+<p>{</p>
+<p>private bool isOpen = true;</p>
+<p>private Queue buffer = new Queue();</p>
+<p>public void ProcessMessages(T msg)</p>
+<p>{</p>
+<p>if (this.isOpen)</p>
+<p>this.OnMessage(msg);</p>
+<p>else</p>
+<p>this.buffer.Enqueue(msg);</p>
+<p>}</p>
+<p>public event Action OnMessage;</p>
+<p>public Action Register(Action processor)</p>
+<p>{</p>
+<p>this.OnMessage += processor;</p>
+<p>return this.ProcessMessages;</p>
+<p>}</p>
+<p>public void Open()</p>
+<p>{</p>
+<p>foreach (T msg in this.buffer)</p>
+<p>this.OnMessage(msg);</p>
+<p>this.isOpen = true;</p>
+<p>this.buffer.Clear();</p>
+<p>}</p>
+<p>public void Close()</p>
+<p>{</p>
+<p>this.isOpen = false;</p>
+<p>}</p>
+<p>}</p>
+<p>Jetzt denken Sie mal weiter… <strong>Was ließe sich mit so einem “Ventil” oder einem vergleichbaren Steuerelement zwischen Komponenten noch alles machen?</strong> Sie könnten Ziel-Komponenten dynamisch laden und austauschen. Sie könnten Ziel-Komponenten ihren Zufluss selbst steuern lassen. Sie könnten Load-Balancing betreiben. Sie könnten Nachrichten per TCP verschicken zu einer entfernten Komponente… Das alles und noch mehr würde Nachrichten 1:1 weiterleiten. Früher oder später ;-)</p>
+<p>Jetzt denken Sie noch weiter… <strong>Was könnten Sie mit den Nachrichten in “Zwischenstücken” alles machen?</strong> Sie könnten Sie transformieren, filtern, zerlegen, aggregieren… Und wieder alles, ohne dass die Komponenten selbst davon etwas merken würden.</p>
+<p><strong>Wer schon mal davon geträumt hat, wiederverwendbare Komponenten zu entwickeln, der hat jetzt endlich etwas in der Hand.</strong> Nicht Geschäftslogik-Komponenten sollten auf Wiederverwendbarkeit getrimmt werden, sondern Infrastrukturkomponenten wie ein solches Ventil. Dafür gibt es aber erst einen Markt, wenn Sie Ereignisorientierung und Nachrichtenorientierung denken.</p>
+<p>Solch flexibler Umgang mit nachrichtenindividuellen Komponentenverbindungen ist für mich dann auch der Grund, Nachrichten einen eigenen Typ zu geben. Dann sehen nämlich alle Verbindungen zwischen Komponenten gleich aus. Sie sind vom Typ <em>Action</em>. Und dann kann man generische Infrastruktur bauen, die mit diesen T-Nachrichten etwas tut.</p>
+<p>Wer da an <a rel="noopener" href="http://www.eaipatterns.com/">Enterprise Integration Patterns</a> denkt, der liegt nicht falsch. Mir gehts aber erstmal nur um eine Flexibilisierung der synchronen Kommunikation zwischen Komponenten.</p>
+<p>Jetzt sind Sie dran. Wohin trägt Sie Ihre Phantasie nun, da sie Event-Based Components kennengelernt haben?</p>
+<h2>Kommentare</h2>
+<p><strong>Laurin Stoll</strong> (2010-02-23):</p>
+<p>Finde das alles hochspannend. Event based components...hm... <em>hirn</em>.</p>
+<p>Etwas provokativ gefragt - wieso nicht grad einen Service Bus lokal einsetzen? Geht ja auch relativ schmerzfrei und ich habe die selben Vorteile - nur halt mit entsprechender Infrastruktur...?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-02-23):</p>
+<p>@Laurin: Wie kommunizieren die synchronen Komponenten über den ServiceBus? Synchron? Asynchron? Über den Stack oder mittels Streams?</p>
+<p>EBC sind genauso performant wie "traditionelle" Komponenten. Und sie sind genauso synchron. Beides würdest du mit einem intra-Prozess ServiceBus verlieren.</p>
+<p>EBC sind ein Migrationspfad. Mit ihnen kannst du in einem Programmiermodell arbeiten, das dir den Übergang zu async lokal und dann async distributed leichter macht.</p>
+<p>Warum sollte ich mir einen ServiceBus aufhalsen, wenn ich aber beides nicht brauche?</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Rainer Hilmer</strong> (2010-02-23):</p>
+<p>Fantastisch!</p>
+<hr />
+<p><strong>Rainer Hilmer</strong> (2010-02-28):</p>
+<p>Ich habe mich jetzt eine Weile mit EBC beschäftigt und bin nach wie vor begeistert. Ich frage mich nur, was spricht gegen Komponenten mit mehr als einem In- und/oder Output? Ich habe mal eben ein Calculator-Demo geschrieben das aus folgenden Komponenten besteht: Keypad (0 Inputs, 4 Outputs (für jede Grundrechenart einen)), Calculator (4 Inputs, 1 Output), Display (1 Input, 0 Outputs) und was soll ich sagen, das Ding funktioniert auf Anhieb einwandfrei.
+Gruß,
+Rainer</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-02-28):</p>
+<p>@Rainer: Freut mich sehr, dass dir die EBCs immer noch gefallen. Ich find sie jeden Tag auch cooler :-)</p>
+<p>Bei deiner Frage weiß ich leider nicht, was du meinst mit "was spricht gegen Komponenten mit mehr als einem In- und/oder Output".</p>
+<p>Komponenten können natürlich beliebig viele Input- und Output-Pins haben. Output-Pins sind Events, Input-Pins sind Event-Handler.</p>
+<p>Allerdings: Ich bin fest der Meinung, dass jeder Pin nur 1 Parameter haben sollte.</p>
+<p>Technisch geht es auch anders. Klar. Events können mehrere Parameter haben, Event-Handler auch.</p>
+<p>Ich halte es jedoch für sehr sinnvoll, diese Freiheit an der Schnittstelle von Komponenten zu beschneiden. Sozusagen freiwillige Selbstkontrolle ;-)</p>
+<p>"Traditionelle" Komponenten sind FSK 16 :-) EBCs sind FSK 6 :-) Jüngeres Publikum (unerfahrenere Entwickler) können sie benutzen, weil sie mehr Regeln vorgeben.</p>
+<p>Dieses Mehr an Regeln ist eine gewisse Standardisierung. Und Standardisierung erlaubt dann auch Standardbauteile. Die ganze Entwicklerwelt sucht ja ständig nach sowas, nach Wiederverwendung.</p>
+<p>Na, dann bitteschön :-) Hier ist eine Chance dafür: Wenn Pins nur 1 Parameter haben, dann kann man alle möglichen Standardkomponenten basteln, die sich an solche Pins ansetzen lassen.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Paul</strong> (2010-03-10):</p>
+<p>Hm.. Faszinierend. Event-based Kommunination auf einer neuen Skala: bislang aus grossen SOA-Systemen (high-level) oder als Mittel für Inter-Objekt Kommunikation (low-level) bekannt. Auf Komponenten-Ebene ein wirklich besonders mächtiges Konzept.</p>
+<hr />
+<p><strong>dr4g0n76</strong> (2010-05-10):</p>
+<p>Ich finde das alles ebenfalls hochinteressant. Neue Architekturmuster, andere Möglichkeiten, effizientere Programmierung usw. sind immer gute Optionen.</p>
+<p>Nur: Bei Mir bringt das alles rein beruflich nichts, da mein Projektleiter nicht einmal weiß was das Wort "Design Patterns" bedeutet und sich hartnäckig weigert es zu lernen.</p>
+<p>Aber privat werde ich mir das alles jetzt einmal aneignen, um mir</p>
+<p>1.) Das Wissen verfügbar zu machen
+2.) Den Nutzen verfügbar zu machen
+3.) Beurteilen zu können, was dabei gut und schlecht ist,
+4.) Ein und dasselbe Projekt einmal als Standard-Projekt mit normalen Design-Patterns und einmal mit dem EBC-Ansatz.</p>
+<p>Hab gerade ein paar der Blogeinträge mit Begeisterung gelesen. Das mit dem Valve gefiel mir gut (Tracing einschalten, ausschalten).</p>
+<p>Vielleicht werde ich auch die Leute hier ein wenig "ärgern" indem ich diesen Ansatz im nächsten Projekte verwende. ;-)</p>
+<p>Es scheint ja nicht wirklich schwierig zu sein.</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-05-12):</p>
+<p>Also DAS ist echt genial!</p>
+<p>Das ist wirklich flexibler, als meine Micro-Pattern-Trilogie!</p>
+<p>Ich glaube, ich konvertiere! (Zumindest probiere ich die EBC erstmal aus.)</p>
+<p>mfg</p>
+<p>Christian</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-05-28):</p>
+<p>Mir ist vorhin beim Autofahren ein "Aha!"-Erlebnis gekommen!</p>
+<p>Meine "Micro-Pattern-Trilogie" ist gar nicht so unflexibel. Das heißt, ich kann damit im Grunde das Selbe erreichen, wie Ralf mit den Event-Based-Components hier gezeigt hat. Und das ist nicht viel aufwändiger.</p>
+<p>Ich hatte nur beim gedanklichen Durchspielen eine Denkblockade.
+Dazu werde ich noch einen Beitrag in meinem Blog hinterlassen.</p>
+<p>Die MPT hänge ich doch noch nicht an den Nagel. <em>g</em></p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

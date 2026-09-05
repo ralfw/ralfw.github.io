@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Legacy Code - aber ganz sicher — ralfw.de Archiv</title>
+<meta name="description" content="Jetzt habe ich sie ganz deutlich gespürt: eine Hürde für die Verbesserung der Softwareentwicklung.">
+<link rel="canonical" href="https://ralfw.de/archiv/2016/legacy-code-aber-ganz-sicher/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Legacy Code - aber ganz sicher — ralfw.de Archiv">
+<meta property="og:description" content="Jetzt habe ich sie ganz deutlich gespürt: eine Hürde für die Verbesserung der Softwareentwicklung.">
+<meta property="og:url" content="https://ralfw.de/archiv/2016/legacy-code-aber-ganz-sicher/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-01)"></span>ralfw.de</p>
+    <h1>Legacy Code - aber ganz sicher</h1>
+    <div class="doc-meta"><span>5. Mai 2016</span><span>Erstveröffentlichung: ralfw.de</span><span><a href="https://ralfw.de/legacy-code-aber-ganz-sicher/" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2016/legacy-code-aber-ganz-sicher/</code></span></div>
+    <div class="art"><p><img loading="lazy" alt="" src="/assets/01-ralfw.de/0443729e03f56f54.jpg" /></p>
+<p>Jetzt habe ich sie ganz deutlich gespürt: eine Hürde für die Verbesserung der Softwareentwicklung.</p>
+<p>Neulich hatte ich über die Clean Code Developer School ein Angebot gemacht: <a rel="noopener" href="http://ccd-school.de/fruehjahrsputz-2016-gemeinsam-ran-an-den-schmutz/">Kostenlose Hilfe beim Frühjahrsputz</a> der Codebasis. Warum nicht mal im Legacy Code aufräumen, wenn die Sonne anfängt zu lachen? Und zu zweit macht das Refaktorisieren noch mehr Spaß. Vier Augen sehen auch mehr Schmutz im Code als zwei.</p>
+<p>Als ich nun mit einem Bewerber für die Aktion den ersten Termin absprechen wollte, schrieb der alsbald, dass sein Datenschutzbeauftragter fordere, dass ich eine Geheimhaltungsvereinbarung unterzeichne. O-Ton:</p>
+<p><em>"Wir müssen natürlich sicherstellen, dass keine Informationen das Unternehmen verlassen, bzw. der Quellcode und Kunden-/Unternehmensdaten sicher sind."</em></p>
+<p>Hört sich das für Sie normal und harmlos an? Für mich nicht. Ich zucke dabei innerlich zusammen.</p>
+<p>Da hilft auch keine weitere Erklärung:</p>
+<p><em>"[...] stellen [Geheimhaltungsvereinbarungen] für unser Unternehmen auch eine rechtliche Absicherung für den Fall dar, dass es zu Datenlecks kommt."</em></p>
+<p>Denn: Was soll abgesichert werden? Ich verstehe das nicht.</p>
+<p>Aber ich will versuchen, mich in die Situation hineinzuversetzen:</p>
+<p>Der Entwickler des Unternehmens, der sich um Frühjahrsputzunterstützung beworben hat, arbeitet mit mir online im Pair. Ich schaue über Screensharing auf seinen Rechner in die IDE. Wir arbeiten an seinem Legacy Code.</p>
+<p>Wo sind da Unternehmensdaten, die nicht nach außen dringen sollen? Achja, der schlichte Fakt, dass es dort im Unternehmen überhaupt solchen immer schwerer wartbaren Code gibt, ist natürlich etwas Geheimhaltungswürdiges. Da geht's schon los. Ich dürfte ja nie verraten, um welches Unternehmen es sich handelt, das da so tief im Brownfield watet. Davor hat das Unternehmen sicher zurecht Angst.</p>
+<p>Oder vielleicht blitzen auf dem Desktop des Entwicklers auch Dokumente auf, die geheimhaltungswürdige Informationen enthalten. Wenn der dann mal eine Pinkelpause macht, nutze ich die Gunst der Stunde und sehe diese bestimmt leicht identifizierbaren Dokumente schnell mal ein oder lade sie gar herunter. Natürlich, um damit bei den zahlreichen Wettbewerbern des Unternehmens hausieren zu gehen.</p>
+<p>Oder es könnte sein, dass im Code Featuretoggles zu erkennen sind, die nur für bestimmte Kunden gelten. Das könnte ich auch verraten. Hehe.</p>
+<p>Oder wir schauen en passant mal in der Datenbank mit ihren 700 eng verzahnten Tabellen vorbei und ich mache Screenshots von darin gespeicherten Kreditkartennummern (inklusive Namen und Sicherheitscodes), vielleicht stehen auch irgendwo noch unverschlüsselte Passworte. Damit ließe sich bestimmt ein hübsches Sümmchen verdienen.</p>
+<p>Nein, so würde es natürlich nicht gehen. Der Datenschutzbeauftragte hat selbstredend ein wachsames Auge auf die Programmierpraktiken der Entwickler. Solche Sicherheitslecks würde es dort nicht mal geben. Aber ich könnte einen Blick auf Kundendaten erhaschen. Dass jemand dort Kunde ist und was er dort als Kunde tut, ist bestimmt auch im Vorbeigehen leicht zu überblicken und zu kopieren und dann in mich bereichernder oder den Kunden schädigender Weise verwendbar. Hehe, hehe.</p>
+<p>So stellt sich das der Datenschutzbeauftragte, nein, die Geschäftsleitung, die den Datenschutzbeauftragten beauftragt hat, bestimmt vor. Die Welt ist ein übler Ort. Das Böse ist immer und überall. Und wenn nicht das Böse, dann die Fahrlässigkeit oder Ignoranz. Vor allem bei Externen.</p>
+<p>Und dagegen – das ist ja sonnenklar – hilft... eine Geheimhaltungsvereinbarung. Denn dann passiert das alles nicht. Nie. Weil mir natürlich nach der Unterschrift die Knie schlottern ob der Strafbewehrung. Der Kragen wird mir dann ganz eng und ich realisiere, wie vorsichtig, vorsichtig ich sein muss, wenn ich auf den Bildschirm des Kunden schaue. Bloß nichts memorieren! Und wenn, dann noch vorsichtiger in Zukunft sein, dass mir von dem, was ich noch erinnere, nichts über die Lippen kommt. Oder vom Laptop auf ein Speichermedium rutscht, das den Weg in eine Redaktion oder zum Wettbewerber oder auf Facebook findet.</p>
+<p>Das war mir vorher natürlich überhaupt nicht klar. Ohne Geheimhaltungsvereinbarung hätte ich wahrscheinlich einen Livestream der online Sitzung geschaltet für alle Software Craftsmen zum über die Schulter schauen. Aber nun, nach Unterschrift... da wäre alles anders.</p>
+<p>Merkt denn kein Datenschutzbeauftragter, wie lächerlich das ist? (Oder geht hier irgendeine Tragweite und Gefahr völlig an mir vorbei?)</p>
+<p>In der <a rel="noopener" href="http://www.sigs-datacom.de/fachzeitschriften/objektspektrum/archiv/artikelansicht/ausgabe-titel/Data-Warehouse-und-Architektur.html">aktuellen Ausgabe des Objektspektrum</a> lese ich gerade von Prof. Gerd Gigerenzer die Formulierung "In unserer wachsenden Absicherungskultur..." Das passt wie die Faust auf's Auge. Genau das ist hier nämlich am Werk: eine Absicherungskultur.</p>
+<p>Zusammenarbeit beginnt mit Misstrauen. Wer ohne Ansicht der Sache – hier: online Refactoring-Sitzung – pauschal eine Geheimhaltungsvereinbarung fordert, der stellt sein Gegenüber unter Generalverdacht.</p>
+<p>Eine Selbstverständlichkeit, dass man unter Geschäfts-/Kooperationspartnern das Gesprochene vertraulich behandelt, gibt es nicht (mehr).</p>
+<p>Auch eine explizite Bitte, die in einer Email sogar dokumentiert werden könnte (und die zumindest dort sicherlich revisionssicher abgelegt wird), ich möge doch alles, was ich sehe/höre vertraulich behandeln, genügt nicht.</p>
+<p>Nein, es müssen 1,2,3 Seiten hochoffizieller Geheimhaltungsvereinbarung her. Mit der hat sich eine Rechtsabteilung befasst, die muss archiviert werden und: Die muss ich vor allem erstmal in ihrer Tragweite verstehen. Ohne Rechtsberatung auf meiner Seite kann ich das aber nicht leisten. Für das kostenlose Angebot müsste ich also mal mindestens für 30 Minuten Anwaltskosten aufbringen.</p>
+<p>Das ist unverhältnismäßig. Das ist nicht auf Augenhöhe. Das ist nichts, was eine flüssige, vertrauensvolle Zusammenarbeit fördert.</p>
+<p>"Aber das Vertrauen kann doch nur entstehen, wenn mann sich sicher sein kann, dass der andere nichts Böses tut. Das erreicht eine Geheimhaltungsvereinbarung." So lautet bestimmt die Rationalisierung des Datenschutzbeauftragten.</p>
+<p>Ich erlaube mir jedoch, anderer Meinung zu sein. Vertrauen entsteht nicht durch einen Vertrag, sondern durch Verlässlichkeit. Wenn ich jemandem nicht vertraue, dann arbeite ich mit ihm nicht. Oder ich wage mich nur so weit vor, wie es mir bei Unzuverlässigkeit nicht schaden würde. <em>Das</em> ist normal und menschlich.</p>
+<p>Eine Geheimhaltungsvereinbarung hingegen setzt sich über solch natürliches Vorgehen hinweg und versucht, eine unnatürliche Effizienz herzustellen. Man macht einen größeren Schritt als das eigene Vertrauen zulässt. Das bedeutet, man arbeitet im Misstrauen zusammen.</p>
+<p>Kann das bekömmlich sein?</p>
+<p>Kurzfristig vielleicht. Langfristig halte ich das für kontraproduktiv. Denn Misstrauen unterliegt auch dem <a rel="noopener" href="https://de.wikipedia.org/wiki/Best%C3%A4tigungsfehler">Bestätigungsfehler</a> (confirmation bias). Wenn ich misstraue, dann finde ich eher mein Misstrauen Bestätigendes. Ich stehe also dem Vertrauensaufbau tendenziell entgegen.</p>
+<p>Daraus folgt: Ich tendiere dazu, mich noch mehr abzusichern. Und noch mehr. Nach außen, nach innen.</p>
+<p>Ob das wirklich etwas bringt, außer Verwaltungsaufwand, ängstlicher Atmosphäre und reziprokem Misstrauen, ist natürlich völlig unklar. Ich erfahre ja nicht, wie es ohne das Misstrauen wäre. Also muss ich glauben, dass ausbleibendes Drama kausal auf diese Absicherung zurückzuführen ist. Die Selbstbestätigung der Absicherungsmentalität ist die Folge.</p>
+<p>Klar, so kann man leben. Nur muss man eben auch die Konsequenzen tragen. Hier: Der Legacy Code ist ganz sicher. Sicher in zweierlei Hinsicht: sicher verwahrt und sicher auch noch auf lange Zeit existent.</p>
+<p>Da sehe ich tatsächlich einen Zusammenhang, der natürlich dem Datenschutzbeauftragten nicht klar ist.</p>
+<p>Dass in dem Unternehmen das Brownfield bis zum Halse steht und vor allem aus Code einer Programmiersprache besteht, die Cobol wohl einmal den Rang ablaufen wird, ist für mich kein Wunder. Absicherungsmentalität – zumindest wie gemeinhin gelebt – kann nicht anders, als am Alten festzuhalten, bis es nicht mehr geht. Neues ist einer Absicherungsmentalität tendenziell unangenehm. Neues ist unbekannt; Unbekanntem kann man kein Vertrauen entgegenbringen; also muss eine Garantie her, dass das Unbekannte keinen Schaden anrichtet. Die Garantie – die natürlich nie eine ist – besteht dann aus Verträgen und Beweisen.</p>
+<p>Und am Ende ist das Eigentliche, die Sache, der Kunde zweitrangig. Dann ist Absicherung wichtiger. Das ist das Gegenteil von Agilität. Deshalb sehe ich in diesem Fall einen Bestätigung (klar, auch ich falle dem confirmation bias zum Opfer) für meine These der "<a rel="noopener" href="https://ralfw.de/the-agile-organization-illusion/">Agile Organization Illusion</a>": nicht jede Organisation kann so agil werden, wie sie scheinbar möchte.</p>
+<p>Hier ist es ja offenkundig: der vom Entwickler geäußerte Wunsch nach Verbesserung kann nicht erfüllt werden. Die aus der Organisations-DNA geborene Geheimhaltungsvereinbarung steht dem im Wege. Denn ich unterschreibe sie nicht.</p>
+<p>Andere unterschreiben sie natürlich. Das Unternehmen kann sich woanders Unterstützung suchen. Aber damit ist das Grundproblem ja nicht behoben. Die Geheimhaltungsvereinbarung selbst ist ja nicht das Problem. Sie ist nur ein Symptom für das wahre Problem: Absicherungs- und Misstrauenskultur.</p>
+<p>Ich finde das tragisch. Denn die einzelnen Menschen im Unternehmen wollen ja das Gute. Der Entwickler ist ehrlich an der Verbesserung des Codes interessiert. Auch der Datenschutzbeauftragte hat einen grundsätzlich wichtigen Job in der heutigen Zeit. Trotzdem wird nicht das Beste erreicht. Sehr schade.</p>
+<p>Es wird an Stellvertreterschauplätzen gekämpft, z.B. mit mir als kleinem Dienstleister, der mal über die Schulter schaut.</p>
+<p>Doch was ist eigentlich mit echten Risiken für Lecks? Was ist eigentlich mit dem Code? Hat der Datenschutzbeauftragte eine Ahnung, welches Datensicherheitsproblem Legacy Code darstellen kann?</p>
+<p>Er hat Angst davor, dass Code das Unternehmen verlässt. Wie lächerlich! Code, den die eigenen Entwickler kaum mehr verstehen, ist für andere ohne Anleitung gar nicht mehr verständlich. Der Code könnte in vollem Umfang auch bei Github in einem öffentlichen Repo liegen und nichts würde passieren. (Naja, vielleicht gäbe es "überraschte" Kommentare ob des Brownfields.)</p>
+<p>Wie steht es mit Regressionen? Macht der Datenschutzbeauftragte sich Gedanken darüber, dass durch unübersichtlichen Code und Regressionen Daten falsch gespeichert, falsch zugeordnet oder gar gelöscht werden könnten? Was ist mit unvollständigem Verständnis der Domäne und des Codes durch Kommunikationsprobleme innerhalb des Teams aufgrund von Kultur- und Sprachdifferenzen? Liegt darin kein Risiko, dass Code entsteht, der Daten leckt? Mitarbeiterverträge sichern dieserlei nicht ab.</p>
+<p>Aber nun genug. Mir gehts um die Verhältnismäßigkeit. Ich kenne auch das Muster: lieber ein (vermeintliches) Problem lösen, das ich verstehe, als ein echtes und großes. Das scheint mir hier pars pro toto auch am Werk.</p>
+<p>Schade. Ich hätte gern meine Zeit verschenkt, um bei der Säuberung des Codes zu unterstützen. (Naja, hoffentlich hätte ich dabei auch etwas gelernt.) Aber nicht unter diesen Umständen. Ohne Vertrauen habe ich keine Lust zu arbeiten. Auch wenn ich zugezogener Hamburger bin, finde ich das Hamburger Kaufsmannsbild erhaltenswert: man geht eine Kooperation per Handschlag ein. Das kann man, weil man ein Wertesystem teilt. Zu dem gehört natürlich auch Vertraulichkeit.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

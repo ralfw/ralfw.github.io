@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prozesse klammern — ralfw.de Archiv</title>
+<meta name="description" content="Prozesse, Tätigkeitsfolgen, Herstellungsschritte stehen für mich derzeit am Anfang des Softwareentwurfs, wie ich hier beschrieben habe. Aus Anforderungen lassen sich nur schwer Kla">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/prozesse-klammern/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Prozesse klammern — ralfw.de Archiv">
+<meta property="og:description" content="Prozesse, Tätigkeitsfolgen, Herstellungsschritte stehen für mich derzeit am Anfang des Softwareentwurfs, wie ich hier beschrieben habe. Aus Anforderungen lassen sich nur schwer Kla">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/prozesse-klammern/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Prozesse klammern</h1>
+    <div class="doc-meta"><span>16. Juli 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/07/prozesse-klammern.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/prozesse-klammern/</code></span></div>
+    <div class="art"><p>Prozesse, Tätigkeitsfolgen, Herstellungsschritte stehen für mich derzeit am Anfang des Softwareentwurfs, wie ich <a rel="noopener" href="http://ralfw.blogspot.com/2010/07/code-als-fabrik-event-based-components.html">hier beschrieben</a> habe. Aus Anforderungen lassen sich nur schwer Klassen als Verantwortliche einer Lösung ableiten. Viel einfacher ist es, die Tätigkeiten zu ermitteln, die in Summe den Wunsch eines Anwenders erfüllen.</p>
+<p>Wenn Sie ins Restaurant gehen, dann wollen Sie ein leckeres Essen. Dafür ist es wichtig, dass ein Prozess reibungslos abläuft:</p>
+<ul>
+<li>Sie wollen einen <em>Tisch zugewiesen</em> bekommen</li>
+<li>Sie möchten die <em>Karte gereicht</em> bekommen</li>
+<li>Sie möchten eine <em>Bestellung aufgeben</em></li>
+<li>Sie möchten, dass das <em>Gericht schmackhaft und zügig zubereitet</em> wird</li>
+<li>Sie möchten, dass das <em>Gericht serviert</em> wird</li>
+<li>Sie möchten am Ende <em>reibungslos bezahlen</em></li>
+</ul>
+<p>Aus der Anforderung “Lecker essen” lassen sich ganz simpel “Herstellungsschritte” ableiten. Es ist klar, was (!) getan werden muss, um Ihren Wunsch zu erfüllen. Wer das tut, ist hingegen nicht herauszulesen. Ihnen als Gast ist es letztlich egal, ob die Tischzuweisung durch Sie selbst geschieht oder Restaurantpersonal. Ihnen ist auch egal, ob ein Kellner Ihnen die Karte bringt oder die schon auf dem Tisch liegt. Und wer das Gericht zubereitet, ist auch einerlei, solange es Ihren Qualitätsanforderungen entspricht. Am Ende müssen Sie auch nicht bei einem Kellner bezahlen, sondern wären womöglich bereit, automatisch bei Verlassen des Restaurants zu bezahlen.</p>
+<p>Wenn Sie ein Programm für die Anforderung hätten entwerfen sollen, dann wären Sie jedoch nach OOP-Manier sehr schnell darauf gekommen, einen Kellern, einen Koch, einen Restaurantchef zu modellieren. Denen hätten Sie Aufgaben/Dienstleistungen zugeordnet.</p>
+<p>Objektorientierung legt es mir Klassen/Objekten einfach nahe zu überlegen, wer (!) an einer Lösung beteiligt sein kann. Ein Prozessdenken, wie ich es hier beschreibe und derzeit übe, stellt hingegen das Was (!) an den Anfang. Was tun? Nicht: Wer tut?</p>
+<p><a rel="noopener" href="http://www.vapiano.com/"></a></p>
+<p>Spüren Sie den Vorteil der Prozessdenke schon bei diesem Beispiel? Wenn Sie in Objekten denken, also in Verantwortlichen, dann beschränken Sie den Lösungsraum. Wenn Sie Kellern, Koch, Restaurantchef an den Anfang stellen, kommen Sie nicht auf ein Konzept wie es z.B. hinter der Restaurantkette <a rel="noopener" href="http://www.vapiano.com/">Vapiano</a> steht. Dort gibt es nämlich keinen Kellner. Sie interagieren direkt mit dem Koch. Und sie bezahlen beim Rausgehen das, was auf einer “Kreditkarte” registriert wurde. Dass dort noch jemand steht und kassiert, hat keinen Nutzen in Bezug auf die Bezahlung, sondern ist nur noch eine Freundlichkeitsgeste.</p>
+<p>In einer reinen Prozessbeschreibung zur Erfüllung der Anforderung “Lecker essen” ist das Vapiano-Konzept erhalten. Es ist eine funktionierende Ausprägung. Prozessschritte sind invariant. Sie müssen sich immer setzen, bestellen, Essen muss zubereitet werden, für Bestelltes muss man bezahlen. Sitzen, bestellen, zubereiten, bezahlen. Ohne diese Aktivitäten geht es nicht.</p>
+<p><a rel="noopener" href="http://www.motel-one.com/de/"></a>
+Wer dafür jedoch verantwortlich ist… das ist eine ganz andere Frage. Es geht ohne Kellner, es geht ohne Koch, es geht ohne Restaurantchef, es geht ohne Kassierer. Die Hotelkette MotelOne macht es auch vor: Sie durchlaufen beim MotelOne einen Prozesse wie in jedem anderen Hotel – aber die Verantwortlichen sind anders verteilt. Alle “Herstellungsschritte” für das Produkt “Angenehme Übernachtung” werden erbracht, nur anders, von anderen als üblich.</p>
+<h2>Quellen und Senken für Prozesse</h2>
+<p>Am Anfang des Softwareentwurfs sehe ich derzeit also ganz klar die Aktivitäten. Was muss für jedes Feature geleistet werden? Das beginnt beim allerkleinsten Feature und hat nach oben keine Grenze. Ob die Farbe einer Zahl verändert werden soll, jenachdem ob ihr Wert positiv oder negativ ist, oder eine Funktion zu plotten ist… immer steht dahinter ein Prozesse bestehend aus Aktivitäten. Eine Tat nach der anderen muss vollbracht werden. Von wem? Erstmal egal.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/7a94d64628318f2f.png" /></p>
+<p>Im Entwicklungsprozess steht also zunächst die Identifikation eines Features und die Bestimmung von Input/Trigger sowie Output/Zustandsänderung.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/3ef8089f49e9d27f.png" /></p>
+<p>Diese Features leiten Sie aus den Anforderungen ab. Das ist natürlich eine Kunst für sich. Sie sollen so groß sein, dass sie einen Anwendernutzen darstellen. Andererseits sollen sie so klein sein, dass sie sich schnell umsetzen lassen. Nur so können Sie in einen kontinuierlichen Feedbackprozess mit dem Anwender treten.</p>
+<p>Diese Feature sind kleine System-Umwelt-Diagramme. Sie benennen einen Prozess, der durch die Umwelt gestartet wird und auf die Umwelt wirkt. Deshalb sind noch Quellen und Senken zu bestimmen. Wer initiiert einen Prozess? Wer nimmt die Produkte des Prozesses entgegen? Quellen und Senken sind Verantwortliche. Bei ihnen geht es um das Wer.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/39ade6b598484ffe.png" /></p>
+<p>Typischer Initiator, typische Quelle für den Prozess eines Feature ist natürlich das UI. Ebenso ist es typische Senke, typischer Empfänger. Aber auch ein Webservice-Stub kann Prozessinitiator sein oder ein Timer. Und Ressourcen wie eine Datenbank können Senke sein.</p>
+<p>Im Augenblick sehe ich also die Verantwortlichen Quelle/Initiator und Senke/Empfänger als Klammern um featureproduzierenden Prozesse. Ganz einfach, ganz systematisch.</p>
+<p>Dieses Denken hat uns jedenfalls im <a rel="noopener" href="http://www.prodevcollege.de/ccd-praktikum.html">CCD Praktikum</a> sehr geholfen. Hier ein Tafelbild von unserer Planungsarbeit:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/adb4658bb31d3af0.png" /></p>
+<p>Die Prozesse für zwei Features des Kinokassenprogramms, an dem wir zwei Tage gearbeitet haben, sind grün hervorgehoben. Die Verantwortlichen für ihre Initiierung bzw. Ergebnisverarbeitung sind rot markiert. Für das obere Feature ist sogar das untere eine Senke; der obere Prozess liefert Daten an den unteren.</p>
+<p>Initiatoren und Senken als Klassen umzusetzen, liegt natürlich nah. Aus meiner Sicht sind sie EBC-Komponenten, wie ich sie bisher gedacht hatte. Denn bisher ging es in EBC-Schaltplänen eigentlich immer um “Wer tut etwas?”</p>
+<p>Diese Frage lässt sich natürlich mir einigem Aufwand beantworten – doch aus heutiger Sicht ist die Diskussion um Request/Response-Drähte ein Symptom dafür, dass das Denken in Verantwortlichen, die per Events kommunizieren, falsch ist.</p>
+<p>Wenn ein Verantwortlicher eine Query absetzt, dann will er zurecht eine Antwort. Wenn aus einer Aktivität jedoch eine Query hinausfließt, dann will die keine Antwort. Die Antwort fließt vielmehr in eine nachgeschaltete weitere Aktivität. Mit Prozessdenken verliert also das Request/Response-Denken an Dringlichkeit. Das fühlt sich für mich gut an.</p>
+<h2>Zwischenstand</h2>
+<p>Das Vorgehen bei der Modellierung sieht bisher für mich also wie folgt aus:</p>
+<ul>
+<li>Aus den Anforderungen Features ableiten; Features haben immer Wert für den Anwender</li>
+<li>Für die Features Input/Trigger und Output/Zustandsänderungen bestimmen</li>
+<li>Bestimmen, wer triggert und wer am Ende Ergebnisse entgegennimmt</li>
+<li>Ausgehend vom Trigger den Prozess formulieren, der seinen Input in Output bzw. Zustandsänderungen transformiert. Der Prozess besteht aus Aktivitäten, d.h. er dreht sich um das, was zu tun ist, nicht darum, wer es tut.</li>
+</ul>
+<h2>Kommentare</h2>
+<p><strong>Manuel Wenk</strong> (2010-07-16):</p>
+<p>Hallo Ralf,</p>
+<p>die Vorgehensweise gefällt mir sehr gut.</p>
+<p>Ich glaube dass die Qualität solcher "neuen" Ansätze immer dadurch deutlich wird das die alten Ansätze plötzlich als gar nicht so geeignet erscheinen.</p>
+<p>Ich bin mir nur noch nicht sicher wo das hinführt. Wenn ich irgendwann meine EBCs mit einem Designer verdrahte habe ich immer einen klassischen Workflow Designer im Kopf. Ich habe das Gefühl das man auf diesem Weg dann wieder bei imperativer Programmierung mit etwas mehr Partitionierung ankommt.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-07-16):</p>
+<p>@Manuel: Dass du an Workflow/Flowchart denkst, kann ich verstehen. In der Praxis war das bisher aber kein Problem. Ich habe mir noch nie die Workflow Engine herbeigewünscht. Und auch den WF Designer nicht.</p>
+<p>Event/Nachrichtenflüsse sind anders.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Mike Bild</strong> (2010-07-16):</p>
+<p>@Manuel: Ich bin der Meinung, dass sich ein Programm aus allen Programmierparadigmen zusammensetzen sollte. Auf einigen Ebenen visuell und modellgetrieben, auf einigen Ebenen deklarativ und funktional, ein einigen Ebenen objektorientiert und dann auch rein imperativ/prozedural. Je nach Blickwinkel und Anforderung. Deshalb machen für mich hybride Sprachen auch so viel Sinn. Ich kann in gewohnter Syntax auf alle Mittel zurückgreifen.
+PS: Workflows müssen nicht imperativ sein. Auch hier muss vom Entwickler/Designer entschieden werden, wie weit er mit dem Workflow-Designer wirklich Unterstützung findet. Bei Schleifen oder reinen Prozedur-/Funktionsausrufen macht das aus meiner Sicht keinen Sinn mehr.
+@Ralf: Sehr cool. EBC durch iterative/kontinuierliche Weiterentwicklung mit Erkenntnisverarbeitung und Verbesserung.
+Schwieriger werden die die Prozesse allerdings, wenn wir Zustände, Interaktionen mit der Außenwelt und damit Prozessänderungen und damit auch Prozessabhängigkeiten ins Spiel bringen. Es ergeben sich viele unterschiedliche Pfade. Sie verzweigen und kommen zusammen. Mache von konkreten anderen Aktivitäten/Status/Prozesse und mache auch zeitabhängig. Z.B. ich als Kunde warte 15 Minuten auf einen Kellner, ich rufe nach den Kellner, nach weiteren 5 Minuten kommt keiner geh ich wieder -&gt; Prozessende. Alternativ, kommt ein Kellner, läuft dein Prozess weiter. Für viele Pfade eines Prozess benötige ich bei gleichem Feature unterschiedlich Betrachtungstiefen und Stufen der Pfade. Ist jeder Pfad ein eigenes Feature, oder sind es nur Szenarien? Wie "coding-like" visualisieren? Wie Visualisierung in Architektur/Design und dann in Code gießen? BMPN ist eine gute, anerkannte, genutzte und akzeptierte Sache, es gibt visuelle Designer und auch eine XML basierte BPML Metasprache. Parser, Lexer ala ANTLR -&gt; Code-Generator -&gt; C#? Ist das ein/der Weg?
+„off topic“ - Der Prozess ist häufig -&gt; PO, Consultant oder Kunden in BPMN, User Stories, Use Cases oder/und UML -&gt; Manager -&gt; Architekten/Designer-Team mit MDA, UML und/oder Code -&gt; Codersclub mit Code -&gt; PO, Kunde, Consultant. Ich kann mir schon vorstellen, wohin Du mit dieser Methodik hin möchtest. Aber sind alle in einem Entwicklungsteam Beteiligten selbiger Meinung eines anderen Developemt-Livecycles mit/auf höherer Abstraktionsebene? Ich finde den Ansatz/Methode toll, nur meine Erkenntnisse waren bisher oftmals gegenteilig und oft Teil einer längeren Diskussion mit ungewissem/unzufriedenem Ausgang. Erst Microsoft oder andere große Hersteller mit ihren Produktlinien brachten häufig ein wenig mehr Akzeptanz und Mainstream in die Sache und konnten so einige Ängste ausräumen oder einfach verdrängen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-07-16):</p>
+<p>@Mike: Ich möchte mal an dieser Stelle zur Vorsicht mahnen. Lass dich nicht davon tragen von BPMN! Was du da an Problemen aufführst, ist realistisch - aber hat mit asynchronen, langlaufenden Prozessen zu tun. Darum geht es mir (noch) gar nicht. Und genau das ist mir wichtig hervorzuheben: Leute, fangt nicht an, von der traditionellen Komponentenorientierung zu asynchronem, lang laufenden Zeugs zu springen! Macht einen Zwischenschritt. Dafür sind EBC erstmal gut.</p>
+<p>Deshalb ist auch mein Beispiel zu klein gewesen. Einfach nur die Farbe eines Eingabefeldes verändern. Selbst das ist ein Prozes. Ein kleiner, schneller, synchroner.</p>
+<p>Insofern ist auch all das, worüber ich hier reden, völlig außerhalb dessen, was man mit einem Kunden besprechen muss. Davon soll keiner was sehen. Wir reden nicht über Businessprozesse. Wir reden über Prozesse in Software.</p>
+<p>Gern würd ich einen anderen Begriff dafür wählen als Prozess. Aber mir fällt keiner ein.</p>
+<p>Wenn EBC (in der sich wandelnden Form) nicht taugen, um selbst der kleinsten Code Kata zu helfen, dann habe ich mein Ziel nicht erreicht. Denn nichts weniger möchte ich, als dass jeder (!) der vor der Aufgabe steht, eine Software zu entwerfen, mit EBC etwas anfangen kann. (Naja, vielleicht nicht wirklich, wirklich jeder, aber so ziemlich jeder ;-)</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Mike Bild</strong> (2010-07-16):</p>
+<p>@Ralf: Natürlich verstehe ich, erst das Happy Day Szenario auf den "Prüfstand" zu schicken. Ist es nicht aber auch gut in der Denk-/Kreativphase auch die extremen Ausnahmefälle gedanklich zu betrachten. (Deine Restaurant-Vorlage musste ich mal uminterpretieren) Natürlich ist ein lang laufender Prozess nicht das Standardszenario für einen einfachen Prozessablauf, aber das bestätigst du, dennoch ein möglicher in gängigen Anforderungen. Ja genau, der erste Teststand muss die "einfache" Kata sein - gut so -, aber gedanklich sicher auch mal ein persistierender, asynchron ausgeführter, langlaufender Prozess mit vielen Pfaden. YAGNI? Ja, aber kommt es nicht oft vor, dass Software länger und dann auch anders läuft als wofür sie konstruiert wurde?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-07-17):</p>
+<p>@Mike: Wenn am Ende von klein bis groß alles mit dem selben Konzept funktioniert, ists schön. Aber ich finds wichtig, die Diskussion eben nicht zu belasten mit zuviel Vision, weil sie dann unfokussiert wird. Dann kommen zuviele Begehrlichkeiten zusammen.</p>
+<p>Wenn EBC in die Nähe von BPMN rücken, habe ich keine Zweifel, dass sie skalieren. Deshalb muss ich mir darüber keine Gedanken machen ;-)</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

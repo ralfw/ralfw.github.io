@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Was ist eine Entität? — ralfw.de Archiv</title>
+<meta name="description" content="Im Zuge meiner Beschäftigung mit CQRS und Event Sourcing habe ich mir wieder die Frage gestellt, was denn eigentlich eine DDD Entität sei?">
+<link rel="canonical" href="https://ralfw.de/archiv/2013/was-ist-eine-entitat/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Was ist eine Entität? — ralfw.de Archiv">
+<meta property="og:description" content="Im Zuge meiner Beschäftigung mit CQRS und Event Sourcing habe ich mir wieder die Frage gestellt, was denn eigentlich eine DDD Entität sei?">
+<meta property="og:url" content="https://ralfw.de/archiv/2013/was-ist-eine-entitat/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Was ist eine Entität?</h1>
+    <div class="doc-meta"><span>1. Aug. 2013</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2013/08/was-ist-eine-entitat.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2013/was-ist-eine-entitat/</code></span></div>
+    <div class="art"><p>Im Zuge meiner Beschäftigung mit CQRS und Event Sourcing habe ich mir wieder die Frage gestellt, was denn eigentlich eine DDD Entität sei?</p>
+<p>Nun hab ich endlich für mich eine ganz einfache Definition gefunden: Eine Entität ist ein <em>Dictionary</em> mit unwandelbarer Id [1]. <strong>Eine Entität ist ein Sammlung von Schlüssel-Wert-Paar als Zeichenfolgen mit unwandelbarer Id [1].</strong></p>
+<p>Jup. Das isses. Mehr nicht [2].</p>
+<p>Den Inhalt einer Entität kann man wandeln, die Id aber nicht. Und der Inhalt einer Entität ist strukturiert. Gerade die Annahme, dass Keys Pfade sein können [2], macht mich zufrieden. Nicht nur “Vorname” oder “Mindestgebot” oder “Lagerplatz” sind also Keys, sondern ebenfalls “Wohnsitz/PLZ” oder “Telefonnummern/3” oder “Positionen/2/Menge” [3].</p>
+<p>So ein Dictionary ist ein Dokument, d.h. es ist selbstgenügsam (self-contained). Alles, was dazugehört, steht drin. Was nicht drin steht, gehört zu einer anderen Entität. So einfach ist das.</p>
+<p>Was Sie als Daten bei einem Key hinterlegen, ist Ihre Sache. Das kann so umfangreich und strukturiert sein, wie es will. Per definitionem ist das aber keine Entität, weil es eben ein Wert <em>in</em> einer Entität ist. Werte als <em>string</em> [4] und nicht als <em>object</em> zu definieren ist mir deshalb sehr wichtig. Dadurch ist ausgeschlossen, aus einer Entität Objekte zu referenzieren.</p>
+<p>Entitäten dürfen allerdings Ids anderer enthalten. Solche Entitätsreferenzen sind ok, weil sie sich auf das wahrhaft Unwandelbare beziehen [5]. Beispiel:</p>
+<p>var frau = new Dictionary{{$$id, "10"}, {"Vorname", "Eva"}, ...};
+var mann = new Dictionary{{$$id, "0815"}, {"Vorname", "Adam"}, ...};</p>
+<p>frau["partner"] = mann["$$id"];
+mann["partner"] = frau["$$id"];</p>
+<p>Mit der Definition “Eine Entität ist ein Dictionary” ist es nun ganz einfach herauszufinden, ob ein zusammengesetzter Wert eine Entität ist oder nicht. Fragen Sie sich einfach, ob Sie den Wert einem oder mehreren Keys in einer anderen Entität zuweisen würden. Beispiel:</p>
+<p>Ist der zusammengesetzte Wert</p>
+<p>Person("Vorname": "Peter", "GebDat": "1967-05-12", "Geschlecht": "m")  eine Entität? In manchen Zusammenhängen mag das so sein:</p>
+<p>var person = new Dictionary{{"$$id", "7654}, {"Vorname", "Peter"}, ...};
+var einwohner = new Dictionary{{"$$id", "0192"}, {"Person", "7654"}};</p>
+<p>In anderen wieder nicht. Dann ist er Teil einer umfassenden Entität, z.B.</p>
+<p>var einwohner = new Dictionary<string,string>{...};
+einwohner["Person"] = "{\"Vorname\": \"Peter\",
+                        \"GebDat\": \"1967-05-12\",
+                        \"Geschlecht\": \"m\"}";</p>
+<p>oder</p>
+<p>einwohner["Person/Vorname"] = "Peter";
+einwohner["Person/GebDat"] = "1967-05-12";
+einwohner["Person/Geschlecht"] = "m";</p>
+<p>Ich denke, das macht die Entscheidung einfacher. Doch auch wenn die mal daneben geht, ist es nicht so schlimm. Entitäten in dieser Form kann man auch leicht refaktorisieren. “Inline entity” und “extract entity” scheinen mir genauso probat wie “inline method” und “extract method”. Also keine Angst vor BDUF!</p>
+<p>Außerdem lassen sich Entitäten dieser Form sehr leicht verteilt über Ereignisse denken, z.B.</p>
+<p>Zugezogen("$$id": "9384", "Nachname": "Müller", "Straße": "Isestr. 2", ...)
+Umgezogen("$$id": "9384", "Straße": "Richterstr. 17", "PLZ": "22085", ...)
+Geheiratet("$$id": "9384", "Ehepartner": "0815", "Nachname": "Schmied", ...)
+Geheiratet("$$id": "0815", "Ehepartner": "9384", ...)</p>
+<p>In jedem Ereignis wird die Entität angegeben und danach nur eine Liste von Keys mit neuen Werten. Der aktuelle Stand einer Entität ergibt sich dann aus dem Summe ihrer Ereignisse.</p>
+<h4>Endnoten</h4>
+<p>[1] Ob die Id ein Eintrag mit speziellem Key in so einem Dictionary ist oder separat gehalten wird, ist mir erstmal egal.</p>
+<p>[2] Noch einfacher könnte man natürlich sagen, eine Entität sei ein strukturierter Text, z.B. ein Json- oder XML-Dokument. Wird letztlich bei NoSql auch so gemacht. Aber das ist mir grad zu wenig griffig, wenn ich an den Umgang damit im Code denke. Mit einem Dictionary fühle ich mich etwas wohler.</p>
+<p>Ein geschachteltes Dokument wie</p>
+<p>Peter</p>
+<p>22085</p>
+<p>sieht mir auch komplizierter aus als eine Liste von Key-Value-Paaren:</p>
+<p>$$id:1234
+Vorname:Peter
+Anschrift/PLZ:22085</p>
+<p>Das eine kann in das andere übersetzt werden. Das reicht mir.</p>
+<p>[3] Wem da Metadaten fehlen, der kann sie sich gern dazudenken, z.B. “Vorname:string” oder “Positionen/2/Menge:int”. Am Ende ist jedenfalls jeder Wert auf eine Zeichenkette abbildbar.</p>
+<p>Wie solche Pfade aussehen, ist hier ebenfalls nicht wichtig. Mit der Syntax, die ich hier benutze, sind Sie ja aber vertraut.</p>
+<p>[4] Binärdarstellungen sind nur eine Optimierung. Mit textuellen Repräsentationen von Daten kommen wir weiter. Sie sind ausreichend, bis ein konkreter Use Case etwas anderes fordert.</p>
+<p>[5] Allerdings hadere ich hier noch mit mir. Manchmal denke ich, dass Entitäten gar keine Referenzen enthalten sollten. Wenn sie zu anderen in Beziehung stehen, dann nur innerhalb eines Kontextes - und der wird dann von einem Aggregat aufgespannt.</p>
+<p>Ein Aggregat ist dann eine Entität, deren Zweck es ist, andere zu verbinden. Es ist ein Beziehungsraum.</p>
+<p>So ganz traue ich mich aber noch nicht, das konsequent zu denken. Ich habe es zwar schon einmal in der dotnetpro so beschrieben - doch im Moment bin ich wieder ein wenig im Zweifel… Hm… warum eigentlich? Dazu mach ich mir am besten ein andermal weitere Gedanken.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2013-08-01):</p>
+<p><em>Eine Entität ist ein Dictionary mit unwandelbarer Id [1].</em></p>
+<p>Wenn schon, denn schon; dann aber schon full monty und unabhängig:
+<em>Eine Entität ist ein Sammlung von Schlüssel-Wert-Paaren als Zeichenfolge mit unwandelbarer Id.</em></p>
+<p>Somit lässt sich der Gedanke auf jede Sprache abbilden, die eine entsprechende Sammlung zulässt.</p>
+<p>Bezüglich der Referenzen: Diese Vorgehensweise hat den Vorteil, dass auch zu einem späteren Zeitpunkt statt einem Wert eine Referenz hinterlegt werden kann, ohne an der Entität zu fummeln.</p>
+<p>Die Verweise/Referenzen werden woanders abgehandelt werden. DCI grüßt (mal wieder :)</p>
+<p>Insofern stimme ich dem Speichern als String zu... obwohl ich mir vielleicht auch einen int, boolean usw. vorstellen könnte. Hatte so etwas schon mal <a rel="noopener" href="http://www.codeproject.com/Articles/107394/Objects-With-Customizable-Properties">implementiert</a>.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-08-01):</p>
+<p>Danke für die full monty Definition :-) Die gefällt mir gut. Beim Dictionary war mir auch nicht 100% wohl, weil in dem Begriff etwas Plattform steckt.</p>
+<p>Eine solche Sammlung ist natürlich in jeder Sprache möglich, die Felder bietet. Eine solche Key-Value-Sammlung lässt sich mit einem string-Array implementieren.</p>
+<p>int, bool etc. sind nur Optimierungen. Wer das will, kann es machen. Aber dann gleitet man schnell ab und will auch object. Und dann kommen die Referenzen wieder ins Spiel.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-08-01):</p>
+<p><em>int, bool etc. sind nur Optimierungen. Wer das will, kann es machen. Aber dann gleitet man schnell ab und will auch object. Und dann kommen die Referenzen wieder ins Spiel.</em></p>
+<p>Slippery road... ist richtig; eher dort auf den "richtigen Typ" umwandeln, wo's wichtig ist... <a rel="noopener" href="http://www.clean-code-developer.de/Roter-Grad.ashx#Vorsicht_vor_Optimierungen!_2">da war jemand schon mal so schlau</a> :D</p>
+<hr />
+<p><strong>Thomas</strong> (2013-08-01):</p>
+<p>Hallo Ralf,
+für mich ist eine Entität, die reale , oder auch abstrakte Ausprägung innerhalb der Umwelt (Domäne), die in einem System abgebildet werden soll.
+Deshalb haben natürlich Objekte (im Sinne von Softwareentwicklung) die Entitäten abbilden meist einen eindeutigen Identifikator (Id)
+Gruß Thomas</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-08-03):</p>
+<p>Absolut! Jede "reine" Datenstruktur sind key-value-paare. Ob im Value Werte oder eine Referenz auf andere Key-Value-Paare stehen ist Desgin. Aggregates ist eine spezielle Entität. Ich verwende Aggregates als "zusammengesetzte" (z.B. projektion) Dokumente. Dabei können die Projektionen, z.B. durch Live-Projektionen oder auch als Background-Task bei Änderungen in den Entitäten) Referenzen natürlich auch gegen Ihren Value (andere Entität) "auflösen". Entitäten haben meist keine weiteren Beziehungen. Aus eine Entität kann natürlich irgendwann auch ein Aggregate werden. Auch das ist Desgin. Aggregates sowie Entitäten haben IDs. Diese können natürlich zusammengesetzt sein.( bsw. Vorname + Nachname). Ist also auch Design.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-08-03):</p>
+<p>Ein wichter Aspekt sind natürlich die nicht genannten Value Objects. Damit wird das Bild dann auch erst komplett.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-08-03):</p>
+<p>Value Objects halte ich für überbewertet. Da ergeben sich viel zu schnell Fragen um Implementationsdetails. Und die FP erhebt ihr Haupt.</p>
+<p>Entscheidend für mich Zusammenhänge von Daten mit eigener Identität. Wobei diese Identität eine konzeptionelle/logische ist und nichts mit Speicherplatz oder Persistenzinfrastruktur zu tun hat. Sie ist eben völlig neutral, sozusagen abstrakt.</p>
+<p>Identität ist unwandelbar, neutral und einzigartig.</p>
+<p>Inwiefern eine Kombination Vorname+Nachname diese Bedingung erfüllen kann, lasse ich mal dahingestellt.</p>
+<p>Insgesamt höre ich aus deinem Kommentar auch noch für meinen Geschmack zuviel heraus, "was geht"". Damit sind wir aber auf dem Holzweg. Die Frage ist weniger "was geht?", "was ist möglich?", sondern "was soll?".</p>
+<p>Wir brauchen weniger Möglichkeiten und mehr Grenzen und Guidelines. Das ist nicht anders als weiland beim Goto. Goto geht - aber Goto soll nicht sein. Wir haben uns mit Kontrollstrukturen wie If oder While bewusst Schranken gesetzt. Wir tun nicht mehr als das, was möglich ist. Wir haben erkannt, dass wir uns sonst verzetteln. Spaghetticode droht.</p>
+<p>Deshalb geben wir auch nicht jedem eine Waffe in die Hand. Möglich ist das, wie die USA zeigen. Aber dann gibt es eben jedes Jahr Tausende Tote. So haben wir uns bewusst gegen das entschieden, was möglich ist.</p>
+<p>Und so sehe ich es auch bei den Daten. Die Frage ist nicht, was möglich ist. Sie ist, was wir tun sollten, um uns nicht zu verzetteln.</p>
+<p>In dieser Hinsicht meine ich meine Beschreibung einer Entität.</p>
+<p>Und in dieser Hinsicht sollte die Frage beantwortet werden, ob eine Entität sich auf andere beziehen sollte oder nicht. Dass sie es technisch kann, ist unzweifelhaft. Aber sollte sie? Oder sollten Zusammenhänge von Entitäten nur in einem Aggregat hergestellt werden? Ist das der Zweck von Aggregaten?</p>
+<p>Es geht um "Freiwillige Selbstbeschränkung" bei den Daten. Damit wir schneller zu Lösungen kommen. Weniger im Rätselraten und Abwägen verzetteln.</p>
+<p>Klar, damit soll die Effizienz der Lösungsfindung steigen und gleichzeitig die Effizienz der Strukturen gesenkt werden - zugunsten größerer Flexibilität. Das ist auch das Thema des Event Sourcing.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-08-03):</p>
+<p>Value Objects - Halte ich für ein sehr wichtiges Konzept um die Frage von Datem-Beziehungen zu klären. FP und "immutable" spielen in diesem Kontext für mich eine untergeordnete Rolle. Implementierung ist dabei auch nebensächlich, da das vom Konzept her mit jeder Sprache umsetzbar ist. Entscheidend ist nur das es sich um "Dinge" ohne ID handelt. Hier ist der "Wert" von Bedeutung.</p>
+<p>@Entität: Ja - "Dinge" mit ID. Eindeutig, neutral und einzigartig - Systemweit.</p>
+<p>@Sollten Entitäten untereinander Beziehungen haben? Meiner Meinung nach nicht. Dafür sind Aggregates als "besondere" Entitäten da. Das sind hier Zweck. -&gt; Ein bisschen vereinfacht: Aggregates = Consistency Boundary!</p>
+<p>@Sollten Entitäten "Beziehungen" mit Value Objects haben? Ja klaro! Genau dafür sind IMHO sie so wichtig.</p>
+<p>Es geht mir auch nicht um "Was geht?" Mir geht es ebenfalls um das Konzept mit seinen Pro und Kontra.</p>
+<p>@"Freiwillige Selbstbeschränkung" - Da bin ich ganz bei Dir. Ja einfacher desto besser. So einfach wie möglich - nur nicht einfacher. ;-)</p>
+<p>@Flexibilität: Auch hier - Klaro - Deshalb Events + Event-Sourcing + Projections = Aggregates = Documents.</p>
+<p>Wie Du auch bemerkst ist es mit dem DDD Ansatz (ähnlich OOA/OOP) doch etwas umfangreicher im Design und dann letztlich in der Umsetzung. DDD (und IMHO auch OOA) setzt eine "stabile" Domäne voraus. Vielleicht klappt das gut mit 20 Jahre "alten" Systemen (Healthcare, Automative, Flugzeugbau) in denen Anforderungen klar sind und halbwegs "konstant" bleiben. Für meine häufigsten Anwendungsfälle funktioniert das nur zum Teil gut und bleibt eher ein Kommunikations- / Analysemittel.</p>
+<p>PS: Ich hab nix gegen GOTO ;). Vorsichtig eingesetzt ist das für mich gewinnbringend.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-08-03):</p>
+<p>Ich hab nix gegen Messer oder Gewehr. Vorsichtig eingesetzt sind das sehr hilfreiche Werkzeuge. Muss man nur erstens beherrschen. Und zweitens braucht es drumherum ein Wertesystem, um den Einsatz zu begrenzen. Nicht alles, was möglich ist, sollte damit getan werden. Und nicht von jedem.</p>
+<p>Dito bei Goto und den technischen Mitteln der Objektorientierung.</p>
+<p>Aber da sind wir wohl einer Meinung.</p>
+<p>Aggregate als Beziehungsraum für Entitäten? Ja, damit kann ich etwas anfangen. Ich habe das auch mal genau so in der dotnetpro dargestellt.</p>
+<p>Das bedeutet - entgegen dem, was du geschrieben hast -, dass Entitäten eben keine (!) Referenzen auf andere haben dürfen. Wieder geht es um die Begrenzung des Möglichen. Möglich wäre es, aber wir tun es nicht.</p>
+<p>Beziehungen zwischen Entitäten werden dann einzig innerhalb eines Aggregats hergestellt.</p>
+<p>Und daraus folgt auch, dass Entitäten Aggregate nicht kennen. Sondern nur Aggregate kennen "ihre" Entitäten.</p>
+<p>@Value Objects: Genau wegen deiner Formulierung finde ich VOs so hinderlich. Da fliegt nämlich Konzept und technische Objektorientierung durcheinander. Da sollten wir nicht auf Evans hören. Darin liegt nicht seine Stärke.</p>
+<p>Konzeptionell betrachtet gibt es keine VOs. Es gibt nur Entitäten mit Werten. Was du in einen Wert reinsteckst, ist deine Sache. Es ist aber immer ein Wert. Dazu hat die Entität keine Beziehung, sondern sie enthält (!) diesen Wert.</p>
+<p>Das ist vielleicht ein feiner, aber für mich wichtiger Unterschied.</p>
+<p>Werte sind Werte. Werte sind keine Objects. Da hilft dann auch kein "Value" als Qualifizierung. Value Object ist ein technischer Begriff. Der hat in einem Metamodell wie DDD nichts zu suchen.</p>
+<p>Es gibt Daten: 101001101
+Es gibt Werte: "Vorname":"Verena"
+Es gibt zusammengesetzte Werte: Gast("Vorname":"Verena", "Alter":13)
+Es gibt Entitäten: Party("$$id":"abcd", "Gäste/0/Vorname":"Verena", "Gäste/0/Alter":13, ...)</p>
+<p>Daten sind einfach nur Bitfolgen. Werte sind Bitfolgen mit einer Bedeutung. Und Entitäten sind Werte mit einer Id.</p>
+<p>Für den irreführenden Begriff "Value Object" sehe ich gar keinen Bedarf. Mindestens mal, weil es hier überhaupt nicht um Objekte geht.</p>
+<p>Es geht um Daten, um Werte, um zusammengesetzte Werte, um identitätsbehaftete Werte und schließlich um Beziehungsräume für identitätsbehaftete Werte.</p>
+<p>Kann man denn dann die Daten eines Wertes verändern? Selbstverständlich. Warum nicht?</p>
+<p>Wer ("Vorname":"Verena") in der Hand hat, der kann daraus ("Vorname":"Maria") machen. Was das technisch bedeutet, ob dahinter ein C# struct oder eine C# class steckt... Das ist mir doch egal.</p>
+<p>Wer auf dieser Ebene schon gleich immutability denken muss, der vermischt Belange. Immutability mag wichtig sein - nur tut sie nix zur Sache bei der Datenmodellierung.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-08-04):</p>
+<p>Richtig Aggregates sind einer Untermenge der Entitäten. Ich erinnere mich <em>nicht</em> geschrieben zu haben, dass Entitäten auf andere eine Referenz haben dürfen.</p>
+<p>@Value Objects: Kein Bedarf - stimmt schon zum Teil. In der Kommunikation finde ich dennoch hilfreich explizit unterscheiden zu können. Vektor, Geoposition, Tuple ... lieber VO. So bekommt ein zusammengesetzter Datentyp eben einen allgemeinen Namen. Ich finde das hilfreich.</p>
+<p>Werte/Daten vs. Objects: Absolut! Hier wird über den Wert(e) und nicht über die ID verglichen. Ist eben ein Wert, keine Identität.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-08-04):</p>
+<p>Das Problem mit dem Begriff "Value Object" ist, dass "Object" Identität impliziert.</p>
+<p>Und wie gesagt, die Frage nach der Immutability halte ich für orthogonal zu DDD.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-08-14):</p>
+<p>Hallo Ralf,</p>
+<p>bin per Zufall über diesen Blog gestolpert und ehrlich gesagt etwas erstaunt über die Sichtweisen. Vielleicht verstehe ich auch den Sinn des Artikels einfach nur nicht.</p>
+<p><strong>Eine Entität ist ein Sammlung von Schlüssel-Wert-Paar als Zeichenfolgen mit unwandelbarer Id [...] Jup. Das isses. Mehr nicht</strong></p>
+<p>Wir haben doch mit der Objektorientierung bereits eine Abstraktion. Wozu eine weitere?</p>
+<p>Abgesehen davon ist diese Definition rein datenorientiert. Ihr fehlt der Typ und das zumindest in der objektorientierten Welt damit verbundene Verhalten.</p>
+<p>Dabei sehe ich die Dinge wesentlich einfacher: Die Aufgabe besteht darin, fachliche Konzepte mit Hilfe eines Objektmodells zu beschreiben. Objektidentität ist der fachlichen Identität jedoch nicht gleichzusetzen. Unter fachlicher Identität soll hier die Identität verstanden werden, die seitens der Domäne gefordert wird. Den hierfür von Evans verwendeten Begriff "konzeptionelle Identität" habe ich hier vermieden, da Du in Deinem Artikel "konzeptionell" anders verwendest.</p>
+<p>Die "Entity" (DDD) ist also nur die Bezeichnung für ein (Fach-)Objekt mit fachlicher Identität. Das "Value Object" analog die Bezeichnung für ein Objekt ohne fachliche Identität. So einfach wäre das:keine Zeichenketten, keine Schlüssel-Wert-Paare/Dictionaries.</p>
+<p><strong>Für den irreführenden Begriff "Value Object" sehe ich gar keinen Bedarf. Mindestens mal, weil es hier überhaupt nicht um Objekte geht.</strong></p>
+<p>Wie kann es sein, dass es im OO-Entwurf überhaupt nicht um Objekte geht? "Value Object" ist für mich ein Objekt, das einen Wert repräsentiert. Irreführung?</p>
+<p><strong>Das Problem mit dem Begriff "Value Object" ist, dass "Object" Identität impliziert.</strong></p>
+<p>Es ist doch nicht ungewöhnlich, nicht identische aber gleich(wertig)e Objekte zu haben.</p>
+<p><strong>Wer ("Vorname":"Verena") in der Hand hat, der kann daraus ("Vorname":"Maria") machen. Was das technisch bedeutet, ob dahinter ein C# struct oder eine C# class steckt... Das ist mir doch egal.</strong></p>
+<p>Wer ein Objekt mit dem Attribut Vorname und dem Attributwert "Verena" hat, kann den Attributwert durch "Maria" ersetzen. Wie das technisch in einer Programmiersprache umgesetzt wird... Das ist mir doch egal. :-)</p>
+<p>Aber: der Wert selbst wird nicht geändert. Er wird durch einen anderen ersetzt. Würde der Wert selbst geändert werden, würden alle "Verena"s zu "Maria"s werden. Und schon sind wir an dem Punkt, warum die Unveränderlichkeit von Value Objects ganz erheblichen Einfluss hat.</p>
+<p>Michael</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-08-14):</p>
+<p>Hallo Ralf,</p>
+<p>nachdem der Kommentar nicht länger sein durfte, muss ich ihn aufteilen. Hier also der zweite Teil:</p>
+<p>Was ist ein Aggregat? Ich kann und will hier keine Definition geben. Aber ich sehe ein DDD-Aggregat im Wesentlichen als Objektgraphen an, der Ganzes-Teile-Beziehungen darstellt, der als Einheit betrachtet wird und bei dem es eine bestimmte, als Wurzel bezeichnete <em>Entity</em> gibt, von der aus alle anderen Objekte des Graphen direkt der indirekt erreichbar sind. Sinnvollerweise kann man sich noch zur Auflage machen, dass der Graph ein Baum sein muss.</p>
+<p>Selbstverständlich dürfen Entities andere referenzieren. Allerdings tauchen dabei zwei Fragen auf. Erstens, welche Entitäten außerhalb des eigenen Aggregats dürfen referenziert werden? Zweitens, welche ID verwenden?</p>
+<p>Nach dem Prinzip "spiele nicht in den Hosentaschen fremder Leute" darf nur die Wurzel eines Aggregats (dauerhaft) referenziert werden. Für die zweite Frage gibt es zwei Möglichkeiten: fachliche ID oder Objekt-ID (=Objektreferenz)? Kopplung und Kohäsion sowie äußere Zwänge machn die Angabe eines Patentrezepts schwer.</p>
+<p>Z.B.: Studenten-Kurs-Belegungen. Kurse sind Entitäten, Studenten sind Entitäten. Sie bilden je ein Aggregate Root. Die Belegung enthält nun Objektreferenzen zum Kurs und zum Studenten. Ob die Belegung nun als Entity oder VO modelliert wurde, spielt keine Rolle. Sie wird sich in jedem Fall außerhalb von mindestens einem der beiden Aggregate befinden. Kein Problem.</p>
+<p>OR-Mapper, die Objektreferenzen nur innerhalb einer Datenbank beherrschen können uns beispielsweise dazu zwingen, Referenz per fachlicher Identität zurückzugreifen. Das sind Realisierungsdetails.</p>
+<p>Michael</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-08-14):</p>
+<p>Hallo Michael,</p>
+<p>vielen Dank für Dein Beispiel. Ich komme gleich darauf zu sprechen.</p>
+<p>"Abgesehen davon ist diese Definition rein datenorientiert. Ihr fehlt der Typ und das zumindest in der objektorientierten Welt damit verbundene Verhalten."
+...
+"Kopplung und Kohäsion"...</p>
+<p>Berücksichtigung und Design von Kopplung, Kohäsion bzw. "richtige Platzierung" von Verhalten führen ohne sehr genaues Studium von Anforderungen der Fachdomäne zwangsläufig zu Irrtümern und Kompromissen. Ein komplexes Geflecht von Abhängigkeiten entsteht. Das zeigt die Praxis - spätestens in der Weiterentwicklung.</p>
+<p>In deinem ersten Kommentar ist Key/Value "nur" datenorientiert. Im zweiten Kommentar verwendest du Aggregates als "datenorientiert". Nun offensichtlich quält immer die Frage - Wohin mit dem Verhalten?</p>
+<p>Zu Deinem Beispiel:
+Stimmt,  sehr einfach. Doch wohin mit dem Verhalten? Davon sprichst Du ja wenn du die Fahne der OO A/P hochhalten möchtest.</p>
+<p>Nehmen wir, Deine Studenten-Kurs-Belegungen, benötigt Verhalten, d.h. nicht nur Datenbeziehungen.</p>
+<p>Nehmen wir einfach mal - Ein Kurs darf maximal 20 Teilnehmer haben. Ein Student darf maximal 5 Kurse belegen. Keine Kurse dürfen sich "überschneiden". Wohin damit? Wie bewerkstelligen mit Class -Student, Kurs und Belegung?</p>
+<p>Jetzt buchen natürlich alle Studenten gleichzeitig am Semesterbeginn Ihren Kurs ;). Wie verhält es sich mit <em>Konsistenz</em>? Wie verhält sich dieses System in einem Multi-Threaded/Process Szenario? Wo, Wann und Welche Art Transaktionen unter Berücksichtigung der genannten Business Rules mit Deinen 2 Entitäten + Relations-(table/object/was auch immer)?</p>
+<p>Eine nicht ganz triviale Aufgabe wie ich finde. Der Wunsch ist nun - Entwicklung nur wenn nötig, flexibel aber einfach - möglichst ohne gaaaaaaaanz genaues Studium der Fachdomäne mit allen seinen "könnte, würde, hätte".</p>
+<p>Grüße, Mike</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-08-14):</p>
+<p>@Michael: Ich finde deine Einwände verständlich, wenn ich als Prämisse "traditionelles" OO-Denken dahinter vermute.</p>
+<p>Aber genau darum geht es mir eben nicht. Deshalb bin ich auch kein Freund von Value Objects.</p>
+<p>DDD hat nichts mit OO zu tun. Es wird nur immer so ausgelegt. Klar, Evans hat auch nicht viel getan, da ganz klar zu trennen. Aber deshalb ist genau dieser Teil seines Buches eben auch der schwächere.</p>
+<p>Eine Entität ist kein Objekt im OO-Sinne. Man kann sie damit realisieren - aber genau das führt schnell in die Irre.</p>
+<p>Aus dem Grunde habe ich Entitäten als identitätsbehaftete Key-Value Listen (Dictionary) beschrieben. Dann fällt die Trennung leichter zwischen OO-Implementationsdetail und Nachdenken über Lösungsansätze für Anforderungen.</p>
+<p>DDD ist "Design", Entwurf, also eben nicht (!) Implementation. Ruby, JS, Java, C#: das ist Implementation.</p>
+<p>Es muss ein Mapping geben von DDD Entwurfskonzepten nach konkreter Sprache. Aber konkrete Sprache hat nichts in Konzepten zu tun. Das ist ja schon das Problem bei UML, wo Javas Pakete in eine universelle Sprache gewandert sind - ohne dann Mappings von Paket nach C, Python oder JS zu liefern.</p>
+<p>Du schreibst selbst:</p>
+<p><strong>Wer ein Objekt mit dem Attribut Vorname und dem Attributwert "Verena" hat, kann den Attributwert durch "Maria" ersetzen.</strong></p>
+<p>Da benutzt du Objekt synonym mit Entität. Denn genau das kann man mit einer Entität machen.</p>
+<p>Und gleichzeitig erzeugst du Dissonanz, weil genau das eben bei einem Value <em>Object</em> nicht erlaubt ist.</p>
+<p>Und was interessieren mich O/R Mapper? Die Technologie muss sich dem Konzept beugen. Dito die technische Objektorientierung. Sie ist Diener, nicht Herr.</p>
+<p>Die Frage ist nicht, ob technische Objekte einander referenzieren können, sondern welche Arten von Referenzen ein Konzept erlauben sollte.</p>
+<p>Und auch hier stehe ich zu meiner Dictionary-Darstellung. Da fehlt es an Referenzen im technischen Sinn. Ganz bewusst. Die Implementation einer Entität nach meinem Bild kann kein irgendwie geartetes Objekt (technische Objektorientierung) referenzieren. Gut so!</p>
+<p>Wenn wir meinen, sie soll auch nicht "soft" per Id andere Entitäten referenzieren, dann ist das leider nur eine Regel. Physisch lässt sich da wohl nichts machen. Deshalb sollte die Regel klar und einfach sein. Ich lasse mich drauf ein: Entitäten enthalten überhaupt keine Referenzen. Das tun nur Aggregate.</p>
+<p>Aggregate sind (!) Entitäten. Deshalb brauchen sie auch nicht - in Abweichung zu Evans - eine Root Entity. Und diese Entitäten enthalten ausschließlich Beziehungen zu und zwischen Entitäten.</p>
+<p>Immer noch sprechen wir aber von Daten. Nur Daten. Dictionaries. Maps.</p>
+<p>Wenn du Funktionalität willst... Dann hat die jenseits physischer Konsistenzsicherung nichts darauf zu suchen. Jedenfalls nicht bei einer technischen Umsetzung mit üblichen OO-Mitteln. Das wäre ein Widerspruch zu den Prinzipien SRP und SoC.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-08-20):</p>
+<p>Hallo Mike, hallo Ralf,</p>
+<p>in der Tat bin ich von der üblichen objektorientierten Anwendung von DDD ausgegangen. Nachdem es aber darum gar nicht ging, bin ich schon raus "aus der Nummer".</p>
+<p>Trotzdem noch ein paar Anmerkungen:</p>
+<p><strong>Eine Entität ist kein Objekt im OO-Sinne.</strong></p>
+<p>Eine Entität soll also eine Sammlung von Schlüssel-Wert-Paaren von Zeichenketten sein aber kein OO-Objekt, denn letzteres wäre nur eine Realisierung, ersteres aber nicht? Jetzt bin ich in der Tat verwirrt. Ist es denn nicht in erster Linie das "Verhalten", das im Allgemeinen ein Objekt von der Schlüssel-Wert-Paare-Sammlung unterscheidet?</p>
+<p><strong>Da benutzt du Objekt synonym mit Entität. Denn genau das kann man mit einer Entität machen.</strong></p>
+<p>Wie Du schon geschrieben hast, kann ich Entitäten mit Hilfe von OO-Objekten realisieren...</p>
+<p><strong>Und gleichzeitig erzeugst du Dissonanz, weil genau das eben bei einem Value Object nicht erlaubt ist.</strong></p>
+<p>... und genauso kann ich "Value Object" mit Hilfe von OO-Objekten darstellen. Das hat nichts mit Dissonanz zu tun. Dass OO-Objekte technisch auch alle Eigenschaften von Entitäten besitzen, ist eine andere Sache.</p>
+<p><strong>Die Technologie muss sich dem Konzept beugen.</strong></p>
+<p>Ideologisch stimme ich 100 %-ig zu. Wir agieren leider zum einen meist nicht auf der grünen Wiese und zum anderen in erster Linie in einer Welt, in der Geld, Konkurrenz und Politik die gewichtigeren Entscheidungsfaktoren sind. Daher habe ich auch von "äußeren Zwängen" geschrieben. Wenn der Kunde partout eine Technologie X fordert, zieht das Argument, dass die Technologie Diener sein muss und nicht Herr, nicht wirklich. Leider.</p>
+<p><strong>Aggregate sind (!) Entitäten. Deshalb brauchen sie auch nicht - in Abweichung zu Evans - eine Root Entity.</strong></p>
+<p>Ersteres ist in erster Linie Ansichtssache. Und ja, formal benötigen wir den Begriff "Root Entity" natürlich nicht (genauso wenig wie "Aggregat"). Mir gefällt die Trennung von Evans besser, eben weil zwischen Aggregat und Root Entity unterschieden wird. Für mich entspricht es auch eher dem Prinzip divide et impera.</p>
+<p><strong>Wenn du Funktionalität willst... Dann hat die jenseits physischer Konsistenzsicherung nichts darauf zu suchen. Jedenfalls nicht bei einer technischen Umsetzung mit üblichen OO-Mitteln. Das wäre ein Widerspruch zu den Prinzipien SRP und SoC.</strong></p>
+<p>Inwiefern?</p>
+<p>Danke</p>
+<p>Michael</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-08-20):</p>
+<p>@Michael:</p>
+<p>Eine Liste von Schlüssel-Wert-Paaren ist kein Objekt. Es ist nur eine Liste von Schlüssel-Wert-Paaren. Die kann man auch auf einer Karteikarte halten. Voilà, Entität :-)</p>
+<p>Ich habe nichts dagegen, bei der softwaretechnischen Umsetzung solch einer Sammlung Funktionalität mitzugeben. Aber ich plädiere dafür, sie zunächst ohne zu denken. Und wenn Funktionalität, dann nur ganz bestimmte: eben nur solche, die der physischen (!) Konsistenz dient.</p>
+<p>Wie gesagt: technisch geht es anders. Aber wir sollten uns Regeln geben, wie wir mit dem technisch Machbaren umgehen. Das ist so eine Regel.</p>
+<p>Genauso mit den "Value Objects": Das, was da gewollt wird - ein Container, dessen Inhalt man nach Befüllung nicht mehr ändern kann -, sollte unabhängig von OO Jargon benannt werden.</p>
+<p>Klar, technisch umsetzen kann man es mit OO Mitteln. Aber eben auch anders.</p>
+<p>Dazu kommt, dass dem Begriff "Objekt" von Hause aus die Veränderbarkeit anhaftet. Diese Eigenschaft durch den Zusatz "Value" zu subtrahieren, halte ich für sprachlich völlig kontraproduktiv. Quasi Oxymoron oder contradictio in adiecto.</p>
+<p>Du gehörst auch der Fraktion an, die einem Kunden immer alles gibt, was er sich wünscht? Der sagt C# und du gibst ihm dann traditionelle OOP? Aus welchem Jahr? Vor 1995?
+Ne, tut mir leid, das Argument halte ich für völlig irrelevant. Damit kannst du am Ende alles rechtfertigen. "Der Kunde wollte aber, dass wir nur mit Active Record statt mit Domänenmodellen arbeiten." - Na, dann hast du ja dein Lehrbuch. Das schreibt der Kunde. Dann müssen wir hier nicht diskutieren.</p>
+<p>Du findest die Trennung bei Evans besser? Aber welche Trennung denn? Da gibt es nur Entitäten - und irgendwie ein Aggregat, dass eine Root Entität hat und selbst deshalb anscheinend nichts tut?
+Hm... Das finde ich konzeptionell wiederum zu schwach differenziert.
+Ich gebe dem Aggregat selbst mehr Verantwortung.</p>
+<p>Alle nehmen es doch so wichtig. Dann sollte sich das auch in der Verantwortung ausdrücken. Anders kann man seine Bedeutung als transaction boundary auch nicht ausdrücken, finde ich.</p>
+<p>Ein Stack ist ein schönes Beispiel, wo traditionelle Objektorientierung Sinn macht: Es gibt ein Interface, das in Bezug auf Daten gewisse Regeln aufstellt. ADT. Wie die Daten konkret gehalten werden, ist egal (Liste, Array...). Einzig wichtig, dass man darauf LIFO zugreifen kann. Die Funktionalität "auf den Daten" sorgt dafür, dass in Bezug darauf Konsistenz herrscht.</p>
+<p>Und nun nicht ein Stack, sondern Daten einer Rechnung. Ich meine, die sollten wir auch nur wie eine ADT behandeln. Auf ein Rechnungsobjekt gehören also nur Methoden zur Sicherung der physischen Konsistenz. Beispiele: Es muss immer eine Rechnungsnummer und einen Rechnungsempfänger geben. Für jedes Produkt gibt es nur eine Rechnungsposition. (Falls ein Produkt mehrfach hinzugefügt wird, werden die Mengen addiert.)</p>
+<p>Das sind Regeln, die mit Code durchgesetzt werden müssen. Dieser Code gehört direkt auf das Rechnungsobjekt. Er macht aus ihr quasi einen ADT. Mehr aber nicht. Er weiß eigentlich nicht, um welches Business es geht. Er konzentriert sich auf eine Form. Und genau das ist eine sehr klare Verantwortlichkeit. Dabei sollte es bleiben.</p>
+<p>Weitere sinnige Funktionalität im Zusammenhang mit Rechnungen, gehört dann nicht mehr auf das Objekt, das die Rechnungsdaten direkt hält. Beispiele: Wenn der Rechnungsbetrag eine Schwelle überschreitet, verlängert sich das Zahlungsziel. Wenn Produkte einer bestimmten Kategorie enthalten sind, entfallen die Versandkosten. Es gibt einen Rabatt auf bestimmte Artikel für Rechnungsempfänger aus einem PLZ-Gebiet.</p>
+<p>Das ist natürlich uferlos. Und genau deshalb ist es wichtig, eine klare Grenze zu ziehen. Auf das Objekt mit den Daten gehören nur sehr wenige Methoden. Alles andere muss woanders untergebracht werden.</p>
+<p>Daten sind Daten sind Daten. Und nur weil wir technisch Funktionalität direkt mit Daten verbandeln können, sollten wir das nicht ausufern lassen. Wo aber ist die Grenze? Ich habe eine gezogen.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-08-20):</p>
+<p>Jepp!</p>
+<p>Interface mit Funktionen - nur Funktionen/Methoden! Zustand wird nicht veröffentlicht. Zustand sind im einfachsten Falle Key/Values. Diese haben mit (Konsistenz)regeln und Verarbeitungsprozessen nichts zu tun.</p>
+<p>Was bleibt im einfachsten Falle?
+Funktionen auf Key/Values</p>
+<p>Wie machen?
+Meiner Meinung nach sind Funktionen auf/mit Kontext (Monaden) oder auch Projektionen auf Event-Logs (Event Sourcing) in der Early Stage ein guter Weg. OO (A/P) und auch DDD braucht meiner Meinung nach mehr Stabilität in der Domäne und etwas mehr Vorbereitung, Analyse und Design.</p>
+<p>m2c,
+Mike</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-08-23):</p>
+<p>Hallo Ralf, hallo Mike,</p>
+<p>um zu überprüfen, ob ich Euch richtig verstanden habe, ein Beispiel: Sagen wir einmal, ich möchte simple Telefonabrechnungen realisieren.</p>
+<p>Dabei habe ich es mit verschiedenen Gesprächstarifen zu tun. Wir machen es ganz einfach und gehen einmal davon aus, dass es sich rein um Minutenpreise handelt.</p>
+<p>Wenn ich Euch jetzt richtig verstanden habe, ist die Denke die folgende:</p>
+<p>Erstmal geht es darum, Preise zu berechnen. Das macht eine Funktion. Was brauche ich dazu? Gut, den Tarif und die Gesprächsdauer. Hierfür gibt es dann ein Interface:</p>
+<p>--&gt; Interface IErrechneGeschprächspreis: errechneGesprächspreis(tarif, dauer):Betrag</p>
+<p>Ein Tarif ist eine Entity. Diese wird definiert durch Schlüssel-Werte-Paare. Daraus folgt:</p>
+<p>--&gt; Entitätstyp Tarif: id, name, minutenpreis</p>
+<p>Das ganze soll jetzt per OO-Methoden umgesetzt werden. Funktionalität auf der Entity nur zur Konsistenzsicherung, d. h. die Entity wird zum OO-Objekt, indem dieser ein entsprechender Konstruktor spendiert wird und die Eigenschaften gekapselt werden durch Getter/Setter. Name und Minutenpreis müssen vorhanden sein, Minutenpreis muss positiv sein.</p>
+<p>Das Interface muss auch noch implementiert werden. Dazu führen wir mal eine Klasse Gesprächspreisrechner ein. Diese enthält dann eine Methode, die einen Tarif und die Dauer des Gesprächs bekommt und mit den Betrag liefert.</p>
+<p>Sehe ich das richtig?</p>
+<p>Danke und Gruß</p>
+<p>Michael</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-08-23):</p>
+<p>Eine Entität Tarif(id, name, minutenpreis) klingt ok. Denn derselbe Tarif kann zu unterschiedlichen Zeiten ja verschiedene Minutenpreise haben.</p>
+<p>Auf logischer/konzeptioneller Ebene ist das nur eine Liste von Name-Wert-Paaren.</p>
+<p>Wenn wir das aber codieren, dann können wir etwas anderes draus machen als ein Dictionary. Es darf auch eine richtige ;-) Klasse sein.</p>
+<p>Nur eben Vorsicht, was darauf für Funktionalität liegt. Auch eine Klasse Tarifentität{} hätte keine Methode Gesprächspreis_berechnen()! Das ist ja Logik. Das hat nichts mit der Konsistenz der Daten in der Entität zu tun.</p>
+<p>Konsistenzfunktionalität könnte zum Beispiel darauf achten, dass der Minutenpreis nicht &lt;0 ist.</p>
+<p>Aber wer berechnet nun die Gesprächsdauer? Hm...</p>
+<p>Das könnte ein Service sein (um in DDD Speak zu bleiben). Du hast dafür ein Interface definiert, das nur eine Funktion enthält. Kann man machen. Ist für den Punkt, um den es geht, aber egal. Entscheidend ist, dass es eben ein anderes Objekt ist als die Entität.</p>
+<p>Insofern kann es auch ein zustandsbehaftetes Objekt sein. Womit ich zu einer Erweiterung dessen komme, was ich beschrieben habe. Es gibt nämlich zweierlei Entitäten :-)</p>
+<p>Für mich gibt es Datenentitäten (entity data objects). Das sind die Entitäten, über die ich im Artikel gesprochen habe. Die sind (!) Daten und haben Konsistenzfunktionalität.</p>
+<p>Und dann gibt es Logikentitäten (entity logic objects). Die kapseln eine Datenentität. Sie haben (!) also Daten - die man nach außen nicht sieht.</p>
+<p>Eine Datenentität zeigt all ihre Daten nach außen. Das ist ihr Job: Datenstruktur.</p>
+<p>Eine Logikentität hingegen zeigt keine Daten, sondern verbirgt sie. Darauf kann man nur mit Methoden zugreifen, Tell don´t ask. Wie die Logikentität seine Daten hält, ist der Umwelt egal. Nix Properties, keine Train wrecks (LoD).</p>
+<p>Aber Logikentitäten können Daten produzieren, sozusagen Views auf ihre Datenentität.</p>
+<p>So eine Logikentität könnte nun eine Tarifdatenentität enthalten und die Gesprächskostenberechnung durchführen.</p>
+<p>Warum diese Trennung? SRP, SoC.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-08-28):</p>
+<p>Hallo Ralf,</p>
+<p>nachdem wir jetzt übereinstimmen, dass DDD-Entities nicht nur Daten sind... ;-)</p>
+<p>"So eine Logikentität könnte nun eine Tarifdatenentität enthalten und die Gesprächskostenberechnung durchführen."</p>
+<p>Gut, wir können außerdem noch davon ausgehen, dass jedem Gespräch exakt ein Tarif zuordenbar ist. Dazu lässt sich der Einfachheit halber annehmen, dass in der Gesprächs-Entität ein Feld zur Referenzierung des Tarifs vorhanden sei.</p>
+<p>Bleibt die Frage, woher das Programm weiß, welche Gesprächskostenberechnung für welchen Tarif anzuwenden ist.</p>
+<p>Eine Möglichkeit wäre es, ein Gesprächskostenberechnung-Repository zu bemühen. Möglich wäre es und in der Tat könnte dies das Problem lösen. Gleichzeitig führt es aber ein neues ein: zusätzliche Komplexität.  Man gibt bei Gesprächsdaten den Tarif an, muss dann über ein Repository die zugehörige Berechnungs-Entity herausfinden, die ihrerseits den selben Tarif referenziert.</p>
+<p>Eie andere Möglichkeit bestünde darin, die Referenz vom Gespräch zum Tarif durch eine Referenz zur Gesprächskostenberechnung zu ersetzen. Allerdings haben wir jetzt ein Modell das zwar ein Problem löst, dieses aber nicht darstellt: der Problembeschreibung nach gibt es eine Relation von Gespräch und Tarif, nicht aber von Gesprächskostenberechnungen...</p>
+<p>Wir stecken jetzt in einer Konfliktsituation. Letztlich führen beide Fälle zu ein und demselben Problem: anhand des Tarifs muss die Gesprächskostenberechnung ermittelt werden. Bei der ersten Möglichkeit muss dies während der Abrechnung geschehen, bei der zweiten im Rahmen der Verwaltung der Gesprächsentity.</p>
+<p>Diesem Konflikt liegt meiner Ansicht nach ein Fehler zugrunde und dieser Fehler ist Folge eines datenorientierten Denkansatzes oder zumindest der Übertragung dessen auf die Objektorientierung. Die Frage, was ein Tarif ist, wird dabei falsch beantwortet. Der Tarif ist nämlich eben keine Datensammlung sondern der Tarif <strong>ist</strong> die Gesprächskostenberechnung. Die Ermittlung von Gesprächskosten ist sein einziger Zweck. Ob (bzw. dass) hierfür neben der im Beispiel gewählten Gesprächsdauer weitere Daten benötigt werden, steht auf einem anderen Blatt.</p>
+<p>Gruß
+Michael</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-08-28):</p>
+<p>Hallo Michael,</p>
+<p>jetzt hast Du so viel drum herum geredet und design, dass es irgendwie passt bzw. nicht passt. Genau das ist in meinen Augen der Beweis für diese z.T. unnötige (OO/DDD) Herangehensweise. Ein einfaches Problem und Du sprichst von Tarif, Gesprächskostenberechnung, Gesprächskostenberechnung-Repository,  Gesprächs-Entität und wo jetzt hin mit der ganzen Funktionalität. Genau das ist das geschilderte Strukturproblem mit einem ausgesprochenen Lösungsansatz. Die Anforderung mit aller Macht auf Klassen, Objekten, Referenzen, OO und DDD  zu "mappen" finde ich ausgesprochen merkwürdig.</p>
+<p>Analyse, Design, Naming - alles gut und sicher im Sinne der Kommunikation richtig. Aus meiner Sicht hat das jedoch nicht unbedingt etwas mit der Implementierung zu tun. Das kann auch ganz anders gehen. Diese Anforderungen lässt sich bsw. auch sehr gut innerhalb einer relationalen Datenbank mit Tabellen und Stored Procedures, oder per Map/Reduce in einer einer NoSQL, oder mit Projektionen auf Event Streams lösen. Es ist einfache Datenverarbeitung -OO/DDD ist dafür nicht zwangsweise nötig.</p>
+<p>Vorrangig geht es bei Deinen geschilderten Anforderungen um Daten - Tarif = Stammdaten, Gespräch = Verlaufdaten. Jetzt folgt eine wie auch immer geartete Datenverarbeitung - Gesprächskostenberechnung. Diese braucht natürlich Daten um etwas zu berechnen. Braucht diese jetzt irgendeine Art von Relationen? Nein! Sie braucht die Daten mit einer irgendwie erstellten Projektion. Danach kann sie rechnen wie der Teufel und das Ergebnis zurückgeben oder wieder irgendwo speichern. Das war's. Entitäten - ja - als Datenstruktur. Aggregates - ja - als Funktionen die Projektionen, Aggregierung und Fallunterscheidungen machen.</p>
+<p>Beste Grüße,
+Mike</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-08-28):</p>
+<p>Hallo Mike,</p>
+<p>Deinen Ausführungen stimme ich grundsätzlich zu. Wenn ich das tatsächlich realisieren wollte, würde ich einfach Excel nehmen :-)</p>
+<p>Darum ging es hier aber nicht.</p>
+<p>Gruß
+Michael</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-08-28):</p>
+<p>@Michael: Ich sehe es ähnlich. Was soll das ganze Rumgeeiere und Buzzword-Bingo.</p>
+<p>Lass uns anschauen, was es gibt: Um Telefongespräche abzurechnen braucht es:</p>
+<ol>
+<li>
+<p>Tarifdaten: Die Tarifdaten sind eine Reihe von Preisen pro Minute oder Sekunde, z.B. "10c pro Minute zwischen 6-18h, 12c pro Minute zwischen 18-6h".</p>
+</li>
+<li>
+<p>Gesprächsdaten: Gesprächsdauer (von..bis), Gesprächspartner und Kunde.</p>
+</li>
+<li>
+<p>Berechnung: Die Berechnung kombiniert Gesprächsdauer mit Tarif und kommt zu einem Gesprächspreis für das Telefonat des Kunden.</p>
+</li>
+<li>
+<p>Tarifbestimmung: Mindestens für die Kombination Gesprächspartner+Kunde muss ein Tarif bestimmt werden.</p>
+</li>
+<li>
+<p>Speicher: Tarifdaten und Kundendaten müssen irgendwo gespeichert sein. (Kundendaten sind nötig, um darüber an Tarifdaten zu kommen.)</p>
+</li>
+</ol>
+<p>Das sind für mich die Aspekte der Domäne. Und die gilt es zu trennen im Code. Deutlich. Dafür sprechen mindestens SRP und SoC.</p>
+<p>Was das mit DDD zu tun hat? Erstmal nix.</p>
+<p>Jetzt kannst du aber die DDD Brille aufsetzen und streng da durch schauen, um die Aspekte schön auf das Vokabular zu mappen. Da suchst du dann dringend Aggregate, Entitäten, VOs, Repos, Services usw.</p>
+<p>Alles gut und schön. Ich hab nix dagegen. Aber das kann eben schnell auch ausarten. Dann machst du DDD um DDD Willen und nicht, weil es dadurch verständlicher wird.</p>
+<p>Was ich hier beschreiben wollte ist eine sehr dünne DDD Brille, sozusagen eine minimale Brille. Die schaut auf die Daten. Und da findet sie zum Beispiel eine Tarifdatenentität. Die enthält Daten wie oben beschrieben, die gewisse formale Konsistenzkriterien erfüllen müssen, z.B. dürfen die Urzeiten für die Minutenpreise nicht überlappen. Aber das war es dann schon. Keine Berechnungsvorschrift, wie mit den Daten umzugehen wäre.</p>
+<p>Das ist einfach ein anderer Aspekt. Und ich meine, das liegt auf der Hand - bzw. ich möchte erreichen, dass man es als auf der Hand liegend ansieht. Dem gilt das Plädoyer in meinem Artikel.</p>
+<p>Man kann es auch anders sehen und "alles" in so eine Entität reinstopfen. Kann man. Wird meist gemacht. Und dann wundert man sich, dass Software unwartbar wird.</p>
+<p>Das machen auch Leute, die sonst so viel auf SOLID geben. Ich finde das merkwürdig.</p>
+<p>Aber naja... Es gibt ja auch Leute, die schwören auf Fitness - und dann rauchen sie und laben sich nach dem Sport bei 0,5 Liter Hefeweizen. Kann man machen - nur darf man sich dann nicht wundern, wenn es irgendwann trotz Fitnesstraining zu allen möglichen negativen körperlichen Erscheinungen führt. Das ist schlicht nicht nachhaltig.</p>
+<p>Es gibt ja wenig Konsenz in der Branche. Aber eine Prinzip sehe ich ganz vorne in der Akzeptanz. Über alle Fraktionen hinweg:</p>
+<p>Strebe nach geringer Kopplung und hoher Kohäsion.</p>
+<p>SRP, SoC, SLA, ISP sind dazu nur Kommentare.</p>
+<p>Der Trick nun: Man muss das Prinzip aber auch leben. Echt leben. Wirklich dran glauben und es tun. Sich immer wieder fragen, wo denn wirklich hohe Kohäsion ist und wo nicht.</p>
+<p>Das (!) geschieht nur ansatzweise. Und deshalb haben wir immer noch die Codeverhaue, die wir haben.</p>
+<p>Daten und Logik zusammen zu legen widerspricht diesem Prinzip. Da ist mir die ganze traditionelle Objektorientierung egal. Und auch DDD-Proponenten wie Jimmy Nilsson können erzählen, was sie wollen. Solange es im Widerspruch zu so einem fundamentalen und akzeptierten Prinzip steht, bin ich nicht dabei.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skalierbare Softwarebausteine - Teil 1 — ralfw.de Archiv</title>
+<meta name="description" content="Wie können wir Software mit evolvierbarer Struktur herstellen? Wie kann Software selbst so agil werden wie unsere Prozesse es schon geworden sind? Diese Frage treibt mich immer noc">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/skalierbare-softwarebausteine-teil-1/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Skalierbare Softwarebausteine - Teil 1 — ralfw.de Archiv">
+<meta property="og:description" content="Wie können wir Software mit evolvierbarer Struktur herstellen? Wie kann Software selbst so agil werden wie unsere Prozesse es schon geworden sind? Diese Frage treibt mich immer noc">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/skalierbare-softwarebausteine-teil-1/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Skalierbare Softwarebausteine - Teil 1</h1>
+    <div class="doc-meta"><span>5. Okt. 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/10/skalierbare-softwarebausteine-teil-1.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/skalierbare-softwarebausteine-teil-1/</code></span></div>
+    <div class="art"><p>Wie können wir Software mit evolvierbarer Struktur herstellen? Wie kann Software selbst so agil werden wie unsere Prozesse es schon geworden sind? Diese Frage treibt mich immer noch um. Die bisher angebotenen Lösungsansätze aus Richtung Clean Code finde ich noch nicht ausreichend. TDD und SOLID sind ganz gute Ansätze… nur fehlt ihnen aus meiner Sicht ein umfassender Blick auf Software. Das SRP in SOLID ist zwar grundlegend – doch DI ist demgegenüber merkwürdig sprachspezifisch, finde ich. Und TDD fokussiert auf Code, so dass von TDD wenig Hilfe zu erwarten ist, wenn noch gar kein Code oder eine Code-Idee vorhanden ist.</p>
+<p>Ich glaube deshalb weiterhin, dass wir noch einen Schritt zurücktreten müssen. Wir müssen eine allgemeinere Vorstellung von Software entwickeln, in die dann TDD und SOLID usw. hineinpassen. TDD und SOLID sollen also nicht einfach ersetzt werden, sondern einen soliden Platz bekommen.</p>
+<h3>Warum die real existierende Objektorientierung uns behindert</h3>
+<p>Die Objektorientierung, so könnten Sie sagen, ist doch aber schon so eine allgemeine Vorstellung von Software. Ja, das stimmt. Irgendwie ist sie das. Und dann doch wieder nicht. Zumindest nicht die real existierende Objektorientierung, die sich von einer idealen ursprünglichen stark unterscheidet. Die real existierende Objektorientierung (REOO) hat aus meiner Sicht einfach einige große Mängel:</p>
+<ul>
+<li>Sie REOO skaliert konzeptionell nicht. Wir können Software mit ihr nicht vom kleinsten bis zum größten Baustein durchgängig beschreiben. Dass Software aus Bausteinen unterschiedlicher Größe/Granularität zusammengesetzt ist, sollte außer Zweifel stehen. Damit meine ich nicht, dass Bausteine mal mehr und mal weniger LOC haben. Ich meine ihre konzeptionelle Größe, ihren Funktionsumfang. Eine ganze EXE umfasst mehr Funktionalität als eine Klasse in der EXE.
+Mir fällt es jedenfalls sehr schwer, Software aus Objekten unterschiedlicher Granularität vorzustellen. Der UML offensichtlich auch, sonst würde sie Klassendiagrammen nicht auch noch Komponenten- und Paketdiagramme beistellen. Weder Komponenten noch Pakete gehören jedoch zur Objektorientierung. Wie ihre Namen schon sagen, geht es nicht um Objekte (oder Klassen als deren Schemata), sondern um Komponenten und Pakete.</li>
+<li>Die REOO ist fixiert auf ein essenziell statisches Bild der Realität. Nomen est omen: Die Realität besteht aus Objekten, aus “Dingern”, die erstmal sind, deren Existenz eine Dauer hat. Diese “Dinger” haben dann vor allem einen Zustand. Die Praxis der REOO versucht sie vor allem anhand von Daten zu identifizieren, für die sie verantwortlich sind. Objekte sind mithin Zuständigkeitsaggregate. Sie bündeln den Umgang mit Daten. Das wird positiv formuliert als Kapselung.
+Ich verstehe, dass diese Sichtweise Appeal hat. Menschen mögen Greifbares. Mit Lego kann jedes Kind umgehen, mit Mathematik jedoch nicht; die ist viel abstrakter. Also mögen Softwareentwickler auch lieber umgehen mit Greifbarem, eben mit Objekten.
+Wenn ich die Wurzel der Softwareentwicklung im Maschinenbau und der Elektrotechnik verorte (und nicht in der Mathematik), dann finde ich das auch nur konsequent. Die vormaligen Hardwarebausteine sind in die Software übertragen worden: aus konkreten Zahnrädern und Hebeln und Transistoren und Widerständen sind Objekte geworden.
+Oder ich könnte philosophisch werden und die Softwareentwicklung an die Griechen binden. Demokrit mit seinen Atomen und Platon mit seinen Ideen haben die Welt bestehend aus klar umrissenen Entitäten aufgebaut gesehen. Die einen waren anfassbar, wenn auch seeeeehr klein. Die anderen abstrakt, dafür beliebig groß. In jedem Fall haben beide ihre “Weltenbausteine” als unwandelbar angesehen, als statische Bausteine.</li>
+<li>Die REOO verbindet Objekte über Abhängigkeiten. Ein Objekt, das viel kann, ist von Objekten abhängig, die weniger können. Dadurch entsteht eine Abhängigkeitshierarchie, über die die Gesamtleistung vertikal verteilt ist. Auf jeder Ebene passiert ein bisschen.
+Das hat die REOO als Problem erkannt – im Zusammenhang mit der Testbarkeit. Als Gegenmaßnahme empfiehlt sie IoC und DI und Attrappen. Damit werden Objekte auf jeder Ebene einzeln testbar.
+Ich halte das für eine Symptombehandlung. Die Abhängigkeiten bleiben bestehen. Funktionalität ist weiterhin vertikal in der Hierarchie verstreut.</li>
+</ul>
+<p>Meine Kritik an der real existierenden Objektorientierung ist also sehr fundamental. Sie macht uns die Beschreibung von Lösungen schwer, weil wir die mit ihren Mitteln nicht leicht auf beliebigen Abstraktionsebenen denken können. Sie fixiert sich auf ein Weltbild, das es uns schwer macht, das zu beschreiben, was Software essenziell repräsentiert: Prozesse. Und die Ergebnisse der Objektorientierung, der Code, hat eine Form, die ganz fundamental anti-agil ist, also im Widerspruch zur zentralen Erkenntnis der Softwareentwicklung steht, dass Software sich ständig anpassen muss.</p>
+<p>Aber nun genug des OO-Bashings :-) Es soll nur als Motivationshintergrund dienen, warum ich immer noch und wieder an einem anderen Software-Weltbild bastle. Nicht, dass mit REOO nix ginge. Doch, klar, es geht was. Mit Pferdefuhrwerken ging auch etwas. Jahrhunderte lang. Und dann kam der Trecker. Nun geht noch mehr.</p>
+<h3>Vorschlag für ein alternatives Weltbild</h3>
+<p>Damit ich nicht den Anschein erwecke, eine rundum-sorglos Lösung zu bieten – Silverkugeln gibts ja nicht und sind in unserer Branche bei vielen auch nur im Anschein verhasst –, spreche ich lieber mal von einem Traum.</p>
+<p>Ja, ich habe einen Traum, in dem wir Software viel einfacher entwickeln. Das ist natürlich auch irgendwie dem verhaftet, was ich in 30 Jahren Softwareentwicklung erfahren habe. Wie Software in 100 Jahren entwickelt wird, kann ich mir wohl nicht vorstellen. Doch für Sie mag mein Traum dennoch esoterisch anmuten. Macht ja aber nichts, ist eben nur ein Traum :-) Träumen Sie doch mal mit. Lassen Sie sich darauf ein. Schicken Sie Ihre Skepsis für eine kleine Weile auf Urlaub. Die kann sich ja mal den Versuchen zur Rettung von Euro und Europa zuwenden.</p>
+<p>In meinem Traum entwickeln wir Software anders, weil Software darin ein anderes Weltbild unterliegt. Software oder die Welt besteht darin nicht aus “Dingern”, sondern aus Prozessen. Im Kern steht nicht etwas Statisches, sondern Dynamik. Es geht ums Tun, um Bewegung, um Wandlung. Softwareentwickler fragen nicht, nach “Objekten”, sondern nach “Aktivitäten”.</p>
+<p>Nach diesem Weltbild besteht Software aus diesem:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/8c55a017ebc256a1.png" /></p>
+<p>Das ist eine Aktivität. Da passiert etwas. Das ist neutral gesprochen eine Funktionseinheit. Kent Beck würde es vielleicht Element nennen.</p>
+<p>“Baustein” möchte ich eigentlich ungern dazu sagen, da “Baustein” schon wieder Statik suggeriert wie “Objekt”. Aktion, Aktivität oder eben Funktionseinheit scheinen mir passender.</p>
+<p>So eine Funktionseinheit “macht ihr Ding”, indem sie eingehende Daten verarbeitet. Sie steht also für das alte EVA-Prinzip: Eingabe-Verarbeitung-Ausgabe.</p>
+<p>Daten können aus verschiedenen Richtungen in die Funktionseinheit einfließen (Input). Das, was sie daraus macht, kann in verschiedene Richtungen aus ihr herausfließen (Output).</p>
+<p>Und wenn eine Funktionseinheit nicht reicht, dann arbeiten mehrere zusammen in einem Fluss. Der Output der einen wird zum Input der anderen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/06a09fb526c9177d.png" /></p>
+<p>Das war´s. So sieht Software aus. Auf jeder Abstraktionsebene. Damit lässt sich eine ganze Anwendung beschreiben wie auch der kleinste Teil einer Anwendung.</p>
+<h4>Zustand</h4>
+<p>Input ist ein Trigger für Funktionseinheiten. Kommt Input an, tun sie etwas. Allerdings muss sich eine Aktivität nicht ausschließlich auf einfließenden Input beziehen. Sie kann auch ein Gedächtnis haben, d.h. Zustand. Aus dem kann sie lesen und den kann sie verändern.</p>
+<p>Zustand macht es zwar schwerer, über das Ergebnis einer Aktion nachzudenken, aber ich halte Zustand für einen so natürlichen Bestandteil der Welt, dass wir ihn nicht mit Macht ausschließen sollten. Das rückt Funktionseinheiten natürlich in die Nähe von REOO Objekten – doch der Unterschied besteht für mich im Fokus. Bei REOO steht Zustand eher am Anfang, bei meiner Träumerei eher am Ende.</p>
+<p>Im einfachsten Fall ist solcher Zustand lokal. Eine Aktion hat individuellen Zustand:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/bdb10934cd88922e.png" /></p>
+<p>Wenn Aktionen kooperieren sollen, dann kann es allerdings nötig sein, dass sie Zustand gemeinsam nutzen. Das ist dann shared state und sollte explizit gemacht werden. Das wird spätestens dann wichtig, wenn der Zugriff darauf gleichzeitig erfolgen soll. Dann muss er nämlich synchronisiert werden.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/afef285c2b189b4a.png" /></p>
+<h4>Nebenläufigkeit</h4>
+<p>Ohne weitere Angaben arbeiten Aktionen sequenziell und synchron. Während eine Funktionseinheit Input verarbeitet, tut das keine andere. Wenn sie Output produziert, stößt sie damit eine empfangende Funktionseinheit an, die ihn als Input verarbeitet, bevor die produzierende weitermacht.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a55eaa43d4a95934.png" /></p>
+<p>Sequenzielle und synchrone Verarbeitung lässt sich gut denken und nachverfolgen. Aber in der realen Welt kommt sie eher nicht vor. Und sie nutzt die verfügbaren Prozessorressourcen womöglich nicht optimal.</p>
+<p>Es ist deshalb konsequent, Aktionen auch nebenläufig betreiben zu können. Sie laufen dann auf (mindestens) einem eigenen Thread (und womöglich auf einem eigenen Prozessorkern).</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/169e96c6d3cc734e.png" /></p>
+<p>Sobald der Fluss von Input-Output durch eine Aktion mit eigenem Thread läuft, findet die weitere Verarbeitung auf diesem Thread statt, bis wiederum eine Aktion mit eigenem Thread angestoßen wird usw.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/6e3b6481408b1720.png" /></p>
+<p>Dass Aktionen nebenläufig betrieben werden können, bedeutet jedoch nicht, dass Nebenläufigkeit auch innerhalb von Aktionen stattfindet. Die scheint mir problematisch, weil sie dazu führt, dass Input in anderer Reihenfolge als der, in der er eintrifft, verarbeitet wird. In meinem Traum ist daher die Verarbeitung innerhalb einer Funktionseinheit immer noch sequenziell. Input wird in der Reihenfolge seines Eintreffens verarbeitet.</p>
+<p>Zumindest sollte das wohl der Default sein. Wenn in ganz bestimmten Situationen eine Aktion davon profitiert, in sich ebenfalls nebenläufig zu sein, d.h. Input auf mehreren Threads parallel zu verarbeiten, dann sei das so. Es könnte so ausgedrückt werden:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/44d70f474a487425.png" /></p>
+<p>Aktionen sind zunächst also synchron und sequenziell, dann können sie auch asynchron sequenziell sein und schließlich vollständig parallel.</p>
+<h4>Unabhängigkeit</h4>
+<p>Es ist vielleicht keiner Erwähnung wert, weil der Fluss von Input-Output es so natürlich macht, doch ich sage es lieber einmal ausdrücklich: Aktionen sind von einander unabhängig.</p>
+<p>Zwei verbundene Aktionen wissen nichts von einander. Der Producer (generiert Output) weiß nicht, wer seinen Output weiterverarbeitet. Der Consumer (verarbeitet Input) weiß nicht, von wem sein Input stammt.</p>
+<p>Das (!) ist ein fundamentaler Unterschied zur REOO. Und deshalb ist es wohl gut, dass ich ihn hier nochmal betone ;-)</p>
+<p>Eine Gesamtleistung als Ergebnis einer Kooperation mehrerer Funktionseinheiten erfordert keinerlei Abhängigkeiten zwischen den Kooperationspartnern. Sie wissen nicht einmal, dass sie kooperieren.</p>
+<p>Jede Aktion innerhalb einer “Kooperative” bekommt Input “von irgendwoher” und produziert Output “für unbekannt”.</p>
+<p>Ein Zusammenhang von Funktionseinheiten wie dieser:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/34c5cf1ceb48af89.png" /></p>
+<p>sieht also eher so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/18cd6c70597d1351.png" /></p>
+<h4>Schachtelung</h4>
+<p>Um größere und sehr große Systeme zu beschreiben, müssen Aktionen hierarchisch angeordnet werden können. Aus großer Flughöhe sieht ein System dann eigentlich immer so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2ab3266419aa1e01.png" /></p>
+<p>Wenn man niedriger fliegt, kommen Details in den Blick:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a29962d82c767a29.png" /></p>
+<p>Und wenn man noch tiefer runter geht, d.h. in das System hineinzoomt, dann kommen noch mehr Details in den Blick:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/10302b14cb938ccc.png" /></p>
+<p>So kann es beliebig tief gehen. Software kann also als Baum dargestellt werden:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/727acc6f753fa063.png" /></p>
+<p>Das sieht nun wieder wie eine REOO Objekthierarchie aus. Das macht auch nichts, solange klar ist, dass der “Verfeinerungsbaum” einem wesentlichen Prinzip folgt: alle Aktionen, die nicht Blatt sind, haben ausschließlich die Aufgabe, Aktionen zu “Kooperativen” zu kombinieren.</p>
+<p>In Nicht-Blättern stecken keine Algorithmen. Sie entscheiden nichts, sie enthalten keine Schleifen. Sie sorgen nur dafür, dass Output der einen Aktion zu Input für eine andere wird. That´s it.</p>
+<p>Ebenfalls betonenswert: Funktionseinheiten auf allen Ebenen sehen gleich aus. Sie verarbeiten Input zu Output mit eventuellen Seiteneffekten. Und sie sind gleichzeitig Teil von darüber gelagerten Funktionseinheiten, von denen sie in einen Kooperationszusammenhang gestellt werden, wie sie Ganzes sind in Bezug auf Funktionseinheiten, die sie selbst zu einem Kooperationszusammenhang zusammenstellen.</p>
+<p>Software ist damit grundsätzlich selbstähnlich aufgebaut; man könnte vielleicht sogar sagen, fraktal. Software ist eine Holarchie und die Funktionseinheiten sind ihre Holons.</p>
+<p>Darüber habe ich früher schon öfter geschrieben wie <a rel="noopener" href="http://ralfw.blogspot.com/2010/04/holarchie-event-based-components-fur.html">hier</a> oder <a rel="noopener" href="http://ralfw.blogspot.com/2011/09/bausteine-fur-die-softwareevolution.html">hier</a> oder 2005 <a rel="noopener" href="http://weblogs.asp.net/ralfw/archive/2005/06/06/410467.aspx">hier</a>. Aber auch wenn ich riskiere, damit zu langweilen, ist mir diese Sichtweise so wichtig, dass ich sie wiederhole. Wir tun uns einen Gefallen, wenn wir dahin kommen, Software so zu sehen. Aller Softwareentwurf kann durch solche Regelmäßigkeit nur einfacher werden.</p>
+<h4>Normalisierung</h4>
+<p>Zum Abschluss für heute noch eine Verallgemeinerung. Aktionen habe ich als Funktionseinheiten mit beliebig vielen Input- und Output-Strömen beschrieben. So soll es auch sein.</p>
+<p>Für etwas mehr Regelmäßigkeit können Sie jedoch reduziert werden. Das hat später Vorteile, wie Sie sehen werden, wenn es an die Implementierung geht.</p>
+<p>Die “Einheitsdarstellung” oder normalisierte Form für Aktionen ist diese:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/045ba166ac96c2ab.png" /></p>
+<p>Normalisierte Funktionseinheiten haben genau 1 Input-Strom und genau 1 Output-Strom. Immer.</p>
+<p>Statt Input/Output entlang verschiedener Ströme fließen zu lassen, gibt es je nur einen Strom, auf dem Input/Output-Daten mit einem Qualifier näher beschrieben sind; der ordnet sie logisch einem der vielen früheren physischen Ströme zu.</p>
+<p>Wie und ob sie sich von Input triggern lassen, sei dahingestellt. Ob sie Output herstellen, sei dahingestellt. Mir geht es um ihre Form. Alle Funktionseinheiten aller Ebenen können ohne Verlust an Flexibilität und Individualität gleich aussehen.</p>
+<h3>Zwischenstand</h3>
+<p>Soweit mein Traum von einer universellen, skalierbaren Grundstruktur von Software. Sie besteht aus einer beliebig tiefen Hierarchie von potenziell zustandsbehafteten und potenziell nebenläufigen Aktionen. Software tut etwas. Sie verarbeitet Daten. Deshalb wird sie beschrieben durch Tätigkeiten einheitlicher Form.</p>
+<p>Klar, das ist Flow-Design nochmal beschrieben. Mir scheint eine so knappe Darstellung allerdings sinnvoll als Grundlage für das, was ich im Folgenden beschreiben möchte. Sie fasst den Stand der Flow-Design Überlegungen zusammen – allemal für die, die nicht alles verfolgen, was bisher dazu geschrieben wurde.</p>
+<p>Ganz ohne Neuigkeit ist dieser Artikel andererseits aber auch nicht. Die Nebenläufigkeit ist jetzt “offiziell” im Bild und die Normalisierung. Der nächste Artikel wird zeigen, dass sie nicht nur konzeptionell nett ist.</p>
+<p><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY"></a><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY">Spendieren Sie mir doch einen Kaffee, wenn Ihnen dieser Artikel gefallen hat...</a></p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2011-10-05):</p>
+<p>Ich habe meinen Frieden in REST gefunden. Dies konsequent angewendet liefert mir kleine Funktionsbausteine, die über den Javascript Client per HTTP verdrahtet sind. Quasi EBC mit "Internetverbindung" (klar kann ich das auch nur lokal verwenden). Ein großes Problem der REOO liegt für mich auch in der Art der Datenhaltung: alle Daten liegen in der gleichen DB, die Tabellen "kennen" (referenzieren) sich und schaffen deshalb hier schon Abhängigkeiten, die dann natürlich noch in die OO gemappt werden.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-10-05):</p>
+<p>@Alexander: RIP wie REST In Peace? :-)</p>
+<p>REST ist ja aber erstmal nur eine Kommunikationstechnik für verteilte Funktionseinheiten. Damit sagst du noch nicht unbedingt aus, wie du die "denkst".</p>
+<p>Und ich sehe ein Problem darin, dass bei REST eben der Consumer gekannt werden muss oder der Producer. Auf einen von beiden muss sich eine URL ja beziehen. Oder - das geht natürlich auch - es kommt ein Bus ins Spiel.</p>
+<p>Dazu später hier im Blog mehr.</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-10-05):</p>
+<p>@Ralf: der JS Client macht die Verdrahtung, nicht die Logik. Er verdrahtet die Bausteine untereinander und bindet an die HTML UI (KnockoutJS). Für mich ist mein Code dadurch schlank und wartbar geworden. Und ich bin in der Entwicklung getestet ca. 30% schneller als vorher. Natürlich funktioniert das möglicherweise nicht für jeden.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-10-05):</p>
+<p>@Alexander: Verstehe ich leider nicht. Male doch mal ein Diagramm dazu. Welche Rechner sind im Spiel, wo läuft welcher Code, wer verdrahtet...</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-10-05):</p>
+<p>Das Prinzip ist schön und gut - ehrlich. Nur wie sieht die Definition von Input/Output aus?</p>
+<p>Die Aktionen müssen mit einem Input etwas anfangen (diesen verstehen) und einen sinnvollen Output (der von anderen Aktionen verstanden wird) erstellen können.</p>
+<p>Werden hierzu (sorry) "Interfaces" definiert? Gibt es ein "universelles" Format? Gibt es nur "primitive" Datentypen (Text, Zahl, ...)?</p>
+<p>Habe ich das übersehen?! Wenn ja, dann sorry.</p>
+<hr />
+<p><strong>Manuel</strong> (2011-10-05):</p>
+<p>@Anonym
+Jede Funktionseinheit wird durch ein Interface definiert. In diesem Kontrakt definierst du beim Input, wie auch beim Output, die Nachrichtentypen.</p>
+<p>Bitte korrigiert mich, wenn ich falsch liege :-)</p>
+<hr />
+<p><strong>Manuel</strong> (2011-10-05):</p>
+<p>Wieso nicht gleich ein Beispiel dazu (sehr trivial):</p>
+<p>public interface IConvertNumberToString
+{
+     void Process(int number); // Input
+     event Action Result; // Output
+}</p>
+<hr />
+<p><strong>Manuel</strong> (2011-10-05):</p>
+<p>Sorry für den Triple-Post. Die eckigen Klammern werden nicht geschluckt. Beim Output gibst du bei Action in eckigen Klammern noch den Typ an.</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-10-05):</p>
+<p>Ähm, wie viele Interfaces sind dann zu erwarten?! Ich gehe mal davon aus, dass diese dann etwas "komplexer" sein müssen, als dass nur "Zahl in Text" konvertiert wird. (zB. Datendateien, ...)</p>
+<p>Wird hier nicht nur das Problem "verlagert". So gesehen werden die Methoden eines Objekts zu "freien" Aktionen, die mit "dummen" Objekten umgehen. Wie bleiben die "beieinander".</p>
+<p>Jedenfalls eine spannende Sache. Bin gespannt, wie dann die "Masse" an Aktionen und Interfaces organisiert wird, um einen Überblick zu behalten. Nachdem Menschen diesbzgl. kongnitive Einschränkungen haben, landen wir sicher wieder bei Namespaces, Packages udglm.</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-10-05):</p>
+<p>@Ralph zum Wochenende werde ich das Diagramm erstellen können, vorher ist nicht damit zu rechnen.</p>
+<hr />
+<p><strong>JensG</strong> (2011-10-05):</p>
+<p>Das was hier im Beitrag beschrieben wurde, ist genau ein wesentlicher Grund dafür, warum ich persönlich denke, daß uns DSL oder irgendeine Weiterentwicklung (zB. eben auch grafisches Flow-Design) hier wesentlich weiterbringen werden: Man kann damit nämlich den Fokus auf den jeweils interessanten Abstraktionslevel heben, und alle anderen Level ausblenden. In dem Zusammenhang möchte ich auch noch mal an "Intentional Programming" erinnern. Beides geht weg von den Untiefen der Implementation, hin zur <strong>trelevanten</strong> Detailebene. Viel interessanter als das WIE ist doch das WAS: "Was will ich eigentlich erreichen?" statt "Wie will ich es implementieren?" Das WIE wird erst später wichtig, weil es mehrere Abstraktionsebenen weiter unten liegt.</p>
+<p>Ich erlebe so häufig, wie Diskussionen in irgendwelche unrelevanten Details abdriften. Klar, Otto Normalentwickler fühlt sich in den tiefsten Details des Codes am wohlsten. Es geht doch nichts über eine selbstgebastelte Quicksort-Implementierung, die noch ein Quentchen schneller ist als die vorliegende Version. Aber es ist falsch, es ist nicht zielführend und es ist schon gar nicht produktiv!</p>
+<p>Mein Fazit: Bitte mehr davon!</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-10-06):</p>
+<p>Warum denn immer gleich so konkret, Leute? :-)</p>
+<p>Der Artikel ist konzeptionell. Lasst euch doch mal drauf ein. Interfaces? Implementationsdetail. Datentypen? Implementationsdetail.</p>
+<p>Oder platte Antwort: Interfaces sind nicht nötig. Und der Datentyp für ein "Datenpaket" ist object oder byte[] (je nach persönlichem Geschmack).</p>
+<p>Zufrieden?</p>
+<p>Ich weiß, am Ende nützt das schönes Konzept nix, wenn man es nicht implementieren kann. Aber da bin ich noch nicht. Haltet noch einen Moment die Füße still. Dieser Artikel war nur notwendiges Vorgeplänkel für das, was ich eigentlich "vorträumen" will.</p>
+<hr />
+<p><strong>Michael Mehl</strong> (2011-10-18):</p>
+<p>Diese Idee erinnert mich stark an eine der Grundlagen der Sprache Oz (http://www.mozart-oz.org): Das Berechnungsmodell ist ziemlich einfach und besteht aus einem Speicher (computation space), der die Daten enthält und nebenläufigen Programmen (threads), die aus dem Speicher lesen (bzw. durch Informationen aus dem Speicher getriggert werden) und die in den Speicher neuen Informationen schreiben.</p>
+<p>Weitere Infos dazu auch in einem schönen Buch von Peter Van Roy und Seif Haridi: Concepts, Techniques, and Models of Computer Programming (http://www.info.ucl.ac.be/~pvr/book.html)</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

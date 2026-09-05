@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zustand als Abhängigkeit – IoC konsequent gedacht [OOP 2010] [endlich-clean.net] — ralfw.de Archiv</title>
+<meta name="description" content="Design for Testability ist auch Design for Flexibility. Deshalb liebe ich TDD. Allerdings bin ich dabei immer wieder über einen Problemfall gestolpert: die Prüfung des Zustands ein">
+<link rel="canonical" href="https://ralfw.de/archiv/2009/zustand-als-abhangigkeit-ioc-konsequent/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Zustand als Abhängigkeit – IoC konsequent gedacht [OOP 2010] [endlich-clean.net] — ralfw.de Archiv">
+<meta property="og:description" content="Design for Testability ist auch Design for Flexibility. Deshalb liebe ich TDD. Allerdings bin ich dabei immer wieder über einen Problemfall gestolpert: die Prüfung des Zustands ein">
+<meta property="og:url" content="https://ralfw.de/archiv/2009/zustand-als-abhangigkeit-ioc-konsequent/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Zustand als Abhängigkeit – IoC konsequent gedacht [OOP 2010] [endlich-clean.net]</h1>
+    <div class="doc-meta"><span>7. Nov. 2009</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2009/11/zustand-als-abhangigkeit-ioc-konsequent.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2009/zustand-als-abhangigkeit-ioc-konsequent/</code></span></div>
+    <div class="art"><p>Design for Testability ist auch Design for Flexibility. <a rel="noopener" href="http://ralfw.blogspot.com/2009/10/tdd-wofur-oop-2010-endlich-cleannet.html">Deshalb liebe ich TDD</a>. Allerdings bin ich dabei immer wieder über einen Problemfall gestolpert: die Prüfung des Zustands eines system under test (SUT). Als Beispiel hier ein typischer (nicht unbedingt optimaler) Ansatz bei der bekannten und beliebten <a rel="noopener" href="http://codingdojo.org/cgi-bin/wiki.pl?KataPotter">KataPotter</a>.</p>
+<p>Viele denken bei der Implementierung der Preisberechnung für die KataPotter an einen Warenkorb, den es zu füllen gilt, um dann den Preis unter Anwendung der Rabatte zu berechnen. Sie definieren eine solche Klasse dann z.B. so:</p>
+<p>class KataPotterShoppingBasket</p>
+<p>{</p>
+<p>private Dictionary books = new Dictionary();</p>
+<p>public void AddBook(int bookId)</p>
+<p>{</p>
+<p>//...</p>
+<p>}</p>
+<p>public decimal Total</p>
+<p>{</p>
+<p>get</p>
+<p>{</p>
+<p>//...</p>
+<p>}</p>
+<p>}</p>
+<p>}</p>
+<p>Ein  zugehörige Test scheint zunächst einfach:</p>
+<p>[TestFixture]</p>
+<p>public class testKataPotterShoppingBasket</p>
+<p>{</p>
+<p>[Test]</p>
+<p>public void Enthält_ein_Buch()</p>
+<p>{</p>
+<p>var sut = new KataPotterShoppingBasket();</p>
+<p>sut.AddBook(1);</p>
+<p>//?</p>
+<p>}</p>
+<p>}</p>
+<p>Aber, ach, ohje… Wie prüft man denn nun, ob das hinzugefügte Buch auch im Warenkorb angekommen ist? AddBook() ist ein Kommando und verändert den Zustand des Warenkorbs. Wie kann man also ganz allgemein diesen Zustand in Tests prüfen?</p>
+<h2>Zugriffsroutinen für Zustand?</h2>
+<p>Naheliegend ist die Prüfung von Zustand durch direkten Zugriff auf den Zustand. Dafür muss das SUT nur einen solchen Zugriff anbieten. Für einen üblichen Warenkorb mag das der Fall sein. Da gibt es nicht nur ein AddBook(), sondern sicher auch noch ein GetBook() oder eine ganze Collection von Books, über die man prüfen kann, ob eine Zustandsveränderung wirksam war.</p>
+<p>Der KataPotter-Warenkorb braucht solche Zugriffsroutinen aber nicht. Warum sollten sie also nur für den Test eingeführt werden? Ich halte nichts davon, weil sie das Interface des system under test aufblähen. Sie haben keinen Wert für die Domäne, sind in der Intellisense-Liste der Eigenschaften und Methoden aber immer sichtbar. Da hilft auch die Deklaration als intern nicht viel. Das wäre falsch verstandenes Design for Testability.</p>
+<p>Wenn Sie die KataPotter so wie oben gezeigt angehen sollten, widerstehen Sie der Versuchung, dem Warenkorb z.B. eine Count-Eigenschaft zu geben, um den Test zum Laufen zu bekommen.</p>
+<p>Solch ein Design wäre dann zwar irgendwie testbarer, aber die Flexibilität würde sich nicht erhöhen. Sie hätten nicht mehr das minimal Notwendige getan. Außerdem würde der Test dann zweierlei testen. Das ist zu vermeiden! Er würde AddBook() und Count prüfen. In beiden könnten ja Fehler stecken.</p>
+<p>AddBook() und Count wären sogar gegenseitig abhängig in Bezug auf Tests. Sie könnten auch Count nicht zuerst testen, denn dazu müssten Sie Zustand aufbauen. Wäre das nicht der Fall, ist die Nutzung von mehreren SUT-Funktionalitäten in einem Test nicht so schlimm. Dann können Sie die in separaten Tests vorweg prüfen.</p>
+<p><strong>Ergebnis: Vermeiden Sie, spezielle Zugriffsmethoden für Zustand nur zum Zweck des Testens einzurichten. Allemal, wenn sie sie nicht wirklich isoliert testen können.</strong></p>
+<h2>Zustandstest durch Ableitung?</h2>
+<p>Auf Zustand können Sie aber nicht nur von außen zugreifen, einfacher ist es von innen. Eine Alternative zu Zugriffsmethoden wäre daher die Ableitung einer Klasse vom SUT. Deren Zustand wäre ja der des Warenkorbs. Dazu müssten Sie nur die Sichtbarkeit des Zustands ändern:</p>
+<p>class KataPotterShoppingBasket</p>
+<p>{</p>
+<p><strong>protected</strong>Dictionary books = new Dictionary();</p>
+<p>...</p>
+<p>}</p>
+<p>Eine Ableitung kann dann “gefahrlos” eine Zugriffsmethode anbieten. Die “verunreinigt” die Domänenklasse nicht:</p>
+<p>class TestableShoppingBasket : KataPotterShoppingBasket</p>
+<p>{</p>
+<p>public int Count { get { return base.books.Count; } }</p>
+<p>}</p>
+<p>Wenn Sie im Test die abgeleitete Klasse als SUT instanzieren, haben Sie also Testbarkeit “ohne Reue”:</p>
+<p>[Test]</p>
+<p>public void Enthält_ein_Buch()</p>
+<p>{</p>
+<p>var sut = new TestableShoppingBasket();</p>
+<p>sut.AddBook(1);</p>
+<p>Assert.That(sut.Count, Is.EqualTo(1));</p>
+<p>}</p>
+<p>Mit einer Ableitung müssen Sie nicht einmal Design for Testability betreiben. Und die Flexibilität wird auch nicht eingeschränkt. Eine scheinbar ideale Lösung, oder? Der Eingriff, private Variablen auf protected statt private zu setzen, ist minimal. Und dass dieser Ansatz an abgeschlossenen (sealed) Klassen scheitert, ist auch unbedeutend.</p>
+<p>Dennoch will mir eine Ableitung vom eigentlichen SUT nicht recht schmecken. Nein, das liegt nicht daran, dass ich Ableitungen für generell überbewertet halte. Hier wäre ja sogar das <a rel="noopener" href="http://clean-code-developer.de/wiki/CcdGelberGrad#LiskovSubstitutionPrinciple">Liskov Substitution Principle</a> eingehalten. Den Aufwand für die Ableitungsklasse finde ich auch nicht zu hoch.</p>
+<p>Nein, es etwas anderes, das mich stört…</p>
+<h2>Zustand als Abhängigkeit</h2>
+<p>Ich glaube, mich stört, dass Zustand hier eine Extrawurst gebraten bekommt. Zustand wird nicht seiner Natur nach behandelt. Denn Zustand ist eine Abhängigkeit!</p>
+<p>Üblicherweise denken wir bei Abhängigkeiten an Funktionalität. Der Warenkorb könnte z.B. von einer Preisberechnungsfunktionalität abhängen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/6edb9c1ebbadb9bf.png" /></p>
+<p>Dann fänden wir es ganz natürlich, diese Abhängigkeit in den Warenkorb zu injizieren:</p>
+<p>class KataPotterShoppingBasket</p>
+<p>{</p>
+<p>private IPriceCalculator calc;</p>
+<p>private Dictionary books = new Dictionary();</p>
+<p>public KataPotterShoppingBasket(<strong>IPriceCalculator calc</strong>)</p>
+<p>{</p>
+<p>this.calc = calc;</p>
+<p>}</p>
+<p>...</p>
+<p>Aber was ist jetzt das private Feld calc? Es gehört genauso zum Zustand des Warenkorbs wie books. Der einzige Unterschied  besteht darin, dass calc von einem selbstdefinierten Typ ist und book einen .NET Fx Typ hat.</p>
+<p>Darüber hinaus glauben wir dann aber irgendwie noch eine größere “Intimität” zwischen book und z.B. AddBook() zu spüren. Die Inhalte von book werden mittels der Warenkorbmethoden verändert, während calc konstant bleibt. book ist eben “wahrer” Zustand und deshalb anders zu behandeln als calc.</p>
+<p>Doch warum ist die Abhängigkeit von einem Preisberechner denn offengelegt? Warum wird der injiziert? Weil das den Warenkorb isoliert testbar macht. Sie können ihn unter Injektion einer Attrappe auf die Probe stellen. Dazu kommt, dass damit die Preisberechnung auch noch flexibler austauschbar wird; ein schöner Nebeneffekt.</p>
+<p>Wenn nun jedoch bessere Testbarkeit zur IoC für funktionale Abhängigkeiten geführt hat, warum sollte sie dann nicht auch bei Abhängigkeiten von Zustand zum Einsatz kommen? Ich sehe da kein gewichtiges Gegenargument. Das widerspräche auch nicht der Objektorientierung. Nach Injektion ist Zustand ja weiterhin in einem Objekt entsprechend dessen Zugriffsmethoden verborgen.</p>
+<p>Wenn wir von Abhängigkeiten sprechen, sollten wir also konsequent sein. <strong>Zustand (state) wie Funktionalität (behavior) sind zwei Seiten derselben Medaille Abhängigkeit</strong>:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/44bf7b58e84068bf.png" /></p>
+<p>Aus meiner Sicht sieht die Lösung des Ausgangsproblems deshalb so aus:</p>
+<p>class KataPotterShoppingBasket</p>
+<p>{</p>
+<p>private readonly PriceCalculator calc;</p>
+<p>private readonly Dictionary books;</p>
+<p>public KataPotterShoppingBasket(Dictionary books,</p>
+<p>PriceCalculator calc)</p>
+<p>{</p>
+<p>this.calc = calc;</p>
+<p>this.books = books;</p>
+<p>}</p>
+<p>...</p>
+<p>Dem erweiterten Warenkorb injizieren Sie nicht nur die Abhängigkeit von einer Preisberechnungsfunktionalität, sondern auch einen initialen Zustand:</p>
+<p>[Test]</p>
+<p>public void Enthält_ein_Buch()</p>
+<p>{</p>
+<p>var books = new Dictionary();</p>
+<p>var sut = new KataPotterShoppingBasket(</p>
+<p>books,</p>
+<p>null);</p>
+<p>sut.AddBook(1);</p>
+<p>Assert.That(books.Count, Is.EqualTo(1));</p>
+<p>}</p>
+<p>Das halte ich für genauso konsequent wie einfach zu verstehen. Etwas systematisiert lautet dann das Muster:</p>
+<ul>
+<li>Abhängigkeiten einer Klasse zusammenfassen in einer Abhängigkeitsklasse. Das gilt für Zustände wie Funktionalität, von denen eine Klasse abhängt.<ul>
+<li>Während Tests die dafür minimal nötigen Abhängigkeiten mit einer Instanz der Abhängigkeitsklasse injizieren.</li>
+<li>Erwartungen an Zustandsänderungen nach Ausführung von Kommandos auf dem SUT prüfen anhand der injizierten Abhängigkeitklasseninstanz.</li>
+</ul>
+</li>
+</ul>
+<p>Am Beispiel des Warenkorbs sähe das so aus:</p>
+<p>class KataPotterShoppingBasket</p>
+<p>{</p>
+<p>internal class Dependencies</p>
+<p>{</p>
+<p>public readonly IPriceCalculator calc;</p>
+<p>public readonly Dictionary books = …</p>
+<p>}</p>
+<p>private readonly Dependencies dependencies;</p>
+<p>public KataPotterShoppingBasket(Dependencies dependencies)</p>
+<p>{</p>
+<p>this.dependencies = dependencies;</p>
+<p>}</p>
+<p>...</p>
+<p>Der Test wäre sogar noch ein wenig klarer, finde ich:</p>
+<p>[Test]</p>
+<p>public void Enthält_ein_Buch()</p>
+<p>{</p>
+<p>var dependencies = new KataPotterShoppingBasket.Dependencies();</p>
+<p>var sut = new KataPotterShoppingBasket(dependencies);</p>
+<p>sut.AddBook(1);</p>
+<p>Assert.That(dependencies.books.Count, Is.EqualTo(1));</p>
+<p>}</p>
+<p>Diesem Verfahren steht auch die “normale” Dependency Injection nicht im Wege. Sie würde es sogar verbergen. Dazu bräuchte die Abhängigkeitsklasse nur einen ausgewiesenen “Kanal” für die Injektion der Funktionalität, von der der Warenkorb abhängig ist, z.B. so für Unity als DI Container:</p>
+<p>public class Dependencies</p>
+<p>{</p>
+<p><strong>[Dependency]</strong></p>
+<p>public IPriceCalculator calc {get; set;}</p>
+<p>public readonly Dictionary books = …</p>
+<p>}</p>
+<p>Zusätzlich müsste im Mapping auch die Abhängigkeitsklasse aufgeführt werden. Aber das ist kein sonderlicher Mehraufwand. Das ließe sich womöglich sogar automatisieren.</p>
+<h2>Fazit</h2>
+<p>Im Sinne eines systematischen Vorgehens beim Test und beim Design finde ich es sehr überlegenswert, Abhängigkeiten breiter als bisher zu fassen. <strong>Funktionseinheiten sind nicht nur von anderen Funktionseinheiten abhängig, sondern auch von Zustand.</strong></p>
+<p>Wenn dann Abhängigkeiten injiziert werden sollen, um bessere Testbarkeit zu erreichen, dann gilt das nicht nur für Funktionseinheiten, sondern auch für Zustand.</p>
+<p>Gerade bei TDD sinkt dadurch – so mein Empfinden – der gedankliche Aufwand. Bei jedem Kommando und jeder Abfrage, die getestet werden, müssen Sie sich dann einfach nur die Frage stellen, welcher Zustand dabei eine Rolle spielt. <strong>Dann bauen Sie vor dem Test Ausgangszustand speziell für den Testfall zusammen (arrange) und injizieren ihn, rufen das SUT (act) auf und prüfen anschließend (bei Kommandos) den neuen Zustand (assert). Fertig.</strong></p>
+<p>Ich werde in der nächsten Zeit mal probeweise konsequent so vorgehen. Mal schauen, wie sich das anfühlt. Ich bin optimistisch, dass es ein gutes Gefühl sein wird. Weniger Zweifel, weniger Nachdenken, also höhere Produktivität.</p>
+<h2>Kommentare</h2>
+<p><strong>Rainer Hilmer</strong> (2009-11-07):</p>
+<p>Das ist alles so interessant! Ich denke, so langsam wird es Zeit für ein Buch, Ralf. :-)</p>
+<hr />
+<p><strong>Georg</strong> (2009-11-08):</p>
+<p>In aller Vorsicht (bin Anfänger bei Unit Tests) die Frage: Was wäre, wenn AddBook einen Rückgabewert hätte, der die Anzahl der Bücher zurückgibt?</p>
+<hr />
+<p><strong>Laurin Stoll</strong> (2009-11-08):</p>
+<p>Hallo Ralf,</p>
+<p>Sehr spannender Gedanke. Genau das stört mich immer.</p>
+<p>// Arrange
+// Act</p>
+<p>// Assert.... und das Assert hier ist eigentlich schonwieder ein ACT, also quasi ein Integrationstest, wenn ich es über eine Count Property teste.</p>
+<p>Vielleicht ist deine Lösung ein eleganter Umweg. So richtig süss schmeckts mir aber noch nicht... wieso kann ich nicht in Worte fassen, bin noch misstrauisch, werds aber mal versuchen.</p>
+<p>grüsse</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-11-08):</p>
+<p>@Georg: Warum sollte AddBook() einen Rückgabewert haben? Das ist für die Problemdomäne unnötig. Und genau darum geht es: Keine Zugriffsmethoden einführen, die die Problemdomäne nicht motiviert.</p>
+<hr />
+<p><strong>(anonym)</strong> (2009-11-11):</p>
+<p>Für Klassen, die sich auf die konkrete Domäne beziehen, finde ich die Lösung sehr toll.</p>
+<p>Aber was ist mit der Unmenge an Helfer Klassen die im Hintergrund werkeln?</p>
+<p>Die möchte ich auch verwenden können ohne einen DI-Container wie Unity zu verwenden oder die Zustände manuell im ctor zu übergeben. So ganz glücklich fühle ich mich auch nicht, muss mich da Laurin Stoll anschließen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-11-11):</p>
+<p>@Sebastian: Im Produktionscode musst du den Dependency-Ctor gar nicht verwenden. Allemal für Zustand nicht.</p>
+<p>Der Dependency-Ctor ist eine "Revisionsklappe". Die benutzt du, wenn du testest. Der kann auch internal sein, selbst wenn die Klasse public ist.</p>
+<p>Du kannst auch zweierlei solcher DI-Ctors haben:</p>
+<p>-einen für den Produktionsbetrieb, wo du nur behavior dependencies reinreichst
+-einen für Tests, wo du behavior und state dependencies reinreichst</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Gretta</strong> (2009-11-20):</p>
+<p>Schade, dass ich Euren Blogg erst heute entdeckt habe. Vielen Dank für den interessanten und nützlichen Artikel!</p>
+<hr />
+<p><strong>Andi</strong> (2009-11-20):</p>
+<p>Hallo Ralf,</p>
+<p>ich bin ganz bei dir, wenn es darum geht die Problemdomäne nicht unnötig aufzublähen, daher finde ich den Ansatz ganz interessant.</p>
+<p>Eine Sache gefällt mir aber nicht (vielleicht habe ich es aber auch nicht richtig verstanden).
+Beim injizieren eines Zustands über den Konstruktor, geht da nicht ein wenig die Datenkapselung hopps, wenn es wie oben beschrieben umgesetzt wird?</p>
+<p>Normalerweise würde ich mir im Konstruktor eine Kopie der Bücher erstellen, sodass ich alleine, die Kontrolle behalte.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-11-21):</p>
+<p>@Andi: Die Datenkapselung geht nicht hopps. Der Ctor für die Zustandsinjektion ist ja nur für Testzwecke da. Normaler Client-Code benutzt andere Konstruktoren. Deshalb ist der Ctor auch internal.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Tarion</strong> (2009-11-24):</p>
+<p>dann sind alle Abhängigkeiten immer in internen klassen und nicht mehr in der eigentlichen Klasse?
+Das würde eine komplett neue Struktur beim Programmieren bedeuten wenn ich das richtig sehe. Es wird quasi das "this" durch "dependencies" ersetzt.</p>
+<p>Mfg Tarion</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-11-24):</p>
+<p>@Tarion: Wäre die "Struktur beim Programmieren" komplett neu? Nö, würd ich nicht sagen. Aus this.myfield würde this.state.myfield oder this.dependencies.myfield oder this.dependencies.state.myfield. Das find ich jetzt nicht sooo anders als bisher.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Werner Mairl</strong> (2009-12-31):</p>
+<p>Hallo Herr Westphal!
+Grundsätzlich folge ich begeistert Ihrem Gedankengang, nur ein "komisches" Gefühl bleibt auch bei mir stehen.
+Ein paar Gedanken die bleiben</p>
+<p>a) die Lösung ist gut. sollte/darf aber wahrscheinlich nicht zwangsweise, unbedacht und überall angewendet werden.</p>
+<p>b) bei Properties, bei welchen ich bisher die "kurze" Schreibweise mit {get;set} verwendet habe erhöht sich der Aufwand/Fehlerrisiko weil ich explizite Getter/Setter schreiben muss</p>
+<p>c) ok wenn es einer Property Bedarf dann könnte man sich das Feld auf der private class sparen =&gt; Mischmasch welche Felder stehen direkt im this und welche im this.Dependencies</p>
+<p>c) Der einzige Zweck einer Methode (ohne out-Parameter) kann nur eine Zustandsänderung des Objektes sein.
+Diese Zustandsänderung MUSS zwangsläufig irgendwo (oftmals auch indirekt) ihre Auswirkung finden (public!), sonst würde das Ganze keinen Sinn machen.
+Im Einkaufskorb-Beispiel sehe ich dafür zwei Möglichkeiten
+c1) die Wahrscheinlichkeit dass spätestens in der 2ten Iteration eine Property Count im Warenkorb dazukommt liegt laut meiner Erfahrung bei 99%
+c2) Man könnte den injizierten PriceCalculator verwenden um die Zustandsänderung zu testen</p>
+<p>oder anders formuliert:
+Je höher die Komplexizität der Klasse desto mehr Nutzen Ihrer vorgeschlagenen Lösung sehe ich (besseres Kosten/Nutzen Verhältnis), bei einfachen Klassen habe ich ein Bauchgefühl welches sagt "zu aufgeblasen"
+andererseits deutet eine "komplexe Klasse" schon wieder auf einen Designfehler hin der schnellstens behoben gehört....</p>
+<p>Alles Gute fürs Neue Jahr</p>
+<p>Werner Mairl</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-12-31):</p>
+<p>@Werner Mairl: Zu Ihren Punkten:</p>
+<p>a) "Zwangsweise" klingt nicht schön. Aber warum denn auch gleich in Zwängen denken? Warum nicht "Muster" oder "Richtlinie"?</p>
+<p>Niemand hat GOTO verboten - und doch setzen wir es nicht mehr ein. Nicht aus Zwang, sondern aus Einsicht.</p>
+<p>Genauso hier: Für mich ist es eine Einsicht, dass Zustand eine Abhängigkeit ist, die - für Testzwecke - genauso injiziert werden sollte wie eine funktionale Abhängigkeit.</p>
+<p>Niemand zwingt uns dazu, DI zu benutzen. Und doch tun wir es. Wir sehen ein, dass wir ansonsten keine vernünftige Testbarkeit hinbekommen. Um nichts anderes geht es mir bei der Injektion von Zustand.</p>
+<p>b) Hier weiß ich nicht, worauf Sie sich beziehen. Wenn es Properties gibt, muss ich Zustand nicht unbedingt injizieren, um ihn setzen/abfragen zu können. Mir geht vielmehr eben darum, dass kein Zugriff von außen auf den Zustand existiert, der in einem Test relevant ist.</p>
+<p>d) Zustandsänderungen müssen nicht notwendig öffentlich sichtbar sein. Sie fließen sicherlich ein in andere Methodenaufrufe, aber deshalb kann ich den Zustand noch lange nicht gezielt setzen/prüfen.</p>
+<p>d1) Da schauen Sie in die Glaskugel. Solche "Erfahrung" aus Testgründen in einer Count-Property zu manifestieren halte ich für einen Widerspruch zum YAGNI-Prinzip. Damit treten Sie ein Fenster ein, das zu weiteren eingetretenen Fenstern führt... ("broken window Theorie").</p>
+<p>d2) Um Zustand zu testen, möchte ich eben keine anderen SUTs benutzen. Denn dann teste ich ich nur eine Funktionalität.</p>
+<p>Insgesamt verstehe ich nicht, dass es ein Problem ist, Zustand hinein zu reichen. Wie gesagt: dazu braucht es nur einen internen ctor. Es geht ja eben nicht (!) um die Änderung einer öffentlichen Schnittstelle.</p>
+<p>Für mich steht die saubere Testbarkeit weit vor dem minimalen Mehraufwand einer Zustandsklasse.</p>
+<p>-Ralf Westphal</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

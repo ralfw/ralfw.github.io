@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OOP 2008: Die Datenbank in den Wolken - Amazons SimpleDB — ralfw.de Archiv</title>
+<meta name="description" content="Wir kennen alle die Vorteile der RDBMS-Schwergewichte in unseren lokalen Netzen. Aber das Bild ist nicht ungetrübt. Unternehmensweit zugängliche Datenbanken machen Deploymentaufwan">
+<link rel="canonical" href="https://ralfw.de/archiv/2008/oop-2008-die-datenbank-in-den-wolken/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OOP 2008: Die Datenbank in den Wolken - Amazons SimpleDB — ralfw.de Archiv">
+<meta property="og:description" content="Wir kennen alle die Vorteile der RDBMS-Schwergewichte in unseren lokalen Netzen. Aber das Bild ist nicht ungetrübt. Unternehmensweit zugängliche Datenbanken machen Deploymentaufwan">
+<meta property="og:url" content="https://ralfw.de/archiv/2008/oop-2008-die-datenbank-in-den-wolken/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>OOP 2008: Die Datenbank in den Wolken - Amazons SimpleDB</h1>
+    <div class="doc-meta"><span>21. Jan. 2008</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2008/01/oop-2008-die-datenbank-in-den-wolken.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2008/oop-2008-die-datenbank-in-den-wolken/</code></span></div>
+    <div class="art"><p>Wir kennen alle die Vorteile der RDBMS-Schwergewichte in unseren lokalen Netzen. Aber das Bild ist nicht ungetrübt. Unternehmensweit zugängliche Datenbanken machen Deploymentaufwand, kosten viel in der Administration und sind in ihren Schemata vergleichsweise starr. Das wird in einer immer mehr auf Vernetzung und Dynamik setzenden Geschäfts-/Softwarewelt zunehmend zum Problem. Aber wo ist die Lösung?</p>
+<p>Natürlich gibt es nicht nur eine Lösung, sondern viele für unterschiedliche Szenarien. Manchmal reicht eine embedded database wie <a rel="noopener" href="http://www.turbodb.de/">TurboDb</a> oder <a rel="noopener" href="http://www.vistadb.net/">VistaDb</a>, manchmal ist eine objektorientierte Datenbank wie <a rel="noopener" href="http://www.db4o.com/">db4o</a> angebracht, manchmal bringt ein <a rel="noopener" href="http://en.wikipedia.org/wiki/Data_warehouse">Data Warehouse</a> die Lösung.</p>
+<p>Und nun bietet Amazon, die schon lange nicht nur Bücher verkaufen, sondern auch <a rel="noopener" href="https://aws-portal.amazon.com/">Web Services</a> im Programm haben, eine weitere Datenbankoption: <a rel="noopener" href="http://aws.amazon.com/simpledb">SimpleDB</a>.</p>
+<p>SimpleDB ist eine online Datenbank, die Sie per Web Service ansprechen können. Jeder Deploymentaufwand entfällt also. Und bei 100 MBit-Internetverbindungen, wie sie heute schon Privathaushalten <a rel="noopener" href="http://www.wilhelm-tel.de/82.htm">für kleines Geld</a> zur Verfügung stehen, ist es vom Geschwindigkeitsaspekt her letztlich nicht mehr so wichtig, ob eine Datenbank im LAN oder "in the cloud" liegt.</p>
+<p>Wenn Sie einmal überlegen, wieviel Aufwand Sie bisher betrieben haben, um nur eine simple Datenspeicherung irgendwie im Internet, also weltweit zentral verfügbar, zu realisieren, dann können Sie das Potenzial erahnen, das in SimpleDB steckt. Gerade für die gemeinsame Nutzung von Daten über LAN-/Unternehmensgrenzen hinweg sind SimpleDB und die anderen Amazon Web Services wie <a rel="noopener" href="http://www.amazon.com/S3-AWS-home-page-Money/b/ref=sc_fe_l_2?ie=UTF8&amp;node=16427261&amp;no=3435361&amp;me=A36L942TSJ2AJA">S3</a> (Speicherung großer Datenmengen/Blobs) und <a rel="noopener" href="http://www.amazon.com/Simple-Queue-Service-home-page/b/ref=sc_fe_l_2?ie=UTF8&amp;node=13584001&amp;no=3435361&amp;me=A36L942TSJ2AJA">SQS</a> (Kommunikation via Warteschlangen) a godsend.</p>
+<p>SimpleDB ist derzeit allerdings nur als Beta-Version verfügbar. Das Featureset ist also noch im Fluss. Dennoch ist es schon jetzt vielversprechend und spannend. Denn Amazon bewegt sich abseits des üblichen RDBMS-Pfades. SimpleDB implementiert nicht das relationale Datenmodell, sondern einen <a rel="noopener" href="http://en.wikipedia.org/wiki/Tuple_space">Tuple Space</a>. Darin gibt es keine Tabellen mit Datensätzen, sondern so genannte Domains mit Items als Tuple:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/8e65f7289d6e67a2.png" /></p>
+<p>Und die Tuple innerhalb einer Domain müssen keinem festgelegten Schema folgen. Und ihre Attribute können sogar mehrere Werte enthalten.</p>
+<p>Das alles ist ganz anders als die vertraute RDBMS-Welt. Aber es ist vielversprechend, weil es einen viel dynamischeren Umgang mit Daten erlaubt. Wenn Datenbanken Verträge zwischen Applikationen sind und Applikationen, die über das Internet verbunden sind, sich nicht synchron verändern, dann ist es wichtig, dass ihre Verträge elastisch sind. Sie müssen eine wachsende Zahl von Bedürfnissen befriedigen. Ein fixes Schema wäre da kontraproduktiv. Amazons SimpleDB ist daher eine "Klebstoffdatenbank", die heterogene und/oder stark fluktuierende Parteien verbindet. Ihr Fokus ist die Flexibilität, nicht die Effizienz.</p>
+<h5>SimpleDB im lokalen Netz</h5>
+<p>Angesichts einer limitierten Anzahl von Beta-Konten für SimpleDB und dem Wunsch, das SimpleDB-Datenmodell mit seinem API nicht nur im Internet nutzen zu können, habe ich entschlossen, SimpleDB in einer Desktopvariante zu entwickeln. Die .NET SimpleDB (NSimpleDB) ist das Ergebnis. NSimpleDB bietet die Leistungen von SimpleDB in Form einer "embeddable tuple space engine". Sie können mit NSimpleDB im lokalen Netz so umgehen, wie mit SimpleDB im Internet. Das ist performanter, das ist kostengünstiger (weil SimpleDB am Ende ein kostenpflichtiger, wenn auch sehr günstiger Service ist), das ist auch mobil möglich, das ist einfacher.</p>
+<p>NSimpleDB ist ein Open Source Projekt entwickelt in C#. <a rel="noopener" href="http://code.google.com/p/nsimpledb/">Ich hoste den Code bei Google</a>. Wer ihn selbst übersetzen will, ist dazu herzlich eingeladen. Mit Subversion können Sie ihn <a rel="noopener" href="http://code.google.com/p/nsimpledb/source">herunterladen</a>. Wer dagegen nur eine fertige Komponente nutzen möchte, kann das auch. Ich habe ein kleines Beispielprogramm <a rel="noopener" href="http://code.google.com/p/nsimpledb/downloads/list">zum Download</a> bereitgestellt; darin ist <em>NSimpleDB.dll</em> enthalten. Nur die Assembly ist nötig, um mit dem SimpleDB Datenmodell zu experimentieren.</p>
+<p>Mehr über SimpleDB und den Umgang mit NSimpleDB erfahren Sie in meinem englischen Blog. Dort finden Sie eine <a rel="noopener" href="http://weblogs.asp.net/ralfw/archive/tags/Amazon+SimpleDB/default.aspx">mehrteilige Artikelserie</a> zum Thema.</p>
+<p>Über Feedback jeder Art würde ich mich freuen.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

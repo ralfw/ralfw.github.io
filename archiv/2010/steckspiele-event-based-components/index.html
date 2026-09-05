@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Steckspiele - Event-Based Components verbinden — ralfw.de Archiv</title>
+<meta name="description" content="Wie ich hier erklärt habe, liegen mir die “traditionellen” Komponenten – bei aller Liebe – doch auch ein wenig im Magen. Sie passen noch nicht ganz in meine Vision von wirklich “zu">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/steckspiele-event-based-components/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Steckspiele - Event-Based Components verbinden — ralfw.de Archiv">
+<meta property="og:description" content="Wie ich hier erklärt habe, liegen mir die “traditionellen” Komponenten – bei aller Liebe – doch auch ein wenig im Magen. Sie passen noch nicht ganz in meine Vision von wirklich “zu">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/steckspiele-event-based-components/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Steckspiele - Event-Based Components verbinden</h1>
+    <div class="doc-meta"><span>22. Feb. 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/02/steckspiele-event-based-components.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/steckspiele-event-based-components/</code></span></div>
+    <div class="art"><p>Wie ich <a rel="noopener" href="http://ralfw.blogspot.com/2010/02/event-based-components-der-nachste.html">hier</a> erklärt habe, liegen mir die “traditionellen” Komponenten – bei aller Liebe – doch auch ein wenig im Magen. Sie passen noch nicht ganz in meine Vision von wirklich “zusammensteckbaren” Software-Bausteinen. Von Event-Based Components (EBC) erwarte ich mir nun einen Fingerzeig, wie es besser werden kann.</p>
+<p>Das Grundmuster für Ihre Implementierung ist denkbar einfach:</p>
+<ul>
+<li><strong>EBC kommunizieren nur über Nachrichten.</strong> Anders als bei der Event-Driven Architecture (EDA) ist diese Kommunikation allerdings (zunächst) synchron. Am Programmablauf ändert sich durch EBC also erst einmal nichts.<ul>
+<li>EBC erhalten Aufforderungen zu einer Dienstleistungen über Input-Nachrichten; sie erteilen Aufforderungen zu Dienstleistungen über Output-Nachrichten.</li>
+<li>Die Übersetzung dieses Nachrichtenflusses in Code ist schematisch:             <strong>Nachrichten werden durch eine je eigene Klasse repräsentiert</strong><ul>
+<li><strong>Input-Nachrichten werden von Methoden ohne Rückgabewert verarbeitet</strong></li>
+<li><strong>Output-Nachrichten werden über Delegaten versandt</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Eine Komponente mit einer Input- und einer Output-Nachricht</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/48cda601cfd4f231.png" /></p>
+<p>hat damit einen Kontrakt wie folgt:</p>
+<p>interface IEventBasedComponent</p>
+<p>{</p>
+<p>void ProcessIncomingCommand(IncomingCommand cmd);</p>
+<p>event Action OnOutgoingCommand;</p>
+<p>}</p>
+<p>Das ist quasi alles, was ich derzeit zum formalen Aufbau von EBC sagen kann. Der Rest sind Folgerungen.</p>
+<h2>Symmetrische unidirektionale Kommunikation</h2>
+<p>Zunächst ist z.B. zu bemerken, <strong>dass der Nachrichtenfluss immer unidirektional ist</strong>. Input und Output fließen immer von der Quelle zum Ziel; im Falle von Aufforderungen bedeutet das, vom Client zum Service.</p>
+<p>Nachrichten “haben” keine Resultate wie Methodenaufrufe. Es kann nichts automatisch zurück fließen. <strong>Die Kommunikation zwischen EBC ist grundsätzlich symmetrisch.</strong> Client und Service unterscheiden sich nicht. Für eine Aufforderung ist der Client die Quelle einer Nachricht an das Ziel Service. Die Aufforderung ist der Output des Clients und der Input des Service. Und falls der Service ein Resultat an den Client zurück geben soll, dann schickt er ihm ebenfalls eine Nachricht, die sein Output und der Input der Clients ist.</p>
+<p>Die Begriffe Client und Service, so natürlich sie in der Welt der “traditionellen” Komponenten sind, bekommen in der Welt der EBC also einen neuen Stellenwert. Früher war die Funktionseinheit, die einen Methodenaufruf absetzt, automatisch der Client. Sie fordert damit eine Dienstleistung von einer Funktionseinheit, von der sie abhängt. Client und Service stehen in einem asymmetrischen Verhältnis. Argumente in einem Methodenaufruf sind etwas anderes als der Rückgabewert.</p>
+<p>Zwischen EBC fließen jedoch nur Nachrichten. Das fundamentale Verhältnis zweier Funktionseinheiten ist nicht mehr das zwischen Client und Service, sondern das von Quelle und Ziel. <strong>Ob die Quelle ein Client und das Ziel ein Service sind, ist nicht mehr eine Frage der Syntax, sondern der Semantik.</strong></p>
+<h2>Unabhängige Komponenten</h2>
+<p>Aus der symmetrischen unidirektionalen Kommunikation mit der obigen Codierung ergibt sich, dass Event-Based Components unabhängig von einander sind. <strong>Das bedeutet, EBC sind wahrhaft “composable”.</strong> Wir können sie ohne Eingriff zusammenstecken. Wo keine Services mehr aufgerufen werden, da gibt es einfach keine Abhängigkeit mehr. Output-Nachrichten fließen einfach nur aus einer EBC hinaus. Ob und von wem sie empfangen werden… das weiß die Komponente nicht.</p>
+<p>Wie das geht, zeigt eine erste Version der Interaktion zwischen zwei Komponenten, die ich schon im ersten EBC-Blogartikel benutzt habe. Das Szenario ist unvollständig, weil der Codegenerator fehlt, aber das möchte ich im Moment vernachlässigen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/85026f1a000206e7.png" /></p>
+<p>Hervorhebenswert ist dabei, dass CompilerCoordinator und ParserWorker in einer Client-Service-Beziehung stehen, Anfrage und Antwort jedoch auf getrennten “Kanälen” fließen. Formal gibt es keinen Unterschied zwischen der Aufforderung zum Parsen und deren Resultat. Die Nachrichten fließen nur in die entgegengesetzte Richtung.</p>
+<p>Auf den Input “Compile” reagiert der CompilationCoordinator mit dem Output “Parse”; der ist Input für den ParserWorker, der daraus “ASTGenerated” als Output erzeugt; der wiederum für den CompilationCoordinator Input ist und über einen hier nicht sichtbaren weiteren Schritt zum Output “CompilationResult” führt.</p>
+<p>Die Kontrakte sehen dafür so aus:</p>
+<p>compiler.contract.dll:</p>
+<p>interface ICompilerCoordinator</p>
+<p>{</p>
+<p>void ProcessCompilationRequest(CompilationRequest request);</p>
+<p>event Action OnCompilationResult;</p>
+<p>event Action OnParse;</p>
+<p>void ProcessParseResult(ParseResult result);</p>
+<p>}</p>
+<p>parser.contract.dll:</p>
+<p>interface IParser</p>
+<p>{</p>
+<p>void ProcessParseRequest(ParseRequest request);</p>
+<p>event Action OnParseResult;</p>
+<p>}</p>
+<p>Zusätzlich gibt es noch einen Kontrakt für die Nachrichten, d.h. die gemeinsame Sprache der Komponenten:</p>
+<p>message.contract.dll:</p>
+<p>class CompilationRequest</p>
+<p>{</p>
+<p>public string Source;</p>
+<p>}</p>
+<p>class CompilationResult</p>
+<p>{</p>
+<p>public Func Function;</p>
+<p>}</p>
+<p>class ParseRequest</p>
+<p>{</p>
+<p>public string Source;</p>
+<p>}</p>
+<p>class ParseResult</p>
+<p>{</p>
+<p>public ASTNode Root;</p>
+<p>}</p>
+<p>Die Interfaces erscheinen schon ein wenig anders als von den “traditionellen” Komponenten gewohnt – aber der wesentliche Unterschied zeigt sich erst bei Betrachtung der Abhängigkeiten zwischen Komponenten und Kontrakten.</p>
+<p>Klassisch sehen die so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/326c4bca544a90da.png" /></p>
+<p>Die Compiler-Implementation ist von zwei Interfaces abhängig: einem, das sie exportiert, und einem, das sie importiert. Je mehr Abhängigkeiten eine Komponente hat, desto mehr Kontrakte muss sie also referenzieren.</p>
+<p>Dem steht nun die EBC-Variante entgegen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/28b08589036daf11.png" /></p>
+<p>Zwei Unterschiede fallen auf: Es gibt einen Kontrakt für die Nachrichten, der in diesem Szenario “traditionell” noch nicht nötig war. <strong>Viel wichtiger ist jedoch, dass jede Komponentenimplementation nur noch abhängig ist von einem Kontrakt.</strong> Das bedeutet, jede Komponente ist nur noch durch einen Kontrakt spezifiziert und nicht durch 1+n. Damit ist schon mal mein 4. Problem mit der “traditionellen” Komponentenorientierung gelöst. (Insgesamt fünf Probleme oder “Bauschmerzen” hatte ich im ersten EBC-Blogartikel genannt.) <strong>EBC-Komponenten lassen sich kompakter spezifizieren.</strong></p>
+<p>Aber nicht nur ist mein Problem 4 gelöst. Auch Problem 1 hat sich in Luft aufgelöst. Ich hatte bei aller Entkopplung von “traditionellen” Komponenten durch die separaten Kontrakte immer noch Bauchschmerzen, weil Clients von Services abhängig waren. Das ist bei EBC-Komponenten nun nicht mehr der Fall. <strong>Auch wenn EBC-Komponenten zusammengesteckt werden können und müssen, sind sie nicht mehr abhängig.</strong> Sie produzieren Output und erwarten Input. Das ist aus meiner Sicht etwas anderes; vielleicht nur subtil, aber immerhin.</p>
+<p>Jetzt zur Frage, wie EBC-Komponenten “zusammen spielen”? Einen Container gibt es dafür bisher nicht, wenn ich es recht sehe. Aber es ist auch nicht schwer, EBC-Komponenten zusammen zu stecken. Sehen Sie selbst:</p>
+<p>// Build</p>
+<p>ICompilerCoordinator cc = new CompilerCoordinator();</p>
+<p>IParser p = new Parser();</p>
+<p>// Bind</p>
+<p>cc.OnParse += p.ProcessParseRequest;</p>
+<p>p.OnParseResult += cc.ProcessParseResult;</p>
+<p>cc.OnCompilationResult += cr =&gt; Console.WriteLine(cr.Function(2));</p>
+<p>// Run</p>
+<p>cc.ProcessCompilationRequest(new CompilationRequest {Source = "2*x"});</p>
+<p>Am besten instanziieren Sie zuerst alle Komponentenimplementationen (Build-Phase). Das ist im Gegensatz zur “traditionellen” Komponentenorientierung möglich, da es ja keine Abhängigkeiten mehr gibt, die über Konstruktoren injiziert werden müssten. (Ja, ich weiß, es ginge auch “traditionell” anders über Property-Injection, aber in der Praxis kommt die nicht sehr häufig vor. Sie fühlt sich im Vergleich zur ctor-Injection nicht so natürlich an.)</p>
+<p>Wenn alle Komponenten instanziert sind, setzen Sie sie zum größeren Ganzen zusammen (Bind-Phase). Dazu registrieren Sie Input-Verarbeitungsfunktionen als Handler für Output-Events. Beispiel: Der <em>CompilerCoordinator</em> definiert mit dem <em>OnParse</em>-Event den Output <em>ParseRequest</em>. Auf dem registriert die Bindungsphase die Input-Methode <em>ProcessParserequest()</em> der <em>Parser</em>-Komponente. Damit sind <em>CompilerCoordinator</em> und <em>Parser</em> in eine Richtung zusammen gesteckt.</p>
+<p>Dass der <em>ParseRequest</em> eine Antwort erwartet, sieht man ihm nicht an. Folglich muss für das <em>ParseResult</em> eine ebensolche Verbindung in umgekehrter Richtung hergestellt werden. EBC-Kommunikation ist eben wahrhaft symmetrisch.</p>
+<p>Die Bindung von EBC-Komponenten ist also denkbar simpel. <strong>Input-Handler werden auf Output-Events registriert.</strong> Fertig. Sie müssen nur die Datenflüsse zwischen EBC-Komponenten identifizieren und wissen sofort, wie Sie sie umsetzen.</p>
+<p>Dass das Nachricht für Nachricht in Handler-Event-Paaren geschieht, finde ich nicht schlimm. Im Gegenteil! Verbindungen zwischen Funktionseinheiten lassen sich dadurch viel detaillierter steuern. <strong>Sie müssen sich beim Entwurf einer Komponente keine Gedanken machen, welche andere Komponenten Outputs weiter verarbeiten oder Inputs liefern.</strong></p>
+<p>So löst sich für mich auch mein Problem Nr. 3 mit der “traditionellen” Komponentenorientierung in Luft auf. Ob Inputs und Output von einer anderen Komponente bedient werden oder von vielen… Das ist egal. Es kann sich deshalb auch während der Entwicklungszeit problemlos ändern. Betroffen sind dann allein die Build-Bind-Phasen, aber nicht die Komponentenimplementationen. Die haben ja keine Abhängigkeiten zu anderen Kontrakten.</p>
+<p>Damit ist auch dem Prinzip Genüge getan, dass Komplexes wenige Abhängigkeiten haben sollte und Einfaches durchaus viele Abhängigkeiten haben kann. Denn komplex sind Komponentenimplementationen, die durch EBC quasi abhängigkeitsfrei sind. Build und Bind hingegen sind trivial und dürfen deshalb viele Abhängigkeiten haben.</p>
+<p>Mit EBC-Komponenten sind wir also bei Platinen und Bauteilen angekommen. Build+Bind entsprechen einer elektronischen Platine, die Bauteile verbindet. Welche Bauteile das sind, hängt vom Zweck eines Gerätes ab. Dem muss sich die Platine anpassen und die Bauteilauswahl. Die Bauteile jedoch selbst, die bleiben unverändert. <strong>Ich nehme den Begriff der Wiederverwendbarkeit nur ungern in den Mund, aber hier passt er mal. Das Potenzial für Wiederverwendbarkeit scheint mir bei EBC-Komponenten dank ihrer Entkopplung und zentralen Definition mittels nur eines Kontraktes höher als bei “traditionellen” Komponenten.</strong></p>
+<h2>Geschachtelte Komponenten</h2>
+<p>Hm… vielleicht ist die Analogie mit den elektronischen Bauteilen passender als zunächst gedacht. Ein Software-Bauteil ist dann immer eines, für das es einen EBC-Kontrakt mit einer zugehörigen Implementation gibt. Ob diese Implementation selbst Geschäftslogik ist oder nur Geschäftslogik-Bauteile verdrahtet… das ist egal. Im letzteren Fall wäre sie eine Platine, also ein Aggregat von Bauteilen, das wieder ein Bauteil auf höherer Ebene darstellt.</p>
+<p>Software-Platinen könnten hybride Komponenten sein: Einerseits implementieren Sie einen EBC-Kontrakt, andererseits werden sie initialisiert wir “traditionelle” Komponenten. Hier eine “Compiler-Platine” als Beispiel. Deren Kontrakt könnte so aussehen:</p>
+<p>interface ICompiler</p>
+<p>{</p>
+<p>void ProcessCompilationRequest(CompilationRequest request);</p>
+<p>event Action OnCompilationResult;</p>
+<p>}</p>
+<p>Dass es da keinen Unterschied zum <em>CompilerCoordinator</em> gibt, ist völlig ok. Wenn der <em>CompilerCoordinator</em> die ganze Interaktion des Compilers mit der Umwelt verkörpert, dann werden dessen “Signalleitungen” zu Inputs- und Outputs der umfassenden Platine.</p>
+<p>Die ist selbst eine EBC-Komponente qua Kontrakt – ist jedoch abhängig von ihren Bauteilen. Und die injiziert ihr ein DI Container wie üblich:</p>
+<p>class Compiler : ICompiler</p>
+<p>{</p>
+<p>private ICompilerCoordinator cc;</p>
+<p>public Compiler(ICompilerCoordinator cc, IParser p)</p>
+<p>{</p>
+<p>this.cc = cc;</p>
+<p>// Bind</p>
+<p>cc.OnParse += p.ProcessParseRequest;</p>
+<p>p.OnParseResult += cc.ProcessParseResult;</p>
+<p>// Output “von innen” weiterleiten zur “Platine”</p>
+<p>cc.OnCompilationResult += cr =&gt; this.OnCompilationResult(cr);</p>
+<p>}</p>
+<p>public void ProcessCompilationRequest(CompilationRequest request)</p>
+<p>{</p>
+<p>// Input der “Platine” weiterleiten “nach innen”</p>
+<p>this.cc.ProcessCompilationRequest(request);</p>
+<p>}</p>
+<p>public event Action OnCompilationResult;</p>
+<p>}</p>
+<p>EBC und “traditionelle” Komponenten sind also kein Widerspruch, sondern ergänzen sich. “Software-Platinen” sind hybride Komponenten, die nur den Zweck haben, EBC zu aggregieren. Sie dürfen Abhängigkeiten haben, weil sie so simpel sind. Nach außen verhalten Sie sich aber wie EBC.</p>
+<p>Im folgenden Bild sind die schwarzen Kästen “atomare” EBC; die offenen Kästen sind “Platinen” – die jedoch genauso wie die schwarzen Kästen Input- und Output-Pins haben. Formal kann man beide also nicht auseinander halten:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/5dee9c05bdd22b8f.png" /></p>
+<p>Ob die Implementation eines EBC-Kontrakts in einer “atomaren” EBC besteht oder in einer hybriden, das muss auch einerlei sein, denn das kann sich jederzeit ändern, weil ein “Software-Bauteil” keine sichtbaren Abhängigkeiten hat.</p>
+<p>Mir scheint solche Schachtelung von Funktionsbausteinen mit EBC einfacher als rein mit “traditionellen” Komponenten. Deshalb lösen EBC auch mein Problem Nr. 5. Die Schachtelungsregeln sind ganz einfach:</p>
+<ul>
+<li>Eine EBC ist ein “Software-Bauteil”.<ul>
+<li>Wo zwei oder mehr “Software-Bauteile” mit einander verdrahtet werden, entsteht ein neues “Software-Bauteil”. Dessen Kontrakt besteht aus den in ihm unverdrahtet gebliebenen Input- und Output-Pins seiner Konstituenten.</li>
+</ul>
+</li>
+</ul>
+<p>Bin ich damit bei einem neuen Begriff angekommen, dem “Software-Bauteil”? Gibt es EBC und EBP, also Event-Based Parts? Ist eine <em>Component</em> ein bestimmte Art von <em>Part</em>. Hm… darüber muss ich mal nachdenken. Aber als nächstes will ich erstmal beschreiben, wie die Kommunikation zwischen Parts einfacher werden kann.</p>
+<p>PS: Von meinen 5 Problemen sind bisher 4 gelöst. Was ist aber mit Problem Nr. 2? Sind EBC “besser” als “traditionelle” Komponenten, weil in sie nichts mehr injiziert wird? Oder wird noch injiziert, nur anders?</p>
+<p>Eine Ctor-Injection oder auch eine Property-Injection eines ganzen Interface scheint mir schwergewichtiger zu sein als die Injektion einzelner Eventhandler. Ganz einfach, weil die übliche DI sich auf ganze Interfaces bezieht. Da wird immer eine Menge auf einmal in eine Komponente hinein gesteckt. Wie schlank ist dem gegenüber die Registrierung einiger Eventhandler.</p>
+<p>Deutlich wird das für mich, wenn ich daran denke, was passiert, wenn sich die Zusammensetzung eines importierten Kontrakts ändert. Wird eine Operation herausgelöst in eine andere “traditionelle” Komponente, dann müssen alle abhängigen ihre Injektionsstellen nachführen.</p>
+<p>EBC merken davon nichts. Wird ein Output von einem anderen EBP verarbeitet, ändert sich etwas an der Platinen, die beide verdrahtet, aber nichts an der Implementation dort, wo der Output heraus kommt.</p>
+<p>Für mich fühlt sich das an wie eine Lösung für mein Problem Nr. 2.</p>
+<p>Ha! Wer hätte das gedacht. So entpuppen sich EBC als den “traditionellen” Komponenten überlegen. Die werden, wie oben bei den hybriden Komponenten gezeigt, allerdings nicht ersetzt, sondern bekommen einen neuen Platz zugewiesen.</p>
+<p>Wer abhängig ist, der darf nur einfaches tun, z.B. zusammenstecken. Wer unabhängig ist, der darf kompliziertes tun, z.B. Geschäftslogik implementieren. Die Unterscheidung zwischen EBC und “traditionellen” Komponenten scheint mir damit ganz in der Linie des Separation-of-Concerns-Prinzips zu liegen.</p>
+<h2>Kommentare</h2>
+<p><strong>Matthias</strong> (2010-02-23):</p>
+<p>Hallo Ralf,</p>
+<p>Danke für diesen zweiten Beitrag, der macht einiges klar.</p>
+<p>Zunächst fühlt sich das Ganze zumindest "komisch" an, was nichts Schlechtes heißen soll, sondern einfach die Unterschiedlichkeit zu Komponenten mit Abhängigkeiten verdeutlicht.</p>
+<p>Wo ich mich derzeit frage ist, ob man sich durch diesen Paradigmenwechsel nicht eine ganze Menge an Komplexität mit ins Boot holt, die einfach der eventbasierten Verarbeitung geschuldet ist.</p>
+<p>Beispiel: der CompilerCoordinator bekommt einen CompilationRequest. Nun führt er seine Verarbeitung aus bis er zu der Stelle kommt wo der Parser aufgerufen werden soll. An dieser Stelle legt er ein "Signal" auf den "Ausgabekanal" OnParse und über das Binding wird der Parser aufgerufen. Und genau an dieser Stelle muss der CompilationCoordinator einen Break machen. D.h. die aktuelle Methode wird verlassen und wenn der Parser fertig ist, wird ProcessParseResult aufgerufen.</p>
+<p>Ich stelle mir gerade vor, wenn eine Komponente einen Prozess implementiert, der z.B. 4 Aufrufe zu externen Komponenten erfordert. D.h. es wären 4 Events nötig (jedem externen Aufruf ein Event) und 4 Methoden welche das Resultat verarbeiten. D.h. der eigentlich in sich geschlossene Prozess wird aufgrund der Abhängigkeiten sehr stark aufgesplittet ist in sich nicht mehr kohärent. Wie siehst du das?</p>
+<p>Sicher könnte man es auch anders sehen: der kohärente Prozess wird in mehrere Teilprozesse zerlegt. Doch das kann u.U. auch problematisch werden, wenn z.B. ein Teilprozess auf Teilergebnissen eines vorgelagerten Prozesses beruht. Diese Teilergebnisse müssten dann z.B. in Properties zwischengespeichert werden. Auch wird für mich das Interface ziemlich aufgebläht. Statt einer Methode enthält ICompilerCoordinator jetzt 2 Methoden und 2 Events und ein "richtiger" Client sieht zunächst nicht, welche Methode für ihn als Einstiegspunkt eigentlich relevant ist.</p>
+<p>Insgesamt finde ich immernoch den Ansatz sehr interessant, habe aber einige Bedenken. Und ich bin gespannt, ob du diese teilweise nachvollziehen oder beseitigen kannst :-)</p>
+<p>Viele Grüße,
+Matthias</p>
+<hr />
+<p><strong>Laurin Stoll</strong> (2010-02-23):</p>
+<p>Hallo Ralf,</p>
+<p>Das ist wirklich sehr sehr spannend. Ich habe auch nicht so Angst vor der Komplexität für das "Zusammenstecken" von Komponenten - dafür gibt es einfach noch nicht die richtigen Werkzeuge / Container. Aber die sollten simpel zu bauen sein.</p>
+<p>Das ganze erinnert mich irgendwie einfach immer ein wenig an Event Based Async Pattern. Vielleicht, weil ich dort auch etwas anstosse und per Event mitbekomme wenn etwas getan ist. Klar, hier ist das ganze synchron und das macht alles ein wenig einfacher. Aber - so einen Mehraufwand das dann direkt asynchron zu machen ist das dann auch nicht mehr - oder?</p>
+<p>Wieso also nicht gleich asynchron? Dahin muss es ja sowieso gehen in Zukunft...</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-02-23):</p>
+<p>@Matthias: Ich verstehe deine Befürchtungen zur Zersplitterung von Code. Im nächsten Beitrag werde ich die aber hoffentlich zerstreuen können.</p>
+<p>@Laurin: Natürlich soll der Einstieg in async Kommunikation durch EBC leichter gemacht werden. Leichter bedeutet allerdings nicht, dass async dadurch wirklich leicht wird und einfach mal eben so dann auch noch mit gemacht werden sollte.</p>
+<p>Der Sprung von sync Methoden zu async verteilt mit Nachrichten ist zu groß. Solange Entwickler noch zwei Mal nachdenken müssen, wenn es um Lambdas und Funktionen höherer Ordnung und Rekursion und solches Zeugs geht... solange muss der Übergang sanfter sein.</p>
+<p>Da scheinen mir EBC ein guter erster Schritt - und nicht nur auf dem Weg zu Asynchronizität.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Golo Roden</strong> (2010-02-23):</p>
+<p>Hallo Ralf,</p>
+<p>ich kann mich Matthias nur anschließen - dieser Beitrag hat vieles sehr viel deutlicher gemacht.</p>
+<p>Was mir prinzipiell besonders gut gefällt, ist, dass Komponenten nun nur noch von ihrem eigenen - nicht jedoch von anderen - Interfaces abhängen.</p>
+<p>Jetzt sind sozusagen die Interfaces der Komponenten voneinander entkoppelt.</p>
+<p>Aber - und hier stellt sich mir wieder die nächste Frage: Damit der Output von Komponente A als Input für Komponente B dienen kann, muss es sich ja entweder um den gleichen Typ handeln, oder es muss eine notwendige Konvertierung stattfinden.</p>
+<p>Zweiteres verbietet sich aus Performancegründen quasi per se, bleibt also nur Variante 1: Der Output einer Komponente muss als Command für eine andere Komponente problemlos möglich sein.</p>
+<p>Das heißt dann aber wiederum, dass beide Komponenten vom selben Kommando-Kontrakt abhängen, oder nicht? Habe ich damit die Abhängigkeit nicht einfach nur eine Ebene weitergeschoben, quasi von der Komponente zum Kommando?</p>
+<p>Statt dass ich (im Extremfall) wie bisher eine dedizierte Contract-Assembly habe, die die Interfaces für alle Komponenten enthält, muss ich jetzt halt eine dedizierte Contract-Assembly haben, die die Schnittstellen für alle Kommandos enthält.</p>
+<p>Übersehe ich hier etwas?</p>
+<p>Viele Grüße,</p>
+<p>Golo</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-02-23):</p>
+<p>@Golo: EBC-Komponenten, deren "Pins" mit einander verknüpft sind, brauchen natürlich etwas Gemeinsames.</p>
+<p>Dieses Gemeinsame ist ihr Vokabular. Das müssen sie beide referenzieren. Das finde ich nicht schlimm. Außerdem ist es unvermeidlich ;-)</p>
+<p>Ist dadurch die Abhängigkeit von den Kontrakten nicht aber nur verschoben? Hm... ja, schon, einerseits. Aber mein Gefühl ist, dass das eine andere Qualität hat.</p>
+<p>Es geht eben um Vokabular und nicht mehr Operationen. Das ist ein Unterschied. Bisher war beides vermischt. Jetzt ist es deutlich getrennt. Das halte ich für einen Gewinn.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Matthias</strong> (2010-02-23):</p>
+<p>Hallo nochmal,</p>
+<p>Hier möchte ich mich Ralf anschließen. Darüber hinaus sehe ich eigentlich keine Verschiebung der Abhängigkeiten.</p>
+<p>Die Komponenten haben jetzt nur noch Abhängigkeiten zu Messages, welche herumgereicht haben. Dabei sollte es sich i.Allg. aber nur um dumme Datenklassen handeln.</p>
+<p>Die Abhängigkeit von Interfaces ist hingegen auf einer ganz anderen Ebene angesiedelt. Hier geht es um die Abhängigkeit, welche Komponente mit welchen Methoden aufgerufen wird und nicht mehr nur darum, welche Objekte eigentlich im Rahmen des Datenaustauschs  übergeben werden.</p>
+<p>Viele Grüße,
+Matthias</p>
+<hr />
+<p><strong>Matthias(2)</strong> (2010-02-23):</p>
+<p>Das Ganze ist mehr als die Summe seiner Teile :-),</p>
+<p>kommt immer drauf an, wo man hin will:
+- Nachrichtenaustausch zwischen Komponenten per Messages mindert die Kopplung.
+- asynchrone Messages <strong>erhoehen</strong> die Komplexitaet in der Komponente</p>
+<p>Bei den hier gezeigte konfigurierbare Compiler-Bsp (Pipe und Filter Pattern) kann das interne Verhalten der Komponenten  bezueglich der Schnittstelle vernachlaessigt werden. Es geht was rein und kommt was raus. Die interne Verarbeitung haengt von den Eingaben und der verwendeten Compilerkomponente ab.
+Interessant wird es, wenn man den Komponenten ein konfigurierbares<strong>Verhalten</strong> implementieren muss, welches dann ueber entsprechende Konfigurations-Messages eingestellt wird. Dann kann die Reihenfolge des Nachrichtenaustausches und der Type der verwendeten Messages <strong>sehr</strong> wichtig sein. Statt einiger Sequenzdiagramme und entsprechender
+Dokumentation ist da ein Funktionsaufruf mit (in , out) Parametern die wesentlich einfachere Wahl.</p>
+<p>Viele Gruesse</p>
+<p>Matthias(2)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-02-23):</p>
+<p>@Matthias(2): Warum ein Funktionsaufruf y=f(a,b) wirklich einfacher sein sollte als</p>
+<p>this.OnF.Request(new FRequest(...)).Receive(y =&gt; {...});</p>
+<p>ist mir nicht ganz ersichtlich. Klar. Diese Notation ist etwas umständlicher, aber dafür ist 1. die Komponentengrenze klar ersichtlich, zweitens die Kopplung geringer, 3. der Weg nach Async offen, 4. die Flexibilität bei der Verbindung von Komponenten höher.</p>
+<p>Die Reihenfolge von Nachrichten wird erst problematisch, wenn wir über Async reden. Das ist ja aber bei sync EBC nicht das Thema.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-02-26):</p>
+<p>Hallo Ralf,</p>
+<p>ich hatte mich kürzlich ein wenig in die Microsoft Cloud-Computing Plattform Azure eingelesen. Dort gibt es ja analog zu Deinem Artikel einen Service Bus, mit dem einzelne Komponenten miteinander kommunizieren bzw. Nachrichten austauschen. Insofern sehe ich in Deinen lehrreichen Artikel ein gewisse Hinführung zur Anwendungsenwicklung mit Azure.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-02-26):</p>
+<p>@Anonym: Naja, dass Microsoft den Bus entdeckt und auch etwas "in the cloud" macht, ist etwas spät. Deshalb sehe ich EBC auch nicht speziell als Hinführung auf den Internet Service Bus, an den Microsoft denkt.</p>
+<p>Bus-Systeme gibt es schon länger einige auch für .NET. Und die brauchen auch kein Internet: NServiceBus, Mass Transit, Rhino Bus. Die sind alle Open Source und auch im Unternehmen einsetzbar.</p>
+<p>Wenn, dann sehe ich EBC eher als Hinführung darauf. Die sind für viel mehr Entwickler relevant, als Microsofts Angebot.</p>
+<p>Und noch weiter sehe ich den Kreis gespannt: Es geht eben nicht nur um Hinführung zu Verteilung, sondern allgemeiner zur Asynchronizität.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Volker von Einem</strong> (2010-02-28):</p>
+<p>Hallo Ralf,</p>
+<p>danke erstmal für den tollen Artikel. Vor 10 Jahren habe ich viel mit Matlab und Simulink gearbeitet. Gerade Simulink war damals schon an der Stelle, was mit den EBC beschrieben wird. Ich habe Blöcke mit 1..n Eingängen und diese haben 1..m Ausgänge. Ein-und Ausgänge kann man dann mit Linien verbinden. Die Message ist in diesem Fall aber auch nur ein numerischer Typ. Das ganze ist intuitiv und unterstützt eine klare und saubere Architektur.</p>
+<p>Ich möchte mich aber auch Golo's Ausführung anschließen, dass die Abhängigkeiten nur eine Ebene höher zusammenführen. Die message.contract.dll macht mir Bauchschmerzen. Die Gefahr ist groß, dass diese dll eine Verdrahtungspunkt ist, die das Herauslösen (wiederverwenden) von einzelnen Komponenten nicht möglich machen, da ich immer die message.contract.dll mitziehen muss. Diese enthält dann jede Menge "Vokabular", die die herausgelöste Komponente gar nicht braucht. Des weiteren möchte ich vieleicht diese Komponente in eine andere EBC Architektur einpflanzen. Dann habe ich 2 message.contract.dll. Ohne größeres Refaktorieren ist das nicht möglich.</p>
+<p>Anders ist das bei DI Frameworks bei denen es nur darum geht Interfaces zu bedienen.</p>
+<p>Also mein Interesse an dem Thema ist geweckt, aber solagne ich keine gut Lösung des message.contract.dll Problems sehe, bin ich erstmal zurückhaltend.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-02-28):</p>
+<p>@Volker: Wenn das schon früher gute funktioniert hat auf anderen Plattformen, dann fühle ich mich bestätigt. Vielleicht ist nun die Zeit reif für breitere Akzeptanz?</p>
+<p>Deine Bedanken zur message.contract.dll kann ich nicht ganz teilen.</p>
+<ol>
+<li>
+<p>Auch bei "traditioneller" Komponentenorientierung gibt es solche "Vokabularien", auf die viele Kontrakte verweisen. Die sind immer dann nötig, wenn Typen nicht nur zwischen zwei Komponenten im Spiel sind, sondern darüber hinaus. Beispielsweise auf DTOs trifft das allermeistens zu.</p>
+</li>
+<li>
+<p>Ich behaupte nicht, dass es nur eine solche "Vokabularassembly" geben sollte. Im Gegenteil! Vokabulare sollten eine Reichweite haben, also in der Nutzung begrenzt sein. Manche reichen dann weiter, manche nicht so weit. Wenn man sie dann aufteilt in mehrere Assemblies, dann kann man die Reichweite steuern.</p>
+</li>
+</ol>
+<p>(Mein Gefühl ist, dass sich eine Ubiquitous Language (DDD) klarer mit Nachrichten, die an keiner Komponente hängen, abbilden lässt, als bisher.)</p>
+<ol start="3">
+<li>Ich empfinde es als Tugend, zwischen Funktionen und den Daten, auf denen sie arbeiten, zu unterscheiden. Das geschieht mit der Kontraktaufteilung bei EBCs viel expliziter/zwangsläufiger als "traditionell".</li>
+</ol>
+<p>Das sind drei Gründe, die eindeutig für die klaren Kontraktverhältnisse bei EBCs sprechen, finde ich.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Thomas Strasser</strong> (2010-11-05):</p>
+<p>Hallo,</p>
+<p>Der EBC Ansatz gefähllt mir sehr gut, da er mich sehr an die Ansätze des internationalen Standards IEC 61499 "Function Blocks" erinnert. Die IEC 61499 Community discutiert über diese Themen schon seit ca. 18. Jahren. Mittlerweile gibt es einige Open Source und kommerzielle Produkte dazu.</p>
+<p>Einen guten Überblick über aktuelle Projekte und Produkte zur event-basierten IEC 61499 findet man unter http://en.wikipedia.org/wiki/IEC_61499. Weitere wichtige Quellen sind z.B.:</p>
+<ul>
+<li>http://www.holobloc.com</li>
+<li>http://iec61499.com</li>
+<li>http://www.fordiac.org</li>
+<li>http://knol.google.com/k/james-christensen/iec-61499
+http://fb61499.com</li>
+<li>u.v.m.</li>
+</ul>
+<p>mfg
+Thomas Strasser</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-11-05):</p>
+<p>@Thomas: Vielen Dank für den Hinweis auf Function Blocks. Sieht tatsächlich sehr ähnlich zu EBC aus.</p>
+<p>Ob ich die Trennung von Signalen/Events und Daten allerdings gut finde, weiß ich noch nicht.</p>
+<p>Jedenfalls gibts da schon Tools und Patterns. Cool. Vielleicht können wir uns was abschauen. Ist mir jedenfalls ne Bestätigung, dass wir auf dem richtigen Weg sind und nicht allein laufen.</p>
+<hr />
+<p><strong>Thomas Strasser</strong> (2010-11-05):</p>
+<p>Hallo Ralf,</p>
+<p>Das Thema der Function Blocks kommt aus der Automatisierungs- und Steuerungswelt. Da sind die Datenverbindungen sehr üblich. Das Event-Konzept ist auch nicht so verbreitet, aber die IEC 61499 hat es eingeführt. Das macht es der IEC 61499 ein wenig schwer bei der Verbreitung, jedoch hat ma ein sehr mächtiges Werkzeug in der Hand.</p>
+<p>Es freut mich auch sehr, dass es durchaus auch andere Communities gibt, die in eine ähnliche Richtung denken.</p>
+<p>PS: falls Du weitere Fragen zur IEC 61499 hast, bitte einfach posten.</p>
+<p>lg
+Thomas</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-11-05):</p>
+<p>@Thomas: Bring dich gern mit deinen Erfahrungen in die Diskussion um EBC in der Google Group ein: groups.google.com/group/event-based-components</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-11-05):</p>
+<p>Hallo,</p>
+<p>ich bin auch ein IEC 61499 Nutzer und bin über diesen Blog gestolpert. Die Trennung von Events und Daten ist ein Thema das oft an der IEC 61499 kritisiert wird. jedoch ist das vorallem in der Steuerungstechnik wichtig und sehr nützlich da hier die Daten-Quelle oft unabhängig von der Event-Quelle ist.</p>
+<p>Für EBCs wird das nicht immer zutreffen. Dafür gibts in der IEC 1499 ein Model das sich adapter nennt mit dem man Events und Daten zusammenkoppeln kann und dadurch eine gemeinsame Letiung für Events und Daten kriegt. sozusagen eine art Kabel. hier kann man auch contracts für die Nutzung dieses Adapters angeben wodurch dieses Interface auch um eine Semantic erweitert wird.</p>
+<p>Für EBCs hätte die IEC 61499 ev. den vorteil eine graphsiche Ansicht zum Verschalten der Komponenten zur Verfügung stellen zu können.</p>
+<p>Viele Grüße,
+Alois Zoitl</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

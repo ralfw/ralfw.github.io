@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software als System II – Software-Umwelt-Kopplung — ralfw.de Archiv</title>
+<meta name="description" content="Ich versuche also mal einen ganz unverstellten Blick auf Software, lasse (zunächst) mal alles hinter mir, was .NET oder OOP angeht. Was ist dann Software?">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/software-als-system-ii-software-umwelt/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software als System II – Software-Umwelt-Kopplung — ralfw.de Archiv">
+<meta property="og:description" content="Ich versuche also mal einen ganz unverstellten Blick auf Software, lasse (zunächst) mal alles hinter mir, was .NET oder OOP angeht. Was ist dann Software?">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/software-als-system-ii-software-umwelt/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Software als System II – Software-Umwelt-Kopplung</h1>
+    <div class="doc-meta"><span>20. Jan. 2007</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2007/01/software-als-system-ii-software-umwelt.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/software-als-system-ii-software-umwelt/</code></span></div>
+    <div class="art"><p>Ich versuche also mal einen ganz unverstellten Blick auf Software, lasse (zunächst) mal alles hinter mir, was .NET oder OOP angeht. Was ist dann Software?</p>
+<p>Ich glaube, es ist hilfreich, Software zunächst einmal ganz allgemein als etwas zu betrachten, das von seiner Umwelt zu unterscheiden ist. Insofern gibt es eine Trennlinie zwischen dem, was wir zu einer Software rechnen und dem Rest der Welt.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c966cb6eaa7fca0c.gif" /></p>
+<p>Klingt trivial – ist aber wichtig, um das Besondere an Software zu verstehen. Aber ich will nicht vorgreifen.</p>
+<p>Nun „liegt“ Software aber nicht einfach so in ihrer Umwelt, sondern allemal die Umwelt verändert sich über die Zeit. Diese Veränderungen wirken sich natürlich auch auf die Software aus. Umweltveränderungen ziehen also Softwareveränderungen nach sich. Und umgekehrt: Veränderungen an der Software führen auch zu Veränderungen in ihrer Umwelt. Software und Umwelt stehen also in einer Rückkopplungsbeziehung: Veränderungen an einem Beziehungspartner wirken sich nicht nur auf den anderen aus, sondern über jenen auch wieder zurück auf diesen und immer so fort…</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2cc2eaa1362af356.gif" /></p>
+<p>Software und Umwelt sind jedoch nicht einfach zwei amorphe „Blobs“, sondern haben eine je eigene Struktur. Ihre gegenseitige Beeinflussung kann daher als strukturelle Kopplung bezeichnet werden. Strukturänderungen auf der einen Seite führen zu Strukturänderungen auf der anderen usw.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/3ecdce741d7b68be.gif" /></p>
+<p>Was genau die Strukturbestandteile der Umwelt sind, soll an dieser Stelle zunächst vernachlässigt werden. Ganz allgemein lässt sie sich aber in mehrere sehr verschiedene Bereiche gliedern. Zur Umwelt einer Software gehören z.B.:</p>
+<p>-Die hard- und softwaretechnische Infrastruktur in der sie läuft
+-Die technologischen Optionen für ihre Realisierug
+-Die Geschäftsprozesse der Kunden
+-Das Verhalten der Anwender</p>
+<p>Veränderungen können hier z.B. bei den technologischen Optionen beginnen, die bei Adaption zu einer Verbesserung von Performance und Skalierbarkeit der Software führen, die sich wiederum auf die Geschäftsprozesse des Kunden auswirken, die wiederum Begehrlichkeiten wecken und zu neuen Anforderungen führen, die dann Anpassungen in der Software nach sich ziehen usw. usf.</p>
+<p>Der Begriff der strukturellen Kopplung [1] ist Maturanas Konzept der autopoietischen Systeme entnommen [2]. Ich finde einfach, er passt sehr gut, um die gegenseitige Beeinflussung von Umwelt und Software zu beschreiben. Allerdings will ich damit nicht sagen, Software sei ein autopoietisches System. Software ist noch nicht einmal ein autonomes System. Software verändert sich also nicht selbst, sondern nur durch Eingriffe ihrer Entwickler, auf die die Umwelt der Software direkt oder indirekt wirkt. Für die weitere Betrachtung finde ich es jedoch einfacher, davon abzusehen und stattdessen der Einfachheit halber zu denken, die Struktur einer Software würde direkt von ihrer Umwelt beeinflusst.</p>
+<p>[1] Vogel &amp; Partner, Strukturelle Kopplung, <a rel="noopener" href="http://www.hs-niederrhein.de/fb06/vogel/konstrukt/glossar/strukturellekopplung.htm">http://www.hs-niederrhein.de/fb06/vogel/konstrukt/glossar/strukturellekopplung.htm</a>
+[2] Wikipedia, Autopoiesis, <a rel="noopener" href="http://de.wikipedia.org/wiki/Autopoiesis">http://de.wikipedia.org/wiki/Autopoiesis</a></p>
+<p><a rel="noopener" href="http://ralfw.blogspot.com/2007/01/software-als-system-i-motivation.html">[Vorhergehender Artikel]</a> <a rel="noopener" href="http://ralfw.blogspot.com/2007/01/software-als-system-iii-system-durch.html">[Nächster Artikel]</a> <a rel="noopener" href="http://ralfw.blogspot.com/search/label/Software%20als%20System">[Artikelserie]</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

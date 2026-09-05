@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aspect Oriented Programming made easy with Event-Based Components – Part II — ralfw.de Archiv</title>
+<meta name="description" content="In my previous post I described the architecture for a small application to index .TXT files. Here´s are the napkins with my design EBC diagrams so far.">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/aop-part-2/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Aspect Oriented Programming made easy with Event-Based Components – Part II — ralfw.de Archiv">
+<meta property="og:description" content="In my previous post I described the architecture for a small application to index .TXT files. Here´s are the napkins with my design EBC diagrams so far.">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/aop-part-2/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>Aspect Oriented Programming made easy with Event-Based Components – Part II</h1>
+    <div class="doc-meta"><span>5. Aug. 2010</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2010/08/05/aspect-oriented-programming-made-easy-with-event-based-components-ndash-part-again.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/aop-part-2/</code></span></div>
+    <div class="art"><p>In my previous post I described the architecture for a small application to index .TXT files. Here´s are the napkins with my design EBC diagrams so far.</p>
+<p>Currently the implementation is working in a synchronous and sequential mode.</p>
+<p>Now, today I want to move on and introduce a couple of aspects (in the AOP sense) into the design/code. I find Event-Based Component architectures very easy to extent in that regard. No special AOP tools necessary. But see for yourself…</p>
+<h2>Adding a logging aspect</h2>
+<p>The "Hello, world!" scenario for Aspect-Oriented Programming seems to be logging. See here for example a logging aspect by the creator of PostSharp. (By thy way I like PostSharp very much. If you need to use an AOP framework in your .NET code, be sure to evaluate PostSharp. But more than PostSharp I like to not need to use any AOP framework, of course ;-) A tool not used is a tool not adding complexity and a tool keeping your learning curve flat.)</p>
+<p>So how and where to add logging to the indexing application? What about logging the .TXT files processed with the number of words extracted from them? This information is available between at the entry point to Build index.</p>
+<p>Also we could log the total number of words indexed. That information is available as an output from Build index. It´s part of the IndexStats data flowing back to the "frontend".</p>
+<p>Here´s, what such an aspect means for an EBC design:</p>
+<p>Simple, isn´t? An aspect is just another activity you insert into some flow. Where you do that, whether on the level of abstraction shown above, or on a lower level, that´s not important.</p>
+<p>An aspect is just another activity. Usually, though, it´s a generic activity you can use in many context. Here´s the code for the Log aspect activity logging single messages:</p>
+<pre><code class="language-csharp">public class Log&lt;T&gt;
+{
+    private readonly Func&lt;T, string&gt; createLogMessage;
+
+    public Log(Func&lt;T, string&gt; createLogMessage)
+    {
+        this.createLogMessage = createLogMessage;
+    }
+
+    public virtual void In_Process(T data)
+    {
+        Write(createLogMessage(data));
+        this.Out_Data(data);
+    }
+
+    public event Action&lt;T&gt; Out_Data;
+
+    private void Write(string logMessage)
+    {
+        File.AppendAllLines(&quot;log.txt&quot;, new[]{string.Format(&quot;{0}\t{1}&quot;, DateTime.Now, logMessage)});
+    }
+}
+</code></pre>
+<p>The LogIEnumerable Log aspect activity is looking similar.</p>
+<p>Sure, this is very, very simple logging code. But if you like you can beef it up – without the contexts in which it is used needing any change. The Log aspect activity is simply plugged in between other activities. I chose to do that in the Build index composite activity:</p>
+<pre><code class="language-csharp">public Build_index(Compile_words compileWords, Write_index_to_file writeIndexToFile)
+{
+    var joinIndexAndFilename = new Join&lt;Index, string&gt;();
+    var logStats = new Log&lt;IndexStats&gt;(stats =&gt; string.Format(&quot;{0} words indexed&quot;, stats.WordCount));
+    var logFileWords = new LogIEnumerable&lt;Tuple&lt;string, string[]&gt;&gt;(
+        fileWords =&gt; string.Format(&quot;{0}, {1} words&quot;,
+        fileWords.Item1, fileWords.Item2.Count()));
+
+    this.in_Process = _ =&gt; logFileWords.In_Process(_);
+    logFileWords.Out_Data += compileWords.In_Process;
+
+    compileWords.Out_Statistics += logStats.In_Process;
+    logStats.Out_Data += _ =&gt; this.Out_Statistics(_);
+...
+</code></pre>
+<p>See how the data is running through the aspects? Before the data flowed right into Compile words:</p>
+<pre><code class="language-csharp">this.in_Process = _ =&gt; compileWords.In_Process(_);
+</code></pre>
+<p>Now it´s first flowing into the Log aspect and then on to Compile words:</p>
+<pre><code class="language-csharp">this.in_Process = _ =&gt; logFileWords.In_Process(_);
+logFileWords.Out_Data += compileWords.In_Process;
+</code></pre>
+<p>A simple detour – of which the sending as well as the receiving activities are oblivious.</p>
+<h2>Adding a validation aspect</h2>
+<p>Next, how about adding some validation? So far the feature process represents the happy day case: all´s working well. But what if the directory to index does not exist? The application crashes with a DirectoryNotFound exception. Not good. Rather the program should check, if the directory does not exist and exit with an error return code.</p>
+<p>Where to add the validation? Before Crawl directory tree is starts. I suggest to do it like this:</p>
+<p>Again the aspect is just another activity inserted into the data flow. It´s implementation is generic. Other activities don´t realize there has been anything plugged in between them.</p>
+<p>If validation became more complicated than in this scenario, you sure would implement a custom validation activity to separate domain validation rules from other concerns and the wiring code within the composite activity Compile files. But for the purpose of this post it´s sufficient to rely on a standard Validate activity like this:</p>
+<pre><code class="language-csharp">public class Validate&lt;T&gt;
+{
+    private readonly Func&lt;T, bool&gt; validateData;
+    private readonly Func&lt;T, string&gt; describeInvalidSituation;
+
+    public Validate(Func&lt;T, bool&gt; validateData, Func&lt;T, string&gt; describeInvalidSituation)
+    {
+        this.validateData = validateData;
+        this.describeInvalidSituation = describeInvalidSituation;
+    }
+
+    public void In_Validate(T data)
+    {
+        if (validateData(data))
+            this.Out_ValidData(data);
+        else
+            this.Out_InvalidData(describeInvalidSituation(data));
+    }
+
+    public event Action&lt;T&gt; Out_ValidData;
+    public event Action&lt;string&gt; Out_InvalidData = _ =&gt; { };
+}
+</code></pre>
+<p>Using it is as simple a using the Log aspect activity. Just plug it in before Craw directory tree in Compile files:</p>
+<pre><code class="language-csharp">public Compile_files(Crawl_directory_tree crawlDirTree)
+{
+    var split = new Split&lt;Tuple&lt;string, string&gt;, string, string&gt;(
+        t =&gt; t.Item1,
+        t =&gt; t.Item2
+        );
+
+    var validatePath = new Validate&lt;string&gt;(
+        Directory.Exists,
+        path =&gt; string.Format(&quot;Diretory to be indexed not found: {0}&quot;, path)
+        );
+
+    this.in_Process = _ =&gt; split.Input(_);
+    split.Output0 += validatePath.In_Validate;
+    validatePath.Out_ValidData += crawlDirTree.In_Process;
+    validatePath.Out_InvalidData += _ =&gt; this.Out_ValidationError(_);
+...
+</code></pre>
+<p>Instead of feeding the Split output to Crawl directory tree it flows into Validate. If the path exists, it´s passed on to Crawl directory tree; otherwise an error message is reported and the flow stops.</p>
+<p>And what happens with the validation error? It´s logged and then the program stops by returning an error code:</p>
+<pre><code class="language-csharp">static int Main(string[] args)
+{
+    int returnCode = 0;
+
+    // Build
+    ...
+    var logValidationError = new Log&lt;string&gt;(errMsg =&gt; &quot;*** &quot; + errMsg);
+
+    // Bind
+    ...           
+    compileFiles.Out_ValidationError += logValidationError.In_Process;
+    logValidationError.Out_Data += _ =&gt;
+                                        {
+                                            ...
+                                            returnCode = 1;
+                                        };
+
+    ...
+
+    // Run
+    ...
+
+    return returnCode;
+}
+</code></pre>
+<h2>Adding an exception handling aspect</h2>
+<p>The Validate aspect activity reports an invalid path through a dedicated output channel. If you want to change the course of feature process based on an validation error, you need to connect to that output. That´s an expected deviation from the normal cource of execution. But what about unexpected situations? What´s supposed to happen if and exception occurs somewhere down the feature process?</p>
+<p>This is a mission for an exception handling aspect. Let me put one right before the first activity like this:</p>
+<p>The aspect activity again ist very simple:</p>
+<pre><code class="language-csharp">public class HandleException&lt;T&gt;
+{
+    public void In_Process(T data)
+    {
+        try
+        {
+            this.Out_Process(data);
+        }
+        catch (Exception ex)
+        {
+            this.Out_Exception(ex);
+        }
+    }
+
+    public event Action&lt;T&gt; Out_Process;
+    public event Action&lt;Exception&gt; Out_Exception = _ =&gt; { };
+}
+</code></pre>
+<p>(Are you beginning to see the pattern across the aspects? ;-)</p>
+<p>Here´s how it´s used at the entry point of the program. I´m wiring it into the feature process right before Compile files:</p>
+<pre><code class="language-csharp">static int Main(string[] args)
+{
+    int returnCode = 0;
+
+    // Build
+    ...
+    var logException = new Log&lt;Exception&gt;(ex =&gt; &quot;*** &quot; + ex.Message + '\n' + ex.StackTrace);
+
+    var handleEx = new HandleException&lt;Tuple&lt;string, string&gt;&gt;();
+
+    // Bind
+    handleEx.Out_Process += compileFiles.In_Process;
+    handleEx.Out_Exception += logException.In_Process;
+
+    logException.Out_Data += _ =&gt;
+                                {
+                                    Console.WriteLine(&quot;Aborted indexing due to exception!&quot;);
+                                    returnCode = 1;
+                                };
+
+    ...
+
+    // Run
+    handleEx.In_Process(new Tuple&lt;string, string&gt;(args[0], args[1]));
+
+    return returnCode;
+}
+</code></pre>
+<h2>Summary</h2>
+<p>That´s how easy it is to add aspects to EBC designs: just plug them in the data flow where you see fit. If you want to hide them, stuff them into a composite activity. You can even aggreate activities with aspects into larger composites.</p>
+<p>The beauty of it is, that it´s completely transparent to either end of a data flow if you insert an aspect into it.</p>
+<p>Also, with EBCs aspect become visible right where they are used. They are not just some column next to layers in a block diagram but activities with a purpose. If you like, you can even invent your own notation for them. Maybe you want them not to be in the way of the main data flow. So why not get them out of the way?</p>
+<p>Invent your own little symbols to annotate data flows with. Why not?</p>
+<p>I hope you´ve got feeling for how easy AOP really is with EBC. Next time I want to expand on this and show you how to introduce asynchronous processing the same way, so you can stop worrying about threads. Just wrap up the multi threading API of your choice into async coordination activities and you´re done. Ok, almost ;-) Asynchronous processing is inherently more difficult than synchronous processing. But at least EBC can help you to lessen the pain of basic multi-threading plumbing and give you a higher level programming paradigm.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

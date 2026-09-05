@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Semantische Kontrakte mittels Tests definieren — ralfw.de Archiv</title>
+<meta name="description" content="Im Kern komponentenorientierter Softwareentwicklung steht die Entkopplung von Codeeinheiten durch separate Kontrakte. Die Definition, was eine Codeeinheit tun soll, ist zu trennen ">
+<link rel="canonical" href="https://ralfw.de/archiv/2009/semantische-kontrakte-mittels-tests/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Semantische Kontrakte mittels Tests definieren — ralfw.de Archiv">
+<meta property="og:description" content="Im Kern komponentenorientierter Softwareentwicklung steht die Entkopplung von Codeeinheiten durch separate Kontrakte. Die Definition, was eine Codeeinheit tun soll, ist zu trennen ">
+<meta property="og:url" content="https://ralfw.de/archiv/2009/semantische-kontrakte-mittels-tests/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Semantische Kontrakte mittels Tests definieren</h1>
+    <div class="doc-meta"><span>7. Feb. 2009</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2009/02/semantische-kontrakte-mittels-tests.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2009/semantische-kontrakte-mittels-tests/</code></span></div>
+    <div class="art"><p>Im Kern komponentenorientierter Softwareentwicklung steht die Entkopplung von Codeeinheiten durch separate Kontrakte. Die Definition, was eine Codeeinheit tun soll, ist zu trennen von den möglicherweise vielen Implementationen dieser Definition. Typischerweise werden Kontrakte als Interfaces und Implemenationen als Klassen realisiert:</p>
+<p>Kontrakt:</p>
+<blockquote>
+<p>public interface ITaschenrechnerRechenwerk
+{
+    int Add(int a, int b);
+   ...</p>
+</blockquote>
+<p>Implementation:</p>
+<blockquote>
+<p>public class TaschenrechnerRechenwerk : ITaschenrechnerRechenwerk
+{
+    public int Add(int a, int b) {...}
+    ...</p>
+</blockquote>
+<p>Gerade wenn solche Kontrakte in einer eigenen Assembly unabhängig von jeder Implementation vorliegen, lassen sie sich wunderbar an Dienstleister in nah und fern versenden. Der Dienstleister muss in seiner Implementation nur die Kontraktassembly referenzieren und das Kontrakt-Interface implementieren. Fertig ist die kontraktkonforme Realisation. Wenn Sie so eine Realisation geliefert bekommen, können Sie sicher sein, dass sie zum Rest Ihrer Anwendung passt, die sich auf den Kontrakt verlässt.</p>
+<p>Oder? Ist es wirklich so einfach?</p>
+<h2>Syntaktischer Kontrakt</h2>
+<p>Formal ja. Durch das unveränderliche Interface, dass der Dienstleister nur implementieren muss, ist sichergestellt, dass seine Realisation kompatibel ist. Allerdings ist sie nur syntaktisch kompatibel. Eine Client-Klasse kann ohne Kenntnis dieser konkreten Realisierung implementiert werden:</p>
+<p>Client:</p>
+<blockquote>
+<p>public class TaschenrechnerClient
+{
+    public void Run(ITaschenrechnerRechenwerk tr)
+    {
+        double r = tr.Add(2,3);
+        ... }</p>
+<p>ITaschenrechnerRechenwerk tr = ...;
+TaschenrechnerClient tc = new TaschenrechnerClient();
+tc.Run(tr);</p>
+</blockquote>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/cd3f8f6205201af2.png" /></p>
+<p>Ob tr eine Instanz von TaschenrechnerRechenwerk oder XYZ zugewiesen bekommt, ist TaschenrechnerClient egal. Das Interface stellt sicher, dass Client und Service-Implementation dieselbe "Sprache sprechen", dass sie zueinander passen. Mit einem Interface sorgen Sie nur dafür, dass eine Implementation "runde Hölzer" für "runde Löcher" bereitstellt. Das Interface beschreibt die Form einer Stecker-Steckdose-Kombination.</p>
+<h2>Semantischer Kontrakt</h2>
+<p>Was leistet aber ein Service, der die syntaktische Defintion erfüllt? Nur, weil ein Stecker in die Steckdose passt, heißt das noch lange nicht, dass an der Steckdose auch eine geeignete Spannung anliegt. Ein Service muss nicht nur so aussehen wie gewünscht, sondern auch leisten, was erwartet wird. Zu einer Komponente gehört deshalb nicht nur ein syntaktischer Kontrakt, sondern auch ein semantischer.</p>
+<p>Der semantische Kontrakt baut auf dem syntaktischen auf und beschreibt die Erwartungen an den Service. Eine ITaschenrechnerRechenwerk-Implementation soll nicht nur eine Methode mit Namen Add(), double-Resultat und zwei double-Parametern bieten, sondern eben auch tun, was man von einer Methode mit Namen "Add" erwartet.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c1a82e7f8ea53c5d.png" /></p>
+<p>Wie aber lassen Sie den Dienstleister wissen, was sie von einer Kontraktimplementation in semantischer Hinsicht erwarten? Trotz aller Bemühungen um formale Spezifikationen haben wir noch kein Mittel, um semantische Kontrakte so einfach wie syntaktische zu beschreiben. Sie werden also nicht umhin kommen, der Kontrakt-Assembly mit dem syntaktischen Kontrakt noch eine Beschreibung der Semantik beizulegen. Das könnten Sie in Form von Kommentaren in den Sourcen des syntaktischen Kontrakts tun oder mit einem separaten PDF-Dokument.</p>
+<p>Und dann? Wenn Sie eine Implementation vom Dienstleister bekommen, was tun Sie dann? Wie stellen Sie sicher, dass die nicht nur den syntaktischen, sondern auch den semantischen Kontrakt erfüllt? Das müssen Sie testen. Oder Sie verlassen sich darauf, dass der Dienstleister es genügend getestet hat. Vielleicht liefert er ja einen Unit Test Testbericht mit und auch noch eine Angabe zur Codecoverrage des Tests.</p>
+<p>Reicht das aber? Nein. Denn das sagt nur aus, dass der Code des Dienstleisters den Tests des Dienstleisters genügt. Darauf dürfen Sie sich nicht verlassen. Vielleicht hat der Dienstleister ja Ihre Beschreibung des semantischen Kontrakts falsch verstanden. Dann hat er wunderbare Tests gebaut, die alle fehlerfrei laufen - aber leiden testen sie das Falsche.</p>
+<h2>Tests als semantische Kontrakte</h2>
+<p>Wenn Sie sich wirklich auf einen Dienstleister verlassen wollen - der kann ja sogar im eigenen Team sitzen -, dann statten Sie ihn nicht nur mit einem unzweideutigen syntaktischen Kontrakt aus, den er nicht mehr interpretieren, sondern nur noch implementieren muss, sondern auch mit einem solchen semantischen. Auch ohne spezielle Spezifikationssprache geht das: mit Unit Tests. Es ist ganz einfach.</p>
+<p>Als erstes definieren Sie weiterhin Ihren syntaktischen Kontrakt (s.o.).</p>
+<p>Dann aber schreiben Sie keine länglichen Dokumente, um zu erklären, was eine Implementation können soll. Stattdessen schreiben Sie sofort Unit Tests, die alle Aspekte der Kontraktsemantik prüfen. Genau: Sie schreiben Unit Tests, ohne eine Implementation zu haben.  Das sollte kein Problem sein, denn zu einem syntaktischen Kontrakt, den Sie ersonnen haben, sollten Sie auch Erwartungen formulieren können, wie er sich zur Laufzeit verhält, wenn Sie ein seiner Implementationen mit diesen oder jenen Parametern aufrufen. Für den obigen Kontrakt kann das so aussehen:</p>
+<p>Semantischer Kontrakt:</p>
+<blockquote>
+<p>[TestFixture]
+public class ExerciseITaschenrechnerRechenwerk
+{
+    ...      [Test]
+    public void Check_add()
+    {
+        ITaschenrechnerRechenwerk tr;
+        ...         Assert.AreEqual(5, tr.Add(2, 3));
+    }
+    ...</p>
+</blockquote>
+<p>Ein ganz normaler Unit Test für eine Implementation von ITaschenrechnerRechenwerk. Der syntaktische Kontrakt ist durch das Interface vorgegeben, der semantische durch das Assert(): Wenn eine Funktion Add() vorhanden ist (Syntax), dann erwarten Sie, dass sie für die Parameter 2 und 3 das Ergebnis 5 zurückliefert. Das ist unzweideutig. Darüber muss kein Dienstleister mehr mit Ihnen diskutieren. Seine Implementation muss nur diese semantische Anforderung erfüllen. Punkt. Wenn er nicht versteht, was "Add" bedeutet, dann soll er halt bei Ihnen nachfragen. Ob sein Verständnis am Ende zu korrektem Code im Sinne Ihres Kontraktes geführt hat, beweist ein erfolgreicher Test.</p>
+<h2>Semantische Kontrakte ohne Implementation definieren</h2>
+<p>Klingt plausibel, oder? Wie können Sie nun aber vor jeder Implementation den semantischen Kontrakt formulieren? Mit Mock-Objekten. Ob obigen semantischen Kontrakt steht hinter tr keine "richtige" Implementation, sondern nur ein Mock-Objekt, dass die im Assert() formulierte Erwartung erfüllt. Nicht mehr, nicht weniger. Das kann mit Rhino Mock zum Beispiel so aussehen:</p>
+<blockquote>
+<p>MockRepository mocks = new MockRepository();
+tr = mocks.StrictMock();
+Expect.Call(tr.Add(2,3)).Return(5);
+mocks.ReplayAll();</p>
+</blockquote>
+<p>Ohne Frage funktioniert das bei Ihnen, wenn Sie den semantischen Kontrakt formulieren. Den Code können Sie auch dem Dienstleister geben - aber in Bezug auf dessen Implementation des Kontrakts ist er nutzlos. Er ist genauso passiv wie ein PDF-Dokument. Der Dienstleister kann ihn nur lesen, aber nicht auf seine Implementation anwenden.</p>
+<p>Das Problem ist, dass Sie tr fest ein Mock-Objekt zuweisen. Wie soll das der Dienstleister durch seine Implementation des syntaktischen Kontrakts ersetzen? Denn nur dann kann schon er vor Auslieferung an Sie seine Implementation auch gegen den semantischen Kontrakt testen.</p>
+<p>Als Lösung bietet sich eine kleine Factory-Methode an:</p>
+<blockquote>
+<p>[TestFixture]
+public class SemanticContract_ITaschenrechnerRechenwerk
+{
+    protected virtual
+             ITaschenrechnerRechenwerk
+             <strong>CreateInstanceToExercise</strong>(Func factory)
+    {
+        return factory();
+    }      [Test]
+    public void Check_add()
+    {
+        ITaschenrechnerRechenwerk tr;
+        tr = <strong>CreateInstanceToExercise</strong>(delegate
+                {
+                    MockRepository mocks = new MockRepository();
+                    tr = mocks.StrictMock();
+                    Expect.Call(tr.Add(2,3)).Return(5);
+                    mocks.ReplayAll();
+                    return tr;
+                });          Assert.AreEqual(5, tr.Add(2, 3));
+    }
+    ...</p>
+</blockquote>
+<p>Die Factory-Methode liefert eine Instanz des zu prüfenden Kontrakts zurück. In Abwesenheit einer realen Implementation bekommt sie die als Parameter in Form einer weiteren Factory-Methode geliefert. Der anonyme Delegat erzeugt das Mock-Objekt, das bei Ihnen den semantischen Kontrakt garantiert erfüllt. Wenn Sie eine Testklasse in dieser Weise formulieren, läuft sie wunderbar in Ihrem Testrunner (z.B. ReSharper). Ganz ohne eine echte Kontraktimplementation. Und sie können sie mit dem syntaktischen Kontrakt als separate Assembly an den Dienstleister schicken. Ob Sie dann noch zusätzlich Kommentare in den Kontrakt-Quellen oder ein PDF brauchen, müssen Sie beurteilen. Jedenfalls müssen Sie sich nicht mehr auf guten Glauben verlassen, ob der Dienstleister solche Dokumentation verstanden hat. Er muss nur darlegen, dass seine Implementation erfolgreich mit dem semantischen Kontrakt geprüft wurde.</p>
+<h2>Semantische Kontrakte gegen Implementation prüfen</h2>
+<p>Und wie prüft der Dienstleister seine Implementation gegen den semantischen Kontrakt? Oder wie prüfen Sie eine Implementation dagegen? Das ist ganz einfach: Sie müssen dem semantischen Kontrakt zur Laufzeit nur eine echte Implementation unterschieben statt der default Mock-Objekte. Dazu genügt aber die Ableitung einer neuen Testklasse von der des semantischen Kontrakts:</p>
+<blockquote>
+<p>[TestFixture]
+public class CheckTaschenrechnerRechenwerk
+                             <strong>: SemanticContract_ITaschenrechnerRechenwerk</strong>
+{
+    protected override
+             ITaschenrechnerRechenwerk
+             CreateInstanceToExercise(Func factory)
+    {
+<strong>return new Dienstleister.TaschenrechnerRechenwerk();</strong>    }
+}</p>
+</blockquote>
+<p>Diese Klasse kann der Dienstleister mit seinem Testrunner genauso ausführen wie Sie Ihre Testklasse des semantischen Kontrakts. Nur wird jetzt nicht gegen die Mock-Objekte geprüft, die die factory-Funktion erzeugen würde, sondern gegen die wahre Implementation. Bei diesem Akzeptanztest wird die factory-Funktion aus den Testmethoden einfach nicht berücksichtigt.</p>
+<h2>Zusammenfassung</h2>
+<p>Mehr ist nicht nötig für vollständige Kontraktdefinitionen für Komponenten:
+ - Definieren Sie einen syntaktischen Kontrakt in Form von Interfaces und/oder (abstrakten) Klassen in einer eigenen Assembly.
+ - Definieren Sie zum syntaktischen Kontrakt einen semantischen Kontrakt in Form von Tests in einer eigenen Assembly.
+ - Geben Sie dem Dienstleister für die Realisierung der Komponente sowohl den syntaktischen wie auch den semantischen Kontrakt und verlangen Sie, dass er nur an Sie ausliefert, wenn auch der semantische Kontrakt bei ihm fehlerfrei ausgeführt wird.</p>
+<p>Da Sie zum Zeitpunkt der Definition des semantischen Kontrakts keine Implementation vorliegen haben, benutzen Sie Mock-Objekte, um Ihre Erwartungen zu erfüllen. Der Dienstleister muss diese Mock-Objekte zur Überprüfung seiner Implementation dann nur leicht ersetzen können. Mit einer abstrakten Factory-Methode wie oben gezeigt, ist das aber leicht. So entwickeln Sie zwar noch nicht wirklich Test-driven, aber zumindest Test-first innerhalb von Contract-first: vor jede Implementation setzen Sie einen syntaktischen und (!) einen semantischen Kontrakt.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2009-02-08):</p>
+<p>Wieder ein guter Post. Aber kannst Du kurz darauf eingehen, warum dein Ansatz nur Test-First und nicht Test-Driven ist?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-02-08):</p>
+<p>@yogikamasa: test-first ist das nur, weil die tests vor der implementation geschrieben wurden.</p>
+<p>test-driven wäre es gewesen, wenn ich die tests noch vor dem syntaktischen kontrakt geschrieben hätte. ja, um den syntaktischen kontrakt überhaupt erst zu definieren.</p>
+<p>-ralf</p>
+<hr />
+<p><strong>oliver.boeff</strong> (2009-02-28):</p>
+<p>Geht man bei TDD nicht eher parallel vor, entstehen semantischer und syntaktischer Kontrakt nicht quasi gleichzeitig bzw. inspirieren sich gegenseitig?</p>
+<p>Rein handwerklich benötigt man, um für den semantischen Kontrakt Tests schreiben zu können, den syntaktischen Kontrakt (tr.<strong>Add(2,3)</strong>) als Werkzeug "es zu tun".</p>
+<p>Die Ziel-Idee eine Anforderung umzusetzen reift doch durch gemeinsames Anwenden beider Kontrakt-Aspekte.</p>
+<p>Es schmeckt ein wenig wie das Henne/Ei-Problem (wobei die Henne [Semantik] eventuell etwas überwiegt bzw. näher an der der eigentlichen Anforderung gefühlt wird).</p>
+<p>cu
+boeffi</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-02-28):</p>
+<p>@Boeffi: Klar, man geht parallel vor bei der Findung von sem. und synt. Kontrakt, die zusammen die Spezifikation einer Komponente sind.</p>
+<p>Aber in jedem Augenblick konzentriert man sich auf nur einen. Anders gehts halt nicht.</p>
+<p>Daraus kann sich natürlich eine Konsequenz für den anderen ergeben.</p>
+<p>Und auch die Komponentenimplementation kann wieder zurückwirken. Also iterative Kontraktentwicklung.</p>
+<p>-Ralf</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OOP 2008: Gesetze der Softwareentwicklung III — ralfw.de Archiv</title>
+<meta name="description" content="Abgesehen mal von der Frage, was eine gute, nein, eine optimale SOA ist, lohnt auch die Frage, wie denn ein Unternehmen überhaupt zu dieser SOA kommen kann? Ich glaube, zu ihrer Be">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/oop-2008-gesetze-der/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OOP 2008: Gesetze der Softwareentwicklung III — ralfw.de Archiv">
+<meta property="og:description" content="Abgesehen mal von der Frage, was eine gute, nein, eine optimale SOA ist, lohnt auch die Frage, wie denn ein Unternehmen überhaupt zu dieser SOA kommen kann? Ich glaube, zu ihrer Be">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/oop-2008-gesetze-der/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>OOP 2008: Gesetze der Softwareentwicklung III</h1>
+    <div class="doc-meta"><span>14. Dez. 2007</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2007/12/oop-2008-gesetze-der.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/oop-2008-gesetze-der/</code></span></div>
+    <div class="art"><p>Abgesehen mal von der Frage, was eine gute, nein, eine optimale SOA ist, lohnt auch die Frage, wie denn ein Unternehmen überhaupt zu dieser SOA kommen kann? Ich glaube, zu ihrer Beantwortung können einige "Gesetze der Softwareentwicklung" beitragen.</p>
+<p><a rel="noopener" href="http://ralfw.blogspot.com/2007/09/gesetze-der-softwareentwicklung-i.html">Gesetz 1</a> sagt, dass optimale Strukturen, also auch optimale serviceorientierte Architekturen überhaupt nur für bekannte Anforderungen entworfen werden können. Das mögen Sie als trivial ansehen, dennoch ist es hilfreich, diese Basislinie zu haben. Und keine Sorge, <a rel="noopener" href="http://ralfw.blogspot.com/2007/10/gesetze-der-softwareentwicklung-ii.html">Gesetz 2</a> macht die Sache schon spannender: Selbst wenn es für gegebene Anforderungen eine oder wenige gleichwertige optimale Strukturen geben sollte, dann lassen sich die nicht aus ihnen ableiten. Unser Verständnis bekannter Anforderungen ist einfach zu begrenzt. Ja, ich meine, dass wir selbst vorliegende Anforderungen allermeistens nur unzureichend verstehen; von den (noch) unbekannten Anforderungen, d.h. davon, dass Anforderungen immer im Fluss sind, also niemals vollständig bekannt, rede ich gar nicht erst.</p>
+<p>Das glauben Sie nicht? Sie meinen, wasimmer Sie aus einem Kunden mit der Hebammenkunst des Requirements Engineering herausgekitzelt haben, verstehen Sie auch in seinen Implikationen und können deshalb eine optimale Struktur dafür entwerfen. Gut, dann unterliegt das Ergebnis der Implementation dieser optimalen Struktur immer noch</p>
+<h2>Gesetz 3: Optimale Strukturen werden nie verlustfrei implementiert</h2>
+<p>Sie kennen das Spiel: Am Anfang stehen gute Vorsätze, aber was aus ihnen wird, ist eine andere Sache. Wie Clausewitz schon sagte: Kein Plan überlebt den Kontakt mit dem Feind. Eine optimale Struktur ist aber ein Plan, ein Vorsatz für die Realisierung von Software. Und der Feind... der ist das Tagesgeschäft. Am Anfang einer Iteration/eines Release sind Motivation und Zuversicht groß. Am Ende, wenn es auf die Auslieferung zugeht, ist die Motivation hoffentlich immer noch groß, aber die Zuversicht hat Dämpfer bekommen. Meist werden Sie am Ende einer Timebox nicht die geplanten Features ausliefern. Sie werden (hoffentlich) immer noch Wert für den Kunden produziert haben, aber nicht den, den Sie anfänglich geplant hatten. Das betrifft nicht nur die Zahl der Features, sonder vor allem die interne Struktur ihrer Implementation.</p>
+<p>Der Grund dafür ist einfach: Es existiert ein Wertekonflikt. Auf der einen Seite der Wert "Funktionalität für den Kunden" und auf der anderen Seite "Qualität der Implementationsstruktur". Und welcher dieser Werte wird, wenn die Zeit knapp ist, höher geschätzt? Sie wissen es aus eigener Erfahrung nur allzu genau. "Funktionalität für den Kunden" ist im Zweifelsfall immer der Gewinner. Wenn die Uhr merklich tickt, dann verfallen wir nicht nur in physischen Gefahrensituationen auf Verhaltensweisen, die sich seit der Steinzeit eingeschliffen haben, sondern auch wenns im Virtuellen brenzlig wird. Copy&amp;Paste als Reflexhandlung, hier noch schnell etwas dazustricken, damit es läuft, dort mit "Ja, ich weiß, das ist jetzt nicht optimal und nicht so, wie wir´s geplant hatten, aber es funktioniert halt erstmal." entschuldigen. So funktioniert Softwareentwicklung in immer engen Zeitplänen auf der ganzen Welt. Nicht schön, aber is´ halt so.</p>
+<p>Der Kunde ist König. Der Kunde sieht keine internen Strukturen. Also wird poliert, was der Kunde sieht und wünscht. Ob die langfristig optimalen Strukturen dabei erhalten bleiben, ist im Zweifelsfall egal. Zweifelsfälle, d.h. Entscheidungszwänge am Ende von Zeitplänen, sind allerdings die Regel. Also ist auch Suboptimalität die unvermeidliche Regel. Wider jeden besseren Willens.</p>
+<h2>In der Suboptimalität einrichten</h2>
+<p>Was bedeutet das für eine SOA? SOA, also Architektur im Großen, muss sich wie jede andere Softwarestruktur in der Suboptimalität und damit im Vorläufigen einrichten. Oder postmoderner ausgedrückt: Wer auf den SOA-Zug springt mit der Hoffnung, endlich der Wahrheit ein Stück näher zu kommen, der hechelt (wieder) einer Illusion hinterher. Es gibt sie nicht, die Wahrheit der Softwarearchitektur, die eine oder andere für das Unternehmen oder auch nur eine Applikation optimale Architektur.</p>
+<p>Es gibt immer nur temporär angemessene Strukturen, die noch nicht einmal wie geplant implementiert werden können. Insofern ist jeder real existierender Code immer suboptimal in der einen oder anderen Hinsicht. Immer. Unausweichlich. Vor allem, solange man an ihm noch zu einem anderen Zweck als der Optimierung seiner Struktur in Bezug auf währenddessen konstante und durch langwierige Implementation inzwischen wohlbekannte Anforderungen hält.</p>
+<p>Im Kern jeder SOA, d.h. der Manifestation der SOA-Prinzipien oder überhaupt irgendwelcher Architekturprinzipien muss daher Anpassungsfreundlichkeit stehen. Design for Change ist nie wichtiger gewesen. Design for Change ist quasi die Metaebene der Agilitätsgrundsätze.</p>
+<p>Das bedeutet aber natürlich nicht, dass Sie keinen Plan haben sollten. Das bedeutet auch nicht, dass es keine guten oder weniger guten Architekturen für bekannte Anforderungen gibt. Es bedeutet nur, dass Sie kein Gefühl von Angekommen entwickeln sollten. Architektur ist die Kunst der Strukturierung und Ordnung des ewig Vorläufigen.</p>
+<p>Egal, welche Technologie Sie heute einsetzen, egal, welcher Schule Sie folgen... das alles wird veralten und Ihre Implementationen sind zu erneuern.</p>
+<p>Und was bedeutet das für schon existierende Strukturen? Dazu mehr bei Gesetz 4 der Softwareentwicklung.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

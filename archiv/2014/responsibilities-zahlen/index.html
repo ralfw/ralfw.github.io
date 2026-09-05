@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Responsibilities zählen — ralfw.de Archiv</title>
+<meta name="description" content="Das Single Responsibility Principle (SRP) ist eine Säule sauberer Softwareentwicklung für hohe Wandelbarkeit. Nicht umsonst macht es auch den Anfang bei den SOLID Prinzipien, würde">
+<link rel="canonical" href="https://ralfw.de/archiv/2014/responsibilities-zahlen/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Responsibilities zählen — ralfw.de Archiv">
+<meta property="og:description" content="Das Single Responsibility Principle (SRP) ist eine Säule sauberer Softwareentwicklung für hohe Wandelbarkeit. Nicht umsonst macht es auch den Anfang bei den SOLID Prinzipien, würde">
+<meta property="og:url" content="https://ralfw.de/archiv/2014/responsibilities-zahlen/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Responsibilities zählen</h1>
+    <div class="doc-meta"><span>2. Okt. 2014</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2014/10/responsibilities-zahlen.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2014/responsibilities-zahlen/</code></span></div>
+    <div class="art"><p>Das <em>Single Responsibility Principle</em> (SRP) ist eine Säule sauberer Softwareentwicklung für hohe Wandelbarkeit. Nicht umsonst macht es auch den Anfang bei den <em>SOLID</em> Prinzipien, würde ich sagen.</p>
+<p>Aber: Wie finden Sie denn heraus, wieviele Responsibilities (Verantwortlichkeiten) eine Methode oder Klasse hat? "Naja, das sieht man halt", scheint mir ein zu schwammiges Kriterium für ein so zentrales Prinzip.</p>
+<h3>Was ist eine Verantwortlichkeit?</h3>
+<p>Bevor es mit dem Zählen losgehen kann, muss natürlich klar sein, was da überhaupt entdeckt und gezählt wird. Was ist eine Verantwortlichkeit?</p>
+<p>Die Literatur spricht von "only one reason to change". Das finde ich leider nicht wirklich hilfreich. Denn um welche Gründe geht es, worauf beziehen die sich?</p>
+<p>Ich versuche es daher einmal so:</p>
+<blockquote>
+<p>Jede Methode soll nur Anweisungen enthalten, die Anforderungen eines Aspekts erfüllen.</p>
+</blockquote>
+<p>Diese Definition ist knackiger, erfordert jedoch die Klärung zweier Begriffe:</p>
+<ul>
+<li><strong>Aspekt</strong>: Ein Aspekt ist eine Menge von zusammengehörigen Merkmalen, die sich unabhängig von anderen Merkmalen ändern können. Man könnte einen Aspekt auch eine Dimension nennen. Beispiele für Aspekte in der realen Welt sind z.B. Frisur, Kleidung, Bildung. Sie können die Merkmale Ihrer Frisur (Haarfarbe, Haarlänge, Schnitt) unabhängig von Merkmalen Ihrer Kleidung (Stoff, Jahreszeitlichkeit, Stil) oder Bildung (Dauer, Inhalt, Ort) ändern.</li>
+<li><strong>Anweisung</strong>: Anweisungen sind Sprachkonstrukte, die definieren, was eine Software tun soll. Sie fallen für mich in zwei Kategorien: Logik und Integration.   <strong>Logik</strong>: Mit Logik bezeichne ich die essenziellen Anweisung von Programmiersprachen, die der Erfüllung von funktionalen wie qualitativen Anforderungen dienen. Das sind Operatoren, die Daten transformieren, Kontrollstrukturen (z.B. <em>if</em>, <em>while</em>), die den Verarbeitungsfortgang steuern, und Hardwarezugriffe (vermittels API-Aufrufen). Logik beschreibt Algorithmen.</li>
+<li><strong>Integration</strong>: Integration bindet mehrere Methoden zu einem Datenfluss zusammen.</li>
+</ul>
+<p>Ich denke, jetzt wird auch verständlicher, was "only one reason to change" bedeutet: Methoden sollen nur geändert werden müssen, wenn sich an einem Anforderungsaspekt etwas verändert hat.</p>
+<p>Methoden sind die kleinsten Container von Programmiersprachen. Darüber liegen für mich in wachsender Größe Klassen, Bibliothekn, Komponenten und µServices. Für die muss das SRP natürlich auch gelten. Also lautet es ganz allgemein:</p>
+<blockquote>
+<p>Jeder Container soll nur Anweisungen enthalten, die Anforderungen eines Aspekts erfüllen.</p>
+</blockquote>
+<p>So zumindest das Ideal. In der Praxis kann und muss sogar davon temporär oder in überschaubarem Maße abgewichten werden. Ziel sollte jedoch ein einziger Aspekt pro Container sein.</p>
+<p>Außerdem ist zu bedenken, dass Aspekte in Hierarchien existieren. Zum Aspekt der Kleidung mögen die Merkmale Stoff, Jahreszeitlichkeit und Stil gehören. Nur zum Stoff z.B. gehören dann jedoch weitere Sub-Aspekte wie Farbe, Material, Haptik. Kleidung kann aus grobem roten Leinen oder feiner grüner Seide oder rauer gelber Wolle oder feinem gelbem Leinen usw. bestehen.</p>
+<p>Ein Container auf höherer Abstraktionsebene (z.B. Klasse) kann dann für einen Dachaspekt stehen, der Container von Sub-Aspekten (z.B. Funktionen) zusammenfasst.</p>
+<h3>Härtegrade</h3>
+<p>Für mich gibt es Aspekte in unterschiedlichen Härtegraden. Hart sind Aspekte, die man an der Form erkennt. Man muss die Anforderungen nicht verstehen, die Anweisungen erfüllen, sondern nur die Programmiersprache/Plattform.</p>
+<p>Beispiele hierfür sind die Anweisungsaspekte Logik und Integration sowie der Aspekt Datenstruktur.</p>
+<p>Innerhalb der Logik können dann jedoch weitere verschiedene Hardwarezugriffe unterschieden werden, z.B. Tastatureingabe, Bildschirmausgabe, Dateisystemzugriff, Datenbankzugriff. Und sogar den Zugriff auf den Heap würde ich dazurechnen, also den Umgang mit Hauptspeicher. Dazu ist zwar kein spezieller API nötig, doch Zugriffe aus globale Daten (statische Felder oder Felder von Objektinstanzen) sind klar erkennbar.</p>
+<p>Weich hingegen sind Aspekte, bei denen man verstehen muss, worum es geht. Es geht um das <em>Was</em>, wohingegen harte Aspekte das <em>Wie</em> betreffen.</p>
+<p>Schon die Unterscheidung zwischen lesender und schreibender Logik setzt Interpretation voraus. Es ist daher kein Wunder, dass bei weichen Aspekten schnell Diskussionen entstehen. Der eine empfindet Lesen und Schreiben als Merkmale des selben Aspekts, der andere empfindet sie als getrennt - was sich dann jeweils in unterschiedlicher Aufteilung in Container ausdrückt.</p>
+<p>Auch hier wieder eine Hierarchie: Lesen und Schreiben sind z.B. Sub-Aspekte von Objektpersistenz (zu der auch z.B. Serialisierung gehört). Und Objektpersistenz ist ein weicher Aspekt von z.B. Personalisierung. Die wiederum ein Aspekt des Anforderungsaspektes Usability ist - welche zur Anforderungskategorie Qualität gehört.</p>
+<p>Und was folgt aus der Unterscheidung zwischen harten und weichen Aspekten? Halten Sie sich so lange wie möglich bei der Strukturierung von Code an harte Aspekte. Darüber gibt es viel weniger Diskussion. Das macht Ihre Codierung schneller, das macht Reviews konfliktfreier.</p>
+<p>Am Ende jedoch können Sie natürlich den weichen Aspekten nicht ausweichen. Üben Sie also immer wieder Ihre Sensibilität in der Unterscheidung und Zusammenfassung von weichen, inhaltlichen Merkmalen.</p>
+<p>Apropos Üben...</p>
+<h3>Angewandte Aspekterkennung</h3>
+<p>Zum Abschluss ein Codebeispiel, an dem ich Ihnen die Identifikation von Aspekten praktisch demonstrieren möchte. Ich entnehme es dem Buch <a href="beispielcode%20aus%20http://www.amazon.de/Head-First-C-Jennifer-Greene-ebook/dp/B00ERG0H7E">"Head First C#"</a>.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/dc7688c00d38a83b.png" /></p>
+<p>Das Szenario? Versuchen Sie es doch einmal dem Code zu entnehmen. Wie Sie feststellen werden, ist das jedoch schwierig. Weil er nicht integriert und kein Titel sichtbar ist. Die Methode <em>Main()</em> enthält ausschließlich Logik. Und die hat ihrer Natur nach denkbar wenig Dokumentationsqualität. Reine Logik muss immer entziffert werden. Hobbyarchäologen sind klar im Vorteil ;-)</p>
+<p>Aber ich verrate Ihnen das Szenario: Es handelt sich um eine Anwendung zur Darstellung von Dateiinhalten in hexadezimaler Form.</p>
+<p>Hier nun der von mir mit Aspekten kommentierte Quellcode:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/1489d1ac219dc2cf.png" /></p>
+<p>Das Kapitel im Buch heißt "Dateien lesen und schreiben" - aber wie das geht, muss der Leser sich mühsam im ganzen Code zusammensuchen. Nicht nur wie das Problem ganz allgemein gelöst wird, wie der Prozess aussieht, der das gewünschte Verhalten herstellt, ist also unklar. Es wird auch dem technologisch Interessierten schwer gemacht, sich zu informieren.</p>
+<p>Das ist Bullshit. Das ist dirty code par excellance. Niemandem ist mit soetwas gedient. Und das in deinem Lehrbuch...! Erschreckend.</p>
+<p>Ich habe vier Aspekte identifiziert, die über den Code verstreut und auch noch geschachtelt sind. Das ist das Gegenteil von Entkopplung.</p>
+<p>Die Domäne ist die Formatierung von Bytes in hexadezimale und ASCII Darstellung. Aber weder ist diese Domäne als ein für sich stehendes Stück Logik herausgearbeitet, noch die anderen Aspekte.</p>
+<p>Aber ich will Goethes "Besser machen, nicht nur tadeln, soll den rechten Meister adeln" folgen und Ihnen nicht vorenthalten, wie ich meine, das der Code aussehen sollte.</p>
+<p>In der reinen Logik unterscheidet sich meine Lösung nur unwesentlich von der im Buch. Doch ich habe die Logik anders (bzw. überhaupt) in Container verpackt. <a rel="noopener" href="https://gist.github.com/ralfw/92fe361fdbacc459656a#file-hexdmperv1-cs">Zunächst nur in Funktionen</a>:</p>
+<p><a rel="noopener" href="https://gist.github.com/ralfw/92fe361fdbacc459656a#file-hexdmperv1-cs"></a></p>
+<p>Das ist ein erster Schritt. In <em>Main()</em> ist der Prozess nun deutlich sichtbar. Außerdem ist klar, wo welche APIs benutzt werden. Wer sich zum Thema "Dateien lesen und schreiben" informieren will, schaut einfach bei <em>Check_if_file_exists()</em> und <em>Read_blocks_from_file()</em> rein; den Rest kann man dann ignorieren.</p>
+<p>Wem das nun jedoch zu wenig objektorientiert ist, wer gern noch eine deutlichere Zusammenfassung der Subaspekte sehen möchte, der findet hier <a rel="noopener" href="https://gist.github.com/ralfw/92fe361fdbacc459656a#file-hexdmperv2-cs">eine Lösung mit Klassen</a>:</p>
+<p><a rel="noopener" href="https://gist.github.com/ralfw/92fe361fdbacc459656a#file-hexdmperv2-cs"></a></p>
+<p>Zum Beispiel bündelt die Klasse <em>FileSystemProvider</em> die Methoden, in denen sich Logik befindet, die den API <em>System.IO</em> benutzt.</p>
+<p>Die Aspekttrennug ist damit deutlicher. Der Preis dafür ist etwas Rauschen: in <em>Main()</em> müssen nun Klassen instanziert werden und Methodenaufrufe haben Objektnamen als Präfix.</p>
+<p>Überhaupt haben meine Lösungen doppelt oder gar mehr als doppelt so viele LOC (lines of code). Ist das gut? Sollte Code nicht immer so kurz und knapp wie möglich sein? Trägt Knappheit nicht zur Lesbarkeit bei?</p>
+<p>Klar, wenige Zeilen Code lassen sich leichter überschauen, sozusagen physisch. Aber inhaltlich ist das nicht unbedingt der Fall, nämlich wenn es sich um reine Logik handelt. Das war ja das Problem des ursprünglichen Codes. 40-50 LOC, also rund eine Bildschirmseite, das war nicht viel - und doch war es nur schwer verständlich.</p>
+<p>Da bezahle ich gern den Preis von etwas Rauschen und mehr LOC, wenn ich dafür Verständlichkeit bekomme. Und die ist nun vorhanden, würde ich sagen.</p>
+<p>Der Einstieg ins Programm ist sonnenklar. Er beschreibt lesbar, wie das Verhalten "Dateiinhalt als Hex Dump anzeigen" hergestellt wird:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/13a240be42319524.png" /></p>
+<p><em>Main()</em> hat nun eine einzige, harte Verantwortlichkeit: Integration.</p>
+<p>Und jede Klasse hat wiederum nur eine einzige Verantwortlichkeit, z.B. <em>FilesystemProvider</em>:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/8c6df1e1712b261c.png" /></p>
+<p>Sie kapselt die Nutzung des <em>System.IO</em> API. Dieser Aspekt zerfällt jedoch in zwei weiche: Prüfen, ob eine Datei existiert, und blockweises Lesen der Bytes aus einer Datei.<a href="#fn:1">1</a></p>
+<h3>Fazit</h3>
+<p>Das <em>Single Responsibility Principle</em> ist zentral für saubere Softwareentwicklung. Um es anwenden zu können, muss man allerdings wissen, was denn eine <em>Responsibility</em> eigentlich ist.</p>
+<p>Mit der Definition, die ich gegeben habe, fällt es Ihnen hoffentlich leichter, die Verteilung von Responsibilities in Ihrem Code zu überschauen - und sie dann mit Refaktorisierung zu entzerren.</p>
+<hr />
+<ul>
+<li>Ok, ich gebe zu, ein kleinwenig unsauber ist der Code noch. Denn sowohl in <em>Check_if_file_exists()</em> wie in <em>Get_filename()</em> nutze ich zwei APIs. Zum einen den eigentlichen, um den es dort geht (Dateisystem- bzw. Kommandozeilenzugriff), zum anderen jedoch auch den für die Ausgabe auf der Konsole zur Fehlermeldung. Konsequenterweise müsste ich die Fehlermeldung in eine eigene Methode verpacken und z.B. in den <em>ConsoleProvider</em> verschieben. Eigentlich - denn hier lasse ich das mal so stehen. Es ist eine vergleichsweise kleine Sünde. Und wer will schon Perfektion? :-) Wenigstens bin ich mir der “Schmutzrückstände” bewusst.<a href="#fnref:1">↩</a></li>
+</ul>
+<h2>Kommentare</h2>
+<p><strong>Peter Conrad</strong> (2014-10-03):</p>
+<p>"Sie können die Merkmale Ihrer Frisur (Haarfarbe, Haarlänge, Schnitt) unabhängig von Merkmalen Ihrer Kleidung (Stoff, Jahreszeitlichkeit, Stil) [...] ändern."</p>
+<p>Dem würde meine Frau widersprechen. :-)</p>
+<p>Das (vermutlich ungewollt) Schöne an dem Beispiel ist natürlich, dass es die Subjektivität der Einteilung unterstreicht.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2014-10-03):</p>
+<p>Deine Frau ist auch ein Aspekt deines Lebens - ein weicher :-) Der kann sich unabhängig von deiner Frisur ändern. Ich hoffe, du spürst diesen Freiheitsgrad :-)</p>
+<p>Klar, Frisur, Kleidung... das sind zu einem gewissen Grad weiche Aspekte. Es mag Leute geben, die Haarfarbe mit Rocklänge enger zusammen sehen als Haarfarbe und Haarlänge.</p>
+<p>Wie gesagt: Darüber lässt sich trefflich diskutieren. Deshalb so lange wie möglich an harte Aspekte halten.</p>
+<hr />
+<p><strong>McZ</strong> (2014-10-07):</p>
+<p>SRP soll korrekte Modularität erzwingen. Korrekte Modularität ermöglicht Testbarkeit, Flexibilität und Evolvierbarkeit.</p>
+<p>Deshalb gehört Environment.Exit  auf keinen Fall in die IO-Operationen (Testbarkeit?). Die Aussage, dass bei einer (in diesem Fall erwarteten) Ausnahmesituation in den Fehlerausgabestrom geschrieben und die Anwendung mit Exitcode = 2 beendet wird, gehört definitiv in die Main-Methode; die Behandlung (oder das Unterlassen) von Ausnahmen ist eine essentielle Aufgabe der Integration.</p>
+<p>Zusammen mit der bereits erkannten Sünde des Konsolenaufrufs wird hier letztendlich um das Weglassen einer an dieser Stelle in Check_if_file_exists opportunen System.IO.FileNotFoundException herumgedoktert. Beim Öffnen des FileStream gibt es eine solche Ausnahme sowieso, das gehört zur Domäne File-IO. Deshalb ist Check_if_file_exists redundant. Will man es weniger "hart", prüft man mit File.Exists; emfände ich hier aber als überflüssig.</p>
+<p>Was die IO-Kapsel Read_blocks_from_file tut ist: Datenstrom aus Datei öffnen, aus dem Datenstrom eine Sequenz von Blöcken erzeugen und für jeden Block zwingend eine Aktion durchführen. Das sind drei Aspekte.</p>
+<p>Es fehlt eine Methode Read_blocks_from_stream mit Eingabe IO.Stream und Ergebnis IEnumerable. Der Code sieht per Yield gar nicht so anders aus. Der Name der Klasse wäre mit "BlockReader" besser gewählt.</p>
+<p>Read_blocks_from_file würde als high-level API als Integration "lokales Dateisystem &gt; Block-Iteration" weiterleben. Da spricht nichts dagegen.</p>
+<p>Diese Design-Entscheidung ist übrigens mit eine wenig Spieltheorie und mit Blick auf die Vererbungshierarchie von IO.FileStream "hart messbar": was wäre, wenn der Datenstrom auf einem Webserver liegt oder in einer Zip-Datei verpackt ist? Oder zur einfacheren Testbarkeit in einem MemoryStream? Was ist, wenn die Blöcke mehrfach iteriert werden müssen, oder sie für Sprünge indiziert werden müssten?</p>
+<p>Ich würde dem Code auch unbedingt ansehen wollen, ob der Inhalt Binär, als Text, JSON, XML oder "my-favourite-worst-nightmare-markup" gelesen wird. Auch der refaktorisierte Code operiert direkt auf dem Stream, anstatt einen BinaryReader zu verwenden. Deshalb ist die Implementierung an dieser Stelle auch jener in IO.BinaryReader.ReadBytes bis aufs Haar ähnlich, mit zwei Performance-Optimierungen.</p>
+<p>Dass dies weggelassen wird, macht den Code weniger verständlich. Das ein Lehrbuch direkte Stream-Lese-Operationen als Tugend verkauft, halte ich für schlicht katastrophal.</p>
+<p>Würde man all dies beherzigen, käme eine Line-Count heraus, der deutlich unter der Originallösung liegt.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2014-10-07):</p>
+<p>Um Missverständnisse zu vermeiden: Meine Refaktorisierung hat bewusst möglichst wenig an der vorhandenen Logik verändert. Ich habe sie möglichst komplett übernommen - und nur in Container zusammengefasst, um Verantwortlichkeiten kenntlich zu machen.</p>
+<p>Bei der Fehlermeldung habe ich allerdings auf eine "vollständige" Refaktorisierung verzichtet.</p>
+<p>@McZ: Du lieferst ein schönes Beispiel dafür, wie weit man die Zerlegung in harte und weiche Aspekte noch treiben könnte.</p>
+<p>Und wir können trefflich darüber diskutieren, ob die Methode (bzw. die dahinter stehende Logik) Check_if_file_exists() nötig ist. Du meinst, nein, weil es eh knallt, wenn die Datei nicht vorhanden ist. Der Autor des Originals meint, ja, weil die explizite Prüfung (bzw. das Abfangen einer solchen Exception) die Gelegenheit gibt, anders auf das Fehlen zu reagieren (z.B. sprechendere Fehlermeldung, Meldungsausgabe auf einem bestimmten Kanal, Exit-Code setzen).</p>
+<p>Das "Was wäre wenn"-Spiel lässt sich natürlich weit und weiter treiben. Hier muss dann auch irgendwann abgebrochen werden. SRP darf nicht zur Glaskugelguckerei verleiten.</p>
+<p>Worüber ich mich gefreut hätte, das wäre eigener Code von dir gewesen. Warum hast du uns nicht deine optimierte Lösung in einem Gist präsentiert?</p>
+<hr />
+<p><strong>Epi</strong> (2015-03-24):</p>
+<p>Hallo,</p>
+<p>ich hatte mich schon immer gefragt, wie das mit dem "one reason to change" gemeint ist. Insofern interessanter Artikel.</p>
+<p>Das Thema "Härtegrade" hat mich an die "Softwarekategorien" aus Siederslebens Buch "Moderne Softwarearchitekturen" erinnert.</p>
+<p>Siedersleben unterteilt in "Kategorie 0" für "Allgemeinwissen", also bspw. Typen der Programmiersprache, Collection-API der Standarbibliothek, Reflection-API etc.</p>
+<p>"Kategorie A" für "Anwendung" wird bestimmt durch der Anwendungsdomäne.</p>
+<p>"Kategorie T" für "Technik" wird bestimmt durch den Umgang mit technischen APIs, z.B. I/O, DB-Persistenz etc.</p>
+<p>Kann ich Deine Härtegrade so verstehen: hart für "T", weich für "A"?</p>
+<p>Ziel für Siedersleben ist eine "Trennung von A und T", weil sich beides unterschiedlich schnell ändert.</p>
+<p>Für die Kommunikation von A + T Software gibt es dann noch die Kategorie "R" für "Repräsentation", die nur transformiert, also z.B. DB-Record nach Objekt oder Objekt nach GUI-Element.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2015-03-24):</p>
+<p>Siedersleben kategorisiert Aspekte stark. Das mache ich hier nicht so sehr. "Hart" und "weich" sollen nicht mit "T" und "A" korrespondieren.</p>
+<p>Eher bei der Softwarezellen unterscheide ich zwischen "Domäne" ("A"), "Portal" ("T"), "Provider" ("T") und dann mit Flow Design nochmal Integration (fällt fasst in die Kategorie "R"). Aber das ist halt differenzierter - und auch nur der Anfang. Denn gerade die Domäne muss weiter zerlegt werden. Aber das sind dann weiche Aspekte.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

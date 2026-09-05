@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The IODA Architecture — ralfw.de Archiv</title>
+<meta name="description" content="The common architectural patterns are all pretty much the same. Layered architecture, MVC, Hexagonal architecture, Onion Architecture, Clean architecture… they all do two things:">
+<link rel="canonical" href="https://ralfw.de/archiv/2015/the-ioda-architecture/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The IODA Architecture — ralfw.de Archiv">
+<meta property="og:description" content="The common architectural patterns are all pretty much the same. Layered architecture, MVC, Hexagonal architecture, Onion Architecture, Clean architecture… they all do two things:">
+<meta property="og:url" content="https://ralfw.de/archiv/2015/the-ioda-architecture/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>The IODA Architecture</h1>
+    <div class="doc-meta"><span>29. April 2015</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2015/04/29/the-ioda-architecture.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2015/the-ioda-architecture/</code></span></div>
+    <div class="art"><p>The common architectural patterns are all pretty much the same. Layered architecture, MVC, Hexagonal architecture, Onion Architecture, Clean architecture… they all do two things:</p>
+<ol>
+<li>Define domains of responsibility</li>
+<li>Put functional dependencies in order</li>
+</ol>
+<p>Look at these depictions of some of the patterns:</p>
+<p>What you find are shapes (rectangles, circles) with the responsibility to produce part of the required behavior of a software. All models forsee certain responsibilities like interaction with the user, persisting data, representing and working with domain data etc. Some patterns are more detailed, some are less. That way they are more or less applicable to concrete requirements.</p>
+<p>And those shapes are explicitly or implicitly connected in service relationships. One shape uses another; one shape depends on another. Sometimes arrows denote these relationships, sometimes mere location (e.g. a shape on top of another means "top uses bottom").</p>
+<p>These uses-relationships are cleanly directed and there are no cycles.</p>
+<p>This is all nice and well. It helped us along quite a while.</p>
+<p>But again and again I've seen developers scratching their heads. What about stored procedures in a database? They implement business logic, but don't reside in the Business Layer. What about JavaScript validation logic? It's part of the Presentation Layer, but implements business logic. Or what if I don't want to go down the DDD path with Domain Entities and Services? Maybe the application is too small for this.</p>
+<p>Most of all, though, what boggles the mind of developers, as far as I can see, are the functional dependencies between all those responsibilities. It's deep hierarchies which won't go away by switching to IoC and DI.</p>
+<p>Looking at a function on any level of this hierarchy is an exercise in archaeology. Put on your head lamp, get out the brush, be careful while you uncover mysterious code hieroglyphs of the past. There is so much to learn from those 5,000 lines of code… And there, look, another tunnel leading you to yet another level of code.</p>
+<p>As useful as the architectural patterns are, they are only coarse grained and they leave us with a very crude idea of the fundamental structure of software. According to them, software is just a deep hierarchy of services with particular responsibilities calling other services calling other services etc. for help.</p>
+<p>Thus the DI container has become the developers best friend. And his second best friend has become the mock framework.</p>
+<p>This is bothering me.</p>
+<p>Certainly every software system is made up of aspects which should be encapsulated in modules. There might be a UI aspect or a persistence aspect or a use case aspect or an encryption aspect or a reporting aspect etc. etc. They are all a matter of the Single Responsibility Principle, which I've already put under the microscope.</p>
+<p>At this point I don't want to argue with the established architectural patterns about the responsibilities they perceive as inevitable, be that Business Layer or Repository or Controller etc.</p>
+<p>Let's call them behavioral responsibilities. Because each responsibility is about a functional or non-functional aspect of the behavior the customer wants a software to show.</p>
+<p>But what I question is, whether the fundamental notion of software being just a uniform hierarchy of services is useful. And service being some kind of behavioral responsibility to be used by another service.</p>
+<p>Essentially there is no distinction. Look at the code in a function in a Presentation Layer or a Use Case or a Controller or a Respository. You won't see a difference - except in behavioral purpose. All functions on all levels of the dependency tree contain logic and calls to other functions.</p>
+<p>"That's how it is. That's the nature of software, isn't it?", you might say. But I beg to differ. This is just how we structure software today. It's a mush. And that's why there are functions with 500 or even 10,000 lines of code. There is no technical limit to how many LOC a function can have. And there is no binding rule about how many LOC it should have (except for some recommendations). It's all up to us developers. So if push comes to shove a method just grows - one line at a time. Because it can.</p>
+<p>This is what has been happening for the past 50 years. And it has been happening despite all well meant design patterns or architecture patterns.</p>
+<p>Why's that? My guess, it's because all those patterns do not question the basic assumption of all levels of dependency being created equal.</p>
+<p>Patterns so far have been concerned with defining certain behavioral responsibilities and nicely ordered dependencies between them. That's all.</p>
+<p>So I suggest, if we don't like the current state of codebase affairs, then we should try something new. Here's what:</p>
+<h2>Formal responsibilities</h2>
+<p>I'd like to propose to search for the fundamental architecture of software in another dimension. The current architectural patterns are just evolutionary steps in the same dimension. So let's step out of it. Let's turn 90° and start moving down another path.</p>
+<p>It's one thing to search for responsibilities in the behavioral domain. That's necessary, but also it is limited. Like the Flatlanders baffled by the effects of a 3D object passing through their 2D space, we're again and agin baffled by the temptation to name some class "manager" or "coordinator". It doesn't sound right.</p>
+<p>Locked in our current view of software design the need for manager/coordinator/controller classes seems like a symptom of bad object-orientation.</p>
+<p>But what if we broaden our view, step out of our dimension or behavioral responsibilities?</p>
+<p>Let me introduce three formal responsibilities. I call them formal, because they are not concerned with creating a certain behavior. These formal responsibilities are orthogonal to all behavioral responsibilities.</p>
+<h3>Operation</h3>
+<p>Operation I call the responsibility of any logic. (With logic being transformations/expressions, control statements, hardware access/API calls.)</p>
+<p>Any module containing just logic, is an operation. What an operation does, whether it stores data in a file, calculates a price, parses a string, stuffs data into a view is of no concern.</p>
+<p>It's implicit in that operations only contain logic. However, since this is so important, let me state it also explicitly: Operations may not call any other operation. Operations don't know of each other. There is no functional dependency between operations. Calling one of your functions is not part of the definition of logic (see above).</p>
+<p>Operations just execute their own logic which works on data. They are I/O-processors: given some input they produce output (and possibly side effects).</p>
+<h3>Data</h3>
+<p>Giving structure to data is a responsibility separate from operating on data. Operations of course work on data - but they are not data.</p>
+<p>This might sound opposed to object-orientation, but it is not. Data structures may provide services to work with them. Those services just should be limited to maintaining structure and consistency of the data.</p>
+<p>If something is data, then that's what its functionality should be limited to. If, on the other hand, something has data, it's free to operate on it in any way.</p>
+<h3>Integration</h3>
+<p>Since operations don't know each other, there needs to be some other party to form a visible behavior from all those small operational behaviors. That's what I call integration.</p>
+<p>Integration is the responsibility to put pieces together. Nothing more, nothing less. That means, integration does not perform any logic. From this also follows, integration is not functionally dependent on operations or other integration.</p>
+<h2>Formal dependencies</h2>
+<p>The formal responsibilities (or aspects) are independent of any domain. They neither suggest nor deny there should exist adapters or controllers or use cases or business logic modules in a software. They are also independent of any requirements scenario. Software can (and should) be structured according to the formal aspects if it's a game, a web application, a batch processor, a desktop application or a mobile application or some service running on a device.</p>
+<p>The formal aspects are truly universal. They define fundamental formal responsibilities to be separated into modules of their own. Put operations into other modules than integration or data.</p>
+<p>And interestingly what goes away if you do this are functional dependencies between the modules of an application.</p>
+<p>If you decide to have some operation module for displaying data, and some for doing business calculations, and some for persisting data… then those modules won't be calling each other.</p>
+<p>They just float around independently, only maybe sharing some data.</p>
+<p>As you can see, operations depend on data. Of course that's necessary. Otherwise there would be no purpose for software. Logic needs to have raw material to process.</p>
+<p>But data is not functionality. It's, well, data. It's structure.</p>
+<p>Finally those operations floating around need to be wired-up to work in cooperation towards a common goal: some larger behavior of which each is just a part.</p>
+<p>This is done by integration on possibly many levels.</p>
+<p>Integration depends on operations and other integration. But also this dependency is not "bad", because it's no functional dependency.</p>
+<p>As you can see, dependencies won't go away. We can't build software without them. But the functional dependencies of the behavioral architecture patterns are gone. There are no more services calling other services etc.</p>
+<p>The dependencies here are just formal. Or empty, if you will. They don't have to do with any functional or non-functional efficiency requirements.</p>
+<h2>Separating What from How</h2>
+<p>I call this universal separation of formal responsibilities IODA Architecture. There are several strata of Integration sitting on top of one stratum of Operations using Data - and APIs from outside the scope of the requirements to at least cause any tangible effects on hardware.</p>
+<p>Or if you are more inclined towards "onions" here's another one ;-)</p>
+<p>Or this one, depending on how you want to look at it. You could say, the environment interacts with some integration, so they need to be on the surface. Or you could say, the environment is only accessible through APIs, so they need to be on the surface.</p>
+<p>In any case, operations are about how behavior is created. Logic is imperative, it's nitty gritty details.</p>
+<p>Integration on the other hand defines what is supposed to happen. It does not contain logic, it thus is not imperative, but declarative. Like SQL is declarative. Integration assumes the stuff it integrates just to work. If that assumption is valid, then it promises to wire it up into something larger and also correctly functioning.</p>
+<p>Also data is about the what. No logic in data except to enforce a certain structure.</p>
+<h2>Self-similarity</h2>
+<p>I've long sought an image to symbolize the IODA architecture. And now I've found one which I like quite a bit: a Sierpinski triangle.</p>
+<p>I think it fits because it's a self-similar figure. It's a triangle made up of triangles made up of triangles… It's triangles all the way down :-) A fractal.</p>
+<p>IODA is also self-similar: An operation on one level of abstraction can in fact be a IODA structure - which you only see when you zoom in.</p>
+<p>Operations on a high level of abstraction are black boxes. They are leaves of the the behavioral tree - which works on data and uses APIs.</p>
+<p>But if you think, an operation is too coarse grained, you may open it up at any time. Refine it. Zoom in. Then it's decomposed into another "miniature" IODA hierarchy. The integration formerly integrating the operation with others then integrates the root integration of the operation.</p>
+<h2>Summary</h2>
+<p>To escape from "dependency hell" it's not enough to wave the IoC/DI wand. The problem is more fundamental. It's the very assumption software should be built as deep hierarchies of functionally dependent modules that's problematic.</p>
+<p>Functional dependencies lead to ever growing methods. The SRP is too weak to keep developers from adding more lines to an already excessively long method.</p>
+<p>This is different in a IODA architecture. There simply is no way to write an operational method with more a dozen lines of code. Because any developer then will tend to extract some logic into a method to be called. But that would be a violation of the IODA rule of not calling any (non-API) functions from an operation. So if a method is extracted from an operation's logic the operation has to be turned into an integration.</p>
+<p>Integration methods are also short. Without any logic being allowed in an integration method it simply does not feel right to have more than a dozen lines of code in it. And it's easy to extract an integration method if the number of lines grows.</p>
+<p>IODA does not only get rid of functional dependencies - of which a palpable effect is, the need for mock frameworks drastically diminishes -, it also creates a force keeping module sizes small.</p>
+<p>Software architecture is not a matter of whether a Presentation Layer may only call a Business Layer or Use Cases may call Entities or the other way around. There should not be any service dependencies between these or other kinds of behavioral responsibilities in the first place.</p>
+<p>Which behavioral responsibilities there should be is only a function of the concrete requirements. But what is truly universal and unchanging in my view is the distinction between integration, operation, data - and whatever framework APIs deemed helpful to get the job done.</p>
+<hr />
+<p><em>Footnotes: The same is true for data, by the way. Data structures are black boxes to operations. But since they can contain logic (to enforce their structure and consistency), they might not just consist of operations but a whole IODA hierarchy. This is not just a theoretical thought, but experience from several years of designing software based on IODA.</em></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

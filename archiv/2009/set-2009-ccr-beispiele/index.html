@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SET 2009 CCR Beispiele — ralfw.de Archiv</title>
+<meta name="description" content="Gestern auf der SET 2009 in Zürich habe ich einen Vortrag über die Concurrency Coordination Runtime (CCR) von Microsoft gehalten. Leider standen mit nur 45min zur Verfügung :-( Den">
+<link rel="canonical" href="https://ralfw.de/archiv/2009/set-2009-ccr-beispiele/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="SET 2009 CCR Beispiele — ralfw.de Archiv">
+<meta property="og:description" content="Gestern auf der SET 2009 in Zürich habe ich einen Vortrag über die Concurrency Coordination Runtime (CCR) von Microsoft gehalten. Leider standen mit nur 45min zur Verfügung :-( Den">
+<meta property="og:url" content="https://ralfw.de/archiv/2009/set-2009-ccr-beispiele/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>SET 2009 CCR Beispiele</h1>
+    <div class="doc-meta"><span>7. Mai 2009</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2009/05/set-2009-ccr-beispiele.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2009/set-2009-ccr-beispiele/</code></span></div>
+    <div class="art"><p><a rel="noopener" href="http://www.sigs-datacom.de/sd/kongresse/set_2009/index.htm"></a> Gestern auf der <a rel="noopener" href="http://www.sigs-datacom.de/sd/kongresse/set_2009/index.htm">SET 2009</a> in Zürich habe ich einen Vortrag über die <a rel="noopener" href="http://www.microsoft.com/ccrdss/">Concurrency Coordination Runtime (CCR)</a> von Microsoft gehalten. Leider standen mit nur 45min zur Verfügung :-( Dennoch glaube ich, dass die Botschaft, die Zukunft liege bei asynchronen Komponenten, um Multicore Prozessoren auszureizen, bei den Teilnehmern angekommen ist. Der Raum war jedenfalls voll und alle schienen am Ende zufrieden. Vielleicht waren sie aber auch nur noch benommen vom Codefeuerwerk, dass ich abgebrannt habe? ;-) Denn ich habe neben 1-2 Flipchartblättern nur Code mit CCR-Beispielen gezeigt. Den gibts <a rel="noopener" href="http://www.ralfw.de/download/SET09CCRSamples.zip">hier auch zum Download</a>. Da asynchrone Programmierung für viele neu ist, mögen die Konstrukte auf die Schnelle nicht immer einfach zu verstehen gewesen sein, auch wenn ich mich auf die CCR-Grundlagen beschränkt habe. In jedem Fall freue ich mich, dass am Ende noch 10 Minuten "Überziehungszeit" war, um auch noch die transparente Verteilung von CCR-basierten asynchronen Komponenten demonstrieren. Denn: Wer schon lokal asynchron programmiert, hat es viel einfacher, skalierbare verteilte Architekturen aufzusetzen.</p>
+<h2>Kommentare</h2>
+<p><strong>Rene Schulte</strong> (2009-05-07):</p>
+<p>"Codefeuerwerk" hin oder her, aber bei diesem Thema wären ein paar Folien mit dem architektonischen Grundgedanken der CCR sicherlich besser gewesen. Mir ging es zumindest bei dem prio.powerday so. Live coding ist ja nett, aber gerade bei diesem Thema sollte dies von ein paar Architektur Folien begleitet werden. Haben Sie nicht auch einmal in der dotnetpro geschrieben, dass Sie bei Beratungsterminen in Firmen nie sofort den Code sehen wollen da dadurch der Blick auf das Wesentliche verloren geht.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-05-07):</p>
+<p>@teichgraf: Ja, ich hätte Folien machen können. Bewusst habe ich darauf verzichtet zugunsten von Code angesichts der Kürze der Zeit. Ich wollte gerade keinen konzeptionellen Vortrag machen, sondern einen, der zeigt, wie es geht. Und da eine Warteschlange und ein Threadpool mir bekannte Konzepte schienen, habe ich das eben für möglich gehalten. Tut mir leid, dass ich Sie damit nicht so richtig "abgeholt" habe.</p>
+<p>Wenn ich in einer Beratung keinen Code sehen will, dann steht dahinter aber ein anderer Grund. Da geht es eben meist nicht wirklich um Code. Das Problem liegt da woanders. Bei der CCR ist aber eben der Code das Problem. Deshalb auch gleich Code. (Mit ein wenig allgemeiner Vorrede.)</p>
+<p>Schauen wir mal, wie das Feedback insg. ausfällt.</p>
+<p>-Ralf Westphal</p>
+<hr />
+<p><strong>Rene Schulte</strong> (2009-05-07):</p>
+<p>Threadpool + Queue sind natürlich bekannte Konzepte, aber die CCR ist doch deutlich mehr. Sie haben in ihren CCR Artikeln in der dotnetpro ein paar Grafiken verwendet, welche hier sicherlich ganz gut gepasst hätten.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-05-07):</p>
+<p>@teichgraf: Wenn die Szenarien komplizierter geworden wären, hätte ich sicherlich auch Grafiken gezeigt. Aber die Demo drehte sich ja nur um 1 Komponente.</p>
+<p>Die meisten Grafiken in den Artikeln haben auch mit den Unterschieden zw Multithreading und Multitasking zu tun. Sie zeigen, wie Taskschritte parallel oder sequenziell verarbeitet werden. Auch das wollte ich bewusst im Vortrag nicht thematisieren.</p>
+<p>Aber ich höre Ihre Meinung und überlege, beim nächsten Vortrag zum Thema etwas mehr zu visualisieren. Der ist im Oktober auf der ADC in Bonn. (Das wird mir auch leicht fallen, weil ich dort 90min Zeit habe ;-)</p>
+<p>-Ralf Westphal</p>
+<hr />
+<p><strong>(anonym)</strong> (2009-05-07):</p>
+<p>Ich habe den Vortrag auf der SET live gesehen und empfinde Ralf's Beschreibung "sie schienen am Ende alle zufrieden" als Understatement par excellence - der Beifall war einem Highlight der SET angemessen, und ich begeistert, zugegeben. Die Eröffnung mit einem an das Flipchart geschriebenen Kommando an das Publikum hat eindruckvoll visualisiert, das verteilte, eigenständige Komponenten eine Infrastruktur zum Kommunizieren brauchen und CCR schien danach, wie eine der Natur nachempfundene Entwicklung. Der Code war einfach, hilfreich und vor allem lesbar und clean. Ach - und am Schluss liefen die Komponenten plötzlich in getrennten Prozessen - eindrucksvoll, überzeugend, durch und durch nachvollziehbar, und so nützlich, wenn man ein paar mehr Cores für sich arbeiten lässt... Danke!</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

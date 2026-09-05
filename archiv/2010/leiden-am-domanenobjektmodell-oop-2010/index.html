@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leiden am Domänenobjektmodell [OOP 2010] — ralfw.de Archiv</title>
+<meta name="description" content="Ist die Objektorientierung wirklich auf dem richtigen Weg? Grad habe ich wieder so eine Phase, wo ich mich das frage – und immer auf die Antwort komme: Es ist etwas grundsätzlich f">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/leiden-am-domanenobjektmodell-oop-2010/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Leiden am Domänenobjektmodell [OOP 2010] — ralfw.de Archiv">
+<meta property="og:description" content="Ist die Objektorientierung wirklich auf dem richtigen Weg? Grad habe ich wieder so eine Phase, wo ich mich das frage – und immer auf die Antwort komme: Es ist etwas grundsätzlich f">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/leiden-am-domanenobjektmodell-oop-2010/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Leiden am Domänenobjektmodell [OOP 2010]</h1>
+    <div class="doc-meta"><span>10. Aug. 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/08/leiden-am-domanenobjektmodell-oop-2010.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/leiden-am-domanenobjektmodell-oop-2010/</code></span></div>
+    <div class="art"><p>Ist die Objektorientierung wirklich auf dem richtigen Weg? Grad habe ich wieder so eine Phase, wo ich mich das frage – und immer auf die Antwort komme: Es ist etwas grundsätzlich falsch mit der Objektorientierung.</p>
+<p>Halt! Stopp! Ich meine nicht, dass wir keine Klassen mehr haben sollten. Auch die Vererbung muss nicht abgeschafft werden. Ebensowenig Polymorphie oder Interfaces. Alles wunderbar. Diese Mittel zur Formulierung von Code dürfen gern erhalten bleiben. (Und andere dürfen gern hinzu kommen.) Das meine ich auch mit Objektorientierung nicht.</p>
+<p>Mit geht es um, tja, die Anwendung dieser Mittel. Ich habe sozusagen ein Problem mit ihrer Auslegung. Die Antwort auf “Was sollen wir mit diesen Mitteln tun?” ist für mich in einigen Bereichen kontraproduktiv.</p>
+<p>Gibt es dafür einen Begriff? Muss ich dann fragen “Ist OOAD wirklich auf dem richtigen Weg?” Ja, vielleicht wäre das präziser. Denn die armen Objekte bzw. Klassen können ja nichts dafür, wenn man sie suboptimal einsetzt.</p>
+<p>Also: Mein wachsendes Gefühl ist, dass OOAD auf dem falschen Weg ist. Und darüber hinaus scheinen mir sogar bekannte Leute wie Martin Fowler, Eric Evans oder Jimmy Nilsson mal auf der falschen Fährte. Ja, ich erlaube mir heute mal – es regnet in Hamburg – Kritik an Gurus zu üben.</p>
+<p>Hier mein Stein des Anstoßes: Domänenobjektmodell. Darüber stolpere ich immer wieder. Ich kann mich nicht mit der Defintion der Gurus anfreunden. Vielleicht spüren Sie, was ich fühle, wenn Sie mal über diese Frage nachdenken:</p>
+<blockquote>
+<p>Wann haben Sie zuletzt einen Kunden gefragt, ob sein Kreditlimit ok sei?</p>
+</blockquote>
+<p>Oder diese Frage:</p>
+<blockquote>
+<p>Wann haben Sie zuletzt einen Auftrag (bzw. den beauftragenden Kunden) gefragt, ob er in dieser Größenordnung ok ist?</p>
+</blockquote>
+<p><a rel="noopener" href="http://www.amazon.de/Applying-Domain-Driven-Design-Patterns-Examples/dp/0321268202"></a>Es mag meiner begrenzten Erfahrung anzulasten sein, aber ich habe soetwas noch nie einen Kunden (oder Auftrag) gefragt. Lassen Sie es mich wissen, wenn Sie es anders kennen und der Kunde selbst zu seiner Bonität Auskunft geben darf.</p>
+<p>Ahnen Sie, worauf ich hinaus will? Mir gehts um die Geschäftslogik oder allgemeiner die Domänenlogik. Wo ist die am besten aufgehohen. Guru Jimmy Nilsson hat in seinem vielbeachteten Buch <a rel="noopener" href="http://www.amazon.de/Applying-Domain-Driven-Design-Patterns-Examples/dp/0321268202">“Applying Domain-Driven Design and Patterns: With Examples in C# and .NET”</a> dazu diesen Vorschlag gemacht. Es ist seine Skizze eines Domänenobjektmodells für eine kleine Liste von Anforderungen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/4d04e2a20791c1be.jpg" /></p>
+<p>Sehen Sie dort die Fragen, die ich gestellt habe? Die Klasse <em>Customer</em> hat eine Funktion <em>HasOkCreditLimit()</em> und die Klasse <em>Order</em> eine Funktion <em>IsOkAccordingToSize()</em>. Die entsprechen meinen Fragen, denn <em>Customer</em> und <em>Order</em> repräsentieren Kunde und Auftrag in der realen Welt. Das ist ja gewollt. Das macht OOAD und auch Domänenobjektmodelle aus.</p>
+<p>Die Welt könnte also in Ordnung sein. Und für viele Entwickler ist sie so auch in Ordnung. Nur für mich nicht mehr. Ich kann so nicht mehr denken. Echt. Mir wird dann schlecht.</p>
+<p>Martin Fowler hingegen findet das wunderbar. Für ihn ist das Ausdruck der <a rel="noopener" href="http://www.martinfowler.com/bliki/AnemicDomainModel.html">“basic idea of object-oriented design; which is to combine data and process together.”</a> (Er sagt das allerdings im Zusammenhang mit dem anämischen Domänenmodell. Aber dazu unten mehr.)</p>
+<p>Gegen diese Grundidee des objektorientierten Designs habe ich auch nichts. Ich liebe die Möglichkeit, Daten und Operationen auf ihnen zusammenfassen zu können. Einen Stack so bedienen zu können, ist unschätzbar:</p>
+<blockquote>
+<p>var s = new Stack();
+s.Push(99);
+s.Push(42);
+Assert.AreEqual(2, s.Pop());</p>
+</blockquote>
+<p>Wie umständlich ist dagegen die prozedurale Programmierung wie mit Pascal oder C. Brrrr, da schüttelt es mich auch.</p>
+<p>Dass wir Operationen und Daten nun allerdings zu Klassen zusammenfassen können, bedeutet nicht automatisch, dass jede solche Zusammenfassung auch eine gute ist. Wir brauchen also Kriterien, um die Qualität eines Objektmodells beurteilen zu können.</p>
+<p>Beim Stack sind wir uns einig. Er nutzt die objektorientierten Mittel angemessen, um einen abstrakten Datentyp zu implementieren. Wie steht es aber mit Jimmy Nilssons Domänenmodell?</p>
+<p>Bevor ich näher auf diese Frage eingehe, scheint es mir angezeigt, zum Begriff Domänenobjektmodell etwas zu sagen und es abzugrenzen gegen andere</p>
+<h3>Objektmodelle</h3>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/804621667583a29b.png" /></p>
+<p>Das Ergebnis eines objektorientierten Designs ist immer ein Objektmodell. Es beschreibt Klassen mit ihren Zusammenhängen (Beziehungen). Ob das <em>Customer</em> und <em>Address</em> wie bei Jimmy sind oder <em>Dictionary&lt;&gt;</em> und <em>KeyValuePair&lt;&gt;</em> oder <em>Form</em> und <em>TextBox</em> bzw. <em>Control</em> ist, das ist einerlei. Wir können also gar nicht anders, als mit Objektmodellen zu arbeiten.</p>
+<h3>Domänenobjektmodelle</h3>
+<p>Wir können auch nicht anders, als Domänen zu modellieren. Wenn der Begriff im Zusammenhang mit Domänenobjektmodell gebraucht wird, dann bezieht er sich allerdings vor allem auf das Geschäftsfeld eines Kunden. In dem kommen <em>Customer</em> und <em>Address</em> vor, nicht aber <em>Form</em> und <em>TextBox</em>.</p>
+<p>Wenn wir es genau nehmen, dann stellen allerdings auch <em>Form</em> und <em>TextBox</em> ein Domänenobjektmodell dar. Nur ist es keines aus der Geschäftswelt, sondern eines aus der Infrastrukturwelt. WinForms ist eine Infrastruktur zur Darstellung von Formularen. Also ist es das Domänenobjektmodell für Infrastrukturentwickler.</p>
+<p>Was die Domäne ist, ist mithin relativ. In Bezug auf eine ganze Anwendung ist allerdings die Problemdomäne der Anwendung gemeint. Das mag bei Jimmy Nilsson eine Warenwirtschaft sein.</p>
+<p>Wenn in der Anwendung weitere Objektmodelle vorkommen, z.B. für die Security oder Caching oder oder oder, dann sind das keine Domänenobjektmodelle im engeren Sinn.</p>
+<p>Diese Unterscheidung wird interessant, wenn wir das <em>DataSet</em> in den Blick nehmen. Es ist unzweifelhaft ein Objektmodell bestehend aus <em>DataSet</em>, <em>DataTablee</em>, <em>DataRow</em>, <em>DataColumn</em> usw. Aber es ist kein Domänenobjektmodell, auch – und das ist wichtig! – wenn es benutzt wird, um Domänendaten zu halten.</p>
+<p>In einem <em>DataSet</em> können Sie genauso Kunden, Aufträge, Auftragspositionen, Adressen usw. ablegen wie in einem Domänenobjektmodell. Allerdings ist dieses Objektmodell unspezifisch. Es enthält ja keine Klassen, die sich auf die Domäne beziehen. Deshalb nennt man es nicht Domänenobjektmodell. Der Begriff ist Objektmodellen vorbehalten, die eben aus ganz eindeutig domänenbezogenen Klassen bestehen wie <em>Customer</em>, <em>Address</em>, <em>Order</em> usw.</p>
+<h3>Anämische Domänenobjektmodelle</h3>
+<p>Den Gurus ist es nun nicht genug, dass Sie zur Verwaltung von Domänendaten ein spezifisches Objektmodell definieren, statt ein generisches zu verwenden. Sie sagen, ein Objektmodell sei nur wahrhaft ein Domänenobjektmodell, wenn die Objekte nicht nur Daten enthalten, sondern auch domänenrelevante Operationen auf diesen Daten anbieten.</p>
+<p>Fehlen solche Operationen, dann spricht Martin Fowler von einem anämischen, d.h. blutarmen Domänenobjektmodell. Ich denke, er könnte auch sagen, dann sei das Objektmodell ein reines Datenobjektmodell.</p>
+<p><strong>Es gilt also: Domänenobjektmodelle sind auch Datenobjektmodelle; aber Objektmodelle sind nicht unbedingt Domänenobjektmodelle, auch wenn sie aus domänenspezifischen Klassen bestehen.</strong></p>
+<h3>Kritik des Domänenobjektmodells</h3>
+<p>Was habe ich nun an dem ganzen auszusetzen? Mein Einwand ist prinzipieller Natur: Aus meiner Sicht widerspricht ein Domänenobjektmodell wie das obige von Jimmy mehreren Prinzipien der Softwareentwicklung.</p>
+<h2>Widerspruch gegen SRP</h2>
+<p>Wenn Sie nur einen ganz flüchtigen Blick auf das Domänenobjektmodell werfen, was sehen Sie da? Sie sehen Kästchen und Linien, d.h. Klassen und Beziehungen. Sie sehen also ein Datenmodell.</p>
+<p>Datenmodell zu sein bzw. Daten zu halten, ist eine Verantwortlichkeit. Ich hoffe, da stimmen Sie mir zu. Verändert sich die Daten(beziehungen) einer Domäne – z.B. könnte jeder Kunde mehrere Adressen haben –, dann ist die Klasse <em>Customer</em> zu verändern.</p>
+<p>Customer muss sich aber auch verändern, wenn sich die Daten nicht verändern. Es könnte z.B. sein, dass nicht nur aufgrund eines Kreditlimits entschieden werden soll, ob ein Kunde ok ist, sondern es soll auch entschieden werden, ob einem Kunden Sonderangebote gemacht werden können. Eine Funktion <em>EligbleForPromotionalOfferings()</em> schiene im Sinne des Nilssonschen Verständnis von Domänenobjektmodellierung doch angezeigt, oder?</p>
+<p>Wenn Sie zustimmen, dass stimmen Sie einem Widerspruch gegen das SRP zu. Denn Sonderangebote haben nichts mit den Daten zu tun, die im Domänenobjektmodell zu sehen sind. Sonderangebote wären ein zweiter Grund für Veränderungen an der Klasse <em>Customer</em>. So wie auch schon die Kreditlimitprüfung.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/eb2f08e65a6abf27.png" /></p>
+<p>Nochmal: Ich bin für Methoden auf Datenklassen. <em>AddOrderLine()</em> ist z.B. eine Methode, die ich absolut passend finde für das Domänenobjektmodell. So wie <em>Push()</em> und <em>Pull()</em> angemessene Methoden für die Problemdomäne Stack sind.</p>
+<p>Methoden sollen aber zur Verantwortlichkeit passen. Die ist bei dem Objektmodell eindeutig “Datenhaltung”. Sonst gäbe es keine Properties und keine Beziehungen. Jimmys Objektmodell ist in jedem Fall ein Datenobjektmodell. Wunderbar. Kein Problem. Dann sollte es sich aber auch darauf konzentrieren.</p>
+<p>Methoden, die helfen, die Daten konsistent zu halten, sind willkommen. Methoden, die darüber hinaus gehen, halte ich für falsch.</p>
+<p>Natürlich soll die Anwendung entscheiden, ob ein Kunde ein ausreichendes Kreditlimit hat. Doch diese Entscheidung sollte nicht dem Kunden in Form eines <em>Customer</em>-Objektes überlassen werden. Das ist nicht intuitiv. Und es widersprich dem SRP. Und es macht auch noch eine “arme Datenklasse” abhängig von einem Service:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9905149362fd3a54.png" /></p>
+<p>Mit Verlaub: Das ist Mist. Da mag Martin Fowler noch so lang die Objektorientierung beschwören, die das möglich macht. Nicht alles, was möglich ist, ist halt auch angemessen.</p>
+<p>Zwar gehört ein Kreditlimit zum Kunden. Das bedeutet jedoch nicht, dass seine Prüfung aber auch über den Kunden stattfinden muss. Wie gesagt, im realen Leben tut das niemand. Warum sollten wir damit anfangen, wenn wir Software schreiben? Nur weil das überhaupt geht? Quatsch.</p>
+<p>Da wird auch nichts einfacher testbar. Und es wird nichts evolvierbarer. Die Prüfung ist eh in einen Service ausgelagert. Ich behaupte, dass im Gegenteil die Evolvierbarkeit sinkt, weil eine “dumme” Datenklassen ohne Not aufgepeppt wird mit Funktionalität, die nichts mit ihrem primären Zweck zu tun hat.</p>
+<p>Wenn die Validierungen auf <em>Customer</em> und <em>Order</em> wegfielen, ja, dann würde das Objektmodell weniger Operationen enthalten. Ist es deshalb aber blutarm? Sollte es in dieser Weise als krank diagnostiziert werden? Ich könnte dagegen halten und es “fokussiert”.</p>
+<p>Aus meiner Sicht bleibt Martin Fowler in seiner <a rel="noopener" href="http://www.martinfowler.com/bliki/AnemicDomainModel.html">Kritik anämischer Domänenmodelle</a> den Beweis eines unausweichlichen pathologischen Effekts auch schuldig. Da schwadroniert er vom Widerspruch zu Grundlagen der Objektorientierung. Da beschwört er eine faulige Nähe zur prozeduralen Programmierung. Da warnt er vor Aufwand mit geringem Nutzen für die Persistenz.</p>
+<p>Beweise sind das aus meiner Sicht aber nicht. Vor allem fehlt mir einer der Hauptnutzen eins Domänenobjektmodells: die Repräsentation der Domäne im Code. Ein Domänenobjektmodell macht auch ohne großartige Domänenfunktionen Code lesbarer und sicherer als ein generisches Objektmodell wie das <em>DataSet</em>.</p>
+<p>Außerdem ist auch ein anämisches Domänenobjektmodell mit heutigen Tools recht schnell aufgesetzt und persistiert.</p>
+<p>Und schließlich: Sein Argument, es würde Domänenlogik ganz unsinnig in prozedurale Services rausgezogen, führt er selbst ad absurdum, indem er lobende Worte für Jimmys Buch findet, das trotz aller Domänenobjektmodellhaftigkeit eben genau das tut. Denn was ist denn sein <em>CreditService</em>, den <em>Customer</em> referenziert? Selbst Martin Fowler würde doch nicht behaupten wollen, dass der Code dieses Service in der Klasse Customer stehen sollte, oder?</p>
+<h2>Widerspruch gegen Law of Demeter</h2>
+<p>Nach dem Law of Demeter (LoD) sind “train wrecks” ein code smell, z.B.</p>
+<blockquote>
+<p>someOrder.OrderLines[n].Product.Description</p>
+</blockquote>
+<p>Wieso haben wir dann aber überhaupt Mittel in der Objektorientierung, um solche offensichtlichen Stinkereien zu produzieren? Properties laden dazu ja ein.</p>
+<p>Das Law of Demeter ist halt differenziert zu verstehen. Was ist sein Zweck? Es will exzessive Abhängigkeiten vermeiden. Ein sehr löbliches Ansinnen. Aber eines, das im Widerspruch dazu steht, was Datenobjektmodelle wollen. Die wollen nämlich gerade Abhängigkeiten repräsentieren. Mithin gilt das Law of Demeter nicht für Datenmodelle.</p>
+<p>Ist ein Objektmodell ein Datenobjektmodell, dann sind “train wrecks” ok, ja geradezu unvermeidbar.</p>
+<p>Indem nun jedoch Jimmy Nilsson sich weigert, ein reines Datenobjektmodell zu definieren, widerspricht er dem LoD. Er entscheidet sich nicht für ein Datenobjektmodell, weil er ja der Domänenobjektmodelllehre folgen will – aber er legt trotzdem die Beziehungen offen, so dass man “train wrecks” erzeugen kann.</p>
+<p>Das bedeutet im Umkehrschluss: Domänenobjektmodelle dürfen eben keine Datenobjektmodelle sein. Wo “hochwertige” Domänenlogik definiert ist, dürfen keine Datenbeziehungen herauslecken.</p>
+<h3>Zwischenstand</h3>
+<p>Die in prominenten Werken wie</p>
+<p><a rel="noopener" href="http://www.amazon.de/Applying-Domain-Driven-Design-Patterns-Examples/dp/0321268202"></a> <a rel="noopener" href="http://www.amazon.de/Patterns-Enterprise-Application-Architecture-Martin/dp/0321127420"></a></p>
+<p>beschrieben Domänenobjektmodelle sehen plausibel aus. In ihnen scheint sich Objektorientierung pur und zum Besten zu manifestieren.</p>
+<p>Leider hilft das nichts, denn es hilft mir nicht. Objektorientierung ist kein Selbstzweck. Wenn mit eine bestimmte Nutzung objektorientierter Mittel es nicht leicht macht, meine Software zu entwerfen und zu pflegen, dann besteht nicht nur die Möglichkeit, dass ich es immer noch falsch mache (Inkompetenz), sondern auch die Möglichkeit, dass die Empfehlungen suboptimal sind.</p>
+<p>Nach jahrelangem Bemühen bin ich nun an einem Punkt, wo ich meine, dass ich so fürchterlich inkompetent nicht sein kann. Also erlaube ich mir, die andere Alternative in Betracht zu ziehen. Vielleicht ist das mit den Domänenobjektmodellen doch nicht so pauschal eine gute Idee wie Fowler, Nilsson &amp; Co es darstellen?</p>
+<p>Ich habe viel übrig für Objektorientierung. Abstrakte Datentypen mit ihren Mitteln zu bauen, ist wunderbar. Die sind jedoch in sich abgeschlossen. Ihre Operationen beziehen sich auf sich selbst. Das wünsche ich auch jedem Datenobjektmodell. Es soll nicht blutleer sein. Operationen, die die Konsistenz von Daten im Sinne der expliziten Beziehungen sicherstellen, dürfen, nein, sollen auf den Klassen des Datenobjektmodells definiert sein.</p>
+<p><a rel="noopener" href="http://www.amazon.de/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215"></a>Jimmys Domänenobjektmodell geht darüber jedoch weit hinaus. Da beginnt dann mein Schmerz. Aber was tun? Eine Idee habe ich. Mal schauen, dass ich die in einem weiteren Blogartikel darstelle. Meine Interpretation von Domain Driven Design (DDD) ist anders. Eric Evans hält sich ja auch bedeckt, was die Übersetzung seiner Modelle in Klassen angeht. Da ist Interpretationsspielraum. Jimmy hat Evans´ Metamodell in einer Weise interpretiert. Ich tue es in einer anderen Weise.</p>
+<h2>Kommentare</h2>
+<p><strong>Dirk Rodermund</strong> (2010-08-10):</p>
+<p>Ralf, danke, Du sprichst mir aus dem Herzen!
+Schon ein Weile habe ich bei mir selbst die Tendenz erkannt eher ein - wie Du so schön sagst - "fokusiertes" Datenmodell zu bevorzugen. Nicht nur um den CCD Prinzipien zu folgen, sonder vor allem, weil es sich für mich deutlich besser anfühlt ;-)</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-08-10):</p>
+<p>Hallo Ralf,
+ich sehe Domänenmodelle gemischt.</p>
+<p>(1) Ich habe es selbst erlebt, wie schmerzhaft solche kombinierten Modelle aus Operationen und Datenhaltungen sein kann. Das schlimmste Beispiel war ein Klasse Product, die auch Preisermittlung für einen Online Shop gemacht hat. Da gab es Preismatrize, Einzelrabatte, Rabattkarten, Kundengruppen mit Sonderrabatte, Preise für Firmen und Endkunden und wahrscheinlich ist mittlerweile noch mehr dazu gekommen. Das ist der Super GAU. Kaum testbar, da die Beziehungen unklar sind (um ein Endkunden-Preis mit einer Preismatrix zu berechnen muss Bedingungen A-Z erfüllt sein), versteckte Abhängigkeiten und unnötige Abhängigkeiten und eine schlechte Darstellung von Businessoperationen (Workflows wären in meinem Beispiel viel deutlicher gewesen).</p>
+<p>(2) Allerdings waren diese Domänenobjekte auch wirklich leicht zu verwenden.
+a) Man musste sich nicht um irgendwelche Services Gedanken machen.
+b) Abhängigkeiten und benötigte Komponenten müssen nicht zusammengesucht werden.
+c) Einfache Methoden berechnen mir den Preis ohne Hintergrund-Informationen zu benötigen.</p>
+<p>Diese Klassen waren für die Darstellung und zum Teil auch Workflows schon extrem hilfreich. Ich würde mir also einen gesunden Mix wünschen, das heißt:
+a) Seperate Datenobjekte (auch z.T. direkt generiert)
+b) Seperate Operationen über Komponenten, Services, Workflows.
+c) Eine einfache API (müssen keine Domänenobjekte sein) für Schnittstellen (Darstellung, Services, Importer, Exporter...)</p>
+<hr />
+<p><strong>Christian / PolarKreis</strong> (2010-08-10):</p>
+<p>Jupp, kann mich nur Dirk anschließen.</p>
+<p>Erfreulicherweise sind wir hier im Kundenprojekt bereits im Januar zu diesem Schluß gekommen, haben aber durch Deinen Blogartikel nochmals Argumente bekommen. Großartig!</p>
+<p>cu
+Christian</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-08-10):</p>
+<p>Wer übrigens ein Szenario hat, zu dem er mal eine Modellierung sehen möchte, melde sich.</p>
+<p>Ich kann mir auch was ausdenken - aber das ist dann vielleicht zu "künstlich".</p>
+<p>Also: Ich bin auf der Suche nach überschaubaren Problemszenarien aus eurer Praxis. Die Anforderungen sollten auf 1 DIN A4 Seiten vollständig passen. Eine Formulierung als User Stories sollte ausreichen. (Und, naja, dahinter darf dann keine AS400 als Backend vorausgesetzt werden ;-)</p>
+<p>Wer hätte da was?</p>
+<hr />
+<p><strong>Sebastian Jancke</strong> (2010-08-10):</p>
+<p>Ralf,</p>
+<p>"Customer muss sich aber auch verändern, wenn sich die Daten nicht verändern."</p>
+<p>hast du nicht zuletzt gegen Änderungsgründe als Indikator für SRP-Verletzungen argumentiert?</p>
+<p>Ich teile deine Sicht auf das Modell von Nilsson. Für micht besteht das grundlegende Problem darin, dass diese Art Modell "zwei Herren dienen muss": Der GUI und der Domänenlogik. Trennt man Modelle für beide Zwecke, kommt man nach meinem Verständnis zu schmerzfreieren Domänen- und Datenmodellen. Alle Daten die rein "informativ" gespeichert werden, aber keinen Eingang in das Domänenverhalten finden, gehören meiner Meinung nach nicht in ein Domänenobjektmodell, sondern nur in das Datenmodell.</p>
+<hr />
+<p><strong>Dominik Schmid</strong> (2010-08-10):</p>
+<p>Ich schließe mich der Kritik im konkreten Fall an, halte das aber nicht für ein grundsätzliches Problem von DDD oder gar OOP.</p>
+<p>Nur weil "hasOKCreditLimit" in diesem Fall fehl am Platze ist, heißt das nicht, dass es keine anderen domänenspezifischen Methoden in der Customer-Klasse könnte, die sie "aus Bordmitteln" durchaus sinnvoll bestreiten könnte. Es läuft also nicht zwangsläufig auf ein anämisches Objektmodell hinaus. Und für alle nicht eindeutig zuzuordnenden Verantwortlichkeiten empfiehlt Evans in seinem Buch ja auch explizit, diese als separate "Domain Services" zu modellieren.</p>
+<p>Was das LoD-Problem betrifft, ist im Beispiel einfach keine saubere Unterscheidung zwischen Objekt und Datenstruktur gegeben. Das heißt aber wohl nicht, dass das grundsätzlich unmöglich wäre. Leider versäumt es gerade Fowler (und offensichtlich auch andere) in seinen Büchern oft, auf die Notwendigkeit dieser Unterscheidung hinzuweisen (siehe z.B. "Active Record" in PoEAA). Vielleicht ist das auch nur der Versuch, die Beispiele so einfach wie möglich zu halten.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-08-10):</p>
+<p>@Sebastian: Ja, mir gefällt das Kriterium "nur ein Änderungsgrund" nicht. Aber ich habe es hier bewusst genommen, um der Literatur zu folgen.</p>
+<p>Ob das Domänenmodell den Herren Frontend und Domänenlogik dient, lass ich mal dahingestellt. In jedem Fall dient es zwei Zwecken: Datenhaltung und Domänenlogik. Wer mit den Daten umgeht... keine Ahnung ;-)</p>
+<p>@Dominik: Auch eine Methode AddCustomer() gehört zur Domäne, wenn sie der Konsistenz der Datenmodells dient. Ich behaupte nicht, dass es kein Domänenobjektmodell gibt. Ich sage nur, dass man es nicht so schnell "krankreden" sollte (Anämie).</p>
+<p>Evans habe ich bewusst weitgehend aus meinem Posting raus gelassen. Ihn sehe ich trotz seines lobenden Vorworts bei Nilsson etwas anders positioniert. Das wird klar in meinem nächsten Posting zum Thema.</p>
+<p>Dass Fowler wenig auf Prinzipien eingeht, ist auch meine Kritik. Deshalb finde ich seine Aussagen zum Domänenobjektmodell und zum anämischen D. auch so schwammig.</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-08-10):</p>
+<p>Ich muss ein wenig schmunzeln, weil ich vor kurzem gerade für den entgegengesetzten Weg begeistert wurde. Also weg von den reinen Datenobjekten, hin zu den "gesunden" Objekten. ;-)</p>
+<p>Die Technik nennt sich "East Oriented Programming". (siehe auch dort: <a rel="noopener" href="http://jamesladdcode.com/?p=12">A Design Compass: East Oriented</a>; <a rel="noopener" href="http://jamesladdcode.com/?p=294">East: Clean and DRY …</a>; <a rel="noopener" href="http://jamesladdcode.com/?p=302">More East …</a>)</p>
+<p>Es gibt da im Grunde nur eine Regel, die man beachten muss, wenn man so programmieren will:
+<em>Jede öffentliche Methode hat nur folgende Rückgabewerte: </em><em>void</em><em>, </em><em>bool</em><em> oder </em><em>this</em><em>.</em>
+(Factories und dergleichen bilden eine Ausnahme.)</p>
+<p>Das Beispiel mit dem <em>Customer.HasOkCreditLimit()</em> wäre aus meiner Sicht OK. Um jedoch dem "East-Prinzip" gerecht zu werden, könnte man die Methode besser so formulieren: <em>Customer.HasOkCreditLimitByRule(anyRuleObject)</em></p>
+<p>Es ist somit nicht mehr der Status des Objektes wichtig, sondern das Verhalten.</p>
+<p>Was nach dem "East-Prinzip" nicht erlaubt wäre, ist z.B. sowas: <em>Customer.GetDateOfBirth()</em>. Denn hier muss man sich die Frage stellen: "Wozu benötige ich denn das Datum? Was will ich erreichen?"
+Legitim wäre dagegen z.B. diese Formulierung: <em>Customer.PutDateOfBirthTo(AgeCalculator)</em></p>
+<p>Und das liest sich, wie ich finde, sehr angenehm.</p>
+<p>mfg</p>
+<p>Christian</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-08-10):</p>
+<p>@ChinaFan: Danke für den Hinweis auf das East-Programming. Das ist ein hübscher Dreh. Ersetzt für mich aber nicht EBC.</p>
+<p>Und ich sehe zumindest in deiner Anwendung auf Jimmys Domänenobjektmodell keine wesentliche Verbesserung. Denn mein Punkt ist schlicht, dass einem Datenobjekt wie Customer die Frage nach der Bonität gar nicht gestellt werden darf. Ob man da nun ne Strategie reinreicht, es nach "Osten ausrichtet" oder auf einen Service zugreifen lässt.</p>
+<p>Ein Datenobjekt wie Customer als Wurzel eines Objektgraphen lässt den Zugriff auf alle Details zu. Also kann sich bedienen, wer will. Das ist Sinn und Zweck von Datenobjekten.</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-08-11):</p>
+<p>Aber warum muss <em>Customer</em> ein reines Datenobjekt sein?</p>
+<p>Ein Objekt ist ja in erster Linie nur eine abstrakte Repräsentation von etwas.
+Der <em>Customer</em> kann Daten beinhalten. Man kann aber auch mit ihm agieren.</p>
+<p>Zitat:
+<em>Denn mein Punkt ist schlicht, dass einem Datenobjekt wie Customer die Frage nach der Bonität gar nicht gestellt werden darf.</em></p>
+<p>Wenn du es aus der Sicht des Customers betrachtest, dann hast du Recht! Denn ich als Kunde wende mich an die Bank, wenn ich wissen will, wie es um die Kreditwürdigkeit bestellt ist.</p>
+<p>Allerdings entwickle ich in dem Beispiel eine Software, wo ich an einer bestimmten Stelle im Programm wissen will, ob der aktuelle <em>Customer</em> kreditwürdig ist.
+Ich muss die Problemstellung als Programmierer betrachten und darf nicht in die Rolle des <em>Customer</em> schlüpfen. Damit lege ich mir hinterher nur Steine in den Weg, weil ich meine Möglichkeiten der Abstraktion zu Gunsten der Realität beschneide.</p>
+<p>Oder:
+Viele Methoden des primitven "string"-Datentyps wären auch Fehl am Platz. Denn ein String hält streng genommen nur einzelne Zeichen zusammen. Aber ich finde dennoch Methoden, wie z.B. <em>.Contains()</em>; <em>.EndsWith()</em>; <em>.IsNormalized()</em>; etc.
+Aus der Sicht der Zeichenkette gehören diese Methoden IMHO nicht hinein, aber ich, <strong>als Programmierer</strong>, finde es äußerst praktischt, dass es diese Methoden gibt. Es hält den Quellcode schlank und vor allem leserlich.</p>
+<p>Noch ein Extrem ist z.B. Ruby (siehe z.B. dort: <a rel="noopener" href="http://www.ruby-lang.org/de/about/">KLICK</a>)
+Da ist z.B. so ein Konstrukt möglich, um eine Textausgabe 5 mal zu wiederholen:</p>
+<p><em>5.times { print "Wir </em>lieben<em> Ruby -- es ist ungeheuerlich!" }</em></p>
+<p>Der Ausdruck <em>.times</em> ist direkter Bestandteil vom Integer. Aus der Sicht des Integer völlig unsinnig, ist es aber aus der Sicht des Programmierers irgendwie cool. Als ich dies zum ersten mal sah, war ich etwas irritiert. Aber was spricht dagegen, wenn es der Lesbarkeit dienlich ist? "Five times {...}" liest sich z.B. schöner, als "for (int i = 0; i&lt;5; i++) {...}".</p>
+<p>Wie gesagt:
+Worauf ich hinaus will, ist, dass man eventuell wieder beginnen sollte "richtig" objektorientiert zu denken. Das heißt, wieder aus der Sicht des Programmierers und nicht aus der Sicht eines Domänenobjektes.</p>
+<p>mfg</p>
+<p>Christian</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-08-11):</p>
+<p>@ChinaFan: Natürlich kann man mit einem Customer auch agieren. Ich habe nichts gegen eine AddOrder() Methode.</p>
+<p>Alles weitere jedoch... da wird es kritisch. Das ist ja gerade mein Punkt.</p>
+<p>Ich komme von Prinzipien wie SRP und LoD. Und ich komme aus der Realität. Da frage ich einen Kunden nicht nach seinem Kreditlimit.</p>
+<p>Du willst es anders, so "richtig objektorientiert"? Ich frage dich: Was ist das?</p>
+<p>Wir definieren, was "richtig" ist. Das ist nicht einfach so gottgegeben. Wir definieren es und es muss zu Designs führen, deren Korrektheit man leicht prüfen kann und die evolvierbar sind. Dazu muss man sie leicht verstehen können. Und dazu ist es gut, wenn sie Prinzipien folgen, die das zusichern.</p>
+<p>Es ist nett, 5.Times schreiben zu können. Dagegen hab ich nix.</p>
+<p>Aber dass die Sicht des Programmierers am Ende siegen sollte... das halte ich für eine naive Vorstellung. Denn dann siegt auch wieder shape.Draw(). Und das ist - darüber sollten wir nicht mehr diskutieren müssen - schlechte Objektorientierung.</p>
+<p>SRP, SoC, LoD sind für mich Leitsterne, die sich im Sinne hoher Evolvierbarkeit bewehrt haben. Wo ich sie verletzt sehe, da ist es mir egal, ob das einer besonders objektorientiert findet. Es dient dann nicht meinen Werten.</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-08-11):</p>
+<p>@Ralf:
+<em>Du willst es anders, so "richtig objektorientiert"? Ich frage dich: Was ist das?</em></p>
+<p>Z.B. das Vermeiden von komplizierten Konstrukten bzw. komplizierte Sachverhalte in einfacher Form formulieren. Die Lesbarkeit und somit die Verständlichkeit des Quellcodes erhöhen.</p>
+<p><em>Aber dass die Sicht des Programmierers am Ende siegen sollte... das halte ich für eine naive Vorstellung.</em></p>
+<p>Hmm, aber warum? Ich meine, wir sind es doch letztlich, welche die Software entwickeln. :-)</p>
+<p><em>Denn dann siegt auch wieder shape.Draw(). Und das ist - darüber sollten wir nicht mehr diskutieren müssen - schlechte Objektorientierung.</em></p>
+<p>Das kommt drauf an. Ein beliebiges "shape" kann ja gezeichnet werden. Es benötigt aber ein "surface", worauf es abgebildet werden kann. So könnte man ja sagen "shape.DrawTo(surface)" oder auch "shape.DrawWith(shapePainter)". Bei Letzterem könnte die Wahl des "surfaces" ganz dem "shapePainter" überlassen werden.
+Das ist echtes "Tell, Don't Ask!".</p>
+<p><em>SRP, SoC, LoD sind für mich Leitsterne, die sich im Sinne hoher Evolvierbarkeit bewehrt haben. Wo ich sie verletzt sehe, da ist es mir egal, ob das einer besonders objektorientiert findet. Es dient dann nicht meinen Werten.</em></p>
+<p>Das sehe ich doch auch so! Aber wo siehst du bei den Beispielen das SRP verletzt?
+Das "shape"-Objekt wäre nach wie vor nur für die eigenen Geometrie-Daten verantwortlich. Die Darstellung würde z.B. der "shapePainter" übernehmen und nicht das "shape" selber.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-08-11):</p>
+<p>@ChinaFan: Wenn shape-Objekte für das Zeichnen gemacht sind, dann mögen sie ein Draw() haben.</p>
+<p>Wenn Sie - wie in den üblichen OO-Beispielen - jedoch eher Modellaufgaben haben, dann ist das Zeichnen nicht ihr Concern.</p>
+<p>Darum geht es mir: Trenne die Concerns! Wo der Concern Datenhaltung ist - Properties, Beziehungen -, da ist Geschäftslogik fehl am Platze, weil sie eben ein separater Concern ist.</p>
+<p>Und es sind gerade die Entwickler, die davon profitieren, saubere Klassen vor sich zu haben, die nur je 1 Verantwortlichkeit/Concern dienen.</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-08-12):</p>
+<p>Hallo Ralf,</p>
+<p>zum LoD bleibt zu sagen, dass man es im Kontext sehen muss. In dynamischen Sprachen, bei denen durch tiefe Zugriffspfade Laufzeitfehler nach Refactorings entstehen können, macht die Begrenzung der Zugriffstiefe mehr Sinn als in C#.</p>
+<p>Die Bonitätsabfrage ist ein klassischer Schnitzer in der Domänenmodellierung. Wenn man sich eng an die Fachdomäne hält, entwickelt man Prozessklassen analog zu den Fachprozessen. Das riecht dann zwar ein wenig nach Transaction Script, schafft aber eine Ubiquitious Language, da die Anwender in der Regel auch in Prozessen denken.
+Bei komplexen Prozessen ist es mit einer Klasse meistens nicht getan, so dass für einen einzigen Prozess ein spezifisches Domänenobjektmodell aufgebaut werden muss.
+Von da aus kann man auch zu CQRS nach Greg Young und Udi Dahan wechseln, wenn die Komplexität es erfordert, muss aber nicht.</p>
+<p>-Markus</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-08-12):</p>
+<p>@Markus: Auch bei C# sind "train wrecks" ein Problem. Sie machen weite Teile des Codes abhängig von Strukturen.</p>
+<p>Die Abhängigkeit ist das eigentliche Problem. Nicht der dynamische Zugriff. Ob der klappt, zeigen ganz schnell Unit Tests.</p>
+<p>Bei der Ubiquitous Language und den Prozessen bin ich deiner Meinung.</p>
+<hr />
+<p><strong>Thomas Zeman</strong> (2010-08-12):</p>
+<p>Wenn man schon Metaphern wie "blutarm" wählt und dann auch noch betont, dass es ein wichtiges Konzept ist, indem man den medizinischen Fachbegriff dafür nimmt, sollte man sich schon sicher sein dass die Analogie auch passt.
+In meinen Augen wäre nämlich eine andere viel passender: Diese Kreditprüfmethode könnte ich auch als Fett oder Flachse bezeichnen und demnach mit einem reinen Datenmodell ein mageres Fleisch haben. Jetzt kann jeder selber wählen: Rinderfilet oder Kotlett.
+Mit den lebenswichtigen Aufgaben von Blut hat eine Methode in einer Klasse jedenfalls wenig zu tun.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-08-12):</p>
+<p>@ThomasZemann: Als "anämisch" hat Martin Fowler Domänenobjektmodelle bezeichnet, die seinen Gütekriterien in bestimmter Weise nicht entsprechen. Am besten schreibst du ihm mal ;-)</p>
+<p>Letztlich ist das konkrete Wort aber einerlei, würde ich sagen. Es geht darum, dass Fowler etwas als pathologisch ansieht, was ich für nicht ganz so ungesund halte.</p>
+<p>Reden wir über mehr oder weniger Fett und es ist Geschmackssache? Zu einem gewissen Grad mag das sein. Dennoch möchte ich mehr Guideline liefern als "Es kommt darauf an!"</p>
+<hr />
+<p><strong>Timo</strong> (2010-08-18):</p>
+<p>Hallo Ralf,</p>
+<p><em>Offtopic: Ich bin noch recht unerfahren was Softwareentwicklung angeht. Bin zur Zeit Student und habe wenig Praxiserfahrung. Aber ohne dumme Fragen zu stellen ändert sich das nicht. Entschuldigung!</em></p>
+<p>Das Domänenobjektmodelle sollte für mich von den konkreten Funktionalitäten/Anforderungen möglichst unabhängig sein. Da die Domäneobjekte von vielen Teilen der Anwendung benutzt werden.</p>
+<p>Ich will mit einem Beispiel erklären warum:
+Ich will doch nicht jedesmal die ganze Anwendung ändern, wenn ich zum Beispiel jetzt für einen Kunden auch noch die Termine verwalten will. Ich erwarte doch dann einfach ein Modul schreiben zu können, welches ich der Anwendung hinzufüge.
+Dann würde ich einen extra TerminService schreiben, welcher in der Anwendung registriert wird. Dieser Service hätte bei mir dann auch so Funktionalitäten wie "AddTerminForCustomer". Die Termin Ansicht der Benutzerschnittstelle würde diesen Service(über Interface), die Customer-Klasse und die Termin-Klasse kennen. Die Referenz müsste dann durch die Termin gehalten werden. Da ich den Customer ja nicht ändern will. Wenn die Benutzerschnittstelle dann gesagt bekommt zeige Termin für Customer x an. Würde diese die neue Ansicht öffnen und den Termin-Service nach den Terminen für Customer x fragen....</p>
+<p>Wenn ich mehr objektorientiert arbeiten will, schreib ich halt für das Termin Modul einen Wrapper für Customer oder schreibe Erweiterungsmethoden(oder oder). Das macht für mich nicht so den Unterschied. Da diese dann in dem Modul liegen, welche auch die Funktionalität bereitstellen.</p>
+<p>Wäre das aus deiner Sicht der richtige Weg. Ich habe mich jedenfalls durch dein Posting bestätigt gefühlt. Vielleicht bin ich zu weit vom Thema abgetriftet(Dann tut es mir Leid).</p>
+<p>Ich hoffe ich konnte mich verständlich ausdrücken und hoffe auf Feedback.</p>
+<p>Gruß Timo</p>
+<p>p.S.: Danke für deine Arbeit, vieles was ich über SE weiß(oder glaub zu wissen *g), habe ich bei dir gelesen.(blog/dotnetPro)</p>
+<hr />
+<p><strong>Manfred Steyer</strong> (2010-08-22):</p>
+<p>Hallo Herr Westphal,</p>
+<p>ich bin da voll und ganz bei Ihnen. Objektorientierung darf kein Sebstzweck sein. Ich hab' festgestellt, dass viele Leute das auch intuitiv erkannt haben und Worker-Klassen, um z. B. gegen Kreditlimits zu prüfen, verwenden.</p>
+<p>Ein gutes Beispiel hierfür ist auch die Evolution des MVC-Patterns. Ursprünglich war ja vorgesehen, dass das Model die Daten sowie die daran gebundene Geschäftslogik kapselt. Heutzutage sind Models meist reine Datencontainer, wenn man es nicht gerade mit View-Models bzw. Presenter zu tun hat. Die Logiken sind in eigenen Worker-Klassen (und bei schlechtem Design direkt im Controller :-) ) zu finden.</p>
+<p>Viele Grüße
+Manfred</p>
+<hr />
+<p><strong>Matthias Jauernig</strong> (2010-08-24):</p>
+<p>Hallo,</p>
+<p>Der Artikel spricht mir quasi aus der Seele bzw. habe ich dieselbe Diskussion schon ein paar Mal mit Kollegen geführt.</p>
+<p>Das Argument, dass mit einem anämischen Modell die Prinzipien der Objektorientierung untergraben werden, zählt in der Tat nicht. Und die Nachteile eines mit Logik vollgestopften Datenmodells wiegen meiner Meinung nach schwerer.</p>
+<p>Ich bin eher ein Freund davon Domänenobjekte möglichst dumm zu lassen und dann ähnlich zu normalen Datentypen als DTOs über Schichten hinweg nutzen zu können. Es macht für mich überhaupt keinen Sinn, wenn meine Datenobjekte Abhängigkeiten zu irgendwelchen Services oder sonstigen Komponenten haben.</p>
+<p>Wenn ich die Datenobjekte als DTOs verwende, ist von externen Komponenten abhängige Logik äußerst kontraproduktiv. DTOs nutze ich in mehreren Schichten einer Anwendung, Logik ist in der Regel allerdings an eine Schicht gebunden. Wenn ich die Logik auf Datenobjekten aus allen Schichten heraus aufrufen kann, so führt das zu Chaos.</p>
+<p>Meine DTOs enthalten schon noch eine gewissen Logik, allerdings nur solche, die sich auf das Datenobjekt selbst bezieht und keine externen Abhängigkeiten benötigt.</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-04-15):</p>
+<p>Hallo Zusammen,</p>
+<p>ích finde das Thema sehr interressant und wollte auch meine Meinung dazu außern.</p>
+<p>Wenn man aus der Realität kommt: Man absrahiert nicht der Customer als eine Person bzw. Lebewesen sondern die Daten der Customer und seine Verhalten, die für den Geschäftsfeld und die FAchabteilung relevant sind.</p>
+<p>Ich stelle mir vor, dass es in der Realität eine Akte für einen Customer gibt mit der Informationen über ihn und einen Notiz oder Ergänzung zur seiner Bonität.</p>
+<p>Wenn man die Akte öffnet, man hat die Information zur Bonität auf den gleichen Ebene wie die Information über den Name.</p>
+<p>Die Daten zur Bonität eines Customers und sein Name bilden für mich ein zusammengehörendes Konzept. Daher ist es gut für das Gewährleisten der "hohe Kohäsion" wenn eine Eigenschaft auf Customer über seine aktuelle Bonität sich in der Customer Klasse befindet.</p>
+<p>Das sollte man nicht als "Abfragen der Bonität des Customer" interpretieren.</p>
+<p>Die Tatsache, dass man die Information nicht über das Objekt selbst aber über einen externen Dienstlester bekommt, kann nicht entscheidend für das Abstrahieren eines fachlichen Konzeptes in einer Klasse sein.</p>
+<p>Was hier wichtig ist, dass man die Logik, wie man eine Bonität für eine Kunde ermittelt, in einer Serviceklasse implementiert und über eine klar definierte Schnittstelle zur Verfügung stellt.</p>
+<p>Wenn man die Klassen nach diesem prinzip entwirft, was macht man mit einer Klasse VersichertePerson
+deren Alter nach tariflichen Regeln bestimmt sind, deren Krankenversichertennummer und Steuernummer über einen automatischen Dienst abgefragt werden. Wird die Klasse VersichertePerson keine Aler und KKVErscherungsnummer Eigenschaften haben, nur weil diese Informationen über einen externen Diensleister bezogen werden?</p>
+<p>SRP ist ein wichtiges Prinzip in OOAD aber hohe Kohäsion ist auch wichtig und soll nicht geopfert werden.</p>
+<p>Ich habe auch Bauchschmerzen mit Martin Fowler's Definition "anemic Domainmodell" und halte ich nicht %100 OOP-Konform, aber die strikte Trennung der Datenhaltungslogik und die Geschäftslogik, die ein zusammenhängendes Konzept mit dem Objket bildet, macht mir eben Bauchschmerzen.</p>
+<p>Mit freundlichen Grüßen aus Dortmund
+Özgür Ergel</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-04-16):</p>
+<p>@Özgür: Ich kann schon verstehen, warum du so argumentierst. Es ist ja eigentlich die traditionelle OOP-Sicht.</p>
+<p>Für mich spricht zweierlei dagegen:</p>
+<ol>
+<li>
+<p>Die de facto Ergebnisse. So haben es alle in den letzten 20 Jahre gemacht. So haben sich alle in die Unwartbarkeit gefahren.</p>
+</li>
+<li>
+<p>Der Begriff "hohe Kohäsion" ist nicht weiter definiert. Hört sich gut an - aber woran erkennst du sie? Das SRP hingegen ist vergleichsweise präzise. Wenn "Dinge" sich getrennt von einander ändern können, sollten sie getrennt codiert werden. Ich nenne diese "getrennten Dinge" Aspekte. Logik und Datenstruktur sind zwei solche für mich fundamentalen Aspekte - die deshalb eben nicht in dieselbe Klasse gehören. SRP over high cohesion :-) Hohe Kohäsion wird durch SRP erst erkennbar bzw. ist eine andere Formulierung für das SRP.</p>
+</li>
+</ol>
+<p>In der dotnetpro habe ich zwei Artikel, die das Thema Domänendatenmodell nochmal näher beleuchten. Einer ist schon erschienen Anfang 2012, ein weiterer kommt in der nächsten Ausgabe oder so. Schau mal rein.</p>
+<hr />
+<p><strong>oXmoX</strong> (2013-05-23):</p>
+<p>Hallo,</p>
+<p>jetzt mal ganz naiv:</p>
+<p>Wenn der Kunde nicht dafür verantwortlich ist, seine eigene Kreditwürdigkeit zu prüfen, wer ist es dann? Leider kenne ich den Sachverhalt aus dem Beispiel nicht, aber ich könnte mir vorstellen, dass diese Verantwortlichkeit gut in eine neue Klasse "Creditor" (Kreditgeber) passen würde. Wer das Domainmodel nicht zu sehr aufblähen will (es soll ja ein "Modell" bleiben), steckt die Methode vlt. lieber gleich in den CreditService (z.B. CreditService.CheckCreditLimit(Customer)). Was spricht dagegen? Wie gesagt: für eine Refaktorisierung des Modells müsste man eigentlich die Randbedingungen besser kennen.</p>
+<p>Was ich sagen will:</p>
+<p><strong>Wenn eine Methode im Kontext eines gegebenen Domain Models und im Sinne des SRP nicht in eine gegebene Klasse passt dann ist das für mich eher ein Grund, das konkrete Modell anzuzweifeln, nicht aber das Prinzip des DDD.</strong></p>
+<p>Die Erkenntnis, dass Daten und Funktionalitäten logisch zusammengehören, ist m.E. die wichtigste Errungenschaft des OOSE. Erst dadurch lassen sich auch sehr komplexe Sachverhalte intuitiv modellieren. Damit ein Objektmodell aber auch wirklich intuitiv wird, muss es bestimmte Regeln befolgen, wie die von Kohäsion und Kopplung und des SRP. Im Beispiel ist dieses wohl nicht gegeben.</p>
+<p>Und natürlich wird es in jedem Modell Klassen geben, die eher einen reinen Datencharakter haben und wenig Funktionalität bieten. DDD bedeutet ja nicht, dass ich zwanghaft versuche, irgendwelche Methoden in meine Klassen unterzubringen, die dort eigentlich nichts zu suchen haben, nur um sicherzugehen, dass mein Domain Model auch nicht unter blutarmut leidet. Ein "gesundes" (Rich) Domain Model liegt irgendwo zwischen den Extremen, denn Polyglobulie klingt mindestens genauso krank wie Anämie. Nur wenn eine Funktionalität auch wirklich zu einem Objekt passt, sollte man keine Hemmungen haben, sie auch dort zu hinterlegen (M.E. sollten man sich dabei keinesfalls nur auf solche Methoden beschränken, die die Konsistenz der Daten sicherstellen). Ich finde das sehr intuitiv. Findet man dagegen für eine Funktionalität kein adequates Objekt, so sollte man über eine neue Klasse oder gar ein Refactoring des Modells nachdenken. Sicherlich erfodert es viel Disziplin, damit ein Rich Domain Modell im Laufe seiner Entwicklung nicht degeneriert. Das gilt natürlich für Applikationen mit reinen Datenmodellen genauso.</p>
+<p>Am Ende ist es vielleicht auch eine Frage des Geschmacks. Gruppiere ich lieber nach fachlichen/logischen Aspekten und lasse zu dass sich dabei Daten und Funktionen vermischen (DDD) oder lege ich mehr Wert auf deren saubere Trennung und nehme dafür in Kauf, dass sich fachlich/logisch zusammengehörendes an verschiedenen Orten wiederfindet. Mein Favorit ist ganz klar Ersteres.</p>
+<p>Der eine sortiert seine Plattensammlung ja auch lieber alphabetisch, der andere chronologisch. Ich sortiere meine übrigens autobiographisch. :-P</p>
+<p>Ahoi</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

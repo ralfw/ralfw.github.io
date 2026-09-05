@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Geschichtet – Event-Based Components abstrahieren und kontrollieren — ralfw.de Archiv</title>
+<meta name="description" content="Das übliche Schichtenmodell der Architektur packt Code bildlich übereinander. Aber was bedeutet das? Sind damit Abstraktionsebenen gemeint wie beim OSI-Schichtenmodell? Oder ist da">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/geschichtet-event-based-components/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Geschichtet – Event-Based Components abstrahieren und kontrollieren — ralfw.de Archiv">
+<meta property="og:description" content="Das übliche Schichtenmodell der Architektur packt Code bildlich übereinander. Aber was bedeutet das? Sind damit Abstraktionsebenen gemeint wie beim OSI-Schichtenmodell? Oder ist da">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/geschichtet-event-based-components/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Geschichtet – Event-Based Components abstrahieren und kontrollieren</h1>
+    <div class="doc-meta"><span>4. April 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/04/geschichtet-event-based-components.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/geschichtet-event-based-components/</code></span></div>
+    <div class="art"><p>Das übliche Schichtenmodell der Architektur packt Code bildlich übereinander. Aber was bedeutet das? Sind damit Abstraktionsebenen gemeint wie beim <a rel="noopener" href="http://de.wikipedia.org/wiki/OSI-Modell">OSI-Schichtenmodell</a>? Oder ist damit eine Kontrollhierarchie gemeint, bei der das Presentation Layer das Business Logic Layer kontrolliert usw.? Eher wohl letzteres, denn das Presentation Layer ist abhängig vom Busines Logic Layer.</p>
+<p>Vom Abstraktionsgrad sind im Schichtenmodell daher alle Schichten gleich. Ein Presentation Layer verbirgt nichts, macht nichts einfacher verständlich. Eine so strukturierte Anwendung verstehen Sie nur im Durchstich von der obersten bis zur untersten Schicht.</p>
+<p>Das Schichtenmodell hat sich entschieden: Es steht für eine Schichtung entlang der Dimension “Kontrolle”. Mit ihm können Sie Abhängigkeiten innerhalb einer Ebene hübsch ausrichten. Das ist auch sehr wichtig, wenn Sie mit Injection-Based Components (IBC), d.h. “traditionellen” Komponenten arbeiten.</p>
+<p>Mit Event-Based Components hingegen ist das anders. Damit können Sie ebenfalls Schichtenarchitekturen definieren – aber Sie können das in zwei Dimensionen. Indem Sie Platinen (boards) definieren und aufeinander stecken, beschreiben Sie ein Softwaresystem auf unterschiedlichen Abstraktionsniveaus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/cb59a7e6a676de3d.png" /></p>
+<p>Innerhalb einer Platine können Sie dann aber auch noch die üblichen Schichten bilden:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/abddbce6fbd3d943.png" /></p>
+<p>Beide Sichtweisen manifestieren sich mit EBCs natürlich im Code. Platinen dienen der Definition von Abstraktionsniveaus und die Verdrahtung auf einem Board sagt etwas über die Kontrollhierarchie innerhalb eines Boards aus.</p>
+<p>EBCs trennen damit deutlich, was im Schichtenmodell oder allgemeiner im IBC-Paradigma vermischt ist: Abstraktion und Kontrolle. Abstraktion hat etwas mit Überblick zu tun. Kontrolle mit Einblick. Bei der Abstraktion geht es um den Betrachter, bei den Abhängigkeiten “den Prozessor”.</p>
+<p>Damit sind wir beim nächsten Problem von Abhängigkeitsdiagrammen. Wenn es denn schon dabei um “den Prozessor” bzw. einen Prozess geht, dann wird der nicht verständlich dargestellt. Denn Abhängigkeiten sind statisch, da rührt sich nichts mehr. Ein Prozess jedoch “lebt”, da ist was in Bewegung. Daten wollen verarbeitet werden.</p>
+<p>Auf einer Platine eines EBC-Diagramms geht es nun genau darum: um den Prozess. Die Verdrahtung von EBCs gibt an, wie Daten fließen. Abhängigkeiten existieren dafür zwischen den EBCs nicht. Nur der Prozess, d.h. die Platine ist von ihren Komponenten abhängig. Doch das ist keine Linie wert; diese Abhängigkeit ist natürlich und implizit. Im Vordergrund steht also der Prozess.</p>
+<p>Gleichzeitig dienen EBC-Diagramme dem Betrachter bzw. Planer, weil sie ihm erlauben, ein System auf dem Level zu betrachten, das ihm gerade am meisten dient. Er bewegt sich mit einem frei gewählten Maßstab durch die Diagramme als Landkarten der Applikation. Die Regeln sind dabei – wie könnte es anders sein – auf jeder “Zoomstufe” gleich. Immer sind Komponenten mit Komponenten im Sinne eines Prozesses verdrahtet. Mal ist der Prozess sehr grob beschrieben, mal ist ein kleiner Ausschnitt des Prozesses sehr detailreich dargestellt.</p>
+<h2>Kommentare</h2>
+<p><strong>Laurin Stoll</strong> (2010-04-11):</p>
+<p>Man, es muss doch möglich sein dafür ein gescheites Tooling zu bauen. Stelle mir da sowas vor wie ein Designer auf dem ich Platinen bauen kann. Ich mag mich noch vor Jahren erinnern als mal bei einem Elektrobaukasten eine CD mit dabei war. Da war ein kleines Tool drauf da konnte man einfach Platinen zusammen stecken und dann in diese Platinen hineinzoomen und die einzelnen Bauteile darauf anordnen und verdrahten. Genauso müsste es doch auch für die SW-Entwicklung gehen. Lässt mich nicht los....</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-04-12):</p>
+<p>@Laurin: Das ist möglich. Keine Sorge. Einen Codegenerator habe ich schonmal als Spike gebaut. Funktioniert cool, wenn eine Architektur in Form einer XML-Beschreibung vorliegt. Dann drückst du auf einen Knopf, kriegst die Architektur visualisiert und Komponentenrümpfe erzeugt.</p>
+<p>Fehlt nur ein Designer...</p>
+<p>Aber wir arbeiten dran.</p>
+<p>-Ralf</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entwickeln im Uhrzeigersinn — ralfw.de Archiv</title>
+<meta name="description" content="Was ist der Unterschied zwischen Software Craftsman und Software Engineer? Darüber kann man natürlich lang und trefflich debattieren. Doch mit den von mir vorgestellten Arbeitsweis">
+<link rel="canonical" href="https://ralfw.de/archiv/2015/entwickeln-im-uhrzeigersinn/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Entwickeln im Uhrzeigersinn — ralfw.de Archiv">
+<meta property="og:description" content="Was ist der Unterschied zwischen Software Craftsman und Software Engineer? Darüber kann man natürlich lang und trefflich debattieren. Doch mit den von mir vorgestellten Arbeitsweis">
+<meta property="og:url" content="https://ralfw.de/archiv/2015/entwickeln-im-uhrzeigersinn/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Entwickeln im Uhrzeigersinn</h1>
+    <div class="doc-meta"><span>6. April 2015</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2015/04/entwickeln-im-uhrzeigersinn.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2015/entwickeln-im-uhrzeigersinn/</code></span></div>
+    <div class="art"><p>Was ist der Unterschied zwischen Software Craftsman und Software Engineer? Darüber kann man natürlich lang und trefflich debattieren. Doch mit den <a rel="noopener" href="http://blog.ralfw.de/2015/04/unschatzbare-arbeitsweisen.html">von mir vorgestellten Arbeitsweisen</a>, ist die Unterscheidung einfach und augenfällig, glaube ich.</p>
+<p>Wie beschrieben, arbeiten wir als Softwareentwickler sowohl als Handwerker (H) wie als Ingenieure (I) und auch als Forscher (F).</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9f55e81437e546ab.png" /></p>
+<h2>Arbeitsweisenverhältnisse</h2>
+<p>Allerdings sind die Anteile der drei Arbeitsweisen nicht gleich. Für mich dominieren I und F; H macht den kleinsten Teil aus.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9554979b1ab84080.png" /></p>
+<p>Der tapfere <strong>Software Engineer</strong> wird das aber noch etwas anders sehen. Für ihn wird der Entwurf eine größere Rolle spielen als Forschung oder Codierung. Codieren kann man lassen und Forschung, z.B. beim Bug Fixing, ist mit guter Entwurfsvorarbeit nicht so häufig nötig, oder?</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d7c6e09dd225348c.png" /></p>
+<p>Das steht im Gegensatz zur Sicht der eher haptisch veranlagten <strong>Software Craftsmen</strong>, denke ich. Den Löwenanteil der Arbeit hält man dort für handwerklich. Warum sollte man sich sonst “Craftsman” nennen?</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/125040885d554881.png" /></p>
+<p>Forschung wird man auch noch groß schreiben (müssen), weil Anforderungsanalyse und Code-Analyse nicht zu läugnen sind. Doch der Entwurf, allemal der explizite, steht im Hintergrund. Am Ende spricht ohnehin nur der Code die Wahrheit, oder?</p>
+<p>Eine unterschiedliche Einschätzung des Mischungsverhältnisses scheint mir eine erste augenfällige Differenz zwischen den Lagern der Engineers und der Craftsmen.</p>
+<p>Ein anderer die bevorzugte Bewegungsrichtung durch die Arbeitsweisen.</p>
+<h2>Arbeitsweisenreihenfolge</h2>
+<p>Software Craftsmen favorisieren TDD, um nicht in die BDUF-Falle zu geraten. Das scheint handwerklicher als ein ingenieursmäßiger Entwurf vorab. Doch damit entkommen sie dem Thema Planung nicht. Sie verschieben es nur. Für mich bewegt sich der <strong>Software Craftsman</strong> bevorzug gegen den Uhrzeigersinn durch die Arbeitsweisen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c41ad93ad829418d.png" /></p>
+<p>Am Anfang steht Forschung. Anforderungen müssen analysiert werden. Daraus ergeben sich Tests in rot (F). Die werden im nächsten Schritt handwerklich möglichst einfach (KISS) auf Grün gebracht (H). Und daran schließlich sich dann eine Refaktorisierung. Für die muss man jedoch einen Entwurf haben (I). Denn so handwerklich Refaktorisieren in einer IDE aussehen mag, ohne Vorstellung von einer Zielstruktur geht es nicht. Die aber ist Ingenieursarbeit.</p>
+<p>Der <strong>Software Engineer</strong> denkt da anders. Er bewegt sich mit dem Uhrzeigersinn durch die Arbeitsweisen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9604fe2969fbc21e.png" /></p>
+<p>Auch bei ihm steht die Forschung am Anfang. Anforderungen in Form eines Lastenheftes müssen analysiert werden. Das Ergebnis ist ein Pflichtenheft (F). Dafür wird im nächsten Schritt ein Lösungsentwurf erarbeitet (I); UML ist dafür als Werkzeug gedacht. Und erst am Ende steht eine Implementierung des Entwurfs (H).</p>
+<h2>Arbeitsweisenfrequenz</h2>
+<p>Ein weiteres Unterscheidungskriterium im Hinblick auf das “Arbeitsweisenrad” scheint mir die Geschwindigkeit, mit der Software Engineers und Software Craftsmen es drehen. Die Engineers drehen es langsamer als Craftsmen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/6c149f9804d7b2de.png" /></p>
+<p>Nicht, dass Engineers keine Iterationen kennen würden. Aber Sie glauben daran, dass man durch Forschung und Entwurf ein größeres Rad drehen kann. Craftsmen hingegen sind erpicht auf Feedback vom Kunden. Deshalb favorisieren sie schnellere Drehungen.</p>
+<h2>Zusammenfassung</h2>
+<p>Kein Wunder, wenn sich Software Engineers und Software Craftsmen immer wieder sprachlos gegenüberstehen, oder? Das wussten Sie natürlich schon vorher ;-) Aber ich hoffe, durch die Brille der Arbeitsweisen HIF sehen Sie nun deutlicher, woran das liegt. So lassen sich die unterschiedlichen Positionen besser kommunizieren, finde ich. Der Blick ist differenzierter.</p>
+<p>Die genauen Prozentzahlen der Arbeitsweisen, sind dabei nicht so wichtig. Es geht um die groben Verhältnisse. Ohnehin verschieben die sich nach Projekt und Anforderungen auch immer wieder etwas. Deshalb zählt die Tendenz.</p>
+<p>Durch diese Aufschlüsselung habe ich für mich z.B. realisiert, dass ich weder Software Engineer noch Software Craftsman bin. Ich hänge irgendwo dazwischen:</p>
+<ul>
+<li>Für mich dominiert weder I noch F, aber H hat definitiv den kleinsten Anteil.</li>
+<li>Für mich dreht sich die Softwareentwicklung im Uhrzeigersinn.</li>
+<li>Für mich dreht sich das Rad im wesentlichen alle 4 bis 16 Stunden. Das ist der wichtigste Zyklus, um ein Inkrement herzustellen (d.h. einen feedbackfähigen Codezuwachs). Innerhalb dessen kann es kürzere TDD-Iterationen geben - muss es aber nicht. Oberhalb dessen kann es längere Release-Iterationen geben - muss es aber nicht.</li>
+</ul>
+<p>Und wenn der nächste Selbstverständnis-Hype aufkommt… dann haben Sie nun ein kleines System, mit dem sie ihn analysieren können.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2015-06-09):</p>
+<p><em>"Software Craftsmen favorisieren TDD, um nicht in die BDUF-Falle zu geraten."</em></p>
+<p>meine Güte, was hat DER denn geraucht...?</p>
+<hr />
+<p><strong>Harald Wellmann</strong> (2015-08-31):</p>
+<p>Zum Verständnis:</p>
+<p>TDD = Test-Driven Development
+BDUF = Big Design Up-Front</p>
+<p>Allerdings befürchte ich doch, dass der Verfasser in die ACH-Falle getappt ist.</p>
+<p>ACH = Acronyms Considered Harmful</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

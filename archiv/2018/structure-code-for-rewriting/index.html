@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Structure Code for Rewriting — ralfw.de Archiv</title>
+<meta name="description" content="From a certain point on it becomes very tedious, frustrating, and expensive to change code in order to implement some new requirement. For a while clean coding and refactoring help">
+<link rel="canonical" href="https://ralfw.de/archiv/2018/structure-code-for-rewriting/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Structure Code for Rewriting — ralfw.de Archiv">
+<meta property="og:description" content="From a certain point on it becomes very tedious, frustrating, and expensive to change code in order to implement some new requirement. For a while clean coding and refactoring help">
+<meta property="og:url" content="https://ralfw.de/archiv/2018/structure-code-for-rewriting/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-01)"></span>ralfw.de</p>
+    <h1>Structure Code for Rewriting</h1>
+    <div class="doc-meta"><span>25. Juni 2018</span><span>Erstveröffentlichung: ralfw.de</span><span><a href="https://ralfw.de/structure-code-for-rewriting/" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2018/structure-code-for-rewriting/</code></span></div>
+    <div class="art"><p><img loading="lazy" alt="" src="/assets/01-ralfw.de/729e01c2cd476796.jpg" /></p>
+<p>From a certain point on it becomes very tedious, frustrating, and expensive to change code in order to implement some new requirement. For a while clean coding and refactoring help - but in the end it’s undeniable: the existing code is more of a burden, a liability, than an asset.</p>
+<p>This is not satisfying, but it’s how things are. It’s how nature is. Every organism grows old and eventually dies. Even mountains erode to oblivion. Why should software be any different?</p>
+<p>Adaptability in nature does not come from highly flexible, everlasting organisms, but from their finiteness. Adaption over long timespans is only possible through death of the old and birth of the new.</p>
+<p>Existing structures can only change (themselves) so much before they break or lose their identity.</p>
+<p>I think software development should try to learn from that. We shouldn’t strive to create immortal instances of code. Why not plan code to have a certain life expectancy? Why not see rewrites as a natural part of software development?</p>
+<p>Sure, it does not seem to be an option to just rewrite a software which was developed over the course of 20 years. Even if a rewrite would only take a fraction of the time it would not be feasible.</p>
+<p>But what about smaller parts?</p>
+<p>How much time would be ok for a rewrite? If you realised a part of the software has reached the end of its life because it has become too rigid, to calcified, too cryptic to adapt to new requirements, how much time would be acceptable for a rewrite? A couple of weeks or months? Probably not years.</p>
+<p>Let’s assume, the birth of a new generation for this part of the code was allowed to take three months.</p>
+<p>Then how large could such a part of code be to rewrite it pretty much from scratch? Let me try a quick estimate: A developer can maybe write 200 lines of production code per day on average. A team of 4 developers then produces 800 lines per day. In a 5 day week that would be 4000, in 12 weeks it would be 48000 lines of code. Or maybe that’s a bit optimistic, so let’s say, it’s maybe just 30000 lines of production code in three months.</p>
+<p>Please note, such a rewrite would be very different from the original process of changing the code over the course of months and years. A three month rewrite can maybe replace three years of constant updates.</p>
+<p>For a software of 300000 lines of code in total that would mean it should be split into 10 perishable parts. Let me call them <em>bubbles</em> for now, because bubbles start small, then grow, and eventually burst and are gone - to be replaced by new bubbles.</p>
+<p>Of course it’s not about a specific number of lines per bubble; come up with a number you feel comfortable with. It’s about a paradigm: evolution.</p>
+<p><strong>Instead of creating software as a kind of monolith with the clear fate of erosion, let’s create software as a sea of bubbles.</strong> Each bubble’s fate is to burst. But the big picture of a bubbly surface will live on - as long as requirements rain down on it.</p>
+<p>Whether the focus of these bubbles is technical or functional, is up to you. The goal is easy rewrite. And that should be very motivating: It means a codebase does not just grow old and makes programming a chore. No, there is always some fun rewriting going on. The greenfield is always near. That sure will keep a team’s spirit high - and opens up opportunities to get new people and/or new technologies and/or fresh ideas on board.</p>
+<p>With bubbles there are now two levels on which software exists, i.e. is born, grows, changes, and eventually dies:</p>
+<ul>
+<li>Bubbles are comparatively short lived, e.g. months to years. Once they reach old age they are rewritten in a fraction of their lifetime and then die.</li>
+<li>The whole of the software consisting of bubbles - maybe I should call it <em>foam</em> - has a long lifetime, e.g. years or even decades. Its bubbles come and go without affecting the overall identity of the software. Or should I say the foam emerges from a constant fireworks of bubbles?</li>
+</ul>
+<p>Sure, in the end the whole which all bubbles constitute like a standing wave will grow old and die, too. But that point hopefully lies further in the future than with a monolith. It’s a matter of how the macro structure of all bubbles is managed.</p>
+<p>How can this be achieved? In the end, I guess, this only works with distribution. Bubbles have to run in their own processes to allow for maximum flexibility during rewrite. A (micro) service oriented architecture will be necessary.</p>
+<p>That said I think structuring code for rewriting can and should start earlier. First and foremost it’s a matter of mindset. And that mindset can be grown by cutting up a monolith into libraries, packets, components first. It’s a valuable exercise to modularise your code first without distribution. You’ll gain a new understanding of your code when you look at it from the perspective of rewriting. It takes time to get used to <em>thinking in bubbles</em>.</p>
+<p>Image source: <a rel="noopener" href="https://pixabay.com/de/blasen-blase-wasser-makro-tropfen-51675/">pixabay</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

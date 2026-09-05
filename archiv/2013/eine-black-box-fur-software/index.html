@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eine Black Box für Software — ralfw.de Archiv</title>
+<meta name="description" content="CQRS hat mich jetzt gepackt. Auf der DWX Konferenz hatte ich Gelegenheit, mich darüber länger mit Jan Fellien auszutauschen. Den Moment, wo ich innerlich “Aha!” und “Wow!” ausrief ">
+<link rel="canonical" href="https://ralfw.de/archiv/2013/eine-black-box-fur-software/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Eine Black Box für Software — ralfw.de Archiv">
+<meta property="og:description" content="CQRS hat mich jetzt gepackt. Auf der DWX Konferenz hatte ich Gelegenheit, mich darüber länger mit Jan Fellien auszutauschen. Den Moment, wo ich innerlich “Aha!” und “Wow!” ausrief ">
+<meta property="og:url" content="https://ralfw.de/archiv/2013/eine-black-box-fur-software/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Eine Black Box für Software</h1>
+    <div class="doc-meta"><span>1. Juli 2013</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2013/07/eine-black-box-fur-software.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2013/eine-black-box-fur-software/</code></span></div>
+    <div class="art"><p>CQRS hat mich jetzt gepackt. Auf der DWX Konferenz hatte ich Gelegenheit, mich darüber länger mit <a rel="noopener" href="http://janekf.wordpress.com/">Jan Fellien</a> auszutauschen. Den Moment, wo ich innerlich “Aha!” und “Wow!” ausrief war, als ich erkannte, was die Aufgabe einer Event Source ist.</p>
+<p>Nicht nur ist Event Sourcing für mich die Antwort auf meine Frage nach einem <a rel="noopener" href="http://blog.ralfw.de/2010/04/geshreddert-persistent-gedanken-zu.html">Datengranulat</a>. Denn aus den “Daten-Kügelchen” vieler kleiner Events kann man sich größere Strukturen in immer neuer Weise “gießen”. Es gibt für mich nicht mehr die Frage, ob “das eine Datenschema” für eine Anwendung relational oder dokumentenorientiert oder sonstwie sein sollte. Stattdessen gibt es soviele Schemata und Datenbanken wie man braucht. Und alle werden aus der einen Quelle gespeist: aus der Event Source.</p>
+<p>Daten für einen Zweck in einem bestimmten Schema bereitzustellen, kann immer dynamisch aus der Event Source geschehen. On demand. In dem Augenblick, wenn sie benötigt werden. Wem das zu langsam ist, der muss halt die Daten in dem Schema cachen. Doch das ist dann eine bewusste Optimierung.</p>
+<p>Mit einer Event Source kann man diese Optimierung dann vornehmen, wenn man sie braucht. Bis dahin ist man frei von lästigen Überlegungen, wie denn ein Schema am besten aussehen sollte. Welche Erleichterung!</p>
+<p>Aber dieser Gedanke hatte mich nicht überfallen auf der DWX. Den hatte ich schon vorher. Im Gespräch mit Jan kam mir vielmehr ein sehr mächtiges Bild für die Event Source in den Sinn.</p>
+<p>Die Event Source ist die Black Box einer Software.</p>
+<p>Ich meine das im Sinne der Flugschreiber, die auch als Black Box bezeichnet werden. Die zeichnen Ereignisse während des Fluges auf. Wenn etwas schief geht, kann man durch Abspielen der Aufzeichnung versuchen, die Ursache zu finden.</p>
+<p>Das leistet für mich nun auch eine Event Source bzw. ein Event Store für Software. Alle Domänenevents werden doch gespeichert (record). So kann man den Zustand eines Programms zu jeder Zeit rekonstruieren. Was an Zustand in-memory ist nur eine Optimierung; Zustand in einem Read-Model ist auch nur eine Optimierung. Maßgeblich ist einzig das, was in der Black Box steht.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d9755580e213684e.png" /></p>
+<p>Wenn also ein Programm oder auch nur ein Teil abstürzt, kann es neu gestartet und aus der Event Source auf den letzten Stand gebracht werden (replay). Die Speicherung auch kleinster Veränderungen des Zustands ist ja kein Problem, weil die Events als “Zustandsdifferenzen” ganz simpel und schnell persistiert werden können.</p>
+<p>Events kommen aus der Domäne. Da spielt die Anwendungsmusik. Dafür wird Software gemacht.</p>
+<p>Die Domäne spielt immer wieder aber auch Events ab, da sie ja nicht ihren kompletten Zustand in-memory halten will.</p>
+<p>Andere Konsumenten von Events werden über sie per Notifikation informiert. Die sind also von der Eventquelle entkoppelt. Falls sie jedoch offline waren, können sie sich “verpasste” Events wieder vorspielen lassen, um sich auf den aktuellen Stand zu bringen.</p>
+<p>Bei CQRS ist ein typischer Event-Konsument natürlich das Read Model. Es fertigt aus einzelnen Events fixe größere Strukturen, die auf unterschiedliche Abfragemuster zugeschnitten sind.</p>
+<p>Ich finde das Bild der Event Source als Black Box sehr eingängig und motivierend. Damit werde ich mich jetzt mal intensiver beschäftigen…</p>
+<h2>Kommentare</h2>
+<p><strong>Mike Bild</strong> (2013-07-01):</p>
+<p>CQRS/ES ... Erkenntnisse und Erfahrungen - alles im Fluss.</p>
+<p>Flugschreiber - eine schöne Analogie. Weshalb? Wie funktioniert der Flugschreiber? Es zeichnet alle technischen Daten des Flugzeugs und die Absichten bzw. Entscheidungen der Besatzung auf. Zeit, also welche Entscheidung und welche Fakten zu welchem Zeitpunkt, spielen dabei ebenfalls eine wichtige Rolle. Im Prinzip kann ich mir das wie eine große Log-Datei vorstellen. Alles wird vorerst gespeichert. Niemand kennt im Vorfeld alle Parameter einer möglichen Handlungsweise.</p>
+<p>Besser - "Hinterher ist man immer schlauer" ;-)
+Erst im Falle einer (sequentiellen) Auswertung werden die Daten mit Bezug zum Zeitpunkt auf unterschiedliche Weisen "interpretiert" und die Absichten bzw. Handlungen sichtbar. Hierbei sind Handlungen innerhalb eines bestimmten Zeitfensters (historische Daten) von großer Bedeutung.</p>
+<p>Und genau darin liegt IMHO der Mehrwert. Nicht nur die Domäne kann / soll Events erzeugen. Ein unnötiger "Zwang" wie ich meine. Analyse, Modellierung, Definition und Begriffe - in der Praxis ein sehr aufwendiger Prozess. Den Business-Logik benötigt nicht unerhebliche Analyse und unterliegt ständigen Änderungen. Letztlich ist es doch IMHO egal wer Events als eine "abgeschlossene System-Interaktion" erzeugt. Diese werden konsequent aufgezeichnet (Append-Only-Model), da niemand den Stellenwert und damit Bedeutung innerhalb der jetzigen oder kommenden Szenarios kennt.</p>
+<p>Ich plädiere somit dafür, den skizzierten Teil "Domäne" als Event-Emitter und ReadModel als Event-Listener außen vor zu lassen.</p>
+<p>So ist es sehr zwanglos möglich, jede X beliebige Facette von Use-Cases (Logik und Prozesse) über spätere Auswertungen (z.B. mittels Projektionen) auf den Datenstrom (Event-Stream) anzuwenden.</p>
+<p>Das führt den Entwicklungsfluss dichter am echten und nicht "nur" erdachten Anwendungsszenario.</p>
+<p>... fürs erste ... Grüße, Mike</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-07-01):</p>
+<p>Natürlich kann es viele Event-Quellen geben. Um anschlussfähig an die CQRS-Diskussion zu bleiben, habe ich aber Domäne und ReadModel explizit reingenommen.</p>
+<p>Die wesentliche Unterscheidung ist aber die zwischen Quellen und Senken.</p>
+<p>Manche Bereiche sind nur Quellen. Manche - wie die Domäne - sind Quelle und Senke - und manche - wie das ReadModel - sind nur Senke.</p>
+<p>Am Ende ist es auch egal, wofür Events stehen. Alles was aufzeichnungswürdig ist, kann in die Black Box. Tendenziell sehe ich da aber Ergebnisse denn Absichten. Letztlich ist diese Unterscheidung jedoch ein Detail. Wer mag, zeichnet auch CQRS Kommandos und Queries auf. Und Ausnahmen jedes Bedeutungsgrades. Dann gibt es wirklich einen lückenlosen Bericht.</p>
+<p>Die Black Box als Event Source im herkömmlichen Sinn und Logbuch.</p>
+<p>Wer dann zwei "Datenbanken" ins Spiel bringen will, um Logging von Zustandsveränderungsevents zu trennen, kann das machen. Aber auch das ist eine Optimierung.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-07-01):</p>
+<p>Prima! Und genau das ist auch noch ein Punkt. ES hat nur am Rande mit CQRS zu tun. Zugegen die beiden ergänzen sich sehr gut, da Event-Driven "Zustand-Abfragen" unmöglich machen. Erst mit Event-Driven, Event-Store und Event-Souring funktionieren die durch "segregation" getrennten Komponenten ineinander.</p>
+<p>Jetzt denke ich sollten wir nicht so kleinlich ;-) sein und ES auf das "klassische" CQRS-Muster reduzieren. Die Möglichkeiten reichen von Zustandsautomaten, Composite-UI, über Testing hin zur Echtzeitdatenanalyse.</p>
+<p>Deshalb Dank an deinen letzten Kommentar zum "besseren" Verständnis.</p>
+<p>Ciao, Mike</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-07-01):</p>
+<p>Klar, EventSourcing ist orthogonal zu CQRS. Aber ohne CQRS denken daran ja noch weniger Leute.</p>
+<p>Wie du in meinem nächsten Blogartikel lesen wirst, kann man ES auch für TicTacToe benutzen :-) Ich hab auch die Bowling Kata schon mit ES gelöst. Und auch stinknormales CRUD geht mit ES besser, finde ich. Dazu hab ich Jan ein Beispiel gebastelt.</p>
+<p>Das Schöne an ES ist ja, dass man die Events nachträglich "skalieren" kann: man kann grob beginnen und feiner werden - oder umgekehrt.</p>
+<p>Jeder Event hat halt sein eigenes kleines Schema. Aber da es davon soviele gibt, ist das aufs Ganze betrachtet eher Schemalosigkeit.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-07-01):</p>
+<p>Cool - ja genau. Ich setze ES in meiner Praxis eben auch an sehr unterschiedlichen Stellen ein. Mal Frontend, mal Backend und mal auch als verteilte Datenbank mit LevelDB. Viele Lösungen sind damit ein bisschen verständlicher wie ich ebenfalls meine.</p>
+<p>CQRS ständig mit ES zu verbinden macht leider den Eindruck, dass es anders nicht ginge. Eins würde das andere zur Folge haben. Mach aus 1 Problem mindestens 2 Probleme.</p>
+<p>Apropos: Ich muss mich mal auf ein Super-CQRS Framework ohne ES auf die Suche machen. Das wäre was ;-).</p>
+<p>Naja egal - freut mich das du ebenfalls sofort einfallsreich und bepackt mit tollen Ideen an die Sache gehst und ich freu mich auf deine Postings dazu...</p>
+<p>Jetzt muss ich erstmal schnell los ... ;-)</p>
+<p>Bis denne, Mike</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-07-01):</p>
+<p>Ich bin doch erstaunt, wie gut das Thema bei der DWX ankam und es freut mich umso mehr, wenn man etwas darüber lesen darf. Ich finde dein Beispiel mit der Black-Box triffts genau ins Schwarze. Ein Logbuch, wo alles drinnen steht.</p>
+<p>Ein wertvolles Logbuch, da es nicht verändert werden kann und genau diese Unveränderbarkeit finde ich so besonders an dem Ganzen. Ist das Log erst persistent gespeichert, bleibt es für die Ewigkeit bestehen. Wenn ein Event gelöscht wird, kann dies nur durch ein weiteres Event "on-top" passieren. Natürlich entsteht dabei eine Unmenge an Daten, was aber relativ egal ist, denn die gewonnene Skalierbarkeit ist dabei echtes Gold wert. Ein weiterer Vorteil ist, dass wir uns nicht mehr um gleichzeitige Zugriffe kümmern müssen, denn dafür gibt es Versionierung, was aber dann, eine weitere Optimierung ist :-)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-07-01):</p>
+<p>Ja, den Speicherbedarf sehe ich auch als zweitrangig in den meisten Fällen. Man kann ja im Notfall auch Events auslagern, wenn man vom damit erreichten Endzustand einen Snapshop ablegt. Aber das ist eine Optimierung für später.</p>
+<p>Für mich ist derzeit der wichtigste Aspekt die Möglichkeit, Datenstrukturen bei Bedarf neu zu formen. Man kommt mit ES also raus aus der vorzeitigen Optimierung, sich für alle möglichen Fälle eine Datenstruktur im voraus zu überlegen.</p>
+<p>Der bisherige übliche objektorientierte Ansatz, der nach Substantiven und damit nach Datenstrukturen sucht, und der übliche datenbankorientierte Ansatz, der auch ein Schema sucht, sind aus meiner Sicht nämlich ebenfalls vorzeitige Optimierungen.</p>
+<p>Man versucht da über etwas Entscheidungen zu treffen, wovon man so wenig weiß.</p>
+<p>Mit ES stellt man das auf den Kopf. Oder endlich auf die Füße :-) Keine Gewissheit vortäuschen, wo keine ist. Und immer, wenn man irgendwo Gewissheit bekommt, wenn sich Muster ergeben, dann kann man etwas aushärten. An allen anderen Stellen wird mit dem Eventfluss gearbeitet.</p>
+<p>Ein Gedanke bewegt mich noch: Ich sehe Parallelen zwischen ES und DVCS. Wann fangen wir also an mit Branches auf unseren Geschäftsdaten? :-)</p>
+<hr />
+<p><strong>Carsten</strong> (2013-07-01):</p>
+<p>Und irgendwann kann ich sagen: ich hab die Geburt <em>live</em> (naja fast) miterlebt ... :D</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-07-02):</p>
+<p>@Roberto: Erstaunt? Muss doch so kommen, wenn alle drüber reden. Hehe! ;-)</p>
+<p>Ja, zum Glück kommt das Thema nach einigen Jahren jetzt auch bei mehr als ein paar Messaging / Event-Driven - Nerds an ;-)</p>
+<p>Die Menge an Daten ist im Vergleich zum Gewinn an Flexibilität und Insights zu vernachlässigen. Generiertes Wissen (empirisch und forensisch) über Benutzer- und Systemverhalten bekommt mit einem Append-Only-Modell eine weitere Dimension. Gerade bei aktuellen Diskussion und Entwicklung um "Knowledge-Discovery in Databases" ist dieses Modell ein unglaublicher Mehrwert. Deshalb ist ein Event-Store - sagen wir lieber Event-Log - mehr als eine "schnöde" Event-Source für eine Domain bzw. einer Entität / Aggregates (DDD) innerhalb der Domain.</p>
+<p>Für mich hat das so und so - wenn überhaupt - nur am Rande etwas mit DDD zu tun. Aber auch egal.</p>
+<p>Versionierung von Events - und Branches: Dabei kommt mir immer eines in den Sinn das ich eben auch zu selten in diesem Zusammenhang höre: Collaborative Domains. Heißt, hier arbeitet mehr als 1 Akteur (System oder Nutzer) mit den selben Daten. Und klaro der Klassiker in Collaborative Domains ist Konflikterkennung. Was ist IMHO noch wichtiger und topt alle bisherigen Anforderungen an Flexibilität? Konfliktlösungen</p>
+<p>Auch hier empfinde ich den Gedanken der Projektionen auf Event-Logs statt Event-Sourcing vielversprechender.</p>
+<p>Vor einiger Zeit hatte ich mal an einer kleiner Lösung mitgearbeitet. Die Überlegung dort war, dass jeder Nutzer sein eigenes Event-Log innerhalb einer collaborative domain bekommt und über spätere Merges mit entsprechender Konflikterkennung und halbautomatischer + manueller Konfliktlösung ein Ergebnis erzeugt. Die Merges wurden dabei natürlich nicht auf die bestehenden Event-Logs gemacht, sondern es wurde ein resultierender Event-Stream / Event-Log über Projektionen mit bestimmten Regeln erzeugt. Vielversprechend wie ich fand.</p>
+<p>Mit Event-Logs können wir durch entsprechende Splits und Joins von Event-Streams zu ein skalierenden System führen. Dabei ist Event-Versioning eine nette und sehr einfach Form "Optimistic Concurrency Management" zu betreiben.</p>
+<p>Viele Möglichkeiten, wenn man sich ein paar Zwängen aus der "klassischen" CQRS/(D)DDD entledigt und Event-Driven denkt ;-).</p>
+<p>Ciao für erste, Mike</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-07-02):</p>
+<p>Ich würde sogar behaupten, dass es in Richtung DVCS geht. Wir brauchen keine single source of truth, also keine einzige Quelle, denn jedes "repository" kann die autoritäre Quelle sein, wenn es zum Beispiel irgendwo Probleme in der aktuellsten Kopie gibt.</p>
+<p>@Mike: Richtig, aber viele reden darüber und (leider) wenige setzen es ein ;-)
+Jedenfalls sind sich dabei wohl alle einig, die Menge an Daten ist irrelevant, die gewonnene Flexibilität gewinnt und dass diese Masse an Daten relevant sein kann, haben in den letzten Jahren wohl sehr viele erkannt..</p>
+<p>Wenn ich auf irgendwelche relationale Strukturen verzichten kann, bin ich immer zu haben. Vor allem der Gedanke, dass ich erst mal alles sammle und nachher was daraus formen (oder noch viel wichtiger: _neu_formen) kann, ist in vielen Fällen vielversprechend, wie ich finde. Andere Systeme können sich andocken und mit den Daten machen, was sie wollen, bleiben aber entkoppelt.</p>
+<p>Wenn es wie Mike sagt um Collaborative Domains geht, würde mir auch diese Lösung spontan in den Sinn kommen. Ich finde diese Thematik (Stichwort: eventual consistency), oder Konflikte zu lösen, immer sehr spannend. Das wäre Stoff für viele weitere Posts.</p>
+<p>Viele Möglichkeiten, wenn man denkt, wie einfach das Prinzip dahinter eigentlich ist, oder? ;-)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-07-02):</p>
+<p>Das Kernproblem ist die Änderung des grundlegenden Paradigmas von Zustand auf Differenz, von Raum auf Zeit.</p>
+<p>Wird noch dauern, bis das in der Masse angekommen ist. Weil es dem Alltagsverstand widerspricht. Der kennt ja im Grunde nur Zustand. Wir sehen immer Endprodukte. Das Werden ist vergangen. Wir sind am Sein bzw. am Haben des Zustands interessiert.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-07-02):</p>
+<p>@roberto: Ganz auf relationale Strukturen bzw. OO-Modelle würde ich nicht verzichten wollen. Diese haben hohen Wert (Algebra). Nur nicht am Anfang des Prozesses. Wenn sich Schema bildet, kann es zur Optimierung sehr, sehr hilfreich sein.</p>
+<p>+1 @ralfw - YEAH - "von Raum auf Zeit" - so ist es!</p>
+<p>http://de.slideshare.net/mbild/event-driven</p>
+<p>Vorn und Hinten sind meine Erfahrungen und Gedanken zum Paradigmenwechsel geschildert. ES muss ich noch exportieren - dort wird es noch klarer wie ich finde.</p>
+<p>Genau so sehe ich das auch. Ein bisschen Zeit wird die "Masse" - und wir selbst - brauchen, um aus den Erkenntnissen solide Erfahrungen zu machen. Ich bin mir sicher, dass es ein guter Lösungsweg für ein bzw. mehrere "echte" Herausforderungen an moderne Anwendungen und Entwicklungsmodelle ist.</p>
+<p>Mir ist vor allem eines aufgefallen: ES hat erstmal wenig mit CQRS und noch weniger mit DDD zu tun. Passt gut zusammen, muss es aber nicht. Deshalb bin ich bemüht eher Messaging bzw. Event-Driven als Grundlage zu verwenden. Koordination - also Ressourcen mittels Zeit - und Integration spielen so eine übergeordnete Rolle.</p>
+<p>Sicher kein einfacher Gedanke, aber es lohnt sich. Schön sind mehr Austausch von Erfahrungen - wie hier.</p>
+<p>PS: "Wir sind am Sein bzw. am Haben des Zustands interessiert." - Ein bisschen wie Kinder (IT in den Kinderschuhen) ;) - Kinder erleben auch nur die Gegenwart - wenig Vergangenheit - wenig Zukunft ;)</p>
+<hr />
+<p><strong>Janek Fellien</strong> (2013-07-02):</p>
+<p>Auch wenn ich mch in den 14 Tagen meines Urlaubes in nichts einmischen wollte, kann ich aufgrund der aktuellen Lage nicht zurückhalten und muss gestehen, dass ich es Klasse finde, dass das Thema ES und CQRS (auch wenn es nicht zwingend zusammengehört) endlich an mehr Fahrt auf nimmt.</p>
+<p>Ich habe auch keinerlei Kritik an den obigen Posts, nur eine Bemerkung. Der industrielle Einsatz eines ES in der Software wird noch ganz lange brauchen. Ich habe immer wieder Diskussionen erlebt (auch nach der DWX), dass man ja das relationales DBS gekauft hat und nun nutzen muss. Oder ein weiteres Argument, dass ich zwar verstehe, aber inzwischen nicht mehr per se tragen kann, ist die Art der Datenstruktur.
+Das Wort 'Struktur' allein vermittelt Sicherheit. Unternehmen stehen auf Sicherheit und Stabilität. Stellt euch mal vor, Daimler findet flexible Strukturen gut und ist einverstanden die vorhandene Software auf flexibel (fälschlicherweise auch dynamisch tituliert) umzustellen. Das versteht doch keiner, das will doch keiner, das ist doch gefährlich. Flexibilität birgt die Gefahr von Angriffspunkten, so die Denke in den Entscheidungsetagen.</p>
+<p>ES wird noch lange brauchen, um in der klassischen Enterprise Applikation anzukommen. Es ist allerdings nicht ausgeschlossen, immerhin hatte ich in meinem Workshop zur DWX zwei drei Vertreter dieser strukturbehafteten Unternehmen. Und am Ende waren sie begeistert - sagten sie zumindest.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-07-02):</p>
+<p>Hey Urlauber,</p>
+<p>schön!</p>
+<p>Nun was Mitarbeiter von Daimler machen, vielmehr nicht machen, ist mir nicht wichtig. Im Enterprise Anwendungsumfeld hat man sich eventuell auch schon mit Herstellern und der Lage arrangiert. Ein Umfeld mit sehr kleinem Wachstum und Potential wie ich meine.</p>
+<p>Ich denke "echte" Überzeugungsarbeit kommt von Außen. Heißt, das "Wie" ist für die "Masse" entscheidend. Zeigen das es "besser" geht - kurzum Traktion an Beispielen - besser an "echten" Apps -zeigen. Deshalb freue auch ich mich ebenfalls über eine breite Diskussion besser Aktion ohne sofortigen CQRS/DDD Zwang ;-).</p>
+<p>Grüße aus Berlin,
+Mike</p>
+<hr />
+<p><strong>Jander.IT</strong> (2013-07-02):</p>
+<p>Stichwort Akzeptanz: Es hilft immer, in Erinnerung zu rufen, dass Event Sourcing eines der ältesten Informationsverarbeitungskonzepte der Welt ist -&gt; das Journal der Buchhaltung (ca 1300 n.Chr. iirc ;) ) ist ein Event log. Kontostände sind Projektionen. Insbesondere, wenn es um Software geht, die fiskalische Zusammenhänge abbildet, ist das m.E. ein extrem überzeugendes Argument.</p>
+<p>Mehr für Techies: jedes RDBMS arbeitet intern nach CQRS und teilweise mit Event Sourcing (Stichworte: Transaktionslog und Indizes)</p>
+<p>Zum Stichwort Branching: das beschreibt ja Systeme, in denen Teilsysteme nicht ständig in Kommunikation stehen, aber trotzdem (eben vorläufig) arbeiten müssen. Bei einer Synchronisation gibt es dann ein Merge, wobei Konflikte nach entsprechenden Regeln oder manuell gelöst werden. Insofern nix neues, Greg (Young) hat zu mehreren Anlässen darüber was erzählt. Spannend bleibts in der Implementierung natürlich trotzdem :)</p>
+<p>@ Ralf: Kleinigkeit zur Nomenklatur: Die Menge aller Ereignisse wird gemeinhin als "Event log" bezeichnet. Eine "Event source" bezeichnet üblicherweise einen einzelnen Erzeuger von Ereignissen, der in einer technischen Implementierung als in-sich konsistent betrachtet wird. Viele Event Sources erzeugen gemeinsam ein Event log.</p>
+<p>@ Roberto: nicht umsonst hab ich bei unserer "park bench" auf der DWX die (provokante) Frage in den Raum gestellt, ob Event Sourcing nicht vielleicht doch eine gute Lösung für sehr viele Probleme ist. Dadruch dass ich mit Ereignissen sehr gut von technischen Belangen abstrahieren und in der Sprache der Domäne formulieren kann, bin ich mit Events sehr gut auf Änderungen eingestellt. Und das ist schließlich immer noch unser (der Softwareentwicklung) größtes Problem. Ich bin da wirklich unentschieden. Auf der einen Seite höre ich Udi&amp;Greg, die gegen (zumindest heute noch Udi) "globale" Event Sourcing-gestützte Entwürfe wettern, auf der anderen Seite sehe ich obigen Vorteil und dazu noch die erleichterte Administration eines durchgängig designten Systems... Die Diskussion ist noch offen :)</p>
+<p>@ janekf: schönen Urlaub ;)</p>
+<p>Grüße
+Philip</p>
+<hr />
+<p><strong>Jander.IT</strong> (2013-07-02):</p>
+<p>Noch was zur Metapher:</p>
+<p>Richtig treffend wird die Analogie zur "Black box", wenn Du BDD mit ins Spiel bringst. Systemverhalten zu spezifizieren als</p>
+<p>Gegeben sei eine Menge an angenommenen Ereignissen,
+wenn ich eine Funktion des Systems ausführe,
+dann erwarte ich das Auftreten folgender Ereignisse (ggf nebst deren Eigenschaften spezifiziert), und (das ist das coole daran): das Nichtauftreten jedes nicht spezifizierten Ereignisses...</p>
+<p>Viel stärker von der Technik der Implementierung abstrahiert kann man gewünschtes Verhalten nicht ausdrücken - Sprache des Problemraums, statt Sprache des Lösungsraums...</p>
+<p>Grüße
+Philip</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-07-02):</p>
+<p>@philip: Richtig geschrieben?</p>
+<p>Cool - ja 100%tig - Event-Log ist gnadenlos einfach und uralt. Gut das argumentativ nochmals in Erinnerung zu rufen!</p>
+<p>"Kontostände sind Projektionen" - Absolut! - Das zeigt einmal mehr den Wert von Projektionen auf Event-Streams ;). Gerade in verteilten Systemen. Kontotransaktion über unterschiedliche Banken. Eine Implementierung hab ich bereits auf Basis von ES mit Konflikterkennung in NODE.JS beispielhaft erstellt. Würde ich bei Gelegenheit mal reviewen wollen.</p>
+<p>Warum bist du unentschieden?</p>
+<p>Ich bin grundsätzlich nicht von "homogenen" Systemen erzeugt. Heißt, nicht alles muss Event-Driven, Event-Sourcing bzw. Event-Log sein. Etwas OO oder RDBMS an den "richtigen" Stellen zur richtigen Zeit erleichtern ungemein. Und das vor allem Udi hier und da gegen ES "wettert" liegt im noch nicht völlig klaren Entwicklungsprozess. Udi verwendet Event-Driven Sagas (NServiceBus) zur Prozesssteuerung. Diese hat eben Problem bei Serialisierung und Deserialisierung von Zustand. Udi spricht von SOA, also Service Mashups - unter anderem, viele Sagas (Zustandautomaten) die Nachrichten austauschen. Greg spricht hingegen von Staged Event Driven. IMHO - weit voneinander entfernt sind dabei beide nicht - Event-Driven. Nur die Implementierungen unterscheiden sich im Detail. Andere verwenden eben die Reactive Extentions oder Streams und/oder LevelDB.</p>
+<p>Sprache (Ubiquitous Language) im Sinne von DDD und auch BDD halte ich persönlich für einen Nebenschauplatz. Gut zu erwähnen, gutes weiteres Argument, weiterer Vorteil, aber IMHO keinesfalls die Essenz.</p>
+<p>Zumal Events (Event-Driven/Async I/O), wie bereits erwähnt, eine weitere Dimension - ZEIT - besitzen. Da wird es schnell doch etwas komplexer. ;) Z.B. Event 2 kann, muss aber nicht vor Event 1 kommen, oder Event 2 muss max. 200ms nach Event1 kommen. Klar, eine Frage der Definition von Specs und SLAs. Aber wer macht das im Detail? Meist wir Entwickler. Warum? Weil wir das wissen. Wie würde ein PO sprachlich damit umgehen? Was sagen wir dazu? TryCloseOrderIn200msElseOrderNotPossible?</p>
+<p>Naja - schwieriges Thema. Alles "Gute" gleich zu mischen - Davon bin ich nicht ganz überzeugt ;-).</p>
+<p>Greetz, Mike</p>
+<hr />
+<p><strong>Jander.IT</strong> (2013-07-02):</p>
+<p>@mike:</p>
+<p>Klar, du hast Recht, homogene Systeme an sich sind nicht positiv. Wahrscheinlich auch eher schädlich. Zumindest mittel- bis langfristig. Kurzfristig gerade bei neuen Systemen ist Tooling immer eins der großen Probleme, und da hilft Homogenität (leider) ganz enorm ;)</p>
+<p>Was speziell Events betrifft, haben diese Vorteile, insbesondere eben, dass Entscheidungen über Strukturen (Stichwort Readmodel) in die Zukunft vertagt werden können, solange man die Ereignisse selbst möglichst umfassend beschreibt. Auch die Unveränderlichkeit des Event logs zeichnet dieses gegenüber vielen anderen Persistenzmechanismen aus. Will ich diese Vorteile nicht von vornherein weggeben, verwende ich Events eher einmal zu viel als einmal zu wenig. Natürlich sind damit auch Kosten verbunden, Ereignisse haben neben Daten ja auch eine semantische Komponente. Diese muss ich im System mitdenken, das ist wesentlich "tiefergehend" als ein Update auf einen Datensatz zu ermöglichen. Und in einigen Anwendungsgebieten mag es auch Probleme mit der Menge der Ereignisse geben. Aber für mich ist inzwischen die Entscheidung zu einer RDB anstelle von Event Sourcing eine aktive Entscheidung, die erstmal begründet und getroffen werden will.</p>
+<p>Der Bereich Sagas / Prozesse ist sicher einer der spannendsten der nächsten Zeit. Persönlich glaube ich (hoffe ich), dass wir eine Tendenz weg von gekapselten OO Modellen hin zu stärker auf funktionalen Paradigmen aufbauenden Transaktionen und Prozessen sehen werden. Ob jetzt unbedingt die Messaging Systeme der richtige Ort für die Prozesse sind, da bin ich mir nicht so sicher. Aber meine Erfahrung ist da noch recht begrenzt und ich bin gespannt, wie sich das entwickelt.</p>
+<p>Das mit der Sprache sehe ich insofern etwas anders, als ich die Erfahrung gemacht habe, dass an der Domäne orientierte Beschreibungen (mittels Ereignissen) auch bei Änderungen deutlich stabiler waren als solche, die aus technischen Überlegungen erzeugt wurden. Deswegen versuche ich im Moment eher, Ereignisse implementierungs-unabhängig zu formulieren, und das führt direkt zu einer starken Betonung der DDD Konzepte (strategischer Teil von DDD).</p>
+<p>Zeit ist ja auch ein spannendes Thema. Da machen Events eigentlich deutlich, dass wir in Software immer in zwei Zeitdimensionen arbeiten. Einer Wirksamkeit (z.B. Zeitraum eines Steuerbescheids) und das Bekanntwerden (z.B. Zeitstempel eines Events). Hier wird explizit, dass sich auch Wissen/Daten ändern können. Genau von den 200ms in Deinem Beispiel muss man in der Implementierung dann aber oft abstrahieren. Ist der Auftrag storniert, liefere ich nicht aus, auch wenn die Stornierung 200ms nach der Kommissionierung kam. Diese Entscheidung(en) kann man dann mit seinen Kunden/POs diskutieren. Das ist schon ein Gewinn, zumindest in der naiven RDB gewinnt immer der erste oder der letzte. Mit Events kann ich sogar im Nachhinein einen Fachadministrator entscheiden lassen (Stichwort Mergekonflikt, nur jetzt eben zeitlich) :)</p>
+<p>Und ja, das sind schwierige Themen, und wir alle dürfen da zum Glück noch viele Wege ausprobieren, bevor die ausgetreten sind. Wie Ralf mal so schön schrieb, wir produzieren forschend. Ob das gut oder schlecht ist, sei dahingestellt ;)</p>
+<p>Grüße
+Philip</p>
+<hr />
+<p><strong>Mike Bild</strong> (2013-07-02):</p>
+<p>@philip: Gutes Abstraktionsvivau in der Diskussion wie ich finde. ;)</p>
+<p>Ja, ja das liebe Tooling - okay gut so ist es halt.</p>
+<p>Richtig - Events haben eine semantische Komponente, vor allem durch die Erweiterung von Logiken mit temporaler Logiken.</p>
+<p>Hier liegt IMHO ein großer Wert. Sprache kann mit seinen Zeitformen helfen, kann eine mögliche Abstraktion jedoch auch unnötig verkomplizieren bzw. verhindern. Ich erlebe hier in meiner Praxis häufiger unnötige Diskussion um ein bereits bestehende Idee einer Lösung. Zudem meine ich, kann ich das Maß an Stabilität durch die Verwendung von "Domänensprache" weder objektiv messen noch subjektiv bestätigen. Das finden von geeigneten Definitionen ist eben nicht ohne und wir haben ja immer noch die Sprache der Informatik und Mathematik die ein Use-Case hinreichend beschreiben kann. Wobei ich natürlich nicht meine, völlig darauf zu verzichten zu müssen. IMHO Die Mischung machts ausreichend gut. Für mich eher ein gutes AddOn sozusagen ;). Ich bin auf die Sichtung und Erfahrungen anderer jedoch sehr gespannt. ;)</p>
+<p>Nun was soll ich sagen - IMHO Prozesse leben von Events - wenn es nur das Timeout eines Schedulers in Form eines Callbacks ist. Es "triggert" den nächsten Schritt - Continuation. Jetzt ist es ebenso möglich aus Callbacks Events zu machen und diese in ein Log zu legen. Continuation - logisch. Komplexer (technisch und logisch) geht immer ;-).</p>
+<p>Nun vielleicht sollten wir den Begriff "Abstraktion" für uns noch mal abklären. Du meinst in deinem letzten Post, die Verwendung eines konkreten Use-Cases  wie Auftrag, Kommission, Stornierung wäre eine Art Abstraktion im Verständnis - Weg von der konkreten Implementierung??!? Warum dann diese Begriffe im Code verwenden. Klaro - als Diskussionsgrundlage, vielleicht als Modell, als geistiges Bild hilfreich. Aber im Code? IMHO zu viel Zwang.</p>
+<p>Abstraktion meint jedoch das weglassen von Details und Einzelheiten wie Auftrag, Kommission, Stornierung. Es geht um die Überführung in etwas einfaches bzw. allgemeines. Mir geht es primär eher um Gesendet, Abgelehnt, Abgebrochen, neu gestartet. Alles andere sind IMHO Details. Das Schöne ist IMHO die Mittel der Mathematik, Logik, Algebra und Informatik (Algorithmen und Datenstrukturen, Zustandsautomaten, usw. ) verwenden zu können. Das ist IMHO Abstraktion die Technik möglich macht. ;).</p>
+<p>Nun, reicht erstmal ;) - freu mich auf Feedback.</p>
+<p>Greetz, Mike</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

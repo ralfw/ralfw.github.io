@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Die Rückkehr der Täter – EBC-Prozesse übersetzen — ralfw.de Archiv</title>
+<meta name="description" content="Einen Moment das objektorientierte Denken auszusetzen, darum hatte ich Sie in ???meinem Blogartikel über die nächste Entwicklungsstufe von EBCs gebeten. Ich weiß, das ist eine groß">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/die-ruckkehr-der-tater-ebc-prozesse/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Die Rückkehr der Täter – EBC-Prozesse übersetzen — ralfw.de Archiv">
+<meta property="og:description" content="Einen Moment das objektorientierte Denken auszusetzen, darum hatte ich Sie in ???meinem Blogartikel über die nächste Entwicklungsstufe von EBCs gebeten. Ich weiß, das ist eine groß">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/die-ruckkehr-der-tater-ebc-prozesse/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Die Rückkehr der Täter – EBC-Prozesse übersetzen</h1>
+    <div class="doc-meta"><span>18. Juli 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/07/die-ruckkehr-der-tater-ebc-prozesse.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/die-ruckkehr-der-tater-ebc-prozesse/</code></span></div>
+    <div class="art"><p>Einen Moment das objektorientierte Denken auszusetzen, darum hatte ich Sie in ???meinem Blogartikel über die nächste Entwicklungsstufe von EBCs gebeten. Ich weiß, das ist eine große Bitte gewesen. Deshalb möchte ich Ihr Wohlwollen auch nicht länger strapazieren. Kommen Sie zurück in die Welt der Objekte bzw. Klassen und der Komponenten.</p>
+<p>In diesem Artikel möchte ich Ihnen zeigen, wo Klassen ihren Platz auch in einer Welt der Featureprozesse haben, d.h. der Prozesse, die ein Anwendungsfeature realisieren.</p>
+<h2>Übersetzung in Klassen</h2>
+<p>Bisher habe ich vorgeschlagen, Anforderungen in Features zu zerlegen, von denen jedes durch einen Prozess “hergestellt” wird. Hier nochmal das Feature “Funktion plotten” als EBC-Prozess:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d1640a65f3acfb47.png" /></p>
+<p>Initiator des Prozesses ist das GUI, Empfänger für das Resultat ebenfalls. Ich denke, soweit bereitet Ihnen das Verständnis keine Probleme.</p>
+<p>Allerdings werden Sie sich fragen, wie das Prozessdiagramm in Code übersetzt werden kann. Abgesehen vom GUI, d.h. einer Formularklasse, ist darin ja noch keine Klasse zu sehen. Beschrieben sind lediglich Taten, aber keine Täter. Das ist natürlich gewollt, denn sonst wäre das Diagramm kein Modell. Modelle sollten nämlich nicht mit dem Vokabular der Implementation beschrieben werden.</p>
+<p>Also: Wo sind die Klassen?</p>
+<p>Aus meiner Sicht ist der Default, jede Tat, jede Aktivität, jeden Prozesschritt in eine Klasse zu übersetzen. Das sähe dann so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/0752148f627ad8d0.png" /></p>
+<p>Damit machen Sie nichts falsch. Das entspräche den bisherigen Übersetzungsregeln für EBC-Bauteile und –Platinen. Bitte beachten Sie jedoch: Auch wenn Sie Aktionen in Klassen übersetzen, werden daraus nicht gleich Täter. Sie würden den Prozessschritt “In Symbole zerlegen” nicht als Klasse Scanner implementieren. Wenn Klassen Aktivitäten repräsentieren, dann sollten sie auch so benannt sein:</p>
+<blockquote>
+<p>class Funktion_in_Symbole_zerlegen
+{
+    public void In_Process(string funktion)
+    {…}</p>
+<p>public event Action Out_Symbole;
+}</p>
+</blockquote>
+<p>Da nun jedoch die “Kästchen” in den EBC-Diagrammen nicht mehr durch Substantive beschrieben werden, da sie keine Täter, sondenr Taten sind, liegt es für mich sehr viel näher als bisher, allemal die atomaren Aktionen nicht in Klassen, sondern in Methoden zu übersetzen. Klassen weisen dann mehrere solcher Methoden-Taten zu einem Täter zusammen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9163194eaddbe960.png" /></p>
+<p>Eine Klasse könnte dann so aussehen:</p>
+<blockquote>
+<p>class Funktionsanalyse
+{
+    public Symbol[] In_Symbole_zerlegen(string funktion)
+    {…}</p>
+<p>public AST Auf_syntaktische_Korrektheit_prüfen(Symbol[] symbole)
+    {…}
+}</p>
+</blockquote>
+<p>Wann sollten Prozessschritte Methoden werden, wann Klassen? Hier sind verschiedene Prinzipien in Anschlag zu bringen. Wenn die Methoden sehr überschaubar sind und nicht in viele weitere zerfallen, um dem SLA-Prinzip zu dienen, dann würde ich dazu raten. (Im vorliegenden Beispiel des Funktionsplotters ist das eher nicht der Fall. Gerade ein Scanner kann schon sehr umfangreich werden.) Auch könnte für Methoden sprechen, dass sie gemeinsamen Zustand haben – wobei anzumerken ist, dass der eine Abhängigkeit darstellen würde, die man aus einem Prozessdiagramm nicht herauslesen kann. Das wäre der Evolvierbarkeit abträglich.</p>
+<p>Oder lassen Sie es mich anders sagen: Methoden sind absolut ok, um Ihnen die Arbeit etwas leichter zu machen, wenn Ihnen kein Prinzip entgegensteht. Vor allem könnten das SRP und SoC sein.</p>
+<h2>Täter durch Abstraktion</h2>
+<p>Vergleichen Sie nun die Klassennamen der Übersetzung in Klassen und der Übersetzung in Methoden. Sehen Sie den Unterschied? Bei einer Übersetzung in Klassen beschreibt der Klassenname die Aktivität, die Klasse ist eine Tat. Anders ist es bei der Klassen, die Prozessschritte als Methoden implementiert. Ihr Name beschreibt einen Verantwortlichen, sie ist ein Täter.</p>
+<p>Dieser Wechsel in der Semantik ist nötig, da ein Menge von Methoden, d.h. Taten nicht ohne weiteres zusammen eine “Großtat” ergeben. Wer sie zusammenfasst, ist also keine Tat, sondern tut viele Taten und ist somit ein Täter. Ein Substantiv als Name ist angezeigt.</p>
+<p>Mit der reinen Objektorientierung können Sie quasi nicht anders: Sie suchen sofort nach Tätern. Sie hätten sich gefragt, welche Verantwortlichen an einem Funktionsplot beteiligt sein könnten. Und da wären Ihnen sofort Scanner, Parser, Codegenerator, Plotter usw. Dann hätten Sie die in irgendeiner Form in Abhängigkeiten zueinander gesetzt (Klassendiagramm, Schichtendiagramm o.ä.).</p>
+<p>Mit EBC-Prozessdiagrammen jedoch müssen Sie sich nicht so anstrengen. Sie listen einfach die Tätigkeiten, die ein Feature ausmachen. Das ist ein viel kleinerer Schritt, wenn Sie von den Anforderungen ausgehen.</p>
+<p>Und erst danach schauen Sie, ob Sie mehrere Prozessschritte demselben Täter zuordnen können. EBC-Prozessdiagramme sind also ein Synthesewerkzeug. Statt top-down vorzugehen und mit Abstraktionen zu beginnen, die Sie nicht kennen, starten Sie bottom-up. Sie beginnen bei relativ leicht identifizierbaren Aktivitäten und abstrahieren dann von ihnen. So kommen Sie zu Klassen, wenn Ihre Prozessschritte Methoden sind. Aber was, wenn sich für eine Übersetzung von Aktivitäten in Klassen entschieden haben?</p>
+<h2>Komponenten als Großtäter</h2>
+<p>Klassen enthalten Methoden. Assemblies enthalten Klassen. Für alle Klassen – egal, ob die Taten oder Täter darstellen – müssen Sie sich entscheiden, wie Sie sie zu Assemblies zusammenfassen.</p>
+<p>Bei EBC-Schaltplänen habe ich noch die Auffassung vertreten, jede EBC-Komponente (allemal Bauteile) wirklich als Komponente zu implementieren. Für EBC-Prozessdiagramme sehe ich das nun anders.</p>
+<p>Wie Sie Taten als Klassen oder Taten als Methoden in Täter-Klassen zu Komponenten zusammenfassen, ist völlig getrennt vom Prozessdiagramm zu entscheiden. Eine automatische Übersetzung von Diagrammelementen in Komponenten (d.h. Assemblies mit separatem Kontrakt) gibt es für mich nicht mehr.</p>
+<p>Komponenten sind insofern darauf reduziert, Einheiten für die starke Entkopplung und eine isolierte bzw. parallele Entwicklung zu sein. Fragen Sie sich bei der Entscheidung für die Zusammenfassung z.B.</p>
+<ul>
+<li>…ob Klassen eine genügend hohe Kohäsion haben, um im selben VS-Projekt realisiert zu werden? Das könnte z.B. der Fall sein, wenn sie in Bezug auf die Problemdomäne eng beieinander liegen oder auf derselben Technologie basieren.  …ob die Implementierung einer Klasse risikoreich ist und daher parallel zur Implementation anderer stattfinden sollte, um deren Umsetzung nicht zu behindern?  …ob für die Implementation von Klassen besondere Kompetenz nötig ist und sie daher parallel zu anderen stattfinden sollte?</li>
+</ul>
+<p>Hohe Kohäsion sollten Sie durch Zusammenfassung in einem VS-Projekt, d.h. in einer Komponente ausdrücken. Hohes Risiko, spezielle Kompetenz oder auch lange Entwicklungsdauer sollten hingegen eher dazu führen, dass Klassen getrennt von anderen in Komponenten realisiert werden.</p>
+<p>Dasselbe gilt auch für die Art ihrer Herstellung. So kann es sein, dass zusammengesetzte Aktivitäten (die früheren Platinen) generiert werden. Damit kommen sie ohnehin in anderen Assemblies zu liegen als manuell zu entwickelnde atomare Aktivitäten. Ich fasse deshalb alle zusammengesetzten Aktivitäten (z.B. “Funktion berechnen”) in einem von allen anderen VS-Projekten getrennten zusammen.</p>
+<p>Unterm Strich sind Komponenten heute für mich “nur noch” Container, die Sie nach sehr pragmatischen Gesichtspunkten füllen. Sie sollen ihre Inhalte von anderen physisch und inhaltlich isolieren. Nur weil Sie in einem Diagramm aber irgendwelche Kästchen zeichnen, entstehen noch keine Komponenten. Ihre Bildung ist orthogonal zur Formulierung eines Lösungsmodells. Machen Sie Komponenten in EBC-Prozessdiagrammen ruhig kenntlich. Aber sehen Sie sie als das, was sie sind: als Einheiten der Codeorganisation und nicht als Bestandteile des Lösungsraumes.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/3a2b8e6dad5cad2e.png" /></p>
+<p>Diese Auffassung unterscheidet sich deutlich von meiner bisherigen. Und sie widerspricht eigentlich auch der Bezeichnung Event-Based Components, denn die primären Elemente von Prozessdiagrammen sind keine Komponenten mehr. Es tut mir leid, wenn ich Sie damit verwirren sollte. Aber es hilft nichts: Es fühlt sich besser an, Komponenten in dieser Weise zu benutzen. Und ich glaube auch, dass es leichter zu erklären ist.</p>
+<p>Komponenten sind Strukturierungsmittel für Code zur Entwicklungszeit. Sie sind damit genausowenig funktional lösungsregelavant wie VS Solutions oder Klassendateien. Fassen Sie in ihnen Klassen für Täter und Taten schlicht zu “Großtätern” zusammen, wie es für die Evolvierbarkeit und Produktionseffizienz günstig ist.</p>
+<p>Komponenten entstehen mithin wie Täter-Klassen durch Abstraktion. Versuchen Sie nicht, sie durch Analyse der Anforderungen zu entdecken. Lassen Sie sie entstehen durch Zusammenlegung von Klassen, die nach einem Gesichtspunkt wie Risiko oder Entwicklungsdauer oder Technologie zusammen gehören.</p>
+<h2>Komponenten elastisch</h2>
+<p>Das bedeutet aus meiner Sicht sogar im Umkehrschluss, dass Komponenten in ihrem Inhalt variabel sein können. Was heute in bestimmter Hinsicht günstig zu einer Komponente zusammengefasst werden sollte, kann morgen anders zusammengefasst werden. Hier ist die Softwareentwicklung im Vorteil gegenüber der Elektrotechnik oder dem Maschinenbau. Deren Komponenten sind fix. Wir können Komponenten jedoch “atmen” lassen. Wir können sie elastisch gestalten.</p>
+<p>Einzig wichtig für eine Software sind die Aktivitäten. Weder ist wichtig, ob sie als Klassen oder Methoden realisiert werden. Noch ist wichtig, welche Methoden-Prozessschritte in welchen Klassen zusammengefasst sind, noch ist es interessant, in welchen Komponenten Klassen gemeinsam liegen.</p>
+<p>Nun mag es schwierig sein, Aktivitäten von Klasse auf Methode umzustellen oder Methoden-Prozessschritte aus Klassen herauszutrennen. Täter- bzw. Tat-Klassen (mit ihren “Anhängseln”) jedoch aus der einen in eine andere Komponente zu verschieben, sie heute so und morgen anders zu gruppieren, scheint mir relativ leicht. Das sollten wir als Chance begreifen und ausnutzen.</p>
+<p>Denken Sie also in elastischen Komponenten. Fühlen Sie sich recht frei, sie mit Aktivitäten zu füllen, um ihren Produktionsprozess zu optimieren. Komponenten mit ihren Komponentenwerkbänken schaffen beste Voraussetzungen für zügige Parallelentwicklung am Code. Im CCD Praktikum sind wir durch sie in fünf Tagen über nicht einen Mergekonflikt gestolpert.</p>
+<h2>Namensräume</h2>
+<p>Klassen und Komponenten sind Mittel zur physischen Strukturierung. Die Beweggründe zu Trennung oder Zusammenfassung von Code sind vielfältig. Sie können mit der Arbeitsorganisation zu tun haben, mit technologischen Abhängigkeiten oder einem Implementationsdetail geschuldet sein.</p>
+<p>EBC-Prozesshierarchien stellen demgegenüber eine funktionale Strukturierung dar. Aktivitäten sind geschachtelt oder nachgeschaltet, um eine Anforderung zu erfüllen.</p>
+<p>Physische Nähe und funktionale Nähe drücken aber noch nicht unbedingt inhaltliche Nähe aus. Von der physischen Nähe ist das zwar eher anzunehmen, aber es ist auch nicht zangsläufig. Vor allem kann sich die physische Struktur ändern, ohne dass deshalb die inhaltliche, logische Struktur auch ändern sollte. Wie drücken Sie im Code also inhaltliche, logische, konzeptionelle Nähe aus? Wie fassen Sie etwas logisch zusammen, auch wenn es physisch getrennt z.B. in verschiedenen Komponenten liegt?</p>
+<p>Das Mittel für die logische Zusammenfassung von Klassen sind Namensräume:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/258978ba4465a59f.png" /></p>
+<p>Ohne Ansehen des Definitionsortes (physische Struktur) und des Einsatzortes (funktionale Struktur) verbinden Namensräume Klassen. Sie schaffen damit eine weitere “Großtäterdimension”.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/6696692202308eec.png" /></p>
+<h2>Zwischenfazit</h2>
+<p>Für mich fühlen sich EBC jetzt stimmiger an. Klare Regeln für das, wie ein EBC-Diagramm aufgebaut ist, leiten meine Gedanken bei der Ableitung des Entwurfs aus den Anforderungen:</p>
+<ul>
+<li>Finde Quelle und Senken für den Prozess. Diese Verantwortlichen sind vergleichsweise einfach zu bestimmen.  Zerlege den Prozess in Aktivitäten; zerlege die Aktivitäten falls nötig in weitere Aktivitäten. Diese Ableitung von Schritten aus einer Anforderung ist vergleichsweise naheliegend; man beginnt mit dem Konkreten, statt mit Abstraktem/Unbekanntem.</li>
+</ul>
+<p>Und klare Übersetzungsoptionen helfen mir beim Codieren des entworfenen Modells. Die Möglichkeiten moderner Sprachen werden ausgenutzt.</p>
+<ul>
+<li>Übersetze Aktivtitäten in Klassen (oder auch Methoden); finde die Täter hinter den Taten; abstrahiere vom Bekannten, suche Muster  Finde Namensräume, um Klassen logisch/inhaltlich in die Nähe zu rücken  Organisiere Klassen in Komponenten, um ihre Implementation effizient betreiben zu können – aber auch, um “Übergriffe” zu vermeiden. Komponenten dienen der Stabilisierung der funktionalen Strukturen; es sind Bollwerke gegen die Tendenz zu steigender Code-Entropie</li>
+</ul>
+<p>Unterschiedliche Plattformfeatures dienen unterschiedlichen Zwecken:</p>
+<ul>
+<li>Klassen, Methoden: funktionale Strukturierung  Namensräume: logische Strukturierung  Assemblies: Strukturierung der Code-Produktion</li>
+</ul>
+<p>Da schaut konzeptionell sauber aus, oder? Alles hat seinen Zweck.</p>
+<p>Fragts sich abschließend nur, was mit den “normalen” Klassen/Objekten ist? Gibt´s die noch? Ja, die gibt´s noch. Sozusagen in den Zwischenräumen ;-) Davon mehr beim nächsten Mal.</p>
+<h2>Kommentare</h2>
+<p><strong>AlexOnASP.NET</strong> (2010-07-18):</p>
+<p>Ähnliche Gedanken hatte ich verfolgt, als ich den Thread zur Prozessautomatisierung in der CCD-Mailingliste gestartet habe.</p>
+<p>Bin gespannt, wie sich der Ansatz weiterentwickelt...</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-07-19):</p>
+<p>Interessanter Denkansatz mit diesen flexiblen Komponenten. Neuerdings kommen ja Überlegungen auf, von Klassen-Orientierung hin zu tatsächlicher Objekt-Orientierung im eigentlichen Sinne zu gehen. Korreliert dein EBC-Ansatz mit dem von <a rel="noopener" href="http://www.qi4j.org">Qi4j</a>?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-07-20):</p>
+<p>@Ralf: EBC haben eher nichts mit DCI (http://www.artima.com/articles/dci_vision.html) zu tun, das Qi4j implementiert. Ich sehe EBC eher orthogonal dazu.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

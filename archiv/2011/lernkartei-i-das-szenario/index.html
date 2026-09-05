@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lernkartei I – Das Szenario — ralfw.de Archiv</title>
+<meta name="description" content="Flow-Design verspricht evolvierbare Software. Wenn ich ein Flow-Design Diagramm zeichne, ist das allerdings noch nicht nachzuvollziehen. So ein Diagramm mag verständlicher sein als">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/lernkartei-i-das-szenario/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Lernkartei I – Das Szenario — ralfw.de Archiv">
+<meta property="og:description" content="Flow-Design verspricht evolvierbare Software. Wenn ich ein Flow-Design Diagramm zeichne, ist das allerdings noch nicht nachzuvollziehen. So ein Diagramm mag verständlicher sein als">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/lernkartei-i-das-szenario/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Lernkartei I – Das Szenario</h1>
+    <div class="doc-meta"><span>29. März 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/03/lernkartei-i-das-szenario.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/lernkartei-i-das-szenario/</code></span></div>
+    <div class="art"><p>Flow-Design verspricht evolvierbare Software. Wenn ich ein Flow-Design Diagramm zeichne, ist das allerdings noch nicht nachzuvollziehen. So ein Diagramm mag verständlicher sein als andere Diagramme, doch warum sollte Software deshalb evolvierbarer sein?</p>
+<p>Um die Evolvierbarkeit von Flow-Designs zu zeigen, ist mehr als ein Diagramm nötig. Nur eine Reihe von Diagramme, die zeigt, wie sich eine Software weiterentwickeln lässt, kann das Versprechen Evolvierbarkeit transportieren.</p>
+<p>Deshalb habe ich mich entschlossen hier im Blog eine Software in kleinen Schritten zu entwickeln, zu evolvieren. Ich tue das live, d.h. ohne vorherige Planung. Ich sitze also nicht erst stundenlang, probiere herum und dokumentiere dann nur das wirklich funktionierende Endergebnis. Hier will ich vielmehr simulieren, was in größeren Projekten an der Tagesordnung ist: Unsicherheit.</p>
+<p>Welche Features sollen wirklich in die Software rein? Welche Technologien sind die besten für den Zweck? Welcher Ansatz verspricht am meisten Erfolg? Wohin wird sich die Software entwickeln? Diese und andere Fragen treiben die Softwareentwicklung ständig um; damit will auch ich leben. Deshalb mache ich mir zunächst gar keine großen Gedanken über die Anforderungen; so ist garantiert, dass ich mich selbst mit Änderungswünschen überrasche.</p>
+<p>Einen Ausgangspunkt muss das Ganze aber natürlich haben. Hier mein grober Wunsch, was ist haben möchte:</p>
+<h3>Auftrag Lernkartei</h3>
+<p>Ich möchte ein <a rel="noopener" href="http://de.wikipedia.org/wiki/Lernkartei">Lernkartei</a>-Programm entwickeln. Mit dem kann ich dann zum Beispiel Vokabeln lernen. Der Lernstoff steht auf Karteikarten in Form von Fragen und Antworten. Auf der einen Seite jeder Karte die Frage, auf der anderen Seite die zugehörige Antwort.</p>
+<p>Mehrere solcher Lernkarteikarten sind zusammengefasst zu einer Lernkartei, z.B. Karteikarten mit Französich-Vokabeln.</p>
+<p>Der Trick bei einer Lernkartei ist nun, dass man ihre Karten nicht einfach von oben nach unten lernt, so wie sie auf dem Karteikartenstapel der Lernkartei liegen. Die Karten werden vielmehr in einen Kasten gesteckt, der mehrere Fächer hat.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/dfe631ae8bb6f8b8.png" /></p>
+<p>Quelle: <a rel="noopener" href="http://lernkartei.de/prinzip.php">http://lernkartei.de/prinzip.php</a></p>
+<p>Das Vorgehen beim Lernen ist einfach:</p>
+<ul>
+<li>Neue Karten kommen ins erste Fach.  Sich abfragen kann man mit Karten in jedem Fach. Wird die Antwort gewusst, kommt die Karte ins nächste Fach; bei falscher Antwort wandert sie jedoch zurück in Fach 1.  Die Fächer haben unterschiedliche Kapazität. Deshalb kommen die Karten immer seltener dran, je weiter sie in den Fächern gewandert sind. Anfangen sollte man immer mit den Karten im ersten Fach. Die weiteren Fächer kommen dran, wenn sie voll sind.</li>
+</ul>
+<p>Nicht alle Fächer sind also gleich. Das erste hat eine gewisse Sonderstellung, weil dorthin alle nicht gewussten Karten zurückwandern. Es füllt sich also am schnellsten mit neuen Karten und nicht gewussten.</p>
+<p>Dazu kommen noch zwei weitere Fächer, die ich mal Halde und Archiv nenne. Die Halde sind enthält alle Karteikarten, die noch nicht in Fach 1 waren. Wer nicht kontinuierlich Karten anlegt und gleich in Fach 1 steckt, sondern eine fertige Lernkartei nutzen will, der fängt mit einer großen Halde an, von der dann einige Karteikarten in Fach 1 gesteckt werden.</p>
+<p>Das Archiv bilden andererseits alle Karten, die aus dem letzten Fach als gewusst entnommen werden.</p>
+<p>Bei einem Karteikasten mit n Fächern (1..n) hat die Halde die Fachnummer 0 und das Archiv die Nummer n+1.</p>
+<p>Die Lernkarteien soll das Programm aus Textdateien laden. Ich stelle mir ein sehr einfaches Format vor:</p>
+<blockquote>
+<p>Frage 1
+Antwort 1</p>
+<p>Frage 2
+Antwort 2</p>
+<p>Frage 3
+Antwort 3
+…</p>
+</blockquote>
+<p>Fragen und Antworten stehen auf je einer Zeile und werden als Paare durch Leerzeilen getrennt.</p>
+<p>Dieses Format nutzt ein Lernkarteiprogramm, das mir auf dem iPad ganz gut gefallen hat: <a rel="noopener" href="http://itunes.apple.com/de/app/imemento-lernkarten">iMemento Lernkarten</a>. Ich möchte, dass meine Lernkartei-Dateien mit seinen kompatibel sind.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a6ddfaa63c1bbed9.png" /></p>
+<p>Die beiden Screenshots von iMemento zeigen, wie ich mir mein Programm auch ungefähr vorstelle. Es gibt ein Fenster mit einer Übersicht aller Lernkarteien und ein Fenster für das Lernen mit einer Lernkartei.</p>
+<p>Das Programm soll zunächst mal auf dem Desktop als WPF-Anwendung laufen. Später könnte es umgestellt werden auf Silverlight oder MonoTouch oder sogar auf ASP.NET. Mal sehen…</p>
+<h3>Los geht´s…</h3>
+<p>Ich finde, das ist ein überschaubares, aber kein triviales Szenario. Es bietet mir (und vielleicht Ihnen auch) Nutzen, die Entwicklung lohnt sich also. Zu lernen gibt es immer etwas. Ein Lernkartei-Programm kann man immer mal zur Hand haben.</p>
+<p>Zu diesem Szenario könnte ich nun natürlich viele Fragen stellen. Aber ich tue das bewusst nicht, sondern werfe mich im nächsten Artikel der Serie einfach in die Entwicklung. So will ich die in größeren Projekten quasi immer herrschende Unterspezifikation simulieren. Die übt ja einen nicht geringen Druck auf die Evolvierbarkeit aus.</p>
+<p>WPF ist auch eine Herausforderung für mich. Mit der Technologie habe ich nicht viel Erfahrung. Allerdings treibt mit ein Ideal an: Ich möchte mit WPF eine strikte Trennung von GUI und dem Rest leben.</p>
+<p>Wenn Sie mögen, grübeln Sie mit. Wie würden Sie dieses Szenario angehen?</p>
+<p>Im nächsten Artikel mache ich den ersten kleinen Schritt in der Implementation. Jeder Artikel soll einen kleinen Anwendernutzen produzieren. Es gibt keine lange Planung oder Infrastrukturbastelei. Ran, rauf, rüber – aber mit Methode.</p>
+<h2>Kommentare</h2>
+<p><strong>Mike Bild</strong> (2011-03-29):</p>
+<p>Schöne Idee! Hab das bereits mal mit Stefans dotnet.pro dojo Vorschlag TodoList durch und gerade mal auf GitHub https://github.com/MikeBild/Demos_Samples veröffentlicht. Leider fehlt der Post zu Modell und vorgehen... mhh</p>
+<p>-Cheers Mike</p>
+<hr />
+<p><strong>Thomas Sczyrba</strong> (2011-03-30):</p>
+<p>Hi Ralf,
+tolle Idee - da bin ich gern dabei. "Es gibt eine lange Planung oder Infrastrukturbastelei." -&gt; Sollte hier nicht statt "eine" eher "keine" stehen? ;-)</p>
+<p>Gruß Thomas Sczyrba</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-03-30):</p>
+<p>@Thomas: Danke für den Hinweis. Natürlich k(!)eine lange Planung :-)</p>
+<hr />
+<p><strong>Gerhard Völkl</strong> (2011-03-30):</p>
+<p>Hallo,</p>
+<p>wo kann ich mehr über Flow-Design finden?</p>
+<p>Gibt es darüber Bücher?</p>
+<p>Viele Grüße</p>
+<p>Gerhard Völkl</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-03-30):</p>
+<p>@Gerhard: Hier ist eine Seite mit Links zum Thema:</p>
+<p>http://clean-code-advisors.com/ressourcen/flow-design-ressourcen</p>
+<hr />
+<p><strong>Hannes Kochniß</strong> (2011-03-30):</p>
+<p>Bin mir gerade nicht bewusst, ob eine strikte Trennung von UI und Logik in WPF von Haus aus 100% möglich ist, in Silverlight braucht man dafür sowas wie Caliburn/Caliburn.micro (was ich persönlich als sehr elegant empfinde, der Eisenberg Effekt halt ;)).
+Wenn es so ist, gehört das mMn zu einer sauberen Lösung.. bin mal gespannt, wie du da EBC einsetzt, warte mal auf nen grösseres praktisches Beispiel, bis jetzt mehr Theorie gelesen.</p>
+<hr />
+<p><strong>mythicrider</strong> (2011-03-31):</p>
+<p>Cool, bin auch schon gespannt auf ein echtes Beispiel!</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-03-31):</p>
+<p>Ja, auf ein sinnvoll großes Projekt mit "Flow Design" bzw. "EBC" warte ich schon lange. Karteikarten ... aha</p>
+<p>In diesem Zusammenhang ein Hinweis auf eine Sendung auf 3sat aus der Reihe "Scobel":</p>
+<p>"More is diffeernt" - Skalierungsprobleme und die Grenzen des Wissens
+3sat.de/page/?source=/scobel/147661/index.html</p>
+<p>Die Sendung war (und insbesondere die Studiogäste waren) sehr interessant und das Thema ist - glaube ich - auch in diesem Zusammenhang nicht unerheblich.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

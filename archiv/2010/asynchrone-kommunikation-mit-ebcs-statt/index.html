@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Asynchrone Kommunikation mit EBCs statt “Async-Pattern” — ralfw.de Archiv</title>
+<meta name="description" content="Freut mich, dass Thomas Christian im build broken Blog eine Lanze für die asynchrone Kommunikation mit Events gebrochen hat. Schade allerdings, dass der Code dafür so umständlich a">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/asynchrone-kommunikation-mit-ebcs-statt/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Asynchrone Kommunikation mit EBCs statt “Async-Pattern” — ralfw.de Archiv">
+<meta property="og:description" content="Freut mich, dass Thomas Christian im build broken Blog eine Lanze für die asynchrone Kommunikation mit Events gebrochen hat. Schade allerdings, dass der Code dafür so umständlich a">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/asynchrone-kommunikation-mit-ebcs-statt/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Asynchrone Kommunikation mit EBCs statt “Async-Pattern”</h1>
+    <div class="doc-meta"><span>6. Mai 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/05/asynchrone-kommunikation-mit-ebcs-statt.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/asynchrone-kommunikation-mit-ebcs-statt/</code></span></div>
+    <div class="art"><p>Freut mich, dass Thomas Christian im build broken Blog <a rel="noopener" href="http://blog.aztec-project.org/2010/05/05/asynchrone-kommunikation-mit-dem-async-pattern/">eine Lanze für die asynchrone Kommunikation mit Events gebrochen</a> hat. Schade allerdings, dass der Code dafür so umständlich aussieht.</p>
+<h2>Kommunikation à la Async-Pattern</h2>
+<p>Ein kleines Formular fordert von einem Calculator die Quadratur einer Zahl an: m_calculator.CalcAsync(number). Was würden Sie dann im Calculator für Code erwarten? Irgendwo sollte number * number stehen. Klar. Und ansonsten? Schauen Sie einmal, wie der Calculator bei Thomas aussieht:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/7630c3489efc40d1.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d86aad45d228384b.png" /></p>
+<p>Puh… Da ist es gar nicht so leicht, das zu finden, worauf es eigentlich ankommt, finde ich. Sehen Sie die kalkulierende Businesslogik? Und was macht der Rest des Codes? Der ist dazu da, ein Pattern zu implementieren.</p>
+<p>Wenig Code für das Wesentliche, viel für Infrastruktur – das hört sich für mich nicht so gut an, auch wenn ich das Kommunikationsmodell voll unterstütze.</p>
+<p>Ich schlage daher einen anderen Weg vor. Hier meine Version der Szenarios:</p>
+<h2>Kommunikation à la Event-Based Components</h2>
+<p>Zunächst die Businesslogik:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/510dd131ef16389f.png" /></p>
+<p>Hier finden Sie keine Rauschen durch Infrastrukturcode. Der Fokus ist ganz klar auf der Problemdomäne. Aber Achtung: Ich habe keine Funktion für Calc() geschrieben, sondern eine Prozedur, d.h. eine Methode ohne Rückgabewert. Das Resultat liefert die Methode dann über einen Event: DeliverCalcResult(). So ist das bei <a rel="noopener" href="http://ralfw.blogspot.com/search/label/Event-based%20Components">Event-Based Components</a>.</p>
+<p>Jetzt der Client-Code im Formular:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/087cb54ef293f589.png" /></p>
+<p>Auch hier kein Rauschen durch Infrastruktur. Nicht mal der Calculator wird als Komponenteninstanz injiziert. Das Formular kennt keinen Calculator. Es ist völlig unabhängig von einer solchen Funktionseinheit. Es äußert Berechnungswünsche lediglich über einen Event – CalcRequest – und empfängt Berechnungsresultate mit OnCalcResult().</p>
+<p>Das ist im Prinzip sehr ähnlich wie bei Thomas. Im Detail ist es jedoch anders, da das Formular eben auf die Kenntnis einer Service-Funktionseinheit verzichtet. Die wird bei Thomas noch im Formular instanziert.</p>
+<p>Und wie kommt es nun zu Berechnungen, wenn das Formular den Calculator nicht kennt? Beide Funktionseinheiten werden von außen verdrahtet. Damit sind Logik und Abhängigkeiten als Concerns sauber getrennt.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2d1f9d1725d83344.png" /></p>
+<p>Voilà! Jetzt kann das Programm starten und berechnet Quadratzahlen. Zuerst werden die Funktionseinheiten instanziert. Dann werden die Eventhandler in die Events gesteckt. Mehr ist nicht nötig. Keine Funktionseinheit weiß von der anderen. Nur der Verdrahtungscode kennt sie.</p>
+<h2>Asynchrone Kommunikation</h2>
+<p>Die kleine Anwendung funktioniert nun zwar, aber synchron. Thomas Beispiel will ja aber gerade zeigen, wie einfach asynchrone Kommunikation mit Events ist. Was muss ich also tun, um meinen Nachbau ebenfalls asynchron zu machen?</p>
+<p>Asynchronizität erfodert keine (!) Veränderung an der Geschäftslogik oder im Frontend. Das halte ich für den wesentlichen Vorteil meines Vorgehens. Ich muss lediglich die Verdrahtung anpassen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/0e01b478b578ef9e.png" /></p>
+<p>Ich instanziere zwei kleine Standard-Funktionseinheiten, eine, die Events asynchron weiterleitet und eine, die Events zurück in den GUI-Thread bringt. Diese Funktionseinheiten schalte ich zwischen den Dialog und den Calculator. War die Verbindung z.B. bisher direkt</p>
+<p>dlg.CalcRequest = calc.Calc;</p>
+<p>so ist sie nun indirekt:</p>
+<p>dlg.CalcRequest = asyncProcessAsynchronously;
+async.OnAsynProcessing = calc.Calc;</p>
+<p>Die Standard-Komponenten sind natürlich auch Event-Based Components, d.h. Input erhalten sie über Eventhandler und Output generieren sie mittels Events.</p>
+<p>Das war´s. Mehr ist nicht zu tun. Die Geschäftslogik läuft jetzt im Hintergrund. Und die Ergebnisse kommen problemfrei im Vordergrund an. Wie das funktioniert? Egal :-) Das ist die Magie der Standard-Komponenten.</p>
+<h2>Fazit</h2>
+<p>Asynchrone Kommunikation mit Events ist eine gute Sache, da stimme ich Thomas zu. Aber man sollte diese Sache dann auch so einfach wie möglich halten. Das bedeutet für mich, dass ich in der Geschäftslogik (oder auch im Frontend) von technischen Klimmzügen, die die Asynchronizität herstellen, nichts sehen will. Geschäftslogik muss frei von diesem Concern sein. Der steckt am besten in wiederverwendbaren Standard-Komponenten. Event-Based Components bieten dafür eine gute Grundlage.</p>
+<h2>P.S.</h2>
+<p>Na, schön. Hier nun doch noch der Code für die Standard-Komponenten. Damit keiner sage, der sei bestimmt total kompliziert ;-)</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/59473be7a93dc2f4.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f02008742baa4f92.png" /></p>
+<p>Dieser Code ist wiederverwendbar. Er folgt nur dem Event-Based Component Muster für die Kommunikation. Deshalb kann er mit beliebigen Pins von anderen Komponenten zusammengesteckt werden, ohne dass die etwas davon merken. Das ist <em>Composability</em>.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2010-05-06):</p>
+<p>Einfach genial.</p>
+<p>Könnte man nicht noch den ContextSwitcher mit dem Asynchonizer zusammenpacken. Quasi wie ein Proxy-EBC für asynchrone Vorgänge?</p>
+<hr />
+<p><strong>Christina</strong> (2010-05-06):</p>
+<p>Hallo Ralf,</p>
+<p>es ist super, dass wir dir so eine tolle Vorlage liefern konnten, der entstandene Code ist wirklich toll. Aber warum nennst uns "build <strong>broker</strong>" ? Du weißt, doch, dass heutzutage Broker nicht sehr beliebt sind ;)</p>
+<p>Schöne Grüße aus München,
+eine Build-Brecherin</p>
+<hr />
+<p><strong>Jan Christian Selke</strong> (2010-05-06):</p>
+<p>Hallo Ralf,
+zuerstmal ein sehr gelunger Beitrag!
+In letzter Zeit habe ich leider etwas den Anschluss verloren... Für dieses "kleine" Szenario ist die Verdrahtung noch recht einfach, aber gibt es für komplexere schon eine Idee (oder sogar Umsetzung) für ein "autowiring"?
+Viele Grüße, Jan</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-05-06):</p>
+<p>@Anonym: Ja, den Context-Switcher könnte man zusammenpacken mit dem Asyncer.</p>
+<p>@Christina: Hab den Tippfehler korrigiert.</p>
+<p>@Jan Christian: Autowiring hab ich probiert. Siehe ebcbinder in einem der EBC-Artikel. Das skaliert auch nicht so dolle. Denn da weiß man nicht so recht, ob wirklich die richtigen Komponenten miteinander verbunden werden. Ist auch schwierig bei Standard-Komponenten.</p>
+<p>Eigentl hilft nur irgendeine Form von Designer. Daran grüble ich auf einem Hintergrundthread :-)</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>tboerner</strong> (2010-05-06):</p>
+<p>Hi Ralf,</p>
+<p>genau das hat bei EBC noch gefehlt: Wie mache ich dat Dingens asynchron. Jetzt ist die Palette erst mal komplett. Bleibt: Fehlende Tools. Denn: Wie Jan Christian richtig sagt, wird das bei vielen Komponenten unübersichtlich, auch wenn man Platinen bauen und somit größere Baugruppen bilden kann.
+Kennst du den Diagram Designer von Nevron? http://www.nevron.com/Products.DiagramDesigner.Overview.aspx
+Das ist ein Freeware-Plug-in für Visual Studio. Vielleicht kann man den irgendwie einbinden ...</p>
+<hr />
+<p><strong>Thomas Christian</strong> (2010-05-06):</p>
+<p>Hallo Ralf,</p>
+<p>ich muss Christina zustimmen, es ist wirklich ein guter Code entstanden. Die EBC-Variante sieht echt super aus.
+Ich habe auf unserem Blog die refaktorisierte Version meiner Variante veröffentlicht. <a rel="noopener" href="http://blog.aztec-project.org/2010/05/06/asynchrone-kommunikation-mit-dem-async-pattern-refactored/">Asynchrone Kommunikation mit dem Async-Pattern (Refactored)</a></p>
+<hr />
+<p><strong>Mike Bild</strong> (2010-05-06):</p>
+<p>Nun sehr schönes Beispiel. Ich finde das Rx Framework für diese Fälle aber auch ganz passend. Besonders bei Komponenten die (noch) nicht EBC sind.</p>
+<p>var dlg = new Form1();
+var asyncCalc = Observable.ToAsync((int number) =&gt; new Calculator.Calculator().Calc(number)); //sync to async
+dlg.CalcRequest += number =&gt; asyncCalc(number) //execute async
+                                    .ObserveOn(dlg) //ui thread synchronisation
+                                    .Subscribe(calculated =&gt; dlg.OnCalcResult(calculated.ToString())); //result to form</p>
+<p>Application.Run(dlg);</p>
+<p>Aber im Prinzip das gleiche. Viele Grüße, Mike</p>
+<hr />
+<p><strong>tboerner</strong> (2010-05-07):</p>
+<p>Hi all,</p>
+<p>Die asynchrone Berechnung einer Multiplikation ist eine feine Sache, weil sie zeigt, wo die Knackpunkte beim Asynchronen liegen. Notwendig ist die Asynchronizität hier aber sicher nicht. Unabdingbar ist die Entkopplung aber, wenn man einen FileSystemWatcher als EBC aufsetzt.</p>
+<p>public class FileWatcher
+{
+  public FileWatcher()
+  {
+    FileSystemWatcher filewatcher = new FileSystemWatcher();
+    filewatcher.Path = @"C:\PathToWatch";
+    filewatcher.Changed += new FileSystemEventHandler(filewatcher_Changed);
+    filewatcher.EnableRaisingEvents = true;
+  }</p>
+<p>void filewatcher_Changed(object sender, FileSystemEventArgs e)
+  {
+    this.OnChanged(e.Name);
+  }</p>
+<p>public Action OnChanged;
+}</p>
+<p>Wer dann den Event new FileSystemEventHandler(filewatcher_Changed) hart mit dem User Interface verdrahtet,</p>
+<p>dlg.OnFileWatcher = fileWatcher.OnChanged;</p>
+<p>erlebt sein blaues Exception-Wunder, denn die Überwachung läuft in einem anderen Thread als der UI-Controller.
+Hier hilft die EBC SyncContextSwitcher von Ralf sofort weiter. Die klemmt man einfach dazwischen</p>
+<p>filewatcher.OnChanged = syncFilewatcher.Process;
+syncFilewatcher.OnMessage = dlg.OnFileWatcher;</p>
+<p>und schon klappts.</p>
+<p>EBC ist das ABC :-)</p>
+<p>Tilman</p>
+<hr />
+<p><strong>Laurin Stoll</strong> (2010-05-08):</p>
+<p>Einmal mehr: Genial!
+Auf dieses snippet habe ich noch gewartet. Jetzt her mit den Tools <em>aufforderung an alle</em> :-)</p>
+<p>Frage am Rande: Ralf wieviele Blogs abonnierst du eigentlich? ;-)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-05-08):</p>
+<p>@Laurin: Ja, Aufforderung an alle! Nachdenken über EBC Standard-Komponenten. Und Nachdenken über ein Tooling, Stichwort Designer. Muss erstmal nicht super slick sein, sondern nur funktional.</p>
+<p>-Ralf</p>
+<p>PS: Blogs? ca. 80 hab ich abonniert. Aber die les ich natürlich nicht alle immer. Ich lass mich von den Beitragstiteln verlocken... ;-)</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-05-09):</p>
+<p>@Laurin</p>
+<p>Ich glaube es ist einfacher die Frage zu invertieren.. "welche Blogs abonniert Ralf <strong>nicht</strong>" oder alternativ "mit welchem Thema beschäftigt sich Ralf <strong>nicht</strong>?" ;-)</p>
+<p>Gruß,</p>
+<p>Paul</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-05-10):</p>
+<p>Hallo zusammen,</p>
+<p>finde die Beträge zum Thema EBC super und nutze es auch schon in einem Projekt.</p>
+<p>Zum Thema Designer für die Verdrahtung sollte noch gesagt werden, dass sich dieses Prinzip dem von LabView annähert und so das von dort bekannte Problem der Übersichtlichkeit mit sich bringt.</p>
+<p>LabView Probleme:
+Unübersichtlich bei großen Projekten, da sich eine Vielzahl von Drähten Kreuzen.</p>
+<p>Unübersichtlich bei vielen Komponenten, da immer nur ein Teil der Verdrahtung gesehen wird.</p>
+<p>Ansonsten bin ich schon sehr gespannt was sich Ralf da sonst noch einfallen lässt.</p>
+<p>mfg Thomas</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-05-10):</p>
+<p>@Thomas: Toll, wenn du EBCs schon einsetzt. Erzähl doch mal...</p>
+<p>Zur Unübersichtlichkeit: Ja, das ist ein grundsätzliches Problem. Am Ende kennen wir das ja aber und beherrschen es auch irgendwie. Die Elektrotechnik geht damit um. Prozessoren funktionieren - auch wenn die Schaltpläne unübersichtlich sein mögen.</p>
+<p>Also kriegt die Softwareentwicklung das auch hin. Busse helfen, Aggregationen helfen.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-05-10):</p>
+<p>@Ralf,</p>
+<p>natürlich können andere Bereiche (Elektrotechnik, Elektronik, Pneumatik, Hydraulik) mit der Komplexität aufwendiger Verdrahtungen/Verrohrungen umgehen. Sollte es uns Softwareentwicklern genügen nur zu anderen Bereichen aufschliessen oder muss das Ziel nicht eher eine Vorreiterrolle sein?</p>
+<p>Eine gute Verdrahtung kann ein erster Schritt zum Ziel sein, aber eben nur ein Schritt.</p>
+<p>Bei mir war für EBC ein bischen umdenken notwendig. Das Problem waren nicht starre Komponenten sondern die dynamischen. Forms, die dynamisch erzeugt werden, müssen auch dynamisch verdrahtet werden.</p>
+<p>Um dieser Unübersichtlichkeit zu begegnen hab ich mir mit "Managern" beholfen. Ein Manager dient mir als Steckdosenleiste. Er ist zentraler Anschluss der von Anfang an da ist und verdrahtet werden kann. Wird eine neue Form benötigt wird diese per Message an den Manager gesendet und dadurch eingesteckt. Alle Messages der Form werden durch den Manager gebündelt und weitergeleitet.</p>
+<p>Für alles Andere hat der EBC Ansatz bisher gut funktioniert.</p>
+<p>mfg Thomas</p>
+<hr />
+<p><strong>tboerner</strong> (2010-05-10):</p>
+<p>@Anonymer Thomas: Das mit der Steckdosenleiste möchte ich gerne in Code sehen.</p>
+<p>Tilman</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-05-10):</p>
+<p>@Tilman,</p>
+<p>das Ganze ist für eine Anwendung mit n Forms entstanden. Alle gemeinsam senden Daten an einen anderen Layer der Applikation.</p>
+<p>Benötigt der User eine neue Form, so löst er in der Rahmenform eine Message aus. Diese Message wird von einer "Formfabrik" empfangen, woraufhin diese eine Form retourniert. Um mit dieser Form Daten zu senden, muss sie noch verbunden werden. Das geschieht mit der Steckdose.</p>
+<p>public class Steckdose
+    {
+        //Implementiert den selben Sendepin wie das Objekt das den Request sendet
+        public event Action&gt; AnzeigeklasseErstellen;</p>
+<pre><code>    //Implementiert den selben Empfangspin wie das Objekt, welches das Ergebnis liefert
+    public void RequestAnzeigeklasseErstellen(Action ErstellenMessage)
+    {
+        //Lamdaausdruck der die Anfrage an den Ersteller weiterleitet, ...
+        AnzeigeklasseErstellen(Anzeige =&gt;
+        {
+            //... den Rückgabewert verbindet und ...
+            Anzeige.DatenSenden += nutzdatenMessage =&gt; this.DatenSenden(nutzdatenMessage);
+            //... dann weiterleitet
+            ErstellenMessage(Anzeige);
+        });
+    }
+
+    //Implemtiert die selben Pins wie das "eingesteckte" Objekt
+    public event Action DatenSenden;
+}
+</code></pre>
+<p>Ich hoffe das Ganze war hilfreich. Eigentlich ist es das Prinzip des man in the middle Angriffs nur für gute Zwecke genutzt.</p>
+<p>mfg Thomas</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-05-10):</p>
+<p>@Thomas: Warum sollte eine FormFabrik eine Form an den Initiator der Herstellung zurücksenden? Der will ja keine Methoden darauf aufrufen.</p>
+<p>Ich hätte angenommen, dass die Initiator-Form an eine Steckdose angeschlossen ist. Und in diese Steckdose schiebt die FormFabrik die neu erzeugte Form.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>nsteenbock</strong> (2010-05-14):</p>
+<p>Hallo Ralf,</p>
+<p>erst einmal vielen Dank für die ganzen Beiträge über Event Based Components. Hat bei mir zwar sehr lange gedauert, bis ich wirklich Zugang zu dem Thema gefunden habe, aber jetzt ist der Groschen so langsam gefallen. Nicht zuletzt durch das Beispiel in diesem Beitrag. Klasse!</p>
+<p>Eine Sache gefällt bzw. gefiel mir aber noch nicht ganz: Der Verdrahtungswaufwand zwischen Async-Komponente, der eigentlichen Komponente und schliesslich Sync-Komponente. Dadurch verstreut man natürlich haufenweise Code über die gesamte Anwendung, die ja eigentlich eher zu einem Aspekt gehört.</p>
+<p>Was hältst Du von generischen Platinen?</p>
+<hr />
+<p>public class AsyncOperation<TIn, TOut>
+{
+  Asynchronizer<TIn> async = new Asynchronizer<TIn>();
+  SyncContextSwitcher<TOut> sync = new SyncContextSwitcher<TOut>();</p>
+<p>public Action<TIn> Execute
+  {
+    get { return async.ProcessAsynchronously; }
+  }</p>
+<p>public Action<TOut> DeliverResult
+  {
+    set { sync.OnMessage = value; }
+  }</p>
+<p>public AsyncOperation(Action<TIn> input, ref Action<TOut> output)
+  {
+    async.OnAsyncProcessing = input;
+    output = sync.Process;
+  }
+}</p>
+<hr />
+<p>Das ist natürlich noch weit weg von AOP, da ich immer noch Code des Aspekts "überall rumliegt":</p>
+<hr />
+<p>var asyncCalc = new AsyncOperation<int, int>(calc.Calc, ref calc.DeliverCalcResult);</p>
+<p>dlg.CalcRequest = asyncCalc.Execute;
+asyncCalc.DeliverResult = dlg.OnCalcResult;</p>
+<hr />
+<p>Finde ich so aber auf jeden Fall schon etwas übersichtlicher ;) Und wenn ich mal merke, dass ich bei diesem Aspekt "AsyncOperation" noch eine weitere EBC hineinverdrahten möchte, dann kann ich das ganz einfach tun. Ich muss meinen Code nirgendwo sonst anpassen :)</p>
+<p>Viele Grüße,</p>
+<p>Nils</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-05-14):</p>
+<p>@Nils: Ich kann verstehen, wenn du den Code mit dem Aspekt nicht mehr ganz so gut lesbar findest. Das ist er auch nicht. Das ist überhaupt kein imperativer Code, der mehr als 2-3 Drähte zieht.</p>
+<p>Deshalb ist es am Ende gar nicht wichtig, wie der Code aussieht. Entscheident ist nur, dass er simpel und regelmäßig ist. Dann kann er leicht generiert werden. Denn das soll sein. Verdrahtungscode schreiben wir grad mal jetzt von Hand, weil wir noch keinen Designer für EBCs haben. Aber der kommt. Keine Sorge. Und dann gibt es die Verdrahtung nur noch binär generiert in einer Assembly. Unsichtbar.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-06-09):</p>
+<p>Hallo Ralf,</p>
+<p>der Artikel ist wirklich sehr gut.
+Da ich mich aber gerade erst in das Thema einarbeite, habe ich noch ein paar grundsätzliche Fragen zum Verständnis:</p>
+<p>Kann man bzgl. EBCs sagen, dass diese immer ein Eingangs- sowie ein Ausgangsobjekt haben (beim Calculator jeweils int)?
+Denn wenn dem so wäre, könnte man für EBCs doch ein generisches Interface definieren, welches Aufruf und Finish-Event definiert?
+Durch eine weitere Kapselung deiner Klassen Asyncronizer und SyncContextSwitcher bräuchte man dann lediglich die vom o.g. Interface abgeleitete EBC-Instanz übergeben, die Events würden im Hintergrund verdrahtet werden, der primäre Code würde noch etwas übersichtlicher werden, da nur noch zwei Events (Aufruf und Rückgabe) verdrahtet werden müssten.</p>
+<p>Ist das in deinen Augen soweit noch EBC-kompatibel?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-06-09):</p>
+<p>@Anonym: EBC haben kein Ein/Ausgangs"objekt", sondern höchstens einen E bzw A "Pin". Objekte fließen dann über diese Pins als Daten.</p>
+<p>Aber auch mit den Pins ist es nicht so, dass es da immer genau einen von jeder Sorte gibt. Eine EBC kann auch 15 Eingangs- und 13 Ausgangspins haben. Wie ein Hardware IC auch beliebig viele Beinchen haben kann.</p>
+<p>In einfachen Architekturen mögen allerdings viele EBC nur je einen E und einen A Pin haben. Aber das ist ein Sonderfall.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Manuel</strong> (2010-10-05):</p>
+<p>Hi, hat jemand mal versucht das per WPF zu realisieren? Mein Problem ist der Einstiegspunkt der Applikation an den man in WPF ja nicht so komfortabl dran kommt wie in der WinForms Anwendung (oder ich weis zumindest nicht wie)</p>
+<p>Ich habe ein MainWindow welches einen Navigation Frame enthält. Den Content des Frames möchte ich je nach Aktion durch verschiedene Pages austauschen.</p>
+<p>Mein Code für das MainWindow sieht im Moment so aus:</p>
+<pre><code>public partial class MainWindow : RibbonWindow
+{
+    public Action NavigateToNewAnalysis;
+
+    public MainWindow()
+    {
+        InitializeComponent();
+
+        // Event-Handling der Applikation...
+        LogicBoard.Setup(this);
+    }
+
+    private void btnStartNew_Click(object sender, RoutedEventArgs e)
+    {
+        if (this.NavigateToNewAnalysis != null)
+        {
+            this.NavigateToNewAnalysis(this.navigationFrame.NavigationService);
+        }
+    }
+}
+</code></pre>
+<p>Die LogikBoard::Setup sieht bei mir dann so aus:</p>
+<pre><code>    public static void Setup(MainWindow mainWindow)
+    {
+        var newAnalysis1 = new NewAnalysis();
+        var newAnalysis2 = new NewAnalysis2();
+
+        newAnalysis1.NextPage = delegate(NavigationService navService)
+        {
+            navService.Navigate(newAnalysis2);
+        };
+
+        mainWindow.NavigateToNewAnalysis = delegate(NavigationService navService)
+        {
+            navService.Navigate(newAnalysis1);
+        };
+    }
+</code></pre>
+<p>Ist das okay? Hat jemand einen besseren Ansatz?</p>
+<p>Gruß,
+Manuel</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-01-31):</p>
+<p>Hallo Ralf,</p>
+<p>das macht man das doch schon die ganze Zeit in ähnlicher Weise z.B. mit INotifyPropertyChanged, oder findest Du nicht? Einzig der benachrichte muss hier nochmal explizit nach dem Wert fragen, wenn es denn ein Wert ist der ihn interessiert. Irgendwie kann ich aber jetzt noch nicht wirklich etwas neues in dem Code erkennen als dass man dafür nun "ECB" als neues Kunstwort aus der Taufe heben müsste, denn im Prinzip ist das doch nur eine - zugegebenermaßen sehr elegante - Implementierung eines Observer-Pattern... http://msdn.microsoft.com/en-us/library/ee817669.aspx Microsoft nennt seine Variante dann im speziellen Event Pattern. Übersehe ich hier etwa einen markanten Unterschied bis auf nicht benötigte Schnittstellendeklarationen bei der Nutzung von Events (Klassisch halt in Erweiterungen von EventArgs)? Wie gesagt finde ich Deine Art das im Code zu Nutzen elegant aber auch wenn die Art der Implementierung/Nutzung gelungen ist, so sehe ich das hier in naher Zukunft allenfalls ein ein "Snippet" in VS. Schon mal versucht das einfach mit einem UML-Tool zu erschlagen, wenn man schon nach einem Editor sucht?</p>
+<p>Vielen Dank für die Inspiration bei der Optimierung von Code und ich hoffe, dass mein Kommentar nicht zu "bissig" rüberkommt... ;-)</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-05-21):</p>
+<p>Es wäre interessant zu sehen, wie der RequestWithResponsePin im Zusammenhang mit C# 5.0 async/await zusammen spielt und asynchrone Verarbeitung bereit stellt, ohne die Geschäftslogik in Even Handler auseinander zu reißen</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

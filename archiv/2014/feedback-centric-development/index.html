@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Feedback-Centric Development - The One Hacker Way — ralfw.de Archiv</title>
+<meta name="description" content="Erik Meijer got something right in his talk &quot;One Hacker Way&quot;. There&#x27;s a lot of bashing and ranting... but at the core there also is a precious diamond to be found. It&#x27;s his admonit">
+<link rel="canonical" href="https://ralfw.de/archiv/2014/feedback-centric-development/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Feedback-Centric Development - The One Hacker Way — ralfw.de Archiv">
+<meta property="og:description" content="Erik Meijer got something right in his talk &quot;One Hacker Way&quot;. There&#x27;s a lot of bashing and ranting... but at the core there also is a precious diamond to be found. It&#x27;s his admonit">
+<meta property="og:url" content="https://ralfw.de/archiv/2014/feedback-centric-development/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>Feedback-Centric Development - The One Hacker Way</h1>
+    <div class="doc-meta"><span>16. Nov. 2014</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2014/11/16/feedback-centric-development---the-one-hacker-way.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2014/feedback-centric-development/</code></span></div>
+    <div class="art"><p>Erik Meijer got something right in his talk "One Hacker Way". There's a lot of bashing and ranting... but at the core there also is a precious diamond to be found. It's his admonition to be driven by feedback.</p>
+<p>As software developer we should focus on production code - and let ourselves be guided by feedback.</p>
+<p>How true! How simple! But contrary to the audience's belief it's no easy feat. He got much applause when he suggested, attendees who had not committed code recently should leave. People liked him extolling the virtues of "hacking", of focusing on code - instead of on fuzzy stuff like a process or even talking or thinking. No, it's the code, stupid!</p>
+<p>Unfortunately they did not get the implications of this, I guess. And Erik Meijer did not tell them what that really, really means. So I'll try to describe how I see what truly and honestly focusing on code and feedback means.</p>
+<h2>Purpose</h2>
+<p>I'm sorry, but before I get to code, we need to lay a foundation. We need to be very clear about why we should produce code in the first place.</p>
+<p>Code is a tool for our customers. Customers want to use software to achieve something, to reach a goal.</p>
+<p>In order to be helpful, code needs to fulfill certain requirements. I see three basic requirements:</p>
+<ul>
+<li>Software needs to be functional, e.g. a calculator has to provide addition and multiplication.</li>
+<li>Software needs to be efficient, e.g. a calculator has to add and multiply much fast.</li>
+<li>Software needs to be evolvable, e.g. a calculator needs to be adaptable to changing functional and efficiency requirements, maybe it has to also provide sine operation or has to become even faster.</li>
+</ul>
+<p>Functional and efficiency requirements define the behavior of software which is produced by logic (for me that's transformational statements, control-flow-statements, and hardware access). Evolvability requires a certain structure which is spanned by modules of several sizes (for me that's function, class, library, component, micro-service).</p>
+<p>What Erik Meijer means, when he favors hacking over some obscure agile way of development is, that software developers should produce code in order to create appropriate behavior and structure.</p>
+<p>And what he means, when he says we should look for feedback is, that we should check whether the code written already delivers on the behavioral and structural requirements.</p>
+<h2>Being Feedback-Centric</h2>
+<p>Now for the fun part: If Erik Meijer is serious about feedback, he needs to emphasize that it has to be sought frequently. In fact the central and recurring question everything is revolving on is:</p>
+<p>How can I get feedback as quickly as possible on my code?</p>
+<p>That's what I call feedback-centric. Yes, we should focus on code. But code without feedback has no value. So we should seek feedback "at all costs". As soon as possible. Frequently. From the most relevant source.</p>
+<p>Software development thus becomes a high frequency iterative activity:</p>
+<ol>
+<li>Code</li>
+<li>Check (gather feedback)</li>
+<li>Back to 1. for fixing any deficit or add more behavior/structure</li>
+</ol>
+<p>Feedback-centric development thus is code-first development. I like. Don't you? As Erik Meijer said: Forget about test-first programming or even TDD. It's the production code which rules!</p>
+<h2>Tiny Steps - The No. 1 Implication</h2>
+<p>If you really, really buy this - it's about code and about feedback -, then you also have to buy the implication: Coding has to progress in tiny steps.</p>
+<p>Because only tiny steps can get you frequent feedback. If you hack away for an hour or a day without feedback, then you're coding pretty much in the dark. Truely frequent feedback is not more than a couple of minutes away.</p>
+<p>When you look at some requirements you have to ask yourself: What can I do to get feedback in the shortest possible amount of time? Can I feedback in 10 seconds, 1 minute, 5 minutes, 15 minutes, 30 minutes?</p>
+<h2>Not Only Code - The No. 2 Implication</h2>
+<p>The ultimate feedback of course is on code. So if you can feedback on some code in 1 minute go for it.</p>
+<p>At least initially, though, it's even faster to get feedback without any code. Producing code and getting some stakeholder to check it for conformance to requirements often takes longer than simply asking a question.</p>
+<p>Code should not be a question, but a statement of some understanding - even if that turns out to be wrong.</p>
+<p>So as long as you've questions or are not very sure to understand what the requirements are... do not start hacking. Rather ask questions, e.g. by talking or by presenting some test cases you made up.</p>
+<h2>Incremental Steps - The No. 3 Implication</h2>
+<p>Being driven by code and feedback also means, you can't just programming any code. The code you want to write is, well, code you can get feedback on. That means it needs to be code some stakeholder can relate to.</p>
+<p>Feedback-centric development thus means producing code incrementally. Code needs to make a difference, needs to produce some possibly very small additional value. And if that's indeed the case only a stakeholder can tell you.</p>
+<h2>Automatic Tests - The No. 4 Implication</h2>
+<p>Once you've identified a tiny increment you can start coding. That's just fine. No need to write a test first. What a relieve, isn't it? ;-)</p>
+<p>Then, after maybe 3 minutes of writing production code, you run the code to give yourself a first round of feedback. Since you've asked a lot of questions you're somewhat of an authority on the requirements - but of course by no means ultimately decisive. The right to accept only lies with stakeholders.</p>
+<p>But how do you run the code and check it for deficiencies? You can do that manually. That's just fine. But how frequent can you then check?</p>
+<p>Not checking the behavior for correctness with automatic tests is a violation of the core principle of feedback-centric development. See, it's not just code, but also fastest feedback possible. You have to balance code production and feedback generation.</p>
+<p>That means, you need to write automatic tests. Do it after you wrote your production code. That's fine. Since you only added a tiny increment there is not much to test. At least do it for every error you encounter. Reproduce the error with an automated test, then fix it. Rerun the test to get feedback if your fix actually fixed it.</p>
+<p>Automatic tests have two feedback purposes:</p>
+<ul>
+<li>whether the code you just wrote delivers on the required behavioral increment</li>
+<li>whether other code still delivers on its behavioral requirements (regression tests)</li>
+</ul>
+<p>TDD might seem to provide no benefit. But it should be clear now, that test-after, i.e. for feedback generation after hacking is a must. It's a sine qua non if you're serious about the One Hacker Way.</p>
+<h2>Testable Structure - No. 5 Implication</h2>
+<p>Now that automatic testing finally is inevitable even for the most eager hacker ;-) it should be obvious that not just any code structure will do. The code must be structured in a way as to be easily testable.</p>
+<p>That even means, each increment should be testable in isolation. Otherwise the feedback would not be precise - which would be a violation of a fundamental principle we started out with.</p>
+<p>What this leads to is... refactoring. Finally! Because in TDD refactoring is clearly optional. Yeah, it's a prescribed step after the test went green - but look at the TDD examples out there. They are a testament to how easy it is to jump this step.</p>
+<p>No, TDD does not (!) exert any force to make a developer refactor her code. Everyone rather writes the next red test.</p>
+<p>But if you're serious about the One Hacker Way, i.e. feedback-centric development, then you have to provide yourself with quick and precise feedback. And that (!) requires you to structure the code in a way to make it possible.</p>
+<ol>
+<li>Code some increment</li>
+<li>Write a test to get feedback on just that increment; if that's not possible, refactor enough to get it working</li>
+</ol>
+<p>Feedback-centric development makes you the first consumer of your code. Eat your own structural dog food and see if it's palatable, i.e. if you can easily test the logic hanging in that structure.</p>
+<h2>Structural Review - No. 6 Implication</h2>
+<p>Manual or even automatic tests just provide feedback on behavior. But as stated above it's not just behavioral requirements the production needs to deliver on. Customers want us to write code in a sustainable way. Nobody knows what kind of changes come around in the next weeks, months, years. So our production code needs to be prepared; it needs to be evolvable.</p>
+<p>Evolvability is a quality of the structure of the code. Traditionally it's produced by some kind of modularization. Recently some more principles have been added to reach this goal under the name of Clean Code.</p>
+<p>However you call it one thing is for sure: evolvability is hard to measure. Automatic tests and the customer/user can comparatively easy give feedback on functionality and efficiency. But whether evolvability is high enough... they can't tell. Especially because evolvability cannot be stated in a requirements document.</p>
+<p>Customers simply assume software to be infinitely malleable and live forever. Mostly, at least to my experience.</p>
+<p>That means, tools measuring certain structural metrics cannot undoubtedly truth about the structural quality of software. At best the might hint at certain spots where it seems evolvability is lower than desired.</p>
+<p>The ultimate feedback on evolvability comes only from... developers. If developers have a hard time to change a codebase, then it's hard to evolve. That simple.</p>
+<p>How then can feedback from developers as authorities on evolvability be gathered frequently?</p>
+<p>Firstly, the feedback is generated implicitly by adding the next increment. If the developer trying that find it difficult, he just has generated feedback - and can act on it. Refactoring is fixing an evolvability deficiency when it arises.</p>
+<p>Unlike with TDD where there is no feedback on structure generated, and refactoring is recommend in a broad brush manner, in feedback-centric development refactoring always has a clear purpose. It's done when necessary to enable the next increment.</p>
+<p>Evolvability is too important to leave it to a single developer, though. Sensitivity to structural quality is very unevenly distributed among developers for several reasons. That's why is helpful to get feedback from more than one developer as soon as possible.</p>
+<p>Enter pair programming. During pair programming it's possible to focus on behavior and structure at the same time. Four eyes see more than two. So if you haven't been convinced of pair programming so far, but like the idea of The One Hacker Way... now is the time to start pair programming. It's a valuable technique to get more frequent feedback on code structure.</p>
+<p>Equally valuable is of course the age old technique of doing code reviews. I don't think they should be replaced by pair programming. Code reviews go beyond the four eyes of the developers who wrote the code. More eyeballs simply can spot more structural flaws. Also a group can check if the structure matches a common understanding of how code should be modularized.</p>
+<p>Even with pair programming and code reviews I feel there is something missing, though. They generate feedback on structure with different frequencies and from different perspectives. But the feedback of both is, hm, somewhat artificial.</p>
+<p>Improving the structure to enable an automatic test carries a certain urgency. Refactoring is really needed to be able to continue according to the principle of frequent feedback. Pair programming and code reviews don't "force" structural improvement in such a way.</p>
+<p>That's why I suggest another technique I call code rotation (or maybe story rotation). Core rotation means, some requirement should not be fully implemented by a single developer or even pair. If coding an increment takes a day, for example every 90 minutes the eyeballs looking at it should be completely exchanged. Maybe developer A and B start, then C and D continue etc. Yes, A and B should be replaced by a fresh pair. There is a quick handover - and then the new pair has to get along alone with the codebase.</p>
+<p>And that's the point: Only if the developer(s) working on a requirement change completely will the be honest feedback about the structure. If even one dev of the first pair remains for a second tour on the code the feedback is "contaminated". We're so prone to lie to ourselves when it comes to our own code... This can only be avoided by letting fresh eyeballs look at it.</p>
+<p>Sometimes I employ this technique in trainings. I let developers start to work on an exercise - and then after a while they hand their code over to their neighbour on the right. You can imagine that this is no delight for anyone ;-) But why? It's this dissonance that needs to be removed from coding. It stems from non-obivous code structures.</p>
+<p>Bottom line: Evolvability is of great importance. Unfortunately it's hard to measure. So we need to actually look at code and work with it to get a feeling for its quality. Therefore we need to establish a hierarchy of feedback cycles:</p>
+<ul>
+<li>Make every increment testable - refactor as needed. Frequency: continuously</li>
+<li>Make code understandable to your pair programming partner - refactor as needed. Frequency: minutes</li>
+<li>Make code understandable to your successor - refactor as needed. Frequency: hours</li>
+<li>Make code understandable for the whole team - refactor as needed. Frequency: day(s)</li>
+</ul>
+<h2>Software Design - No. 7 Implication</h2>
+<p>Switching pairs during development of a feature is a tough call. Sure you want to avoid it. But why? Too much context switch? Takes too long to find your way around the code of other devs to be able to continue their work?</p>
+<p>Yeah, right. That's all difficult. But you can choose: experience that now - or sometime in the future. And it should be obvious that it becomes harder the longer it takes until somebody else looks at your code.</p>
+<p>In order to make code rotation as smooth as possible another technique is needed. Frequent feedback gets another prerequisite: design.</p>
+<p>Yes, I believe the reason for explicit design now should becomes apparent. Explicit design done by a group of devs or even the whole team helps to understand the code. Also it decreases the need for refactorings later.</p>
+<p>Some modularization cannot be avoided to be done ad hoc during hacking. But quite some modularization can be done before even starting to code. It's a part of developing a solution. It's the "thinking before coding". And it has value because it makes it easier for developers to switch working on the codebase.</p>
+<p>So forget about design "because that's how you do software development". Also forget about not doing design "because that's how real programmings code."</p>
+<p>Explicit design is a means to an end. It's purpose is to develop a common understanding of easily evolvable coarse grained structures - in order to increase the frequency of feedback. Because you don't want to wait years to realize you're sitting on a monolith, if the next developer can tell you in a couple of hours he has a hard time extending what you left behind.</p>
+<h2>Continuous Deployment - No. 8 Implication</h2>
+<p>Ultimate feedback only comes from those who require your code to do their job. That means it must be very, very easy to give your code to them. The closed the code to the final usage environment the better.</p>
+<p>That's why continuous deployment is so important for any software project. We need it to be a no brainer as much as possible to deploy code so we can ask just about anybody for feedback at any time.</p>
+<p>Think about A/B deployment, think about deploying each increment separately, think about deploying only to a subset of customers... The more freedom and options you have, the better for gathering feedback.</p>
+<h2>In Closing</h2>
+<p>At first I did not like Erik Meijer's talk much. But once I saw through his polemic fireworks I realized how much truth can be found in what he said. Never mind his suggestion to treat developers as top athletes. Never mind him calling Jeff Sutherland a satan.</p>
+<p>Let's stick to the title, the core of his message: We need to focus on code - because only that's delivering value. And we need integrate feedback into our work much more seriously - because only then we know if we're actually heading in the right direction with our code.</p>
+<p>Forget about hype, buzzwords, and any elaborate belief system like "Agile" or "Scrum" etc. Yes, like the Buddhists are saying: "If you meet the Buddha on a road, kill him." We need to kill our Buddhas, the gurus, the dogmas. Let's do away with cargo cults.</p>
+<p>Instead focus on the essential: production code. And get as much feedback as possible. Truely become a closed system on many levels of your daily practice and your organization.</p>
+<hr />
+<p><em>PS: If you happen to recognize one of your favorite "agile practices" in my above description, congratulations. Of course there is value in some of them. We don't need to throw the baby out with the bath water. My point, though, is to justify such practices starting just from production code and the need for feedback. Nothing more, nothing less. No buzzwords, no argumentum ad verecundiam.</em></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

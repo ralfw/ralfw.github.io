@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>In Abhängigkeit refaktorisieren — ralfw.de Archiv</title>
+<meta name="description" content="Refaktorisieren ist überbewertet – zu der Überzeugung gelange ich immer mehr. Refaktorisieren ist eine Symptomkur, die das System, das Paradigma, das zu dem Zustand geführt hat, de">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/in-abhangigkeit-refaktorisieren/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="In Abhängigkeit refaktorisieren — ralfw.de Archiv">
+<meta property="og:description" content="Refaktorisieren ist überbewertet – zu der Überzeugung gelange ich immer mehr. Refaktorisieren ist eine Symptomkur, die das System, das Paradigma, das zu dem Zustand geführt hat, de">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/in-abhangigkeit-refaktorisieren/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>In Abhängigkeit refaktorisieren</h1>
+    <div class="doc-meta"><span>25. Dez. 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/12/in-abhangigkeit-refaktorisieren.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/in-abhangigkeit-refaktorisieren/</code></span></div>
+    <div class="art"><p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a81cc03ff77461b7.png" /></p>
+<p>Refaktorisieren ist überbewertet – zu der Überzeugung gelange ich immer mehr. Refaktorisieren ist eine Symptomkur, die das System, das Paradigma, das zu dem Zustand geführt hat, den sie auflösen soll, nicht verlässt.</p>
+<p>Vielleicht ist das auch der Refaktorisierung selbst nicht anzukreiden. Das mag sein. Refaktorisierung bedeutet dann nicht nur eine funktionserhaltende Umstrukturierung, sondern genauer eine paradigmatische funktionserhaltende Umstrukturierung.</p>
+<p>Dann ist es denen anzukreiden, die die Refaktorisierung – speziell die objektorientierte Refaktorisierung - so vertreten, als sei sie der Schlüssel zum Glück. “Schaffe dir die Refaktorisierungsmuster drauf, schaffe dir ein Tool wie ReSharper an – und schon ist der Weg aus dem Brownfield abgesteckt.” Oder auch: “Folge treu dem Dreischritt red-green-refactor und ein Platz auf der ewig grünen Wiese ist dir gewiss.”</p>
+<p>Bullshit!</p>
+<p>Selbstverständlich hat Refaktorisierung einen Wert. Sie ist ein Tool, das man zur rechten Zeit einsetzen kann und soll. Mein Eindruck ist nur, dass die jedem Tool eigene Begrenzung beim Lob der Refaktorisierung vergessen wird. Wo hat je ein Artikel gesagt: “Stopp! Ab hier hilft Refaktorisierung nicht weiter, um Evolvierbarkeit zu erreichen.” oder “Refaktorisierung macht nur in diesem oder jenem Rahmen Sinn.”</p>
+<p>Klar, es wird schonmal erwähnt, dass man vorsichtig sein solle und Refaktorisierung nicht zum Selbstzweck werden darf. Refaktorisierung solle vor allem helfen, einen anderen Zweck zu erfüllen; refaktorisiere dann, wenn eine Veränderung es gebietet und nicht “auf Vorrat”.</p>
+<p>Damit ist aber keine Grenze des Werkzeugs Refaktorisierung aufgezeigt, sondern nur die Intensität seiner Anwendung.</p>
+<p>Mir tritt nun aber immer deutlicher eine solche Grenze ins Auge. Die üblicherweise beschriebene Refaktorisierung, die ReSharper-Refaktorisierung, hat ihre Grenze in der Objektorientierung. Refaktorisierung kann nur mit den Mitteln der Objektorientierung arbeiten. Der Code nach der Refaktorisierung ist immer noch objektorientiert.</p>
+<p>Wie gesagt: Der Refaktorisierung selbst kann man das nicht anlasten, aber ihren Proponenten, die diese Grenze nicht aufzeigen – und sei es aus den löblichsten Beweggründen.</p>
+<p>Eigentlich müsste ich deshalb wohl sagen: Objektorientierung ist überbewertet. Entzündet haben sich meine folgenden Gedanken aber an der Refaktorisierung. Deshalb habe ich es eingangs anders formuliert.</p>
+<p>Und was stört mich nun an der Refaktorisierung bzw. am OO-Paradigma?</p>
+<p>Mich stören die Abhängigkeiten.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/378dc2f4de876589.png" /></p>
+<p>Man <a rel="noopener" href="http://de.wikipedia.org/wiki/Objektorientierung">mag lesen</a>, Objektorientierung sei die Summe aus Kapselung plus Polymorphie plus Vererbung. Das ist natürlich nicht falsch, selbst wenn man sich trefflich darüber streiten kann, ob denn nun Vererbung ein unverbrüchliches Element der Objektorientierung sei.</p>
+<p>Das Problem solcher Beschreibung von Objektorientierung ist nicht, was sie als Eigenschaften nennt, sondern das, was sie auslässt. Sie lässt – ganz natürlicherweise, übrigens – aus, das was der Objektorientierung zugrunde liegt. Sie lässt ihr Erbe aus. Das liegt in der prozeduralen Programmierung. Und noch tiefer liegt es in der von-Neumann-Maschine.</p>
+<p>Es gibt keine wirkliche Einheit von Daten und Funktionen in unseren Rechnern, wie Objekte sie vorgaukeln. Zwar liegen Daten und Funktionen im grundsätzlich selben Speicher (Prozessadressraum), doch darin sind sie sauber getrennt. Das ist heute immer noch so wie zu Zeiten von Modula, C, Fortran, Assembler.</p>
+<p>Objekte sind daher nur moderne Formen von C-Strukturen oder Pascal-Records. Und Methoden rufen sich immer noch mit einer call-Maschinencodeanweisung auf. Ob die zu einer virtuellen oder realen Maschine gehört, ob der Sprung direkt oder über eine Dispatch-Tabelle geht… das ist einerlei.</p>
+<p><strong>Objektorientierung abstrahiert von der notwendigen Trennung von Daten und Funktionen im Speicher. Das ist eine gute Sache. Aber das ist eben nicht alles. Sie bleibt dem Abhängigkeitsdenken, dem Callstack-Denken verhaftet. Wie Methoden einander nutzen, unterscheidet sich nicht davon, wie weiland C-Funktionen sich genutzt haben.</strong></p>
+<p>Das halte ich für ein Problem. Hier sehe ich die Grenze für die Nützlichkeit der Objektorientierung (wie der prozeduralen Programmierung oder auch Anteile der Funktionalen Programmierung).</p>
+<p>Man mag dagegen halten, dass so die Welt sei und doch auch soviel machbar sei und funktioniere. Klar. Das ist unzweifelhaft.</p>
+<p>Bis zum Beginn des 19. Jahrhunderts war aber auch viel machbar und hat funktioniert. Stonehenge, Pyramiden, Petra, Chinesische Mauer, Petersdom… all das wurde vor allem mit “menschlicher und tierischer Kraft” geschaffen. Die Werkzeuge haben sich in 5000 Jahren natürlich verändert. Was den Erbauern von Stonehenge noch sehr schwer gefallen war und Jahrzehnte gedauert hat, war für die Baumeister des Kölner Doms kein wirkliches Thema mehr.</p>
+<p>Doch was ist dieser Fortschritt angesichts dessen, was dann ab dem 19. Jahrhundert passiert ist? Dampfmaschine, Explosionsmotor und Elektromotor haben das Bauen revolutioniert - genauso wie die Fortschritte in den Materialien Stahl, Beton, Glas, Kunststoff.</p>
+<p>Alle Verbesserungen innerhalb des Paradigmas (oder Denkhorizonts) “menschliche und tierische Kraft” (oder “Materialien aus der Natur”) konnten nicht vorausahnen lassen, was passierte, als man dieses Paradigma sprengte.</p>
+<p>Innerhalb der Grenzen von “menschliche und tierische Kraft” war viel möglich, sehr viel – arrogant wäre jedoch der gewesen, der behauptet hätte, damit sei die Grenze des Machbaren erreicht, der Gipfel der Baukunst erklommen.</p>
+<p>So sehe ich es mit der Objektorientierung. Mit ihr im Speziellen und im Rahmen des zugrundeliegenden “Abhängigkeitsparadigmas” für Funktionalitätsnutzung ist viel möglich, sehr viel. Arrogant wäre jedoch der, der behauptete, damit sei die Grenze des Machbaren (oder Wünschenswerten), der Gipfel der Programmierkunst erreicht. Man müsse nur lernen, Objektorientierung sauber zu betreiben und schon sei nur noch der Himmel die Grenze.</p>
+<p>I beg to disagree.</p>
+<p>Menschliche und tierische Kraft und natürliche Baumaterialien waren und sind genauso beschränkend wie das “Abhängigkeitsparadigma” der prozeduralen und objektorientierten Programmierung. Und beim hochgelobten Refaktorisieren zeigt sich das für mich sehr deutlich. Hier ein Beispiel mit einer Folge von Anweisungen in einer Methode in einer Klasse:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c04f3f2c70b33221.png" /></p>
+<p>Was würde daraus durch Refaktorisierung? Mit “Extract Method” würden Anweisungsgruppen ausgelagert in eigene Methoden:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/086b72da41b7f5ea.png" /></p>
+<p>Und mit “Extract Class” würden Methoden dann nochmal in separate Klassen rausgezogen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/ea408069138ebec4.png" /></p>
+<p>Für einen Freund der Objektorientierung und des Refactoring sieht das alles normal aus. Prinzipien wie SPR und SLA werden in Anschlag gebracht und treiben eine differenzierte Struktur aus. Statt alles in einer Methode abzufrühstücken, wird auf kleinere Funktionseinheiten verteilt. Die LOC pro Methode sinken, die LOC pro Klasse sinken, die Cyclomatische Komplexität sinkt. Alles scheint in Butter.</p>
+<p>Ich sehe das anders. Denn ich sehe eine Vervielfältigung von Abhängigkeiten. Vor der Refaktorisierung war der Code schlecht zu verstehen, weil er Anweisungen auf verschiedenen Abstraktionsebenen enthielt und verschachtelt war; dafür stand er “auf einem Haufen”. Nach der Refaktorisierung ist der Code aber immer noch schlecht zu verstehen. Denn erstens sind die algorithmischen Verschachtelungen nicht aufgehoben, sondern nur verschleiert worden. Und zweitens sind zu ihnen Indirektionen in Form von Abhängigkeiten getreten. Der vorherige Haufen ist jetzt nur kein Haufen mehr, sondern in alle Winde zerstreut.</p>
+<p>Der refaktorisierte Code ist selbstverständlich im OO-Paradigma geblieben. Die Abhängigkeiten sprießen. Und weil sie sprießen, muss nun auch noch über Praktiken wie IoC und Tools wie DI Container nachgedacht werden.</p>
+<p><strong>Etwas übertrieben gesagt: Die Objektorientierung ist eine so komplizierte Technologie, dass man sie nicht ohne eine Vielzahl von begrenzenden und stützenden Prinzipien, Praktiken und Tools einsetzen kann. Damit ist sie mehr ein Problem denn eine Lösung.</strong></p>
+<p>Mit so einem Statement mache ich mich natürlich unbeliebt. Das ist mir klar. Aber ich habe lange drüber nachgedacht und spreche es daher nicht leichtfertig aus. Die wahren Gewinne, die nur oder zumindest vor allem durch Objektorientierung erzielt wurden in der Softwareentwicklung, sind mir zu gering, als dass ich sagen wollte, sie sei eine einzige Erfolgsgeschichte. Und das sage ich, obwohl (oder weil?) ich seit 1990 objektorientiert programmiere.</p>
+<p>Natürlich gibt es Gewinn durch Objektorientierung. Aber ich sage mal provokant: Wer hat je dagegen die Verluste durch Objektorientierung aufgerechnet? Ist die Bilanz wirklich positiv. Ich habe Zweifel.</p>
+<p>Wie gesagt: Irgendwie funktioniert ja die OO-Software. Keine Frage. Aber wenn es heute unwartbare Systeme gibt, dann sind das Anwendungen auf OO-Basis. Man mag einwänden, das läge daran, dass ja vor allem mit OO-Sprachen entwickelt würde, deshalb müssten auch die unwartbaren System OO-Anwendungen sein. Haha. Ja, klar. Dagegen halte ich: Die Objektorientierung ist damit angetreten, genau das zu verhindern. Sie hatte versprochen, Softwareentwicklung “natürlich” zu machen – halt objektorientiert wie die Welt scheinbar ist und damit viel einfacher zu beherrschen als alles was vorher war – und damit eben auch evolvierbarer und korrekter. Und was ist rausgekommen?</p>
+<p><strong>Objektorientierung ist einfach kein Selbstgänger. Sie ist vielmehr so schwierig, dass sie deutlich in der Anwendung begrenzt werden muss,</strong> meine ich. Sie hat ihren Wert. Ich möchte sie nicht missen. Doch den sehe ich vor allem bei der “Programmierung im Kleinen”. <strong>Überschaubare Probleme, die in wenigen Hundert Zeilen Code zu lösen sind, die kann man objektorientiert angehen.</strong> Super! Volle Kraft voraus. Da entstehen dann Codegebilde, die man mit SOLID-Prinzipien und Refaktorisierung im Griff haben kann, deren Korrektheit man zeigen kann, die für sich evolvierbar sind.</p>
+<p>Aber oberhalb dieser “Taschen der Objektorientierung”…? Was da? <strong>Helfen da Komponenten- oder Pakete wie sie die UML bietet? Nein. Die sind nur Objektorientierung in Verkleidung. Denn was Klassen/Objekten, Komponenten, Paketen gemeinsam ist, ist die Sicht auf die Welt durch eine Abhängigkeitsbrille. Die ist das Problem. Große Systeme lassen sich – so meine immer fester werdende Meinung – nicht wirklich agil und evolvierbar innerhalb eines fundamentalen Abhängigkeitsparadigmas realisieren.</strong></p>
+<p>Irgendwie geht das. Aber irgendwie geht irgendwie alles. Man kann <a rel="noopener" href="http://bit.ly/eUviqO">auch mit Streichhölzern ein Formel 1 Auto</a> bauen oder Kleidung aus Papier fertigen. Das sind hübsche Zeitvertreibe – nur wirklich praktischen Wert haben sie am Ende nicht. Oder wollte man sie praktisch einsetzen, wären große Probleme gleich zur Stelle.</p>
+<p>Noch eine andere Analogie: Wir können auf der Basis Newtonscher Physik eine Menge Energie erzeugen mit Wind-, Kohle-, Wasserkraftwerken. Richtig, richtig viel Energie braucht dann aber ein anderes Paradigma: die relativistische Physik Einsteins und die Quantenphysik Heisenbergs. Nur damit sind Kernkraftwerke oder dermaleinst Fusionskraftwerke möglich.</p>
+<p>Für mich bedeutet das zusammenfassend: <strong>Objektorientierung ist eine gute Sache. Ihr muss allerdings ein Platz und eine Reichweite zugewiesen werden, damit ihr Nutzen ihre Nachteile aufwiegt.</strong></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/6d64cfbecec1f1fb.png" /></p>
+<p>Im Bild sind das die “Taschen der Objektorientierung”. Sie sind überschaubar, innerhalb ihrer sind Abhängigkeiten in übliche OO-Manier erlaubt.</p>
+<p>Außerhalb dieser “Taschen” jedoch… die “Taschen” selbst… da soll keine Objektorientierung im Spiel sein. Das Denken in Abhängigkeitsbeziehungen ist dort zu verrmeiden. Wie die “Taschen” nach außen beschaffen sind, woher sie kommen, das will ich an dieser Stelle offen lassen.</p>
+<p><strong>In der Natur finden sie keine Abhängigkeiten wie sie in objektorientierten Strukturen existieren. Die wahrhaft komplexen Systeme der Welt kommen ohne aus. Und auch die Teile menschengemachter Maschinen sind nicht abhängig voneinander wie es objektorientierte Funktionseinheiten sind.</strong></p>
+<p>Woher kommt da nur der Glaube, virtuelle, aber dennoch (oder gerade deshalb) riesige Softwaregebilde könnten geeignet auf einem Paradigma aufgebaut werden, in dessen Kern Abhängigkeiten stehen? Ich weiß nicht, ob ich diesen Glauben naiv oder arrogant nennen soll. In jedem Fall scheint es mir nun offensichtlich, dass er verfehlt ist.</p>
+<p>Sobald ein Problem eine Größe hat, die sich mit OO-Mitteln in Hunderten LOC umsetzen lässt, finde ich Objektorientierung geeignet. Solange ein Problem jedoch umfangreicher ist, ist für Entwurf und Umsetzung die Objektorientierung und jedes andere Paradigma das auf “Abhängigkeitsdenken” basiert ungeeignet.</p>
+<p>Hierarchie ist natürlich weiterhin ein wichtiges Strukturierungsmittel. Keine Frage. Doch das, was da in einer Hierarchie aufgespannt ist – die Funktionseinheiten, die zusammen die Lösung ergeben –, darf nicht über Abhängigkeiten verbunden sein. Das ist schlicht nicht überblickbar, nicht evolvierbar. Objektorierung bzw. OO-Denke verbietet sich also sogar doppelt: erstens, weil sie sich innerhalb des Abhängigkeitsparadigmas bewegt, zweitens weil sie kein Mittel zu natürlicher Hierarchisierung bietet.</p>
+<p><strong>Die üblichweise gemeinte Refaktorisierung ist mithin überbewertet, weil sie Objektorientierung perpetuiert. So wichtig sie in “Taschen” der OO nötig sein mag, so hilfreich dort Prinzipien wie SOLID oder Tools wie DI Container sein mögen… Ich bin der Meinung, dass man daraus nicht ableiten soll, Objektorientierung sei dazu geeignet, einfach/natürlich/intuitiv Größeres zu leisten.</strong></p>
+<h2>Kommentare</h2>
+<p><strong>Rainer Hilmer</strong> (2010-12-25):</p>
+<p>Hallo Ralf,
+ich möchte gar nicht widersprechen, nur fällt es meinem Gehirn schwer, alternative Ideen zu erzeugen. Sagen wir mal, ich habe zwei Komponenten (Taschen). Irgendwie müssen die Informationen austauschen. Mal angenommen, ich schreibe dafür eine dritte Komponente, welche Informationen persistiert, bis sie von einem Interessenten abgerufen werden. Irgendwie muss ein Kommunikationskanal entstehen. Zumindest für die Dauer der Kommunikation entsteht eine Abhängigkeit - auch wenn ich IOC einsetze. Etwas anderes fällt mir dazu wohl nicht ein, weil mein Gehirn auf die Wahrnehmung materieller Dinge (eben Objekte) programmiert ist. Auch all meine Sinnesorgane nehmen nur materielle Dinge wahr, wenn auch teilweise indirekt. Meine Augen empfangen Licht, das von einem Objekt reflektiert wurde. Das Licht selber ist imateriell, aber die Informationen die damit transportiert werden, müssen im Gehirn wieder zu etwas materiellem interpretiert werden. Hmm... , ein imaterielles Kommunikationsmedium ohne Abhängigkeit zwischen Sender und Empfänger. Das könnte der Schlüssel sein, aber wie könnte man das auf die Welt der Softwareentwicklung übertragen?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-12-25):</p>
+<p>@Rainer: Da sitzt du in der OO-Paradigmenfalle und kannst nicht mehr recht anders... ;-) Kann ich aber verstehen. So ist das eben nach 20 Jahren Indoktrination und "Durchhalteparolen". "Wenn es noch nicht klappt, dann versuch es noch mehr; dann machst du etwas noch nicht ganz richtig."</p>
+<p>Bis zu einem gewissen Grad ist das auch richtig. Auch OO wollte und will gelernt sein. Aber wenn es nach 20 Jahren immer noch so schwer ist, evolvierbare Systeme zügig zu entwickeln... dann ist da was falsch mit OO und nicht mit den Leuten, die es immer noch nicht raffen.</p>
+<p>Du siehst Objekte in der Welt... ja, das kann ich verstehen. Die möchtest du dann in der Software haben. Klingt pausibel, eigentlich zu schön um wahr zu sein.</p>
+<p>Ich behaupte aber, damit beschränkst du deinen Horizont. Du bist damit gar nicht flexibel genug. Und dazu kommen leichte Fehlinterpretationen. Der Kunde, der selbst Auskunft über seine Bonität gibt, ist nicht als Objekt in der realen Welt zu finden. Aber in der Software ist er allgegenwärtig.</p>
+<p>Zudem: Ja, wo sind denn in der realen Objektwelt die Abhängigkeiten? Nicht vorhanden. Ein Motor ist nicht abhängig von Rädern. Eine Taste auf deiner Tastatur ist nicht abhängig von einer Platine auf der sie steckt - und umgekehrt auch nicht.</p>
+<p>Also dann: Wenn du schon die reale Welt in die Programmierung holen willst, dann richtig. Dann verzichte auf Abhängigkeiten und siehe schlicht "Ketten" von Funktionen oder Kausalketten.</p>
+<hr />
+<p><strong>Rainer Hilmer</strong> (2010-12-26):</p>
+<p>@Ralf: Du schreibst, "Dann verzichte auf Abhängigkeiten und siehe schlicht "Ketten" von Funktionen oder Kausalketten."</p>
+<p>Das würde ich ja gerne, aber nochmal: wie kannt Kommunikation ohne zumindest zweitweise Abhängigkeit stattfinden. Um einmal dein Beispiel mit der Tastatur aufzugreifen: In dem Moment in dem ich eine Taste drücke, wird ein Kontakt auf der Platine geschlossen - eine Abhängigkeit entsteht, ohne Platine kein Kontakt, ohne Taste sind die Kontakte sinnlos (wie eine Event das nirgendwo benutzt wird). In der Softwareentwicklung wären wir damit wieder bei EBC, was ja schon einmal eine gute Sache ist.
+und jetzt mal zurück zu meinem Beispiel, die Wahrnehmung der Umwelt mit den Augen: Hier erkenne ich nichts was man mit EBC nachbilden könnte. Hier gibt es ein Transportmedium (Licht), das seinen Informationsgehalt durch die Reflexion an Materie ändert. Ohne Abhängigkeiten gelangen diese Informationen zu unseren Augen. Es wäre schön wenn wir dieses Verfahren in Software nachbilden könnten - aber wie?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-12-26):</p>
+<p>@Rainer: In Kausalketten gibt es natürlich Abhängigkeiten: Das Umfallen eines Baues ist abhängig vom Sturm der nicht entsteht ohne große Temperaturdifferenzen, die nicht entstehen ohne eine der Sonne zu und eine der Sonne abgewandte Erdseite usw.</p>
+<p>Effekte sind voneinander abhängig. Aber Bauteile nicht.</p>
+<p>Ein Baum braucht keinen Sturm. Ein Sturm braucht keinen Baum.</p>
+<p>Eine Taste braucht keine Platine. Eine Platine keine Taste.</p>
+<p>Und einen Motor testet der Hersteller ganz ohne Auto. Der Motor braucht keines.</p>
+<p>Wenn er später in einem Auto läuft, dann wird er dafür auch nicht verändert.</p>
+<p>Ja, und damit sind wir wieder bei Flüssen. EBC ist aber nur eine bestimmte Art der Übersetzung von Datenfluss.</p>
+<p>Ich glaube, dass Software "oberhalb" der OO-Taschen oder drumherum aus Flüssen bestehen sollte. Flüsse, die durch "Funktionseinheiten" fließen wie Flüsse, die durch Mühlen und Wehre und Kraftwerke fließen.</p>
+<p>Eine Mühle ist dabei unabhängig von allen anderen Stationen, durch die der Fluss fließt.</p>
+<p>Flows durch Funktionseinheiten ohne Abhängigkeiten: das ist für mich das Paradigma für die Programmierung "im Großen". Architektur und Modell sollten durch Flüsse beschrieben werden. Dabei entstehen Funktionseinheiten. Und die kleinsten sind dann die "Taschen der Objektorientierung".</p>
+<hr />
+<p><strong>Krzysztof Eraskov</strong> (2011-02-15):</p>
+<p>Keiner, der ernsthaft darüber nachdenkt, wird behaupten, dass OOP das Ende der Fahnenstange ist, und es prinzipiell nichts besseres geben kann. Aber die Menschen, die Stonehenge gebaut haben, haben vermutlich auch gewusst, dass es irgendwann mal besser und einfacher geht. Nur das Wissen darum alleine nützt noch nicht, solange die Voraussetzungen für die Revolution, also die Dampfmaschine, der Explosionsmotor und der Elektromotor noch nicht erfunden sind. Und so weit ich weiß, ist nichts davon in erster Linie für den Hausbau erfunden worden, sondern für andere Zwecke und erst in einem Transfer wurden die Erfindungen auch für das Bauen benutzt. Vermutlich kommen wir einfach deshalb noch nicht über die Objektorientierung hinaus, weil bestimmte dafür nötige Erfindungen noch nicht gemacht sind.</p>
+<p>Aber im Grunde geht es in dem Artikel ja um Abhängigkeiten. Du führst in deinem Kommentar als Beispiel die (vermeintliche) Unabhängigkeit von Motor und Auto an. Das ist ein gutes Beispiel ... um dich zu widerlegen. Denn es zeigt deutlich, dass Abhängigkeiten nicht verschwinden, nur weil sich Komponenten nicht kennen.</p>
+<p>Ok, ein Motor kann (relativ) unabhängig von dem Fahrzeug entwickelt werden, in das er später eingebaut wird. Aber gibt es deshalb keine Abhängigkeiten? Wenn er eingebaut wird, wird er an eine Getriebe angeschlossen - das er zwar nicht kennt und kennen muss, aber das Getriebe muss mindestens auf die Drehzahlen des Motors angestimmt sein. Noch klarer wird es, wenn man sich überlegt, den Motor auszutauschen. Du kannst nicht einfach einen Motor mit doppelter Leistung in das Fahrzeug bauen, ohne zu prüfen, ob die Kardanwelle, das Getriebe, die Steifheit der Karosserie, die Reifen, die Bremsen und noch einiges mehr für die höheren Kräfte und die höheren Geschwindigkeiten geeignet sind. Vermutlich wird man feststellen, dass dem nicht so ist. Die Abhängigkeiten sind also weiterhin da, ob du das nun wahrhaben willst oder nicht.</p>
+<p>Das ist bei EBC nicht anders. Formal sind die Abhängigkeiten zwischen den Komponenten weg (eigentlich sind sie nicht mal formal weg, sie sind nur woanders hin gewandert, nämlich auf die Platine; dass die Abhängigkeiten dort weniger stören, weil eine Platine eine sehr geringe Komplexität hat, will ich durchaus gelten lassen). Aber inhaltlich sind die Abhängigkeiten noch alle da. Wenn die Motor-Komponente getauscht wird und jetzt eine andere Leistung liefert, müssen alle Komponenten, die hinten dran sind, geprüft werden, ob sie die neuen Leistung korrekt verarbeiten können. Und das, obwohl der Motor keine der Komponenten kennt.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-02-16):</p>
+<p>@Krzysztof: Ja, auch in Flow Designs gibt es noch Abhängigkeiten. Vor allem implizite:</p>
+<p>Platinen sind abhängig von den Funktionseinheiten, die sie verdrahten.</p>
+<p>Bauteile sind abhängig von den Daten, die sie verarbeiten.</p>
+<p>Das sind statische bzw. dynamische Abhängigkeiten. Die gehen nicht weg. Aber Flow Design lenkt den Umgang mit ihnen in bewusste Bahnen:</p>
+<p>Platinen können von vielen Funktionseinheiten abhängig sein, weil sie selbst trivial sind. Änderungen an Funktionseinheiten, von denen sie abhängen, haben selten Auswirkungen auf Platinen. Diese Abhängigkeiten führen also nicht zu Komplexität.</p>
+<p>Bei Bauteilen ist das anders. Änderungen an Datentypen haben potenziell große Auswirkungen auf abhängige Bauteile. Deshalb muss sorgfältig über die Kompliziertheit von Daten nachgedacht werden. Flow Design macht das klar.</p>
+<p>Die Form von Abhängigkeit, die du nennst, würde ich inzw anders betiteln. Das sind Voraussetzungen. Natürlich ist ein Bauteil davon abhängig, dass die Daten, die es empfängt erwartungsgemäß zusammengestellt sind. Sein Treibstoff sind korrekte Daten, so wie Benzin der Treibstoff eines Motors ist.</p>
+<p>Ist der Motor deshalb abhängig von Treibstoff wie eine übliches Businesslayer abhängig ist von einem Dataaccesslayer? Nein.</p>
+<p>Mir scheint für diese Beziehung Abhängigkeit das falsche Wort.</p>
+<p>Nun magst du sagen, ich würd mir das schön reden und Wortklauberei betreiben. Dagegen halte ich, dass die Erfahrung mit Flow Design einfach zeigt, dass die Entwicklung damit anders ist als mit der "normalen" Objektorientierung. Und deshalb halte ich eine Veränderung der Terminologie für gerechtfertigt.</p>
+<p>Vielleicht musst du dich noch mehr drauf einlassen? Versuch es mal.</p>
+<p>PS: Zu deinem Trost findest du in der dotnetpro 4/2011 einen Artikel von mir, der explizite Abhängigkeiten in Flow Designs einführt :-)</p>
+<hr />
+<p><strong>Sebastian Kübeck</strong> (2011-02-17):</p>
+<p>Ralf,</p>
+<p>Du hast recht damit, dass die objektorientierte Programmierung (OOP) nicht zwangsläufig zu guten Lösungen führt. Es gibt auch Fälle, die mit den Mitteln der OOP äußerst schwierig zu realisieren sind. So vertragen sich sich transitive und kommutative Operationen nicht wirklich mit der Vererbung (siehe das Problem mit der Implementierung von equals() in Klassenhierarchien).</p>
+<p>Auch führt nicht jede Rerfactoring-Maßnahme zwangsläufig zu besserem Code. Die Begriffe "OOP" und "Refactoring" würde ich allerdings nicht in einen Topf werfen, schließlich ist Refactoring prinzipiell unabhängig vom verwendeten Programmierparadigma.
+Man kann auch prozedurale, funktionale und logische Programme
+ohne weiteres refaktorisieren. Man muss lediglich die verwendeten Techniken an die zur Verfügung stehenden Sprachmittel anpassen.</p>
+<p>Im übrigen kritisierst Du eigentlich nicht das Refactoring an sich sondern das Einführen von zusätzlichen Abstraktionsschichten, die durch das Aufteilen von Klassen und Methoden zwangsläufig entstehen.</p>
+<p>Abstraktionsschichten sind generell ein zweischneidiges Schwert: auf der einen Seite bieten sie mehr Flexibilität und Testbarkeit, auf der anderen Seite kann es äußerst umständlich sein, die eigentliche Funktionalität zu verstehen, da der Code ja auf zahlreiche Klassen und Methoden aufgeteilt ist.
+Ob Abstraktionsschichten ein Problem für die Verständlichkeit darstellen, hängt stark von der Art und Weise ab, wie diese gestaltet sind und es ist leider alles andere als einfach, allgemein verständliche und konsistente Abstraktionen für das jeweilige Problem zu finden.
+Das ist einer der Gründe, warum Programmieren eine äußerst anspruchsvolle Tätigkeit ist und sicher auch immer bleiben wird.</p>
+<hr />
+<p><strong>Ingo</strong> (2011-03-23):</p>
+<p>Mal am Rande:</p>
+<p>Refaktorisieren - refactorize (math.)
+Refaktorieren - refactor (comp.)</p>
+<p>Das Refaktorisieren hat nichts mit dem Umstellen von Programmcode zu tun als mehr mit dem Umstellen von math. Gleichungen.</p>
+<p>siehe auch:
+http://de.wikipedia.org/wiki/Refactoring#Begriffsherkunft</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

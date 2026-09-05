@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mustergültig – Event-Based Components aufbohren — ralfw.de Archiv</title>
+<meta name="description" content="Wie Sie Event-Based Components (EBC) grundsätzlich “zusammenstecken” habe ich hier gezeigt. Das ist nicht schwer, oder? Nur etwas gewöhnungsbedürftig. Dafür winken aber einige Vort">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/mustergultig-event-based-components/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Mustergültig – Event-Based Components aufbohren — ralfw.de Archiv">
+<meta property="og:description" content="Wie Sie Event-Based Components (EBC) grundsätzlich “zusammenstecken” habe ich hier gezeigt. Das ist nicht schwer, oder? Nur etwas gewöhnungsbedürftig. Dafür winken aber einige Vort">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/mustergultig-event-based-components/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Mustergültig – Event-Based Components aufbohren</h1>
+    <div class="doc-meta"><span>23. Feb. 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/02/mustergultig-event-based-components.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/mustergultig-event-based-components/</code></span></div>
+    <div class="art"><p>Wie Sie Event-Based Components (EBC) grundsätzlich “zusammenstecken” habe ich <a rel="noopener" href="http://ralfw.blogspot.com/2010/02/steckspiele-event-based-components.html">hier gezeigt</a>. Das ist nicht schwer, oder? Nur etwas gewöhnungsbedürftig. Dafür winken aber einige Vorteile gegenüber “traditionellen” Komponenten, finde ich. Meine <a rel="noopener" href="http://ralfw.blogspot.com/2010/02/event-based-components-der-nachste.html">“Bauchschmerzen”</a>, die ich mit denen bei aller Liebe immer noch latent hatte, sind jetzt weg.</p>
+<p>Ob ich Sie damit jedoch automatisch auch für EBC begeistert habe, weiß ich nicht. Das streng nachrichtenorientierte Programmiermodell und die “Verklausulierung” von Serviceaufrufen als Events sind recht weit weg vom Üblichen. Ich will deshalb hier noch ein paar Kommunikationsmuster beschreiben, die Ihnen das Konzept schmackhafter machen.</p>
+<h2>One-way Nachrichten</h2>
+<p>Das Grundmuster der EBC-Kommunikation ist die one-way Nachricht. Als solche bezeichne ich eine Nachricht, die vom Empfänger keine Antwort an den Absender erwartet. Bisher habe ich nur Beispiele für one-way Nachrichten gegeben. Selbst die Nachricht <em>ParseResult</em>, die vom <em>Parser</em> als Antwort zurück fließt zum <em>CompilerCoordinator,</em>ist eine solche one-way Nachricht:</p>
+<p>interface ICompilerCoordinator</p>
+<p>{</p>
+<p>…</p>
+<p>event Action OnParse;</p>
+<p>void ProcessParseResult(ParseResult result);</p>
+<p>}</p>
+<p>interface IParser</p>
+<p>{</p>
+<p>void ProcessParseRequest(ParseRequest request);</p>
+<p>event Action OnParseResult;</p>
+<p>}</p>
+<p>Formal besteht zwischen <em>ParseRequest</em> und <em>ParseResult</em> kein Unterschied. Die Semantik, dass ein <em>ParseResult</em> als Ergebnis eines <em>ParseRequest</em> versandt wird, ist nur in unserem Kopf. Deshalb sind beide Nachrichten formal gleich.</p>
+<p>Wie gesagt: Die Kommunikation zwischen Interaktionspartnern ist bei der Ereignisorientierung grundsätzlich symmetrisch.</p>
+<p>One-way Nachrichten sind im Sinne der <a rel="noopener" href="http://en.wikipedia.org/wiki/Command-query_separation">Command Query Separation</a> das Mittel, um Kommandos zu versenden. Die Implementation ist denkbar einfach: Der Sender definiert einen Event für eine one-way Nachricht als Output; der Empfänger definiert einen passenden Event-Handler. Auf einer “Software-Platine” werden beide mit einander verbunden.</p>
+<p>One-way Sender:</p>
+<p>event Action OnT;</p>
+<p>One-way Empfänger:</p>
+<p>void ProcessT(T msg);</p>
+<h2>Request/Response V1</h2>
+<p>Auch wenn es in der Ereignisorientierung formal nur one-way Nachrichten gibt, hilft es ja nichts: viele Interaktionen erwarten eine Antwort. Request/Response ist ein typisches Muster in der Kommunikation zwischen Funktionseinheiten. Dafür sind Funktionen gemacht. Auch die obige <em>ParseRequest</em>-Nachricht ist ein solcher Aufruf, der die Produktion eines Resultats anstoßen soll. Ansehen tun sie ihm das aber nicht. Das ist misslich, weil der ereignisorientierte Code dadurch schlechter lesbar ist als üblicher methodenbasierter.</p>
+<p>Das können Sie jedoch leicht ändern, indem Sie den Request “aufbohren”. Sie verschicken mit ihm nicht nur Argumente für die Bearbeitung – sondern auch noch den Empfänger für die Antwort:</p>
+<p>class ParseRequest</p>
+<p>{</p>
+<p>public string Source;</p>
+<p>public Action ProcessParseResult;</p>
+<p>}</p>
+<p>Jetzt wird die Nachricht ihrem Namen gerecht. Sie ist ein echter Request, eine Anforderung von Daten. Source steht für die <em>Input</em>-Daten beim Empfänger und die Methode <em>ProcessParseResult</em> für den Empfänger des Outputs.</p>
+<p>Die Kontrakte für <em>CompilerCoordinator</em> und <em>Parser</em> werden dadurch einfacher:</p>
+<p>interface ICompilerCoordinator</p>
+<p>{</p>
+<p>void ProcessCompilationRequest(CompilationRequest request);</p>
+<p>event Action OnParse;</p>
+<p>}</p>
+<p>interface IParser</p>
+<p>{</p>
+<p>void ProcessParseRequest(ParseRequest request);</p>
+<p>}</p>
+<p>Der Produzent von Resultaten braucht bei solchen Aufträgen keinen “Pin” mehr eigens für ihren Versand. Das macht ihn auch flexibler, weil er dadurch von vielen Clients als Service benutzt werden kann. Jeder Client schickt ja mit seinem Request einen Request-individuelle Antwort-“Pin” mit. Der funktioniert wie eine Return-Adresse bei normalen Funktionsaufrufen.</p>
+<p>class CompilerCoordinator : ICompilerCoordinator</p>
+<p>{</p>
+<p>public void ProcessCompilationRequest(CompilationRequest request)</p>
+<p>{</p>
+<p>ParseResult pr;</p>
+<p>this.OnParse(new ParseRequest</p>
+<p>{</p>
+<p>Source = request.Source,</p>
+<p>ProcessParseResult = r =&gt; pr = r</p>
+<p>});</p>
+<p>…</p>
+<p>}</p>
+<p>…</p>
+<p>Im einfachsten Fall stecken Sie in den nachrichtenindividuellen Event-Handler für das Resultat eine Lambda-Funktion wie hier gezeigt. Ja, das ist etwas umständlicher als ein Funktionsaufruf – aber ich glaube immer noch daran, dass am Ende der Gewinn aus solch ereignisorientierter – oder besser: nachrichtenorientierter – Kommunikation die Umständlichkeit mehr als kompensiert. Außerdem ist der Umstand ja nur für inter-komponenten Aufrufe zu treiben. Die stellen gewöhnlich nur eine Minderheit in Ihrem Code dar.</p>
+<p>Das Muster einfach: Die Request-Nachricht bekommt einen eigenen Event (oder auch nur einen Delegate), den ihr Empfänger mit einem Resultat aufruf. Genersich sieht das z.B. so aus:</p>
+<p>class Request</p>
+<p>{</p>
+<p>public TInput Input;</p>
+<p>public Action ProcessResult;</p>
+<p>}</p>
+<p>Client:</p>
+<p>event Action&gt; OnT0WaitingForT1;</p>
+<p>Service:</p>
+<p>void TransformT0IntoT1(Request request);</p>
+<h2>Notifkationen</h2>
+<p>Den Empfänger in einer Nachricht zu transportieren ist der universelle Weg, um Nachrichten kontextabhängig zuzustellen. Das gilt nicht nur für Resultate, sondern auch für Zwischenergebnisse jeder Art. Das können z.B. Fortschrittsinformationen sein. Wenn Sie den Fortgang einer Operation dem Auslöser mitteilen möchten, versenden Sie am besten einen Endpunkt, dem darüber Bescheid gegeben werden kann:</p>
+<p>class ParseRequest</p>
+<p>{</p>
+<p>…</p>
+<p>public Action ShowProgress;</p>
+<p>}</p>
+<p>Ein Service muss dann nicht permanent an einen Event-Handler gebunden sein, sondern bekommt für jeden Auftrag womöglich einen neuen mitgeteilt.</p>
+<p>ParseResult pr;</p>
+<p>this.OnParse(new ParseRequest</p>
+<p>{</p>
+<p>Source = request.Source,</p>
+<p>ProcessParseResult = r =&gt; pr = r,</p>
+<p>ShowProgress = p =&gt; Console.WriteLine("Fortschritt: {0}", p)</p>
+<p>});</p>
+<p>Hier zeigt sich für mich sehr schön die Simplizität der Nachrichtenorientierung. Sie kennt nur wenige Konzepte, die man aber ganz flexibel immer wieder neu kombinieren kann. In einer <a rel="noopener" href="http://weblogs.asp.net/ralfw/archive/tags/Application+Space/default.aspx">einführenden Serie zum Application Space</a> in meinem englischen Blog können Sie sehen, was das für verteilte Anwendungen bedeutet. Notifikationen sind sozusagen “first class citizens” bei der Nachrichtenorientierung.</p>
+<p>Das Muster ist ganz einfach und unterscheidet sich nicht von dem für Resultate in Request/Response-Szenarien.</p>
+<h2>Request/Response V2</h2>
+<p>Ich verstehe, wenn Ihnen eigene Events für Resultats oder Notifikationen nicht so leicht runtergehen. Sie sollten sie allerdings als Muster “drauf haben”. Allemal für die synchrone ereignisbasierte Kommunikation sehe ich jedoch noch eine Alternative. Wir können einen Delegaten speziell für Requests definieren:</p>
+<p>delegate void Request(TInput message,</p>
+<p>Action processResult);</p>
+<p>Der Kontrakt wird damit wieder einfacher:</p>
+<ul>
+<li>Es ist kein Resultat-Event in der Request-Nachricht mehr nötig.<ul>
+<li>Die Signaturen können sich auf das Wesentliche konzentrieren und werden verständlicher.</li>
+</ul>
+</li>
+</ul>
+<p>Hier der überarbeitete <em>CompilerCoordinator</em> als Client:</p>
+<p>interface ICompilerCoordinator</p>
+<p>{</p>
+<p>…</p>
+<p>event Request OnParseRequest;</p>
+<p>}</p>
+<p>Ich habe jetzt sogar auf den <em>ParseRequest</em>-Nachrichtentypen verzichtet, weil darin ohnehin nur ein Argument verpackt würde. Die Gesamtsignatur scheint mit jetzt so spezifisch, dass der Typ nicht mehr nötig ist. (Allerdings würde ich immer noch dazu raten, nicht mehr als einen Parameter für die Argumente einer Operation zu benutzen. Fallen Sie nicht zurück in die Gewohnheiten “traditioneller” Komponenten mit ihren ausgefeilten Signaturen. Sie machen es sich damit unnötig schwer, später auf die asynchrone Ereignisorientierung umzusteigen.)</p>
+<p>Und hier der <em>Parser</em> als Service:</p>
+<p>interface IParser</p>
+<p>{</p>
+<p>void ProcessParseRequest(string source, Action processResult);</p>
+<p>}</p>
+<p>Beachten Sie, wie der Endpunkt für den Versand des Resultats als Delegat in den Event-Handler hinein gereicht wird. Das ist besser lesbar, weil schon beim Blick auf die Signatur klar ist, dass ein Resultat geliefert werden soll.</p>
+<p>Und auch der Client wird in der Implementation einfacher:</p>
+<p>class CompilerCoordinator : ICompilerCoordinator</p>
+<p>{</p>
+<p>public void ProcessCompilationRequest(CompilationRequest request)</p>
+<p>{</p>
+<p>ASTNode program;</p>
+<p>this.OnParseRequest(request.Source, r =&gt; program = r);</p>
+<p>…</p>
+<p>}</p>
+<p>…</p>
+<p>Das Muster ist einfach: Für jeden kontextspezifischen Notifikationsendpunkt übergeben Sie einen an den Nachrichtenempfänger Delegaten als Parameter. Der kann dann ein Resultat liefern oder Fortschrittsinformationen oder noch ganz anderes…</p>
+<h2>Request/Response V3</h2>
+<p>Wenn Sie spezielle Delegaten für Requests denken können, dann können Sie das Spiel natürlich auch noch weiter treiben. Auch Folgendes ist möglich:</p>
+<p>public void ProcessCompilationRequest(CompilationRequest request)</p>
+<p>{</p>
+<p>ASTNode program = this.OnParseRequest.Request(request.Source);</p>
+<p>…</p>
+<p>}</p>
+<p>Huch! Wo ist denn die Ereignisorientierung hin? Der Code feuert den Event mit der Aufforderung zum Parsen, denn er benutzt ja dessen Membervariable <em>OnParseRequest</em>. Aber die Aufforderung liefert ein Resultat. Wie kann das sein?</p>
+<p>Eine Erweiterungsmethode auf dem <em>Request&lt;&gt;</em>-Delegatentyp machts möglich:</p>
+<p>public static class RequestExtension</p>
+<p>{</p>
+<p>public static TOutput Request(this Request fireEvent, TInput msg)</p>
+<p>{</p>
+<p>TOutput output = default(TOutput);</p>
+<p>fireEvent(msg, r =&gt; output = r);</p>
+<p>return output;</p>
+<p>}</p>
+<p>}</p>
+<p>Und schon ist sie dahin die schöne Nachrichtenorientierung…</p>
+<p>Auch wenn das möglich ist, empfehle ich doch, es nicht zu tun. Sie verschleiern das grundlegende Programmiermodell bis zur Unkenntlichkeit. Das halte ich für Kontraproduktiv im Sinne der Verständlichkeit. Man sieht einfach nicht mehr so deutlich, wo Komponentengrenzen verlaufen. Und es baut eine Hürde für die spätere Migration zu asynchroner Kommunikation auf.</p>
+<p>Mit einer anderen Variante könnte ich mich allerdings anfreunden:</p>
+<p>public void ProcessCompilationRequest(CompilationRequest request)</p>
+<p>{</p>
+<p>this.OnParseRequest</p>
+<p>.Request(request.Source)</p>
+<p>.Receive(astNode =&gt;</p>
+<p>{</p>
+<p>…</p>
+<p>});</p>
+<p>}</p>
+<p>Hier wird dem Request explizit eine <a rel="noopener" href="http://www.c2.com/cgi/wiki?ContinuationPassingStyle">Continuation</a> mitgegeben, d.h. Code, der nach seiner Erfüllung ausgeführt werden soll. So ist der Code immer noch lesbar; die bisherige lokale Variable für das Resultat wird gespart; und vor allem funktioniert dieser Stil auch in asynchronen Szenarien.</p>
+<p>Möglich wird mit einer Erweiterungsmethode und einer kleinen Fluent Interface Klasse:</p>
+<p>public static class RequestExtension</p>
+<p>{</p>
+<p>public static RequestContinuation Request(this Request fireEvent, TInput msg)</p>
+<p>{</p>
+<p>return new RequestContinuation(processResult =&gt;</p>
+<p>fireEvent(msg, processResult));</p>
+<p>}</p>
+<p>public class RequestContinuation</p>
+<p>{</p>
+<p>private readonly Action&gt; fireEvent;</p>
+<p>public RequestContinuation(Action&gt; fireEvent)</p>
+<p>{</p>
+<p>this.fireEvent = fireEvent;</p>
+<p>}</p>
+<p>public void Receive(Action processResult)</p>
+<p>{</p>
+<p>fireEvent(processResult);</p>
+<p>}</p>
+<p>}</p>
+<p>}</p>
+<p>Hervorhebenswert ist hier, dass die Erweiterungsmethode eine Funktion höherer Ordnung aus dem Event-Delegaten macht. Der wird also nicht in der Erweiterungsmethode aufgerufen, sondern erst in <em>Receive()</em>. Ein wenig Funktionale Programmierung ist hier also hilfreich, um die Ereignisorientierung angenehmer zu gestalten.</p>
+<p>Soweit für dieses Mal mit den Event-Based Components. Ich hoffe, inzwischen konnte ich Ihre Bedenken zerstreuen, dass die unhandlich und schwierig sind. Beim nächsten Mal geht es weiter mit einem Blick auf die Verdrahtung von EBCs.</p>
+<h2>Kommentare</h2>
+<p><strong>Matthias Jauernig</strong> (2010-02-24):</p>
+<p>Hallo Ralph,</p>
+<p>Unhandlich und schwierig ist relativ, oder? ;-)
+Ich finde das ganze Konzept sehr spannend und dein Beitrag ist starker, aber auch echt guter Tobak. Man muss das Ganze wohl mal im größeren Rahmen eingesetzt haben um Vor- und Nachteile aufzuzeigen.</p>
+<p>Ich finde die Syntax schon komplexer bzw. zunächst schwerer eingänglich als einen simplen Methodenaufruf. Das ist imho aber eine Gewöhnungsfrage und auch einfach dem abgewandelten Programmiermodell geschuldet (funktionale Programmierung sieht für viele am Anfang auch "komisch" aus, wenn zuvor nur imperativ programmiert wurde).</p>
+<p>Dieser Beitrag hat schön meine Bedenken vom 2. Teil zerstreut, dass der Code zersplittert wird. Eine Anmerkung möchte ich trotzdem noch machen.</p>
+<p>Ich würde Request&lt;,&gt; als Klasse belassen. So wird sie besser wiederverwendbar und man kann sie z.B. auch anstelle von CompilationRequest verwenden. Ansonsten bekommt man spätestens dann Probleme, wenn man z.B. statt CompilationRequest das Request-Delegate verwenden will. Hier wäre dann ein Aufruf von OnParseRequest.Request() mit dem Input des Request-Delegates nur über Umstände möglich.
+Dies zieht ein paar Code-Änderungen in den Klassen und den Extension-Methods nach sich, die imho aber kein Problem darstellen.</p>
+<p>Insgesamt also klasse Idee und Ausarbeitung des Themas. Das muss unbedingt mal ausprobiert werden!</p>
+<p>Grüße, Matthias</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-02-24):</p>
+<p>@Matthias: Ich teile deine Gedanken zu Request/Response. Aus meiner Sicht sollte der Standard eine Nachricht sein, also ein Parameter bei Event und Event-Handler. Dann lassen sich am besten generische Komponenten bauen als "Zwischenstücke".</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>dalini</strong> (2010-06-20):</p>
+<p>Hmm, erinnert mich - also von den Basics her - an Smaltalk aber da war das Systeminherent, man musste sich (als Objekt) sogar selbst Nachrichten schicken... aber spannendes Thema.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

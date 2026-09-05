@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Informed TDD – Using Mocks to Allow for True Stepwise Refinement — ralfw.de Archiv</title>
+<meta name="description" content="In my previous article I described a process of designing and implementing software. It combined TDD with explicit thinking before coding. The dialog I embedded it in was supposed ">
+<link rel="canonical" href="https://ralfw.de/archiv/2014/informed-tdd/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Informed TDD – Using Mocks to Allow for True Stepwise Refinement — ralfw.de Archiv">
+<meta property="og:description" content="In my previous article I described a process of designing and implementing software. It combined TDD with explicit thinking before coding. The dialog I embedded it in was supposed ">
+<meta property="og:url" content="https://ralfw.de/archiv/2014/informed-tdd/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>Informed TDD – Using Mocks to Allow for True Stepwise Refinement</h1>
+    <div class="doc-meta"><span>12. Feb. 2014</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2014/02/12/informed-tdd-ndash-using-mocks-to-allow-for-true-stepwise.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2014/informed-tdd/</code></span></div>
+    <div class="art"><p>In my previous article I described a process of designing and implementing software. It combined TDD with explicit thinking before coding. The dialog I embedded it in was supposed to make this deviation from traditional descriptions of TDD more palatable. This came at a price, though. The systematic behind this approach was somewhat hidden. This article is supposed to make up for that. I want to make it crystal clear how I think the process of solving problems with code should look like.</p>
+<h2>"Traditional" TDD</h2>
+<p>But first a recapitulation of how TDD "traditionally" is depicted. I´m not saying this is how its inventor(s) thought it should be done. Whatever they had in mind, though, got reduced to this:</p>
+<p>For a given functional unit of production code you write a test. It´s red/failing first. Then you do the simplest possible thing in production code to change it to green/passing. Finally you refactor.</p>
+<p>Sounds simple. And it is simple – technically. The hard part of TDD is in the, well, details. Or in the cracks between these steps.</p>
+<p>Question number #1: Where do the test cases come from? From the customer? Hardly at the level of detail that´s needed to drive out a solution from the inital ignorance. The customer of course should provide acceptance test cases. But they are coarse grained. What´s needed to refine the solution in small steps are fine grained test cases. And they should be in a certain order so that the solution code really can become progressively more complicted.</p>
+<p>So where do those nicely prioritized fine grained test cases come from? That´s rarely explained in the TDD literature. Authors try to derive them from the problem itself or maybe from some acceptance test cases. But never have I seen test cases being linked to the solution. The reason for that is simple: the solution is supposed to somehow emerge.</p>
+<p>You write a failing test, then switch to the production code side, and there you just do the simplest thing possible. Solution follows test case. That´s the "traditonal" TDD mantra.</p>
+<p>Unfortunately I´ve seen many, many developers fail at that. They make quick progress – with obvious and trivial test cases, so called "degenerate test cases". And then they hit a wall.</p>
+<p>Try this for yourself with the famous code kata. It´s about a function (e.g. <code>string ToRoman(int number)</code>) to convert arabic numbers like 5, 19 or 42 into roman numbers: V, XIX, XLII.</p>
+<p>How does your list of test cases look like?</p>
+<p>Let me speculate: 0, 1/I, 2/II, 6/VI, 4/IV, 9/IX, 40/XL, …</p>
+<p>First the degenerate test case: 0. Because there is no zero in the roman number system. You need to check for this input, though. Don´t you? That´s good defensive coding practice.</p>
+<p>Then the simplest roman number: I. It consist of just a single character.</p>
+<p>Then a sequence of the same character/number. A sequence of like values is "higher order" than a single value.</p>
+<p>Then a sequence of different characters/numbers. A sequence of different values is "higher order" than a sequence of like values.</p>
+<p>And now for the fun part: the first of those pesky numbers with "reversed digits". Usually "larger" roman digits precede "smaller" ones like in XVI. But some numbers require for a reversal of this order like in IV or IX or XL.</p>
+<p>Given the premise "solution flows from test case" this would be a perfectly reasonable order and granularity of test cases. At least that´s what I´ve seen many times. And you can find it in the literature, too.</p>
+<p>In reality, though, – as is often the case compared to technical or recreational literature – things work out differently. And so it happens more often than not, that developers doing the Roman Numerals kata like this to exercise their TDD skills fail. They do not arrive at a working solution in a moderate time frame of, say, 60 minutes.</p>
+<p>Of course several excuses are readily at hand. I´ve read and heard often for example "We wanted to have fun. So we did not really focus on a solution." or "We wanted to focus on the red-green-refactor steps. A working solution is not that important."</p>
+<p>That´s all nice and well. I don´t want to deprice anybody of his or her fun with TDD or at their dev community gathering. Also I fully understand that in order to learn A you sometimes need to sacrifice B and C for a while. Otherwise you can´t fully focus on doing A right. In the end, though, that means in your daily work practice, A + B + C must come together.</p>
+<p>But, hey, come on. What are we talking about here? Roman Numerals is a trivial problem. It´s orders of magnitude simpler than anything you´re doing for profit. It´s like drawing a stick figure compared to the Mona Lisa.</p>
+<p>No, I don´t buy "focussing on the TDD steps" as an excuse for not solving a trivial problem in an expanded timeframe like 60 or even 90 minutes. That´s inacceptable for any method. And it neglects the need for closure. Developers want closure. They want to accomplish something, that means they crave for building something that works. Failing to satisfy this need hampers any learning.</p>
+<p>And finally: Even if working solutions are produced, I rarely have seen any which really have lived up to the full TDD process consisting of three steps. The refactoring step often is skipped altogether. "We can refactor later. First let´s get this baby off the ground. We need working code."</p>
+<p>Most TDD solution on the internet don´t show any sign of refactoring. Their design is… well, "as usual".</p>
+<p>If you think about this for a minute, this is very plausible for two reasons. Firstly, closure is reached if the functionality is implemented. Clean code is not needed. Secondly, where should a good design come from? TDD does not contain any hints on good design. It just commands: "Thou shalt refactor once the test passes." But as is with most of such commandments, they are overheard in favor of some seemingly more important issue.</p>
+<p>And since rules for good design are orthogonal to TDD, refactoring is neglected except for fairly trivial cases.</p>
+<p>Please get me right: I´m not against TDD. Red+green+refactor are great – if they only produced the results the claimed on a satisfying scale.</p>
+<p>So this is why I´m looking for a different approach. Can the "traditional" TDD approach be improved. And I think it can. One way to improve it has been described by Keith Braithwraite as "TDD as if you meant it". It improves on the refactoring step. With it refactoring becomes inevitable. Great!</p>
+<p>Another way to improve the TDD rhythm is by thinking before coding:</p>
+<h2>Informed TDD</h2>
+<p>My experience is, software development becomes easier if we think before coding. Sounds trivial. Sounds like something everyone´s doing already. But I beg to differ.</p>
+<p>We´re far to quick to grad our keyboards and start coding. The lack of working code for the "stick figure problem" Roman Numerals after 60 minutes to me is proof to that. If experienced developers are unable to code a solution – with or without TDD – in that timeframe, then something is wrong.</p>
+<p>What´s missing is not good will, motivation, technical skill. It´s experience in conceptualizing solutions. Systematically thinking problems through to arrive at solutions or at least reasonable (rough) ideas of solutions is an art not valued – at least in many developer circles I´ve attended in the past years.</p>
+<p>Everybody is trying his/her best. Of course! There is no lack of motivation. However, the hard work put into software development sometimes resembles a prison inmate trying to dig his way out with his bare hands. It would be much easier for him had he a pick ax, or even some explosives at his disposal. Or better: a key. Or even better: not be in prison in the first place.</p>
+<p>But to someone sitting in a whole these don´t seem to be options. That´s why we need an explicit emphasize on thinking. We need preventive measures. Before developers convict "the crime of premature coding".</p>
+<p>For this article I want to call what I´m trying to bring across "Informed TDD". This is to underline the value of TDD – while at the same time adding a missing piece, namely information. Information about the solution to be coded.</p>
+<p>Ok, here´s how Informed TDD (ITDD) differs from Traditional TDD (TTDD).</p>
+<p>Like TTDD I start with a functional unit. But instead of writing a failing test right away, I think before coding. The result of such thinking is a solution approach. That means I develop an idea of how the problem can be solved using "custom tools". These custom tools are special "code machines" to be arranged in a transformation process. Think of it like an assembly line in a factory.</p>
+<p>"First this is done, then that is done, finally something else is done." - that´s the most simple form of an idea for a solution. Yeah, it´s simple – on the surface. But it´s powerful. Because what I get are smaller problems. And if I repeat this process for the resulting "custom tools" I get even smaller problems to solve.</p>
+<p>This is called stepwise refinement. Divide a bigger problem into smaller, simpler ones. By thinking, by simulation, by imagination, by drawing on a whiteboard, maybe by experimenting with some code.</p>
+<p>The two leaf-circles represent the function units for the "custom tools" somehow integrated into a whole by the initial functional unit, the root.</p>
+<p>Next comes a red test. But this now is guided by my knowledge of the outline of a solution. The test case can be very different from one that you´d choose doing TTDD.</p>
+<p>The interesting question now is: How to get the test to green?</p>
+<p>View it as a hypothesis. It states: If the function sub-units work like supposed, then the system under test (root) is correct. Because the job of the system under test is just to integrate those two leafs. Nothing more. That´s the Single Responsibility Principle (SRP) taken to an extreme.</p>
+<p>How can this hypothesis be verified? By faking the implementation of the leafs. Using a mocking framework like JustMock that´s easy even without IoC/DI.</p>
+<p>Now I´ve two simpler problems to solve. Of course I do that the same way as before. I think, before I code. The focus now is one of the leaf functional units.</p>
+<p>This time I don´t see how to further refine it, though. There are no "tools" I can think of. Just an "algorithm" I can code. In that case I´m back to TTDD.</p>
+<p>However the leaf probably is a private method hidden behind the public root method. That´s why special measures need to be taken to make it teastable. A framework like JustMock helps here, too.</p>
+<p>If needed, I add another test or refactor. But in the end I go back to the root test and remove the mock:</p>
+<p>Now the hypothesis is proven not only by mocks, but also by production code. That´s better.</p>
+<p>Next I need to tackle the second leaf of the root. ITDD tells me to think first. Can I come up with smaller steps to reach the goal of the whole leaf? Yes, this time I can:</p>
+<p>That means I need to continue according to ITDD: Write a red test, then replace the sub-leafs with mocks.</p>
+<p>And so the process continues "into the deep". I´m drilling down into the ever finer details of the solution.</p>
+<p>Tackle the first leaf with ITDD:</p>
+<p>Tackle the second leaf with ITDD:</p>
+<p>Then backtrack to the top and remove the mock there:</p>
+<p>And finally… remove all non-root tests. They are not needed anymore. It´s just temporary scaffolding while fleshing out the solution. The essential test is the test of the root functional unit.</p>
+<p>That´s it. That´s what I mean by Informed TDD.</p>
+<p>Technically it´s easy – with a little help of a framework like JustMock or Typemock Isolator (both for .NET).</p>
+<p>The benefits of ITDD I´ve come to value are:</p>
+<ul>
+<li>Refactoring is less necessary, since there is a clean design before I start coding.</li>
+<li>Testing of solution aspects does not need to go through the root all the time. That makes it easier on the test cases.</li>
+<li>Test cases are less contrived because they are informed by a solution. This leads to less groping around for the right code.</li>
+</ul>
+<p>Also I find this process natural compared to other "manufacturing tasks". I you build a table from wood or repair your kitchen sink you mess around and clean up. The surrounding of the "work item" loses and regains order. That´s what´s happening with ITDD too. Tests are written, mocks are created (mess) – and later discarded (clean up). I don´t need to be careful with my tests or at least not with all the tests. Some tests have a long lifetime: acceptance tests. But others are just temporary.</p>
+<p>I hope this helped to clarify how I think TDD can be enhanced by a little explicit thinking before coding.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

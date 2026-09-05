@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Objektorientierung an der Quelle — ralfw.de Archiv</title>
+<meta name="description" content="Was viele Entwickler so jeden Tag betreiben, soll ja Objektorientierung sein. Java, C, C++ und einige Sprachen mehr firmieren als objektorientiert. Sogar F sucht den Anschluss als ">
+<link rel="canonical" href="https://ralfw.de/archiv/2013/objektorientierung-der-quelle/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Objektorientierung an der Quelle — ralfw.de Archiv">
+<meta property="og:description" content="Was viele Entwickler so jeden Tag betreiben, soll ja Objektorientierung sein. Java, C, C++ und einige Sprachen mehr firmieren als objektorientiert. Sogar F sucht den Anschluss als ">
+<meta property="og:url" content="https://ralfw.de/archiv/2013/objektorientierung-der-quelle/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Objektorientierung an der Quelle</h1>
+    <div class="doc-meta"><span>7. Jan. 2013</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2013/01/objektorientierung-der-quelle.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2013/objektorientierung-der-quelle/</code></span></div>
+    <div class="art"><p>Was viele Entwickler so jeden Tag betreiben, soll ja Objektorientierung sein. Java, C#, C++ und einige Sprachen mehr firmieren als objektorientiert. Sogar F# sucht den Anschluss als hybride Sprache.</p>
+<p>Und wenn es dann in diesen Sprachen Klassen gibt, aus denen zur Laufzeit Objekte gemacht werden, dann ist das doch auch richtig – oder?</p>
+<p>Natürlich kann jeder unter Objektorientierung im Grunde verstehen, was er will. Oder Objektorientierung ist einfach der kleinste gemeinsame Nenner dessen, was irgendwie so genannt wird. Ja, so kann man die Kunst betreiben.</p>
+<p>Aber man kann es auch anders tun und sich fragen, was diese Objektorientierung denn ursprünglich mal sollte, wie sie eigentlich gedacht war. Was da herauskommt, finde ich spannend.</p>
+<p>Wer hat´s erfunden? Der <a rel="noopener" href="http://de.wikipedia.org/wiki/Alan_Kay">Alan Kay</a>. Und der sagt zu seiner Erfindung <a rel="noopener" href="http://www.purl.org/stefan_ram/pub/doc_kay_oop_en">in einer Emailkonversation</a> zum Beispiel das Folgende:</p>
+<blockquote>
+<p><em>“I thought of objects being like biological cells and/or individual computers on a network, only able to communicate with messages (so messaging came at the very beginning -- it took a while to see how to do messaging in a programming language efficiently enough to be useful).”</em> <em>“So I decided to leave out inheritance as a built-in feature until I understood it better.”</em> <em>“OOP to me means only messaging, local retention and protection and hiding of state-process, and extreme late-binding of all things.”</em></p>
+</blockquote>
+<p><a rel="noopener" href="http://en.wikiquote.org/wiki/Alan_Kay">An anderer Stelle</a> ist von ihm dann auch noch zu hören gewesen:</p>
+<blockquote>
+<p><em>“I invented the term Object-Oriented, and I can tell you I did not have C++ in mind.”</em> <em>Das Internet: “Possibly the only real object-oriented system in working order.”</em></p>
+</blockquote>
+<p>Nun frage ich mich, was der entscheidende Unterschied ist zwischen dem, was Alan Kay mal visionierte und dem, was wir heute haben? Denn ganz offensichtlich ist die heutige Objektorientierung nicht zu dem herangewachsen, was er gewollt hatte.</p>
+<p>Mir scheint, der Hauptunterschied liegt im Begriff Message. Bestätigung finde ich dafür auch <a rel="noopener" href="http://c2.com/cgi/wiki?AlanKaysDefinitionOfObjectOriented">hier</a> in der Bemerkung über Smalltalk-80, wo der Begriff Message irreführenderweise weiter verwendet wurde, obwohl es nur noch um synchrone bidirektionale Kommunikation zwischen Objekten ging.</p>
+<p><strong>Heutige objektorientierte Sprachen betreiben schlicht kein Messaging zwischen Objekten.</strong>Sie haben damit den Begriff aus dem Blick verloren, der am Anfang aller Objektorientierung stand (s.o. das erste Zitat).</p>
+<p>Im folgenden Code wird also keine (!) Message vom Aufrufer an Objekt <em>o</em> gesendet:</p>
+<p>var z = o.f(x, y);
+…
+o.p = “…”;</p>
+<p>Das erste ist nur ein Unterprogrammaufruf, ein procedure call. Das zweite ist ein Zugriff auf Daten eines Objektes.</p>
+<p>Keine Frage, so etwas ist nützlich. Ich denke nicht, dass Alan Kay das abschaffen wollte. Aber er hätte nicht mit der Objektorientierung begonnen, wenn er nicht darüber hätte hinausgehen wollen.</p>
+<p><strong>Messaging ist unidirektional. Und Objekte sind mindestens abgeschlossene, zustandsbehaftete Kapseln, die keine Struktur verraten, wenn nicht sogar autonom, d.h. auf eigenem Thread laufend.</strong></p>
+<p>Klassen, Vererbung, Polymorphie (über Basisklasse oder Interface)… das sehe ich daher ganz und gar nicht im Kern von Objektorientierung. Alan Kay hat eher an dynamische Programmierung gedacht, wenn er “extreme late-binding of all things” forderte.</p>
+<p>Und was bedeutet das? Wenn wir Alan Kay ernst nehmen, dann sollten wir erstens bei dem, was wir so üblicherweise tun, den OO-Mund nicht so voll nehmen. Zweitens sollten wir endlich beginnen, mal richtig objektorientiert zu denken und zu codieren. Manche Sprachen machen das sicher leichter als andere. Und dann schauen wir mal, wohin wir kommen, wenn wir unsere Software intern mehr nach dem Internet modellieren, das Alan Kay für das einzige funktionstüchtige echt objektorientierte System hält.</p>
+<p>In diesem Sinne: Merry encapsulation, and happy messaging!</p>
+<h2>Kommentare</h2>
+<p><strong>Nils Tubbesing</strong> (2013-01-07):</p>
+<p>Interessant. Das klingt nämlich nach so ziemlich exakt dem Gegenteil vom dem, was realexistierende OO ist. Die ist nämlich m.E. vor allem eins: Monolitisch! Hauptsächlich weil Objekte, wenn sie andere Objekte - z.B. aus einem Framework oder einer andereren Klassenbibliothek - nutzen wollen diese erstmal instanzieren müssen, sprich deren Implementierung kennen müssen. Damit kommen Referenzen, damit kommt die DLL-Hölle, usw. usf.. Klar kann man versuchen dem mit Dependency Injection-Techniken und ähnlichem entgegenzuwirken, aber eigentlich will ich nicht <em>gegen</em> die Grundeigenschaften einer Programmiersprache arbeiten müssen ...</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-01-07):</p>
+<p>@Nils: Und ich setze mal hinzu: Monolithisch bedeutet ja nicht "aus einem Dings" bestehen (also z.B. nur eine Klasse), sondern es bedeutet: das Ganze, auch wenn es aus Einzelteilen besteht, kann eben nur als Ganzes angesehen werden - zum Beispiel, weil die Einzelteile so fest zusammengebacken sind.</p>
+<p>Oder anders ausgedrückt: die unkontrollierten Abhängigkeiten (an denen DI nichts ändert), machen den Monolithen aus.</p>
+<p>Womit ich wieder - wie kann denn das nur sein? ;-) - beim Thema der vorhergehenden Blogartikel bin.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-01-07):</p>
+<p>Eine erstaunliche Trendwende im Verständnis der Softwareentwicklung?
+Sind Multicores (und ein globaler Heap) die Treiber?</p>
+<p>Mainstream Evolution:
+70/80er structured programming
+80/90er (deep) object oriented programming -&gt; Klassenbiliothken mit tiefen Hierarchien
+90/00 (flat) object oriented programming -&gt; Frameworks, flache Hierachien, Interfaces und Patterns
+2010 Functional programming -&gt; Funktionen, "lose" Objekte, Aktoren
+zukünftig: "fliessende Strukturen", adaptive Systems und Schwärme oder "natural languages"?</p>
+<p>Wird man in Zukunft feststellen, dass ein globale Heap nicht skaliert, wir also mehrere, getrennte Heaps haben werden = Miromachines (1 Core mit eigenem Heap und IO-Schnittstellen) - und dann wieder der Zyklus von neuem beginnt oder ganz neue Formen hervorbringt?</p>
+<p>Wird in Zukunft auch spannend bleiben. Aktuell sehe ich auch Vorteile im Messaging.
+Die Hardwareevolution und einhergehende Softwareevolution, die aktuelle Basis (JVM, CLR, LLVM) sehe ich noch Potential in den Sprachen, Tools und Libs für höheres Programmierniveau:
+- Keine Threads und Locks
+- Kein Heap, keine Nullpointer, korrupte Datenstrukturen
+- Modularisierung
+- kein Debugging, kein Compilierung
+- keine Typen, Daten und Methoden mehr, alles fliesst ineinander und je nach Betrachtungsweise ist es das eine oder andere?</p>
+<hr />
+<p><strong>Stelzi79</strong> (2013-01-07):</p>
+<p>Meiner Meinung liegt ja hier im Grunde ein Grundfehler des Menschen vor, dass er grundlegend Neueres mit gut Bekannten vergleicht und sich von alten (bewährten) Denkmustern nicht trennen kann. Ein eventuell nicht verstehen von neueren Denkmustern wird dann gerne auch als schlecht angesehen und viele können sich dann gar nicht mehr von alten Denkmustern trennen.</p>
+<p>Ein Parade-Beispiel wie ich finde, ist jetzt das neue Windows 8. Probleme haben nur die Leute, die sich auf Grund von schlechten und oftmals sehr unfairen Berichterstattungen blenden lassen und sich noch nicht mal die Mühe machen es verstehen zu wollen. Aus Erfahrung habe ich festgestellt, dass unerfahrene Leute, die man mal Kurz (so ca. 5 min ganz kurz zusammen gefasst) die "Besonderheiten" von Windows 8 erklärt, überhaupt keine Probleme mit Windows 8 haben.</p>
+<p>Da der Herr Kay, der sogenannte "Erfinder von OOP", ja noch in einem altem Denkmuster dachte und auch mit der Zeit entwickelte, hatte er sicherlich nicht die jetzige Form von OOP im Sinn. Auch ist zu erwähnen, dass ja meiner Meinung im C++ die ++ eigentlich nur dafür stehen, dass C die OOP aufgesetzt wurde. Ein C++-Compiler muss ja nach wie vor normalen C-Code Kompilieren können.</p>
+<p>Und gerade aus dieser Denkweise der noch nicht richtige verstandenen Denkweise der OOP kommen viele quasi Standard-Implementierungen von Funktionen. Da wurde dann halt aus einer funktionxy(x,y) geradewegs eine funktionssammlung.funktionxy(x,y) und so ist natürlich OOP nicht zu verstehen. Viele dieser in C++ entstanden Standard-Implementierungen werden ja gerade noch Heute in vielen Frameworks so wie damals und womöglich mit gleichen Funktionsnamen implementiert. Erst wenn diese alten Standard-Implementierungen aus der Zeit von Prozeduralen-Denkmustern aus Frameworks konsequent verbannt werden, kann von einer wirklichen OOP gesprochen werden!</p>
+<p>Ein "extreme late-binding of all things" ist meiner Meinung nach kein Bestandteil von OOP sondern ob es eine eher schwach typisierte Sprache sein soll. Ein Late-Binding womöglich noch zur Laufzeit, ist meiner Meinung nach nicht kompatibel mit einer stark typisierten Sprache. Wenn aus einem Einhorn mit rosa Fell zur Laufzeit ein grüner Apfel mit Wurm werden kann, ist da nicht nur im Apfel der Wurm drinnen! Im ganz klar eingegrenzten Einzelfall kann dies ja noch nützlich sein, aber im Normalfall sollte man solche "Möglichkeiten" raus lassen. Warum Programmiert man ein rosa Einhorn, wenn man zur Laufzeit einen grünen Apfel mit Wurm braucht.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-01-08):</p>
+<p>@Wolfgang: Dass es schwer ist, Denkmuster/Glaubenssätze zu überwinden, sehe ich auch so.</p>
+<p>Die Frage ist nur, welches die zu überwindenden Denkmuster sind. Ist es hier das de facto Verständnis von Objektorientierung - oder das, was Alan Kay ursprünglich gewollt hat?</p>
+<p>Für mich spricht einiges dafür, dass das zu überwindende Denkmuster in der Gegenwart liegt. Denn in der Gegenwart haben wir weithin unwartbaren Code, der mit dem gegenwärtigen OO-Verständnis hergestellt wurde. Da kann doch etwas nicht stimmen. Und ich weigere mich zu glauben, dass die Entwickler der letzten 20 Jahren dumm sind. Also bleibt nur der Schluss, dass etwas mit der Methode nicht ganz in Ordnung ist, die die nicht dummen Entwickler versucht haben anzuwenden.</p>
+<p>Deshalb habe ich mal auf die andere, ursprüngliche Sicht auf die Objektorientierung hingewiesen. Die könnte ja Denkmuster sein, das man mal ausprobieren kann.</p>
+<p>Wenn "extreme late binding" für dich nicht zur OOP gehört, dann ist das natürlich deine persönliche Sache. Aber es eine andere Sache, ob es zu Alan Kays OOP gehört. Und das ist der Fall, wie mein Zitat belegt.</p>
+<p>Die Frage ist also nicht, ob es dazu gehört, sondern ob es Vor- oder Nachteile hat. Und da gibt es mehrere Meinungen: deine - und auf der anderen Seite die der Entwickler, die mit dynamischeren Sprachen arbeiten. Duck Typing ist keine Flause in den Köpfen von Spinnern.</p>
+<p>Wo hilft also "extreme late binding" und wo ist es hinderlich? Ich habe gern beides: statische Typen mit Compilerchecks und "extreme late binding".</p>
+<hr />
+<p><strong>Nils Tubbesing</strong> (2013-01-08):</p>
+<p>Ich bin auch der Meinung, dass die OO im gegenwärtigem Zustand nicht (mehr?) die Anforderungen erfüllt, die man an eine Programmiersprache haben sollte, die im regulärem Umfeld für Geschäftsanwendungen eingesetzt wird: Schnell, planbar und damit wirtschaftlich wartungsfähigen Code erstellen. Nicht umsonst gibt es all die vielen esoterischen Pattern und Frameworks die uns helfen sollen <em>Alltagsprobleme</em> zu lösen. Was schlicht und ergreifend nicht notwendig sein sollte. Ein durchschnittlich begabter Entwickler sollte mit dem richtigem Werkzeug von Haus aus in der Lage sein halbwegs zur richtigen Lösung zu kommen, wenn er mit Alltagsanforderungen zu tun bekommt, auch ohne Softwarearchitekturtheologie studiert zu haben. Aber so ist es in der Praxis leider nicht.</p>
+<p>Der momentane Hype um dynamische Sprachen und die Tatsache, dass dynamische Techniken zunehmen Einzug in .NET erhalten kommt auf jeden Fall nicht von ungefähr. Offenbar haben uns strenge Typisierung und Kompilercheck nicht glücklich gemacht.</p>
+<p>In diesem Kontext sind die Aussagen von Kay zumindest interessant. Ob sein ursprüngliches Bild von der OO die Lösung (gewesen) wäre sei dahingestellt.</p>
+<hr />
+<p><strong>Hendrik Lipka</strong> (2013-01-08):</p>
+<p>Wenn man sich mal anschaut was man mit dem Kay'schen OOP-Idden anstellen kann, scheinen die Ideen nicht so schlecht gewesen zu sein. Squeak z.B. bringt nahezu alles mit sich was ein Betriebssystem ist, und besteht aus etwa 200kLoC. Aktuelles Ziel ist, den gleichen Funktionsumfang mit 20kLoC zu erreichen (siehe http://www.vpri.org/pdf/rn2006002_nsfprop.pdf ). Das halte ich mit Sprachen, die auf der heutigen OOP-Vorstellung basieren für unmöglich.</p>
+<p>Btw. gab es für Alan Kays Vorstellung von OOP gerade eben nur sehr wenige Vorbilder, auf die er sich beziehen konnte - insfoern gab es da nicht so sehr viele Denkmuster die er hätte bewahren können. Wenn es welche gab, dann kamen sie eher aus der Biologie (sein ursprüngliches Fachgebiet).</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-01-09):</p>
+<p>Liegt die Syntax (ich blende C# jetzt einmal aus) in in den Augen des Betrachters?</p>
+<p>var z = o.f(x, y);</p>
+<p>Ich könnte () als Message-Operator interpretieren. Also sende das Tupel (x, y) an f des Kontextes o.</p>
+<p>Das f ist aber nicht nur ein Messageempfänger, sondert sendet eine Nachricht zurück und dafür nutzt man den Empfangsoperator =.</p>
+<p>Wenn (x, y) unveränderbar sind, könnte man das auch in C# als Message (in C#-Syntax) ansehen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-01-10):</p>
+<p>Das ist die allgemeine Auffassung, dass z = o.f(x,y) eine Nachrichtenkommunikation darstellt.</p>
+<p>Aber ich habe mich schon immer gefragt, wo da die Nachricht ist. Und ich kenne viele andere Entwickler, die das auch nicht verstehen. Am Ende kann man natürlich einfach sagen, "So ist es! Das ist eine Nachrichtenkommunikation!" Aber damit kann man alles mit einem beliebigen Begriff, der grad passt, belegen.</p>
+<p>Wenn man hingegen irgendwie Message/Nachricht ernst nimmt und sozusagen näher am Alltagsgebrauch halten will, dann ist so ein Funktionsaufruf keine Nachrichtenkommunikation.</p>
+<p>Das Problem steckt aber nicht in (x,y). Das ist nur Syntaxzuckerguss. Natürlich kann eine Nachricht ein Tupel sein.</p>
+<p>Nein, das Problem steckt in der Kopplung von Request und Response. Der Sender wartet auf die Rückantwort. Und das wird auch mit await in C# 5 nicht besser.</p>
+<p>Für den Sender geht es erst weiter, wenn die Antwort da ist.</p>
+<p>Tut mir leid, das (!) verstehe ich nicht unter Nachrichtenkommunikation. Wenn ich einen Brief abschicke - der Prototyp einer Nachricht, denke ich -, dann warte ich doch nicht an meinem Postkasten auf die Antwort, bevor ich weitermache. Das tue ich auch nicht mit einer Email oder SMS. (Höchstens, wenn ich verliebt bin und mir nichts Schöneres vorstellen kann, als mit träumerischem Blick der Antwort meiner Geliebten zu harren :-)</p>
+<p>Das Hauptproblem bei der heutigen Ausgabe von Messages bei der OOP ist für mich also das Konzept der Funktion.</p>
+<p>Als Folgeproblem des Widerspruchs zur Nachrichtenorientierung sehe ich dann übrigens, dass Methoden lang und länger werden. Sie können nach jedem Nachrichtenversand ja weitergehen, da auf die Antwort gewartet werden kann.</p>
+<hr />
+<p><strong>Nils Tubbesing</strong> (2013-01-10):</p>
+<p>"Das Hauptproblem bei der heutigen Ausgabe von Messages bei der OOP ist für mich also das Konzept der Funktion."</p>
+<p>Letztendlich ist realexistierende OOP eben auch nur prozedurale Programmierung.</p>
+<p>Es fällt mir allerdings schwer mir eine rein asynchrone Message-orientierte Programmiersparache vorzustellen, mit der man in der Praxis auch produktiv arbeiten kann.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-01-10):</p>
+<p>Hi Ralf,
+ich denke das Beispiel mit dem Brief und der Funktion hinkt ein wenig.
+Das ist beim Brief ist es ja eher so als ob ich wie mir einem BackGroundWorker der Daten lade und sich dann meldet (der Postbote klingelt) wenn er fertig ist. Dann kann ich auch mit den Daten weiter arbeiten.
+Das mit der Funktion ist eher wie beim Auto betanken, da kann ich ja auch nicht los fahren bevor ich zu ende getankt habe. (Ok geht schon, nur ich komme wahrscheinlich nicht sehr weit. ;) )
+Um es mal so zu sagen Ohne keine Datenverarbeitung.</p>
+<p>Eine sehr lose Koppelung kann ma z.B. mit POCOs (Reinen Daten Objekten ohne jegliche Funktionalität) und Extension Methods (EMs)  erreichen.
+Die POCOs kennen nur sich selber du sonst nichts.
+Die EMs kennen nur das POCO für das sie sind und das POCO, was sie zurückgeben. Also nur die Daten auf denen sie Arbeiten.
+ Die Syntax  erinnert dann übrigens sehr an SmalTalk mit seinen Nachrichten.
+So sähe der einer der Flows aus deinen letzten Artikel aus:
+indexer = document.prasedoc.filterOccurrence.registOccurence</p>
+<p>MFG
+Björn</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-01-10):</p>
+<p>@Björn: Mit den Extension Methods kann man gut lesbaren Code basteln. Keine Frage.</p>
+<p>Aber beim Thema Nachrichten bin ich weiter anderer Meinung. Mir geht es um eine Definition von "Nachrichtenorientierung".</p>
+<p>Die lautet für mich: "Nachrichten sind unidirektional laufende Datenpakete. Und der, der sie abschickt, wartet nicht auf eine Antwort."</p>
+<p>Das entspricht der Erfahrung des gesunden Menschenverstands mit Nachrichten. Und dazu passt auch das Thema Delegation.</p>
+<p>Nun kann ich aber eine Nachricht auf zweierlei verschicken. Ich kann sie mit einem Adressaten verschicken, an den ich einen Wunsch habe. Das ist Delegation. "Hier sind Daten. Tue bitte dies und jenes mit ihnen."</p>
+<p>Und ich kann Nachrichten ohne Adressaten verschicken. Dann sind sie Informationen über mich als Absender, dann sind sie Ereignisse. "Ich habe ich einen Haufen Daten. Wer mag, tut damit etwas."</p>
+<p>Ersterer Modus bringt uns noch nicht so viel weiter. Besser wird es erst mit dem zweiten Modus.</p>
+<p>Ich nenne sie mal "extrovertierte Nachrichtenorientierung" und "introvertierte Nachrichtenorientierung" :-)</p>
+<p>Beim introvertierten Modus will ich als Datenproduzent nichts weiter. Ich versende Daten und mache dann irgendwas. Aber ich warte auf kein Ergebnis. Wenn irgendwer meine Daten interessant findet und damit etwas tut, dann ist das seine Sache. Und der kann dann wieder Ergebnisse publizieren. Und so weiter.</p>
+<p>Damit schrittweise dann doch etwas Neues entsteht, müssen solche Introvertierten Prosumenten zusammengebracht werden. Das macht eine Integration. Dazu am besten meine vorhergehenden Postings lesen.</p>
+<hr />
+<p><strong>McZ</strong> (2013-01-10):</p>
+<p>"Und das wird auch mit await in C# 5 nicht besser."</p>
+<p>Kommt darauf an. Await macht ja die Methode nicht synchron, sondern erlaubt bei Callback des Futures die Abarbeitung weiterer asynchroner Logik, ohne den Steuerfluss des Programms zu ändern.</p>
+<p>Alle neuen Asynchrony-Funktionen in C# 5 sind letztlich nur Hilfsmittel, die Komposition asynchroner Funktionalität zu vereinfachen.</p>
+<p>Letztendlich besteht die Code Maintenance Hell primär aus dem Thema Komponenten-Kopplung.
+Ein Nachrichtensystem ist primär ein Werkzeug zur Vermeidung dieses Problems. Zwei Module eines Systems müssen dann nur noch das "Vokabular" in Form bekannter Nachrichten kennen, statt im bisherigen Service-User-Pattern mit seinen fixen Abhängigkeiten zu verharren. EDI macht das bereits seit Jahrzehnten vor, und dort sind die System wirklich ultra-heterogen.</p>
+<p>Die poor-mans-solution - die ich viel öfter beobachte - ist die kreative Nutzung von Strings oder XML als neutrales Parameter-Übergabeformat. Deshalb habe ich auch gewaltigen Respekt vor Hypes, die mir dynamische Programmierung verkaufen wollen. Denn letztlich führen die nur ein neues, etwas besseres Neutralformat ein.</p>
+<p>Die Königsdisziplin der Entkopplung ist dann die GUI-Entwicklung. Wenn Artikelstamm und Lagerstamm sich nicht kennen, dann ist die Anzeige des Lagerbestands je Artikel eine Herausforderung.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-01-10):</p>
+<blockquote>
+<p>Das ist die allgemeine Auffassung, dass z = o.f(x,y) eine Nachrichtenkommunikation darstellt.
+"Nachrichten sind unidirektional laufende Datenpakete. Und der, der sie abschickt, wartet nicht auf eine Antwort."</p>
+</blockquote>
+<p>Die erste Aussage kann man als Nachricht auffassen, wenn sie UNVERÄNDERBAR ist - diese Bedingung hatte ich genannt. Die Unveränderbarkeit ist für mich eine zwingende Eingenschaft eines Messaging (sogar vor Asynchronität).</p>
+<p>Die verlangte Nebenläufigkeit zweiten Punktes konnte ich in Alan Kays zitierte Aussage nicht finden. In der Praxis führt das auch zu langsamen Systemen, wenn man dieses Prinzip für alle "Objekte" anwenden sollte. Ich stimme dir zu, dass das eine Eigenschaft von nachrichtenorientierten Systemen ist, aber das habe so bei Alan Kays Aussage nicht herausgelesen (oder überlesen?).</p>
+<p>Die gewünschte Nachrichtenorientierung sehe ich bei grob- und mittelgranularen Einheiten als wertvolle Eigenschaft. Deren internen Strukturen sollten darauf aber aus Effizienzgründen verzichten und stattdessen eher immutable Referenzen auf Datenstrukturen bestehen und wenn es notwendig ist, auch eben änderbar sein oder andere Seiteneffekte haben.</p>
+<p>Dennoch erstaunt mich ein wenig, dass eine Denkweise und Interpretation eines Gedankengangs in eine Richtung möglich scheint, in eine andere nicht: Ist die Vorstellung z = o.f(x,y) wirklich so abwägig und falsch?
+Stellt die FowRuntime eigentlich sicher, dass Message.Data unveränder ist?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-01-11):</p>
+<p>Die Nebenläufigkeit meine ich auch nicht unbedingt im physischen Sinne.</p>
+<p>Wer eine Nachricht abschickt, der muss nicht zwangsläufig auf einem anderen Thread laufen als der/die Nachrichtenempfänger.</p>
+<p>Mir geht es um die inhaltliche (!) Unabhängigkeit.</p>
+<p>Wo steht</p>
+<p>// vorher
+this.OnSomeData(data);
+// nachher</p>
+<p>da ist es egal, ob "nachher" sofort ausgeführt wird, weil Subscriber von OnSomeData auf ihrem eigenen Thread laufen - oder ob "nachher" erst ausgeführt wird, wenn Subscriber mit ihrer Arbeit fertig sind.</p>
+<p>Der Trick ist, dass in "nachher" auf eventuelle Subscriber und ihre Arbeit auf data keine Rücksicht genommen wird. Das meine ich mit "Principle of Mutual Oblivion" (s. vorhergehende Blogpostings).</p>
+<p>Das ist für mich Messaging.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-01-11):</p>
+<p>„Der Trick ist, dass in "nachher" auf eventuelle Subscriber und ihre Arbeit auf data keine Rücksicht genommen wird.“
+Das Problem ist doch das data „vorher“ in einem Zustand ist der „nachher“ anders sein soll, bzw. ich habe andere Daten die ich ändern möchten die aber vom Zustand abhängig ist.
+Wenn durch aufrufen der Methode der Zustand des Systems nicht geändert wird. Brauche ich die Methode nicht aufrufen.
+Wenn die Zustandsänderung des Systems keine Auswirkung hat brauche ich die Methode auch nicht aufrufen.
+Das heißt der Methoden Aufruf macht nur Sinn wenn „vorher“ anders ist als „nachher“. Damit habe ich auch eine Abhängigkeit.</p>
+<p>MFG
+Björn</p>
+<hr />
+<p><strong>Nils Tubbesing</strong> (2013-01-11):</p>
+<p>Es geht ja nicht darum Abhängigkeiten grundsätzlich zu vermeiden, dann würden die Teilkomponenten nicht zusammenarbeiten, sondern nur unnötige Abhängigkeiten. Und davon gibt es in der OO in der gängigen Form leider sehr viele. Wenn die Methode mir aus Vorname, Nachname, Geschlecht und Titel eine Anrede basteln soll, soll die Abhängigkeit zwischen Aufrufer und Bereitsteller der Methode auch nur in der Verabredung der Ein- und Ausgabeparameter bestehen. Die im Normallfall bestehende enge Kopplung an die Assembly und ihrer Klassenstruktur, in der die Methode residiert, ist hingegen für die Erfüllung der eigentlichen Aufgabe überflüssig bis hinderlich.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-01-12):</p>
+<p>@Björn: Das Problem ist, dass "vorher" und "nachher" in den meisten Fällen Logik enthalten und die aufgerufene Funktion auch. Logik vorher und Logik nachher werden durch die Möglichkeit von Request/Response gekoppelt.</p>
+<p>Das Ergebnis sehen wir regelmäßig in Form von 5000 LOC Methoden. Die können nur entstehen, weil es Funktionen gibt.</p>
+<p>Gäbe es keinen Funktionen, wäre das, was nachher passiert sehr begrenzt. Es könnte immer noch etwas nach dem Feuern eines Events gemacht werden - nur kann sich das nicht mehr auf irgendwelche Ergebnisse eines Subscribers beziehen. (Jedenfalls nicht, wenn wir mal globale Daten außen vor lassen.)</p>
+<p>Wen wir also von einem Funktionsaufruf absehen und auch noch davon absehen, uns an Semantik zu binden (das geschieht nämlich immer, wenn wir wollen, dass etwas spezifisches mit den Daten passiert)... dann entkoppeln wir viel mehr.</p>
+<p>Das steckt hinter IOSP und PoMO.</p>
+<hr />
+<p><strong>Thomas</strong> (2013-01-12):</p>
+<p>Hallo zusammen,</p>
+<p>inzwischen wird hier etwas über "Nachrichtenorientierung" gesprochen, welche die Übertragung verschleiert, das Threading übernimmt und "semantisch" ist. Vielleicht errinnert sich der ein oder andere ja an's Studium. Neben der OOP gibt es auch noch andere Konzepte und eines davon ist das der Agenten.</p>
+<p>Ich nutze momentan JADE http://jade.cselt.it/ mit einem semantic-addon und dieses bietet mir die Möglichkeit Teile zu definieren, welche über semantische Nachrichten kommunizieren und sich ansonsten komplett unabhängig verhalten. Leider ist es in java aber ansonsten macht es Spaß und bietet einen anderen Ansatz. Kann für manche ein Ansatz sein.</p>
+<p>mfg Thomas</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

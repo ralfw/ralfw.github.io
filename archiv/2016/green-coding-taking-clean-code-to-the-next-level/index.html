@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Green Coding - Taking Clean Code to the Next Level — ralfw.de Archiv</title>
+<meta name="description" content="When things change sufficiently their names should follow. Label and content should be in sync. Otherwise the label loses its usefulness. That&#x27;s what the Single Responsibility Prin">
+<link rel="canonical" href="https://ralfw.de/archiv/2016/green-coding-taking-clean-code-to-the-next-level/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Green Coding - Taking Clean Code to the Next Level — ralfw.de Archiv">
+<meta property="og:description" content="When things change sufficiently their names should follow. Label and content should be in sync. Otherwise the label loses its usefulness. That&#x27;s what the Single Responsibility Prin">
+<meta property="og:url" content="https://ralfw.de/archiv/2016/green-coding-taking-clean-code-to-the-next-level/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-01)"></span>ralfw.de</p>
+    <h1>Green Coding - Taking Clean Code to the Next Level</h1>
+    <div class="doc-meta"><span>4. Juni 2016</span><span>Erstveröffentlichung: ralfw.de</span><span><a href="https://ralfw.de/green-coding-taking-clean-code-to-the-next-level/" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2016/green-coding-taking-clean-code-to-the-next-level/</code></span></div>
+    <div class="art"><p><img loading="lazy" alt="" src="/assets/01-ralfw.de/39251b00fc94a24b.jpg" /></p>
+<p>When things change sufficiently their names should follow. Label and content should be in sync. Otherwise the label loses its usefulness. That's what the <em>Single Responsibility Principle</em> and refactoring are about. But it's true not only for code. It's also true for concepts and methods.</p>
+<p>When Robert C. Martin wrote his book "<a rel="noopener" href="https://www.amazon.de/Clean-Code-Handbook-Software-Craftsmanship-ebook/dp/B001GSTOAM">Clean Code</a>" in 2008 he put a label on a certain set of principles and practices. That was very valuable indeed. From then on developers were able to talk much easier about a particular aspect of software development. Evolvability - the quality behind <em>Clean Code</em> - was better to grasp and communicate to managers.</p>
+<p>Since then, though, quite some time has passed. And as important as the building blocks of <em>Clean Code</em> are, they are not enough. As long as one focuses only on the content of "Clean Code" or "<a rel="noopener" href="https://www.amazon.de/Art-Readable-Code-Theory-Practice-ebook/dp/B0064CZ1XE">The Art of Readable Code</a>" to improve evolvability, it's hard to go beyond a certain level. At least that's what we've been observing throughout the past 7 years since <a rel="noopener" href="http://lieser-online.de">Stefan Lieser</a> and I founded the <a rel="noopener" href="http://clean-code-developer.de/">Clean Code Developer</a> initiative, which has become very popular among German speaking developers.</p>
+<h2>Something missing</h2>
+<p>Teaching SRPSLASoCISPOCPLoD etc. simply is not enough. It helps to improve awareness, it leads to better codebases. But still... something is missing.</p>
+<p>There are tons of valuable, tried and true principles and practices in those books waiting to be applied. Take a look at the tables of contents. They are chock-full of stuff you should know (or at least have heard about ;-) ). What's lacking, though, is a framework to tie it all together. Yes, that's what we've found.</p>
+<p>You can write down all those principles and practices on index cards and learn them. Great! Go ahead! And then of course apply them. But there's no story behind them. No narrative. No path to follow.</p>
+<p>Certain "calls to action" like "Do TDD!" or "Do pair programming!" or "Do regular reviews!" describe activities (practices), but still don't tell a story.</p>
+<p>That's strange, because there always is a story to tell in software development. It has a start, it has a (more or less clearly defined) end, it's full of dangers and moments of success. It's even a quest, I'd say. There are fellows and adversaries. There are unexpected turns of events. It's full of despair, and WTFs, but also joy.</p>
+<p>There is a story we all follow again and again when we embark on a software project. In it we seek to please King Customer by finding the ultimately satisfying code. Today that's not just functional and efficient code, but also code which is clean. Our industry's contemporary version of a holy grail.</p>
+<p>Despite all the principle and practices of great utility for a successful quest, there is no map for our path. We're not provided with a guideline, no handrails, no Ariadne's thread to follow from a customer's request to a satisfying codebase.</p>
+<p>Try it for yourself. Here's a sample quest you can set out on, the <a rel="noopener" href="http://ccd-school.de/coding-dojo/agility-katas/viewing-csv-files-i/">CSV Viewer application kata</a>. It's simple, but not trivial requirements. You're supposed to produce a small application. Now, how do you do that? Can you describe how you move forward? What do you do first, what second and so on? And most importantly: How do you ensure you´re writing <em>Clean Code</em> right from the beginning?</p>
+<p>Confronted with this task many developers have a hard time to provide a straightforward answer. They are lacking a systematic approach to software development - despite all the OOP they've heard about, despite all the Agile processes they've heard about, despite all the <em>Clean Code</em> principles and practices they've heard about.</p>
+<p>I call it "the fear of the blank flipchart" ;-) Because when asked to sketch their approach and/or their solution on a flipchart, they fear to draw anything on a blank flipchart sheet. What should they draw? Where to start? Use a diagram or text? That's a mystery to many, if not most developers.</p>
+<p>And so they resort to the one thing they know best: textual code. Code in the IDE is concrete, it can be executed and thus checked if it's pointing in the right direction.</p>
+<p>Of course RAD tools of all sorts are a godsent. Unfortunately, though, code is much harder to change than a thought or a diagram on paper. And communicating ideas through code is harder than with images.</p>
+<p>That's why we think, what's lacking is a straightforward <em>method</em> to move from requirements to not only functional and efficient, but also <em>Clean Code</em>.</p>
+<p>It should be easy to write <em>Clean Code</em> right from the start. Don't wait for some kind of review to fix your code. You can't test correctness into code. You can't review evolvability into code. Reviews will be skipped too easily. So better write <em>Clean Code</em> the first time.</p>
+<p>Starting with <em>Clean Code</em> right is not a matter of code alone, however. It's also a matter of how you deal with requirements, and how you think about the solution before you write any code. Both aspects - requirements analysis as well as solution design - are not part of what has been subsumed under the title <em>Clean Code</em> so far, though. But they are as important to evolvability as is the SLA or good names or good formatting or good comments or unit tests.</p>
+<p>Over time this has led us to the conclusion, <em>Clean Code</em> wasn't anymore an appropriate name for what's needed to really reach considerably higher levels of evolvability. But what else to call a method including <em>Clean Code</em>? "Clean Code 2.0"? We toyed with that idea but it never felt quite natural.</p>
+<h2>Green Coding</h2>
+<p>Then, the other day, it hit us. A customer of ours had written "Green Code" on a flipchart next to other building blocks of <em>Clean Code</em>. (Thanks, Guido!) "Green Code" immediately resonated with us. And after some thinking we settled on <em>Green Coding</em>. To us that sounds about right. It's a crips description of what we envison the next level of improving evolvability to be:</p>
+<ul>
+<li>"Green" - although a bit worn - denotes (even more) clearly the purpose of this kind of coding: sustainability. Software has to evolve to be of value not only today but indefinitely into the future. Customers who order a software don't put an expiration date on it. Also they don't tell you what kind of changes the software needs to undergo until it's taken out of operation. Thus software development has to move forward in a sustainable manner. Code is a resource which needs to be treated like a forest. You can't just do anything to it to satisfy short term requirements. "Green" has become synonymous for sustainability, but it's more striking.</li>
+<li>"Coding" instead of "Code" is supposed to emphasize the process instead of just a result. We need to talk more about what to do and when to do it in order to move forward from requirements to an evolvable codebase. Still it's the code the customer wants. But that should not just conform to certain principles, but also be produced in a manner making it more likely to be evolvable. We need to talk about behavior and ways of thinking. That's why we deem "Coding" more encompassing than "Code".</li>
+</ul>
+<p><img loading="lazy" alt="Green Coding" src="/assets/01-ralfw.de/7de496b04d4cda34.jpg" /></p>
+<p>In the past years we've embellished <em>Clean Code</em> with principles and practices like IOSP/PoMO, spinning/shuffling, Informed TDD, data flow design, requirements slicing and more. A de facto new whole has emerged of which the original <em>Clean Code</em> building blocks are a part. But the new whole now deserves a name of its own. We think <em>Green Coding</em> is a good candidate for that. It puts content and label in sync again.</p>
+<p>Stay tuned for elaboration of the details of this method... ;-)</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

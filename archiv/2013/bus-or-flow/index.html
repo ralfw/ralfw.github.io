@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bus or Flow? - Messaging done one way or the other — ralfw.de Archiv</title>
+<meta name="description" content="Messaging is neutral to the way it´s done. There is nor right or wrong. You think of a message bus, when you hear about communication by messages in software? That´s fine. You thin">
+<link rel="canonical" href="https://ralfw.de/archiv/2013/bus-or-flow/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bus or Flow? - Messaging done one way or the other — ralfw.de Archiv">
+<meta property="og:description" content="Messaging is neutral to the way it´s done. There is nor right or wrong. You think of a message bus, when you hear about communication by messages in software? That´s fine. You thin">
+<meta property="og:url" content="https://ralfw.de/archiv/2013/bus-or-flow/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>Bus or Flow? - Messaging done one way or the other</h1>
+    <div class="doc-meta"><span>28. Aug. 2013</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2013/08/28/bus-or-flow---messaging-done-one-way-or-the.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2013/bus-or-flow/</code></span></div>
+    <div class="art"><p>Messaging is neutral to the way it´s done. There is nor right or wrong. You think of a message bus, when you hear about communication by messages in software? That´s fine. You think of "pipes and filters", when you hear about messaging? That´s fine, too.</p>
+<p>Messaging does not dictate specific means for how to send messages. All´s well, as long as messages are sent one-way and sender and receiver are oblivious of one another (Principle of Mutual Oblivion (PoMO)).</p>
+<p>Let me show you what I mean with an example. Here´s a scenario:</p>
+<p>A small application is to be written to count the lines of code (LOC) in C# files located in a directory tree.</p>
+<p>The user should be able to select the root path of the .cs files. And once the LOC counting has started, the progress should be shown. At the end, the stats on the number of files processed and the total LOC are to be displayed.</p>
+<p>To solve this problem, there are at least two parties involved: a UI and some domain logic. They should be communicating via messaging. But how?</p>
+<p>Should there be a clear flow, where processing gets initiated by some interaction of the user with the UI, then data flows to the main processing unit, which outputs progress updates and finally the LOC count stats to the UI? Cause and effect, flow of processing are clearly visible.</p>
+<p>Or should the cooperating parties hand over their messages to a bus for delivery?</p>
+<p>What´s the better way to connect UI and domain logic? Codewise both is easy. Here´s how the flow could get wired up:</p>
+<pre><code class="language-csharp">// build
+var ui = new Form1;
+var interactions = new Interactions;
+
+// bind
+interactions.Progress += ui.Display_Progress;
+
+ui.OnFolderSelected += path =&gt; {
+    var stats = interactions.Count_LOC_in_Path(path);
+    ui.Display_Stats(stats);
+};
+
+// run
+Application.Run(ui);
+</code></pre>
+<p>Output could flow through events (<code>ui.OnFolderSelected</code>, <code>interactions.Progress</code>) or be returned from a function (<code>interactions.Count_LOC_in_Path</code>). Input would flow by calling methods (<code>ui.Display_Progress</code>, <code>interactions.Count_LOC_in_Path</code>).</p>
+<p>And here´s how the bus could be employed:</p>
+<pre><code class="language-csharp">// build
+var bus = new Bus;
+var ui = new Form1(bus);
+var interactions = new Interactions(bus);
+
+// bind
+bus.Subscribe(&quot;PathToAnalyse&quot;, interactions.Count_LOC_in_Path);
+bus.Subscribe(&quot;LOCStats&quot;, ui.Display_Stats);
+bus.Subscribe(&quot;AnalysisProgress&quot;, ui.Display_Progress);
+
+// run
+Application.Run(ui);
+</code></pre>
+<p>To receive input, functional units would subscribe to certain notifications. The bus then would call the appropriate handlers. Output on the other hand would be published by handing it over to the bus, e.g. <code>bus.Publish("PathToAnalyse", @"c:...");</code>.</p>
+<p>Which approach to messaging would you choose? What are the advantages/drawbacks of one or the other?</p>
+<p>And how to continue below that level? Because however Count does its work, it´s cerainly more than one concern involved and more than one step to take:</p>
+<ul>
+<li>Relevant files have to be gathered</li>
+<li>File contents have to be loaded</li>
+<li>Lines of code have to be counted</li>
+<li>Stats have to be compiled</li>
+<li>Report progress, maybe as each file gets tackled</li>
+</ul>
+<p>For that a flow like this comes to my mind. It could be easily implemented, event without wiring-up events and event handlers. Just a sequence of method calls:</p>
+<pre><code class="language-csharp">class Interactions {
+    public string Count_LOC_in_Path(string path) {
+        var fsa = new FilesystemAdapter;
+        var lc = new LineCounter;
+
+        fsa.Find_CS_files(path, filename =&gt; {
+            Progress(Path.GetFileName(filename));
+            var content = fsa.Load_file(filename);
+            lc.Count_LOC_in_file(content);
+        });
+
+        return lc.Stats;
+    }
+
+    public event Action Progress;
+}
+</code></pre>
+<p>Except for <code>fsa.Find_CS_files</code> which does not return a single value, but produces a stream of filenames as output via a continuation:</p>
+<pre><code class="language-csharp">public void Find_CS_files(string path, Action OnFilename) {
+    Directory
+        .GetFiles(path, &quot;*.cs&quot;, SearchOption.AllDirectories)
+        .Where(filename =&gt; !Path.GetFileName(filename)
+            .StartsWith(&quot;Temporary&quot;))
+        .ToList
+        .ForEach(OnFilename);
+}
+</code></pre>
+<p>Using a continuation keeps the enumeration in the leaf method of the call tree: <code>Find_CS_files</code>. This way the code follows the Integration Operation Segregation Principle (IOSP). It keeps nodes in a call tree free of logic; logic only resides in leafs. That makes them easier to test and the whole tree easier to understand.</p>
+<p>Of course this functionality could also be implemented using a bus to conduct the messages between the cooperating functional units, e.g. the file system adapter and the true domain logic.</p>
+<p>But the question would be the same as above: What´s the better approach for a messaging scenario? Should a bus or a flow be used?</p>
+<p>My personal answer is twofold:</p>
+<ol>
+<li>Whether to use a bus or a flow is less important than to use messaging at all. Following the IOSP and the PoMO makes the most difference, I guess. So if Steve is in favour of "pipes and filters" and I like wiring up events or just plain sequences of method calls, should be not point for much dispute.</li>
+<li>That said, I´d like to put it this way: understandability over decoupling. Both, understandability and decoupling are important, but since with IOSP and PoMO the decoupling is already high, I think the next issue to tackle should be understandability and not further decoupling. Since flows are easier to understand in terms of "how is input processes to yield output?" I´d say use a flow whenever in doubt. That means on the other hand: use a bus whenever understandability is not hurt.</li>
+</ol>
+<p>What does that mean regarding the above example scenario?</p>
+<p>I´d connect UI and domain logic using a bus. Their interplay is readily understandable. Or you could argue, UI and domain logic should be as decoupled as possible to make the UI easier to exchange.</p>
+<p>For the domain logic, though, I´d prefer a flow. That´s where the action is. That´s the most likely area for changes. So the need for understandability is high.</p>
+<p>Also this is where precise coordination is required. Using a bus it´s harder to correlate response processing with requests. Currently the example system is too small to actually feel this. But if it grows, decoupling the file system adapter and the domain logic would lose some of it´s simplicity.</p>
+<p>For me a bus thus is more of a tool for distributed scenarios, where correlation overhead does not have such a big impact. But that does not mean I won´t use it in-process. As I said: if understandability is not hurt, use a bus for it´s added decoupling.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

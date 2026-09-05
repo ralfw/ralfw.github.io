@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vorzeitige Optimierung durch Monolithen — ralfw.de Archiv</title>
+<meta name="description" content="Softwareentwicklung ist historisch ein Geschäft der knappen Ressourcen. Speicher war knapp, Speicher war langsam, die Prozessorgeschwindigkeit war gering, die Prozessorverfügbarkei">
+<link rel="canonical" href="https://ralfw.de/archiv/2013/vorzeitige-optimierung-durch-monolithen/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Vorzeitige Optimierung durch Monolithen — ralfw.de Archiv">
+<meta property="og:description" content="Softwareentwicklung ist historisch ein Geschäft der knappen Ressourcen. Speicher war knapp, Speicher war langsam, die Prozessorgeschwindigkeit war gering, die Prozessorverfügbarkei">
+<meta property="og:url" content="https://ralfw.de/archiv/2013/vorzeitige-optimierung-durch-monolithen/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Vorzeitige Optimierung durch Monolithen</h1>
+    <div class="doc-meta"><span>21. Feb. 2013</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2013/02/vorzeitige-optimierung-durch-monolithen.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2013/vorzeitige-optimierung-durch-monolithen/</code></span></div>
+    <div class="art"><p>Softwareentwicklung ist historisch ein Geschäft der knappen Ressourcen. Speicher war knapp, Speicher war langsam, die Prozessorgeschwindigkeit war gering, die Prozessorverfügbarkeit war niedrig und die Kommunikation zwischen Prozessoren/Maschinen war unmöglich bis schwierig.</p>
+<p>Ich glaube, diese jahrzehntelange Not ist zum Bestandteil der Kultur der Softwareentwicklung geworden. So wie die Not der (Vor)Kriegszeit zur Kultur unserer Eltern und Großeltern gehört.</p>
+<p>Der Teller wird leer gegessen. Man schmeißt keine Lebensmittel weg. Mit dem Essen spielt man nicht. Kerzenstummel und andere Reste werden gehortet. Socken müssen gestopft werden. Wer kennt solche Ermahnungen und Verhaltensweisen nicht von Eltern und Großeltern? Sie entstammen einer tief liegende Angst, dass das, was heute verfügbar ist, morgen wieder weg sein könnte. In der heutigen Zeit des Überflusses sind es allerdings Anachronismen [1].</p>
+<p>Ähnlich kommen mir nun viele Reflexe von Entwicklern vor. Sie mahnen, nicht verschwenderisch mit Speicher umzugehen; sie bedenken zu allererst die Performance; sie misstrauen jeder Ressource und jeder Interaktion [2].</p>
+<p>Dabei leben auch wir inzwischen in Zeiten des Überflusses. 48 KB oder 640 KB Hauptspeicher oder 5 MB Festplatten sind heute nicht mehr Stand der Dinge. Für viele (oder gar die meisten?) Anwendungsszenarien ist Hardware heute so groß, schnell und billig, dass sie keine Begrenzung mehr darstellt.</p>
+<p>Komplette Unternehmensdatenbanken können wir heute im Hauptspeicher halten. Prozessoren haben mehrere Kerne. Festplatten sind schnell und groß. Rechner sind in Gigabit-Netzwerke eingebunden. Und quasi unendlich viele Rechen- und Speicherressourcen stehen auf Abruf weltweit zur Verfügung.</p>
+<p>Doch die Mentalität ist immer noch eine der Knappheit. Das kann ich irgendwie verstehen; ich bin ja selbst in Zeiten der Hardwaremängel mit der Programmierung groß geworden. Jetzt sollten wir aber mal diese Haltung langsam ändern. Solange wir uns ihrer nämlich nicht bewusst sind und sie versuchen zu überwinden, verschwenden wir unsere Zeit und geistige Kapazität. Die sind nämlich tatsächlich noch genauso begrenzt wie früher.</p>
+<p>In vielen Bereichen ist die Mangelkultur ein Anachronismus. Wir verhärten uns mit ihr gegen nützliche Veränderungen. Denn dass sich einiges verändern muss, ist unzweifelhaft. Beispiel: Softwareentwurf. Wir müssen Software anders entwerfen, damit die Strukturen evolvierbarer werden. Das heutige Legacy Code Problem darf sich nicht ungebremst so fortsetzen.</p>
+<p>Für mich ist es ein Problem des Mangeldenkens, weil die uns so drückenden Softwaremonolithen aus meiner Sicht Kinder des Mangeldenkens sind. Denn warum sollte man Code zu einem Monolithen zusammenschweißen, wenn nicht aus Angst vor Performance- und Speicherproblemen?</p>
+<p>Unter Monolith verstehe ich hier Software, die all ihre Aufgaben in möglichst wenigen Prozessen erledigt. Am besten ist das nur einer, eine Desktopanwendung (bzw. ein Batch) oder eine Web-Anwendung. Ein Betriebssystemprozess hostet dabei die gesamte Funktionalität. Das ist das Ideal.</p>
+<p>Das ist einfach zu deployen. Das ist vermeintlich einfach zu entwickeln, da man alles in ein Visual Studio Projekt stecken kann. Das ist schnell, weil die gesamte Kommunikation innerhalb des Adressraums eines Prozesses stattfindet. Das ist technisch simpel, weil man sich nicht mit Infrastruktur herumschlagen muss.</p>
+<p>Natürlich verstehe ich all diese Beweggründe. Ich habe auch so gedacht. Doch inzwischen glaube ich, dass wir uns damit keinen Gefallen tun, wenn wir so auf diese Mängel stieren. Das Deploymentproblem ist heute nicht mehr so groß wie noch vor 10 Jahren; die Kommunikationsgeschwindigkeit ist mit heutigen Prozessoren, Hauptspeichern und Netzwerkverbindungen auch zwischen Prozessen oft ausreichend. Und die Infrastruktur müssen wir nicht mehr in dem Maße selbst programmieren wie noch vor 10-20 Jahren [3]. Wer heute einen Monolithen entwickelt, der betreibt also vorzeitige Optimierung. Er optimiert für Mängel, deren Existenz nicht gesichert ist im Hinblick auf eine konkrete Domäne.</p>
+<p>Unsere Kultur verhindert jedoch, dass wir dieses Potenzial voll ausschöpfen. Wo es nicht anders geht, da wird es getan. amazon, Twitter, Facebook, eBay usw. können nicht anders, als an die heutigen Grenzen zu gehen.</p>
+<p>Wer allerdings heute ein CRM oder sonstige Intranet/Desktop-Software programmiert, der verschenkt Potenzial. Der schnürt sich ein in ein Korsett, dass man geradezu masochistische Neigungen vermuten könnte.</p>
+<p>Wenn es denn sonst keine Probleme gäbe, wäre das ja nicht schlimm. Jedem seine Neigung ;-) Das Evolvierbarkeitsproblem halte ich jedoch für so groß, dass wir uns “Neigungsprogrammierung” in dieser Hinsicht nicht mehr erlauben können. Die mittel- bis langfristige Gesundheit unserer Software leidet darunter. <a rel="noopener" href="http://blog.ralfw.de/2012/09/vorsicht-co-evolution.html">Und auch die unserer Teams</a>.</p>
+<p>Wir müssen bessere Wege finden, um Software über die Jahre nicht nur zu retten, sondern entspannt weiterentwickeln zu können. Dazu gehört für mich immer mehr auch die Neuentwicklung. Ja, genau, Code wegschmeißen und neu machen.</p>
+<p>Dass das nicht für komplette Anwendungen funktioniert, ist mir klar. Deshalb müssen wir aufhören, Monolithen zu bauen. Die können wir nämlich nur komplett ersetzen – was unökonomisch ist. Oder wir müssen sie zu Tode refaktorisieren.</p>
+<p>Mit geht es um einen Mittelweg. In <a rel="noopener" href="http://blog.ralfw.de/2012/09/form-follows-feasibility.html">“Form Follows Feasibility”</a> hatte ich schon darüber nachgedacht. Seitdem bin ich nur sicherer geworden, dass solch ein Mittelweg nötig und gangbar ist – wenn wir uns aus dem Mangeldenken befreien.</p>
+<p>Die bewusste Strukturierung auch von Deskptop- oder Web-Anwendungen in mehrere Services, d.h. Komponenten mit plattformunabhängigem Kontrakt, ist mir sogar noch wichtiger geworden.</p>
+<p>Erstens kann man sich mit plattformunabhängigen Kontrakten weniger in die Tasche lügen, was die Entkopplung von Code angeht. Zweitens bieten nur solche Kontrakte die Chance, sich vor der <a rel="noopener" href="http://blog.ralfw.de/2012/12/pervertierte-dienerschaft.html">drohenden Systemrelevanz</a> der Programmierplattform mit einhergehender Verkalkung des Teams zu schützen.</p>
+<p>Jede Software als “web of services” zu denken, sollte der Default werden, glaube ich. Und erst wenn sich das handfest als suboptimal herausstellt, sollte mit einer Optimierung begonnen werden.</p>
+<h4>Endnoten</h4>
+<p>[1] Die Motive Respekt und Dankbarkeit hinter solcher Haltung will ich nicht ausschließen. Schön, wenn sie denn mitschwingt. Auch im Überfluss tun wir sicherlich gut daran, Bescheidenheit und Respekt unserer Umwelt entgegen zu bringen.</p>
+<p>[2] Schizophren ist, dass diese Haltung komplett umkippen kann. Denn der Umgang mit Objekten in verteilten Anwendungen war (und ist?) von großer Naivität, gar Sorglosigkeit geprägt. Da spielten Skalierbarkeit, Robustheit und Performance lange so gar keine Rolle. Anders sind CORBA, EJB und DCOM und auch noch Teile von .NET Remoting nicht zu erklären.</p>
+<p>[3] Eine Kommunikation zwischen Prozessen, die über die Welt verteilt sind, ist via Internet und Cloud API wie Pubnub oder iron.io heute eine Sache weniger Zeilen Code.</p>
+<h2>Kommentare</h2>
+<p><strong>Michael Pralow</strong> (2013-02-21):</p>
+<p>Architektur ist nie Selbstzweck, letztlich geht es um das Umsetzen von Anforderungen.</p>
+<p>Dabei sind fachl. Anforderungen selten der Art "Zukunftsicherheit sicherstellen - für 10 Jahre". Durchaus zu Recht, niemand kann sicher soweit schauen (im Zweifel ist der von Ihnen genannte Ansatz da auch schon wieder überholt). Und der Anforderer ist auch eher selten so "strategisch" aufgesetzt.</p>
+<p>Das zugrundeliegende Problem hierbei bzw. die Quelle der Unsicherheit, es fehlt an der "Strategie". Also was will das Unternehmen erreichen? Und wie will es das tun? Mit welchem zeitlichen Horizont? Wie kann die IT diese Ziele unterstützen (operationalisieren)? Wie kann die Architektur... Sie wissen schon :-)</p>
+<p>Der oben genannte Ansatz könnte einem "time to market, wir akzeptieren ständige Neubauten" eher entgegenstehen.</p>
+<p>Langer Rede kurzer Sinn, der von Ihnen genannte Ansatz klingt für mich nach einer höheren Anfangsinvestition um später und länger weniger zu investieren. Je nach Unternehmensorganisation würde ich dafür einen strategische Entscheidungsprozess in Gang setzen (wollen).</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-02-22):</p>
+<p>Dass es eine größere Anzahl an Monolithen gibt, die im Bewusstsein der Konsequenzen gebaut worden wären, bezweifle ich.</p>
+<p>Weder bei Managern noch bei Entwicklern existiert eine Sensibilität für die trade-offs. Und selbst wenn sie existierte, mangelt es weithin an der schlichten Fähigkeit, es anders zu machen.</p>
+<p>Insofern ist auch die "vorzeitige Optimierung", die ich hier beschreibe, nicht bewusst, sondern quasi alternativlos.</p>
+<p>Natürlich fehlt es an Strategie. Aber gerade deshalb sehe ich Verantwortung bei der Softwareentwicklung, sich maximal offen zu halten. Das bedeutet in Zeiten, da wir keinem Ressourcenmangel auf den Maschinen mehr unterliegen, Software eben anders zu bauen.</p>
+<p>"Time to market"... "Wir müssen das ASAP draußen haben!"... ach ja, damit wird alles begründet und entschuldigt. Wenn man sonst keine Ahnung hat, dann weiß man doch eines: Wer zu spät kommt, den bestraft der Markt. Und deshalb muss immer und alles huschhusch gehen, eilig, eilig.</p>
+<p>Erstens bezweifle ich, dass das eine Strategie ist und auch noch eine gute. Zumindest nicht in sovielen Fällen wie angenommen. Es ist vielmehr der Ausdruck von Abwesenheit von Strategie. Niemand wurde bisher dafür gefeuert, dass er versucht, schnell zu sein. Niemand ist bisher dafür gerügt worden, andere angetrieben zu haben. "Time to market" ist somit ein Selbsterhaltungsmantra für Manager.</p>
+<p>Doch das ist eine Sache der Unternehmensführung und eigentlich hier gar nicht Thema.</p>
+<p>Selbst wenn man schnell und noch schneller sein muss, steht vielmehr die technische Frage im Raum: steht eine Serviceorientierung dem entgegen?</p>
+<p>Ich behaupte, nein. Im Gegenteil. Software in Services zu zerlegen, erhöht (!) die Entwicklungsgeschwindigkeit. Nicht nur jetzt, sondern für alle Zeit. Zum Teil bieten das auch schon Komponenten, aber mit Services ist es noch nachhaltiger.</p>
+<p>Wo liegt denn die höhere Anfangsinvestition? Ich kann sie gar nicht entdecken. Darin, sich überhaupt mal einen Gedanken zu machen, bevor man wie besengt loscodiert? Wohl kaum.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-02-22):</p>
+<p><strong>Für mich ist es ein Problem des Mangeldenkens, weil die uns so drückenden Softwaremonolithen aus meiner Sicht Kinder des Mangeldenkens sind. Denn warum sollte man Code zu einem Monolithen zusammenschweißen, wenn nicht aus Angst vor Performance- und Speicherproblemen?</strong></p>
+<p>Gründe (ungeordnet)</p>
+<ul>
+<li>Ist ja nicht viel, was gemacht werden soll...</li>
+<li>Geht doch bestimmt schnell...</li>
+<li>Brauchen wir nur ein paar mal...</li>
+<li>[Hier eine beliebige Aussage einfügen]</li>
+</ul>
+<p>Oft genug fangen Applikationen klein an, ohne sich Gedanken darüber zu machen (kleines VBA-Projekt). Dann kommen ein paar Ideen und aus der kleinen Lösung ist ein Homunkulus geworden.</p>
+<p>Ich stimme dem Ziel zu, auch wenn ich mit den Gründen nicht d'accord bin... allerdings braucht es Mut/Chuzpe einfach mal eine vorhandene Lösung (die "Anwendung"; nicht den Gedanken dahinter) nicht weiterzuentwickeln, sondern dem digitalen Nirvana zu überlassen (been there, done that :)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-02-22):</p>
+<p>@stmon: Natürlich gibt es diese Gründe, die du nennst. Aber die liegen auf einer anderen Ebene bzw. bewegen sich in einem Rahmen, der durch das von mir skizzierte Denken vorgegeben wird.</p>
+<p>Man kann schnell oder langsam fliegen - aber immer nur mit Rücksicht auf die Physik.</p>
+<p>Und genauso kann man nach "Geht doch bestimmt schnell" usw. entwickeln - aber immer nur mit Rücksicht auf die Gegebenheiten der Hardware.</p>
+<p>Physik/Hardwaremängel sind so tief eingebrannt in uns, dass wir alles andere daran ausrichten.</p>
+<p>Dass das so ist, zeigen immer wieder völlig reflexhafte, geradezu instinktive Reaktionen von Entwicklern. Sie bekommen eine Aufgabe und wenden ohne Nachfrage und ohne weitere Beurteilung der Situation Muster an, die Performance optimieren oder Sicherheit vergrößern sollen.</p>
+<p>Die Begründung ist: "Meiner Erfahrung nach..." D.h. der Blick ist rückwärtsgewandt. Ohne Reflexion. Man schaut nicht auf das, was ist, sondern bewegt sich in eingefahrenen Bahnen.</p>
+<p>Dito bei der völlig unbewussten Optimierung zum Monolithen hin. Keine Reflexion, keine Abwägung, sondern einfach machen, machen, machen nach Schema F wie schon die letzten 50 Jahre.</p>
+<p>Erfahrung ist ne gute Sache. Aber unreflektierte Erfahrung kostet Geld und Zeit.</p>
+<p>Die Physik gilt noch wie schon immer. Aber die Mängel der Hardware gelten nicht mehr. Da lohnt sich also Reflexion.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-02-23):</p>
+<p>Du definierst sozusagen das "Mangeldenken" als Wert, woraus der Rest sich ableitet.</p>
+<p>Also, dass die vorhandene Zeit ebenfalls als "Mangel" angesehen wird, und als Entschuldigung angesehen wird, mal "schnell" was zu machen, ohne sich irgendwann klar zu werden, dass eben ein Monolith (oder wie dies Monster auch immer heissen mag :) erstellt wird.</p>
+<p>Mhm... im gewissen Sinne stimme ich zu (bei den Konsequenzen bin ich ohnehin schon dabei).</p>
+<p>Noch nicht ganz konsent ;)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-02-23):</p>
+<p>@stmon: Zeit als Mangel hatte ich gar nicht so sehr auf dem Schirm. Aber da ist sicher etwas dran. Der Aspekt ist dann unverändert mangelvoll.</p>
+<p>Aber eigentlich meinte ich erstmal die weiterhin im Stammhirn sitzende Vorstellung, Ressourcen wie Speicherplatz, Prozessorzeit und Kommunikationsgeschwindigkeit/-bandbreite seien noch Mangelware.</p>
+<p>Ultimativ stimmt das natürlich, weil sie endlich sind. Nur in Relation zu dem, was wir heute erreichen wollen, stimmt das nicht mehr oder immer weniger. Vor allem viel weniger als früher.</p>
+<p>Nur hat das keiner so richtig mitgekriegt. Deshalb wird unbewusst, reflexhaft optimiert. Also vorzeitig und damit unökonomisch.</p>
+<p>Auch im Eleganzbegriff sehe ich davon noch Reste. Der hatte früher etwas mit Ressourceneffizienz zu tun. Welcher Algorithmus braucht weniger Speicher oder Cycles als die bisherigen? "Weniger" bedeutete dann oft auch "eleganter".</p>
+<p>Diese Werte haben ihren Wert in einer bestimmten Umwelt, unter bestimmten Bedingungen. Keine Frage.</p>
+<p>Sie werden aber zu Anachronismen, wenn sich die Umwelt ändert. Das hat sich massiv getan in den letzten 20-30 Jahren. Nur merken wir davon nichts in den Programmiergewohnheiten.</p>
+<p>Wo früher ein Monolith womöglich eine Tugend war, wo es quasi nicht anders ging, als alles möglichst eng zu binden, weil sonst Performance oder Speicherverbrauch schlecht gewesen wären, da ist dieselbe Struktur heute schlicht kontraproduktiv.</p>
+<p>Früher war es nötig, Zeugs überhaupt zum Laufen zu bringen. Heute ist es nötig, es unter ständig wechselnden Anforderungen am Laufen zu halten.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-02-24):</p>
+<p><strong>Früher war es nötig, Zeugs überhaupt zum Laufen zu bringen. Heute ist es nötig, es unter ständig wechselnden Anforderungen am Laufen zu halten.</strong></p>
+<p>Ist nur die Frage, wann "früher" war ;)</p>
+<p>Für mich persönlich stellt der größte Mangel die Zeit dar; allerdings nehme ich diesen Mangel als Herausforderung an, Code/Architektur/usw so zu entwerfen, dass die Handhabung/Änderung für mich zeitsparend ist, auch wenn ich am Anfang vielleicht etwas länger brauche.</p>
+<p><em>Bitte entschuldigen Sie den langen Brief, ich hatte keine Zeit, einen kurzen zu schreiben.</em> (Blaise Pascal)</p>
+<hr />
+<p><strong>mabra</strong> (2013-03-06):</p>
+<p>Hallo !</p>
+<p>Ich wollte mal 'was aus der Praxis sagen .... und auch, warum
+das einfach wahrscheinlich oft nicht funktionieren kann ...</p>
+<p>Wie schon in anderen Beiträgen anklang, das Business hat keine
+Strategie, die dazu paßt ... oder ??</p>
+<p>Ich arbeite in einem Unternehmen mit &gt; 50 Standorten und z. Zt.
+vermutlich so etwa 300 Servern. Die Landschaft hat sich in den
+letzten 10 Jahren daramatisch verändert dahin, das es keine Resourcen
+mehr gibt. Die Netzwerke sind dermaßen langsam, das sie nur das
+Nordüftigste tun. 200 der oben genannten Server sind natürlich
+inzwischen virtualisiert.</p>
+<p>Das Business betreibt das Geschäft des Mangels und erfindet genau
+diesen jeden Tag neu..... !!!!!</p>
+<p>Das alles ist Ergebnis der absoluten Optimierung der Businessprozesse,
+auch bekannt als Globalisierung. =&gt; Zeit == Null !</p>
+<p>Die schönen vielen Cpu-Cores/Threads sind nun volles Rohr auf
+mehrere Terminalserver verteilt und nichts, garnichts arbeitet
+wirklich füssig. Presentation Foundation?? Keine GPU da, nur
+virtuelle, es lebe WinForms!</p>
+<p>Apps mit mehreren Threads, die warten müssen, weil die Cpu keine
+mehr frei hat ?? Das ist die Businesswelt ! Neue Welt ? Gibt's
+leider nicht, schon ausverkauft.</p>
+<p>Übrigens, ich sage keineswegs, das der architekonische Ansatz
+falsch wäre, ganz im Gegenteil. Ich verfolge das seit Jahren
+und bin begeistert[es lebe der Flow!].</p>
+<p>Viele Grüße,
+mabra
+(Manfred)</p>
+<p>[Ich könnte auch ein paar Performance-Vergleiche nachliefern ;-) ]</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

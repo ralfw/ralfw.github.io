@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Es hilft nichts, dass es darauf ankommt – nicht nur beim Null-Problemo [OOP 2010] — ralfw.de Archiv</title>
+<meta name="description" content="Erst ein Feiertag, jetzt ein Sonntag und die Diskussion um “Null oder nicht Null” geht weiter. Als hätten diese Softwareentwickler nichts anderes zu tun… ;-) Ilker hat versucht, ei">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/es-hilft-nichts-dass-es-darauf-ankommt/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Es hilft nichts, dass es darauf ankommt – nicht nur beim Null-Problemo [OOP 2010] — ralfw.de Archiv">
+<meta property="og:description" content="Erst ein Feiertag, jetzt ein Sonntag und die Diskussion um “Null oder nicht Null” geht weiter. Als hätten diese Softwareentwickler nichts anderes zu tun… ;-) Ilker hat versucht, ei">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/es-hilft-nichts-dass-es-darauf-ankommt/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Es hilft nichts, dass es darauf ankommt – nicht nur beim Null-Problemo [OOP 2010]</h1>
+    <div class="doc-meta"><span>2. Mai 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/05/es-hilft-nichts-dass-es-darauf-ankommt.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/es-hilft-nichts-dass-es-darauf-ankommt/</code></span></div>
+    <div class="art"><p>Erst ein Feiertag, jetzt ein Sonntag und die Diskussion um <a rel="noopener" href="http://ralfw.blogspot.com/2010/05/null-oder-nicht-null-das-ist-hier-die.html">“Null oder nicht Null”</a> geht weiter. Als hätten diese Softwareentwickler nichts anderes zu tun… ;-) Ilker hat versucht, einen <a rel="noopener" href="http://www.gmbsg.com/null-toleranz/">ausbalancierenden Schlussstrich</a> unter <a rel="noopener" href="http://blog.thomasbandt.de/39/2333/de/blog/null-verstaendnis.html">die Diskussion</a> zu ziehen, um uns wenigstens ein Rest schönes Wetter genießen lassen zu können. Doch mich wurm da noch etwas. Und weil der Stein, an dem ich mich da anstoße, bei ihm so ausdrücklich in seinem Blogartikel zu lesen ist, greife ich auch am Sonntag Morgen nochmal in die Tasten:</p>
+<p>Woran ich mich in dieser Diskussion – die allerdings nur stellvertretend für viele andere ist – störe, das sind Aussagen wie</p>
+<blockquote>
+<p>“Es kommt auf den Anwendungsfall an. Die beliebte ‘It-Depends’-Weisheit streckt das Thema mit geballter Kraft nieder.”</p>
+</blockquote>
+<p>und</p>
+<blockquote>
+<p>“So oder so – beides ist machbar und beides hat seine Berechtigung.”</p>
+</blockquote>
+<p>Ich kann das einfach nicht mehr hören. (Sorry, Ilker, ist nix Persönliches. Diese Formulierungen sind vielmehr ein Anti-Pattern unserer Branche.) Kommt irgendeiner mit ‘ner Frage, was er tun soll – diese oder jene Technologie oder dieses oder jenes Sprachfeature oder diesen oder jenen Lösungs weg? –, dann antwortet die Branche unisono: “It depends!”, “ Kommt darauf an… “, “Im Prinzip ist alles möglich.”</p>
+<p>Was soll denn das? Ja, ja, ich mache so einen Spruch auch mal. Am Ende sind diese Aussagen aber doch ein Armutszeugnis. Vor allem aber: Sie helfen nicht. Niemandem. Vor allem nicht dem, der gefragt hat.</p>
+<p><strong>“Es kommt darauf an…” ist eine triviale Antwort.</strong> Sie ist trivial und nutzlos, weil sie quasi immer wahr ist. Es kommt immer im Leben darauf an. Auf irgendwas. Wo Wahlmöglichkeiten bestehen, da kommt es immer auf den einen oder anderen Faktor an, ob die eine oder andere Möglichkeit gewählt werden sollte. Diese Faktoren mögen subjektiv sein, also rein persönlich, oder objektiv, d.h. irgendwie aus der Problenstellung bzw. der angestrebten Lösung abgeleitet.</p>
+<p>Also: Leute, ihr habt/wir haben immer Recht, wenn wir sagen “Es kommt darauf an…”. Super. Lasst uns darauf einen trinken. Und dann lasst uns endlich damit aufhören. Wer “Es kommt darauf an…” sagt (oder etwas Sinngleiches), der zahlt in Zukunft 5 EUR in das Phrasenschwein. Wie wäre das? Wir kommen einfach nicht voran mit solchen Sprüchen. Sie dienen nie-man-dem. Wir bringen weder den einzelnen Frager noch “unsere Kunst” damit voran.</p>
+<p>Ok, so ein Spruch geht also nicht mehr. Was aber dann? Wir sollten, wann immer wie reflexartig “Es kommt darauf an…” sagen wollen, innehalten. Mund zu, Denkmaschine anwerfen… Das halte ich für den ersten Schritt. Nachdenken, ob denn aus einer Problembeschreibung sich nicht doch irgendwie ein Hinweis auf eine vorzuziehende Lösungsmöglichkeit ergibt.</p>
+<p>Ja, Nachdenken verbraucht auch Kalorien, aber wir sollten uns diesen Sport gönnen. Der bringt uns selbst und “unsere Kunst” nämlich voran. Die Ergebnisse sind nämlich immer positiv: Schärfung der Wahrnehmung, Reflexion des eigenen Tuns, Ausarbeitung von Regeln.</p>
+<p>Eine Regel hat sich ja auch in dieser Diskussion um das Null-Problemo herauskristallisiert:</p>
+<p><strong>Null-Regel #1:</strong> Man darf Null benutzen und auch als Wert zurückgeben – aber Vorsicht! Erst prüfen, ob es nicht auch anders geht.</p>
+<p>Das ist doch schon mal ne schöne Sache, oder? Darin sind wir uns einig. Prost!</p>
+<p>Nur verstehe ich nicht, warum Ilker dann schreibt</p>
+<blockquote>
+<p>“Für mich gibt es beim Umgang und bei der Anwendung von Null keine Faustregel.”</p>
+</blockquote>
+<p>Denn diese Regel ist doch eine Faustregel. Sie lautet: Setze Null eher nicht ein. Punkt. Warum sollten wir das runter spielen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f9a2d50feb08deed.png" /></p>
+<p>Mein Gefühl ist, dass “die Branche” da an einem kollektiven mangelnden Selbstvertrauen leidet. “Man” traut sich nicht, einen Pflock in den Boden zu hauen. Denn wer Pflöcke in den Boden haut und die dann auch  noch mit Latten zu einem Areal verbindet, der läuft Gefahr, dass andere einen Streit von diesem Zaun brechen. Und das will “man” doch nicht. Ne, Streit ist doof.</p>
+<p>“Wer Regeln formuliert oder verbreitet, wird mit Stirnrunzeln oder gar flame comments bestraft.” – so lautet das unausgesprochene Gesetz.</p>
+<p>Regeln stören den Seelenfrieden dessen, dem sie “aufgedrückt” werden. Oder sie stören womöglich sogar den Seelenfrieden dessen, der sie aufstellt. Denn wer Regeln formuliert, der muss sich ja auch daran halten. Will “man” das aber? Wer weiß, vielleicht findet “man” es morgen bequemer, es anders zu tun – und dann wäre die Regel hinfällig. Aaargh… Also besser mal keine Regel aufstellen. Und schon gar nicht anderen die Befolgung einer Regel nahelegen. Denn was auch, wenn die damit nicht zum Erfolg kommen? Dann sind sie sauer auf “einen”.</p>
+<p>Das sind natürlich sehr verständliche Regungen. Aber: Leute, Leute, so kommen wir nicht voran. Niemand behauptet, dass “alles” reglementiert werden sollte oder gar könnte. Angst, in der “künstlerischen Programmiererfreiheit” eingeschränkt zu werden, ist völlig (!) unbegründet. Maler, Bildhauer, Schauspieler, Musiker… alle sind vielmehr erst Künstler durch die Regeln ihres Metiers. Ohne Regeln keine Kunst. Denn Kunst ist sozusagen “mit und in den Regeln schaffen und spielen”. Ohne Regeln ist alles keine Kunst. Wir schätzen einen Meister seines Metiers dafür, dass er “gar künstlich” (d.h. soviel wir “nach den Regeln der Kunst” oder “virtuos”) etwas (er)schafft.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c41619423a92cddb.png" /></p>
+<p>Wer am leeren Tisch sitzt und hört, “Schaffe mal ein Kunstwerk”, der hat es schwer, nicht leicht. Sitzt er aber vor einer Staffelei mit Ölfarbenpallette und Pinsel in der Hand und bekommt den Auftrag “Schaffe ein impressionistisches Landschaftsbild”, der kann loslegen. Öl, Pinsel, Leinwand, Stilrichtung, Motiv: das sind Begrenzungen mit impliziten Regeln, die erst die Möglichkeit bieten, Künstler zu sein.</p>
+<p>(Ja, ja, es gibt immer mal wieder auch Künstler, die dadurch groß werden, dass sie (scheinbar) regellos oder gegen die Regeln arbeiten. Aber Achtung: Erstens können sie sich nur profilieren im Kontrast zu etablierten Regeln der Kunst, zweitens schaffen diese Künstler durch ihr Tun (bewusst oder unbewusst) wieder neue Regeln, und drittens sind solche Regelwerk sprengenden bzw. ausweitenden Künstler die Ausnahme. Wer mein, ohne Regeln auszukommen, läuft also Gefahr, sich zu überschätzen.)</p>
+<p>Bottom line: Ohne Regeln geht es nicht. Und jeder, der in einer Situation sitzt, wo er nicht recht weiter weiß, der sehnt sich nach einer Regel, die ihn leitet. Warum also diese branchenweite Ambivalenz? Einerseits Regeln suchen für die eigene Anwendung, andererseits aber keine Regeln formulieren wollen, wenn “man” gefragt wird.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/98490db2ab855463.png" /></p>
+<p>Ohne Regeln ist das Verhalten ein Rumgeeiere wie hier von Ilker trefflich beschrieben:</p>
+<blockquote>
+<p>“Ich gebe in einigen Methoden NULL zurück. Meistens genau dann, wenn ich wirklich damit ausdrücken möchte, dass etwas katastrophales passiert ist. Ich finde es sehr schwerwiegend, NULL als Zuweisung oder Rückgabe stehen zu lassen – aber ich mache es manchmal ganz bewusst.”</p>
+</blockquote>
+<p>Ja, was denn nun? Keine Faustregel, aber “manchmal ganz bewusst”? Wie geht das? Bewusstsein erfordert (!) einen Raum, in dem es sich eben bewusst verortet durch Entscheidungen. Und die Wände dieses Raumes bestehen (zumindest zum Teil) aus… Regeln. Die mögen sehr speziell sein, aber immer noch sind es Regeln, die man dann auch äußern kann, um sie zur Diskussion zu stellen.</p>
+<p>Thomas hatte das in seinem <a rel="noopener" href="http://blog.thomasbandt.de/39/2331/de/blog/kleiner-helper-fuer-linq-to-sql-tolistordefault-update.html">ursprünglichen Blogartikel</a> getan:</p>
+<blockquote>
+<p>“Außerdem erwarte ich von jeder Methode null als Rückgabewert für den Fall, dass keine Daten in der Datenbank gefunden wurden.”</p>
+</blockquote>
+<p>Jede Methode (seines Repositories) liefert bei Erfolg ein Objekt und bei Misserfolg Null. So war seine Regeln. Ob die gut oder schlecht ist, sei mal dahin gestellt. Das wurde ja auch ausführlich diskutiert. Zumindest war das eine Regel basierend auf einer bewussten Entscheidung. Die hat er geäußert. Nur so konnte darüber ein Diskurs beginnen. Wunderbar.</p>
+<p>Ilker hingegen sagt, er sei bewusst – eine Regel (außer der obigen Null-Regeln #1) mag er aber eben nicht benennen. Das finde ich sehr, sehr schade. Denn so – ich wiederhole mich – kommen wir eben nicht voran.</p>
+<p>Oder? Hoppla, jetzt hab ich mich doch durch Ilkers Statement, er hätte keine (Faust)Regel verwirren lassen. Natürlich hat er welche. Die Regel #1 und auch noch seine persönliche Regel:</p>
+<p><strong>Null-Regel #2 (von Ilker; noch zu diskutieren):</strong> In Katastophenfällen darf Null zurükgegeben werden.</p>
+<p>Das ist doch mal eine Aussage. Darüber kann man diskutieren. Aber nicht hier.</p>
+<p>@Ilker: Vielleicht magst du ja in einem weiteren Blogartikel ausführen, was Katastrophenfälle sind und warum dann Null als Rückgabewert erlaubt ist und wie zwischen Null und Exceptions als Mittel zur Anzeige von Katastophenfällen entschieden werden sollte. Darüber würde ich gern mehr hören.</p>
+<p>Ilker hat also Regeln (mindestens zwei), zieht sich aber darauf zurück, dass “die beliebte ‘It-Depends’ Weisheit” im Falle Thomas “alles niederstreckt”. Warum? Warum keine klare Aussage, keine Empfehlung mit Verweis auf eine seiner Regeln? Weiß Ilker nicht mehr weiter? Das glaube ich nicht.</p>
+<p>Ich möchte ihm stellvertretend für uns alle zurufen: Nicht verzagen! Mach doch eine klare Aussage. Habe eine Präferenz. Zeige Kontur. Mach dich sichtbar – ja, und auch angreifbar. Haue einen Pflock in den Boden.</p>
+<p>Denn niemand wird dich oder irgendwen für soetwas verhaften. Entweder ist die Empfehlung für den konkreten oder auch allgemeinen Fall richtig/praktikabel – oder es stellt sich im Diskurs heraus, dass sie es nicht ist. Dadurch können doch dann aber alle nur gewinnen. Und niemand steht deshalb schlechter da. Auch nicht der, der die Regeln/Empfehlung ausgesprochen hat.</p>
+<p>Niemand muss ja auch seine Regel/Empfehlung kampflos ausgeben. Nur weil ein anderer damit nicht übereinstimmt, heißt das nicht, das man falsch liegt. Solange wir einen Diskurs führen, also sachlich bleiben, solange kommen wir voran – und können am Ende auch mal unterschiedliche Meinungen behalten. In der Malerei gibt es Schulen, in der Programmierung kann es die auch geben. Da könnte es z.B. die “Null geht gar nicht, nie, nimmer!”-Schule geben oder die “Null ist überhaupt kein Problem”-Schule oder die “Null mit Vorsicht”-Schule oder die “Null nur mit Vorsicht und mit folgenden Regeln”-Schule.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/1116516f5f64416b.png" /></p>
+<p>Ich gehöre – soviel kann ich sagen – zur letzteren. Deshalb hier mein Pflock im Boden:</p>
+<p><strong>Null-Regel #3 (Ralfs Vorschlag):</strong> Null darf nur Rückgabewert sein, wenn Null zur selben Kategorie gehört wie ein Nicht-Null Rückgabewert.</p>
+<p>Darüber können wir gern diskutieren. Einen Anfang habe ich <a rel="noopener" href="http://ralfw.blogspot.com/2010/05/null-oder-nicht-null-das-ist-hier-die.html">hier</a> gemacht. Also: Klare Aussage von mir, kein Rumgeeiere. Und jetzt die Argumente dagegen. Aus der Community. (Zur Regel #2 sage ich etwas, wenn Ilker sie begründet. Hier nur soviel vorab: Ich bin dagegen ;-)</p>
+<p>Und jetzt noch ein letzter Schwenk zurück zum Allgemeinen. Wir brauchen also Regeln. Wir sollten uns der Reflexäußerung “Es kommt darauf an…” enthalten. (Auch das ist übrigens eine Regel ;-) Noch ein Pflock von mir im Boden.) Besser, wir schalten in solchen Situationen erstmal die Denkmaschine an. Analyse hilft.</p>
+<p>Ebenfalls hilfreich ist allerdings auch: Fragen und Zuhören! Denn so mancher, der sagt “It depends”, leidet womöglich nicht unter mangelndem Selbstvertrauen oder Denkfaulheit, sondern schlicht unter Unwissen. Er weiß nicht genug, um eine Entscheidung zwischen den Alternativen klar treffen zu können.</p>
+<p>Dem kann dann durch Nachfragen und genaues Hinhören abgeholfen werden. Wenn man sich denn als Befragter überhaupt interessiert. Womit wir bei einem weiteren Grund für “Es kommt darauf an…”-Antworten sind: Desinteresse. “Was interessiert mich das Problem des anderen? Ich hab schon selber genug Probleme. Wenn mir doch mal einer helfen würde…” usw.</p>
+<p>Hieraus ergibt sich auch eine Empfehlung für Hilfesuchende: Wer fragt und “It depends” als Antwort bekommt, der sollte nicht zufrieden sein. “It depends” ist trivial und beliebig. Wer fragt, sollte die Antwort als Aufforderung verstehen, mehr über das Problem zu erzählen oder überhaupt mal festzustellen, ob der Befragte überhaupt ein Interesse an einer Antwort hat. (Von einer Kompetenz zur Antwort sehe ich hier mal ab. Jeder ist kompetent zumindest insofern, als dass er dem Fragenden ein Spiegel sein kann. Auch das hilft oft.)</p>
+<p><strong>Fazit:</strong> Es hilft also nichts, dass wir die Hände in die Luft werfen und sagen “Es kommt darauf an…” Diese Phrase können wir uns in Diskussionen sparen. Sie macht nur Sinn als Replik auf eine ebenso sinnlose allgemeine Frage. Beispielfrage: “Sollte man die Daten mit einem RDBMS oder einem ODBMS speichern?”, Antwort: “Es kommt darauf an…”</p>
+<p>In solche einem Fall mag die allgemeine Frage allgemein mit einer Phrase beantwortet werden, um dadurch aufzuzeigen, dass schon die Frage schlecht formuliert war. In dem Fall ist “Es kommt darauf an…” aber sozusagen ein Stilmittel – dass sofort als solches aufgedeckt werden sollte: “Es kommt darauf an… Das sage ich, weil Ihre Frage zu allgemein ist. Erklären Sie mir bitte genauer, worum es geht.”</p>
+<p>“Es kommt darauf an…” ist quasi immer richtig und hilft deshalb nicht. Wir müssen weg von dieser Phrase hin zu mehr Nachdenken und mehr Zuhören. Und daraus müssen sich mehr konkrete Regeln ergeben, die auf konkrete Fälle angewandt werden können. Ob das wenige oder viele, einfache oder komplizierte Regeln sind, ist erstmal egal. Wir brauchen sie als Fundament für “unsere Kunst”.</p>
+<p>Niemand behauptet auch, dass die so bewusst erarbeiteten Regeln starr sein sollten. Im Gegenteil. Sie sollen lebendig bleiben im Rahmen eines Diskurses. Zwischendurch mal Ruhe ist auch gut. Einfach mal die Regeln lernen und anwenden, bevor man sie hinterfragt. Aber dann auch gern immer wieder Infragestellung. Die Zeiten ändern sich, also dürfen sich auch die Regeln ändern. Manche langsamer, manche schneller.</p>
+<p>Unzweifelhaft ist jedoch, dass wir sie brauchen. Ich glaube sogar, dass wir als Branche unterspezifiziert sind mit Regeln. Deshalb habe ich auch <a rel="noopener" href="http://www.clean-code-developer.de">www.clean-code-developer.de</a> (CCD) mit gegründet. Und der Erfolg der Initiative gibt meiner Vermutung recht, würde ich sagen. Denn CCD ist eine Sammlung von Regeln und darauf stehen offensichtlich mehrere Tausend Entwickler, wenn ich mal die Mitgliedszahlen in den Foren und die vergebenen Armbänder zusammenrechne.</p>
+<p>So, nach diesem Ausflug ins Grundsätzliche gern wieder zurück zum Konkreten: Da es beim Null-Problemo genauso “darauf ankommt” wie sonst im Leben, stellt sich immer noch die Frage: Worauf kommt es denn an? Was sind die Regeln für die Null-Verwendung? Was sind damit die Eigenschaften eines Szenarios, die geklärt werden müssen, um zu entscheiden, welche Regel zum Einsatz kommt?</p>
+<h2>Kommentare</h2>
+<p><strong>Rainer Hilmer</strong> (2010-05-02):</p>
+<p>Hallo Ralf,
+ich verstehe einen Punkt in deinem Statement nicht. Du schreibst, "Null darf nur Rückgabewert sein, wenn Null zur selben Kategorie gehört wie ein Nicht-Null Rückgabewert."</p>
+<p>Gehört null zu irgend einer Kategorie? Ich dachte immer, null ist null. Etwas das so allgemein ist wie der Typ object - oder sogar noch darüber hinaus. Object kann man beschreiben, aber beschreibe mal das Nichts. :-)</p>
+<p>In deinem anderen Artikel zum Thema null ziehst du das "Principle of Least Astonishment" Paradigma heran. Gut, ich erwarte null wenn kein passender Datensatz gefunden wird. Ein Exception statt null verwende ich auch stellenweise - ja ich weiß, du magst es nicht hören, und ich gebe dir ja auch Recht, wenn du sagst daß dieses "It depends" für die Tonne ist. Ich sage hier und jetzt für Exceptions nur "it depends" weil ich keine Lust habe, hier einen Regelatalog aufzustellen. Ich denke, es ist nicht der richtige Ort. Wir können das aber gerne gemeinsam machen. :-) Mit "wir" meine ich die gesamte Entwicklergemeinde.</p>
+<p>Was mir eher nicht gefällt, sind Kunstobjekte wie "NonExistentCustomer" als Rückgabe für einen nicht gefundenen Datensatz (ich beziehe mich auf diesen Blog-Artikel: http://www.gmbsg.com/null-toleranz/). Das ist genau so, als würde ich in den Laden gehen um ein bestimmtes Produkt zu kaufen. Dort heißt es dann, "ham' wer nich" und mir wird statt des gewünschten Artikels eine Attrappe in die Hand gedrückt. Dann doch lieber null. Schließlich muß ich null ebenso auswerten wie so einen Dummy - nur hat null den Vorteil daß ich es nicht vorher irgendwo definieren und dann womöglich auch noch an zig Stellen referenzieren muß.
+So, das war mein Pflock.</p>
+<hr />
+<p><strong>Jürgen Gutsch</strong> (2010-05-02):</p>
+<p>Hallo Rainer,</p>
+<p>zur "NULL-Kategorie":
+NULL gehört keiner Kategorie an, aber es gibt Kategorien, in die NULL definitv nicht rein gehört:
+Im Beispiel der Liste: Liefert das Repository keine Datensätze, so ist die Liste leer, also definitiv nicht NULL. In die Kategorie "Listen" gehört NULL also nicht rein. Bei "Kontainern" aller art, ist der Kontainer leer, aber nicht null.
+Erwartest du dagegen ein bestimmtes Objekt (das nicht der Kategorie "Kontainer", oder "Liste" angehört), darf der Rrückgabewert IMHO null sein, wenn das Objekt nicht gefunden wird, bzw. nicht erzeugt werden kann.</p>
+<p>Das ist meine Regel :-)</p>
+<hr />
+<p><strong>Thomas Mueller</strong> (2010-05-02):</p>
+<p>Hallo Ralf,
+Du schreibst in Deinem Fazit:
+"Ob das wenige oder viele, einfache oder komplizierte Regeln sind, ist erstmal egal. Wir brauchen sie als Fundament für “unsere Kunst”"
+Ich denke, dass die Notwendigkeit von Regeln keine große Frage mehr ist. Viel mehr sehe ich die Herausforderung bei der Erfolgsbeteiligung für den Anwender, wenn er die Regeln befolgt. Ich selbst bin kein Freund mehr von Dokumenten, die seitenweise Regeln beschreiben, die dann durch Ihre Fülle einfach verdrängt werden. Sicher, „done criteria“ sind aus agilen Prozessen nicht wegzudiskutieren. Aber was wäre, wenn wir beim Design, neben wenigen knackigen Abnahmekriterien, auch die Problemdomäne beachten und so dem Entwickler die kurzfristige Erreichung des Ziels als Erfolgserlebnis bieten könnten? Mit Regeln allein ist meiner Meinung nach keinem geholfen.</p>
+<p>Besten Gruß, TOM</p>
+<hr />
+<p><strong>Rainer Hilmer</strong> (2010-05-02):</p>
+<p>@Jürgen Gutsch: Ach so hat Ralf das gemeint! Klar, da sind wir einer Meinung. :-)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-05-02):</p>
+<p>@Thomas Müller: Ich bin auch kein Freund von anwendungsspezifischen oder teamspezifischen Dokumenten. Erstmal 73 Seiten Styleguide lernen, bevor man im Projekt produktiv werden kann. Ne, ne, so meine ich das nicht.</p>
+<p>Mir gehts hier um Regeln der Branche! Also Regeln, die du im Idealfall während der Ausbildung lernst. Das bedeutet im Umkehrschluss weniger projektspezifische Regeln. Also weniger Dokumente, weniger Eigenheiten, weniger eigene Süppchen.</p>
+<p>Derzeit sind viele Lösungen Neuerfindungen auf unterschiedlichem Niveau. Das halte ich für falsch. Die Kreativität geht in solch Zeug wie "Wie könnte meine Regel für Null-Rückgabewerte aussehen?" Da das aber ein universales Problem ist für alle Entwickler, sollten wir als Branche dafür einen Satz von Regeln haben. Fertig. Dann hätte Thomas Bandt sich seinen Blogartikel gespart und wir alle uns unsere Kommentare ;-)</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-05-02):</p>
+<p>@Rainer: Mach doch mal an einem anderen Ort einen Vorschlag zu Regeln über Exceptions statt Null oder umgekehrt.</p>
+<p>Ebenso können wir über "Empty-Objekts" als Pattern reden bzw. Alternativen. Ein Kommentator hat z.B. F# Options ins Spiel gebracht, die man recht leicht in C# nachbilden kann. Wie wäre es damit?</p>
+<p>class OptionalResult<T> {...}</p>
+<p>OptionalResult<User>GetUserById(...) {...}</p>
+<p>var oUser = repo.GetUserById(...);
+if (oUser.HasValue) ...</p>
+<p>Das ist nah dran an Nullable Types, aber doch noch was anderes.</p>
+<p>Ich hänge nicht an speziellen Empty-Objekten. Aber ich finde Null ziemlich hässlich.</p>
+<p>Also: Wann ist Null erlaubt? Was sind die Alternativen? Und auch: Wann sind Empty-Objekte eine gute Sache? Was sind die Alternativen?</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Christoph T.</strong> (2010-05-02):</p>
+<p>Hallo Ralf,</p>
+<p>ich habe aufmerksam den Blogeintrag von Thomas Bandt gelesen und die Wellen die dieser Eintrag in verschiedenen Blogs geschlagen hat.</p>
+<p>Man möge mir im folgenden die ein oder andere Unschärfe verzeihen, als FiSi und Quereinsteiger fehlt mir ab und an doch noch ein wenig Erfahrung ;)</p>
+<p>Als ich zunächst auf die Diskussion gestoßen bin habe ich mir relativ wenig Gedanken darüber gemacht, ob null nun verwendet werden sollte oder nicht. Erst im laufe des Tages ist mir dann die eigentliche Tragweite bewußt geworden. Meines Erachtens liegt hier auch ein Unterschied im Verständnis von OOP vor. Im einfachsten Grundsatz möchte man mit OOP möglichst nah an der Wirklichkeit liegen. Wie ich finde, widerspricht null diesem Anspruch komplett. Null ist in meinen Augen ein recht künstliches Gebilde. Stellt man sich z.b. vor, man möchte die Teilnehmerliste einer Veranstaltung sehen, versucht diese zu öffnen und bekommt jedoch nichts zu sehen. Das lässt zunächst einmal sehr viel Spielraum für Spekulationen. Veranstaltung abgesagt? Liste gelöscht? noch nicht angelegt? Null als Rückgabe liefert also keinerlei Aufschluss darüber, was intern passiert ist. Das ist eigentlich dass, was mich am meisten stört. Wenn in dem Fall der Veranstaltung nun einfach noch niemand angemeldet ist, würde ich rein intuitiv eine leere Liste erwarten. Das passt sowohl von der Implementierung, als auch vom Anspruch der Abbildung der Wirklichkeit.</p>
+<p>Eine Exception hingegen erwarte ich, wenn Probleme innerhalb des Ablaufs aufgetreten sind und ich eine klare Information dazu nutzen kann zu entscheiden, wie ich weiter verfahren möchte.</p>
+<p>Ist nun alles nicht sonderlich spektakulär. Dessen bin ich mir bewußt. Um nun auf meine Aussage zurückzukommen, es läge ein Unterschied im Verständnis von OOP vor, möchte ich folgende These aufstellen: Wer OOP als annäherung an die Wirklichkeit versteht wird höchstwahrscheinlich im o.g. Beispiel zur leeren Liste greifen, weil es die korrekteste Annäherung an die Wirklichkeit ist(ich möchte das sehr bewußt ohne Wertung verstanden wissen).</p>
+<p>Ich hab dann mal mein Verhalten ein wenig Reflektiert und festgestellt, dass ich ganz unbewußt deine Regel #1 zu großen Teilen so umgesetzt habe, aber auch oft aus Faulheit null aus Rückgabewert benutzt habe, ohne da aber wirklich drüber nachzudenke. Auf der anderen Seite finde ich es gar nicht so einfach zu sagen, wo ich null für wirklich falsch (im Sinne von unsauber) halte.
+Wesentlich unschöner als null finde ich die bereits von Rainer Hilmer kritisierten NonExistentCustomer .. hat ein wenig was von Schrödingers Katze.</p>
+<p>Was die Regeln betrifft, sehe ich vor allem das Problem der Anwendung.
+Zunächst einmal wie erreiche ich möglichst viele Entwickler mit einer solche Regel? Nehme ich z.b. mich als "Nachwuchs" hätte ich nie etwas über diese Problematik erfahren, wenn ich mich nicht in meiner Freizeit durch verschiedene Blogs wühlen würde. Okay, macht ja nach CCD einen Teil der Professionalität aus...
+Würde ich aber wie viele in meinem Projektteam nur in bekannten alten Strukturen denken, würde es mich dann erreichen? Wohl eher nicht. Die "unprofessionellen" werden also in ihrem Zustand verharren.</p>
+<p>Aber nehmen wir mal an, man erreicht zumindest die Professionellen..Ich denke man sollte sich da wirklich nur auf einen grundlegenden Satz von Regeln einigen, das ganze darf nicht zu starr werden. Regel #1 ist da schon ein sehr guter Ansatz. Alles andere überlasse ich da lieber euch Experten.</p>
+<p>Ich hoffe meine Gedanken waren zumindest ein wenig Nachvollziehbar und nicht völlig wirr ;)</p>
+<hr />
+<p><strong>Andreas Adler</strong> (2010-05-03):</p>
+<p>Hallo zusammen :)</p>
+<p>Ich stimme bei dieser NULL-Problematik Jürgen und Rainer zu. Bei Container-Objekten ist NULL einfach fehl am Platz. Wenn aber die Methode keine Auflistung zurückgibt sondern z.B. ein konkretes User-Objekt, dann muss ich, wenn nun mal kein passender User zurückgegeben werden kann, so oder so anschließend eine Fallunterscheidung getroffen werden.</p>
+<p>Ob das jetzt "if (user != null)" oder "if (user.HasValue)" ist, kommt doch am Ende aufs gleiche hinaus und ist für mich nur eine Frage des Geschmacks.</p>
+<hr />
+<p><strong>Rainer Hilmer</strong> (2010-05-03):</p>
+<p>@Andreas: ... oder if(user.Equals(new NonExistingUser()) ;-)</p>
+<p>@Ralf: Ich möchte noch einmal den Ort ansprechen, denn ich habe den Eindruck daß meine Bemerkung vielleicht etwas unhöflich angekommen ist. Der Grund warum ich das geschrieben habe, ist eigentlich simpel: Es liegt nun einmal in der Natur von Blogartikeln daß sie irgendwann in der Versenkung verschwinden. So ein Reglement halte ich aber für zu wertvoll als daß es so ein Schicksal teilen sollte. Ich denke es ist im Interesse aller Enwtickler, wenn sich die Gemeinde auf eine einheitliche "Aussprache" einigt. Das vereinfacht den Umgang mit dem Code des jeweils anderen und es erspart eine Menge WTFs wenn das API eines anderen Entwicklers sich so verhält wie es das Reglement vorschreibt. Was wir als Fundament brauchen, ist etwas mit Bestand und etwas daß schon möglichst bekannt sein sollte. Dazu fällt mit spontan eure CCD-Webseite ein. Thematisch würde es auch hervorragend dort hin passen.</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-05-03):</p>
+<p>Hallo Leute,</p>
+<p>jetzt bin ich zwar nicht gerade der Profi in Sachen Implementierung, aber ein Aspekt bzgl. NULL ist mir sofort eingefallen, der aus meiner Sicht nicht unter den Tisch gekehrt werden sollte.</p>
+<p>Intern brauchen Objekte, auch "KeinKunde" udglm. Speicherplatz oder zumindest Speicherplatz für "Referenzen" auf diese. Bei NULL ist das aber nach meinem Wissenstand nicht der Fall.</p>
+<p>Jetzt kann man natürlich darüber streiten, ob dieser Speicheraufwand (inkl. Aufwand für die Bereinigung im GC) verhältnismäßig ist. Auch in Zeiten von GByte an RAM und schnellen Prozessoren sollte ein Programmierer sich meiner Meinung nach nach wie vor darüber Gedanken machen, wie mit den Ressourcen eines Systems umgegangen wird.</p>
+<p>Wie gesagt, das hängt sicher von der konkreten Implementierung ab, wie oft solch eine Situation auftritt. ("Kommt drauf an ... :-)").</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-05-03):</p>
+<p>@Rainer: Am Ende müssen Regeln einen Ort haben, an dem sie gesammelt werden.</p>
+<p>Solche Orte gibt es. Das sind Lehrstätten und Fachliteratur. Ein Wiki wie bei CCD ist auch Fachliteratur. Aber nur eine mögliche Form. Ein Blogartikel ist aber auch Fachliteratur.</p>
+<p>Während des Diskurses sollte der Ort nicht fixiert werden. Kann auch nicht. Aber wenn der Diskurs irgendwo mal "ankommt", dann wird sich ein Ort finden. Ganz natürlich. Bei CCD oder in der dnp oder in einem Blogartikel. Und nicht nur ein Ort.</p>
+<p>Ich denke nicht, dass wir einen Diskurs über den Ort des Diskurses oder für das Festhalten von Diskursergebnissen brauchen ;-)</p>
+<p>@Anonym: Sorry, aber da fällt mir nur ganz kurz und knapp ein: Vergiss den Speicherplatz. Darüber nachzudenken für "Empty-Objekte" widerspricht dem Prinzip "Beware of Premature Optimization".</p>
+<p>Für jede Klasse mit Empty-Objekt muss ja nur eines existieren. Wieviele sollen das sein? 10, 20, 100? Völlig vernachlässigbar. (In nahezu allen Kontexten. Und falls nicht, dann wird sich das am Ende herausstellen aufgrund konkreter Messungen.)</p>
+<p>Genauso wie wir von "Es kommt darauf an..." wegkommen müssen, müssen wir endlich aufhören als erstes an Speicherplatz oder Performance zu denken, wenn irgendwo mal eine Regel sich rührt. Wir sind nicht mehr in den 1970ern und wir, die wir hier diskutieren, entwickeln auch keine embedded systems.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-05-03):</p>
+<p>@Ralf: Zu Deinem letzten Absatz hätte ich folgende Anmerkungen:</p>
+<p>Wenn ich Dich richtig verstehe forderst Du einerseits standardisierte Implementierungsregeln (die evtl. sogar auch auf Hochschulen vermittelt werden sollten), andererseits gelten diese nicht für Entwickler für Embedded Systems?! Wenn dem so ist, dann müssten die Regeln diese "Einschränkung" ebenfalls enthalten.</p>
+<p>Performance und Speichernutzung sollen nicht von Anfang an bei der Entwicklung berücksichtigt werden? OK, aber setzt man sich zB. bei der Definition von NULL-Regeln diesbzgl. nicht "Angriffen" aus, die vermeidbar wären. Regeln sollten meiner Meinung nach auch Pros und Cons behandeln und dokumentieren. Damit weiß ein jeder was ggf. zu beachten ist.</p>
+<p>Ich gebe Dir recht, dass eine Regeln, nur weil sie im Fall des Falles ein wenig ins wanken kommt, nicht deswegen komplett in Frage gestellt werden soll. Dennoch bin ich der Meinung, dass es sinnvoll ist, bei der Regeldefinition die "Herleitung" mit anzugeben. Einerseits, um immer wieder auftretende Diskussionen abzukürzen, und auch um Regeln nach einer gewissen Zeit (zB. technischer Fortschritt) sinnvoll adaptieren zu können.</p>
+<p>Dies würde ich auch deshalb für wichtig erachten, da es außer C, C++ und C# noch andere Sprachen gibt, die vor ähnlichen Problemen stehen. OK, nicht jede Sprache hat vergleichbare "Probleme", dennoch können solche Fälle dann zumindest dokumentiert werden.</p>
+<hr />
+<p>ad "10, 20, 100": Na ja, nicht ohne Grund habe ich die Referenzen (Pointer) angemerkt. Diese sind ggf. doch häufiger und kurzlebiger anzutreffen und verursachen einen nicht allzu großen aber nicht zu unterschätzenden "Overhead".</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-05-03):</p>
+<p>@Anonym: Regeln gelten nur immer in einem Kontext. So können für Embedded-Entwickler andere Regeln gelten als für Server-Entwickler.</p>
+<p>Zu den Pointern: Null und nicht Null belegen gleich viel Platz. Beides sind Verweise/Adressen. Gebe ich Null zurück braucht das nicht mehr Platz als wenn ich den Verweis auf ein Empty-Objekt zurückgebe.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Carsten</strong> (2010-05-03):</p>
+<p>Volle Zustimmung..</p>
+<p>Ich erachte es als gut und sehr wichtig, sich über diese fundamentalen Dinge Gedanken zu machen und darüber einen breiten Konsens im Sinne eines breiten Verständnisses zu finden. Ich denke, dass derlei Missdeutungen eines der Hauptprobleme der Softwareentwicklung sind. Null ist, als Grundsatz, fast immer Scheisse.</p>
+<p>Praktisches Beispiel: nehmen wir ein Zeitintervall, das einen definierten Startpunkt und einen Endpunkt hat.</p>
+<p>Interval interval = new Interval(startDate, endDate);</p>
+<p>Nun kann es Intervalle geben, deren Ende unbekannt ist. (Bsp: Derzeitige Gültigkeit der Mehrwertsteuer). Null wird gerne als Ausprägung eines Typen interpretiert, dessen Wert wir nicht kennen. Man ist nun geneigt, ein Intervall als offen zu deklarieren:</p>
+<p>Interval mwstInterval = new Interval(new DateTime(2007, 1, 1), null);</p>
+<p>Schaut man genau hin, so meint das Intervall aber etwas anderes: Die derzeitige Mehrwertsteuer gilt ab dem 31.12.2006 auf unbestimmte Zeit, also im Zweifelsfalle, bis in alle Ewigkeit (was wir alle hoffen wollen).
+Für die Ewigkeit gibt es aber einen konkreten Wert: DateTime.MaxValue. Das Intervall sollte demnach als:</p>
+<p>Interval mwstInterval = new Interval(new DateTime(2007, 1, 1), DateTime.MaxValue);</p>
+<p>definiert werden. Jetzt sind Aussagen über die Intervall Instanz wesentlich klarer und auch die Implementierung gestaltet sich einfacher, da der Null Fall nicht betrachtet werden muss. Sortieren, Vergleichen und Berechnungen auf diesem Typ sind nun nahezu problemlos möglich und die Einführung des Begriffes „Ewigkeit“ ist dem Verständnis des Typs ebenfalls zuträglich.</p>
+<p>Von einer, im referenziertem Beitrag erwähnten Funktion „SignIn“ – erwarte ich, dass es das tut, was es vorgibt zu tun. Kann es dies nicht, wünschte ich eine Ausnahme oder einen Demo Account oder einen Account.Unknown in keinem Fall aber Nichts:</p>
+<p>Wenn ich am Geldautomaten die Taste „200 EUR“ drücke, dann erwarte ich tunlichst 200 EUR vom Apparat. Geht nun die Klappe auf und ich blicke in ein Nichts, bin ich überrascht und verärgert. Ich wünsche in derlei – hoffentlich - Ausnahmefällen vom Automaten entsprechend benachrichtigt zu werden.
+Wenn es um meine Liquidität nicht besonders gut bestellt ist, dann fände ich eine „TryGetMoneten(200 EUR, out Money maxAmountPossible)“ komfortabel.</p>
+<hr />
+<p><strong>Christina</strong> (2010-05-03):</p>
+<p>Hallo Jungs,</p>
+<p>ich muss sagen, ihr wart sehr fleißig dieses Wochenende, war nicht um sonst Tag der Arbeit :D</p>
+<p>Abgesehen von den vielen Pro und Contra bzgl. NULL, was in sich schon sehr lehrreich war, finde ich es sehr gut, dass endlich das Thema "Regeln" angesprochen wird. @Ralf, du hast viele Gründe aufgelistet, warum man zögert oder sich weigert, eine klare Aussage zu machen, aber ich glaube, du hast einen Grund vergessen: man muss dann nämlich die Verantwortung übernehmen und seinen Namen auf den Pflock tackern. Und da sind wir vielleicht bei einem Generationsproblem angekommen, worüber sich jeder Gedanken machen müsste...</p>
+<hr />
+<p><strong>Ilker Cetinkaya</strong> (2010-05-03):</p>
+<p>Hallo Ralf,</p>
+<p>Ich habe meine Ansichten zu Deinem Artikel hier zusammengetragen:</p>
+<p>http://www.gmbsg.com/kein-yin-ohne-yang-kein-null-ohne-pointer/</p>
+<p>Um es kurz zu machen: It depends! [1][2][3] :-)</p>
+<p>Siehe:
+[1] http://blog.thomasbandt.de/39/2334/de/blog/null-erkenntnis-ganz-im-gegenteil.html</p>
+<p>[2]  http://www.aspnetzone.de/blogs/juergengutsch/archive/2010/05/03/katastrophenfall-null.aspx</p>
+<p>[3] http://www.aspextra.de/2010/05/03/handwerk-clean-vs-pragmatisch/</p>
+<p>Zu Regeln habe ich einen festen Standpunkt. Regeln sind gut. Es gibt allgemeine Regeln und es gibt spezielle Regeln, das hängt ja wohlbekannter Weise auch vom Kontext ab. Doch welche Regel bei der Entwicklung einer Lösung oder Anwendung letztlich greift und "gut" oder "böse" ist, entscheiden diejenigen, die an der Lösung arbeiten.</p>
+<p>My 2c, oder soll ich sagen, mein Pflock in den Boden? :-)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-05-03):</p>
+<p>@Christina: Klar, Verantwortung übernehmen für den Pflock im Boden.</p>
+<p>Liegt das an der Generation? Jüngere tun das eher? Oder Ältere? Keine Ahnung. Oder liegt das "dem Deutschen" nicht? Hm...</p>
+<p>Ich find es jedenfalls nicht schlimm, denn: Was passiert denn schon, wenn man den Pflock am Ende in den Morast gehauen hat?</p>
+<p>Man zieht ihn wieder raus. Fertig.</p>
+<p>Dann der nächste Versuch.</p>
+<p>Wer sich für sein Projekt schon Agilität auf die Fahne geschrieben hat, der kann das gleich für sein Leben auch tun :-) "Leben im Vorläufigen".</p>
+<p>Das bedeutet nicht, dass man nicht nachdenken soll. Aber es bedeutet, dass man unweigerlich Fehler machen wird. Also kann man mutig voranschreiten. Den anderen gehts ja zum Glück nicht besser.</p>
+<p>Allerdings: Nicht nur Nachdenken sollte man, sondern auch offen sein und kommunizieren. Da mögen Leute, die eher eine "Herrenmentalität" haben, d.h. die ansagen wollen, ein Problem haben. Denn Kommunikation bedeutet hier Bidirektionalität, also auch zuhören können.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-05-04):</p>
+<p>Hallo zusammen</p>
+<p>das eine Liste leer und nicht NULL sein soll, kann ich nur unterstützen.</p>
+<p>Kürzlich stellte ich mir die Frage: was gebe ich bei einer Integer Methode zurück, wenn aus irgend einem Grund keine gültige Zahl vorhanden ist. Da wünschte ich mir NULL ;-), denn 0 ist ja möglicherweise gültig.
+Da überlegte ich wie das währe, wenn eine Methode immer vom Typ Boolean währ und der eigentliche Wert über einen Parameter zurück gegeben würde.</p>
+<p>Daraus könnte man folgende Regel ableiten:
+Wenn eine Methode einen Wert von einem beliebigen Typ zurück gibt muss sicher gestellt werden, dass immer ein gültiger Wert zurück gegeben wird, wobei NULL ein ungültiger Wert ist. Kann dies nicht gewährleistet werden, so ist die Methode von Typ Boolean zu erstellen und zeigt an, ob der für die Rückgabe bestimmte Out-Parameter einen gültigen Wert enthält.</p>
+<p>Ob der Ungültige Wert in diesem Szenario NULL oder sonst was ist hat dann nicht mehr so viel Gewicht, da die Verarbeitung (mit diesem Wert) auf Grund der Rückmeldung nicht weiter geführt wird.</p>
+<p>Habs selbst in der Praxis noch nicht umgesetzt, war wie gesagt nur so eine Idee.</p>
+<p>Vielen Dank für die interessanten Artikel und Kommentare.</p>
+<p>Gruss
+Andreas Schädler</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-05-06):</p>
+<p>@Anonym: Also out-Parameter gefallen mir gar nicht...</p>
+<p>Und zu deinem Problem mit der Integer-Methode gibt es doch bereits eine Lösung: Nullable Types (http://msdn.microsoft.com/en-us/library/1t3y8s4s%28VS.80%29.aspx).</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

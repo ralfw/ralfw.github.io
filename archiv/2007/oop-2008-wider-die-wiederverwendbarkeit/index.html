@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OOP 2008: Wider die Wiederverwendbarkeit — ralfw.de Archiv</title>
+<meta name="description" content="Im OBJEKTspektrum 1/2008 hat Nicolai Josuttis einen Artikel zum Thema SOA geschrieben, der mir recht das Herz aufgehen ließ. Besonders hervorheben möchte ich hier von den vielen se">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/oop-2008-wider-die-wiederverwendbarkeit/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OOP 2008: Wider die Wiederverwendbarkeit — ralfw.de Archiv">
+<meta property="og:description" content="Im OBJEKTspektrum 1/2008 hat Nicolai Josuttis einen Artikel zum Thema SOA geschrieben, der mir recht das Herz aufgehen ließ. Besonders hervorheben möchte ich hier von den vielen se">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/oop-2008-wider-die-wiederverwendbarkeit/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>OOP 2008: Wider die Wiederverwendbarkeit</h1>
+    <div class="doc-meta"><span>25. Dez. 2007</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2007/12/oop-2008-wider-die-wiederverwendbarkeit.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/oop-2008-wider-die-wiederverwendbarkeit/</code></span></div>
+    <div class="art"><p>Im <a rel="noopener" href="http://www.sigs-datacom.de/sd/publications/os/2008/01/index.htm">OBJEKTspektrum 1/2008</a> hat <a rel="noopener" href="http://www.josuttis.de/">Nicolai Josuttis</a> einen <a rel="noopener" href="http://www.sigs-datacom.de/sd/publications/pub_article_show.htm?&amp;AID=2209&amp;Table=sd_article">Artikel zum Thema SOA</a> geschrieben, der mir recht das Herz aufgehen ließ. Besonders hervorheben möchte ich hier von den vielen seiner Aussagen, denen ich beipflichte, allerdings zunächst nur diese:</p>
+<p><em>"Beides zusammen führt dazu, dass sich Wiederverwendbarkeit nicht unbedingt als primärer Business-Case für SOA eignet."</em></p>
+<p>Fast möchte ich darauf nur sagen: Amen.</p>
+<p>Denn Wiederverwendbarkeit - oder Neudeutsch: <em>Reuse</em> - halte auch ich für stark überbewertet. Nicht nur in Bezug auf SOA, sondern allgemein in der Softwareentwicklung. Seit die Objektorientierung ihren Siegeszug angetreten hat, lautet die Botschaft "Wiederverwendung ist gut, Wiederverwendung ist ein wichtiges Ziel!".</p>
+<p>Irgendwie klingt das ja auch ganz plausibel, nein, geradezu zwingend! Besonders für alle, die ein Auge auf´s Geld haben wollen oder müssen. Wenn etwas wiederverwendet werden kann, dann amortisieren sich die darin getätigten Investitionen umso schneller. Wer wollte das nicht?</p>
+<p>Nun, alle die etwas mehr Weitblick haben, wollen das nicht "einfach so". Die Welt ist nicht so simpel schwarz/weiß, wie Wiederverwendungsapostel es gern hätten. Wiederverwendbarkeit steht nicht einfach unökonomische Mehrfachentwicklung gegenüber. Wiederverwendbarkeit und Wiederverwendung haben ihren Preis - und müssen daher wie jede andere Investition abgewogen werden.</p>
+<h2>Kosten der Wiederwendbarkeit und Wiederverwendung</h2>
+<ol>
+<li>
+<p><strong>Wiederverwendbares zu entwickeln, kostet deutlich mehr Aufwand</strong>, als nur für einen konkreten Zweck zu entwickeln. Es ist Zeit aufzuwenden, um die vielen möglichen Wiederverwendungsszenarien zu sammeln und zu analysieren. Es ist dabei auch mehr Personal involviert. Und die Qualität des Wiederverwendbaren muss höher sein, d.h. mehr Planungs- und Entwicklsaufwand fließt hinein, weil mehr Parteien davon abhängen. Wann sich nun aber ein solcher Mehraufwand amortisiert haben wird, ist ungewiss. Hoffnungen und Wünsche sind oft die Triebfedern, nicht glasklare Kalkulationen.</p>
+</li>
+<li>
+<p><strong>Wiederverwendung ist nicht kostenlos</strong>. Sobald ein Zusammenhang entsteht, in dem etwas wiederverwendet werden könnte, der zum Zeitpunkt der Herstellung der Wiederverwendbarkeit noch nicht bekannt war bzw. nicht berücksichtigt wurde, entsteht Anpassungsaufwand. Per definitionem ist die Schnittstelle von etwas Wiederverwendbarem nicht optimal für den einzelnen Wiederverwendungsfall. Wer wiederverwendet, muss sich mehr oder weniger anpassen. Und im schlimmeren Fall muss sogar das Wiederzuverwendende ebenfalls nachgeführt werden.</p>
+</li>
+<li>
+<p><strong>Wiederverwendbares zu finden, kostet Aufwand</strong>. Sobald Wiederverwendung nicht in überschaubarem Rahmen abläuft, man also quasi im Hinterkopf haben kann, was denn potenziell wiederverwendet werden könnte, fallen Recherchekosten an. Bei allen Entscheidungen muss explizit geprüft werden, ob "Spezialentwicklung" oder Wiederverwendung angezeigt ist. Ist der Pool des als grundsätzlich wiederverwendbar Klassifizierten groß genug, kann der Rechercheaufwand sogar womöglich den Aufwand einer Spezialentwicklung erreichen. Nicht zu vernachlässigen sind auch negative Effekte auf die Motivation der Projektmitglieder, die ihren Sinn aus dem Entwickeln ziehen und nicht aus der Suche nach Wiederverwendbarem (s. <a rel="noopener" href="http://portal.acm.org/citation.cfm?id=1323688.1323696">"Implementing component reuse strategy in complex products environments", Ilan Oshri et al. in CACM 12/2007</a>).</p>
+</li>
+</ol>
+<p><strong>4. Wiederverwendung erhöht die Komplexität</strong>, denn Änderungen an etwas Wiederverwendbarem haben Auswirkungen auf eine große Anzahl von Verwendern.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/55ddc16e42e4ebf1.png" /></p>
+<p>Wenn sich eine Spezialentwicklung ändert, hat das potenziell nur Auswirkung auf wenige Nutzer. Wiederverwenbares jedoch muss immer im Blick behalten, dass eine große, womöglich sogar unbekannt große Zahl Nutzer zu Anpassungsaufwand gezwungen werden könnte. Das führt über kurz oder lang zur Versteifung von Wiederverwendbarem, weil die Konsequenzen von Änderungen immer schwerer zu überschauen sind. Dem Versprechen von Änderungen, die nur noch an einem Ort vorgenommen werden müssen, steht also eine Drohung des Kompatibilitätszwangs gegenüber.</p>
+<p><strong>5. Wiederverwendbarkeit entwickeln, ist nicht agil</strong>. Wer etwas auf Agilität gibt, kann eigentlich kein Freund der Entwicklung von Wiederverwendbarkeit sein. Denn Wiederverwendbarkeit lässt sich nur mit einem Blick in die Glaskugel erreichen. Es muss vom aktuell Nötigen extrapoliert werden. Gefragt ist dann nicht mehr, was jetzt, hier und heute ausreichend wäre, sondern was auch noch morgige potenzielle Fälle abdecken helfen könnte. Das läuft dem Gedanken zuwider, immer nur den aktuell angemessenen Aufwand zu treiben und alle weitere Aufwände bzw. Entscheidungen auf den spätest möglichen Zeitpunkt zu vertagen - weil sich ja bis dahin wieder Anforderungen oder schlicht Erkenntnisse (über Anforderungen oder Technologien) geändert haben könnten.</p>
+<h2>Wiederverwendbarkeit ist kein Ziel, sondern ein Mittel</h2>
+<p>Und nun? Wiederverwendbarkeit ist nicht schlecht. Ich mag sie auch - wo sie sich leicht herstellen lässt oder einfach ergibt. Wiederverwendbarkeit halte ich nur einfach für kein taugliches Ziel. Kräfte sollten nicht auf Wiederverwendbarkeit ausgerichtet sein nach dem Motto "Lasst uns erst schauen, was wir wiederverwendbar machen können!" Das mag sich für Controller zwar gut anhören oder Entwicklerpersönlichkeiten entsprechen, die sich gern mit Grundsätzlichem und vor allem Infrastruktur beschäftigen. (Wer würde nicht gern seinen eigenen Persistenzframework basteln und das Thema einfürallemal lösen, statt sich mit ewig wetterwendischen Kundenwünschen herumzuplagen?)</p>
+<p>Stattdessen sollten alle Kräfte zu jeder Zeit darauf gerichtet sein, Komplexität zu meistern - und natürlich Kundenwünsche zu erfüllen. Wiederverwendbarkeit ist aber kein Kundenwunsch. Gemeisterte Komplexität jedoch, weil sie Langlebigkeit fördert. Und wenn sich dann an einem Punkt ergibt, dass die Komplexität durch Wiederverwendung sinken würde, dann ist das wunderbar. Dann ist Wiederverwendbarkeit lediglich ein Mittel. Dann ist es Zeit, durch Refaktorisierung Wiederverwendbarkeit herzustellen - falls dem nicht zu hohe Folgekosten entgegenstehen. Aber nicht früher.</p>
+<h2>Wiederverwendbarkeit und SOA?</h2>
+<p>Wiederverwendbarkeit und SOA haben deshalb soviel miteinander zu tun wie Wiederverwendbarkeit und Objektorientierung oder Wiederverwendbarkeit und Komponentenorientierung. SOA-Dienste können Einheiten der Wiederverwendung sein wie Objekte oder Komponenten. Mehr nicht. Es gibt keinen SOA-Grundsatz, der da lautet "Services should be as reusable as possible" oder dergleichen. SOA-Services können wiederverwendbar sein - aber ob das angemessen ist, steht auf einem ganz anderen Blatt.</p>
+<p>SOA wie Komponentenorientierung - die Objektorientierung lasse ich einmal bewusst außen vor - haben vor allem ein Ziel: die Beherrschung von Komplexität. Große Systeme sollen verstehbar und evolvierbar sein und bleiben. Darum geht es. Und deshalb halte ich eine <a rel="noopener" href="http://ralfw.blogspot.com/2007/11/oop-2008-soa-system-oriented-attitude.html">"System Oriented Attitude"</a> für den wichtigsten Ausgangspunkt aller Softwareentwicklung.</p>
+<p>PS: In der Entwicklungsgeschichte eines Systems kann es übrigens zu gegenläufigen Bewegungen kommen: Ähnliche Funktionalität kann zu Wiederverwendbarer zusammengefasst werden (Integration) - Wiederverwendbares kann aber ebenso wieder aufgespalten werden, wenn es versucht, zuvielen Herren zu dienen (Desintegration). Auch diese Möglichkeit gilt es im Blick zu behalten. Wahrhafte Agilität versteift sich nicht auf einen Zustand.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

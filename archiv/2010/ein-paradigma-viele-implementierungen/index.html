@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ein Paradigma, viele Implementierungen — ralfw.de Archiv</title>
+<meta name="description" content="Event-Based Components (EBC) werden vor allem mit C-Events in Zusammenhang gebracht. Nicht zu unrecht natürlich. Darum ging es ja auch am Anfang: Funktionseinheiten über Events ver">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/ein-paradigma-viele-implementierungen/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Ein Paradigma, viele Implementierungen — ralfw.de Archiv">
+<meta property="og:description" content="Event-Based Components (EBC) werden vor allem mit C-Events in Zusammenhang gebracht. Nicht zu unrecht natürlich. Darum ging es ja auch am Anfang: Funktionseinheiten über Events ver">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/ein-paradigma-viele-implementierungen/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Ein Paradigma, viele Implementierungen</h1>
+    <div class="doc-meta"><span>28. Dez. 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/12/ein-paradigma-viele-implementierungen.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/ein-paradigma-viele-implementierungen/</code></span></div>
+    <div class="art"><p>Event-Based Components (EBC) werden vor allem mit C#-Events in Zusammenhang gebracht. Nicht zu unrecht natürlich. Darum ging es ja auch am Anfang: Funktionseinheiten über Events verbinden. So können sie “im Außen” zusammengesteckt werden; “im Innen” haben sie keine Abhängigkeiten mehr.</p>
+<p>Inzwischen hat sich die Welt aber gedreht. Aus den EBC sind die Komponenten verschwunden. Und nun verschwinden auch die Events. Oder besser: sie bekommen einen anderen Platz zugewiesen.</p>
+<h3>Flow Design</h3>
+<p>In den letzten Monaten habe ich mit vielen Entwicklern über EBC diskutiert und in vielen Zusammenhängen damit gearbeitet. “EBC-Denke” hat auch die Clean-Code-Developer-Trainings, die ich mit <a rel="noopener" href="http://www.lieser-online.de/">Stefan Lieser</a> veranstalte, stark beeinflusst. Sie macht es schlicht soviel leichter, Anforderungen in Lösungen zu transformieren.</p>
+<p>Bei all dieser Beschäftigung mit dem Konzept bleibt es nicht aus, dass es sich verändert. Der Blick darauf wird differenzierter. Und so ist mein aktueller Standpunkt, dass EBC nur eine bestimmte Ausprägung eines Paradigmas ist.</p>
+<p>Objektorientierung ist ein Paradigma, bei dem es um polymorphe “Dinger” geht, die Daten und Funktionen vereinen und voneinander abhängig sind.</p>
+<p>Das hinter EBC stehende Paradigma nenne ich mal “Flussorientierung”. Bei dem geht es um “Dinger”, die Eingaben in Ausgaben transformieren, dabei auf Ressourcen zurückgreifen – und zu Sequenzen verbunden werden. Solche Sequenzen können wieder als “Dinger” betrachtet werden, weil sie als Ganzes Eingaben in Ausgaben transformieren. Im Fluss durch die Sequenzen sind also Daten; die Ausgaben eines “Dings” sind die Eingaben anderer “Dinger”.</p>
+<p>Diese Flussorientierung sehe ich inzwischen als so wichtig weil grundlegend an, dass ich sie von den EBC getrennt nutzen möchte. Sie ist für mich sogar so universell, dass ich sie nicht auf die Modellierung, d.h. den Entwurf funktionaler Strukturen beschränken möchte. Flussorientierung ist für mich vielmehr das Ausgangsparadigma für Architektur und Modell. Denn nur mit einer Flussorientierung können wir komplizierte Systeme agil evolvierbar entwerfen, d.h. in dünnen Längsschnitten. Das behaupte ich mal keck :-)</p>
+<p>Meine Begründung: Flussorientierung ist der Objektorientierung im Entwurf in mehrerlei Hinsicht überlegen.</p>
+<ul>
+<li>Erstens entstehen durch Flussorientierung keine Systeme mit funktionalen Abhängigkeiten;  zweitens sind flussorientierte Systeme intuitiv auf beliebig vielen Abstraktionsebenen denkbar und darstellbar;  drittens geht es bei Anforderungen immer um Verarbeitungsflüsse, so dass flussorientierter Entwurf näher an den Anforderungen verläuft.1)</li>
+</ul>
+<p>Aller Softwareentwurf sollte daher, so meine ich derzeit, mit Flussorientierung beginnen.</p>
+<h3>Flow Architecture</h3>
+<p>Die nicht-funktionalen Anforderungen sollten konsequent mit einer flussorientierten Architektur erfüllt werden.2) Was da in Flüssen steckt, <a rel="noopener" href="http://ralfw.blogspot.com/2010/12/was-ist-softwarearchitektur-teil-2.html">ist architekturspezifisch</a>. Daten fließen in der Architektur (zumindest) zwischen Bounded Contexts, Apps, Maschinenen und BS-Prozessen.</p>
+<p>Der Architekt definiert und bindet physische Funktionseinheiten zu Sequenzen zusammen. Einen Betriebssystemprozess kann man “anfassen” (s. Taskmanager), eine App kann man “anfassen” (s. die BS-Prozesse auf den zugehörigen Maschinen) usw. Mit diesen Funktionseinheiten kann am Ende auch ein IT-Admin etwas anfangen oder eine Einkaufsabteilung, weil hard- oder softwaretechnische Server gekauft werden müssen.</p>
+<h3>Flow Model</h3>
+<p>Die funktionalen Anforderungen sollten vor dem Hintergrund der flussorientierten Architektur dann ebenfalls flussorientiert angegangen werden. Das geschieht im Rahmen der Modellierung, die logische Funktionseinheiten definiert und zu Flüssen verbindet. Wo Architektur immer aus einer begrenzten physischen Hierarchie besteht, sind Modelle freier. Ihre Strukturelemente haben deshalb allgemeinere Namen: Platine und Bauteil. Bauteile sind atomare Funktionseinheiten, Platinen zusammengesetzte bzw. zusammensetzende Funktionseinheiten. Die Hierarchien der Funktionseinheiten von Modellen können beliebig tief geschachtelt sein.</p>
+<p>Zum Trost der Freunde der Objektorientierung: Die Bauteile des Modells wie auch die in ihm fließenden Daten sind die “Taschen”, in denen für mich Objektorientierung weiterhin ihren Wert hat. Sie sind überschaubar und klar abgegrenzt, so dass Objektorientierung die Harmonie des Großen Ganzen des Entwurfs nicht zerstören kann. “Taschen voller Matsch” sind zwar misslich, aber immer noch viel besser als ganze Anwendungen als Brownfield.</p>
+<p>Es obliegt Architektur und Modell, diese “Taschen” so klein zu halten, dass die Nachteile der Objektorientierung ihre Vorteile nicht überwiegen. Das halte ich aber für keine allzu schwierige Aufgabe.</p>
+<h3>Flow Implementation</h3>
+<p>Flüsse fließen also überall im Entwurf, in der Architektur und im Modell. Das bedeutet, es kann nicht nur eine Übersetzung für sie geben. Das hatten EBC suggeriert. Aber das ist eine unnötig einschränkende Sichtweise.</p>
+<p>Einen Fluss wie</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/3ee78c3fc7ae938e.png" /></p>
+<p>in Interfaces mit Events zu übersetzen wie hier</p>
+<p>interface IA
+{
+  event Action Output;
+}</p>
+<p>interface IB
+{
+  void Process(string input);
+}</p>
+<p>ist nur eine Möglichkeit. Sie ist einfach und naheliegend – doch letztlich ist es eben nur eine Möglichkeit.</p>
+<p>Genauso gut können die Funktionseinheiten in Methoden übersetzt werden:</p>
+<p>string A() {…}</p>
+<p>void B(string input) {…}</p>
+<p>Das tun Stefan und ich zum Beispiel gern in TDD-Seminaren, wenn wir kleine Aufgaben modelliert haben. Für die meisten Code Katas wäre die Übersetzung in Interfaces/Events ein zu großes Geschütz. Mit der Übersetzung in Methoden muss man nun aber nicht auf die Segnungen der Modellierung auch bei kleinen Aufgaben verzichten.</p>
+<p>Und sonst? Es gibt weitere Übersetzungen für Modelle. In einem Blogartikel habe ich zum Beispiel mal mit <a rel="noopener" href="http://ralfw.blogspot.com/2010/04/kanalisiert-event-based-components-im.html">expliziten Kanälen</a> gearbeitet. Oder <a rel="noopener" href="http://blog.jebc.de/2010/12/spinnen/">hier eine Übersetzung für die Java-Welt</a> – auch ohne Events.</p>
+<p>Auf Architekturebene sieht die Übersetzung dann noch wieder anders aus. Wie könnte ein Datenfluss zwischen zwei Bounded Contexts übersetzt werden?</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/ac5016f9ed1a5663.png" /></p>
+<p>Aus dem schlichten Pfeil im Architekturmodell auf hoher Abstraktionsebene kann z.B. ein ETL-Betriebssystemprozess3) auf niedrigerer Ebene werden:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/7e55ddf16035609a.png" /></p>
+<p>Tendenziell werden allerdings flussorientierte Modelle direkt in recht simple programmiersprachliche Konstrukte übersetzt und flussorientierte Architekturen mit flussorientierten Modellen verfeinert.</p>
+<p>Aus jeder Entwurfsperspektive gilt jedoch: Für “Kästchen” (oder “Kuller”) und Fluss-Pfeile sind je geeignete Übersetzungen zu finden. Welche das sind, hängt vom Abstraktionsgrad, zur Verfügung stehenden Technologien und nicht-funktionalen Anforderungen ab.</p>
+<h3>Fazit</h3>
+<p>Was mit EBC begonnen hat ist nun viel größer geworden. Auf Flussorientierung kann und will ich nicht mehr verzichten. Funktionale und nicht-funktionale Anforderungen möchte ich mit dem Paradigma angehen. Große und kleine Probleme möchte ich damit lösen. Synchron und asynchron möchte ich dabei denken können.</p>
+<p>Die Trennung von Paradigma und Implementation, die in EBC ursprünglich nicht so direkt zu sehen war, hilft mir dabei. Ich denke auch, dass sie Flussorientierung attraktiver macht, weil sie keine bestimmte Implementation aufzwingt. Jeder kann einen flussorientierten Entwurf in objektorientierten oder prozeduralen oder funktionalen Code gießen, wie er mag. Je systematischer das geschieht, desto größer der Gewinn. Interfaces und Events sind nur eine Variante von vielen.</p>
+<p>In diesem Sinne: Happy Flow-Designing!</p>
+<h4>Anmerkungen</h4>
+<p>1) Dass die Objektorientierung meint, bei Anforderungen ginge es vor allem um Daten, halte ich inzwischen für eine sehr tragische Verirrung. Sie ist tragisch, weil Objektorientierung dazu gedacht war “alles besser zu machen”. Endlich Software so strukturieren, wie die Welt uns entgegentritt: als Gewebe von Dingen, die Zustände haben und tätig sind und unterschiedlichen Kategorien angehören.</p>
+<p>Klingt ja auch total cool. Klingt sogar philosophisch-richtig, weil hier These (Platon als Proponent einer Ideenwelt unabhängig von den Dingen –&gt; Klassen) und Antithese (Descartes als Stellvertreter des modernen diesseitigen, mechanistischen Denkens –&gt; Objekte) synthetisch vereint scheinen.</p>
+<p>Leider ging der Schuss nach hinten los. Ich sehe nicht, dass die Objektorientierung die Softwareentwicklung ihrem Anspruch entsprechend leichter gemacht hat. Unsere Softwaresysteme sind heute größer als früher. Aber nicht wegen der Objektorientierung, sondern weil Rechner heute mehr leisten. Selbst wenn wir heute nur mit C oder Modula arbeiten würden, wären unsere Softwaresysteme größer als die in den 1970ern.</p>
+<p>Schuldig geblieben ist die Objektorientierung, dass Softwaresysteme wirklich deutlich leichter entworfen werden können. Und dass Softwaresysteme leichter evolvierbar gemacht und gehalten werden können als zu zeiten von C oder Modula.</p>
+<p><a rel="noopener" href="http://ralfw.blogspot.com/2010/12/in-abhangigkeit-refaktorisieren.html">Wie an anderer Stelle schon gesagt</a>: Objektorientierung hat ihren Wert. Ich möchte sie nicht missen. Aber sie ist nicht der Heilsbringer, den die Branche in ihr gesehen hat und sieht. Und erkennen lässt sich das an der kontraproduktiven Gewichtung von Daten bei der Analyse von Anforderungen, um die dann herum Funktionalität gruppiert wird. Das Ergebnis sind oft/meist ideal-naive oder schlicht falsche Repräsentationen der Welt.</p>
+<p>2) Flussorientierte Architektur ist kein neuer Gedanke. <a rel="noopener" href="http://en.wikipedia.org/wiki/Event-driven_architecture">Event-Driven Architecture</a> (EDA) ist ein etabliertes Architekturmuster in diesem Sinne. Ich möchte jedoch darüber hinaus gehen. EDA ist heute vor allem in “großen Anwendungen” in Gebrauch. Das empfinde ich als unnötige Beschränkung, die vor allem einem Denken entspringt, EDA hätte mit spezieller oder gar teurer Infrastruktur zu tun.</p>
+<p>Jede Software kann davon profitieren, wenn ihre Architektur flussorientiert ist. Höhere Evolvierbarkeit sollte kein Privileg großer Systeme sein.</p>
+<p>3) Ein ETL-Prozess nimmt in der Architektur insofern eine besondere Bedeutung ein, als dass er nicht nur einem Bounded Context angehört. Eine eigene Ebene in der Strukturhierarchie der Architektur verdient er deshalb jedoch nicht. Er kann als App oder als BS-Prozess angesehen werden.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/0aef3249af901a13.gif" /></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

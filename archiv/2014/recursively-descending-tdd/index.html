@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recursively descending test-driven development aided by thinking — ralfw.de Archiv</title>
+<meta name="description" content="&quot;Hey, Ron, wanna try something new&quot;, Janine asked across the table in their team room. Ron looked at her uneasily over his line of monitors. For hours he had been trying to fix thi">
+<link rel="canonical" href="https://ralfw.de/archiv/2014/recursively-descending-tdd/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Recursively descending test-driven development aided by thinking — ralfw.de Archiv">
+<meta property="og:description" content="&quot;Hey, Ron, wanna try something new&quot;, Janine asked across the table in their team room. Ron looked at her uneasily over his line of monitors. For hours he had been trying to fix thi">
+<meta property="og:url" content="https://ralfw.de/archiv/2014/recursively-descending-tdd/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-03)"></span>The Architect&#x27;s Napkin</p>
+    <h1>Recursively descending test-driven development aided by thinking</h1>
+    <div class="doc-meta"><span>10. Feb. 2014</span><span>Erstveröffentlichung: geekswithblogs.net</span><span><a href="https://geekswithblogs.net/thearchitectsnapkin/archive/2014/02/10/recursively-descending-test-driven-development-aided-by-thinking.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2014/recursively-descending-tdd/</code></span></div>
+    <div class="art"><p>"Hey, Ron, wanna try something new", Janine asked across the table in their team room. Ron looked at her uneasily over his line of monitors. For hours he had been trying to fix this elusive bug.</p>
+<p>"Nah, not now. I really need to get this done first, Jan."</p>
+<p>"Oh, come on, Ron, that´s what you´re telling us all the time."</p>
+<p>Ron blushed. That certainly wasn´t true. Especially not with regard to Janine.</p>
+<p>"You know me better than that, Jan. I´m always willing to help you out and stuff. But right now…"</p>
+<p>"It won´t take long, Ron. Promised. It´s just so cool. You´ll like it. And… maybe it even helps you with your current problem. Who knows…" Janine winked at him – and of course Ron´s resolution to not again get distracted by her crumbled. He sighed and rolled his chair next to her.</p>
+<p>"Ok, what´s it? You better make it quick, Jan – and exciting."</p>
+<p>Janine beamed at him. Then with a secretive look and a hushed voice she said: "I found a better way to approach coding. We´ve been doing TDD, right. We´ve tried hard to do it right, to do it by the book."</p>
+<p>Ron nodded slowly. What was she trying to get at? For the past couple of weeks they had run coding dojos with their team to get up to speed with TDD. Finally. He strongly hoped she wouldn´t suggest to deviate from that course. It had been difficult enough to convince their colleagues to at least try automated tests. Those guys were old code cowboys and not so happy to be asked to learn new tricks.</p>
+<p>"Oh, Ron, don´t give me this skeptical look again. Please. It´s not what you might think. TDD is cool – but we can do even better. Remember how we had a hard time doing the kata Roman Numerals? We tried hard, we moved along in tiny steps – but in the end of our timebox we had not finished the task."</p>
+<p>Yes, he remembered that particular coding dojo very well. Their colleagues had been very frustrated.</p>
+<p>"Sure. But our retrospective made clear what we´d done wrong, didn´t it? It was a matter of wrong test priorization."</p>
+<p>"That´s right, Ron. But why did we get the test prios wrong? Again, that is. Because we didn´t give it much thought. Because we did not think about the solution first. We were so eager to get coding…"</p>
+<p>"Well, only in code lies truth, Jan. You know that."</p>
+<p>"True, Ron, true. In the end at least. But what code to write? Where should the code containing all the truth come from? How do we transform a test case into code?"</p>
+<p>Ron stared at her blankly. What was this? A lesson in philosophy? Programming is about detail. Code represents all those details. Details need deep technological knowledge. Without solid craftsmanship no running code would get to their customers.</p>
+<p>"Come on, Jan. Don´t play this kind of game with me. You know I hate it. Just tell me what you want to tell me."</p>
+<p>Janine sighed. Usually Ron was very pleasant to work with. A guy who liked to explore the unknown like she did. But sometimes… She took a deep breath, turned to her monitors and pointed to a C# file.</p>
+<p>"Ok, Ron, see those test cases? It´s the kata Word Wrap. We did it a while ago. Tried to do it like we saw it on the web in Robert C. Martin´s blog. And then – you remember? – George came up with this additional test case. And our solution did not handle it correctly. Neither did Martin´s show case solution."</p>
+<p>Ron nodded. That had been one of the more successful coding dojos – well, until they found out, TDD had not led them to a bug free solution right away.</p>
+<p>"I have pondered long about why in the end we failed. And I guess I´ve found the root cause. We did everything right TDD-wise. But we did not enough thinking upfront."</p>
+<p>"What? We should think more ahead? Big design up-front, Jan? You can´t be serious. Our retrospective clearly showed we just failed to come up with the additional test case. Had we added it to our list we surely would have also solved that problem."</p>
+<p>"Yeah, you´re right, Ron. But how can we think about test cases in the first place if we don´t have a clue about our solution? Test cases not only depend on the customer, but also on how we design the code."</p>
+<p>"Yes, the design naturally flows from the test cases and is refined through refactoring."</p>
+<p>"Ron, just listen to what you´re saying. I know, this is how we´ve thought so far. But can this be true? How can code flow from test cases? Code, and its design are the result of our thinking. We plan code before we write it. Maybe we´re not aware of it, but there´s no other way. It is born in our heads. Before we code. The questions are just: When? And how explicitly?"</p>
+<p>He took a deep and somewhat resentful breath – but before he could retort, Janine drew him back to the code.</p>
+<p>"I know, this sounds theoretical and somehow against what we´ve read about TDD and stuff. So let me show what I did. I read a blog post about an alternative approach to test-first programming and tried the suggestions out. Just follow me for a couple of minutes, will you?"</p>
+<p>Ron gnashed his teeth, but kept silent and noded.</p>
+<p>"Ok, thanks, Ron, honey.", Janine said and smiled at him disarmingly. "I want to do the kata Word Wrap with you in a different way. These acceptance tests are our starting point. Currently they are all red. Of course. The Wrap() method just throws a NonImplementedException. I want to flesh out its implementation together with you."</p>
+<p>"It´s all the canonical unit test cases – including the one which brought our prior implementation to its knees. And two more test cases with real texts. Just for the fun of it. Now, what I want to do differently is: I want to think about our solution approach first."</p>
+<p>"What do you mean by 'thinking'? Do you want me to draw an UML diagram, or what?"</p>
+<p>"No, no, Ron. No UML. You know I hate that, too. I mean, well, just 'thinking' or talking about how we would accomplish the word wrapping task by hand."</p>
+<p>"By hand? We need to code, Jan."</p>
+<p>"Yes. In the end we need to code. But software always does what we as humans could do by hand or in our heads. Just much faster. It´s the non-functional requirements software is written for. Functional requirements can always be fulfilled without software – given enough time and money."</p>
+<p>"You mean, functionality is not important?", Ron exclaimed in disbelief.</p>
+<p>"No, of course. It´s essential. But… Oh, no, let´s no digress. We can talk about that later. Let´s focus on the kata for now. How could we do 'wrapping words' by hand?"</p>
+<p>Ron stared blankly at her. After a short pause Janine took a piece of paper and a pencil and wrote:</p>
+<ol>
+<li>Split text into words</li>
+<li>Build lines from words</li>
+</ol>
+<p>"How about that, Ron? Wouldn´t that very simply describe how word wrapping could be done?"</p>
+<p>"Hm… yeah, sure. But that´s not code. It´s just words. You don´t know if this is actually working."</p>
+<p>"Oh, Ron… Of course this is just words. But those words can be translated into code, can´t they? We do that all the time. Look here."</p>
+<p>"This is not just words, it´s even bubbles, Ron. I know, they don´t crash. But still it´s a representation of our code. It´s like a little plan: We intend to write a functional unit which transforms an incoming text into an outgoing text with line breaks. It´s like a map of our code. It´s not the code itself, just an abstract view. The same is true for what I´ve written above. It can be depicted like this."</p>
+<p>"I just refined the first functional unit. The finer grained functional units describe how the mission of the coarse grained unit can be accomplished. You know how to transform the coarse grained unit into code – you define a function. So why not do the same with the finer grained units?"</p>
+<p>"What do you want me to do, Jan? Write three functions without a test? Is that your new shiny road to reliable code?"</p>
+<p>"No, Ron, not that quickly. First I want you to see that thinking brought us closer to the solution. Instead of a big problem, we´ve two smaller problems. And we have a simple hypothesis: if there was a function 'split lines into words' which did what´s suggested by its name, and there was a second function 'build lines from words' which did what its name suggested, then their combination would solve the word wrap problem. Yes, it´s just a thought. But one that can easily be verified. By code. Give it a try. Write a simple failing test for the Wrap() function. I´ll then take over and show you what I mean."</p>
+<p>At the prospect of writing code Ron relaxed visibly. He gently pushed aside Janine on her chair and grabbed her keyboard. In no time he set up the test code.</p>
+<p>"Thanks, Ron. I see you´re cutting right to the chase. You´re right, we don´t want to waste our time on unenlightening trivialities like tests for null or empty strings. Now let me show you how I want to turn this test to green. Currently it´s failing because there is no solution code behind the Wrap()-facade. Let´s change that first."</p>
+<p>Janine took over the keyboard and fleshed out the Wrapper class.</p>
+<p>"I hope you see I translated our solution idea into code. The job of Wrap() now is to just integrate two functions into a larger whole. How those functions accomplish their sub tasks I don´t know yet. Before we turn to that let´s check our hypothesis. Let´s turn the test green."</p>
+<p>"How do you wanna do that, Jan? Those functions both throw exceptions."</p>
+<p>"Well, Ron… let me apply some very, very advanced technology here – which is indistinguishable from magic, as you know", Janine said grinning while mimicking Hermine wielding her magic wand. "But to be honest, I just downloaded a cool mocking framework called JustMock from Telerik."</p>
+<p>"This test proves: if those two functions worked correctly, the whole would work correctly. You could say: we just fake it until we make it."</p>
+<p>Surely the introduction of a new tool grabbed Ron´s attention. Regardless of Janine´s strange approach to programming this was something to take a closer look at. Maybe she was right and this little breakout session with her could help him fix the darn bug.</p>
+<p>"Jan, even though I don´t know if I like your approach, I´m amazed at how this mocking framework of yours can replace even private methods. How about methods from .NET Framework types or even whole types? Have you tried that?"</p>
+<p>"No, Ron, I haven´t. And please let´s not get carried away here. I know it´s a cool tool. And you can check it out later. For now please stay with me. I want to show you how I think this technology can help us become better at TDD."</p>
+<p>Ron moved a bit restlessly in his chair, but Janine was able to regain his attention by asking him to write a next test.</p>
+<p>"Since this test is green, why not move on? We need to tackle one of the smaller problems now. This approach I want to show you is recursive. TDD is applied on every level. So why not write a red test for Split_into_words()? Ron, your turn again."</p>
+<p>Ron looked puzzled. "But, Jan, those methods are private. How could I write a test for them?"</p>
+<p>"Oh, Ron, you baby, don´t you trust our new shiny tool? Here let me show you."</p>
+<p>"But you´re not even supposed to test private methods. They are details hidden behind the public interface of a class for a reason."</p>
+<p>"That´s true, Ron. But as you´ll see, we won´t violate this rule for long. Come on, get this test to green. Be a good craftsman for me, will you?" And so Ron dug into his knowledge about string manipulation with C#.</p>
+<p>"Great! It´s simple, yet pretty comprehensive, I guess. This not only covers the happy day case of the test, but also a few other scenarios. I guess, as long as we keep our requirements constant, that words are separated by spaces, this will do. So let´s go back to our hypothesis and retest it – but now with the real functional unit instead of a mock. Can you imagine what I want to do?"</p>
+<p>Ron frowned. But then his eyes opened with near despair. "Oh, no, Jan, you´re not gonna change the previous test, are you? You´re not supposed to do that."</p>
+<p>"Yes, Ron, that´s exactly what I´m gonna do", replied Janine with her well known comforting voice. "Why not change a test? It´s nothing sacred. Esspecially not these 'under the hood' tests. They are all just temporary skaffolding while erecting our code building."</p>
+<p>"The test got simpler. And now it´s even more valuable, because our hypothesis is even true for some real functionality, not just fake bubble implementations. And now let´s repeat these steps for the second processing phase of our solution. Your turn again, Mr. Craftsman."</p>
+<p>Ron turned to Janine´s keyboard and applied his newly won knowledge of JustMock.</p>
+<p>"This sure is a non-trivial test, Ron. And I´m eager to see, how you´re gonna get it to green," said Janine smiling in a way that made Ron feel a little strange.</p>
+<p>"Well, I choose the simplest possible implementation first."</p>
+<p>"Yeah, but what´s that? Do you want to return the string 'a b'?"</p>
+<p>"No, Jan, of course not," said Ron a little unnerved. "I´ll actually solve the problem of joining words into a line."</p>
+<p>"Oh, how clever of you, Ron!" Janine acclaimed jokingly and clapped her hands. "That get´s us to a very cute light green. But not more, you know. Because it does not even try to use the second parameter."</p>
+<p>"Sure not. The test case does not require it. That´s the point about making test cases progressively more complicated."</p>
+<p>"You´re right, Ron. About the test cases. But why make the solution overly dependent on the test case? Why eschew the opportunity to really learn something about the problem domain? The second parameter is there for a reason. Admitted: if it wasn´t there, this would be a good first try. But we´ve design the function with a second parameter for a good reason. It´s the workhorse function of our solution to the word wrap problem. So we need the second parameter. That´s not looking into a crystal ball, but solid untderstanding of the problem at hand. But anyway. Leave it as is and move on to a second test. I guess we´re agreeing at least on that we need one more."</p>
+<p>Ron wanted to reply – but then settled for doing as asked. That way he´d surely get back to his computer more quickly for some real exploration of JustMock.</p>
+<p>"Yes, that´s what I thought of, too. Now watch what happens to your previous solution…"</p>
+<p>Ron switched to the implementation of Create_lines_from_words(), pondered the one-line solution, frowned – and then his eyes lit up.</p>
+<p>"Ah, I see what you mean. I have to throw it away. Right? There´s nothing I can carry over from the previous test, because now the second parameter becomes important, but I did not use it."</p>
+<p>Janine nodded and smiled at him broadly. "You got it, pal."</p>
+<p>"So let me fix this first. I´ll replace the trivial solution with one that´s actually tackling the problem – but still in a simple way. How about this?"</p>
+<p>"That looks much better, I guess. Even though we know the maximum line length is never exceeded, this code demonstrates an idea of how it can come into play. But let´s not dwell on this for long. We´ve to solve the new test case."</p>
+<p>"Right, mam, at your service," Ron said jokingly and continued implementing the function.</p>
+<p>"This does the job, Jan. But I´m not 100% content with it. Looks a bit clunky, doesn´t it?"</p>
+<p>"Yeah, I guess so. But then… it´s just some 20 lines of code. The purpose is pretty clear. Important terms from the ubiquitous language are present like text, line, max. line length. You even extracted a method for adding a finished line to the text."</p>
+<p>"That was an experiment. I saw nested function definitions in F# and liked it. So I thought about how to mimick that in C#."</p>
+<p>"Pretty nifty to use a lambda expression. Yeah, why not. Let´s leave it at that. We can always come back and refactor more or even find a better overall approach. But first we want to go back to our hypothesis…"</p>
+<p>"You want to remove the second mock?"</p>
+<p>"Exactly! Then we´re truely gonna see, if our hypothesis was true."</p>
+<p>"Ah, finally! This looks good. It´s still green. So we were right, Ron. Now, let´s check how many of our acceptance tests have also turned green."</p>
+<p>"Hey, look at this! More than half of the acceptance test cases are already fufilled by our solution. Not bad for a start. And the non-canonical test case which crashed our coding dojo solution is among the green tests. That´s especially great because we didn´t labor much about the individual cases. Remember how we discussed where and when to break lines? But now, with just a little thinking before coding, with an idea of a conceptual solution, we just covered it."</p>
+<p>"That´s true, Jan. Maybe this approach of yours isn´t that bad in the end."</p>
+<p>Janine blew Ron a kiss.</p>
+<p>"But don´t go overboard now, Jan! The devil is in the detail. We´ve three more tests to go."</p>
+<p>"Ok, ok. Let´s move on. We need to tackle the next category of tests: what about words longer than a line? First a red test. Your turn again, Ron."</p>
+<p>"That was the category we started the coding dojo with. But I guess it´s more natural to do it second. The probability for such long words is small – at least in the real world, I suppose. So it´s a special case."</p>
+<p>"The test was easy to write. But how should we go about to make it green, Jan? You sure have your own ideas about that."</p>
+<p>"I sure have, Ron. Because we´re again in a situation where we need to find a solution first, instead of quickly slinging code. The current implementation does not cover the test case. What´s our idea of how to tackle wrapping long words?"</p>
+<p>"Hm… as far as I remember they may be cut off at any point. There are no special requirements for something like hyphenation."</p>
+<p>"Right. That makes it easy to enhance our current solution, I presume. How about adding a processing step between the exiting ones? That way we would not need to change existing code, except the simple integration function Wrap()."</p>
+<ol>
+<li>Split text into words</li>
+<li>Split long words into "syllables"</li>
+<li>Build lines from words</li>
+</ol>
+<p>"I call the split words 'syllables' because that´s what they look to me, even though we won´t use hyphens at the end of lines. At least for now."</p>
+<p>"Sounds good to me. Makes for a precise term of our ubiquitous language. However, is it ok to split all long words into syllables, Jan? In the usual kata solutions words are split at the end of lines, only. But this approach will do it proactively."</p>
+<p>"I don´t find the requirements very clear about this aspect. So I assume we´d be within the boundaries of what´s permissible. And in the end at least the canonical acceptance test cases will tell."</p>
+<p>"Ok, let´s try it this way. Now, let me see if I understand your approach. Is this how you´d enhance the code: put in a function for the processing step and first mock it to get the test to green?"</p>
+<p>"Right on, Ron! That would make our hypothesis tangible."</p>
+<p>"The mock-up nicely plays together with the other functions. The test is green. Now we´ve to drill down and focus a test on the new function Split_long_words(). You wanna do that, Ron?"</p>
+<p>"Sure. Especially since the first test again is the easier one."</p>
+<p>"Yeah, I see, you´re going for the low hanging fruits, Ron. But you know: the test is only half the fun. I want to see you sweat over a simple, but not too simple implementation. Remember: don´t eschew solving the problem."</p>
+<p>"I saw that coming, Jan, I have a plan already. Take this."</p>
+<p>"That looks great, Ron!", Janine said nudging Ron jokingly. "What´s up next?"</p>
+<p>"Well, I guess a test for truely long words. But guess what: Even I can now see that´s a task calling for a function of its own. A function to split a single long word. And that needs to be mocked first."</p>
+<p>Janine´s jaw dropped as she looked at Ron in disbelief. Was it possible he already had gotten the knack of her new approach? Yes, it seemed so. How cool was that…</p>
+<p>"Yeah, I know, you thought, I would be more skeptical. But I can feel what you mean. This really is a helpful way to do TDD. It´s small steps. But these steps are better guided. Guided by thinking. I like it."</p>
+<p>That said Ron showed Janine how he thought they should continue. First a red test using mocks, then the enhancement in the production code. This turned the test green. Another hypothesis formulated.</p>
+<p>"That feels like a systematic process, doesn´t it, Ron? If stuff is more than trivial, then the test data is not enough. Some idea of how the expected result is supposed to be created is in order – and should be encoded in the test."</p>
+<p>"Yes, the mocks are representations of a design idea – which needs to be validated."</p>
+<p>"And this is true on any level of abstraction as we can see. We did it like this on the top with Wrap(). And we´re doing it again down here."</p>
+<p>"Yep. But with each level it becomes easier. The functions become smaller. Look at my stab at this new function. A test first, then an implementation."</p>
+<p>"Impressive, Ron, impressive. You wrote that down in no time. Had it all in your head? Oh, you´re my hero coder of the day…", Janine purred and Ron blushed. He knew she was joking, but still… There was something about Janine, he liked very much. At least as long as she didn´t try to talk with him about some of her even more esoteric ideas on software development. Like event sourcing or reactive something.</p>
+<p>Then, when Ron opened his mouth after a tiny, but uncomfortable pause, Janine threw up her arms and called out loud: "Look, Ron, we´re done! All tests are green! All of them!"</p>
+<p>Ron swallowed a supposedly funny remark he was about to make about him being her hero and looked at the code. Indeed, all methods where shown with a green dot next to them. That meant, NCrunch, the background test runner, had found no failing test.</p>
+<p>"Wow. Awesome! That means all our acceptance requirements are fulfilled. And that means, our approach to splitting long words can´t be all that wrong."</p>
+<p>"Well, what can I say… So, cool Ron! Your implementation did it. We don´t even need to remove the mocks on the higher levels. The proof is in the acceptance tests."</p>
+<p>Nevertheless they took out the mocks and found their hypothesises validated.</p>
+<p>"Jan, I need to say…", but Janine interrupted Ron. "There´s one more thing I want to show you, Ron. Watch, what I´m doing now. We checked in the current state of the code. Right? Ok, here we go…"</p>
+<p>And Janine deleted all the unit tests.</p>
+<p>Ron nearly fainted. All their precious work gone…</p>
+<p>"What are you doing, Jan?!"</p>
+<p>"I´m cleaning up, Ron," said Janine and smiled broadly. "Clean code does not mean it needs to be clean all the time. We can – and should – make a mess while working on the code. In the end, though, once we´ve reached our goal, we need to clean up. That also means to throw away any scaffolding code or any code we produced along the way while 'grinding' our implementation."</p>
+<p>Ron wiped some sweat from his brow. This girl really knew how to shake up his convictions.</p>
+<p>"Look, Ron, this is like building a house. While building it, you make a mess. You set up all sorts of additional structures to easily produce the building. Think of how the Egyptians build the pyramids. Today you only see those geometrical shapes – but while they were building them, there were all sorts of ramps. Otherwise it would have been impossible for them to drag those heay stones up to the top."</p>
+<p>"Or think of the last time you made dinner for someone. You surely made a mess while cooking, no, even in order to cook. But in the end, there was just cleanly layed out food on the plates. All the mess gone into the trash can or the dish washer."</p>
+<p>Whether this was true, Ron couldn´t remember at the moment. Janines images evoked not so nice memories of the final period of his marriage. His wife and him trying to mend their relationship by doing more stuff together like cooking. But, alas, to no avail. It even seemed that "pair cooking" upset them more than bringing them back together.</p>
+<p>"…but just chippings. – Ron? Hello?"</p>
+<p>"Yes, what? Oh, I´m sorry. What did you say?"</p>
+<p>"I said, we´re not throwing away precious code, but just chippings. Or molds. That´s perfectly fine. It makes for better focus. And look at the test coverage: it´s still 100%."</p>
+<p>"Shedding all the detailed tests also makes it easier to change our solution later. We don´t need to be careful to not break any tests, but can refactor boldly – as long as the acceptance tests stay green. And if we need to zoom in on a detail, e.g. if we want to change how long words are treated, we (re)create any tests we need."</p>
+<p>Ron nodded. This was quite a bit of input for him. At he beginning he had be skeptical about a new approach to TDD. Then he got the knack of "thinking before coding". And the mock framework was fun. But trashing all their test work… he wasn´t convinced yet despite all the effort Janine invested.</p>
+<p>"Jan, this sounds good, when you describe it like this. However, I guess I need some time to digest this experience."</p>
+<p>This saddened Janine a bit. She had the impression, Ron had jumped on her bandwagon. But then… the capacity to absorb changes to one´s beliefs is different from person to person. Maybe she really had been too enthusiastic at the end.</p>
+<p>"Ok. I´m sorry if I blew it. I just was so excited about how well this approach was working, and about JustMock, and all. You know, I thought this really could spark up some new experiments in our coding dojos."</p>
+<p>Ron smiled at her a tad tired.</p>
+<p>"Yes, Jan, we´ll try it out next time with Dave and George. But now I need to go back to my bug. It probably hasn´t fixed itself in the meantime. But, hey, thanks for calling me over. This was fun. And I´ll check out JustMock. I have a hunch it can help with the bug."</p>
+<p>"Alright, then, Ron. Thanks for listening to my babble. It was good to go through this again by telling somebody. Helped to clear up my thinking."</p>
+<p>Ron was about to turn around his chair when Janine got up and very lightly hugged him. Then she quickly turned around and barely audible added "Thank you, Ron."</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

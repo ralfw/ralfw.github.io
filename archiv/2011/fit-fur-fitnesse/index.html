@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fit für FitNesse — ralfw.de Archiv</title>
+<meta name="description" content="FitNesse ist ein hübsches Framework für Akzeptanztests. Ist zwar Java-basiert mit seinem eigenen Web-Server, aber der Einsatz ist auch für .NET möglich. Gojko Adzic hat dazu schon ">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/fit-fur-fitnesse/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Fit für FitNesse — ralfw.de Archiv">
+<meta property="og:description" content="FitNesse ist ein hübsches Framework für Akzeptanztests. Ist zwar Java-basiert mit seinem eigenen Web-Server, aber der Einsatz ist auch für .NET möglich. Gojko Adzic hat dazu schon ">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/fit-fur-fitnesse/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Fit für FitNesse</h1>
+    <div class="doc-meta"><span>17. März 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/03/fit-fur-fitnesse.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/fit-fur-fitnesse/</code></span></div>
+    <div class="art"><p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/67afe51517d1a050.png" /></p>
+<p>FitNesse ist ein hübsches Framework für Akzeptanztests. Ist zwar Java-basiert mit seinem eigenen Web-Server, aber der Einsatz ist auch für .NET möglich. Gojko Adzic hat dazu schon vor längerer Zeit ein Buch geschrieben – <a rel="noopener" href="http://www.amazon.de/Test-Driven-Net-Development-Fitnesse/dp/0955683602">Test Driven Development with FitNesse</a> -, dass auch kostenlos als <a rel="noopener" href="http://gojko.net/fitnesse/">eBook</a> verfügbar ist.</p>
+<p>Leider hat sich der Einstieg dann aber doch nicht so flüssig gestaltet, wie ich es gern gehabt hätte. Die grundsätzliche Installation ist simpel:</p>
+<ul>
+<li>Java VM installieren; Download von <a rel="noopener" href="http://www.java.com/de/download/">http://www.java.com/de/download/</a></li>
+<li>FitNesse Server herunterladen von <a rel="noopener" href="http://fitnesse.org/FrontPage.FitNesseDevelopment.DownLoad">http://fitnesse.org/FrontPage.FitNesseDevelopment.DownLoad</a>. Er kommt als .jar-Datei, für das Sie am besten ein FitNesse-Verzeichnis anlegen, z.B. C:\FitNesse</li>
+<li>FitSharp herunterladen von <a rel="noopener" href="http://fitsharp.github.com/">http://fitsharp.github.com/</a>. Das ist ein Framework wie NUnit, mit dem Sie .NET-Klassen zu FitNesse-Fixtures machen können. Die FitSharp Assemblies legen Sie am besten im FitNesse-Verzeichnis ab, z.B. unter C:\FitNesse\FitSharp.</li>
+<li>FitNesse-Server starten. Ich habe mir dazu einen einzeiligen Batch gebastelt, der im FitNesse-Verzeichnis liegt und den Server auf Port 8888 startet:</li>
+</ul>
+<p>java -jar fitnesse.jar -p 8888</p>
+<p>Das Ergebnis einer soweit erfolgreichen Installation ist ein laufender Server:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/15af15f53cc1faf2.png" /></p>
+<p>Auf den können Sie über den Browser mit Adresse localhost:8888 zugreifen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/adfeeb60582910c4.png" /></p>
+<p>Soweit lief bei mir auch alles gut. Knifflig wurde es, als ich dann eine C# Testfixture aufrufen wollte. Ich hatte sie nach Gojkos Beispiel wie folgt geschnitzt:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/4fd065ca8fb64cc7.png" /></p>
+<p>Die FitSharp Assemblies <em>fit.dll</em> und <em>fitSharp.dll</em> musste ich referenzieren (am besten aus einem projektlokalen Verzeichnis) und die Fixture-Klasse von <em>ColumnFixture</em> ableiten. Weitere Details entnehmen Sie am besten Gojkos Buch.</p>
+<p>Ein FitNesse-Test war ebenfalls einfach aufgesetzt:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/c5145e1c14557bef.png" /></p>
+<p>Nur leider zeigte der nicht den gewünschten Erfolg. Nach Start über das FitNesse-Dashboard passierte schlicht nichts :-( Nicht mal eine Fehlermeldung erschien. Der Test war angestoßen worden… aber “kam nicht zurück”. FitNesse schien zu hängen.</p>
+<p><strong>Tip #1:</strong> Um mehr Infos über einen (abstürzenden) Test zu erhalten, nicht mit dem FitSharp <em>Runner.exe</em> starten, sondern mit <strong><em>RunnerW.exe</em></strong>:</p>
+<p>!define TEST_RUNNER {fitsharp\RunnerW.exe}</p>
+<p>Der Grund für das Hängen war, dass durch eine Security Policy Änderung bei .NET 4 der Runner-Prozess Libraries nicht einfach so laden konnte. Ob es daran lag, dass meine Test-Assembly nicht auch im FitSharp-Verzeichnis lag (wie in Gojkos Beispiel), weiß ich nicht. Diesen Grundsatz wollte ich jedenfalls nicht aufgeben.</p>
+<p><strong>Tip #2:</strong> Um das Laden der nötigen Assemblies für den Runner zu ermöglichen, einfach zwei <strong>App.Config-Dateien im FitSharp-Verzeichnis anlegen</strong>. <em>Runner.exe.config</em> und <em>RunnerW.exe.config</em>:</p>
+<p>Mit der Konfigurationsdatei lief dann der Runner, meldete aber, dass er meine Testklasse nicht finden können. Dafür die Ursache zu finden, hat mich dann einige Zeit gekostet. Google war keine Hilfe. Ich hatte ja auch alles Formal richtig gemacht.</p>
+<p>Am Ende stellte sich heraus, dass FitNesse oder FitSharp ein Problem mit dem Namespace der Testklasse hatte. Dessen Name lautete ursprünglich “spike_fittest”. Als ich ihn dann nach “fittest” umbenannt hatte, lief der Test durch.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/88d382b22f56098b.png" /></p>
+<p><strong>Tip #3</strong>: <strong>Sonderzeichen in Namen von Namensräume oder Testklassen vermeiden, allemal einen Unterstrich “_”.</strong> (Umlaute scheinen allerdings kein Problem zu machen und sogar falsche Groß/Kleinschreibung wird toleriert.)</p>
+<p>Schließlich noch ein Hinweis auf FitSharp Suite-Dateien. Zwischendurch schien es, dass “etwas” besser wurde, als ich eine solche testspezifische Datei mit Runner-Konfigurationsdaten im Test referenzierte. Meine Suite-Datei <em>suite.config.xml</em> sah so aus:</p>
+<p>fitlibrary</p>
+<p>Eingebunden hatte ich sie in den Test so:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/aa55e5063e3ff5c8.png" /></p>
+<p>Heute, beim Schreiben dieses Artikels, konnte ich allerdings keinen Vorteil mehr darin erkennen. Auch ohne Referenz dieser Suite lief der Test problemlos. Merkwürdig… Aber egal. Ich denke, ein Hinweis auf Suite-Dateien ist trotzdem nützlich.</p>
+<p>Ich hoffe, mit diesem kleinen Erfahrungsbericht mache ich Ihnen den Einstieg in FitNesse mit .NET ein bisschen einfacher. Mir gefällt der Framework als Grundlage für <a rel="noopener" href="http://ralfw.blogspot.com/2011/01/software-prufstande-das-fehlende-glied.html">Softwareprüfstände</a>. Bevor Sie einen Prüfstand komplett selbst aufsetzen, schauen Sie sich einmal FitNesse an. Damit können Sie auch mal einen Kunden auf Ihren Code loslassen.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

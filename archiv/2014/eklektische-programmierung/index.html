@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eklektische Programmierung — ralfw.de Archiv</title>
+<meta name="description" content="Jetzt hab ich genug. Mir hängt das ganze Gerede über Für und Wider von Objektorientierter Programmierung (OOP) und Funktionaler Programmierung (FP) zum Hals raus. Ich mag nicht meh">
+<link rel="canonical" href="https://ralfw.de/archiv/2014/eklektische-programmierung/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Eklektische Programmierung — ralfw.de Archiv">
+<meta property="og:description" content="Jetzt hab ich genug. Mir hängt das ganze Gerede über Für und Wider von Objektorientierter Programmierung (OOP) und Funktionaler Programmierung (FP) zum Hals raus. Ich mag nicht meh">
+<meta property="og:url" content="https://ralfw.de/archiv/2014/eklektische-programmierung/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Eklektische Programmierung</h1>
+    <div class="doc-meta"><span>3. Jan. 2014</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2014/01/eklektische-programmierung.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2014/eklektische-programmierung/</code></span></div>
+    <div class="art"><p>Jetzt hab ich genug. Mir hängt das ganze Gerede über Für und Wider von Objektorientierter Programmierung (OOP) und Funktionaler Programmierung (FP) zum Hals raus. Ich mag nicht mehr.</p>
+<p>Es ist zwar nicht egal, ob OOP oder FP. Der eine Ansatz hat für manche Szenarien Stärken, der andere Ansatz für manche Szenarien Stärken. Und? Warum sollte ich mich deshalb entscheiden müssen? Warum sollte OOP gewinnen, warum FP die Welt erobern? Das ist doch alles Quatsch. Solche Überlegungen binden geistige Kapazität, die wir besser einsetzen können.</p>
+<p>Es geht nicht um die Frage, ob OOP oder FP. Es geht nicht um entweder-oder. Es gibt keinen Grund, warum es nicht ein sowohl-als-auch geben sollte.</p>
+<p>Und schon gar nicht geht es um eine bestimmte Programmiersprache. Vorgestern Java, gestern C#, Python, Ruby, nun Go, Clojure, Erlang, Elixir – und natürlich gestern wie heute JavaScript? Gott ist das langweilig.</p>
+<p>Ich mag mich nicht mehr entscheiden müssen. Ich will beides: OOP + FP. Das ist die Frage, die ich an Sprachen in Zukunft stellen werden: Kannst du mir volle OOP-Power geben und (!) kannst du mir volle FP-Power geben? [1]</p>
+<p>Deshalb beschäftige ich mich gerade auch mit F#. Das ist eine hybride Sprache, allerdings geboren aus der FP. Da kommt für mich vieles eklektisch zusammen. Ich kann z.B. einen Stack à la FP implementieren und nutzen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/59def0238cc390d6.png" /></p>
+<p>Oder ich kann ihn à la OOP definieren und nutzen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/219248611b60fe24.png" /></p>
+<p>Das sieht dann ähnlich einer Implementation in C# aus – ist nur etwas knapper formuliert, weil F# Typinferenz und eine leichtgewichtigere Syntax bietet. Hier zum Vergleich C#:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2fd19970f7d3f73b.png" /></p>
+<p>Oder ich kann in F# Objekte aus C# (bzw. aus .NET Assemblies) nutzen – und umgekehrt.</p>
+<p>Mit F# muss ich mich nicht mehr entscheiden. Ich habe die volle Power von OOP und FP “at my fingertips”.</p>
+<p>Nun kann ich frei überlegen, wann ich welchem Paradigma den Vorzug gebe. Ist ein Stack besser mit FP- oder OOP-Mitteln implementiert? Wie steht es mit der Logik für ein Spiel? Wie steht es mit einem View Model? Wie mit einem EventStore? Wie mit dem Domänendatenmodell?</p>
+<p>An den Grenzen meines Codes stoße ich dann allerdings auf Infrastruktur. Mit der muss ich mich arrangieren, die präsentiert sich mir in Form von APIs. Natürlich muss meine Sprache mir den Zugriff erlauben.</p>
+<p>Und ansonsten… Freiheit!</p>
+<p>Denn erst wenn wir beide Paradigmen gleichwertig zur Verfügung haben, können wir zum Wesentlichen kommen: Was denn in welchem Fall der geeignete Ansatz sei.</p>
+<p>Solange Sprachen noch beim einen oder anderen Paradigma zurückstehen, verlieren wir uns schnell in Rechtfertigungen. Dann ist das kein Defizit, sondern ein Feature, weil das andere Paradigma es einfach nicht bringt.</p>
+<p>Doch das ist Quatsch. Die Frage nach <em>dem</em> richtigen, wichtigen, seligmachenden Paradigma ist die falsche Frage. Nicht das eine oder das andere Paradigma ist seligmachend, sondern die Vielfalt. Pluralismus statt Monokultur.</p>
+<p>Ich will eklektisch programmieren, d.h. mich aus einem Bauchladen bedienen. Was mir taugt, wird benutzt. Fertig.</p>
+<p><a rel="noopener" href="https://leanpub.com/Fsharp_lernen_Kata_fuer_Kata"></a>Das mag Lernaufwand für mich bedeuten. Ok, dann wende ich den eben auf. So wie ich es gerade mit F# tue und in einem Buch dokumentiere: <a rel="noopener" href="https://leanpub.com/Fsharp_lernen_Kata_fuer_Kata">F# lernen Kata für Kata</a>. (Damit mache ich es Ihnen dann vielleicht ein wenig leichter, wenn Sie sich auch für die eklektische Programmierung entscheiden.)</p>
+<p>Lernaufwand zur Ermöglichung von Eklektizismus ist Aufwand. Aber Rechtfertigungen für das eine oder andere Paradigma und Workarounds, wo es eben nicht optimal passt, Sie jedoch darauf festgenagelt sind… das ist auch Aufwand. Und zwar kein unbeträchtlicher.</p>
+<p>Klar, C# bietet schon einiges in Richtung FP. Aber eine wirklich hybride Sprache ist C# noch nicht und wird es auch nicht. F# hingegen wurde mit dieser Absicht entworfen.</p>
+<p>Für mich ist 2014 das Jahr, in dem ich meine eigenen Entwicklungen auf F# umstellen werde. Damit kann ich eklektisch arbeiten, bleibe dem .NET-Universum aber verbunden.</p>
+<p>Wer mit Java arbeitet, der hat ähnliche Möglichkeiten. Scala und Clojure scheinen mir auch den hybriden Ansatz zu verfolgen. Für meinen Geschmack ist das JVM-Universum jedoch zu weit weg. Außerdem hat mir Scala einen Grandiositätsanspruch, der mich ermüdet. Und Clojure ist mir syntaktisch dann doch im Moment zu anders.</p>
+<p>Wie gesagt, am Ende geht es auch nicht um einzelne Sprachen, sondern um Paradigmen. Wenn ich mich über Softwareentwurf unterhalten will, dann interessiert mich die konkrete Syntax nicht sonderlich. Wichtig ist vielmehr, dass mein Gegenüber Paradigmen und Konzepte zur Verfügung hat.</p>
+<p>Soviel zu meinem Vorsatz für 2014: Eklektische Programmierung mit F#.</p>
+<p>Und was ist Ihr Vorsatz?</p>
+<p>PS: Achso, dynamische Programmierung (DP) will ich übrigens auch :-) Von der steckt in C# etwas drin; F# ist in der Hinsicht schwachbrüstiger. Derzeit ist mir jedoch mehr FP-Power wichtiger. Mit etwas weniger DP kann ich leben. Oder ich werde noch eklektischer: Ich wechsle nicht nur das Paradigma in einer Sprache, ich wechsle gleich zwischen den Sprachen. Da C# und F# auf der CLR/BCL laufen, muss ich mich nicht mal zwischen ihnen entscheiden.</p>
+<h4>Endnoten</h4>
+<p>[1] Ich ahne es, irgendwer wird fragen, was denn “volle Power” für die beiden Paradigmen ist. Und darüber lässt sich womöglich trefflich streiten. Aber ich denke, es gibt da einen gewissen Konsens. Zu OOP gehören Interfaces, Polymorphie, Kapselung von veränderbarem Zustand, einfache Vererbung. Zu FP gehören Funktionen als Werte &amp; höhere Funktionen, tail recursion, unveränderbare Werte/Datenstrukturen, pattern matching.</p>
+<h2>Kommentare</h2>
+<p><strong>Blabla</strong> (2014-01-03):</p>
+<p>Das sehe ich genauso. In Perl 5 ist OOP für Massendaten nicht optimal, aber dafür sind FP und dynamische Programmierung dank "eval" ganz stark. Ideal für Scripting per API. Nicht ideal für Domänenmodelle mit großen Datenmengen. Dafür kann man die Namen von Funktionen zur Laufzeit definieren / ändern / umhängen. Gut für das Testen von FP Code.</p>
+<hr />
+<p><strong>(anonym)</strong> (2014-01-03):</p>
+<p>Hallo Ralf,</p>
+<p>das Problem bei den meisten Betrachtungen bzw. Gegenüberstellungen von OOP und FP ist, dass die Perspektiven gleich voll ins Extreme gehen.</p>
+<p><strong>Pures OO ist widernatürlich</strong>, weil es eben Konzepte in der realen Welt gibt, die nun mal keine Objekte sind. Natürlich kann man auch einen Algorithmus in eine Klasse wrappen und dann so tun, als sei es ein Objekt, aber das ist cheating!</p>
+<p>Auf der anderen Weise ist <strong>die reine, funktionale Programmierung ebenso widernatürlich</strong>. Man muss sich nur mal in seiner Umwelt umschauen um sehr schnell festzustellen, dass so gut wie alles, was wir tun, Nebenwirkungen und Seiteneffekte hat. Wozu hat ein Computer denn Speicher, egal ob RAM oder nicht-transiente Festplatte? Vielleicht damit er sich Dinge, wie Werte und Zustände, merken kann?</p>
+<p>Das Ideal ist eine Hybridsprache, die beide Konzepte zur Verfügung stellt. Auch wenn sie sehr unbeliebt ist, spielt für mich C++ als Multiparadigmen-Sprache diesbezüglich immer noch in der obersten Liga - erst Recht seit des neuen Standards C++11.</p>
+<hr />
+<p><strong>Oliver Funke</strong> (2014-01-03):</p>
+<p>Hallo Ralf,</p>
+<p>Ich sehe das ähnlich. Man sollte sich nicht auf ein Werkzeug beschränken sondern je nach Anwendungsfall das geeignete Werkzeug aus seinem Werkzeugkasten verwenden. Ich selbst nutze zurzeit gern eine Kombination aus C# und F#. C# eignet sich meiner Meinung nach besser für Präsentations- und Logikschicht, während F# sehr passend für die Entwicklung der Datenschicht ist. Somit bestehen meine aktuellen Anwendungen meist aus einer Mischung aus C# und F# Assemblies. Klar steigt der Einarbeitungsaufwand wenn man mehrere Programmiersprachen nutzt, aber dieser Aufwand amortisiert sich relativ schnell wenn die Sprachen dann besser zum jeweiligen Anwendungsfall passen.</p>
+<hr />
+<p><strong>Mike Bild</strong> (2014-01-06):</p>
+<p>+1 Um das gewünschte Ziel zu erreichen, die nützlichste Sprache zum Werkzeug machen.</p>
+<p>Doch weiter gehts...</p>
+<p>Für mich heißt das ebenfalls</p>
+<p>1) die Platform zum Werkzeug machen
+2) Micro-Services als App-Standard-Bausteine zu konstruieren</p>
+<p>=&gt; Software Engineering unabhängig von Sprache und Platform</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2014-01-06):</p>
+<p>Klar, µServices sind der Weg. Habe darüber hier auch schon geschrieben:</p>
+<p>http://blog.ralfw.de/2013/03/software-als-web-of-services.html</p>
+<hr />
+<p><strong>Mike Bild</strong> (2014-01-06):</p>
+<p>+2 !!! Für meine Geschmack gerade etwas "weit weg" vom praktischen aber GROSSARTIG!</p>
+<p>...</p>
+<p>"SOA ist mir da schon zuviel. Aber Actors sind mir zuwenig."</p>
+<p>"Deshalb plädiere ich dafür, Software aus mehr, viel mehr Prozessen zusammenzusetzen als heute üblich."</p>
+<p>"Das ist für mich der Weg für die effizientere Herstellung von evolvierbarer Software"</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

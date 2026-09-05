@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NETZ it! - Komponentenorientierte Software ausliefern leicht gemacht — ralfw.de Archiv</title>
+<meta name="description" content="&quot;Soooviele Assemblies???&quot; ist der ungläubige Ausruf, den ich oft höre, wenn ich ich über Komponentenorientierung spreche. Denn damit komponentenorientierte Entwicklung wirklich ihr">
+<link rel="canonical" href="https://ralfw.de/archiv/2008/netz-it-komponentenorientierte-software/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="NETZ it! - Komponentenorientierte Software ausliefern leicht gemacht — ralfw.de Archiv">
+<meta property="og:description" content="&quot;Soooviele Assemblies???&quot; ist der ungläubige Ausruf, den ich oft höre, wenn ich ich über Komponentenorientierung spreche. Denn damit komponentenorientierte Entwicklung wirklich ihr">
+<meta property="og:url" content="https://ralfw.de/archiv/2008/netz-it-komponentenorientierte-software/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>NETZ it! - Komponentenorientierte Software ausliefern leicht gemacht</h1>
+    <div class="doc-meta"><span>9. Nov. 2008</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2008/11/netz-it-komponentenorientierte-software.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2008/netz-it-komponentenorientierte-software/</code></span></div>
+    <div class="art"><p>"Soooviele Assemblies???" ist der ungläubige Ausruf, den ich oft höre, wenn ich ich über Komponentenorientierung spreche. Denn damit komponentenorientierte Entwicklung wirklich ihre Vorteile ausspielen kann, ist es nötig, Software nicht nur logisch in Komponenten zu zerlegen, sondern die auch noch physisch getrennt zu implementieren. Das bedeutet, jeder Komponentenkontrakt und jede Komponentenimplementation wird zu einer eigenen Assembly. Die Zahl der Assemblies einer Anwendung ist also immer mindestens doppelt so groß wie die ihrer Komponenten.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/7e69ce0d8354a840.png" /></p>
+<p>Das hört sich viel an. Oder zumindest ungewohnt. Schon bei 3 Komponenten kommen 5 oder 6 Assemblies zusammen, wie die nebenstehenden Beispielanwendung zeigt. Und größere Anwendungen bestehen schonmal aus 50 oder 100 Komponenten und damit 100 oder 200 Assemblies.</p>
+<p>Einen "materiellen" Nachteil hat das jedoch nicht. Der .NET Framework kommt damit ganz gut zurecht. Nur Visual Studio nicht. Es macht keine Freude, in einer Visual Studio Projektmappe mehr als vielleicht 10 Projekte zu verwalten. Aber das soll man ja auch nicht.  (Insofern entspricht die Abbildung links nicht dem Ideal; ich habe die Projekte nur für eine einfachere Darstellung so zusammengefasst.)</p>
+<p>Echte Komponentenorientierung bedeutet vielmehr, dass alle Komponenten in je eigenen Projektmappen entwickelt werden. Wenn Sie an einer Komponente arbeiten sollen Sie nicht abgelenkt werden durch Implementationsdetails anderer Komponenten, die in derselben Projektmappe liegen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/661a17290c168eba.png" /></p>
+<p>Doch auch wenn es keinen "materiellen" Nachteil hunderter Assemblies für eine Anwendung gibt, verstehe ich, dass sie dazu angetan ist, den Überblick zu verlieren. Vor allem wollen Sie womöglich dem Kunden gegenüber solche Detailfülle nicht offenlegen. Die Abbildung rechts zeigt, wie ich die Beispielanwendung eigentlich ausliefern müsste: als "Sack von Assemblies". Das ist zwar einfach, aber mag sich eben zumindest merkwürdig anfühlen.</p>
+<h2>Krücke ILmerge</h2>
+<p>Nun habe ich aber noch nie behauptet, dass die Zahl der Assemblies zur Entwicklungszeit der zur Zeit der Auslieferung gleich sein müsse. Immer schon habe ich auf die Möglichkeit hingewiesen, sie mit Microsofts ILmerge zusammenzufassen. Aus den 7 zur Anwendung gehörenden Assemblies (inkl. DI Framework Infrastruktur) rechts im Bild könnte mit ILmerge ganz leicht eine werden.</p>
+<p>Sie anders zusammenfassen, wäre allerdings nicht unproblematisch. Zum Beispiel könnten Sie nicht nur alle Kontrakt-Assemblies vereinigen, weil Sie damit die Referenzen darauf in den Komponentenimplementationen invalieren würden. Die beziehen sich ja auch konkrete Assemblynamen, die es dann nicht mehr gäbe.</p>
+<p>ILmerge funktioniert zwar grundsätzlich. Ist aber letztlich nur eine Krücke, weil es nicht genügend Freiheitsgrade bietet. Außerdem mag es nicht jedem schmecken, dass ILmerge den IL-Code "anfasst". Zugegebenermaßen ein Vorgang, bei dem mehr falsch laufen könnte, als wenn man Assemblies, so wie sie sind, irgendwohin kopiert.</p>
+<h2>NETZ to the rescue</h2>
+<p>Aber diese Zeit der Krückenlösung ist nun vorbei! Durch einen News-Schnippsel in einer Entwicklerzeitschrift bin ich auf das <a rel="noopener" href="http://madebits.com/netz/">Open Source Tool NETZ</a> gestoßen. Das ist echt cool für die komponentenorientierte Entwicklung! Und es ist auch noch eines aus deutschen Landen - ein seltener Umstand bei Softwareentwicklungstools.</p>
+<p>Was bietet NETZ? Zusammenfassung und Kompression von Assemblies. Mit NETZ können Sie Assemblies wie mit ILmerge zusammenfassen, allerdings ohne Eingriff in den IL-Code. NETZ verpackt die Assemblies einfach nur als Ressourcen in eine von ihm generierte.</p>
+<p>Für die Komponentenorientierung unwichtig, aber für Sie dennoch vielleicht interessant, komprimiert NETZ die Assemblies während der Zusammenfassung auch noch. So kann der in den Ressourcen steckende IL-Code nicht mehr so einfach decompiliert werden. Ohne Obfuscation erhalten Sie also einen ersten Schutz gegen beiläufige Ausspähung von Implementationsdetails.</p>
+<p>Die obige Beispielanwendung in eine Assembly zusammenzufassen, ist mit NETZ ganz einfach. Eine Kommandozeile wie diese reicht (sie ist nur der Lesbarkeit wegen hier in mehrere Zeilen geteilt):</p>
+<p><em>netz -z -s</em><em>frontend.exe</em><em>-d logic.dll dataaccess.dll</em><em>contracts.logic.dll contracts.dataaccess.dll
+       Microsoft.Practices.Unity.dll Microsoft.Practices.ObjectBuilder2.dll</em></p>
+<p>Mit ihr verpackt NETZ alle Assemblies in eine neue Assembly (-s), die auch eine DLL zur Dekompression enthält (-z). Alle Assemblies können auch dynamisch geladen werden (-d) - das ist für die Nutzung eines DI Frameworks nützlich sein mag. Das Resultat: eine Assembly mit Namen frontend.exe und einer Struktur wie in der nachstehenden Abbildung. Der Start-Code wurde komplett durch NETZ generiert (Methoden auf der linken Seite), die Anwendungsassemblies sind zu Ressourcen geworden (rechts). Der NETZ-Code sorft dafür, dass beim Laden einer Assembly, die die CLR nicht selbst findet, die Ressourcen herangezogen werden.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2b53e04c1eaa557e.png" /></p>
+<p>Schon bis hierhin bietet NETZ also mehr als ILmerge. Nicht nur Zusammenfassung von Assemblies, sondern gleichzeitig Kompression - und das ohne Eingriff in den Assembly-IL-Code.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/69fe275598ddf372.png" /></p>
+<p>NETZ kann aber noch mehr! NETZ kann die Assemblies auch in externe Ressourcen verpacken. So können Sie sie beliebig gruppieren. Auf die Referenzen hat das keinen Einfluss. Bilden Sie also beliebige Gruppen von Assemblies. Die Beispielanwendung habe ich z.B. einmal so zusammengefasst wie rechts zu sehen. In frontend.exe steckt die ursprüngliche EXE mit den Microsoft Unity DI Infrastruktur-Assemblies. Die contracts-Ressourcen enthalten die Kontrakt-Assemblies, die components-Ressource die Implementationen. Ganz einfach ist damit einem Batch wie diesem:</p>
+<p><em>netz -z -s frontend.exe Microsoft.Practices.Unity.dll Microsoft.Practices.ObjectBuilder2.dll
+netz -xr contracts contracts.logic.dll contracts.dataaccess.dll
+netz -xr components dataaccess.dll logic.dll</em> <em>move </em>-netz.resources frontend.exe.netz* Der -xr Switch weist NETZ an, die Assemblies nicht zu einer EXE, sondern zu einer externen Ressource zusammenzufassen. Der NETZ-Start-Code sucht in solchen Ressourcendateien im selben Verzeichnis sogar zuerst nach Assemblies.</p>
+<p>Lassen Sie sich durch 50 oder 100 Assemblies nicht in Bockshorn jagen. Fassen Sie sie für´s Deployment mit NETZ einfach so zusammen, wie Sie es möchten: alle zu einer großen Assembly oder Kontrakte und Implementationen getrennt oder Kontrakte zusammen mit ihren Implementationen oder alle Assemblies einer Kategorie (z.B. alle Domänenlogik-Assemblies getrennt von allen Aspekt-Assemblies). Mit NETZ ist das alles sehr einfach möglich. Und kostenlos dazu! Mein herzlicher Dank gilt Vasian Cepa, dem Entwickler! (Der ist übrigens sehr bemüht; innerhalb eines Tages hatte er eine Verbesserung eingebaut, auf die ich ihn angesprochen hatte.)</p>
+<p>Ich arbeite jetzt nicht mehr ohne NETZ in meinen komponentenorientierten Projekten.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2008-11-09):</p>
+<p>Hey Ralf</p>
+<p>danke für den tollen Tipp!</p>
+<p>bisher habe ich immer mit Finalbuilder + ILMerge gearbeitet und das ging auch immer ohne probleme</p>
+<p>Werte NETZ auf jedenfall austesten!</p>
+<p>Allerdingsverstehe ich auch nicht das problem dass man beim Kunden viele Assemblies hat.
+Es dreht sich doch allenfalls um psychologie oder ?</p>
+<p>Einzelne Assemblies bieten auch eine sehr gute autauschbarkeit und die Möglichkeit für gezielte Updates einzelner Komponenten (z.bsp. bei Bugfixes).</p>
+<hr />
+<p><strong>Howard</strong> (2008-11-10):</p>
+<p>da muss ich Boas irgendwie Recht geben. Was ist das Problem daran beim Kunden 200 Dll's  liegen zu haben? Ich kann ggf. besser austauschen (okay kann ich bei einer Datei auch) Ist einfach ne gewöhnungsbedürftige Sache mit den ganzen Dll's zu hantieren aber ansonsten kein Nachteil.</p>
+<p>Bei dieser ganzen zusammenfasserei: funktioniert das auch mit verschiedenen Sprachen. Dort liegen ja die Resource.dll's in einzelnen Unterordner(de-DE oder en-US) ist das nen Problem oder funzed das?</p>
+<p>Howard</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

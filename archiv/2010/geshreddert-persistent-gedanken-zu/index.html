@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Geshreddert persistent – Gedanken zu einem Datengranulat — ralfw.de Archiv</title>
+<meta name="description" content="Mapping von Daten zwischen Pesistenzmedium und Objektmodell ist nicht zu vermeiden. Es ist keine Last, sondern pure Notwendigkeit, wenn wir mit persistenten Daten “in Zeit und Raum">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/geshreddert-persistent-gedanken-zu/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Geshreddert persistent – Gedanken zu einem Datengranulat — ralfw.de Archiv">
+<meta property="og:description" content="Mapping von Daten zwischen Pesistenzmedium und Objektmodell ist nicht zu vermeiden. Es ist keine Last, sondern pure Notwendigkeit, wenn wir mit persistenten Daten “in Zeit und Raum">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/geshreddert-persistent-gedanken-zu/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Geshreddert persistent – Gedanken zu einem Datengranulat</h1>
+    <div class="doc-meta"><span>22. April 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/04/geshreddert-persistent-gedanken-zu.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/geshreddert-persistent-gedanken-zu/</code></span></div>
+    <div class="art"><p><a rel="noopener" href="http://ralfw.blogspot.com/2010/04/datengranulat-oder-mapping-als-lust.html">Mapping von Daten zwischen Pesistenzmedium und Objektmodell ist nicht zu vermeiden.</a> Es ist keine Last, sondern pure Notwendigkeit, <strong>wenn wir mit persistenten Daten “in Zeit und Raum” integrieren wollen</strong>. Denn <strong>dann müssen persistente Daten eine sehr flexible Struktur haben</strong>, die sich immer wieder neuen Anforderungen an in-memory Datenmodelle anpassen lässt. Zu dieser Erkenntnis hat mich eine <a rel="noopener" href="http://ayende.com/Blog/archive/2010/04/21/that-no-sql-thing-modeling-documents-in-a-document-database.aspx">Diskussion</a> um Ayende Rahiens Dokumentendatenbank RavenDB gebracht.</p>
+<p><strong>Mein Gefühl ist nun, dass solch flexible persistente Struktur weder RDBMS noch DocDBs bieten.</strong> Ihre Datenmodelle sind zwar flexibler als die von ODBMS, doch ich glaube, das ist noch nicht genug. Zum Beleg hier Ayendes Dokumente für eine Blog-Datenbank:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/7524dd51ea773cbb.png" /></p>
+<p>Das implizite Schema ist ganz einfach. User, Blog, Post sind Entitäten, die einander referenzieren; ein Post enthält Comments, verweist also nicht weiter auf sie.</p>
+<p>Die ist natürlich überschaubarer als ein typisches relationales Schema für das Szenario (<a rel="noopener" href="http://ayende.com/Blog/archive/2010/04/21/that-no-sql-thing-the-relational-modeling-anti-pattern-in.aspx">ebenfalls von Ayende</a>):</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a20040e74ff39690.png" /></p>
+<p>Was habe ich nun daran auszusetzen? <strong>Das relationale Schema ist vor allem erstmal ein Schema, das geplant werden muss. Solche Planung ist gerade in der Anfangsphase eines Projektes schwierig und tendiert dazu, immer wieder angepasst werden zu müssen</strong>. Häufige Schemaänderungen am Persistenzmedium machen aber keinen Spaß.</p>
+<p>Dem hält die NoSql-Bewegung schemalose Datenbank entgegen, von denen RavenDB ein Vertreter ist. Ayende konnte die obigen Dokumente einfach so ohne Vorplanung in seine Datenbank “schmeißen”. Keine Schemadefinition ist nötig. Er kann sie dann über ihre Id oder Queries auf ihren Feldern wieder herausholen. Eine NoSql-Datenbank leistet also nicht weniger als ein RDBMS – spart Ihnen jedoch Planungsaufwand. Ändert sich die Struktur eines Dokuments, speichern Sie es einfach neu. RavenDB ist auch tolerant gegenüber dem Hinzufügen/Löschen von Feldern oder Typänderungen. Indexe für schnelle Suche gibt es ebenfalls.</p>
+<p>Sind NoSql-Datenbanken also nicht vielleicht die besseren Datenbanken?</p>
+<p><strong>Es gibt keine “absolut guten” Datenbanken, die immer eingesetzt werden sollten.</strong> Güte/Qualität/Eignung hängt von Ihren Anforderungen ab. Die unausgesprochene Anforderung, die RDBMS lange erfüllt haben und immer noch erfüllen, war/ist die nach hoher Effizienz gepaart mit einiger Flexibilität. Immerhin sind RDBMS Kinder der 1970er, als Software unter starker Ressourcenknappheit (Speicher, Prozessorgeschwindigkeit, Datenübertragungsrate) gelitten hat. Da war Effizienz in dieser Hinsicht ein hohes Gut.</p>
+<p><strong>Heute sind diese Ressourcen in vielen Szenarien kein Problem mehr.</strong> Andere Anforderungen gewinnen daher an Bedeutung. <strong>Die aus meiner Sicht wesentliche Anforderung ist die nach Flexibilität</strong>. Wir haben schon genug Mühe mit unseren Objektmodellen, da wollen wir nicht noch aufwändig ein zweites Schema für die persistenten Daten pflegen.</p>
+<p><strong>Dass NoSql-Datenbanken jetzt ein Thema sind, finde ich also ganz verständlich. Sie bieten durch Schemalosigkeit mehr Flexibilität.</strong> (Dass sie darüber hinaus auch noch andere Anforderungen besser als RDBMS erfüllen, lasse ich hier undiskutiert. Darum geht es mir nicht.)</p>
+<p>Doch warum bei Tupeldatenbanken (z.B. Amazon SimpleDb) oder Dokumentendatenbanken (z.B. RavenDB) stehenbleiben? Geht vielleicht noch mehr Flexibilität? Ich glaub schon.</p>
+<h2>Beziehungsprobleme</h2>
+<p>Mein Gefühl ist, dass auch Dokumentendatenbanken noch Flexibilitätspotenzial verschenken. Das Problem steckt aus meiner Sicht im Umgang mit Beziehungen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f708e6d6628c12bb.png" /></p>
+<p>Ein Post-Dokument verweist auf ein Blog-Dokument, ein Post-Dokument enthält Felder und insb. mehrere Comment-Strukturen. <strong>Das sind zwei Arten von Beziehungen, explizite und implizite.</strong>Einmal wird verwiesen, einmal wird enthalten.</p>
+<p>Klingt alles so natürlich – doch ich glaube, da steckt der Teufel im Detail. <strong>Wir machen unsere Datenmodelle unflexibel, weil wir beide Arten von Beziehungen vermischen.</strong> Ein Dokument wie ein Post ist über den Verweis an das Blog-Dokument gekoppelt. Ein Post ist abhängig vom Blog. Und Abhängigkeiten sind unschön; soviel sollte sich herumgesprochen haben.</p>
+<p>Dass wir Einheiten definieren und persistieren wollen, ist unzweifelhaft. Ich habe also nichts gegen Dokumente. Solche Einheiten fassen Daten in Form von Feldern (Name-Wert-Paare) zusammen. Welche Felder sollen in einem Dokument stehen? Felder mit hoher Kohäsion, d.h. solche, die einfach eng zusammen gehören.</p>
+<p><strong>Dokumente sind damit sozusagen Einheiten mit einer “Single Responsibility”. Die stehen für genau eine Sache</strong>, z.B. ein Artikel in einem Blog oder ein Benutzer usw. Das macht sie auch zu Einheiten hoher Effizienz. Denn so ein Dokument kann man “in einem Rutsch” gut aus einem Persistenzmedium laden.</p>
+<p>Und solche Einheiten haben eine Identität, d.h. sie lassen sich referenzieren, statt immer wieder in unterschiedlichen Zusammenhängen gespeichert werden zu müssen. Sie <strong>manifestieren das DRY-Prinzip in der Datenhaltung.</strong> Konsistenz ist leichter herstellbar.</p>
+<p><strong>Ob innerhalb eines Dokuments dann ein Feld nur einen Datenwert hat oder mehrere, halte ich für unerheblich.</strong> Im obigen Dokument hat tags z.B. mehrere Werte. Das widerspricht der relationalen 1. Normalform – aber was soll´s ;-) Wir reden über Flexibilität und Dokumentendatenbanken. Ganz pragmatisch gesehen sind multiple Werte kein Problem.</p>
+<p><strong>Welche Form ein Wert jedoch hat, das halte ich für bedenkenswert.</strong> Sollte ein Wert, der innerhalb eines Dokuments steht, selbst wieder eine Struktur haben, so wie die Comment-Werte? Ich glaube, nein. <strong>Felder sollten die Atome eines Dokuments sein, ihre Werte unteilbar.</strong> Zeichenketten, Zahlen, Datum/Zeit… das war´s.</p>
+<p>Das halte ich aus zwei Gründen für vorteilhaft:</p>
+<ul>
+<li>Ob ein Feld einen oder mehrere Werte haben können soll, ist bei der Datenmodellierung meist schnell entschieden. Für die Persistenz als Dokument macht es, wie oben gezeigt, außerdem keinen Unterschied. Auch ob ein Feldwert eine Struktur hat oder nicht, ist meist leicht zu entscheiden. Straße+PLZ+Ort als 3 Felder speichern oder doch besser als eigene Datenstruktur? Kein Problem. Doch dann kommt die knifflige Frage, wenn die Entscheidung für eine Datenstruktur fielt. Soll die in einem Dokument gespeichert werden oder außerhalb nur mit einer Referenz darauf? Darüber kann man lange diskutieren und immer wieder Blicke in die Glaskugel werfen.
+Um das zu vermeiden, möchte ich nahelegen, per se alle strukturierten Werte nicht in einem Dokument abzulegen, sondern darauf zu verweisen. <strong>Mein erster Antrieb ist also hohe Produktivität.</strong> Nicht lang schnacken ;-)  Doch nicht nur die Produktivität steigt, wenn Sie über Inklusion/Exklusion nicht lange diskutieren müssen. Daten, die für sich, d.h. separat in einem (kleinen) Dokument gespeichert sind, können Sie wiederverwenden. Im Hauptspeicher sind Objekte die Einheiten, die referenziert werden können. In Doumentendatenbanken sind es Dokumente. <strong>Felder zu Strukturen zusammenfassen und separat speichern spart also Platz und macht es leichter, Konsistenz herzustellen.</strong>Das ist erstmal das Potenzial, das in der Auslagerung von Strukturen liegt. Ob Sie es nutzen und einem Adressdokument wirklich eine eigene Identität geben und es wiederverwenden, ist dann nochmal eine zweite Frage. Die Auslagerung, d.h. Entkopplung von Strukturen macht das jedoch erst möglich.  <strong>Auslagerung ist Entkopplung.</strong> Oder umgekehrt: Einschachtelung ist eine stärkere Form der Kopplung als Referenzieren. Es ist ja gerade der Zweck eines Dokuments, sich eng an seine Felder zu koppeln. Das führt zu Effizienz. Was zusammengehört, soll man nicht auseinander reißen. So eng koppeln wie (aus Effizienzgründen) nötig, so lose koppeln wie möglich. Das ist nicht für in der Softwarearchitektur wichtig, sondern auch bei der Datenmodellierung eine Tugend, denke ich. Wo Sub-Strukturen auftauchen, scheint mir daher eine Grenze überschritten. Bei ihnen sollte die enge Kopplung durch Inklusion enden. <strong>Schachtelung ist also nicht nur bei Programmstrukturen “böse”, sondern auch bei Datenstrukturen.</strong></li>
+</ul>
+<p>Unterm Strich bin ich also dafür, Daten zu Dokumenten zusammenzufassen. Eine gute Sache. Daten in einen Sack füllen, zubinden, ab in die Datenbank damit.</p>
+<p><strong>Diese “Datensäcke”/Dokumente sind für mich das Granulat flexibler persistenter Datenhaltung. Sie sind die aus Anwendungssicht unteilbaren Dateneinheiten.</strong> Die hohe Kohäsion ihrer Felder hält sie zusammen. Und die Felder haben wiederum atomare Werte – allerdings können das mehrere sein.</p>
+<p>Soweit zur Modellierung der Kommentare in Ayendes Post-Dokument. Was aber ist mit dem Verweis auf das Blog? <strong>Ich glaube, dass Felder keine Beziehungen enthalten sollten.</strong> Punkt.</p>
+<p>Ja, genau, lassen Sie sich das auf der Zunge zergehen: Dokumente selbst referenzieren keine anderen Dokumente. Referenzen wie das blog-Feld in Ayendes Post-Dokument halte ich für eine zu enge Kopplung. Wie oben schon gesagt: Der Verweis macht das Dokument abhängig. Das ist bei Daten so unschön wie bei Funktionseinheiten. Abhängigkeiten sind “böse”.</p>
+<p>Warum steckt der Bezug zum Blog im Post? Aus zwei Gründen: Erstens aus einem Mangel an geeigneten Alternativen und zweitens aus Effizienzgründen. Beides halte ich für überwindbare Hindernisse, wenn persistente Datenmodelle flexibel sein sollen. Der Effizienzgrund verschwindet durch den Wunsch nach Flexibilität. Effizienz und Flexibilität widersprechen sich (meistens). Und der Mangel an Alternativen sollte sich beheben lassen. Hier ist “Tooling” gefragt.</p>
+<p><strong>Ohne eingeschachtelte Strukturen (comments) und ohne Beziehungen (blog) halte ich dann das Beziehungsproblem für gelöst.</strong> Es gibt dann keine enge Kopplung mehr nach innen und keine Kopplung mehr nach außen. Dokumente stehen dann für sich im “Datenraum” als “Granulatkügelchen”. Mein Post-Dokument würde so aussehen:</p>
+<p>// posts/1
+{
+    "title": "RavenDB",
+    "content": "... content ...",
+    "categories": ["Raven", "NoSQL"]
+    "tags" : ["RavenDB", "Announcements"],
+}</p>
+<h2>Beziehungsraum</h2>
+<p>Wenn Dokumente keine Beziehungen mehr enthalten, wie werden die denn dann aber aufgebaut? Sie sind doch wichtig. Post-Dokumente gehören zu einem Blog und haben Kommentare. Irgendwie muss ein Post-Dokument also auf sein Blog und seine Kommentare verweisen. Doch wo/wie soll das geschehen, wenn es keine Felder mit Referenzen und keine Schachtelung mehr gibt?</p>
+<p><strong>Ich schlage einen “Beziehungsraum” vor, einen Bereich/Container, der nur die Beziehungen zwischen Dokumenten verwaltet. Das wäre eine klare Separation of Concerns (SoC). Dokumente enthalten Daten. Der Beziehungsraum enthält Beziehungen. Zusammen ergeben sie das persistente Datengeflecht.</strong></p>
+<p>Im Beziehungsraum wären jedem Dokument die Dokumente zugeordnet, mit denen es in Beziehung steht. Der Beziehungsraum bestünde also quasi nur aus Identitäten. Der Identität post/1 wären dann z.B. die Identitäten blog/1 und comment/1, comment/2 zugeordnet.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/57948330c223d9c6.jpg" /></p>
+<p>Etwas weniger bildhaft könnte das so aussehen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/326beb5c1aed2b07.png" /></p>
+<p>Das wäre dann ein normaler Graph. Die Beziehungen sind bewusst ohne Pfeile, weil <strong>ich denke, dass alle Beziehungen grundsätzlich bidirektional persistiert werden sollten.</strong> Denn: Wer weiß, ob man nicht irgendwann mal auch “rückwärts” traversieren will? Wer heute ein Blog herauszieht aus der Datenbank, um darüber Postings zu erreichen, der will es morgen vielleicht umgekehrt tun. Immer schön flexibel bleiben.</p>
+<p>Ein Graph legt natürlich nahe, eine Graphendatenbank wie <a rel="noopener" href="http://www.slideshare.net/emileifrem/nosql-east-a-nosql-overview-and-the-benefits-of-graph-databases">Neo4J</a> (<a rel="noopener" href="http://neo4j.org/">http://neo4j.org/</a>) oder <a rel="noopener" href="http://www.slideshare.net/infogrid/a-taste-of-infogrid-1688328">InfoGrid</a> (<a rel="noopener" href="http://infogrid.org/">http://infogrid.org/</a>) für das Datengranulat einzusetzen. Leider gibt es anscheinend bisher (Stand April 2010) keine ähnlich leistungsfähigen Angebote auf der .NET Plattform, doch das mag sich ja ändern. Dokumentendatenbanken schießen aus dem Boden, warum nicht auch Graphendatenbanken? Müssen ja nicht gleich Enterprise-Qualität haben. Erstmal geht es auch kleiner, embedded, um mal mit dem Paradigma warm zu werden.</p>
+<p>Oder sind Graphendatenbanken es auch noch nicht? Denn lt. deren API sieht es noch so aus, als würden Beziehungen mit den Knoten gespeichert. (Aber vielleicht ist das nur einem einfachen API geschuldet und im Persistenzmedium sieht es dann anders aus.) Denn meine Idee ist ja eben, die Knoten (“Datensäcke”) frei von Beziehungen zu halten. Das Bild dafür sähe eher so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/28a6b0f759e320de.png" /></p>
+<p>“Irgendwas” zwischen den “Datensäcken”, den Granulatkügelchen setzt sie in Beziehung.</p>
+<p>Während ein generischer Graphendatenbank-API Beziehungen so aufbauen würde:</p>
+<p>Node post = new Node(…);</p>
+<p>Node blog = new Node(…);</p>
+<p>post.Relate(blog);</p>
+<p>oder</p>
+<p>blog.Relate(post);</p>
+<p>Wäre ein Granulat-API ehrlich, wenn er es so täte:</p>
+<p>RelationSpace rs = …;</p>
+<p>rs.Relate(post, blog);</p>
+<p>Aber das könnte natürlich auch in einer Node.Relate() Methode versteckt sein. Hm… Ich bin noch unsicher, wie ich es gern hätte.</p>
+<p><strong>In jedem Fall scheint mir die deutliche Unterscheidung zwischen Daten und Beziehungen wichtig. So wird das persistente Datenmodell sauber (im Sinne des SoC) und flexibel.</strong> Zusätzlich wären Beziehungen immer first class citizens und könnten ebenfalls mit Attributen versehen werden. Sie könnten z.B. den Beziehungsenden “Rollen” zuweisen:</p>
+<p>rs.Relate(post, “partOf/contains”, blog);</p>
+<p>Aus Sicht eines Posting wäre das Blog das Ganze dessen Teil (“partOf”) es ist. Für ein Posting könnte damit gezielt erfragt werden, wovon es denn Teil ist:</p>
+<p>IEnumerable blogs = rs.Traverse(post, “partOf”);</p>
+<p>Oder ein Blog könnte nach seinen Postings befragt werden:</p>
+<p>IEnumerable postings = rs.Traverse(blog, “contains”);</p>
+<p>Aber vielleicht ist der Graph-API doch etwas intuitiver?</p>
+<p>… = post.Traverse(“partOf”);</p>
+<p>Um einem Node Zugriff auf den “Beziehungsbaum” zu geben, müsste er dafür allerdings damit initialisiert worden sein. Hm… warum nicht? Es geht hier ja nicht um einen API/ein Datenmodell, dass in allen Anwendungsschichten und über Remoting-Grenzen hinweg funktionieren soll. Mapping ist notwendig. Die über den API zugänglichen Granulatkügelchen und Beziehungen müssen damit nur gefüllt werden können. Danach kann das objektorientierte Datenmodell allein stehen.</p>
+<h2>Semantikfreiheit</h2>
+<p>Das bringt mich zu einem letzten Punkt: <strong>Ich glaube immer mehr, dass im Persistenzmedium keine Semantik stecken sollte. Die ist ein Concern, der nicht dahin gehört</strong>. Ein Persistenzmedium ist ein Persistenzmedium ist ein Persistenzmedium. Es speichert Daten dauerhaft, so dass aus ihnen später wieder “Werkstücke” gefertigt werden können. Dafür sind in einem Datengranulat “Kügelchen” und Beziehungen festzuhalten. Fertig.</p>
+<p>An einem Blog hängen viele Postings. Ein Posting hat viele Kommentare. Dieser Zusammenhang ist zu persistieren. Ob ein Blog-Objekt in einem bestimmten Kontext seine Postings in einer IList&lt;&gt; oder einem Dictionary oder in einem Array halten will, ist nicht Sache des Persistenzmediums. Ein Mapping sorgt dafür, dass die vielen Postings in die kontextspezifische Collection eines Blogs kommen.</p>
+<p><strong>Das Persistenzmedium kennt nur atomare Granulatkügelchen mit einem oder mehreren atomaren Werten je Feld. Und es kennt bidirektionale benannte Beziehungen zwischen den Granulatkügelchen.</strong></p>
+<p>Das scheint mir die Grundanforderung an ein Datengranulat-Modell. <strong>Was in einem Objektmodell für die Verarbeitung “irgendwie verwoben ist”, wird für die Persistenz gründlich geshreddert.</strong>Nur so ist es möglich, es später für die Verarbeitung in anderen Kontexten möglichst einfach immer wieder anders zusammenzusetzen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2038956f78adf1bf.png" /></p>
+<p>Der Unterschied zum relationalen Datenmodell besteht dabei darin, dass das relationalen Datenmodell kontextspezifische Schemata nahelegt. Datengranulat hingegen sieht immer gleich aus. Die Granulatkügelchen mögen unterschiedliche “Farben” und Größen haben, doch sie sind in einem immer gleich: es sind Atome ohne inhärente Beziehungen. Beziehungen sind extern zu ihnen und sehen ebenfalls immer gleich aus.</p>
+<p>Jetzt die Frage: Wo ist eine Datengranulat-Persistenztechnologie? Dokumentendatenbanken sind es nicht. In ihnen können “Datensäcke” zwar hübsch gespeichert werden, doch für die Beziehungen sind Dokumente untauglich, glaube ich.</p>
+<p>RDBMS wiederum könnten für Beziehungen ordentlich sein, aber schemalose “Datensäcke” sind nicht ihr Ding.</p>
+<p>Ein ODBMS könnte hier hingegen passen. Das Granulat-Datenmodell ist ja universell und ändert sich nicht. Flexibilität ist nicht nötig. Da ODBMS für starre Datenmodelle geeignet sind und direkte Beziehungen effizient verwalten, könnte darauf eine Granulatdatenbank aufgesetzt werden.</p>
+<p>Oder doch besser eine Graphendatenbank? Hm… Ich glaube, damit würde ich am ehesten mal spielen wollen.</p>
+<p>Oder selbst bauen? Mal mit F# Infrastruktur basteln? Ein Entwicklertraum würde wahr… :-) Na, mal schauen. Erstmal drüber schlafen. Am Ende gehts ja zunächst nur um einen API. Wie es darunter aussieht, ist egal.</p>
+<h2>Kommentare</h2>
+<p><strong>serega</strong> (2010-04-23):</p>
+<p>Ralf, das ist ja alles interessant, aber mir noch etwas zu abstrakt. Warum brauchst Du so viel Flexibilität? So ein Ansatz sieht sehr nach Bottom-Up aus, wovon ich eigentlich kein Fan bin. Ich halte heute für optimal den Ansatz von DDD, basierend auf einer DocDb. Ich denke, dass BC und AR Patterns genau dafür sorgen, um die Beziehungen (die Du gerade verboten hast) richtig hinzukriegen.
+Natürlich ist das nicht "leicht". Schwer ist das aber auch nicht - nur etwas ungewöhnlich für manche, die nur mit dem Designer klar kommen. Für solche macht diese Diskussion sowieso nicht viel Sinn. Die gehen eher mit Entity Framework besser um.
+Ich würde es lieber mit dem Top-Down-Ansatz versuchen, als bottom-up in die Glaskugel zu schauen.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-04-23):</p>
+<p>@Serega: Schaue ich in die Glaskugel? Hm... Genauso viel wie die Leute, die DocDb nutzen oder CQRS. Die tun das nämlich, weil sie unzufrieden sind mit dem, was für sie davor war.</p>
+<p>Ich bin unzufrieden. Deshalb suche ich nach Wegen, meine Unzufriedenheit zu mildern. Das halte ich für kein Glaskugelgucken. Das ist vielmehr der Antrieb, der hinter jedem Fortschritt oder zumindest jeder Forschung steckt.</p>
+<p>Wenn ich dabei über die unterste Schicht nachdenke, dann bedeutet das nicht notwendig, dass ich bottom-up denke. Ich verorte da vielmehr ein Wurzelproblem. Als muss ich es dort lösen.</p>
+<p>Ich finde DocDBs auch hübsch. Aber ich erlaube mir, auch diesem Hype nicht gleich zu verfallen. O/R Mapper sahen auch schon wie "die Lösung" aus. Nun sind es DocDBs.</p>
+<p>Aber wofür überhaupt "die Lösung"?</p>
+<p>Das, so meine ich, hat sich eben geändert. Früher brauchten wir "die Lösunge" für effiziente Persistenz. Da kamen RDBMS.</p>
+<p>Heute brauchen wir für etwas anderes eine Lösung. Nämlich für flexible Persistenz. Wir müssen Daten für Modelle (um nichts anderes geht es bei DDD) so persistieren, dass wir uns nicht in eine Ecke pinseln. Und wir wollen auch für Daten kein BDUF.</p>
+<p>Das scheint nun mit DocDBs etwas besser zu gehen als mit RDBMS. Schön. Aber warum dabei stehenbleiben? Nachdenken sollte erlaubt sein.</p>
+<p>Vor allem schaue ich ja nicht in die Glaskugel, weil ich mich bemühe, das Grundproblem zu analysieren. (Dass wir Flexibilität brauchen, sollte unzweifelhaft sein. Um nichts anderes geht es der ganzen Agilitätsbewegung. Da haben wir ja auch akzeptiert, dass die nicht in die Glaskugel schaut, sondern postuliert: du willst immer flexibel sein und die nicht durch einen Jahre vorausschauenden Projektplan einengen lassen.)</p>
+<p>Und so bin ich für mich da angelangt, dass ich vermute, unser Dateninflexibilitätsproblem hat mit Beziehungen zu tun. Mit einem Mangel an Prinzipien bei der Datenmodellierung. Wenig DRY (abgesehen von relationalen Normalisierungen), wenig SoC, wenig SRP. Und so sinne ich darüber, wie ein persistentes Datenmodell aussehen könnte, das diesen Prinzipien mehr folgt.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-04-25):</p>
+<p>Hallo,</p>
+<p>ich finde es gut sich Gedanken über Flexibilität bei Datenpersistenz zu machen. Dem Statement "… ich vermute, unser Dateninflexibilitätsproblem hat mit Beziehungen zu tun."  kann ich mich nur anschließen.  Die Artikelserie über das Intuitive Datenmodell (IDM) war nach meiner Meinung schon auf einem sehr guten Weg zu dieser Erkenntnis. Ist es nicht nur ein kleiner Schritt von den Atomic und Composite Values (AV, CV) des IDM zu einem Datenmodell, welches ausschließlich durch (meinetwegen typisierten) AVs und typenlosen binären Beziehungen zwischen AVs definiert ist?</p>
+<p>Die Graph-DBs machen das zwar im Grunde so, nur sind sie eben viel mehr als ein Modell für eine flexible Persistenz; z.B. InfoGrid zwingt einem ein bestimmtes Programmiermodell auf: Ich muss meine Objekte zu MeshObjects machen und Relationen dazwischen explizit mit „relate“ oder „unrelate“ herstellen oder aufheben. Klar, das muss sein, es ist ja auch ein richtiges DBMS mit Zustandsprotokollierung, Transaktionen und allem was dazugehört. Das brauche ich aber nicht immer. Oft reicht schon oft das LoungeRepository, welches aber durchaus auf „Datengranulat“ und einer „Relations-Kitt-Komponente“ die wieder Ordnung herstellt basieren kann.</p>
+<p>(…Ich hoffe der Ralf ist mir nicht böse, dass ich hier eigenmächtig Zusammenhänge zwischen verschiedenen Artikeln und Projekten von ihm herstelle. Wenn ich falsch liege, bin ich bereit eines besseren gelehrt zu werden…)</p>
+<p>Also „flexible Persistenz“ ohne BDUF ist hier das Kampfwort – wobei ich den Begriff „sich um die Ecke pinseln“ nur intuitiv verstehe :-) …</p>
+<p>Mit dem Problem bin ich immer wieder in "meiner" Domäne konfrontiert: Design von Algorithmen für CAGD (Computer Aided Geometric Design). Ein bewährtes Berechnungsmodell ist hier die Boundary Representation (B-Rep) – ein Graph der topologische Beziehungen zwischen Knoten, Kanten, Facetten (Vertex, Edge, Face) beschreibt, die geometrische Elemente (Point, Curve, Surface …) referenzieren.  Dieses Modell eignet sich gut für effiziente Algorithmen, die aber den ändernden Zugriff auf die Struktur des B-Rep Graphen voraussetzen.  Was ich nicht will ist, dass mein Laufzeitmodell an ein Persistenz-Modell gebunden ist, dessen change tracking System jede Veränderung des Graphen protokolliert. Was ich brauche, ist eine Möglichkeit den erreichten Zustand der (vielen)  B-Rep Graphen unter Beibehaltung von generierten oder vergebenen Identitäten ganz oder teilweise zu persistieren, vielleicht auch mal das Repository nach bestimmten Zusammenhängen und Ordnungen fragen. Dabei will ich bei meinem Domain-Modell keine Einschränkungen in Punkto Datenzugriff in Kauf nehmen, am liebsten möchte ich es auch von keinen wie-auch-immer gearteten Basis-Klassen oder Interfaces abhängig machen – gut, so etwas wie „object“ oder „RepositoryIdentity“ nicht mitgerechnet.</p>
+<p>Mein bewährtes Modell für die Persistenz von solchen Daten lässt sich im Grunde wie folgt beschreiben: ein Objekt wird in ein AtomicValue mit Identität umgesetzt. Die Referenzen des Objekts zu anderen Objekten sind als identifizierbare gerichtete binäre Relationen zwischen AV mit Identität x und AV mit Identität y umgesetzt: r(i) = {av(x), av(y) }, fertig. Das Modell ist dann durch eine Menge von AVs und eine Menge von Relationen zwischen AVs vollständig beschrieben. Die Vorteile: 100%-tige Übereinstimmung mit meinem Domänenmodell, leichte Erweiterbarkeit, kaum Voraussetzungen an das Implementierungsmodell. Und: es lässt sich bei Bedarf leicht und effizient in jedes andere gängige Modell (Relational, Object-based..) umsetzten, was man von der anderen Richtung nicht behaupten kann...</p>
+<p>Gruß,</p>
+<p>Paul</p>
+<hr />
+<p><strong>serega</strong> (2010-04-25):</p>
+<p>Ralf, Flexibilität macht für sich allein auch keinen Sinn. Ich glaube, dass die Idee alles mit einem einzelnen Model zu beschreiben einfach nicht zielführend ist. Als ich in der Uni OOP studiert habe, war mir auch alles einfach - ein Auto hat vier Räder, ein Rad kann einem Auto gehören. Solche Modele sind aber aus dem Kontext gerissen und für sich allein sind die unsinnig. DDD hat dafür eine logische Lösung gefunden - nämlich BC. Innerhalb eines BCs ist es sehr unwahrscheinlich, dass die gewünschte Flexibilität gebraucht wird. Die monolitischen Modelen wird aber auch keine Flexibilität (in der Persistenz) retten können.</p>
+<p>Das ist alles einfach meine Meinung. Vielleicht brauche ich einmal ein Beispiel erstmal zu sehen, wo die Flexibilität wirklich eine grosse Rolle spielt.</p>
+<p>Sergey</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-05-01):</p>
+<p>@Sergey: Klar, Flexibilität allein macht auch nicht glücklich. Aber ich sehe dort den Engpass.</p>
+<p>Früher hatten wir ein großes Effizienzproblem. Das ist in vielen Fällen heute nicht mehr existent.</p>
+<p>Früher wie heute haben wir aber ein Flexibilitätsproblem. Datenmodelle zu planen ist heute immer noch oft ein BDUF. Und dann sitzt man in der Tinte, weil man sich an ein Schema geheftet hat.</p>
+<p>Deshalb glaube ich, dass ein Schema, das ja für Effizienz sorgen soll, eine Sache von Optimierung sein sollte. Im Umkehrschluss fängt man daher besser ohne Schema an. Und maximal ohne Schema scheint mir da der Gedanke einer Graphendatenbank wie skizziert, mit einem Relationenraum.</p>
+<p>Bounded Contexts machen das Problem kleiner, aber nicht signifikant, glaube ich. Für einzelne BCs mag es dann mit einem Schema gehen. Aber warum sollte man sich darauf festlegen, wenn es ohne noch flexibler ist?</p>
+<p>DokumentenDBs sind ein guter Schritt. Mein Gefühl ist, dass da noch ein bisschen mehr geht.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-05-01):</p>
+<p>@Paul: Hört sich plausibel an, was du schreibst. Ich freue mich, dass dir das Intuitive Datenmodell geholfen hat. Das sehe ich auch in der Nähe meiner aktuellen Gedanken.</p>
+<p>Dass du Bezüge zw. meinen Postings herstellst, finde ich gut :-)</p>
+<p>Wenn du sagst, dass du dein Domänenmodell nicht an ein Persistenzmedium binden willst, ist das genau richtig. Das macht dann zwar Mapping nötig - aber dadurch wirst du wirklich unabhängig. Ich sag ja: Mapping ist keine Last ;-)</p>
+<p>Das LoungeRepo (oder auch RavenDB) sind aber noch nicht das, was ich derzeit suche. Darin haben ja Entitäten/Dokumente noch Beziehungen "in sich". Das scheint mir aber das Problem. Eine Vermischung von Daten-Concerns.</p>
+<p>Deshalb überlege ich, mal prototypisch was anderes zu basteln. Eher eine GraphenDB. Sozusagen als Fingerübung auch für den Umgang mit Esent. Mal schauen...</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-05-03):</p>
+<p>Hallo,</p>
+<p>Ja, im LoungeRepo haben Entitäten/Dokumente noch Beziehungen "in sich". Aber ist das aus der Sicht der Anwendung nicht ein Implementierungsdetail?  Der Objektgraph auf der Anwendungsseite (auf den wir ja nicht verzichten wollen, oder?) sieht auf der Persistenzseite aus wie Säcke mit Datengranulat (ich mag die Metapher..) und die Ordnung-herstellende Menge von Relationen. Für den Anwender äußert sich das nur durch die Existenz von flexibleren Graph-DB-artigen Query-Schnittstellen... Beispiel folgt, kann auf dem PocketPC schlecht Code schreiben...</p>
+<p>Gruß,</p>
+<p>Paul</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-05-03):</p>
+<p>@Paul: Im LoungeRepo werden eben keine Granulatkügelchen gespeichert, weil (!) die Entitäten sich noch referenzieren. Es gehört für mich zur Definition von Datengranulat, dass die Kügelchen selbst unabhängig voneinander sind. Ob ein Kügelchen neben einem anderen, weit oder nah dran liegt... das ist nicht "im Kügelchen", sondern eine Sache der Anordnung von außen. Die Beziehungen sehe ich nur als Beobachter von außen.</p>
+<p>Das LoungeRepo ist also noch kein so allgemeiner Speicher, wie ich es mir vorstelle.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-05-03):</p>
+<p>Hallo Ralf,</p>
+<p>ich habe mich etwas unklar ausgedrückt... Ich weiss wie das LoungeRepo aufgebaut ist. In meinem Post habe ich an ein hypothetisches Datengranulat-basiertes "Business-class-Lounge-Repository" gedacht :-)</p>
+<p>Gruss,</p>
+<p>Paul</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

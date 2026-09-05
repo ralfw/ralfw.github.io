@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spiel, Satz, Sieg fürs Nachdenken — ralfw.de Archiv</title>
+<meta name="description" content="Gerade hat die .NET Online User Group die Kata Tennis beim online Coding Dojo bearbeitet. Leider konnte ich nicht teilnehmen. Da in Twitter dazu aber noch anschließend diskutiert w">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/spiel-satz-sieg-furs-nachdenken/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Spiel, Satz, Sieg fürs Nachdenken — ralfw.de Archiv">
+<meta property="og:description" content="Gerade hat die .NET Online User Group die Kata Tennis beim online Coding Dojo bearbeitet. Leider konnte ich nicht teilnehmen. Da in Twitter dazu aber noch anschließend diskutiert w">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/spiel-satz-sieg-furs-nachdenken/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Spiel, Satz, Sieg fürs Nachdenken</h1>
+    <div class="doc-meta"><span>20. Nov. 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/11/spiel-satz-sieg-furs-nachdenken.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/spiel-satz-sieg-furs-nachdenken/</code></span></div>
+    <div class="art"><p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/819c053edb8c771a.png" /></p>
+<p>Gerade hat die <a rel="noopener" href="http://online-usergroup.de/">.NET Online User Group</a> die Kata Tennis beim online Coding Dojo bearbeitet. Leider konnte ich nicht teilnehmen. Da in Twitter dazu aber noch anschließend diskutiert wurde, habe ich mir gedacht: Warum nicht die Aufgabe nachträglich angehen?</p>
+<p>Meine Lösung liegt <a rel="noopener" href="http://code.google.com/p/ralfwscratchpad/source/browse/#hg/Kata Tennis">hier in meinem Mercurial Google Repository</a>. Anders als im Coding Dojo bin ich jedoch nicht streng nach TDD vorgegangen. Deshalb ist die Struktur der Implementation anders als bei den Dojo-Teilnehmern und auch meine Tests sehen anders aus.</p>
+<p>Zum Hintergrund meiner Lösung an dieser Stelle daher ein paar kurze Worte.</p>
+<h3>1. Der API</h3>
+<p>Bevor ich mit der Implementation losgelegt habe, habe ich über die Lösung nachgedacht. Wie könnte die aussehen? Nicht nur an der “Oberfläche”, Stichwort API, sondern auch darunter.</p>
+<p>Der API – der immer explizit vor Codierungsstart festgelegt werden sollte, wie ich meine – sieht so aus:</p>
+<p>var g = new Game();
+g.AddScore(Players.Player1);
+g.AddScore(Players.Player2);
+g.AddScore(Players.Player1);
+…
+Console.WriteLine(g.Winner);</p>
+<p>Bei mir geht es also nur darum festzustellen, ob durch einen Ballsieg ein Gewinn eingetreten ist und wer der Gewinner ist. Die <a rel="noopener" href="http://codingdojo.org/cgi-bin/wiki.pl?KataTennis">Aufgabenstellung der Kata Tennis</a> lässt diese Interpretation zu. Dort ist nämlich von gar keinem API die Rede; es sollen lediglich “irgendwie” die Regeln implementiert werden.</p>
+<h3>2. Das Modell</h3>
+<p>Ausgehen vom API habe ich mir Gedanken gemacht, wie denn so ein Tennisspiel intern überhaupt repräsentiert werden könnte. Sofort fiel mir da ein Zustandsautomat ein. Die Zustände sind die Spielstände eines Spielers, die Übergänge ergeben sich aus Gewinn eines Balls bzw. ob ein Ball verloren wurde (rot). Hier meine Skizze, die ich auf meinem iPad gemacht habe:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/7c098b61dc0385a6.png" /></p>
+<p>So ein Zustandsautomat ist natürlich eine sehr abstrakte Funktionseinheit. Wo und wie läuft der denn im Zusammenhang, so dass er vom API genutzt wird? Das habe ich mit einem kleinen EBC-Diagramm für den <em>AddScore()</em> API-Aufruf modelliert:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/5e04e837c021d632.png" /></p>
+<p>Der Spieler, der einen Ball gewonnen hat, fließt hinein und wird übersetzt in eine Position für jeden der beiden Spieler. Beide Spieler sind repräsentiert durch ein Objekt (<em>Player</em>), das ihren Zustand hält. Dort läuft der Zustandsautomat. Der liefert nach einer Transition den neuen Spieler-Spielstand an ein abschließendes Bauteil, das ermittelt, wer gewonnen hat.</p>
+<p>Beide Skizzen zusammen haben mich, hm, 10-15 Minuten gekostet. Der Zustandsautomat hatte daran den Löwenanteil, würde ich sagen. Er diente ja aber nicht nur der Lösungsmodellierung, sondern auch noch dem Anforderungsverständnis.</p>
+<p>Am Ende der Modellierung kannte ich dann alle relevanten Funktionseinheiten und konnte loslegen – und zwar wo ich wollte. Denn die Funktionseinheiten sind ja durch EBC wunderbar entkoppelt.</p>
+<h3>3. Implementation</h3>
+<p>Die Implementation habe ich mit den beiden kleinsten Funktionseinheiten begonnen: Ballgewinner in Position übersetzen und Gewinner aus den Spieler-Spielständen ermitteln. Die Herausforderung Zustandsautomat hab ich also an den Schluss gelegt.</p>
+<p>Die ersten beiden Funktionseinheiten waren so klein, dass ein Test-first Ansatz nicht nötig war. Ich habe sie deshalb einfach runtergeschrieben und danach Tests geschrieben. Das war ohne Verlust an Korrektheit befriedigender.</p>
+<p>Test-first/TDD sollte ja kein Dogma sein. Wenn die Zwecke von TDD anders/leichter erreicht werden können, dann sollte man den leichteren Weg gehen. Und was sind die Hauptzwecke von TDD? 1. Code in überschaubare, leicht testbare Einheiten strukturieren; 2. Eine gute Testabdeckung sicherstellen. Beides habe ich durch die Modellierung erreicht. Denn die hat zu kleinen Funktionseinheiten geführt – ohne später refaktorisieren zu müssen –, die testbar sind und die ich mit wenigen Tests gut abdecken kann – auch im Nachhinein.</p>
+<p>Bei der Implementation des Players habe ich dann jedoch nach Test-first gearbeitet. Viel herausgekommen ist dadurch jedoch nicht ;-) Denn auch der Player ist am Ende so einfach mit dem Zustandsautomaten, dass sich eine weitere Zerlegung nicht lohnt:</p>
+<p>internal class Player
+{
+    private readonly Dictionary&gt;
+                                _stateTransitions =
+        new Dictionary&gt;
+            {
+                {ScoringPositions.YouWin,
+                    new Dictionary
+                    {
+                        {Scores.Love, Scores.Fifteen},
+                        {Scores.Fifteen, Scores.Thirty},
+                        {Scores.Thirty, Scores.Forty},
+                        {Scores.Forty, Scores.Win},
+                        {Scores.Deuce, Scores.Advantage},
+                        {Scores.Advantage, Scores.Win},
+                        {Scores.Win, Scores._Invalid},
+                        {Scores._Advantage, Scores.Deuce},
+                        {Scores._Win, Scores._Invalid},
+                    }},
+                {ScoringPositions.YouLoose,
+                    new Dictionary
+                    {
+                        {Scores.Love, Scores.Love},
+                        {Scores.Fifteen, Scores.Fifteen},
+                        {Scores.Thirty, Scores.Thirty},
+                        {Scores.Forty, Scores.Forty},
+                        {Scores.Deuce, Scores._Advantage},
+                        {Scores.Advantage, Scores.Deuce},
+                        {Scores.Win, Scores._Invalid},
+                        {Scores._Advantage, Scores._Win},
+                        {Scores._Win, Scores._Invalid},
+                    }},    };
+    internal Scores _currentState;</p>
+<p>public void Adjust_score(ScoringPositions position)
+    {
+        _currentState = _stateTransitions[position][_currentState];
+        this.Out_CurrentScore(_currentState);
+    }</p>
+<p>public void In_Deuce()
+    {
+        _currentState = Scores.Deuce;
+    }</p>
+<p>public Action Out_CurrentScore;
+}</p>
+<p>Etwas zusammenreißen musste ich mich vielmehr bei den Tests. Ich war schon dabei, möglichst viele Zustandsübergänge zu testen, als ich merkte, dass ich damit “Feedback” verzögerte. Also habe ich nur ein paar essenzielle Transitionen geprüft und mich dann an die Integration aller Bauteile gemacht.</p>
+<p>Damit konnte ich dann schon “beweisen”, dass das Gesamtmodell grundsätzlich funktioniert. Zwei Szenarien zeigen Funktionsweise und Umgang mit dem API. Hier zum Beispiel ein Spiel mit Gewinn nach Tie Break:</p>
+<p>[Test]
+public void Game_with_a_tie_break()
+{
+    var sut = new Game();
+    sut.AddScore(Players.Player1);
+    Assert.AreEqual(Players.None, sut.Winner);
+    sut.AddScore(Players.Player2);
+    Assert.AreEqual(Players.None, sut.Winner);
+    sut.AddScore(Players.Player1);
+    Assert.AreEqual(Players.None, sut.Winner);
+    sut.AddScore(Players.Player2);
+    Assert.AreEqual(Players.None, sut.Winner);
+    sut.AddScore(Players.Player1);
+    Assert.AreEqual(Players.None, sut.Winner);
+    sut.AddScore(Players.Player2);
+    Assert.AreEqual(Players.None, sut.Winner);
+    sut.AddScore(Players.Player1);
+    Assert.AreEqual(Players.None, sut.Winner);
+    sut.AddScore(Players.Player1);
+    Assert.AreEqual(Players.Player1, sut.Winner);
+}</p>
+<h3>Fazit</h3>
+<p>Ich bin zufrieden mit meinem Vorgehen. Erst modellieren – ja, auch in so kleinen Szenarien – und dann moderat testgetrieben implementieren hat mich schnell, flexibel und sicher gemacht. Alle Funktionseinheiten waren überschaubar und gut testbar. Ich konnte mich auf die Implementation konzentrieren, ohne immer wieder über Refaktorisierungen nachdenken zu müssen.</p>
+<p>Es scheint mir ein Nachteil von TDD zu sein, die Modi Implementation und Refaktorisierung so zu verquicken. In der Schrittfolge red-green-refactor sind sie zwar getrennt, doch da diese Schleife immer wieder und schnell in kleinen Schritten durchlaufen werden soll, verschmelzen Implementation (red-green) und Refaktorisierung wie die Einzelbilder eines Films. Als Entwickler muss ich schwebende Aufmerksamkeit für beide haben.</p>
+<p>Bei meinem Vorgehen hingegen sind beide Modi klar getrennt. Ergebnis der Modellierung sind Funkionseinheiten, die zunächst mal nicht mehr refaktorisiert werden müssen. Solange ich die implementiere, kann ich mich auf die Implementation konzentrieren. Das entlastet mich mental. Wenn ich damit dann fertig bin – z.B. nach einer Stunde wie in diesem Beispiel –, dann kann ich mich zurücklehnen und den Modus wechseln. Das empfinde ich als Entspannung und wertvolle Phase der Reflexion. Dann habe ich die “Ruhe des Erfolgs” in mir, weil ich ja schon eine Menge geschafft habe.</p>
+<p>Ergo: Ich finde weiterhin, dass Implementierung ohne Modellierung harte Arbeit ist und nicht smarte. Man kommt damit auch zum Ziel – aber warum so anstrengen, wenn es auch einfacher geht? TDD ist ne gute Sache – in Maßen. Es ist keine Silberkugel, sondern nur eine Methode unter vielen, die im Zusammspiel zur Produktion von Code genutzt werden sollten. Und somit empfände ich es als künstliche oder gar unrealistische Reduktion, wenn ein Coding Dojo sich nur auf die Anwendung von TDD zur Lösungsfindung beschränken würde.</p>
+<p>PS: Danke an Krzysztof Eraskov für seine Hinweise auf Fehler in der Implementierung und Inkonsistenzen im Modell.</p>
+<h2>Kommentare</h2>
+<p><strong>Unknown</strong> (2010-11-20):</p>
+<p>Hi Ralf,</p>
+<p>erstmal cool das Du auch ne Tennis Version beigesteuert hast. Sehr interessant die einzelnen Versionen miteinander zu vergleichen.</p>
+<p>Zustände zu identifizieren, finde ich grundsätzlich das richtige Vorgehen bei der Kata. Allerdings kann ich mich nicht so recht mit der von Dir gewählten Variante mit dem Zustandsautomat anfreunden. Warum so abstrakt? Warum so viel Zeremonie? Eine Alternative wäre bsp. das State-Pattern. Finde ich persönlich deutlich einfacher und lesbarer.</p>
+<p>Eine weitere Sache, die mir aufgefallen ist, sind die Tests für die als intern deklarierten Funktionseinheiten. Implementierungsdetails in den Tests halte ich für keine gute Sache. Ich finde man sollte so was in Tests vermeiden, da man solche Tests wegwerfen kann/muss wenn sich die interne Implementierung ändert.</p>
+<p>Vielleicht bin ich an ner anderen Ecke auch etwas dogmatisch, aber der Einsatz von Asserts in dem Test mit dem der Blogpost endet halte, ist auch für problematisch. Meines Erachtens hast Du da mehrere Szenarios, die besser in verschiedene Tests aufgeteilt sein müssten, in einen Jumbo-Test gestopft.</p>
+<p>Nichtsdestotrotz freu ich mich auf die nächste Kata-Runde. Total cool die einzelnen Ansätze zu sehen.</p>
+<p>VG
+Björn</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-11-20):</p>
+<p>@Björn: Ähm, warum ist ein Zustandsautomat "Zeremonie"? Und was bringt das State-Pattern?</p>
+<p>State-Pattern bezieht sich nur darauf, wo Zustand gehalten wird. Der Zustand ist dann aber immer noch Zustand. Beim Tennis muss der Zustand aber wechseln. Wo steht denn der Code dafür? Der hat nix mit State-Pattern zu tun. Da kommt der Zustandsautomat ins Spiel. Der stellt eine sehr einfache Implementation von Regeln dar, weil deklarativ.</p>
+<p>Die Alternative zum Zustandsautomaten ist nicht das State-Pattern, sondern eine andere Implementierung der Zählregeln.</p>
+<p>Was du mit deinen Gamestates machst, ist nichts anderes, als einen Zustandsautomaten zu implementieren. Du nennst ihn nur nicht so - und deshalb ist er verteilt über mehrere Klassen und - so emfinde ich - schwer zu fassen.</p>
+<p>Internes testen: Internes ist aus Sicht eines Anwenders natürlich Implementierungsdetail. Aber warum soll ich das nicht direkt testen. Warum der Dogmatismus, alles nur durch den API zu testen? Warum nur Blackbox Tests? Oder andersrum: Warum alles, was man testen will, public machen?</p>
+<p>Ne, da kann ich dir nicht folgen, dass man Internes nicht direkt testen soll. Das ist schlicht pragmatisch.</p>
+<p>Jumbotest? Ne, das ist kein Jumbotest am Ende, sondern ein Integrationstest. Der zeigt, dass die Integration im Sinne von Szenarios funktioniert und dokumentiert dabei gleichzeitig.</p>
+<p>Eigentlich braucht es nur einen Integrationstest, denn dass korrekt "weitergeschaltet" wird und die Geiwnnermittlung stattfindet, weiß man danach - und dass die Einzelschritte gehen, weiß ich durch die Unit Tests. Dennoch habe ich zwei Integrationstests, um eben komplette Szenarios zu zeigen. Nicht für die Korrektheit, sondern für die "Greifbarkeit", das Verständnis von Problem und Lösung.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-11-20):</p>
+<p>Vor weiteren Kommentaren den zugehörigen Blogbeitrag lesen: http://ralfw.blogspot.com/2010/11/wider-die-patternmania.html</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

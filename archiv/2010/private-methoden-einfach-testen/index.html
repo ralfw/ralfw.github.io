@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Private Methoden einfach testen — ralfw.de Archiv</title>
+<meta name="description" content="In einer Session auf der ADC fragte Stefan Lieser mich heute, ob nicht die dynamischen Features von C helfen könnten, private Methoden von Objekten zu testen. Erst war ich skeptisc">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/private-methoden-einfach-testen/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Private Methoden einfach testen — ralfw.de Archiv">
+<meta property="og:description" content="In einer Session auf der ADC fragte Stefan Lieser mich heute, ob nicht die dynamischen Features von C helfen könnten, private Methoden von Objekten zu testen. Erst war ich skeptisc">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/private-methoden-einfach-testen/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Private Methoden einfach testen</h1>
+    <div class="doc-meta"><span>26. Okt. 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/10/private-methoden-einfach-testen.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/private-methoden-einfach-testen/</code></span></div>
+    <div class="art"><p>In einer Session auf der ADC fragte Stefan Lieser mich heute, ob nicht die dynamischen Features von C# helfen könnten, private Methoden von Objekten zu testen. Erst war ich skeptisch – doch dann half Google. Es geht tatsächlich.</p>
+<p>Wer das also dringend tun will, der kann es so wie folgt beschrieben tun. Besonders mag das in Brownfield-Projekten helfen. Denn ansonsten ziehe ich es vor, Privates privat sein zu lassen und nicht direkt zu testen. Und Internes mache ich für Tests mit <em>InternalsVisibleTo</em> zugänglich.</p>
+<p>Gegeben dieses Systen under Test:</p>
+<pre><code>public class MyFizzBuzzer
+{
+    public static IEnumerable&lt;string&gt; FizzBuzz()
+    {
+        return Enumerable.Range(1, 100).Select(FizzBuzzThis);
+    }
+
+    private string FizzBuzzThis(int i)
+    {
+        if (IsFizzBuzz(i)) return &quot;FizzBuzz&quot;;
+        if (IsFizz(i)) return &quot;Fizz&quot;;
+        if (IsBuzz(i)) return &quot;Buzz&quot;;
+        return i.ToString();
+    }
+
+    private static bool IsFizz(int i)
+    {
+        return i % 3 == 0;
+    }
+    …
+
+</code></pre>
+<p>Dann können Sie in Zukunft solche Tests schreiben für die privaten Methoden:</p>
+<pre><code>[TestFixture]
+public class testMyFizzBuzzer
+{
+    [Test]
+    public void Check_fizz_numbers()
+    {
+        dynamic sut = typeof(MyFizzBuzzer).Undress();
+        Assert.IsTrue(sut.IsFizz(3));
+        Assert.IsTrue(sut.IsFizz(12));
+        Assert.IsFalse(sut.IsFizz(5));
+    }
+
+    [Test]
+    [TestCase(1, &quot;1&quot;)]
+    [TestCase(2, &quot;2&quot;)]
+    [TestCase(3, &quot;Fizz&quot;)]
+    [TestCase(5, &quot;Buzz&quot;)]
+    [TestCase(15, &quot;FizzBuzz&quot;)]
+    public void FizzBuzz_number(int number, string expected)
+    {
+        dynamic sut = new MyFizzBuzzer().Undress();
+        Assert.AreEqual(expected, sut.FizzBuzzThis(number));
+    }
+    …
+</code></pre>
+<p>Dazu ist es nur nötig, dass Sie diese Klassen ins Testprojekt einbinden:</p>
+<pre><code>namespace System.Dynamic
+{
+    public static class UndressObjects
+    {
+        public static dynamic Undress(this Type type)
+        {
+            return new UndressedObject(type);
+        }
+
+        public static dynamic Undress(this object obj)
+        {
+            return new UndressedObject(obj);
+        }
+    }
+
+    public class UndressedObject : DynamicObject
+    {
+        private const BindingFlags MEMBERS_FLAGS =
+                BindingFlags.Instance | BindingFlags.Static |
+                BindingFlags.Public | BindingFlags.NonPublic;
+
+        private readonly object _dressedObject;
+
+        public UndressedObject(object o)
+        {
+            _dressedObject = o;
+        }
+
+        public override bool TryInvokeMember(InvokeMemberBinder binder,
+                                             object[] args, out object result)
+        {
+            var method = TypeOfDressed().GetMethod(binder.Name,
+                                                   MEMBERS_FLAGS,
+                                                   null,
+                                                   GetParameterTypes(args).ToArray(),
+                                                   null);
+
+            if (method == null) return base.TryInvokeMember(binder, args, out result);
+
+            result = method.Invoke(_dressedObject, args);
+            return true;
+        }
+
+        private IEnumerable&lt;Type&gt; GetParameterTypes(object[] args)
+        {
+            return from a in args select GetActualType(a);
+        }
+
+        private Type GetActualType(object t)
+        {
+            return (t is ParameterInfo) ? (t as ParameterInfo).ParameterType
+                                        : t.GetType();
+        }
+
+        private Type TypeOfDressed()
+        {
+            return (_dressedObject is Type) ? (Type)_dressedObject
+                                            : _dressedObject.GetType();
+        }
+    }
+}
+</code></pre>
+<p>Die Idee stammt aus <a rel="noopener" href="http://amazedsaint.blogspot.com/2010/10/poor-mans-singleton-methods-via-dynamic.html">diesem Artikel</a>. Ich hab sie lediglich etwas, hm, fokussiert.</p>
+<p>Getestet werden können also private statische Methoden oder Instanzmethoden.</p>
+<p>Enjoy your brownfield! ;-)</p>
+<h2>Kommentare</h2>
+<p><strong>Mike Bild</strong> (2010-10-26):</p>
+<p>Nice... - Good bye InternalVisibleTo -
+-Mike</p>
+<hr />
+<p><strong>Mike Bild</strong> (2010-10-26):</p>
+<ul>
+<li>InternalsVisibleTo -</li>
+</ul>
+<hr />
+<p><strong>Querschaedel</strong> (2010-10-27):</p>
+<p>Gibt ab VS 2008 einen Private Accessor - find ich die schönste Art private Methoden zu testen. (<a rel="noopener" href="http://msdn.microsoft.com/en-us/library/bb385974.aspx">MSDN Seite</a>)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-10-27):</p>
+<p>@Querschädel: Der private accessor ist MSTest-spezifisch. Damit kann und will nicht jeder arbeiten. Außerdem wird er - wenn ich mich recht erinnere - umständlich generiert.</p>
+<hr />
+<p><strong>Querschaedel</strong> (2010-10-27):</p>
+<p>@Ralf - Nein mit NUnit funktioniert er auch. Weitere Frameworks hab ich nicht ausprobiert. Die Generierung ist einfach - rechte Maustaste und Auswahl von "Generate Private Accessor"</p>
+<hr />
+<p><strong>Mike Bild</strong> (2010-10-27):</p>
+<p>Private Accessor?!? Entschuldige - schon beim "Regenerate Private Accessor" bekomme ich irgendwie Bauchschmerzen.
+@Ralf: Wie wäre es mit einem kleinem NuPack(age)? Dann geht die Bindung schnell und einfach.</p>
+<hr />
+<p><strong>(anonym)</strong> (2010-10-29):</p>
+<p>@Mike Private Accessoren sind jedoch in VS2010 deprecated. Microsoft hat diese nicht .Net4.0 fähig gemacht und man weiss nicht ob das noch gemacht wird.
+http://blogs.msdn.com/b/vstsqualitytools/archive/2010/01/18/publicize-and-code-generation-for-visual-studio-2010.aspx</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

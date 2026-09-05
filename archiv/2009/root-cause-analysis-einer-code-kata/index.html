@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Root Cause Analysis einer Code Kata [endlich-clean.net] — ralfw.de Archiv</title>
+<meta name="description" content="Stefan Lieser tut es nun auch: Er hält seine Codierfinger mit Code Katas geschmeidig. Gerade hat er beschrieben, wie es ihm da bei der KataPotter ergangen ist. Zunächst ist ihm die">
+<link rel="canonical" href="https://ralfw.de/archiv/2009/root-cause-analysis-einer-code-kata/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Root Cause Analysis einer Code Kata [endlich-clean.net] — ralfw.de Archiv">
+<meta property="og:description" content="Stefan Lieser tut es nun auch: Er hält seine Codierfinger mit Code Katas geschmeidig. Gerade hat er beschrieben, wie es ihm da bei der KataPotter ergangen ist. Zunächst ist ihm die">
+<meta property="og:url" content="https://ralfw.de/archiv/2009/root-cause-analysis-einer-code-kata/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Root Cause Analysis einer Code Kata [endlich-clean.net]</h1>
+    <div class="doc-meta"><span>17. Sept. 2009</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2009/09/root-cause-analysis-einer-code-kata.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2009/root-cause-analysis-einer-code-kata/</code></span></div>
+    <div class="art"><p>Stefan Lieser tut es nun auch: Er hält seine Codierfinger mit Code Katas geschmeidig. <a rel="noopener" href="http://www.lieser-online.de/blog/?p=185">Gerade hat er beschrieben</a>, wie es ihm da bei der <a rel="noopener" href="http://codingdojo.org/cgi-bin/wiki.pl?KataPotter">KataPotter</a> ergangen ist. Zunächst ist ihm die Lösung leicht gefallen:</p>
+<blockquote>
+<p><em>“Da ich es gewohnt bin, testgetrieben zu arbeiten, hatte ich mit den ersten Schritten keine Probleme. Die ersten Tests waren schnell erstellt und haben die Implementierung schnell in die richtige Richtung getrieben.”</em></p>
+</blockquote>
+<p>Später war es nicht mehr so einfach:</p>
+<blockquote>
+<p><em>“Dann kamen jedoch die komplizierteren Beispiele an die Reihe und ich habe länger mit der Implementierung gekämpft.”</em></p>
+</blockquote>
+<p>Seine Schlussfolgerung zur Ursache mit den Lösungsschwierigkeiten:</p>
+<blockquote>
+<p><em>“Ich habe erkannt, dass ich mit dem Refaktorisieren tendenziell zu früh beginne.”</em></p>
+</blockquote>
+<p>Hört sich gut an, oder? So soll es sein: Erkenntnisgewinn durch Code Kata.</p>
+<p>Da ich diese Kata neulich auch gemacht habe und auch Schwierigkeiten hatte, erlaube ich mir jedoch, hinter den Erkenntnisgewinn zu schauen. Ich bezweifle nicht, dass es einer ist und wir alle daraus etwas lernen können: <strong>TDD ist kein Selbstzweck; auch mit TDD müssen wir schauen, dass wir Nutzen produzieren, bevor wir innere Code Qualität herstellen.</strong></p>
+<p>Aber ich frage mich, ob Stefan damit sein Ursprungsproblem aufgedeckt hat. Hat er hier erfolgreich eine Root Cause Analysis betrieben?</p>
+<p>Ich vermute, seine Schwierigkeit ist ein Folgeproblem eines Symptoms, das durch TDD quasi provoziert wird. Das nenne ich jetzt mal das <em>No Design Up Front</em> (NDUF) Symptom.</p>
+<p>Aus meiner Sicht ist passiert, was heufig passiert und scheinbar durch TDD auch noch gutgeheißen wird: Stefan hat ein Problem gelesen, kurz darüber nachgedacht, ob er es versteht, und dann mit dem Codieren begonnen in dem Glauben, dass sich schon ein angemessenes Design bei der Codierung ergeben wird. TDD = Test Driven Design.</p>
+<p>Der Gedanke ist sicher nicht falsch. Die Frage ist nur, wofür sich ein angemessenes Design durch die kleinen TDD-Schritte ergibt?</p>
+<p>Meine Antwort ist: TDD führt zu einem angemessenen Design für das Modell, das man sich von einer Lösung gemacht hat. Nicht mehr, nicht weniger.</p>
+<p><strong>TDD ist also ein Werkzeug, das mich eine Zielvorstellung konkretisieren lässt.</strong> Mit TDD kann ich ein evolvierbares Design manifestieren. Ich schlage es mit TDD-Schritten sozusagen als Skulptur aus einem Marmorblock heraus.</p>
+<p>Tja… was aber, wenn ich einen falschen Marmorblock gewählt habe? Wenn du zu klein ist, dann komme ich nicht zu der Skulptur, die ich gern hätte.</p>
+<p>Verräterisch an Stefans Aussage ist, dass die  Tests <em>“die Implementierung schnell in die richtige Richtung getrieben”</em> haben – und er trotzdem am Ende mit den komplizierten Beispielen zu kämpfen hatte. Ich behaupte mal, Stefans anfängliche Tests bzw. die Implementierung haben eben nicht (!) in die “richtige Richtung” gezielt. Nur weil Tests grün waren, heißt das eben nicht, dass irgendwie die Gesamtlösung näher gerückt ist. Denn die Gesamtlösung enthält eben auch und gerade die komplizierten Fälle.</p>
+<p>Mein Verdacht ist eher – und den erlaube ich mir, weil ich selbst in diese Falle getappt bin –, dass Stefan keinen Leitstern hatte und damit keine Richtung. Er hatte kein Modell der Lösung, auf das hin er Code geschrieben hat. Er hat nur unmittelbar vor seine Füße geschaut. Dort lag dann immer nur ein nächster Testfall, den er in ad hoc Manier gelöst hat.</p>
+<p>Tut man das, dann läuft man bei der KataPotter aber unweigerlich gegen eine Mauer. Ab einem gewissen Punkt muss man mit seiner Lösungsstrategie umschwenken. Da geht es nicht mehr mit “brute force”. Das ist der Fall, wenn der beste Preis für einen Warenkorb nicht der naheliegende ist. Die Kata-Beschreibung nennt diesen Fall explizit.</p>
+<p>Und da setzt meine Kritik an: Wider besseren Wissens ist Stefan mit Babysteps losgelaufen und hat einfach Test auf Test gehäuft. Das Problem ist dann am Ende nicht gewesen, dass er zu früh refaktorisiert hat, sondern dass er nicht vor dem ersten Schritt überlegt hat, wie die Lösung im Modell aussehen soll. Der komplizierte Warenkorb hat ihn überrascht wie den geschäftigen Familienvater alle Jahre wieder das Weihnachtsfest.</p>
+<p>Dabei glaube ich, dass Stefan schon vor dem ersten Test ein Modell im Kopf hatte. Wenn er die Lösung für den komplizierten Warenkorb selbst gefunden hat, dann hat er auch eine implementierbare Strategie gekannt. Ich sag mal als Stichwort “Baum” ;-)</p>
+<p>Warum hat er dann diese Strategie nicht auf einem Blatt aufgezeichnet und überlegt, welche Algorithmen und Datenstrukturen dafür nützlich wären? Warum hat er dann diese Algorithmen und Datenstrukturen nicht vom ersten Test an angepeilt? Auch das hätte kleinschrittig mit TDD geschehen können.</p>
+<p>Stattdessen hat er sich sozusagen dümmer gestellt als er war. Er hat sich ganz TDD überlassen in dem Glauben, dass sich durch TDD schon eine Problemlösung ergeben würde. Aber TDD führt nur zu Strukturen, nicht zu Algorithmen. Die Algorithmen, die grundsätzlichen Lösungsansätze, die Modelle, die entstehen im Kopf. Sie sind die Leitsterne für das Voranschreiten mit TDD.</p>
+<p>Da liegt für mich das Wurzelproblem. Nicht nur bei Stefan. Ich bin ja selbst in diese Falle getappt. TDD bietet sich so vollmundig als Design-Werkzeug an, dass wir (und sicher auch andere) ihm auf den Leim gehen und allzuleicht glauben, dass wir uns weitere Gedanken ersparen können. Mit TDD gleich loslegen können: das ist so verlockend.</p>
+<p><strong>Aber TDD ist immer nur so gut wie das Modell, das ich für eine Lösung habe. TDD ist ein Werkzeug, das mir den Weg zu wartbarem Code für ein gegebenes Modell zeigt. TDD ersetzt die Modellierung aber nicht.</strong> Und die lohnt sich eben – wie hier zu sehen ist – auch für ein so kleines Problem wie die KataPotter. Mich lehren meine eigenen und nun auch Stefans Schwierigkeiten deshalb, dass sich ein paar Gedanken zur Lösung immer lohnen. Die Lösung sollte ich im Kopf haben – aber nicht ihre Struktur. Zu der führt mich TDD.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2009-09-23):</p>
+<p>Hallo,</p>
+<p>"TDD ist nur so gut wie das Modell selbst". Dem stimme ich zu, aber aus einem vielleicht etwas überraschenden Blickwinkel.</p>
+<p>Um einen "puren" Algorithmus zu modellieren, gibt es eine ausgezeichnete Modellierungsmethode: Programmiersprachen! Eine "höhere" Modellierungsmethode zu verwenden ergibt also keinen wirklichen Sinn. Daher scheitert, meiner Meinung nach, der Versuch des TDD.</p>
+<p>Einen Algorithmus zu testen, indem man die erwarteten Ergebnisse mit eben diesem Algorithmus ausrechnet, erscheint mir nicht sinnvoll. Die einzig wirklich gute  Methode besteht, z.B. bei numerischen Algorithemen, in einem Test mit analytisch berechenbaren Ergebnisses.</p>
+<p>Im Falle dieser Kata bleibt einem nichts weiter übrig, als sich mit einigen wenigen Ergebniswerten davon zu überzeugen, dass der Code "im Wesentlichen" richtig ist (d.h. keine elementaren Fehler aufweist) evtl. angereichert mit einer Code-Inspektion. Weiterführende Tests sind meiner Meinung nach nicht sinnvoll.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2009-09-23):</p>
+<p>@Anonym: Ich würde das, was ich mit einer Programmiersprache mache, wenn ich einen Algorithmus implementiere, nicht als Modellierung bezeichnen.</p>
+<p>Ein Baum oder ein endl. Automat: das können Modelle sein. Die implementiere ich dann mit einer Programmiersprache.</p>
+<p>Wenn ein Modell nicht "höher" liegt als das Gebiet, für das ich eine Lösung suche, dann ist was im Argen, finde ich. Dann lohnt das "Modell" nicht.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Kai Beck</strong> (2010-02-11):</p>
+<p>Hallo Ralf,</p>
+<p>gestern ist mir ein Flyer in die Hände gefallen. Unter der Überschrift Clean Code Developer stand da doch glatt Test Driven DESIGN. Nach diesem Blogartikel hätte ich für die Abkürzung TDD eher Test Driven DEVELOPMENT dort erwartet.</p>
+<p>Mir ging es bei den ersten Katas ganz ähnlich wie Stefan und Dir. Mit TDD bin ich zu einer gekapselten, testfähigen Lösung gekommen. Aber erst in den folgenden Wiederholungen des gleichen Katas gefiel mir das Design und die Testfälle wirklich gut. Das lag daran, dass ich die Problemdomäne verinnerlicht und die Anforderungen viel besser verstanden habe.</p>
+<p>In echten Entwicklungsprojekten kann ich eine Aufgabe nicht beliebig oft wiederholen. Da hilft es, wenn ich mir vor dem ersten Test u.a. Gedanken über die Schnittstellendefinition mache. Wenn ich dabei schon ins Strudeln gerate, ist das ein Indikator für unklare Anforderungen. Sind die geklärt und vielleicht sogar schon in signifikante User Stories aufgebrochen worden, klappts mit TDD um so schneller.</p>
+<p>Kai</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Was ist eigentlich Kopplung? — ralfw.de Archiv</title>
+<meta name="description" content="Funktionseinheiten von Software sollen lose gekoppelt sein. Das ist ein Prinzip, dass wir alle runterbeten können - aber was bedeutet das denn konkret?">
+<link rel="canonical" href="https://ralfw.de/archiv/2013/was-ist-eigentlich-kopplung/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Was ist eigentlich Kopplung? — ralfw.de Archiv">
+<meta property="og:description" content="Funktionseinheiten von Software sollen lose gekoppelt sein. Das ist ein Prinzip, dass wir alle runterbeten können - aber was bedeutet das denn konkret?">
+<meta property="og:url" content="https://ralfw.de/archiv/2013/was-ist-eigentlich-kopplung/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Was ist eigentlich Kopplung?</h1>
+    <div class="doc-meta"><span>19. Juli 2013</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2013/07/was-ist-eigentlich-kopplung.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2013/was-ist-eigentlich-kopplung/</code></span></div>
+    <div class="art"><p>Funktionseinheiten von Software sollen lose gekoppelt sein. Das ist ein Prinzip, dass wir alle runterbeten können - aber was bedeutet das denn konkret?</p>
+<p>Irgendwie scheint es auch schwer einzuhalten, denn die Mehrheit der Softwaresysteme, die ich sehe, folgt ihm eher nicht. Monolithen sind das Gegenteil von loser Kopplung. Da hilft auch kein Einsatz von Interfaces.</p>
+<p>Also: Was ist (lose) Kopplung und warum ist sie so schwer herzustellen?</p>
+<p>Ein Blick in Wikipedia fördert leider nicht wirklich Hilfreiches zu Tage. <a rel="noopener" href="http://de.wikipedia.org/wiki/Kopplung_(Softwareentwicklung)">Danach ist Kopplung…</a></p>
+<blockquote>
+<p><em>die Verknüpfung von verschiedenen Systemen, Anwendungen, oder Softwaremodulen, sowie ein Maß, das die Stärke dieser Verknüpfung bzw. der daraus resultierenden Abhängigkeit beschreibt.</em></p>
+</blockquote>
+<p>Und danach findet sich eine Liste Kopplungsarten, die ich, hm…, akademisch finde. Nicht falsch, aber eben nicht praxistauglich. Zumindest nicht für den Einstieg.</p>
+<p>Der Eintrag zu loser Kopplung bringt auch nichts, würde ich sagen. <a rel="noopener" href="http://de.wikipedia.org/wiki/Lose_Kopplung">Da steht z.B.</a></p>
+<blockquote>
+<p><em>Eine lose Kopplung bedeutet in der Softwarearchitektur, dass Komponenten einer Software nur über wenige Schnittstellen mit anderen Komponenten kommunizieren bzw. von anderen Komponenten abhängig sind.</em></p>
+</blockquote>
+<p>Wenn es nicht weit her ist mit der losen Kopplung in den heutigen Softwaresystemen, dann ist das kein Wunder, scheint mir. Aus solcher Schwurbelei lassen sich konkrete Maßnahmen nur schwer ableiten.</p>
+<p>Ich versuche deshalb mal, den Begriff alltagstauglich zu fassen.</p>
+<h3>Kopplung konkret</h3>
+<p>Kopplung ist nötig, wenn Kooperation im weitesten Sinn gewünscht ist. Daran geht nichts vorbei. Sollen zwei Funktionseinheiten - Funktionen, Klassen, Bibliotheken, Services, Anwendungen, Softwaresysteme - miteinander arbeiten, dann müssen sie gekoppelt werden.</p>
+<p>Das ist wie bei einer Lokomotive und Waggons. Wenn die Lokomotive Waggons ziehen soll, müssen die an die Lokomotive und untereinander gekoppelt sein, damit sich die Zugkraft überträgt.</p>
+<p>Und auch hier ist die Stärke der Kopplung schon ein Thema. Sie braucht ein rechtes Maß: Ist sie zu lose, fällt der Zug [sic!] leicht auseinander. Ist sie zu fest, zerbricht es den Zug z.B. in Kurven.</p>
+<p>Die erste Frage an eine Kopplung ist also die nach dem Zweck. Das Fragewort ist <strong>Wozu</strong>. Bei Lokomotive und Waggons geht es um Kraftübertragung zum Zwecke der Bewegung. Die Lokomotive ist Zugkraftdienstleister für die Waggons.</p>
+<p>Die Kopplung im Sinne eines Zwecks ist immer eng, würde ich sagen. Weil das der Sinn einer Kopplung ist.</p>
+<p>In allen anderen Belangen jedoch lässt sich die Stärke von Kopplung variieren von eng bis lose.</p>
+<p>Hier meine Liste von solchen Belangen. Ich versehe sie alle mit einem Fragewort, um deutlich zu machen, dass wir uns immer wieder fragen sollten, wie stark die einzelnen Kopplungen denn wirklich sein müssen.</p>
+<ul>
+<li><strong>Wer</strong>: Wer ist es, an den eine Funktionseinheit gekoppelt ist? Ist eine Funktionseinheit an eine konkrete Instanz oder Identität einer anderen gekoppelt? Das Prinzip IoC und die Diskussion um Zustand in Servern drehen sich um diesen Kopplungsbelang.  <strong>Wo</strong>: Ist einer Funktionseinheit der “Ort” der anderen bekannt - egal, wie eng sie an eine Instanz gekoppelt ist. “Orte” sind Speicherbereiche, Prozesse oder Geräte. Dieser Belang hat jedoch zwei Seiten: Adresse und Entfernung. Die <em>Adresse</em> bezeichnet einen Platz in einem Adressraum, das kann ein physikalischer Speicher sein oder ein virtueller Raum wie das Internet. Die Diskussion um DI Container, Warteschlangen und Servicebusse drehen sich um diesen Kopplungsbelang. Die <em>Entfernung</em> hingegen sagt etwas darüber aus, wie leicht/schnell die Kommunikation zwischen zwei Orten stattfinden kann. Wenn Kopplungspartner sich nicht über ihre Hauptspeicheradresse kennen, geht es hier um Transportmedien, Protokolle, Kompression oder Caches.  <strong>Wohin</strong>: Wie ist die Kopplung zwischen zwei Funktionseinheiten gerichtet? Ist sie unidirektional oder bidirektional? Wer muss wieviel vom anderen wissen? Die Diskussion um die Vermeidung zirkulärer Referenzen adressiert diesen Belang. Aber auch bei der reaktiven Programmierung bzw. asynchroner Verarbeitung geht es darum.  <strong>Wann</strong>: Wann erwartet eine Funktionseinheit das Ergebnis einer anderen? Oder ist eine Funktionseinheit daran gebunden, wann ihr Kopplungspartner existiert? Darum geht es bei asynchroner Verarbeitung, Event-Driven Architecture und Cloud-Diensten wie <a rel="noopener" href="http://www.iron.io/worker">ironWorker</a>.  <strong>Womit</strong>: Wie sind die Daten (Parameter, Resultat, globale Daten), aber auch die Dienste strukturiert, auf denen Kopplungspartner arbeiten? Inhaltlich, also in Bezug auf den Zweck (<strong>Wozu</strong>) gibt es da immer eine enge Kopplung (logische Abhängigkeit). Aber bei der Form gibt es Spielraum. Darum geht es u.a. bei dynamischen Programmiersprachen oder NoSql.  <strong>Wie</strong>: Wieviel weiß eine Funktionseinheit darüber, wie es in ihrem Kopplungspartner aussieht? Kann sie algorithmische oder datenbezogene Details kennen - oder nutzt sie sie gar? Ist sie nicht nur an eine Leistung, sondern auch an die Plattform, auf der die erbracht wird, gekoppelt? Wenn über Entkopplung gesprochen wird, dann meist in dieser Hinsicht. Objektorientierung, Information Hiding, Interfaces: das sind Begriffe, die bei der Diskussion über diesen Belang fallen.</li>
+</ul>
+<p>Auf alle W-Fragen zu Belangen der Kopplung kann die Antwort mehr oder weniger spezifisch sein. Je spezifischer aber, desto enger die Kopplung.</p>
+<p>Eine bestimmte Instanz an einer bestimmten Adresse in bestimmter Entfernung, die zu einem bestimmten Zeitpunkt vorhanden sein muss und zeitlich in bestimmter Spanne mit ganz bestimmten Strukturen in einer ganz bestimmten Struktur in genau bestimmter Weise arbeitet… an die ist die Kopplung eben sehr, sehr eng.</p>
+<p>Oder eben umgekehrt ist die Kopplung lose, wenn die Antworten unbestimmter ausfallen. Wenn Instanzen egal sind, wenn nicht genau gewusst werden muss, wo und in welcher Entfernung sind sie befinden. Wenn der Zeitpunkt ihrer Existenz und ihrer Antwort nicht festgeschrieben sein müssen. Wenn die Datenstrukturen und Aufrufstrukturen nicht in Beton gegossen sind. Und wenn es egal ist, wie im Detail die Leistung erbracht wird.</p>
+<p>Wenn Sie dem Prinzip der losen Kopplung folgen wollen, dann stellen Sie sich am besten immer wieder diese Fragen. Bemühen Sie sich, die Antworten möglichst allgemein, offen, locker zu halten. Als Gewinn winken höhere Evolvierbarkeit und bessere Testbarkeit.</p>
+<p>Aber auch ein Preis ist zu bezahlen. Lose Kopplung ist eine Form von Flexibilität. Das sehen Sie an der Verbindung zwischen Waggons. Flexibilität jedoch steht im Gegensatz zu Effizienz. Wo Sie lose koppeln, leidet also irgendeine Form von Effizienz. Das könnte die Entwicklungsgeschwindigkeit sein oder die Performance der Software. Das ist nicht zu vermeiden.</p>
+<p>Lose Kopplung gibt es also nicht umsonst, sondern nur in einem Trade-off mit anderen Werten. Seien Sie sich derer also bewusst. Und denken Sie nicht nur an heute, sondern auch an morgen und übermorgen.</p>
+<p>Deshalb ist für mich der default, im Zweifelsfall eher in lose Kopplung zu investieren, also in Flexibilität, denn in Effizienz. Das scheint mir nachhaltiger.</p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2013-07-22):</p>
+<p>"Und danach findet sich eine Liste Kopplungsarten, die ich, hm…, akademisch finde. Nicht falsch, aber eben nicht praxistauglich."</p>
+<p>Dieser Post fällt aber leider in die gleiche Kategorie - in der Praxis hilft er mir kein Stück weiter.</p>
+<p>Es fehlen einfach konkrete Verhaltensregeln, je allgemeiner und abstrakter die Beschreibung wird, desto praxisuntauglicher wird sie zum gleichen Zeitpunkt.</p>
+<p>Wenn Softwareentwicklung dem Beispiel des Handwerks folgen soll, dann müssen konkrete Verhaltensregeln her. Ein Maurer interessiert sich nicht für den Ursprung der Gravitation, oder der genauen Bestimmung von Gravitationskräften und was die resultierenden Kräftevektoren sind. Er hängt ein Lot auf, oder benutzt die Wasserwaage und "gets the job done".</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-07-23):</p>
+<p>Schade, dass für dich die W-Fragen mit den Beispielen für dich kein Stück konkreter sind.</p>
+<p>Die konkreten Verhaltensregeln allerdings kannst du nicht unbedingt von einem Artikel mit der Überschrift "Was ist eigentlich Kopplung" erwarten. Dafür müsste sie eher lauten "Tipps &amp; Tricks zur Vermeidung von enger Kopplung" oder so.</p>
+<p>Das sind ja eh die beliebtesten Postings, die mit "Tipps &amp; Tricks" überschrieben werden. Alle wollen ja ganz schnell Abhilfe fürs Handwerk. Tun, machen, wegschaffen - nicht so gern nachdenken und verstehen.</p>
+<p>Verständlich - nur leider sind so weder Pyramiden noch Kölner Dom entstanden. Und schon gar nicht der Eiffelturm oder der Burj Al Arab.</p>
+<p>Auch wenn da Handwerker mitgearbeitet haben mit Wasserwaage und Lot bzw. ihren modernen Pendants, sind diese Bauwerke zunächst einmal Leistungen von Ingenieuren. Und die interessieren sich sehr wohl für Gravitation und andere Kräfte im Zusammenspiel mit unterschiedlichen Materialien.</p>
+<p>Wenn du intuitiv genauso mit den Kräften in der Software umgehst, wie ein mittelalterlicher Handwerker mit Gravitation und Reibung, dann können wir gern wieder über die Reduktion der Softwareentwicklung auf das Handwerk reden. Einstweilen glaube ich jedoch daran, dass mehr Nachdenken und Hintergrundwissen und Ingenieursarbeit nötig ist.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why UML got it wrong - Abstraktion vs Modell — ralfw.de Archiv</title>
+<meta name="description" content="Jetzt hab ich es endlich, was mich an der UML stört. Es ist nicht mal ihre Aufgeblasenheit, sondern ihr falsches Versprechen. Die UML verspricht eine Vereinheitlichung von Modellie">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/why-uml-got-it-wrong-abstraktion-vs/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Why UML got it wrong - Abstraktion vs Modell — ralfw.de Archiv">
+<meta property="og:description" content="Jetzt hab ich es endlich, was mich an der UML stört. Es ist nicht mal ihre Aufgeblasenheit, sondern ihr falsches Versprechen. Die UML verspricht eine Vereinheitlichung von Modellie">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/why-uml-got-it-wrong-abstraktion-vs/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Why UML got it wrong - Abstraktion vs Modell</h1>
+    <div class="doc-meta"><span>23. Juni 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/06/why-uml-got-it-wrong-abstraktion-vs.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/why-uml-got-it-wrong-abstraktion-vs/</code></span></div>
+    <div class="art"><p>Jetzt hab ich es endlich, was mich an der UML stört. Es ist nicht mal ihre Aufgeblasenheit, sondern ihr falsches Versprechen. Die <a rel="noopener" href="http://de.wikipedia.org/wiki/Unified_Modeling_Language">UML</a> verspricht eine Vereinheitlichung von Modellierungsansätzen. Doch leider ist viel weniger Modellierung drin als suggeriert, wo Modellierung so fett gedruckt drauf steht.1</p>
+<p>Dazu muss ich aber erklären, wie ich Modellierung verstehe – und was die UML stattdessen bietet.</p>
+<h3>Abstraktion</h3>
+<p>Bevor ich zu Begriff Modell komme, zunächst etwas über einen anderen Begriff, der etwas mehr Aufmerksamkeit verdient: Abstraktion. <a rel="noopener" href="http://de.wikipedia.org/wiki/Abstraktion">Wikipedia sagt</a>, Abstraktion sei der “<a rel="noopener" href="http://de.wikipedia.org/wiki/Induktion_(Denken)">induktive[] Denkprozess</a> des Weglassens von Einzelheiten und des Überführens auf etwas Allgemeineres oder Einfacheres”.</p>
+<p>Abstraktion hat also mit Detaillierungsgrad zu tun. Wenn die Darstellung von etwas einmal mehr und einmal weniger Details enthält, dann ist sie einmal weniger und einmal mehr abstrakt. Das Gegenteil von abstrakt/allgemein ist also detailreich/konkret.</p>
+<p>Einige Beispiele für abstrakt(er) vs konkret(er):</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/387e45cdb880cabb.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f3ffadb2353ff95d.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d1f2a70c4ac5055b.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/7dbd970a4d5de8a9.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/de14c7c533d84570.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9383bd5fc5bc535a.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d895924ac023ce50.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a984e474439f15fb.png" /></p>
+<p>Darstellungen auf unterschiedlichem Abstraktionsniveau haben also mehr oder weniger Details. Dazu kommt allerdings noch eine vermeintliche Feinheit: Bei der Abstraktion bleibt man in der Domäne. Im ersten Beispiel (Karte) ist in der abstrakten wie in der konkreten Darstellung bei allem Unterschied im Detailreichtum von denselben Dingen die Rede; es geht um Straßen, Gewässer, Häuser usw. Dito beim letzten Beispiel: auch in der sehr abstrakten Schemazeichnung des Motors geht es um dieselben Dinge wie Zylinder, Kurbelwelle, Zündkerzen usw. wie beim konkreten Motor.</p>
+<p>Bei gegebener Domäne stellen wir mit dem Abstraktionsregler also “nur” den Detailreichtum einer Darstellung ein. Manchmal ist das einfach, wie bei Karte oder Schemazeichnung. Manchmal schwieriger wie beim Artenbaum (Beispiel 2); Pflanzenarten sind Verallgemeinerungen von Merkmalsmengen. Die mussten erstmal gefunden werden. Von einer konkreten Straße auf eine bunte Linie zu abstrahieren, ist einfacher, als von tausenden Pflanzen auf ihre Arten.</p>
+<p>Am Ende ist der Artenbaum jedoch auch “nur” eine Abstraktion. In ihm geht es um Pflanzen wie bei der Betrachtung einer einzelnen Rose.</p>
+<h3>Modell</h3>
+<p>Bisher bin ich mit dem Begriff Modell zu leichtfertig umgegangen. Als Beispiel habe ich oft eine Karte herangezogen. Das ist genau genommen aber falsch. Darum geht es mir in diesem Artikel.</p>
+<p>Modelle sind auch detailreduzierte Darstellungen von etwas Konkretem. Doch sie sind anders als Abstraktionen, weshalb sie einen anderen Begriff verdienen. Modelle verlassen zur Vereinfachung der Darstellung die Domäne des Beschriebenen. Das “Material”, aus dem Modelldarstellungen sind, ist sozusagen ein anderes als bei Abstraktionen.</p>
+<p>In der Abstraktion einer Stadt kommen Straßen, Gebäude, Wasserflächen vor; in einem Modell einer Stadt wäre das nicht so. In der Abstraktion eines Motors kommen Zylinder und Kurbelwelle vor, in einem Modell eines Motors nicht.2</p>
+<p>Abstraktionen dienen der Verständlichmachung, dem Überblick. Die Vielfalt der Details wird reduziert, damit das Konkrete sozusagen in unseren Kopf passt. Wenn das reicht, dann ist es ok. Dann arbeiten wir mit Abstraktionen, um konkrete Problemlösungen zu entwerfen. Abstraktionen sind ein altes Mittel der Planung. Allemal Karten gibt es schon viele Jahrtausende.</p>
+<p>Was aber, wenn die Abstraktion nicht reicht? Dann muss ein anderes Verallgemeinerungsmittel her, ein Modell. Natürlich beschreibt ein Modell wieder etwas Konkretes – doch mit anderen Mitteln. Hier einige Beispiele für Modelle:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/33ada80129163046.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e34947f4d7075a7c.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a35b7ce1df0cea38.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/8969fe1e1a5ab5d8.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/cfafe59f68eb4759.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2db2445fdd05fa2c.png" /></p>
+<p>Dem Modell von einem Pendel ist nichts “Pendelhaftes” anzusehen, dem Zustandsautomaten ist nichts “Maschinenmäßiges” anzusehen; und selbst das neuronale Netz ist keine Abstraktion eines realen neuronalen Netzes, sondern ein Modell, weil darin keine Neuronen mehr vorkommen.</p>
+<p>Modelle bilden das Modellierte natürlich ab, sie enthalten eine Essenz daraus. Modelle sind also an das Konkrete gebunden. Sie erfüllen darauf bezogen ja einen Zweck. Deshalb ist irgendwie natürlich das Konkrete auch im Modell vertreten. Allerdings nicht einfach durch Reduktion des Detailgrades, also eine veränderte Quantität, sondern durch eher durch Analogie, also eine andere Qualität.</p>
+<p>Die Abstraktion Karte hat den Anspruch, die Realität zu sein – nur nicht komplett. Ein Modell hingegen hat nur den Anspruch wie ein Ausschnitt der Realität zu funktionieren oder ihn zu erklären.</p>
+<p>Das wird deutlich, wenn ich ein Modell einer Abstraktion gegenüberstelle:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/ff34f1d79727a5a2.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/236d53cd6805dc77.png" /></p>
+<p>Das Konkrete ist Deutschland mit seinem ganzen Leben und Weben. Das ist natürlich hier nicht darstellbar, also abstrahiere ich mit einer Karte. Das Organigramm für die Verwaltungsstruktur der Luftfahrt bezieht sich auf einen winzigen Ausschnitt des Konkreten – allerdings nicht mehr mit Mitteln der Abstraktion. In den Kasten “Deutscher Wetterdienst” kann man nicht hineinzoomen, da kommen nicht irgendwann Gebäude und dann der Deutsche Wetterdienst in de Blick. Es gibt nicht einmal einen konkreten Ort im Gewusel Deutschlands, an dem der Wetterdienst einzig existiert. Das Organigramm ist daher “nur” ein Modell, es erklärt eine Facette von Deutschland.</p>
+<h3>UML und die Modellierung</h3>
+<p>Mit diesen Definitionen von Abstraktion und Modell in der Hand ein Blick auf die UML 2.0. Sie definiert <a rel="noopener" href="http://www.oose.de/downloads/umlnotationsuebersicht2.pdf">eine ganze Reihe von Diagrammen</a> für die sich zu prüfen lohnt, ob sie tatsächlich etwas mit Modellierung zu tun haben.</p>
+<p>Dazu ist natürlich erst einmal festzustellen, was denn modelliert werden soll. Was ist das Konkrete? Denn zwischen Modell und Abstraktion kann nur in Bezug auf Konkretes unterschieden werden.</p>
+<p>Für mich als Softwareentwickler ist das Konkrete Quellcode und all die Artefakte, die ich sonst noch erzeuge (z.B. Datenbank, Datendatei, Assembly).</p>
+<p>Wie steht es mit den <a rel="noopener" href="http://www.oose.de/downloads/umlnotationsuebersicht2.pdf">UML Diagrammtypen</a> in dieser Hinsicht?</p>
+<pre><code>**Diagrammtyp** **Einsatzgebiet**  Anwendungsfälle Modell  Klassen und Objekte Abstraktion  Beziehungen Abstraktion/Modell  Pakete Abstraktion  Deployment Abstraktion  Komponenten Abstraktion  Zustandsdiagramm Modell  Kommunikationsdiagramm Abstraktion  Timingdiagramm Abstraktion  Aktivitätsdiagramm Abstraktion  Interaktionsübersicht Abstraktion  Sequenzdiagramm Abstraktion
+</code></pre>
+<p>Hm… das sind nicht viele modellierungsrelevante Diagrammtypen in der UML. Sie sollte vielleicht besser UAL heißen: Unified Abstraction Language ;-)</p>
+<p>Achtung: Das ist kein Qualitätsurteil. Abstraktion ist sehr nützlich. Die abstraktionsrelevanten Diagrammtypen haben ihren Wert. Nur sollte man sie eben nicht mit Modellierungswerkzeugen verwechseln.</p>
+<p>Wenn das Konkrete Klassen, Methoden, Objekte, Objektreferenzen etc. sind, dann sind alle Diagramme, in denen Klassen, Methoden, Objekte, Objektreferenzen etc. vorkommen – egal in welchem Detaillierungsgrad – “nur” Abstraktionen.</p>
+<p>Auch nett, nur eben keine Modelle. Ihnen fehlt also etwas, das wir in Modellen suchen.</p>
+<h3>Warum Modelle so wichtig sind</h3>
+<p>UML ist deshalb für mich knapp daneben, weil sowenig “echte” Modellierung drin steckt. Schön, dass wir Code damit abstrakter aus verschiedenen Blickwinkeln darstellen können – aber um Kompliziertes, nein, Komplexes entwerfen und darstellen zu können, ist mir das zuwenig.</p>
+<p>Abstraktionen bieten mir schlicht, ähm, zuwenig Abstraktion :-) Bei Abstraktionen bin ich immer gezwungen, in der Domäne des Konkreten zu bleiben. Das bedeutet, ich muss mich ewig mit Klasse, Methoden, Objekte, Assemblies herumschlagen.</p>
+<p>Wenn die damit sonst in der Welt zufrieden gewesen wären, hätten wir immer noch einen technischen Stand auf dem des Barock. Mit der Mathematik als universeller Modellierungssprache jedoch… damit konnten wir im wahrsten Sinn des Wortes abheben.</p>
+<p>Und dasselbe ist uns auch schon in der Softwareentwicklung gelungen. SQL und reguläre Ausdrücke sind aus meiner Sicht Beispiele dafür, oder Prolog, neuronale Netze, Zustandsautomaten. Mathematische Ansätze und DSLs haben uns in einigen Bereichen sehr voran gebracht. Heute kann jeder einen Compiler mit ANTLR zusammenbasteln dank Zustandsautomaten und EBNF. Und auch die Abfrage komplizierter Datenbestände ist mir SQL kein Hexenwerk.</p>
+<p>Für die meisten Softwareproblemstellungen gibt es jedoch kein allgemein anerkanntes Modellierungsverfahren. Und damit meine ich nicht einmal, dass Code soweit modelliert werden soll, dass man am Ende keine Zeile C# mehr schreiben muss.</p>
+<p>Schade. Denn Modellierung spart viel Zeit. Was man nicht modelliert, das muss man sofort konkret umsetzen. (Naja, ein bisschen Hilfe durch eine Abstraktion kann auch noch dabei sein.) Am schwierigsten ist es aber immer, das Konkrete richtig hinzukriegen.</p>
+<p>Zwar zählt am Ende nur das Konkrete, der funktionierende Motor, die laufende Software. Aber wenn man immer nur auf dem Konkreten rumrutscht, sind Veränderungen mühsam. Das ist, als hätte man keine Karte und bewegt sich in unbekanntem Terrain. Das geht – aber es ist mühsam.</p>
+<p>Feldherren sitzen daher traditionell erhöht oder haben heute Satellitenunterstützung. Im konkreten Schlachtengetümmel lassen sich einfach manche Entscheidungen nur schlecht treffen.</p>
+<p>Abstraktionen bieten, wie gesagt, mir nicht genug. Sie fesseln mich zu sehr an das Konkrete. Wenn ich eine Softwarelösung plane, will ich so lange wie möglich nicht über Details wie Klassen oder technologische Feinheiten wie WCF nachdenken. Nicht “gar nicht”, sondern nur “solange wie möglich nicht”.</p>
+<p>UML erinnert mich einfach früher als hilfreich immer wieder an Details. Deshalb sind mir UML-Abstraktionen zu wenig; ich will echte Modelle.</p>
+<p>Wie könnte es anders sein – der aufmerksame Leser meines Blogs wird es sich schon gedacht haben ;-) - scheint mir nun Flow-Design solche Modellierung zu ermöglichen. Denn damit kann ich Funktionalität beschreiben, ohne an Codekonkretheit denken zu müssen. In einem Flow-Design Modell tauchen keine Klassen auf. Die Übersetzung in Code ist ein separater Schritt. Darin gleicht Flow-Design SQL oder Zustandsdiagrammen.</p>
+<p>Dass ein Flow-Design kein vollständiges Programm beschreibt, sondern nur einen Grobentwurf darstellt, ist dabei kein Nachteil, sondern eine Tugend. Modellierung soll Codierung nicht ersetzen, sondern sie erleichtern. Sprache wie C# sind zur Beschreibung mancher Lösungsaspekte gut geeignet, für andere nicht. (Wer anders denkt, sieht in 3GLs schon eine Silberkugel.) Also scheint es mir konsequent, C#, F#, VB, Java, C++ usw. zu komplementieren. Abstraktionen sind dafür aber nicht geeignet, weil sie ja die Domäne der Sprachen nicht verlassen. Also müssen Modelle her.</p>
+<p>Die Frage ist für mich deshalb nicht, ob wir zu unseren 3GLs noch Modelle brauchen, sondern welche. Flow-Design ist mal ein Vorschlag, der für mich und viele andere vielversprechend ist.</p>
+<p><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY"></a><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY">Spendieren Sie mir doch einen Kaffee, wenn Ihnen dieser Artikel gefallen hat…</a></p>
+<p>PS: “Why UML got it wrong” schießt natürlich über das Ziel hinaus. Aber “Why UML is not enough” klingt nicht so knackig ;-) Für etwas mehr Aufmerksamkeit habe ich mir daher eine polemische Vereinfachung erlaubt.</p>
+<h4>Fußnoten</h4>
+<p>1 Ob die UML überhaupt <em>eine</em> Sprache ist (“”) oder nicht vielmehr ein Konglomerat an Sprachen, ließe sich auch diskutieren. Ebenso, ob es überhaupt sinnvoll ist, graphische Beschreibungsmittel für so unterschiedliche Aufgaben wie Spezifikation, Konstruktion und Dokumentation unter einem Dach zusammenzufassen. Aber davon vielleicht ein andermal.</p>
+<p>2 Hier wird deutlich, dass ich offensichtlich etwas anderes mit Modell meine als ein Modellbauer. Wer das Modell eines Motors zusammenbastelt, hält natürlich Zylinder und Kurbelwelle in der Hand. An dieser Stelle würde ich einen Modellbausatz für einen Motor deshalb nicht Modell nennen, sondern Abstraktion. Wer mit Kleber und Farbe an einem Motor aus Plastik im Maßstab 1:10 bastelt, der hat einen “Abstraktionsbausatz” vor sich.</p>
+<h2>Kommentare</h2>
+<p><strong>pvblivs</strong> (2011-06-23):</p>
+<p>Hallo Ralph,</p>
+<p>ich meine, dass Deine Interpretation der Unterschiede von Modell und Abstraktion über Material und Domäne sehr eigenwillig sind. Ich würde es eher über den Zweck festmachen.</p>
+<p>Als Herleitung des Begriffs Modell mag ich den Maßstabsbegriff "modulo". Modelle dienen immer einem ganz unterschiedlichen Zweck und einen anderen nicht. Z.B. gibt es Windkanalmodelle, Spielzeuge, Vorbilder oder Prototypen. Gemein ist ihnen, dass sie ein kleineres, handhabbares Abbild von etwas schaffen und (da stimmen wir überein) Details weglassen die für den Zweck nicht von Belang sind. Vorbilder (role models) z.B. sind auch nur eine Vereinfachung. Niemand versucht Vorbilder in ihrer Gänze zu verstehen, sondern man sucht sich etwas heraus, das einem gefällt und nimmt das als Vorbild. Das "Big Picture" ist hier meist unwichtig.</p>
+<p>Abstraktion dagegen haben meist einen Zweck: Das Gesamte (Big Picture) beschreiben, indem vermeintlich unwesentliches weggelassen wird. Wenn für das Verständnis der politischen Karte nicht sinnvoll ist, Flüsse einzuzeichnen, wird man es nicht tun.</p>
+<p>Aber auch das Modell eines Gebäudes soll häufig ein Gesamtverständnis schaffen, es hat beschreibenden Charakter.</p>
+<p>Insofern überschneiden sich Abstraktionen und Modelle oft. Abstraktion ist nicht ungleich Modell. UML-Diagramme sind Abstraktionen und Modelle. Ob solche Modelle sinnvoll sind, ist eine ganz andere Frage - und das stellst Du ja auch in Frage.</p>
+<p>Für meinen Geschmack sollten wir uns eher fragen "was wir modellieren sollten". Deswegen verwendet man oft verschiedene Werkzeuge. Zum einen ist es wichtig, die Geschäftsprozesse zu verstehen (Flows?), zum anderen ein Stück betriebene Software in seiner Umgebung zu verstehen.</p>
+<p>Der Unterschied zwischen Abstraktion und Modellen hilft meinem Verständnis da nicht weiter. Er lenkt eher ab vom Wesentlichen. Und das ist für mich "welches Problem will ich lösen?". Dabei kann ich hypothesengetrieben arbeiten und ein Modell bauen (z.B. einen Prototypen für Lasttest oder ein Bild das zeigt, dass ich Geschäftsprozesse grundsätzlich einfach abbilden kann) oder aber ich male mir ein Bild, schreibe einen Text oder 3 gelbe Zettel um das Problem erstmal Schritt für Schritt in seiner Gänze zu verstehen ohne ins Detail gehen zu müssen.
+Die Tools können dafür oft die gleichen sein, müssen sie aber nicht. UML würde ich heutzutage auch nur noch selten verwenden ;-)</p>
+<p>Grüße
+Stefan</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-06-23):</p>
+<p>@Stefan: Dass Modelle einen Zweck haben und nur einen Aspekt des Konkreten modellieren, sehe ich auch so. Steht auch in im Artikel drin.</p>
+<p>Aber Abstraktionen haben auch einen Zweck. Eine Karte der Wasserwege ist für den Zweck "Schifffahrt" gedacht, eine Karte der Bodenschätze für den Zweck "Bergbau" usw.</p>
+<p>Ein echtes Modell eines Flusses jedoch (ich meine ein mathematisches Modell, keinen maßstabsgetreuen Nachbau), das dient auch z.B. dem Zweck "Schifffahrt" - hat aber eine andere "Qualität". Bergbaukarte und Wasserweggekarte unterscheiden sich nicht fundamental - aber Flussmodell und Wasserwegekarte schon.</p>
+<p>Auf diesen Unterschied will ich hinaus. Modelle (in meinem Sinn) helfen für bestimmte Zwecke besser oder überhaupt. Abstraktionen reichen nicht immer.</p>
+<p>Die Verwechslung der Abstraktion eins Klassendiagramms mit einem Modell ist ein Beispiel. Immer wieder wunderder man sich, wie wenig so ein Klassendiagramm bringt. Warum versteht man so wenig von der Software wenn man darauf starrt? Liegt das daran, dass es nur statisch ist? Ja, auch. Aber vor allem bringt es so wenig, weil es keinen "Hub erzeugt"; der Unterschied zwischen Coderealität und Klassendiagramm ist vernachlässigbar. Im Code sind Klassen, im Klassendiagramm auch.</p>
+<p>Wenn ein Klassendiagramm aus beliebigem legacy Maschinencode generiert werden könnte... ja, das wäre was anderes. Da könnte es etwas bringen, weil es gegenüber der Realität ein Modell wäre (weil in dem Code keine Klassen drin sind). Bei C#, Java usw. jedoch, sind Klassendiagramme nur müde Abstraktionen.</p>
+<p>Abstraktion und Modell teilen Eigenschaften. Dennoch trenne ich sie. Das verschafft mir, wie ich finde, einen Erklärungsvorteil.</p>
+<p>Das Tool beantwortet natürlich nie die Frage, was du damit machen willst. Ein Hammer liegt einfach nur rum; du musst ihn einem Zweck zuführen. Deshalb ist die Frage, was wir modellieren wollen, unabhängig von meiner Sichtweise.</p>
+<p>Auch ist egal, was du auf deine Zettel malst. Benutze eine Notation wie du willst. Symbolisiere, was du willst. Wenn es dir hilft, ist doch alles gut.</p>
+<p>Trotzdem solltest du nicht Modell und Abstraktion zusammenwürfeln.</p>
+<p>Wenn du mir deinen Zettelberg zeigst und sagst, was das Konkrete dahinter ist, dann sage ich dir, ob du ein Modell oder eine Abstraktion "angezettelt" hast ;-)</p>
+<p>In dem Moment ist das natürlich relativ uninteressant. Aber im Allgemeinen ist das anders. Wir können dann vielleicht etwas von deiner Zettelei lernen. Meine These:</p>
+<p>Die Leute malen am ehesten Abstraktionen - weil sie halt nicht über das Konkrete hinausdenken. Deshalb scheitert am Ende auch MDA. Wir können nicht alle unsere eigenen DSLs entwickeln. Denn DSLs sind gewöhnlich Modellierungswerkzeuge.</p>
+<p>Mehr Nutzen ziehen die Leute jedoch aus Modellen. SQL und RegEx sind meine Zeugen. Gerade SQL ist viiiiel weiter in Gebrauch als jedes UML Diagramm. Warum? Weil SQL modelling power hat :-)</p>
+<hr />
+<p><strong>pvblivs</strong> (2011-06-23):</p>
+<p>Hmm, ich weiß nicht ob mir das etwas hilft, zu wissen, dass man DSLs als Modelle betrachten kann.</p>
+<p>Persönlich glaube ich, dass DSLs deshalb so mächtig sind, weil sie es schaffen, eine bestimmte Abstraktionsebene zu erreichen und sie auch durchzuhalten. Z.B. die Ebene einer Datenabfrage, oder einer Abhängigkeitsbeschreibung.</p>
+<p>Der Erfinder des Modells muss entscheiden, was am Modell relevant ist, d.h. was das Modell beschreibt und was nicht (was durch den Kontext, bei SQL z.B. die konkrete Datenbank ergänzt wird).</p>
+<p>Diese Entscheidung zwischen Modell und Kontext, was gehört wohin, das ist die Abstraktion. Das Modell ist das Ergebnis, der Nutzen des Modells ("die Usability") bestimmt sich vorranging an der Qualität seiner Abstraktion.</p>
+<p>Und ich behaupte, dass die Flusskarte und das Flussmodell beides Modelle sind. Es ist interessant, dass als Beispiele für Modelle häufig physikalische Repräsentationen gewählt werden, als Beispiele für Abstraktion aber Denkprozesse. In Deinem Beispiel hast Du das fast völlig auf den Kopf gestellt - auch wenn, zugegeben, das mathematische Modell des Flusses trotzdem ein Modell bleibt.</p>
+<p>Also nochmal: Es mag Dir helfen, aber es hilft mir leider nicht. Ich verstehe in welche Richtung Du denkst, ich verwende den Begriff der Abstraktion aber anders. Er ist mehr der Weg und das Modell als Abbild der Realität dann vielleicht das Ziel.</p>
+<p>Mir hilft es deshalb zu wissen, was der Zweck ist: Das Modell Flusskarte dient der Navigation, das Modell Flussmodell (wenn es Dir um dieses geht, Googlen dazu ist sehr interessant) z.B. dem Verständnis von Strömungen, Verwirbelungen, Untiefen, vielleicht Einflüsse von Jahreszeiten.</p>
+<p>Genauso dient das UML-Klassendiagramm eigentlich aus meiner Sicht nur dem einfacheren Überblick - und da es kaum gute Tools gibt ist es eben fast unnütz. Es ist eben ein Modell, dass Geschäftsprozesse ausblendet. Das ist der Kontext, der Rest, in dem das Modell valide ist, denn ein Modell sollte valide sein sonst ist es kein Abbild der Realität mehr.
+Eine Prozess- oder Flow-Beschreibung blendet eben Implementierungen aus. Und der Grund, warum das gut ist, ist nicht, weil es keine Abstraktion darstellt (doch!) im Gegensatz zu UML (falsch!) ein Modell ist. Der Grund warum es gut ist, ist, weil das Strukturieren in Klassen eine Form der Premature Optimization ist (oder Premature Design?). Während der von Dir beworbene Flow möglichst nah am Geschäftsprozess ist, der auch abgebildet werden soll.</p>
+<p>Ich glaube, deswegen lese ich auch die Flow-Posts. Weil Flow-Beschreibungen näher am Kunden sind und ich verstehen will, wie ich sie einsetzen kann. Nicht wegen einer haarspalterischen Kategorisierung, die jeder anders verstehen wird als Du oder ich es tun. Es dient also vielleicht Dir - aber erklären können wir es dann nicht, weil der Empfänger nicht kompatibel ist. Ist es also nützlich? - nein. Ok, das war jetzt eine steile Hypothese ;-)</p>
+<hr />
+<p><strong>ToniG</strong> (2011-06-26):</p>
+<p>Hallo Ralph,</p>
+<p>was mich an UML stört ist, dass es vollkommen von Medienbrüchen eingeschlossen ist.</p>
+<p>Anforderung # UML # Code</p>
+<p>Viele Anwender lehnen die Beschäftigung mit den "zu technischen" UML-Diagrammen rundweg ab. Selbst technik-affine Anwender können anhand eines UML-"Modells" kaum erkennen, ob der Ersteller die Anforderung ansatzweise verstanden hat. So stochert ein Entwickler weiterhin im Nebel.</p>
+<p>Andererseits gibt es kaum Möglichkeiten aus den UML-Diagrammen Code zu generieren bzw. umgekehrt noch weniger Möglichkeiten die UML-Diagramme automatisiert aus Legacy Code erstellen zu lassen. So spart UML für einen Entwickler keinen Aufwand, im Gegenteil es erfordert Arbeitszeit, der kaum Nutzen gegenüber steht.</p>
+<p>Grüße, Toni</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

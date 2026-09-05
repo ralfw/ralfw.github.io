@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vergleich von Flow-Designs für Kata Ordered Jobs — ralfw.de Archiv</title>
+<meta name="description" content="So unterschiedlich können Flow-Designs sein. Ich hatte es schon geahnt, doch nun ist es öffentlich.">
+<link rel="canonical" href="https://ralfw.de/archiv/2013/vergleich-von-flow-designs-fur-kata/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Vergleich von Flow-Designs für Kata Ordered Jobs — ralfw.de Archiv">
+<meta property="og:description" content="So unterschiedlich können Flow-Designs sein. Ich hatte es schon geahnt, doch nun ist es öffentlich.">
+<meta property="og:url" content="https://ralfw.de/archiv/2013/vergleich-von-flow-designs-fur-kata/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Vergleich von Flow-Designs für Kata Ordered Jobs</h1>
+    <div class="doc-meta"><span>10. Dez. 2013</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2013/12/vergleich-von-flow-designs-fur-kata.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2013/vergleich-von-flow-designs-fur-kata/</code></span></div>
+    <div class="art"><p>So unterschiedlich können Flow-Designs sein. Ich hatte es schon geahnt, doch nun ist es öffentlich.</p>
+<p><a rel="noopener" href="http://blog.ralfw.de/2013/11/mitmachen-flow-designs-gesucht.html">Am 1.11.2013 hatte ich ermuntert</a>, Flow-Designs für die Kata Ordered Jobs “einzureichen”. Auslöser dahinter war ein Flow-Design, dass Entwickler eines Kunden von mir in einem Coding Dojo unter sich erarbeitet hatten. Sie wollten einfach Flow-Design üben. Das sah so aus, als sie mich schließlich um Rat fragten:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2c4cb0532d372627.png" /></p>
+<p>Was mich daran überraschte: Dem Lösungsansatz ist nicht anzusehen, um welches Problem es eigentlich geht. “Process”, “Release”, “Save”, “Output” sind ganz allgemeine Begriffe. Auch der fließende “Job” erhellt nicht wirklich, wie (!) die Lösung funktioniert. Die Musik spielt in “Process” – aber genau die Funktionseinheit wurde nicht verfeinert.</p>
+<p>Ob das auch anderen Interessenten an Flow-Design so geht/gehen würde? Das wäre schade, denn ich glaube, so führt Flow-Design zu keiner großen Verbesserung der Verständlichkeit und Evolvierbarkeit von Software.</p>
+<p>Es ist ja gerade der Trick an Flows, dass bei ihnen die Syntax so minimal ist, dass sie eine Domänensemantik nicht verrauscht.</p>
+<p>Fünf “Einsendungen” hat es dann auf meinen Aufruf hin gegeben. Vielen Dank an die fleißigen Entwerfer! Die möchte ich hier allerdings nicht in ihrer Funktionstauglichkeit bewerten, sondern nur formal gegenüberstellen. Wie sich zeigt, gibt es nämlich mehrere Aspekte, in denen sie sich unterscheiden.</p>
+<h3>Darstellung</h3>
+<p>Flow-Design setzt auf… Flüsse. Der Name ist Programm. Die können handgemalt sein wie oben oder in einem Tool wie Visio ordentlich “gesetzt” werden:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/9882d8c27fcd265e.png" /></p>
+<p>Überrascht hat mich daher die folgende Darstellung:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/8a109d3f5c13e127.png" /></p>
+<p>Aber nicht wegen der “squiggly lines” bin ich überrascht, sondern wegen der Gewichtung der Darstellung. Hier sind zwar auch Pfeile im Spiel und stehen für Datenflüsse. Doch prominenter scheinen mit die Abhängigkeiten. Da ist ein DGraph von mehreren Flow-Funktionseinheiten abhängig. Oder? Nein, umgekehrt. Jetzt sehe ich es: Die Funktionseinheiten sind vom DGraph abhängig. Ich war nur einen Moment verwirrt, weil die Abhängigkeiten von unten nach oben zeigen. Das ist eher ungewöhnlich (in Flow-Designs allemal), finde ich.</p>
+<p>Im oberen Entwurf gibt es auch eine Abhängigkeit (zu “nextOrderNumber”). Doch die ist zurückhaltender dargestellt; sie steht dem Fluss nicht im Weg.</p>
+<p>Die Darstellung bzw. Gewichtung von Abhängigkeiten unterscheidet sich also in Flow-Designs durchaus. Das ist bis zu einem gewissen Grad auch ok, finde ich. Doch wenn die Abhängigkeiten scheinbar die Oberhand gewinnen, wenn der Fluss nicht mehr im Vordergrund steht, dann finde ich einen Vorteil von Flow-Design verschenkt.</p>
+<h3>Detaillierungsgrad</h3>
+<p>Wie das erste Diagramm zeigt, können Flow-Designs sehr unspezifisch sein. “Process” passt auf nahezu jedes Problem. Ähnlich empfinde ich aber auch noch bei “Sort” im dritten Diagramm – zumindest solange dann nicht weiter verfeinert wird. So bleibt die Lösung im Dunkeln; die Last liegt voll auf der Codierung und ist damit die Verantwortlichkeit nur eines Entwicklers.</p>
+<p>Dito im folgenden Entwurf, wo noch klarer wird, dass die Aufgabe eigentlich nicht vom Flow, sondern von der Datenstruktur DGraph gelöst wird. So eine Datenstruktur samt Algorithmus zur topologischen Sortierung “einzukaufen”, ist natürlich legitim. In der Praxis würde man es womöglich sogar anstreben, um sich eigenen Aufwand zu sparen. Doch das funktioniert natürlich nur, wenn es eine Lösung “einzukaufen” gibt. Und hier war es an der Aufgabe vorbei, da es ja gerade darum ging, selbst einen Lösungsansatz zu formulieren.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a7fcf619852f4dd3.png" /></p>
+<p>Andererseits können Flows natürluch auch sehr detailliert sein:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/b4b01e640ef0c143.png" /></p>
+<p>In diesem und weiteren Flows der “Einreichung” wird der Algorithmus genau beschrieben. Jede Funktionseinheit wird mit 2-3 Zeilen Code umsetzbar sein, schätze ich. Für mich ist das sogar zu detailliert, zumindest für die Implementierung. Bei Entwurf mag man mal so tief einsinken… doch dann würde ich wieder einige Ebenen nach oben steigen beim Codieren. Nicht für jede Funktionseinheit lohnt wirklich eine eigene Funktion.</p>
+<p>Lösungen können also zu grob sein, dann helfen sie nicht wirklich. Andererseits können sie auch zu detailliert sein, dann fangen sie an zu rauschen. Die Kunst besteht mithin darin, eine angemessene mittlere Granularität zu finden. Die ist natürlich ein Stück subjektiv und erfahrungsabhängig ;-)</p>
+<h3>Abstraktion</h3>
+<p>Flows entwerfen, ist etwas anderes als zu codieren. Es geht um Abstraktion von den Niederungen der textuellen Programmiersprachen. Nur dadurch gewinnt der Entwurf Geschwindigkeit und Überblickscharakter. Es geht darum, eine Karte zu schaffen, nicht eine (Miniatur)Landschaft zu herzustellen.</p>
+<p>Auch hier gilt es, die Balance zu finden. Am einen Ende des Spektrums ist der Globus, d.h. eine sehr grobe Karte, die alles zeigt. Das ist völlig ok, nein, unumgänglich – sollte nur nicht wie im vorletzten Diagramm dabei bleiben. Die schrittweisen Verfeinerungen, die auch im Code erhalten werden können und sollen, machen das Flow-Design aus.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/ae83b9edaf816a05.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/73ce2bc0e95721ad.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/92a08f9621db9777.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/f58d6eecdf6b1908.png" /></p>
+<p>In die falsche Richtung geht es aus meiner Sicht jedoch, wenn sich in die Karten Artefakte aus dem Terrain einschleichen. Das ist der Fall, wenn der Fluss nicht mehr deklarativ ist, sondern imperativ wird. Das ist hier z.B. der Fall:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/915d254cfe8e2f32.png" /></p>
+<p>Ein “ForEach” ist beim Flow-Design fehl am Platze; der Begriff steht erstens für eine explizite Kontrollanweisung, wo es doch um Datenflüsse geht, und zweitens ist er frei von jedem Domänenbezug.</p>
+<p>Dicht darauf folgen Schleifen jeder Art, z.B.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/dd1973791b4d20eb.png" /></p>
+<p>Sie lassen sich einfach nicht mit dem <a rel="noopener" href="http://geekswithblogs.net/theArchitectsNapkin/archive/2013/08/19/nested-messaging---flows-on-different-levels-of-abstraction.aspx">Integration Operation Segregation Principle (IOSP)</a> in der Implementation mit 3GL vereinbaren.</p>
+<p>Ein Flow-Designs beschreiben Datenflüsse, dazu gehören mindestens zwei Punkte, um eine Strecke für den Fluss abzustecken und ihm eine Richtung zu geben. Andererseits dürfen die Flüsse aber auch nicht umkippen und zu Kontrollflüssen degenerieren. Abstraktion im Entwurf bedeutet also, soweit wie möglich eine deklarative Domänensprache zur Lösung eines Problems zu finden.</p>
+<h3>Anforderungstreue</h3>
+<p>Überrascht hat mich schließlich auch die Kreativität der Lösungen. Die Vorgaben waren ja klar. Es galt, ein Interface zu implementieren.</p>
+<p>Doch das hat nicht in allen Lösungen dazu geführt, auch dieses Interface sichtbar zu machen. Manchmal wurde aus dem geforderten <em>Register()</em> nur ein <em>AddJob()</em>. Manchmal war solch eine Funktionalität aber auch gar nicht zu sehen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e439b1b4b0e10a10.png" /></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/5b91b42bff15e000.png" /></p>
+<p>Am anderen Ende des Spektrums dann wieder eine recht treue Abbildung der Anforderung:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/173b402f5192c6d2.png" /></p>
+<p>Kreativität ist bei der Findung eines Lösungsansatzes selbstverständlich wichtig. Allerdings sollte sie sich dort austoben, wo die Anforderungen notwendig Lücken haben. Das, was der Kunde beschreibt, das, was klar erkennbar ist, sollte hingegen treu übernommen werden. Sonst leidet die Verständlichkeit. Man bedenke immer den anderen Entwickler oder sich selbst in der Zukunft. Da wird dann U in den Anforderungen gelesen, aber im Entwurf ist ein X zu sehen…</p>
+<p>Ich weiß, das ist manchmal schwer. Da hat man seine Coding-Standards. Da wallt die Erfahrung in einem auf. Das will alles berücksichtigt werden. Doch ich glaube, wir tun gut daran, uns solchen Regungen nicht gleich hinzugeben. Etwas Disziplin in der Beschränkung der Kreativität hilft der Verständlichkeit.</p>
+<h3>Fazit</h3>
+<p>Dass die Entwürfe so weit auseinander gehen, hätte ich doch nicht gedacht. Auch mit den überschaubaren Mitteln des Flow-Design ist also große Bandbreite möglich. Einerseits schön – andererseits aber auch wieder eine ernüchternd. Die guten alten Tugenden Maßhaltung und Genauigkeit und Fokussierung gelten auch im Flow-Design.</p>
+<p>Mir hat der Vergleich der Entwürfe sehr geholfen. Und ich hoffe, dass es Ihnen ein bisschen auch so geht.</p>
+<h2>Kommentare</h2>
+<p><strong>Michael</strong> (2013-12-10):</p>
+<p>Hallo Ralf,</p>
+<p>du hast meinen Entwurf offenbar nicht so ganz verstanden. Ein gerichteter "DGraph" löst das Problem nicht, aber er macht die Lösung einfacher. Das ist ein klassischer, abstrakter Datentyp, der z.B. mit Adjazenzmatrizen implementiert werden kann. Auf dem Datentyp kann dann z.B. ein "transitiver Abschluss" gebildet werden, das wäre eine Operation innerhalb von "SortJobs" auf dem DGraphen.</p>
+<p>Ich halte letztendlich "Flow Design" nicht für das Mittel der Wahl, diese Interna zu beschreiben. Warum? Dazu hättest du dir mal meine 2. Entwurf genauer ansehen müssen, da habe ich das nämlich bis zu einem gewissen Grad probiert. Da ist aber kein "guter" Datenfluss mehr vorhanden, da wird nur noch mit Schleifen und Request/Response auf dem ADT "DGraph" operiert".   Von "Einkaufen" war da überhaupt keine Rede - das hast du da so reininterpretiert; ich hatte im Kopf, dass man den DGraphen durchaus selber implementieren muss.</p>
+<p>Für einen richtigen Entwurf, den man nicht missversteht, fehlt hier nämlich was - die saubere Beschreibung der Verantwortlichkeiten der einzelnen Komponenten, was sie genau machen sollen. Verbal und/oder im Pseudocode. Die hätte ich hier natürlich dazufügen können, das wäre dann aber keine grafische Lösung mehr gewesen, sondern mehr Text als Grafik.</p>
+<p>Mir zeigt das jedenfalls, das ein rein "grafisches" Modellieren mit Flow Design zuwenig ist - ohne genauere Beschreibung bleibt auch ein solches Design unverständlich und substanzlos.</p>
+<p>Viele Grüße</p>
+<ul>
+<li>Michael -</li>
+</ul>
+<p>P.S. Wolltest du uns nicht auch deinen eigenen Lösungsentwurf vorstellen? Der würde mich nämlich schon interessieren.</p>
+<hr />
+<p><strong>boolean01</strong> (2013-12-11):</p>
+<p>Klasse Zusammenfassung und eine tolle Möglichkeit zu Üben.</p>
+<p>Das Flow Layout zeigt das was im Code "spürbar" ist, jeder hat einen anderen Stil.</p>
+<p>Aber es stimmt, dort wo der Auftraggeber feste Vorgaben macht, sollten sie eingehalten werden. Aber gehört das in ein Flow Layout? Weiß nicht.</p>
+<p>Ein Flow Layout ist für mich eine Abstraktion drüber, weniger eine Spezifikation. Sinnvoll zum Austüfteln von Lösungen und Algorithmen die dann als Grundlage für TDD dienen.</p>
+<p>Wann machen wir die nächste Runde?</p>
+<p>:)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-12-13):</p>
+<p>@boolean01: Was sind "feste Vorgaben" des Auftraggebers? Anforderungen?</p>
+<p>Klar sollen Anforderungen im Entwurf zu sehen sein. Der stellt ja eine Lösungsidee für eben diese Anforderungen dar.</p>
+<p>Deshalb finde ich die Bezeichnung "Process" ja auch zu allgemein. Die hat nichts mit der Anforderung "Sortiere Jobs nach Abhängigkeit" zu tun.</p>
+<p>Deshalb finde ich es auch nicht gut, wenn Register() und Sort() nicht auftauchen. Die gehören zum geforderten API.</p>
+<p>Ein Entwurf ist natürliche eine Spezifikation: für die Codierung.</p>
+<p>Ein Spezifikation als Word Dokument vom Kunden ist eine für den Entwurf (und den Code).</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-12-13):</p>
+<p>@Michael: Ich denke, ich habe deinen Entwurf schon verstanden. Dafür ist es auch gar nicht so wichtig, genau zu wissen, wieviel Arbeit du in "SortJobs" und wieviel du im DGraph ansiedelst.</p>
+<p>Mein Punkt ist, dass nicht erkennbar ist, wie die Lösung funktioniert. Dass sortiert werden muss, ist ja keine Erkenntnis deines Lösungsansatzes, sondern steht in der Aufgabenbeschreibung drin.</p>
+<p>Dass die Aufgabe klein ist... geschenkt. Natürlich ist sie das, denn sonst wäre sie schwer zu verstehen und nur langwieriger umzusetzen gewesen. Es ging eben nicht darum, sie damit abzutun, dass man erkennt, "Ach, topologische Sortierung! Da benutze ich mal die Lösung aus Quelle X." (Beispielquellen: http://books.google.de/books?id=XimWpv-_iw4C&amp;pg=PA289&amp;lpg=PA289&amp;dq=c%23+topological+sorting&amp;source=bl&amp;ots=JbekMHKC4g&amp;sig=qu3CZ8ntsp1cixL93LmFoKWTsr0&amp;hl=de&amp;sa=X&amp;ei=BtyqUvr5Ks3ItAaBvoGQDg&amp;ved=0CFQQ6AEwAw#v=onepage&amp;q=c%23%20topological%20sorting&amp;f=false oder http://stackoverflow.com/questions/4106862/how-to-sort-depended-objects-by-dependency)</p>
+<p>Genauso würde ich das Problem "Kata FizzBuzz" nicht mit TDD lösen im realen Leben. Aber in einer Übung, da tue ich das. Da steht mir das Problem nicht im Wege, wenn ich mich auf die TDD Schritte konzentrieren will.</p>
+<p>Genauso sollte meine Aufgabe verstanden werden: nicht trivial, aber auch nicht superkompliziert. Eben auf einem Niveau, wo man sich mal einen Flow überlegen kann.</p>
+<p>Wenn bei dir etwas fehlt, warum? Warum hast du keinen "richtigen Entwurf" abgeliefert?</p>
+<p>Wenn "richtig" für dich bedeutet, dass du viel textuell annotieren musst oder mit Pseudocode... dann ist das doch aber ein Hinweis darauf, dass du eben kein Flow-Design abgeliefert hast.</p>
+<p>Das magst du als unnötig angesehen haben - es war jedoch die Aufgabe. Aus "didaktischen" Gründen, nicht weil man das so in der Realität macht.</p>
+<p>Ist Flow-Design zuwenig? Flow-Design kann, soll und will nicht alles sein. Sonst wäre es kein Design/Entwurf mehr, sondern schon das Produkt, der Code.</p>
+<p>Für diese einfache Aufgabe sehe ich jedoch keinen sondernlichen zusätzlichen Beschreibungsbedarf. Der Entwurf wird ja auch nicht für jemanden gemacht, der das Problem nicht kenn und nicht versteht und irgendwo ohne Kommunikation in weiter Ferne sitzt.</p>
+<p>Hier geht es um eine kleine Aufgabe, die weder zur Raketenwissenschaft hochstilisiert werden sollte (Berge an Doku), noch als Trivialität abgetan werden sollte ("Das löst der Algorithmus aus dem Internet in Sort().").</p>
+<p>Tut mir leid, wenn du keinen Spaß am Mitmachen gehabt hast. Versuch dann doch mal eine andere Aufgabe aus dem Coding Dojo der CCD School: ccd-school.de/coding-dojo/ Da sind auch größere Aufgaben, die dir vllt geeigneter für Flow-Design erscheinen.</p>
+<hr />
+<p><strong>(anonym)</strong> (2013-12-15):</p>
+<p>Hallo Ralf,</p>
+<p>in meiner Firma arbeiten wir in neuen Projekten immer mit Flow-Design.
+Entwürfe wie oben habe ich auch schon gesehen.
+Was mir immer wieder auffällt, ist, dass Programmierern, die mit Flow noch wenig Erfahrung haben, der Unterschied zwischen Datenfluss und Funktionsfluss nicht bewusst/klar ist. Meistens ist Datenfluss wesentlich vertrauter.
+Oder es wird versucht die gewohnte Denkweise nur anders darzustellen.
+Aber Flow-Design ist nun mal nicht einfach eine andere Dastellungsweise.
+Es hilft ganz bewusst von Funktionsfluss zu sprechen, so dass beim Entwurf der richtige Fokus im Spiel ist.</p>
+<p>Schöne Grüße
+Franz</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2013-12-15):</p>
+<p>@Franz: Datenfluss ist etwas anderes als Kontrollfluss. Deshalb am besten immer wieder klar machen, wo der Unterschied liegt:</p>
+<p>Bei Datenflüssen ist die Kontrolle an vielen Stellen.</p>
+<p>Ob man das in einer Implementation ausnutzt durch Parallelverarbeitung in mehreren Funktionseinheiten oder nicht, ist eine zweite Sache. Auch</p>
+<p>y = f(x);
+z = g(y);</p>
+<p>ist ein Datenfluss, selbst wenn dort die Kontrolle nur jeweils in einer Funktion ist - allerdings muss sie ja nicht konsequent von oben nach unten fließen :-) yield return machts möglich.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

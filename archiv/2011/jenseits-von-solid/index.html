@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jenseits von SOLID — ralfw.de Archiv</title>
+<meta name="description" content="In einem hübschen Artikel hat Mark Nijhof ein Refactoring nach SOLID beschrieben. Dem ist nichts hinzuzufügen – wenn man denn bei SOLID stehen bleiben will. Ich sehe SOLID aber nic">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/jenseits-von-solid/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Jenseits von SOLID — ralfw.de Archiv">
+<meta property="og:description" content="In einem hübschen Artikel hat Mark Nijhof ein Refactoring nach SOLID beschrieben. Dem ist nichts hinzuzufügen – wenn man denn bei SOLID stehen bleiben will. Ich sehe SOLID aber nic">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/jenseits-von-solid/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Jenseits von SOLID</h1>
+    <div class="doc-meta"><span>25. Aug. 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/08/jenseits-von-solid.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/jenseits-von-solid/</code></span></div>
+    <div class="art"><p>In einem <a rel="noopener" href="http://cre8ivethought.com/blog/2011/08/23/software-development-is-not-a-jenga-game">hübschen Artikel</a> hat Mark Nijhof ein Refactoring nach SOLID beschrieben. Dem ist nichts hinzuzufügen – wenn man denn bei SOLID stehen bleiben will. Ich sehe SOLID aber nicht als sakrosankt an; für mich darf Code gern noch “cleaner” werden.</p>
+<p>Hier zunächst die Code-Ausgangslage:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/80721175ac3dca07.png" /></p>
+<p>Eine Klasse mit eine Menge Verantwortungen. Mark löst sie im Sinne des Single Responsibility Principle (SRP) wie folgt auf:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/569eac622b528c14.png" /></p>
+<p>Dagegen ist nichts einzuwenden. Es entstehen drei “Akteure”, d.h. Funktionseinheiten mit jeweils wiederum potenziell vielen Aufgaben. Hinweis darauf ist die Benennung mit Substantiven. Für den Moment hat Mark zwar Verantwortlichkeiten getrennt – doch das ist “Rückspiegelweisheit”: Bei Vorlage einer Brownfield-Klasse ist ihm die Vermengung von Verantwortlichkeiten in einer Klasse aufgefallen.</p>
+<p>Wäre es aber nicht viel besser, bei einer Refaktorisierung Code zu erzeugen, der einer solchen Entwicklung von vornherein Widerstand leistet? Vorbeugen ist besser als Refactoring. Dazu bedarf es jedoch einer Idee von der Ursache der Verantwortungsanhäufung. Woher könnte die rühren?</p>
+<p>Ich glaube, das hat nicht nur mit Unaufmerksamkeit der Entwickler zu tun, die zum ursprünglichen Stand von OrderProcessor beigetragen haben. Mitschuldig ist auch die Bennung der Klasse. Sie ist als Akteur ausgelegt, als Substantiv, d.h. als Funktionseinheit, die qua Name suggeriert “Stopfe mich voll mit allem, was mit der Auftragsverarbeitung zu tun hat.”</p>
+<p>So machen wir es doch auch, wenn ein Mensch als Akteur vor uns steht. “Ach, kannst du das nicht auch noch machen?” Und schon hat er eine Verantwortlichkeit mehr am Hacken.</p>
+<p>Um das Wurzelproblem anzupacken, fände ich es besser, die Namen anders zu wählen. Allemal die der Logik-Funktionseinheit. Sie sollte nicht <em>OrderProcessor</em> heißen, sondern <em>Process_order</em>. Denn nur darum geht es hier. Noch schöner wäre es, wenn dazu dann <em>Send_confirmation_email</em> und <em>Save_order</em> dazu kämen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/4033e34c5b5ffca9.png" /></p>
+<p>Lassen Sie Ihr Unwohlsein angesichts der merkwürdigen Methodenbezeichnung “_” kurz beiseite. Spüren Sie stattdessen einmal in sich hinein: Wir groß ist nun die Gefahr, dass <em>Process_order</em> oder eine der beiden anderen Klassen mit weiterer Funktionalität aufgeladen wird, die nichts direkt mit dem Klassennamen zu tun hat? Für mich ist da jetzt eine spürbare Barriere.</p>
+<p>Nun aber zu einem noch wichtigeren Aspekt im wahrsten Sinn des Wortes, den Mark bei seinem Separierungsbestreben übersehen hat. Er ist schwer zu sehen, weil wir alle so traditionell OO-konditioniert sind. Wir halten den Code in dieser Hinsicht für normal. “So macht man das halt” denken wir und hat Mark gedacht.</p>
+<p>Mit geht es um das, was in <em>Process_order</em> passiert. Ich greife es mal heraus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2021d708b9c22f56.png" /></p>
+<p>Wieviele Verantwortlichkeiten hat <em>Process()</em>? Wieviele Gründe für Veränderung gibt es?</p>
+<ul>
+<li>Muss die Methode “angefasst werden”, wenn die Bestätigungen per Fax statt der Email versandt werden sollen?</li>
+<li>Muss die Methode verändert werden, falls nach der Email-Bestätigung auch noch ein Eintrag in ein Protokoll gemacht werden soll?</li>
+<li>Muss die Methode überarbeitet werden, wenn sich die Bedingung für eine Email-Bestätigung verändert?</li>
+</ul>
+<p>Die Antwort auf alle drei (!) Fragen ist Ja. Die Methode hat mithin nicht nur eine Verantwortlichkeit. Die Fragen gehören nämlich zu unterschiedlichen Verantwortlichkeitsbereichen:</p>
+<ul>
+<li>Implementationsauswahl</li>
+<li>Integration</li>
+<li>Kontrolle</li>
+</ul>
+<p>Die Methode kontrolliert die Integration konkreter Implementationen für Operationen. Sie stellt also nicht nur sicher, dass bestimmte Operationen in einer bestimmten Reihenfolge ablaufen, nein, sie entscheidet auch noch über diese Reihenfolge zur Laufzeit und instanziiert ganz bestimmte Ausprägungen der Operationen.</p>
+<p>Zur Marks Ehrenrettung sei gesagt, dass er eine dieser Verantwortlichkeiten auch durch seine SOLID-Brille erkannt hat: die Implementationsauswahl. Sie löst er über Inversion of Control auf. (Dass er später auch noch einen DI Container einsetzt, ist nicht so wichtig.)</p>
+<p>Also mache ich meine Code-Version auch IoC-konform:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d22a9a594ac786dd.png" /></p>
+<p>Dabei bleibt es dann bei Mark. Er belässt die Verantwortlichkeiten Integration und (!) Kontrolle in der Methode. Er erkennt sie schlicht nicht. Sie liegen außerhalb seines Wahrnehmungshorizonts.</p>
+<p>Dabei ist es so einfach: Wo eine Kontrollstruktur – nomen est omen – wie <em>if</em> oder <em>for</em> im Spiel ist, da werden Operationen nicht nur “hintereinandergeschaltet”, sondern auch darüber entschieden, wann die unterschiedlichen Pfade durchlaufen werden. Also muss man ein Augenmerk darauf haben, dass diese Entscheidung nicht ebenfalls in derselben Methode gefällt wird. Darum geht es beim Prinzip Single Level of Abstraction (SLA) – das allerdings nicht zu SOLID gehört. Schade.</p>
+<p>Um konsequent SRP umzusetzen, muss die Bedingung, unter der eine Bestätigung gesendet werden soll, raus aus der Auftragsverarbeitung. Das kann zunächst in einfacher Weise geschehen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/b98a415a1e2b7325.png" /></p>
+<p>Aber fühlt sich das wirklich gut an? Mich schüttelt es, weil nun ganz deutlich wird, dass die Bedingung zwei Verantwortlichkeiten hat. Nicht umsonst musste ich einen Namen wählen, der eine Konjunktion enthält. Nur <em>Is_order_valid()</em> hätte die Speicherung unterschlagen, nur <em>Successfully_saved_order()</em> hätte die Validation unterschlagen.</p>
+<p>Das Ziel ist richtig, die Verantwortlichkeiten zu entzerren. Aber das Mittel ist falsch. Besser finde ich es so:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/ff93df64c52313f2.png" /></p>
+<p>Jetzt ist deutlicher und ohne Schachtelung die Sequenz des Ablaufs zu sehen:</p>
+<ul>
+<li>Gültigkeit des Auftrags prüfen</li>
+<li>Auftrag speichern</li>
+<li>Email-Bestätigung senden</li>
+</ul>
+<p>Hier könnte ich es gut sein lassen. Doch ich bin seit der Lektüre von “Clean Code” sensibel geworden. Die Verantwortungshäufung lauert überall. Vor allem lädt der obigen Code bei aller Sauberkeit immer noch (oder wieder) dazu ein, in ihm weitere Verantwortungen anzuhäufen. Wie schnell ist die Validitätsbedingung aufgebohrt und sieht dann z.B. so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/3672d1f3b6c52a05.png" /></p>
+<p>Schon wieder steckt die Kontrollverantwortung mit drin.</p>
+<p>Und warum? Weil die Kontrollstruktur <em>if</em> in der Methode geblieben ist. Sie ist zwar relativ harmlos, solange sie nur eines tut, nämlich den Codefluss entsprechend eines Flags mal in dieser und mal in jener Richtung zu leiten. Doch wie ein Stäubchen in der Luft ist sie ein Kristallisationskeim: für Domänenlogik. Eben noch steckte die ausschließlich in <em>IsValid</em>, doch dann hat die sich ausgebreitet, weil grad keine Zeit war, über eine Methode auf <em>Order</em> oder sonst wo nachzudenken, die beide Bedingungsklauseln umfasst. Ja, so schnell kann es gehen. So entsteht Entropie (oder dirty code) in kleinsten Inkrementen.</p>
+<p>Hört sich vielleicht nach Erbsenzählerei an. Mag sein. Aber wenn ein Container voller Erbsen zerbricht, kann das ordentlichen Schaden anrichten.</p>
+<p>Ich meine also, dass die Verantwortlichkeit Integration solange nicht ordentlich herauspräpariert ist, wie in einer Methode noch Kontrollstrukturen stehen. Aber wie kann die Integration der drei Operation zu einem Ganzen – der Auftragsverarbeitung – erreicht werden, wenn sie einerseits von Bedingungen abhängig ist, andererseits jedoch keine Kontrollstrukturen dafür enthalten darf?</p>
+<p>Die verblüffend einfache Antwortet lautet: mit <strong>Continuations</strong>. (Mit Erweiterungsmethoden ginge es auch. Aber damit würden wir uns auf statische Methoden festlegen.)</p>
+<p>Meine Version der Refaktorisierung mit Continuations so aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/cd95f0e9a4207799.png" /></p>
+<p>Die Methode zur Auftragsverarbeitung ist jetzt ausschließlich für die Integration von Operationen im Sinne eines Verarbeitungsflusses zuständig. Und sie lädt niemanden mehr ein, Logik hineinzustecken. (Naja, wer will, der bohrt natürlich die Lambda-Ausdrücke auf. Aber das halte ich für weniger naheliegend als mal eben eine Bedingung zu erweitern.)</p>
+<p><em>Validate_order()</em> ist ebenfalls auf eine Verantwortlichkeit konzentriert: Kontrolle. Wer die Validitätsbedingung verändern will, ist dort genau richtig. Was anderes kann man dort aber auch nicht sinnvoll tun. Insofern muss der Ausdruck auch nicht in eine weitere Methode ausgelagert werden.</p>
+<p>Zum Schluss noch zu den merkwürdig benannten Methoden der zum Speichern und Senden des Auftrags. Ich habe die Namen auf einen Unterstrich beschränkt, um den Code besser lesbar zu halten. Oder ist <em><em>save.</em>()</em> nicht besser zu lesen als <em>_save.Process()</em> oder <em>_save.Save()</em>?</p>
+<p>Dennoch verstehe ich, wenn Sie bei “_” als Methodenname zucken. Er scheint so nichtssagend. Klar. Er muss ja auch nichts sagen, weil der Klassenname (und der davon abgeleitete Feldname) alles sagt.</p>
+<p>Fallen Sie angesichts Ihres Unwohlseins nun aber nicht zurück in alte Gewohnheit. Prügeln Sie sich aber auch nicht, “_” als Methodenname zu akzeptieren. Sondern machen Sie den nächsten konsequenten Schritt, den Mark ebenfalls nicht vollzogen hat. Den Robert C. Martin sich vor ihm nicht getraut hat.</p>
+<p>Denken Sie das Interface Segregation Principle (ISP) weiter.</p>
+<p>In Marks Artikel kommt das ISP in Bezug auf den Ausgangscode eigentlich gar nicht zum Einsatz. Er muss dafür weitere Einsatzszenarien erfinden. Das liegt daran, dass das ISP eben ein I-SP ist; es beharrt darauf, Dienstleistungen in Bündeln anzubieten und zu nutzen. Das IoC und der DI Container arbeiten auf Interfaces, obwohl im Beispiel von jedem Interface nur 1 Methode gebraucht wird.</p>
+<p>Das ist nicht nur hier, sondern sehr oft der Fall. Integrationen bekommen Akteure mit vielen Dienstleistungen hineingereicht, nutzen davon aber nur sehr wenige, oft nur 1 oder 2. Warum also überhaupt Abhängigkeiten auf Interfaces basieren? Der Code könnte ohne auskommen, ohne IoC und DI Container zu vernachlässigen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/a5a44b5ab99b9e9d.png" /></p>
+<p>Voilà! Die Unterstriche sind verschwunden. Interfaces sind nicht mehr nötig. <em>Process_order</em> ist von keiner Implementation abhängig. <em>Process_order.Process()</em> hat weiterhin nur eine Verantwortlichkeit.</p>
+<h4>Fazit</h4>
+<p>SOLID ist gut. SOLID+SLA ist besser. Und SOLID+SLA+ISP2TheMax ist noch besser.</p>
+<p>SOLID hat uns auf dem Weg zu Evolvierbarkeit voran gebracht. Wir sollten uns nun aber nicht ausruhen. Das Ziel ist nicht erreicht. Deshalb dard es gern noch konsequenter prinzipieller zugehen. Schauen Sie genau hin, hinterfragen Sie das Selbstverständliche und Überkommene. Die Kristallisationskeime für Dreck sind manchmal klitzeklein. Über die Zeit entfalten sie nichtsdestotrotz eine ungute Wirkung. Versuchen Sie deshalb, Code schon beim Schreiben in der Form so zu halten, dass an ihm Dreck nicht anhaften kann.</p>
+<p>Continuations statt Kontrollstrukturen und Delegaten statt Interfaces sind ein Anfang.</p>
+<p>Eine Technik zur Vermeidung von dreckigem Code von vornherein ist besser als eine Prinzip zum Aufspüren von Dreck im Code im Nachhinein.</p>
+<p><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY"></a><a rel="noopener" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZEGUTHQ2BWWDY">Spendieren Sie mir doch einen Kaffee, wenn Ihnen dieser Artikel gefallen hat…</a></p>
+<h2>Kommentare</h2>
+<p><strong>(anonym)</strong> (2011-08-25):</p>
+<p>Lieber Ralf,</p>
+<p>bist du dir sicher dass du hier noch richtig bist? Hier, das ist unsere kleine OO/C# Welt, in der wir Klassen nach Dingen benennen und Methoden diese Klassen etwas machen lassen, indem wir ihnen Methoden schenken!</p>
+<p>Ich finde den Stil sehr beeindruckend (Und _ gibt einem sicher kein schlechtes Bauchgefühl)!
+Was mir etrem gefällt ist die domänennähe und die extreme Lesbarkeit! Toll!!! Sowas will ich lesen und sowas kann ich auch mal meinem BA zeigen :)</p>
+<p>Es sieht aber aus als wolltest du eine andere Sprache verwenden. Es wirkt als sei C# nicht gemacht für das was du vorhast. Allein dass die Klassen wie Funktionen benannt sind lässt sie wie overhead wirken.</p>
+<p>Wie würde das Beispiel in F# aussehen? Wäre da nicht weniger syntaktisches Rauschen notwendig durch Klassen, Interfaces und Lambdas? Indem man einfach die natürlichen Spracheigenschaften nutzt und näher am nativen paradigma programmiert? Indem du einfach Funktionen ohne die Klasse als First-Class Citizen der Sprache verwendest..?</p>
+<p>Ich denke was du da tust ist mehr als richtig! So solls sein. Aber C# ist auf dem Pfad wohl nicht das richtige Gefährt.</p>
+<p>lieben Gruß</p>
+<p>Johannes</p>
+<hr />
+<p><strong>Trupp</strong> (2011-08-25):</p>
+<p>Kode ist nicht nur Grammatik. Die Wortwahl, wie Sie ja selbst ausführen, ist genauso wichtig. Der letzten Funktionalen Version fehlt für mich an Lesbarkeit. Das ist Grundproblem des Funktionalen Einsatzes der uns in Zukunft noch paar Probleme und „Clean Code“ Bücher beschert.</p>
+<hr />
+<p><strong>Trupp</strong> (2011-08-25):</p>
+<p>@Johannes wieso F#? gleich Lisp. Wir schreiben den Sourcecode ganz klar für die Maschine und nicht für die Mitmenschen.</p>
+<hr />
+<p><strong>Stefan</strong> (2011-08-25):</p>
+<p>Jo, genau so schreibt man Code, den keiner versteht.</p>
+<hr />
+<p><strong>Golo Roden</strong> (2011-08-25):</p>
+<p>@ Johannes: Sehe ich ähnlich. Im Grunde sind EBCs ja auch schon nichts groß anderes als FP mit den Mitteln der OOP nachgebildet. Eine funktionale Sprache - egal ob jetzt F# oder sonstwas - fände ich dafür auch besser geeignet. denn wenn es um =&gt; funktionales &lt;= Denken geht, liegt FP irgendwie näher als OOP.</p>
+<p>Und wenn ich mir den Pipeline-Operator in F# angucke, erzeugt das definitiv weniger redundantes Rauschen als das verbose Verdrahten von Events.</p>
+<p>Wie es so schön heißt: The right tool for the right job. Und C# scheint mir für das, was Ralf vorschlägt, zunehmend weniger geeignet zu sein. Insofern: Fullack.</p>
+<hr />
+<p><strong>Steffen Forkmann</strong> (2011-08-25):</p>
+<p>Also Ralf, wenn schon Continuations dann bitte mit ContinuationMonad ;-)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-08-25):</p>
+<p>Freut mich, dass mein Posting soviele Emotionen rausgekitzelt hat. Von "total cool" bis "vergiss es". So soll es sein :-) Da ist also der Finger in einer Wunde.</p>
+<p>Bin ich noch richtig bei C#? Ja. Schon aus dem Grund, weil "alle Welt" C# schreibt. Zu erwarten, dass "alle Welt" auf F# umsteigt, ist kaum zu erwarten. Es muss also eine Lösung gefunden werden, die auch innerhalb der C# Welt funktioniert. Deshalb bewege ich mich nicht weit weg davon.</p>
+<p>Allerdings: Ein bisschen mehr geht schon noch ;-)</p>
+<p>Deshalb sage ich mal: Auch bei dem, was ich hier beschrieben habe, dürfen wir nicht stehenbleiben. Ich bin damit über SOLID hinausgegangen. Ok. Mark hat sich in einem Horizont bewegt, den ich überschritten habe.</p>
+<p>Aber auch ich bewege mich noch in einem Horizont. Und das ist der, in dem ebenfalls F# oder OCaml residieren. Wenn ich also von C# nach OCaml wechsle, komme ich nicht wirklich soweit, wie ich glaube, dass ich kommen muss.</p>
+<p>Der Horizont nämlich, in dem sich all diese Sprachen bewegen ist der der Textualität. Da kann es noch so schöne Operatoren geben - am Ende ist die Ausdruckmöglichkeit der Sprachen und damit die Lesbarkeit begrenzt dadurch, dass es Textsprachen sind.</p>
+<p>Natürlich ist meine Lösung mit den Continuations am Ende recht schlecht zu lesen. Mindestens ist das gewöhnungsbedürftig. (Und für Gewöhnung haben die wenigsten Zeit.)</p>
+<p>Besser lesbar wäre:</p>
+<p>Validate_order |&gt; Save_order |&gt; Send_confirmation_email</p>
+<p>Klaro.</p>
+<p>Doch auch diese Notation stößt an ihre Grenzen, wenn es mal nicht mehr nur so eine Sequenz ist. Das (!) ist der Knackpunkt.</p>
+<p>Wir winden und winden und winden uns, lesbareren Code zu schreiben - nur die fundamentale Begrenzung der Lesbarkeit, nämlich die Textualität, die wollen wir nicht hinter uns lassen.</p>
+<p>Müssen wir auch nicht komplett. Ich will ja nicht alles mit Bildchen zusammenklickern. Aber das, was wir textuell notieren, das muss auf eine Menge beschränkt sein, die wir gut lesen können. Und das hört irgendwo bei einer Bildschirmseite auf.</p>
+<p>Also: Was ich hier heute beschrieben habe, kann nur der Anfang sein...</p>
+<hr />
+<p><strong>Steffen Forkmann</strong> (2011-08-25):</p>
+<p>Moin nochmal,</p>
+<blockquote>
+<blockquote>
+<p>"Bin ich noch richtig bei C#? Ja. Schon aus dem Grund, weil "alle Welt" C# schreibt."</p>
+</blockquote>
+</blockquote>
+<p>Was ist das denn für eine Argumentation? Das passt doch gar nicht zum Rest des Textes.</p>
+<blockquote>
+<blockquote>
+<p>"dass "alle Welt" auf F# umsteigt, ist kaum zu erwarten."</p>
+</blockquote>
+</blockquote>
+<p>Vielleicht nicht F#, aber funktionale Sprachen und Frameworks (siehe JS-Community) gewinnen immer mehr an Fahrt.</p>
+<p>Noch zum Pipe. Du kannst durchaus andere Syntax für nicht lineare Workflows (monads) definieren. Haskell und F# haben dafür was.</p>
+<p>Grüße Steffen</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-08-25):</p>
+<p>@Steffen: Wenn ich hier die allerbeste Lösung in APL vorstellen würde, brächte das nix. Gar nix. Damit wäre ich nicht anschlussfähig. Dasselbe gilt auch für OCaml oder sogar für F#.</p>
+<p>Ich rede hier von der Masse der Entwickler, nicht von einzelnen, die beweglich genug sind, umzusteigen.</p>
+<p>Und wie schon in einem anderen Kommentar von mir gesagt: Am Ende kommen alle textuellen Sprache - mit oder ohne Monaden - an ihre Grenzen. Wahre Lesbarkeit kriegen wir damit nicht hin. Das gibt der eindimensionale Text schlicht nicht her. Und warum sollten wir uns auch darauf versteifen?</p>
+<p>Wir suchen Usability und Lesbarkeit im weitesten Sinn bei Devices, die nicht textuell ausgerichtet sind. Nur bei der Programmierung beharren wir störrisch darauf, dass Text die Lösung unserer Probleme ist. Das halte ich für eine grundsätzliche Verirrung bei der Notation. Ein Wurzelproblem.</p>
+<hr />
+<p><strong>Robert Mischke</strong> (2011-08-25):</p>
+<p>Bis zur Refaktorisierung hin zu Continuations, arbeite ich genau schon so. Vor allem dank Deiner Posts, Ralf!</p>
+<p>In C# bringt für mich die Continuation wenig Mehrwert. Tendenziell sehe ich eher Probleme mit der Erweiterbarkeit u. später mit der Lesbarkeit.</p>
+<p>Deklarativ scheint mir einfacher u. damit besser:</p>
+<p>if (IsValidOrder.No(order))
+ return; //Vermutlich mehr..</p>
+<p>Send_ConfirmationMail.Run(order);
+Save_Order.Run(order);</p>
+<hr />
+<p><strong>Steffen Forkmann</strong> (2011-08-25):</p>
+<p>@Robert: Continuations sind meiner Meinung nach schon gut. Wenn man an Node.js und ähnliche Projekte denkt, dann sieht man wie viele Vorteile man davon bekommt.</p>
+<p>Allerdings habe ich da manchmal das Gefühl (wie auch hier), dass OO-Entwickler das ständig neu erfinden und FP-Papers einfach nicht lesen/anwenden wollen bzw. als zu akademisch abtun. Das ist mir echt völlig unverständlich zumal am Ende ganz simple Lösungen rauskommen.</p>
+<p>Gruß Steffen</p>
+<hr />
+<p><strong>Steffen Forkmann</strong> (2011-08-25):</p>
+<p>@Robert: Insbesondere wenn man bedenkt, dass ja noch Error-Continuations usw. dazu kommen. Dann sieht man, dass dieses Modell schon sehr gut für performante und wartbare Anwendungen geeignet ist. Allerdings muss man dafür sorgen, dass man die einzelnen Continuations-Steps per Composition zusammen kleben kann. Sonst wird es schwierig.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-08-25):</p>
+<p>@Steffen: Und genau scheiden sich unsere Geister. Du sieht kein Problem, Compositions für kompliziertere Prozesse mit Text lesbar aufzubauen. Ich finde das hingegen grundsätzlich limitierend.</p>
+<p>Text ist Text ist Text. 1 Dimension der Darstellung. Wir haben damit nun 60 Jahre zugebracht. Und weiter soll es nicht gehen? Die nächsten 60 Jahre ebenfalls textuelle Notation für hochkomplizierte Problemlösungen?</p>
+<p>Ne, daran glaub ich nicht. Und wenn alles CASE und alles executable UML gescheitert ist, daran glaub ich nicht. Tablet PCs sind vor 20 Jahren gescheitert - und sind jetzt der Hit. Smartphones sind vor 8 Jahren gescheitert - und sind jetzt der Hit. Alles hat seine Zeit. Man muss sie nur erkennen.</p>
+<p>Ich spreche damit nicht gegen Konzepte. Von mir aus sind Monaden, AOP &amp; Co die dollsten Konzepte. Können gern bleiben.</p>
+<p>Nur zeigt sich schon an kleinen Beispielen, dass sauberer Code nicht unbedingt lesbarer Code ist. Und damit meine ich nicht mal unbedingt meinen Code. An anderer Stelle habe ich ja schon über eleganten, nur leider schwer nachvollziehbaren Code geschrieben.</p>
+<p>Wenn durch Clean Code oder SOLID alles in tausend Teile zerfällt, dann haben wir es sehr schwer, darüber in Texten den Überblick zu behalten. Und NDepend hilft auch nur begrenzt weiter.</p>
+<p>Männer, die lange auf Text starren, sehen natürlich darin irgendwann immer einen Sinn. Aber wer will denn lange starren? :-)</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-08-26):</p>
+<p>Hallo Ralf,</p>
+<p>der Kardinalsfehler ist in dem Code nicht die Verwendung des if-Befehls, denn dieser gehört m. E. in die Verarbeitungslogik des Prozessors, sondern das order.IsValid() direkt aufgerufen wird.</p>
+<p>Dieser Code gehört in einen OrderValidator. Dann hat der OrderProcessor nur noch die Verantwortung für den Ablauf der Bearbeitung einer Order.</p>
+<p>-Markus</p>
+<hr />
+<p><strong>Steffen Forkmann</strong> (2011-08-26):</p>
+<p>@Ralf:</p>
+<p>Wenn du Formulierungen wie "zur Marks Ehrenrettung" oder "außerhalb seines Wahrnehmungshorizonts" verwendest, dann weich doch bitte selbst der Kritik nicht aus indem du auf philosophische Diskussionen lenkst.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-08-26):</p>
+<p>@Steffen: Für dich mag es eine philosophische Diskussion sein, wenn ich davon anfange, dass letztlich textuelle Darstellungen begrenzt sind.</p>
+<p>Für mich hingegen ist das eine der praxisrelevantesten Diskussionen überhaupt. Sie steht aus meiner Sicht geradezu am Anfang aller Programmierung und jedes Projektes.</p>
+<p>var y = f(x);
+var z = g(y);</p>
+<p>oder</p>
+<p>f x |&gt; g</p>
+<p>oder sonstwie ist ein Implementationsdetail.</p>
+<p>Weder zur Laufzeit noch zur Entwurfszeit (egal wie kurz die in deinem Kopf ist) gibt es diesen Text.</p>
+<p>IL Code muss das leisten, was dein Entwurf eines Verarbeitungsprozesses fordert. Den IL Code sehen wir nicht.</p>
+<p>Aber wie ist es mit dem Entwurf? Ist der in deinem Kopf textuell? Wohl kaum. Der ist irgendwie... wahrscheinlich bildlich und wahrscheinlich - wenn es komplexer ist - mehrdimensional. Und nicht nur bei dir.</p>
+<p>Schon vor Jahrzehnten habe ich Paper darüber gelesen, dass Entwickler mit einem guten visuellen Vorstellungsvermögen und visueller Ausdrucksfähigkeit die besseren seien. (Aber von mir aus magst du auch deine Programme hören oder schmecken ;-)</p>
+<p>Der Entwurf einer Software, also die Idee, die abstrakte Lösung ist nicht textuell. Und zur Laufzeit ist die Lösung auch nicht textuell.</p>
+<p>Wenn wir nun darauf schwören, den Entwurf textuell zu notieren, damit er nach IL umgewandelt werden kann... dann ist das für mich grundsätzlich widersinnig. Eine Krücke.</p>
+<p>Woher die kommt, ist mir klar. Früher ging es nicht anders. Auch ich hab am Teletype gelernt.</p>
+<p>Aber wir haben nicht mehr 1972 oder 1985. Es ist 2011 und wir hüsern noch genauso rum, um unsere Entwürfe aus dem Kopf in den Rechner zu bekommen.</p>
+<p>Ich behaupte nicht, dass Text für alles schlecht sei. Manches würde ich auch nicht anders notieren wollen.</p>
+<p>Aber ganz diesseitig, ganz unphilosophisch möchte ich hier und heute manches eben auch nicht mehr in Text notieren müssen. Es ist zu langsam und es ist zu schlecht leserlich. Ganz einfach.</p>
+<p>Wenn du diesen Schmerz nicht spürst, dann ist das ok. Andere jedoch spüren ihn: denen will ich zeigen, sie sind nicht allein und es gibt einen Erklärungsansatz für den Schmerz. Wir können nach Verbesserung suchen.</p>
+<hr />
+<p><strong>Trupp</strong> (2011-08-26):</p>
+<p>M.E hat Markus hat die beste Lösung für das Validation Dilemma. @Ralf was ist Malen ohne Farbe? Was ist eine Softwareentwicklung ohne Text? Manchmal Greift ein Künstler, auch ein Maler zu Meisel. Ein Softwareentwickler  zu UML. Das heißt nicht  das Bildhauen = malen und UML zeichnen gleich Softwareentwicklung. Die Softwareentwickler denen Text nicht ausreicht sollen andere Berufung suchen, Software Architekt … Maler?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-08-26):</p>
+<p>@Trupp: Der Vergleich hingt leider. Programmierung ohne Text ist nicht wie Malen ohne Farbe.</p>
+<p>Wenn du Programmieren mit Kunst in Verbindung bringen willst, dann sollte das grundlegender sein, würd ich sagen:</p>
+<p>Der Künstler will eine "Idee" ausdrücken. Der Entwickler will eine Lösung ausdrücken.</p>
+<p>Der Künstler sucht dafür das passende Medium. Mal ist das Stein, dann Bronze, dann Ölfarbe, dann der Körper, dann die Stimme.</p>
+<p>Wenn ein Künstler keine schöne Stimme hat oder kein Pantomime ist, sondern irgendwie nur ein Bild zustande bringt, dann ist er halt in seinen Medien und damit Ausdrucksmöglichkeiten beschränkt. Eine Tugend ist das aber nicht. Für "Ideen" ist das einschränkend - aber zum Glück gibt es ja viele Künstler mit ganz unterschiedlichen Fähigkeiten. Und so lesen wir erst eine Geschichte, dann sehen wir dazu Bilder, dann vielleicht ein Musikstück dazu und schließlich macht einer einen Film drüber.</p>
+<p>Wohnt der "Idee" inne, dass man sie nur Malen kann? Wenn ich die Schönheit der Natur oder das Leid der Unterdrückten als Künstler ausdrücken möchte, bin ich dann auf Malen, Gesang, Bildhauerei festgelegt? Nein.</p>
+<p>Jetzt zur Software. Wohnt dem Problem "Fakturasoftware" oder "Online Game" der Ausdruck der Lösung in Form von Text inne? Natürlich nicht. Die Lösung muss am Ende nur in Maschinencode realisiert werden können. Wie der Entwickler dahin kommt, ist doch der Lösung und auch dem Problem egal.</p>
+<p>Softwarelösungen mit Text zu beschreiben ist legitim und probat und üblich.</p>
+<p>Bei weitem ist es aber nicht die einzige Möglichkeit und auch nicht die beste.</p>
+<p>Wie wir an dieser Diskussion sehen, ist die Vorstellung aber sooo tief im Stammhirn der Branche verankert, dass man es für eine unumstößliches Faktum hält: "Programmieren kann man nur mit Text. So lernen wir das. So tun wir das."</p>
+<p>Wenn denn nun aber Software Design ist, wie immer wieder beschworen wird, dann schaue man sich mal in der Welt um, welche anderen Branchen ihre Designs in Form von Text machen. Nicht mal Textautoren tun das notwendig. Niemand außer den Softwareentwicklern formuliert Designs mittels Text.</p>
+<p>Der Entwurf eines Musikstücks als Text? Lachhaft.
+Der Entwurf einer elektronischen Schaltung als Text? Lachhaft.
+Der Entwurf eines Autos als Text? Lachhaft.
+Der Entwurf eines Gartens als Text? Lachhaft.
+Der Entwurf von Software als Text? Lachhaft.</p>
+<p>Trotzdem tun wir es. Das ist dann nicht mehr lachhaft, sondern bitter traurig. Wir beschränken uns selbst massiv. Warum?</p>
+<p>Weil Text so toll übersichtlich ist? Das kann es ja wohl nicht sein.
+Weil Text sich so toll manipulieren lässt? Naja, get real.
+Weil Text sich so gut versionieren lässt? Vielleicht.
+Weil Text so schnell auch mit einfachstem Werkzeug hingerotzt ist? Ja.</p>
+<p>Ich behaupte nicht, dass wir gar keinen Text mehr schreiben sollen. Aber wir können weniger, viel weniger schreiben und dabei eine Menge gewinnen.</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-08-26):</p>
+<p>@Ralf:
+Ein bisschen hast du mit deinem Beitrag schon Recht. (Daher auch ein +1 von mir).</p>
+<p>Dennoch finde ich die Codeverbesserungen von Mark Nijhof verständlicher.
+Vielleicht liegt das wirklich an der Sprache C#. Ihr wird zwar nachgesagt, dass sie eine Multiparadigmensprache sei, aber ihre Wurzeln hat sie im OOP-Bereich.
+F# bedient auch den OOP-Bereich, aber das ist nicht ihr Fachgebiet. Wenn ich F# vor mir habe, versuche ich automatisch funktional und in Pipe-Sequenzen zu denken, weil es die Syntax geradezu provoziert.</p>
+<p>Das Codebeispiel im letzten Bild hat mir Schwierigkeiten bereitet, als ich es verstehen wollte. (Denn die Klassen "Send_confirmation_email" und "Save_order" tauchten nicht mehr in der "Process_order"-Klasse auf.)
+Kurze Zeit später ist erst der Groschen gefallen, dass im Grunde nur noch Funktionszeiger (Delegates) referenziert werden.</p>
+<p>Aber für solche Konstrukte finde ich C# auch nicht so gut geeignet.
+Mir graut es vor dem Gedanke, wenn ich irgendwo eine Methodensignatur sehen würde, die einen (oder mehrere) Parameter in der Art "Action&gt;&gt;" verlangen würde.</p>
+<p>Da mögen für die Lösung noch so wenige LoC benötigt werden, aber ab einem gewissen Punkt leidet ganz einfach die Lesbarkeit und die Verständlichkeit drunter, wenn man dann schon mit einer unverständlichen Methodensignatur konfrontiert wird.
+C# ist nicht dafür gedacht, die funktionalen Sprachen zu ersetzen. Allenfalls, um mal ein kleines Problem auf die Schnelle funktional zu lösen.</p>
+<p>Daher finde ich das Beispiel mit den Interfaces für den C#-Kontext wesentlich verständlicher und eleganter, als die funktionale "Vergewaltigung" von C# in dem Zusammenhang. :-)</p>
+<p>mfg</p>
+<p>Christian</p>
+<p>PS.: Statt den Unterstrich als Methodenname, könnte man auch "Execute" oder so verwenden. ;-)</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-08-26):</p>
+<p>Nachtrag:
+Das Blog-Backend hat mein "Action"-Parameter-Beispiel zerstört. Es sollte 3-fach geschachtelt sein.</p>
+<p>@Ralf:
+*Wir beschränken uns selbst massiv. Warum?</p>
+<p>Weil Text so toll übersichtlich ist? Das kann es ja wohl nicht sein.
+Weil Text sich so toll manipulieren lässt? Naja, get real.
+Weil Text sich so gut versionieren lässt? Vielleicht.
+Weil Text so schnell auch mit einfachstem Werkzeug hingerotzt ist? Ja.*</p>
+<p>Ja, ich denke, dass die Unix/Linux-Welt nicht ganz unschuldig dabei ist. Jedes minimalistische System bringt immer den vi-Editor mit. Damit kann ich das gesamte System verändern.
+Der Grund ist letztlich wirklich ein Frage der Einfachheit. Text kann der Computer sequentiell verarbeiten. Mit Bildern tut er sich etwas schwer. (Aber IBM hat schon neuronale Prozessoren am Start. Vielleicht krempeln die letztlich generell die Art des Programmierens um. Dann lehren wir dem Prozessor, wie er was machen soll. <em>g</em>)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-08-26):</p>
+<p>@ChinaFan: Ja, wenn das so ist, dann sollten Entwickler konsequent auf Handy und Internet verzichten. Am besten auch noch auf Autos (wg des Benzins). Nein, noch besser auf Elektrizität.</p>
+<p>Denn all das braucht ja Infrastruktur, die womöglich nicht da ist. Wer vi immer benutzt, weil der halt immer da ist, der sollte immer zu Fuß gehen, um sich nicht zu sehr an Autos oder Flugzeuge zu gewöhnen - die sind ja auch nicht immer da.</p>
+<p>Das kann doch aber keine Lösung sein, oder? Ein bisschen den Rüdiger Nehberg raushängen lassen und mit nix außer Luft und Wasser auskommen, ist ja nett. Aber deshalb zu sagen: "Die Software der Welt sollte so geschrieben werden, dass man in der Not mit vi alles verändern kann." das ist nicht nur anachronistisch, das ist volkswirtschaftlich schädlich.</p>
+<hr />
+<p><strong>Thomas T.</strong> (2011-08-26):</p>
+<p>@Ralf: Das Bild bzw. Diagramm muss ja auch irgendwie gespeichert werden. Wenn die Speicherung als XML oder in einem anderen textuellen Format erfolgt, ist das Ganze wieder problemlos versionierbar. Und man kann es auch mit vi bearbeiten, wenn man möchte.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-08-26):</p>
+<p>@Thomas: Klar, beim Speichern kann man Diagramme und was nicht noch alles als Texte speichern. Wenn das einen Vorteil hat, gern. Ich bin dafür.</p>
+<p>Nur lesen soll das dann bitte niemand - außer einem Deserialisierer.</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-08-27):</p>
+<p>@Ralf:
+Also ich wäre auch sehr dafür, wenn wir "grafischer" werden. Keine Frage. Überall sehen wir den Fortschritt, nur nicht da, wo er wirklich notwendig wäre.
+Man stelle sich vor, wir hätten holografische Interfaces, aber zum Programmieren holen wir wieder Tastatur und Maus hervor und Linux ist seinem vi-Editor treu geblieben. Vor dieser Vorstellung graut es mir, wenn ich ehrlich bin.
+Die Abstraktion muss für den Programmierer zunehmen, damit der Compiler besser optimieren kann.</p>
+<p>Da hast du völlig Recht, dass wir Entwickler es sind, die sich selber die Steine in den Weg legen. Keiner käme auf die Idee, auf einem iPad Software zu entwickeln, weil man ja ein vernünftiges Texteingabewerkzeug braucht. Daher auch immer die Unkenrufe, dass solche Geräte keine Relevanz in der Praxis haben. Dabei liegt es eigentlich an uns, diesen Zustand zu ändern. (Wir sind ja schließlich die Entwickler.)</p>
+<p>Aber erzähle das mal Linus Torvalds oder dem ein oder anderen Konsolen-Hacker. Oder ein Arbeitskollege von mir ist auch so. "Ach, der ganze Klicki-Bunti-Mist. Mit der Konsole bin ich viel flexibler und schneller."</p>
+<p>Dann sehen manche Entwickler vielleicht auch ihre Existenzberechtigung schwinden, wenn am Ende jeder ganz einfach seine Software zusammenklicken kann. Nach dem Motto: "Das darf einfach nicht sein!"</p>
+<p>Das ist schon ein Dilemma. :-/</p>
+<p>Wenn ich bei golem.de mal wieder eine ähnliche Diskussion erlebe, werde ich das mal ansprechen.
+Wir müssen uns und unsere Tools den neuen Gegebenheiten anpassen und dürfen nicht versuchen, unsere alten Gewohnheiten in die neue Technologie zu pressen. Klar, dass das scheitern muss.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-08-27):</p>
+<p>@ChinaFan: Genau: Auch wir müssen mit der Zeit gehen. VS 2010 mit seinen RAD Features ist nicht wirklich viel besser als VB 1.0.</p>
+<p>VB 1.0 war für die GUI-Entwicklung ein Meilenstein. Seitdem ist in Bezug auf GUI nicht viel passiert. Und einen Meilenstein für den restlichen Code sehe ich gar nicht. (Hm... außer vielleicht mal früher Smalltalk oder Magic.)</p>
+<p>Hier aber mal eine Anregung: http://scratch.mit.edu/</p>
+<p>Nicht, dass ich so entwickeln wollte. Ist mir zu feingranular. Aber nach Logo passiert da mal wieder etwas im Bereich "Grundbildung".</p>
+<hr />
+<p><strong>(anonym)</strong> (2011-08-28):</p>
+<p>@Ralf:
+<em>Und einen Meilenstein für den restlichen Code sehe ich gar nicht.</em></p>
+<p>Ja. Intellisense und automatische Vervollständigung kann ja nicht das Ende der Fahnenstange gewesen sein. Aber immerhin ist es nun schon so gekommen, dass ich ohne diese Features gar nicht mehr entwickeln möchte. (Ist auch nahezu unmöglich, wenn man nicht ständig die Dokumentation bemühen möchte. Die Frameworks sind einfach zu komplex, um sich jede Kleinigkeit zu merken.)</p>
+<p><em>Hier aber mal eine Anregung: http://scratch.mit.edu/</em></p>
+<p>Ja, das ist mir auch schon mal begegnet. Auf jeden Fall ist es ein sinnvoller Ersatz für Logo. Man scheint da auch ziemlich viele Spielereien machen zu können.
+Es ist aber (leider) nix für die professionelle Software-Entwicklung.</p>
+<p>Man darf bei den zukünftigen grafischen Tools nicht den Fehler machen, wieder in die Fluss- oder Struktogramm Falle zu tappen. Da war man ja schon mal ... das Ding ging nach hinten los.
+Klar, weil man in dem Falle besser dran war, direkt den Code einzutippen. Die Diagramme boten keine sinnvolle Abstraktion, sondern nur eine andere (umständliche) Sicht auf den Code.</p>
+<p>Man bräuchte eine deskriptive Abstraktion, wo es keine primitiven if-then-else Konstrukte mehr gibt. Von dieser atomaren Ebene muss man sich irgendwie trennen.</p>
+<p>Vielleicht müsste man bei der Überlegung auch ganz oben beginnen und nicht dort unten, wo wir uns derzeit befinden.
+Das Ende der Fahnenstange wäre mit Sicherheit sowas, wie bei Raumschiff Enterprise. Es gibt einen "Data", dem man einfach sagt, was man will. Das wäre die vorerst vollendete deskriptive Form der Programmierung. (Danach wäre nur noch die Gedankenübertragung effektiver.)
+Das ist momentan (noch) nicht möglich. (Wobei, SQL ist die sehr primitive Form davon.)</p>
+<p>Am Ende müssen wir dahin kommen, dass sich der Entwickler keine Gedanken mehr um Low-Level-Optimierung machen muss. Die neue Form der Programmierung muss genauso für die Spieleprogrammierung, wie auch für die normale Anwendungsentwicklung taugen. Das ist immer noch das Totschlagargument, weshalb viele noch auf C/C++ setzen: Wegen der Möglichkeit, optimalen Code zu schreiben.</p>
+<hr />
+<p><strong>Andreas Schädler</strong> (2011-08-29):</p>
+<p>Hallo Ralf,</p>
+<p>Du schreibts "Interfaces sind nicht mehr nötig".
+Was ist dann mit Contract First?
+Habe ich da was falsch verstanden?</p>
+<p>Gruss
+Andreas</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-08-29):</p>
+<p>@Andreas: Interfaces sind ein anderer Concern bei der Entwicklung. Die haben vor allem mit der Arbeitsorganisation zu tun. Mit einem Interface beschreibe ich eine Klasse, die es womögl. noch nicht gibt. Ich kann Code davon abhängig machen, ohne die Implementation in der Hand zu haben; die kann also gleichzeitig woanders hergestellt werden.</p>
+<p>Und im Beispiel sind Interfaces einfach auch nicht nötig, weil keine "ganzen Objekte" injiziert werden, sondern nur einzelne Methoden. Das "Interface" einer Methode ist ein Delegate-Typ, z.B. Action.</p>
+<hr />
+<p><strong>Frank Jurisch</strong> (2011-08-29):</p>
+<p>Schön dass es auch Leute gibt die sich nicht für Scheiß c# interessieren und mich mit jedem ihren "mach doch was andres"-Kommentaren in den Orkus der berufsverweigerer wünschen Dein komisches Zeug lesen.
+Darf ich nun noch EBC und wenn nich krieg ich den Kaffee zurück ?</p>
+<hr />
+<p><strong>Christian Jacob</strong> (2011-08-30):</p>
+<p>Dass Du polarisierst, ist ja bekannt, Ralf. :)</p>
+<p>Dass viele Deiner Leser nicht auf so hohem Niveau arbeiten, auch.</p>
+<p>Wenn Du allerdings die geistigen Erkenntnisse anderer Entwickler (hier: Mark Nijhof) "zerpflückst" und damit aufzeigen möchtest, dass deren Ergebnisse noch nicht weit genug gedacht sind (aus Deiner Perspektive), dann bin ich persönlich der Meinung, dass Du den Originalautor mit Deinen Ergebnissen konfrontieren solltest.</p>
+<p>Da Du Dich immer gerne der Diskussion stellst und i.d.R. auch mit vernünftigen Argumenten konterst, wäre das für Dich sicher ein Leichtes.</p>
+<p>Hinzu kommt, dass Du jemanden, der eventuell ebenfalls einen großen Leserkreis hat, zum Weiterdenken animierst, was zu einer größeren Verbreitung von z.B. Clean Code Prinzipien führen kann.</p>
+<p>Gruß,
+Christian.</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-08-30):</p>
+<p>@Christian: Nein, ich denke nicht, dass ich eine Verpflichtung habe, die zu informieren, deren Arbeit ich kommentiere oder gar kritisiere.</p>
+<p>Kein Journalist informiert die Bundeskanzlerin, wenn er ihre Politik zerpflückt. Niemand informiert Martin Fowler, wenn er nicht seiner Meinung ist.</p>
+<p>Ich sperre mich gegen keinen Kommentar von Mark oder sonst wem. Wenn er Deutsch versteht, kann er gern etwas erwidern (auch auf Englisch).</p>
+<p>Das heißt nicht, dass ich nicht manchmal einen Autor, auf den ich Bezug nehme, darüber informiere. Mal so, mal so. Wie gesagt: keine Pflicht.</p>
+<p>Wenn du magst, kannst du ihn aber gern informieren und zur Diskussion einladen.</p>
+<hr />
+<p><strong>Mark Nijhof</strong> (2011-08-30):</p>
+<p>Hi Ralf,</p>
+<p>Thanks for writing your thoughts on refactoring, I think (both my German and Google Translate leave to desire) that where we both stand nowadays is not to far off. I remember when writing this in 2009 that I had trouble keeping the examples small enough for one slide while communicating the basic message that I was trying to communicate. So that was the copout for not going all the way ;-)</p>
+<p>Now I do strongly believe that the code we write is for developers (including ourselves) to read. And as such it should be simple. I would rather not implement an particular pattern if that makes the code more magical to those who will read the code. So some steps you suggest I would probably skip in certain team, while in other teams I would have no trouble with them.</p>
+<p>F.ex. passing in Actions or Functions instead of objects (class or interface meh who cares) does make the code harder to quickly navigate and thus understand.  You will still need a similar wiring setup somewhere so there is no win there, i.e. then that place needs changing instead of perhaps in the code itself. Also method signature changes will suffer regardless.</p>
+<p>To be clear, in my current project I do a lot of Action, Function "injections" so not opposing that idea.</p>
+<p>Now about the naming, I think that calling something a OrderProcessor makes ore sense then calling it a ProcessOrder because when I read ProcessOrder I think it is an entity a thing, but when I read OrderProcessor I read that it is a thing without an identity that processes orders.</p>
+<p>But I generally agree with you that naming is hugely important. I agree as well with you that splitting up logic in smaller functions with describing names is one of the more important things to do to make the code more readable.</p>
+<p>And finally, yes code can <em>always</em> be refactored into a better state, but you do want to weight the benefits of such refactoring up to the costs of that refactoring. So using Actions/Functions instead of Objects looses navigatibility but gains flexibility. So if that flexibility is valuable then yes go for it, but if this class is most likely not to change anyway then I say don't.</p>
+<p>And to comment to your last comment, no it is not your responsibility to inform anyone, but it might be a learning opportunity that you are missing out on? That at least is my opinion and I would ping Martin Fowler if I disagree, even if it was just to learn that I was wrong.</p>
+<p>Perhaps we should meetup one day as I am sure it will be an interesting discussion regardless of topic :-)</p>
+<p>Cheers,</p>
+<p>-Mark</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-08-30):</p>
+<p>@Mark: Thx for commenting. Glad to hear we´re not far apart in our opinions. That, however, was not clear from what I was able to see in your presentation ;-)</p>
+<p>I agree, "Code is for developers to read". And I agree that the "integration code" in my posting is not straightfwd to read if you´re not used to these kinds of constructs.</p>
+<p>However, there´s always a balance to strike. Readability - although very important - is not the only value to strive for. Another one is Single Responsibility. And in this case I put more weight on that side of the scale. The danger of code getting overloaded with domain logic is so huge that I´m willing to trade in readability for "domain logic resistance". That´s why I call the illegibility of the integration code a feature not a bug.</p>
+<p>Integration is a much undervalued concern. It´s hard to spot. To raise the consciousness of the dev community in that regard was the purpose of my posting. I found it sad you stopped with the usual SOLID approach.</p>
+<p>So I´d like to separate two things: notation of the "integration" aspect and its extraction.</p>
+<p>I´m firm in my believe that extraction is very, very important. But continuations are just one of several ways of writing such code. This surely can and should improve.</p>
+<p>Maybe I can make it to Denmark or some other Scandinavian country so we can have a chat in person. That sure would be fun.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

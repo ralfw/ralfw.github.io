@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lernkartei II – Erste Lerninteraktion — ralfw.de Archiv</title>
+<meta name="description" content="Wie ist eigentlich das Vorgehen beim Flow-Design und der Umsetzung mit Event-Based Components? Das – so hatte ich in einem früheren Posting angekündigt – möchte ich mal anhand eine">
+<link rel="canonical" href="https://ralfw.de/archiv/2011/lernkartei-ii-erste-lerninteraktion/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Lernkartei II – Erste Lerninteraktion — ralfw.de Archiv">
+<meta property="og:description" content="Wie ist eigentlich das Vorgehen beim Flow-Design und der Umsetzung mit Event-Based Components? Das – so hatte ich in einem früheren Posting angekündigt – möchte ich mal anhand eine">
+<meta property="og:url" content="https://ralfw.de/archiv/2011/lernkartei-ii-erste-lerninteraktion/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Lernkartei II – Erste Lerninteraktion</h1>
+    <div class="doc-meta"><span>15. April 2011</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2011/04/lernkartei-ii-erste-lerninteraktion.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2011/lernkartei-ii-erste-lerninteraktion/</code></span></div>
+    <div class="art"><p>Wie ist eigentlich das Vorgehen beim Flow-Design und der Umsetzung mit Event-Based Components? Das – so hatte ich in einem <a rel="noopener" href="http://ralfw.blogspot.com/2011/03/lernkartei-i-das-szenario.html">früheren Posting</a> angekündigt – möchte ich mal anhand einer Beispielanwendung zeigen. Das Szenario ist einfach zu verstehen, aber nicht trivial: ein Lernkarteiprogramm. Ich würde sogar sagen, nach oben gibt es da nicht so bald eine Grenze. Das könnte ich sogar mit der Cloud verbinden ;-)</p>
+<p>Aber erstmal klein anfangen. Einen Schritt nach dem anderen. Heute nehme ich mir nur eine dünne Featurescheibe für Modellierung und Implementierung vor:</p>
+<blockquote>
+<p>Der Anwender soll das Programm aufrufen und mit einer Lernkartei interagieren können. Es sollen ihm Fragen präsentiert werden und er kann bewerten, ob er die Antworten gewusst hat oder nicht.</p>
+</blockquote>
+<p>Es geht mir nur darum, die Interaktion zwischen Anwender und Programm während des Lernens umzusetzen, ohne mich dabei dumm zu stellen. Das Ergebnis soll kein Prototyp sein, aber auch nicht die volle Abfragefunktionalität enthalten. Eben nur eine dünne Scheibe vom kompletten Feature “Karten abfragen”. Die Musik spielt zwar im GUI, doch dahinter soll auch schon rudimentäre Logik stehen.</p>
+<p>Vor Modellierung und Implementation haben die Softwaregötter jedoch die Architektur gestellt. Einen groben Entwurf in Bezug auf die nicht-funktionalen Anforderungen will ich also auch liefern.</p>
+<h3>Architektur</h3>
+<p>Die Architektur beginnt für mich immer mit einem System-Umwelt-Diagramm:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/cdacf65370dc2b1f.png" /></p>
+<p>Es zeigt das Softwaresystem als Ganzes in der Mitte und drumherum sowohl die Rollen, die damit arbeiten, wie die Ressourcen, auf die es zugreifen muss. In diesem Fall ist die Lage sehr simpel:</p>
+<ul>
+<li>Es gibt nur eine Anwenderrolle, den Lernenden</li>
+<li>Es gibt Lernkarteien auf der Festplatte (FlashCardBox)</li>
+<li>Es gibt Karteikartenstapel auf der Festplatte (FlashCardFile), die in Lernkarteien importiert werden können; so wie man Karteikärtchen in den Lernkarteikasten steckt</li>
+</ul>
+<p>FlashCardFiles sind Textdateien, wie den Anforderungen im vorherigen Artikel zu entnehmen ist. FlashCardBoxes denke ich mir derzeit als XML-Dateien.</p>
+<p>Die Interaktion mit dem Benutzer erfolgt über ein WPF-GUI. Das Anwendungssystem besteht mithin aus nur einem Betriebssystemprozess, einer EXE.</p>
+<p>Daraus ergibt sich eine Zerlegung in Belange (Concerns) wie folgt:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/42f9638312a4ab0e.png" /></p>
+<p>Die Anwendung (WPF FlashCard, WPFFC) zerfällt in “Codekategorien” für die WPF-Interaktion und den Zugriff auf die Ressourcen. Und das WPF-GUI Belang zerfällt nochmal in einen View und ein ViewModel. Ich folge hier also dem MVVM-Pattern. Rollen und Ressourcen treiben die Belangidentifikation.</p>
+<p>Belange sind allerdings nur Geschmacksrichtungen oder Farben für Code und keine Codecontainer. Architektur produziert keinen Code, sondern nur einen (gedanklichen) Rahmen dafür. In den müssen sich das nachfolgende Modell und der Code einpassen.</p>
+<p>Ab jetzt habe ich eine Erwartung, bei der Modellierung auf Funktionseinheiten zu stoßen, die keine funktionale Anforderung erfüllen, sondern zu einem dieser nicht-funktionalen Belange gehören. Die Belange geben mir ein Messer in die Hand, mit dem ich Lösungsideen zerlegen kann (und muss); sie geben vor, in welche grundsätzlich verschiedenen Kategorien ist Code einteilen sollte.</p>
+<h3>GUI-Skizze</h3>
+<p>Der Entwurf des Codes für die funktionalen Anforderungen beginnt immer bei der Benutzeroberfläche. Nur, was über eine Interaktion angestoßen wird, muss realisiert werden. Deshalb sollte am Anfang der Modellierung eine GUI-Skizze stehen.</p>
+<p>Wie stelle ich mir (oder der Kunde/Anwender sich) die Benutzeroberfläche vor? Das Wichtigste dabei: Welche grundsätzlichen Interaktionen gibt es? Es geht also nicht darum, welche Buttons oder Menüpunkte es in einem Dialog gibt, sondern nur, welche Kommandos irgendwie ausgelöst werden sollen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/12e1b0c145527e3a.png" /></p>
+<p>Für den Längsschnitt heute denke ich mir die Benutzerschnittstelle so:</p>
+<ul>
+<li>Frage und Antwort werden in zwei Kästchen gezeigt, die Vorder- und Rückseite einer Karteikarte darstellen. Die Antwort ist aber erst zu sehen, wenn man sie ausdrücklich aufdeckt. Bis dahin steht an ihrer Stelle nur ein Fragezeichen.</li>
+<li>Nach Aufdecken der Antwort kann man sich selbst einschätzen: Hat man die Antwort gewusst oder nicht. Dafür reichen erstmal zwei Buttons.</li>
+</ul>
+<p>Es gibt also nur zwei grundsätzliche Interaktionen: Antwort zeigen (ShowAnswer) und Selbsteinschätzung (ScoreKnowledge).</p>
+<p>Nach der Selbsteinschätzung wird dann die nächste Karte in der aktuellen Lernkartei abgefragt.</p>
+<h3>Modell</h3>
+<p>Ausgehend von der GUI-Skizze kann ich mit der Modellierung beginnen. Die erste Funktionseinheit ist das GUI oder genauer, der View im GUI. Der View zeigt aber nur an und ist Interaktionspartner, darin steht jedoch kein Code. Codebehind will ich mir verkneifen. Gerade mit WPF sollte das möglich sein. Der View ist also reines XAML.</p>
+<p>Das heißt, die Daten, die angezeigt werden sollen und die Kommandos, die bei Interaktion ausgeführt werden sollen, müssen in anderen Funktionseinheiten stehen. Das ist das ViewModel.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/bac2cd7d029d3670.png" /></p>
+<p>Die Skizze zeigt, dass der View abhängig ist von den ViewModel-Kommandos (rechts) und den ViewModel-Daten (unten). (Und die Kommandos kennen durchaus auch die Daten, um darauf unmittelbar einwirken zu können, falls es um etwas sehr Einfaches geht.)</p>
+<p>So die grundsätzliche Trennung nach dem MVVM-Pattern.</p>
+<p>Zu beachten: Bei aller Flussorientierung sind hier noch Abhängigkeiten zu finden. Die sind jedoch technologiebedingt unvermeidbar. Um Kommandos und Daten deklarativ an View-Elemente binden zu können, muss der View abhängig davon sein. Aber das macht auch nichts, weil Kommandos und Daten erstens einfach sind und zweitens der View auch keine Logik enthält.</p>
+<p>Jetzt zur Modellierung der Kommandoflüsse. Erst jenseits der ViewModels wird es interessant.</p>
+<p>Beim Kommando zum Anzeigen der Antwort verzichte ich auf einen Fluss. Es ist trivial, da es nur die Sichtbarkeit der Antwort setzt und die das Kommando zur Selbstbewertung anschaltet. Es agiert ausschließlich auf dem ViewModel.</p>
+<p>Das Kommando zur Selbstbewertung ist da schon interessanter. Im Moment soll zwar noch nicht viel passieren; es gibt ja noch keine echten Lernkarteien. Dennoch möchte ich die grundsätzlichen Prozessschritte modellieren:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/3db484baf4774ea8.png" /></p>
+<p>Das Kommando wird für beide Bewertungen ausgelöst, einmal mit dem Parameterwert <em>True</em> (wenn die Antwort gewusst wurde), einmal mit <em>False</em>. Selbst ist es aber nicht dafür verantwortlich, die Funktionalen Anforderungen zu erfüllen. Das soll Domänenlogik tun.</p>
+<p>Und was soll passieren bei einer Selbstbewertung? Zuerst soll die gerade abgefragte Karte in der Lernkartei passend zur Bewertung verschoben werden; wurde die Antwort gewusst, wandert die Karte in das nächste Fach, wurde sie nicht gewusst, dann zurück ins erste Fach. Danach soll die nächste Karte aus der Lernkartei abgefragt werden.</p>
+<p>Welche Karte “die nächste” ist, ist heute noch nicht wichtig. Irgendein Algorithmus wird darüber später entscheiden. Mir reicht es für heute, dass es eine nächste Karte geben muss. (Hm… was soll eigentlich passieren, wenn alle Karten gelernt wurden und im Archiv liegen? Dann gibt es keine nächste Karte. Darüber mache ich mir jetzt aber keine weiteren Gedanken; in diese Glaskugel will ich nicht schauen.)</p>
+<p>Diese beiden Schritte der Domänenlogik habe ich im Modell eingezeichnet. <em>Advance_card</em> steckt die aktuelle Karte je nach Bewertung weiter. <em>Get_next_card</em> holt anschließend die nächste.  Und am Schluss wird die neue aktuelle Karte ins ViewModel eingetragen; dafür gibt es eine extra Funktionseinheit, einen Mapper. Der entkoppelt ViewModel und DomainModel.</p>
+<p>Mapper und View sind also beide abhängig vom ViewModel. Das fühlt sie wie eine saubere Klammer um die Domänenlogik an.</p>
+<h3>Arbeitsorganisation</h3>
+<p>Ich arbeite allein am Code. Deshalb will ich mich hier nicht so mit der Arbeitsorganisation beschäftigen. Komponenten im Sinne VS Projektmappen spare ich mir im Augenblick also.</p>
+<p>Dennoch will ich natürlich den Code sauber strukturieren. Also bringe ich mal die Belange der Architektur in Anschlag und teile die Funktionseinheiten zu.</p>
+<ul>
+<li>Der View gehört zum Belang WPF GUI/View und kommt in ein eigenes Projekt.</li>
+<li>Das Mapping gehört zum View bzw. zum ViewModel. Ich stecke es auch in ein eigenes Projekt. Weitere Mappings mögen dazu kommen. Zum ViewModel packe ich es nicht, denn…</li>
+<li>…das ViewModel (Daten und Kommandos) ist für mich ein Kontrakt und damit in einem eigenen Projekt. Dito die Klasse zur Repräsentation einer Karte (<em>Card</em>).</li>
+<li>Und die beiden Domänenlogik-Funktionseinheiten fasse ich auch zusammen in einem Projekt, sie bilden den Grundstock für die <em>FlashCardBox</em>.</li>
+</ul>
+<p>Damit ergibt sich eine Projektmappenstruktur wie folgt:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/2f15ce7062bbeb0d.png" /></p>
+<p>Die Kontrakte sind derzeit noch am umfangreichsten. Aber das macht nichts. Sie sind dafür ganz einfach.</p>
+<p>Alles steckt zusammen in einer Projektmappe, weil ich der einzige bin, der daran arbeitet. Und ich bin diszipliniert genug – nehme ich mal an ;-) -, nicht “zu luschern”, wenn ich an einer Funktionseinheit sitze. Und die expliziten Kontrakte tun ihr Übrigens, um die entworfene Entkopplung bei der Implementierung aufrecht zu halten. Ich kann mir also das bisschen mehr Bequemlichkeit leisten, das eine Projektmappe für alles bringt. But don´t try this at home ;-) In Ihren Projekten, an denen viele Entwickler sitzen, sollten Sie das nicht tun.</p>
+<h3>Implementierung</h3>
+<p>Die Implementierung ist derzeit trivial. Einzig der View hat Mühe gemacht. Ein elendes Gewiggel ist das mit dem WPF ;-) Wenigstens ist er rein deklarativ geblieben. Allerdings war ich mir unsicher, ob die ganzen Bindungen ans ViewModel passen; deshalb habe ich ein kleines Testprojekt aufgesetzt.</p>
+<p>Das App-Projekt ist der Startpunkt. Dort werden die Flow-Funktionseinheiten zusammengesteckt und der View geöffnet.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e929b1c6929dbf41.png" /></p>
+<p>Das ist überschaubares Event-Based Components “Plumbing” würde ich sagen.</p>
+<p>Eine Unsauberkeit steckt allerdings noch drin: die Initialisierung des Views mit einer Karte. Ich habe die Start-Interaktion nicht modelliert, deshalb gibt es aus der Domänenlogik keine erste Karte. Für den Moment ist das ok, denke ich. Denn auch die weiteren Karten sind ja keine echten, sondern nur Dummykarten. So sieht der GUI dann nach Aufdecken einer Dummykarte aus:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/731f7f80c642b4e3.png" /></p>
+<p>Nicht superschön, aber funktional. An “schön” kann sich gern jemand mit Designambitionen versuchen. Der Code liegt bei Google in einem Mercurial Repository: <a rel="noopener" href="http://code.google.com/p/wpfflashcards/">http://code.google.com/p/wpfflashcards/</a></p>
+<h3>Zwischenstand</h3>
+<p>Ich habe einen ersten dünnen Längsschnitt durch die Anforderungen gemacht. Inklusive Modellierung hat mich das netto 2 Stündchen gekostet, schätze ich mal. Wie gesagt, der View war am Ende der Engpass.</p>
+<p>Jetzt kann der imaginierte Kunde erstes Feedback geben. Und der sagt: “Ok, good enough. Weitermachen…”</p>
+<p>Also mache ich mich beim nächsten Mal an, hm, ja, an was eigentlich? Was ist das nächste wichtige Feature? Die Lernkarteiübersicht? Oder der Import eines Kartenstapels? Nein, ich denke, beim nächsten Mal muss ich mich an die Lernkartei machen. Es müssen Karten durch die Fächer bewegt werden. Der Kern der ganzen Anwendung wird dran sein.</p>
+<p>Zum Glück wird das wohl nichts mit dem View zu tun haben. Der ist vorbereitet auf echte Karten und echtes Weiterstecken. Gut, dass ich schon dieses Mal die Kommandos zumindest realistisch verdrahtet habe und auch schon Platzhalter für die wesentlichen Funktionsschritte vorhanden sind.</p>
+<h2>Kommentare</h2>
+<p><strong>Blog: Robert-M</strong> (2011-04-16):</p>
+<p>Alles in diesem Projekt ist schön, einfach und verständlich. Ich finde das Vorgehen gut beschrieben und lehrreich.</p>
+<p>Was mir auffällt: Warum immer noch separate Kontrakte? Worin besteht der Wert für diese Projekt? Ist das nicht YAGNI - für einen Fall der selten Eintritt, zumal "Extract Interface" eine toolgestützte Refakatorisierung ist. (http://robert-m.de/extract- interface/).</p>
+<p>Überraschend für mich: Im Projekt sind keine automatisierten Tests? Gut, Tests als Sicherheitsnetz kann man sich hier vielleicht schenken und es müssen ja nicht gleich Specs/Akzeptanzkriterien sein - aber selbst kleinteilige -Tests sind auch immer wieder eine schöne Doku. Ja richtig, Dein Post ist Doku genug, aber trotzdem: Irgendwie erwarte ich Tests heutzutage, in der einen oder anderen Form, in jedem Projekt. Bei einem Sicherheitsgurt empfiehlt sich ja auch nicht zu sage: "Waren doch nur ein paar hundert Meter, was kann da schon passieren?" Und wie war das mit dem Händewaschen? Gehören Tests nicht heute zur Entwicklerhygiene?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2011-04-17):</p>
+<p>@Robert: Du hast Recht, so wie ich die Implementation am Ende in eine Projektmappe stecke, sind Kontrakte (für die Flow-Funktionseinheiten) nicht wirklich nötig.</p>
+<p>Ich nehme sie raus - bis ich sie brauche, weil ich echt komponentenorientiert arbeiten will. Hätte ich mit ebc.xml gearbeitet wären sie einfach generiert worden. Dagegen hätte ich mich nicht gewehrt. Aber so hab ich mir aus Gewohnheit zuviel Mühe gemacht. Danke für das Feedback. Review hilft :-)</p>
+<p>Warum fehlen bisher Tests? Weil die Funktionalität trivial ist. Es gibt noch nicht einmal etwas zu dokumentieren.</p>
+<p>Auf der anderen Seite... das ist auch ein bisschen Ausrede ;-) Denn an einer Stelle wäre ein Test wirklich nützlich gewesen und hätte mit tatsächlich auch Zeit gespart: beim Mapping. Da hatte ich mich nämlich zuerst vertippt und hab statt aus card.Question aus _vm.Question die neue Frage gesetzt.</p>
+<p>Am Ende gibt es also kaum Code, der zu trivial ist.</p>
+<p>Lax war ich mit den Tests, weil es mir in der Realisierung nicht um eine allseits saubere Implementierung geht, sondern um die Evolvierbarkeit durch Flow-Orientation.</p>
+<p>Doch es stimmt schon, dass auch ich dabei selbst von Tests profitieren würde. Und so rüste ich sie nach, wo es bisher Sinn macht. Nicht zur Dokumentation, sondern als Sicherheitsnetz gegen Regressionsfehler.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

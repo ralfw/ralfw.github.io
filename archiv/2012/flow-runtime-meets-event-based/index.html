@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flow Runtime Meets Event-Based Components — ralfw.de Archiv</title>
+<meta name="description" content="Dass die Flow Runtime ein Ersatz für Event-Based Components sein soll, hat nicht jedem Freund des Flow-Design geschmeckt. Nicht alle sind deshalb mit fliegenden Fahnen zu NPantaRhe">
+<link rel="canonical" href="https://ralfw.de/archiv/2012/flow-runtime-meets-event-based/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Flow Runtime Meets Event-Based Components — ralfw.de Archiv">
+<meta property="og:description" content="Dass die Flow Runtime ein Ersatz für Event-Based Components sein soll, hat nicht jedem Freund des Flow-Design geschmeckt. Nicht alle sind deshalb mit fliegenden Fahnen zu NPantaRhe">
+<meta property="og:url" content="https://ralfw.de/archiv/2012/flow-runtime-meets-event-based/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Flow Runtime Meets Event-Based Components</h1>
+    <div class="doc-meta"><span>5. Juli 2012</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2012/07/flow-runtime-meets-event-based.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2012/flow-runtime-meets-event-based/</code></span></div>
+    <div class="art"><p>Dass die <a rel="noopener" href="http://geekswithblogs.net/theArchitectsNapkin/archive/2012/04/27/introduction-to-the-flow-execution-engine-npantarhei.aspx">Flow Runtime</a> ein Ersatz für Event-Based Components sein soll, hat nicht jedem Freund des Flow-Design geschmeckt. Nicht alle sind deshalb mit fliegenden Fahnen zu <a rel="noopener" href="https://github.com/ralfw/NPantaRhei">NPantaRhei</a> übergelaufen.</p>
+<p>Ok, ok, kann ich verstehen. Aber jetzt ist Schluss :-) Jetzt gehen Event-Based Components (EBC) nämlich auch mit der Flow Runtime. EBC werden von der Runtime einfach in Operationen “übersetzt”. Und das geht so:</p>
+<pre><code>class Rechenwerk
+{
+    public void Teilen(Tuple&lt;int,int&gt; input)
+    {
+        if (input.Item2 == 0)
+            DivisionDurchNull(input);
+        else
+            Resultat(input.Item1/input.Item2);
+    }
+
+    public event Action&lt;int&gt; Resultat;
+    public event Action&lt;Tuple&lt;int,int&gt;&gt; DivisionDurchNull;
+}
+</code></pre>
+<p>Eine Instanz EBC-Klasse wird dann einfach bei der Konfiguration reingereicht:</p>
+<pre><code>var config = new FlowRuntimeConfiguration()
+        …
+        .AddEventBasedComponent(&quot;rechenwerk&quot;, new Rechenwerk());
+</code></pre>
+<p>Die Runtime analysiert die Klasse und bietet dann alle Methoden mit der Signatur</p>
+<ul>
+<li>
+<p>Action</p>
+</li>
+<li>
+<p>Action</p>
+</li>
+</ul>
+<p>als Input-Port an. Der Methodenname ist der Portname. In diesem Fall wäre es nur <em>Teilen</em>.</p>
+<p>Alle öffentlichen Events mit ebensolcher Signatur erkennt die Runtime als Output-Ports. Der Event-Name ist der Portname.</p>
+<p>Im Flow müssen dann die Ports explizit angegeben werden.</p>
+<pre><code>var config = new FlowRuntimeConfiguration()
+                .AddStreamsFrom(@&quot;
+                                 /
+                                 .in, rechenwerk.teilen                                                rechenwerk.resultat, .result
+                                 rechenwerk.divisionDurchNull, .error
+                                 &quot;)…
+</code></pre>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/d3ff4c2442fea59b.png" /></p>
+<p>Bei Func/Action-Operationen gibt es keine Portnamen, weil sie durch den Verwendungsort der Operationen automatisch unterschieden werden kann zwischen Input und Output. EBC sind also ausführlicher. Aber das ist ja auch Sinn der Aktion. Auf EBC werden Sie zurückgreifen, wenn Ihre Operationen mehrere Input- und/oder Output-Ports haben.</p>
+<p>Ich hoffe, damit ist es nun für alle attraktiv, sich mit der Flow Runtime zu beschäftigen. Selbst wer ganz auf EBC eingeschossen ist, kann jetzt davon profitieren, dass Flows für die Runtime mit einem Visualizer definiert und sogar aus Assemblies wieder ausgelesen werden können. Oder er kann ganz einfach die Verarbeitung in einer EBC-Instanz in den Hintergrund legen. Oder sie kann Exceptions in einer EBC-Instanz mit einer Causality abfangen – selbst wenn es auf einem Hintergrund-Thread gekracht hat.</p>
+<p>Enjoy EBC at the next level!</p>
+<h2>Kommentare</h2>
+<p><strong>Michael Kreich</strong> (2012-07-06):</p>
+<p>Das freut mich sehr, ich spiele seit ein paar Wochen mit EBC rum und wollte gerade in die Flow Runtime einsteigen, habe aber mit Bedauern festgestellt, dass alle meine Klassen ein zweites nicht-EBC-Gesicht bräuchten. Hooorray :-)</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2012-07-06):</p>
+<p>@Michael: Freut mich, dass es dir nun leichter fällt, auf die Runtime umzusteigen.</p>
+<p>Aber bedenke: Wenn du weiterhin "in EBC denkst" und nur deren Platinen durch Flows ersetzt, verschenkst du Potenzial.</p>
+<p>Der Charme der Runtime ist, dass du Operationen als Funktionen oder Prozeduren implementieren kannst. EBC sind unhandlich grobgranular im Vergleich mit ihrem Zwang zu "1 Klasse pro Operation".</p>
+<p>Deshalb kommen Sie auch jetzt erst in das Flow Runtime Bild. Sie sind nützlich hier und da, wenn Operationen wirklich mal mehrere Inputs brauchen. Oder mehr als 2 Outputs. Das sollte jedoch für die Lesbarkeit von Flows nur selten der Fall sein!.</p>
+<p>Also: Versuche dich trotz dieses Features von EBC zu verabschieden.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

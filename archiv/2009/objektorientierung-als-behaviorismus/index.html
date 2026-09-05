@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Objektorientierung als Behaviorismus der Softwareentwicklung [OOP 2010] — ralfw.de Archiv</title>
+<meta name="description" content="Die Objektorientierung steht uns im Weg zu evolvierbareren Programmen. Ja, das glaube ich immer mehr. Nicht, dass ich Objekte missen möchte – sie sind nützliche und wichtige Strukt">
+<link rel="canonical" href="https://ralfw.de/archiv/2009/objektorientierung-als-behaviorismus/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Objektorientierung als Behaviorismus der Softwareentwicklung [OOP 2010] — ralfw.de Archiv">
+<meta property="og:description" content="Die Objektorientierung steht uns im Weg zu evolvierbareren Programmen. Ja, das glaube ich immer mehr. Nicht, dass ich Objekte missen möchte – sie sind nützliche und wichtige Strukt">
+<meta property="og:url" content="https://ralfw.de/archiv/2009/objektorientierung-als-behaviorismus/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Objektorientierung als Behaviorismus der Softwareentwicklung [OOP 2010]</h1>
+    <div class="doc-meta"><span>26. Dez. 2009</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2009/12/objektorientierung-als-behaviorismus.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2009/objektorientierung-als-behaviorismus/</code></span></div>
+    <div class="art"><p>Die Objektorientierung steht uns im Weg zu evolvierbareren Programmen. Ja, das glaube ich immer mehr. Nicht, dass ich Objekte missen möchte – sie sind nützliche und wichtige Strukturierungsmittel für Software.  Ich will natürlich Funktionseinheiten mit eigenem Zustand definieren können. Aber die Sprache der Objektorientierung wie sie C++, Java, C# und auch VB vorgeben, ist einfach nicht für Flexibilität und Evolvierbarkeit gedacht gewesen. Und <strong>da Sprache unser Denken bestimmt, kommen bei der Benutzung objektorientierter Sprachen eben nicht einfach flexible und evolvierbare Programme heraus</strong>.</p>
+<p>Objektorientierung ist sozusagen die Brille der Programmier-Behavioristen. Wer durch sie blickt, vereinfacht die Welt extrem – manchmal bis zur Unkenntlichkeit. <strong>Wo die Welt der Behavioristen durch Reiz-Reaktion determiniert ist, da ist sie für “die Objektorientierten” durch Zustand und Synchronizität geprägt.</strong></p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/096d3521ecdeda6a.png" /></p>
+<p>Und so wie Behaviorismus bei der Dressur eines Tanzbären funktionieren mag, so funktioniert Objektorientierung auch bei einem simplen Malprogramm. Ok, sie “funktioniert” auch bei viel größeren Anwendungen – doch ich meine mit “funktionieren” nicht, dass objektorientierter Code am Ende läuft, sondern ob mit den Mitteln der Objektorientierung etwas heraus kommt, was sich auch weiterentwickeln lässt. Denn das ist ein wesentliches und trotzdem oft unterschätztes Qualitätsmerkmal von Software. Beim Tanzbären ist das hingegen nicht wichtig. Wenn der keine neuen Tricks mehr lernt, nimmt man einen neuen.</p>
+<p><strong>Wer hingegen mehr als einen Tanzbären dirigieren will, z.B. ein ganzes Unternehmen, der ist mit Behaviorismus schlecht bedient.</strong> Unternehmensführung funktioniert schlecht mit Zuckerbrot und Peitsche als Mittel, um Reize auszulösen und Reaktionen zu provozieren, die eine vielköpfige Belegschaft verlässlich zum Erfolg führen.</p>
+<p>Dito die Objektorientierung in nicht mehr einfach überschaubaren Szenarien. <strong>Direkte, streng typisierte und synchrone Kopplung ist das falsche Denkmuster für evolvierbare Software.</strong> Solche Kopplung ist aber der Default der Objektorientierung. Nur mit Mühe und Disziplin kann man sich von ihm lösen. Das mag dann zwar das Expertentum von Softwareentwicklern ausmachen – doch wie in Panik die Moral schnell verdampft, so verflüchtigen sich unter Projektdruck auch solche programmierzivilisatorischen Errungenschaften. Was dann nicht durch die Sprache quasi erzwungen wird, das findet nicht statt.</p>
+<p>Deshalb bin ich für möglichst hart verdrahtete neue Defaults – wenn schon nicht neue Sprachen, die die Evolvierbarkeit begünstigen. Ein solcher Default ist die <strong>echte Komponentenorientierung</strong>, bei der Komponentenimplementationen physisch alleingestellt in Komponentenwerkbänken stattfinden und Komponenten einander nicht mehr direkt referenzieren. Deshalb bin ich für <strong>Flows als ersten groben Implementationsansatz</strong> für jede Realisierung eines Features; denn in Flows gibt es keine Kopplung mehr zwischen den Schritten, so dass die Evolvierbarkeit sehr hoch ist. Deshalb bin ich für die <strong>Nutzung eines in-proc Bussystems</strong>, d.h. selbst wenn die Kommunikation noch lokal und synchron ist. Ein solcher Bus entkoppelt noch mehr als ein DI Container.</p>
+<p>Komponentenorientierung begrenzt die OO-Defaults lokal auf die Implementation einer überschaubaren Komponente. Und DI Container, Flows sowie Busse sind neue Defaults für die Kopplung von Strukturen, wenn es unüberschaubar wird – was immer schneller passiert, als wir uns vorstellen.</p>
+<p>Wie wäre es, damit einmal im neuen Jahr zu experimentieren? Der überkommene Programmierbehaviorismus würde einem differenzierteren Verständnis von Software weichen.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

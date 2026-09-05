@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Event Sourcing Challenge: Bowling Game Kata — ralfw.de Archiv</title>
+<meta name="description" content="Event Sourcing ist für mich die Zukunft der grundsätzlichen Zustandshaltung in Software. Alles andere ist eine Optimierung, die man nicht leichtfertig und schon gar nicht vorzeitig">
+<link rel="canonical" href="https://ralfw.de/archiv/2019/event-sourcing-challenge-bowling-game-kata/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Event Sourcing Challenge: Bowling Game Kata — ralfw.de Archiv">
+<meta property="og:description" content="Event Sourcing ist für mich die Zukunft der grundsätzlichen Zustandshaltung in Software. Alles andere ist eine Optimierung, die man nicht leichtfertig und schon gar nicht vorzeitig">
+<meta property="og:url" content="https://ralfw.de/archiv/2019/event-sourcing-challenge-bowling-game-kata/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-01)"></span>ralfw.de</p>
+    <h1>Event Sourcing Challenge: Bowling Game Kata</h1>
+    <div class="doc-meta"><span>17. Dez. 2019</span><span>Erstveröffentlichung: ralfw.de</span><span><a href="https://ralfw.de/event-sourcing-challenge-bowling-game-kata/" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2019/event-sourcing-challenge-bowling-game-kata/</code></span></div>
+    <div class="art"><p><img loading="lazy" alt="" src="/assets/01-ralfw.de/3ce1f65267e80561.png" /></p>
+<p>Event Sourcing ist für mich die Zukunft der grundsätzlichen Zustandshaltung in Software. Alles andere ist eine Optimierung, die man nicht leichtfertig und schon gar nicht vorzeitig vornehmen sollte.</p>
+<p>Mit Event Sourcing verdrängt endlich <a href="#INTERNAL_LINK#/post/NaN">Konstruktivismus</a> den bisherigen Materialismus des immer noch dominierenden RDBMS/OO-Denkens.<a href="#fn1">1</a> Und ich halte Event Sourcing für die Grundlage von Antifragilität in der Softwareentwicklung.<a href="#fn2">2</a></p>
+<p>Ich finde Event Sourcing also sehr spannend und wichtig – nur leicht ist es nicht. Denn auch wenn Event Sourcing auf das eine Datenmodell, die eine große Datenstruktur verzichtet, bedeutet das nicht, dass man sich keine Gedanken um Datenmodelle machen muss.</p>
+<p>Damit meine ich nicht die vielen situationsspezifischen Strukturen, die nun sehr einfach möglich werden. Für jede Interaktion mit einer Software kann es nun ein daraufhin optimiertes Datenmodell geben.</p>
+<p>Ich meine die Events, die beim Event Sourcing in einem stetig wachsenden Strom gespeichert werden und den sich entwickelnden Systemzustand repräsentieren. Statt des einen großen Datenmodells gibt es im Event Sourcing ein Granulat bestehend aus kleinen und kleinsten Datenstrukturen, den Events.</p>
+<p>Das ist für das RDBMS- oder auch Dokumenten-gewohnte Denken eine Umstellung. Während man bisher versuchen konnte, „die Struktur der Welt“ zu erkennen und möglichst realitätsgetreu in Software abzubilden, geht es jetzt um ihre Entfaltung über die Zeit. Es geht nicht mehr um statische Resultate von letztlich irrelevanten Ereignissen, sondern um höchst relevante Ereignisse, aus denen alle möglichen Resultate in Zukunft abgeleitet werden können.</p>
+<p>Die Welt der Zustandshaltung steht damit Kopf, würde ich sagen.🙃😁</p>
+<p>Gedanken muss man sich also beim Event Sourcing um die Events machen. Klingt auch ohne große Einleitungsworte plausible, oder?😉</p>
+<p>Wie findet man aber „die besten“ Events? Was sind überhaupt „gute“ Events? Das sind Fragen, die mich deshalb bewegen. Ich suche Prinzipien und Heuristiken, um für gegebenen Anforderungen mindestens „ziemlich gute“ Events zu finden.</p>
+<h2>Die Challenge</h2>
+<p>Deshalb habe ich im Domain Driven Design Slack-Workspace „DDD Germany“ mal nachgefragt, wie man dort die Sache sieht. Getan habe ich das mit einer kleinen Aufgabe, die mir einerseits sehr überschaubar scheint, andererseits aber doch ein bisschen Herausforderung bietet.<a href="#fn3">3</a></p>
+<p><a rel="noopener" href="https://paper.dropbox.com/doc/EventSourcing-Challenge-Die-Bowling-Game-Kata--AqiYiJ05NEjMjfC6iUSFxU2lAg-MrmZs8ODudTrrlrvSi5i0">Als Aufgabe</a> habe ich die aus Coding Dojos bekannte Bowling Game Kata gewählt:</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/668ca65e8a6c956c.png" /></p>
+<p>Es soll ein „Ergebniszähler“ realisiert werden, der die Punktzahl eines Bowling-Spiels bestimmt. Dieser Zähler reagiert auf zwei CQS-Nachrichten: dass ein Wurf registriert und dass das Ergebnis geliefert werden soll. Mehr nicht.</p>
+<p>Es gibt also zwei glasklare Interaktionen der Umwelt mit einer Zähler-Software. Darüber muss nicht spekuliert werden. Die einzige Frage, die die Aufgabe stellt, ist die nach den Events.</p>
+<p>Die Interaktionen basieren auf gemeinsamem Zustand. Dieser Zustand soll mit Event Sourcing realisiert gedacht werden, d.h. als Strom von Events. Welche Events sollten das sein?</p>
+<p>Mehr ist nicht zu liefern, nur die Events. Die Lösung soll gerade nicht komplett implementiert werden, weil es mir ja darum geht, wie Events <em>a priori</em> gefunden werden können.</p>
+<p>Event Storming - nomen es omen - ist eine Technik, die dafür zum Einsatz kommen könnte; allerdings sehe ich sie vor allem bei Szenarien, die deutlich größer sind und/oder bei denen es viele Sichtweisen zu berücksichtigen gilt.<a href="#fn4">4</a></p>
+<p>Dass man nach Implementation und Betrieb einer Lösung immer schlauer ist und also vielleicht auch eine noch bessere Idee hat, welche Events nützlich wären, scheint mir ausgemacht. Wie bei RDBMS oder umfänglichen Objektmodellen ist eine Änderung der Datenbasis dann jedoch schwierig. Und Event Sourcing verspricht ja, dass man gerade das nicht tun muss/soll.</p>
+<p>Events versionieren, weitere Events später nachschieben, einen Eventstrom komplett umschreiben: das kann man alles machen und es mag zuzeiten nötig sein. Doch so, wie es einige Kriterien für RDBMS-Schemata gibt, um nicht gleich mit dem falschen Fuß aufzustehen, so gibt es ja vielleicht auch Kriterien für das Schneiden von Events, um den Zeitpunkt hinauszuzögern, da man sich in eine Ecke gepinselt hat. Was meint die DDD-Community dazu?</p>
+<h2>Die Lösungen</h2>
+<p>Ich hatte zuerst für mich selbst die Aufgabe gelöst (und natürlich doch nicht darauf verzichtet, den kompletten Code dafür zu schreiben🤪). Ohne meine Events zu verraten, habe ich dann die Aufgabe der Community vorgelegt und weitere vier Lösungen bekommen.</p>
+<p>Ich liste sie einfach mal mit den Slack-Benutzernamen ihrer Einreicher in alphabetischer Reihenfolge:</p>
+<p><img loading="lazy" alt="Lösung von @akii" src="/assets/01-ralfw.de/0ac167b55e5f8142.png" /></p>
+<p>Lösung von @akii</p>
+<p><img loading="lazy" alt="Lösung von @bwaidelich" src="/assets/01-ralfw.de/5958725a5d181471.png" /></p>
+<p>Lösung von @bwaidelich</p>
+<p><img loading="lazy" alt="Lösung von @phj" src="/assets/01-ralfw.de/3ce1f65267e80561.png" /></p>
+<p>Lösung von @phj</p>
+<p><img loading="lazy" alt="Meine eigene Lösung (@ralfw)" src="/assets/01-ralfw.de/ca5b3a00b0bf6e04.png" /></p>
+<p>Meine eigene Lösung (@ralfw)</p>
+<p><img loading="lazy" alt="Lösung von @sebastian" src="/assets/01-ralfw.de/fd11ca6844b1af9f.png" /></p>
+<p>Lösung von @sebastian</p>
+<p>Die Lösungen wurden in Pseudocode, Typescript, C#, F# eingereicht. Ich habe sie zur besseren Vergleichbarkeit alle nach C# übersetzt. Ein bisschen ging dabei die Ausdrucksfähigkeit von F# (@phj) verloren, aber das finde ich nicht schlimm.</p>
+<p>Außerdem habe ich sie insofern vereinheitlicht, als dass ich eine Game ID, die in manchen Lösungen in den Events stand, gelöscht habe. Ich denke, sie trägt in Bezug auf diese Aufgabe nichts zur Erkenntnis von Prinzipien und Heuristiken bei und betrifft einen orthogonalen Belang.</p>
+<h3>Lösungsebenen</h3>
+<p>Die Aufgabe war nicht groß. Die Lösungsvorschläge sollten also nicht so weit auseinander liegen. So hatte ich es mir gedacht - und war dann doch überrascht, dass selbst hier eine Lösungsvielfalt entstanden ist.</p>
+<p>Ich sehe die Lösungen auf drei Ebenen:</p>
+<ol>
+<li>Minimallösung (@akii, @bwaidelich): Es wird nur ein Event benötigt, der die über das Kommando gemeldeten geworfenen Pins aufzeichnet.</li>
+<li>Aufzeichnung von Bonuspunkten (@sebastian): Zusätzlich zum Event der Minimallösung wird aufgezeichnet, dass ein Wurf als Bonus für einen vorhergehenden anerkannt wurde.</li>
+<li>Aufzeichnung von Frames und Bonuswürdigkeit (@phj, @ralfw): Zusätzlich zu den Events der zweiten Ebene wird aufgezeichnet, falls ein Wurf einen Frame beendet hat und ob der Frame bonuswürdig ist (Spare oder Strike).</li>
+</ol>
+<h3>Analyse</h3>
+<p>Die Idee hinter der Aufgabe war, dass ein Event Store befüllt wird mit Events im Rahmen der Verarbeitung des einen Kommandos - und dass die Events während der einen Query zu einem Gesamtergebnis verarbeitet werden.</p>
+<p>Die Logik zur Herstellung des Verhaltens würde sich in einer Implementation also auf einen Command- und einen Query-Handler verteilen. Die Wahl der Events hat darauf einen großen Einfluss.</p>
+<p>Die Minimallösungen zeichnen im Grunde nur die mit dem Kommando gemeldeten Pins eines Wurfes 1:1 auf. Das ist trivial, so dass die ganze Last der Ergebnisberechnung bei der Query-Verarbeitung liegt. Die Minimallösungen betreiben mithin eigentlich kein Event Sourcing, sondern eher ein Command Sourcing.</p>
+<p>Die Bonuspunktlösung verschiebt die Last zum Command-Handling. Bei der Query-Verarbeitung müssen nur die Pins aus den Events für die Würfe und die Bonuspunkte addiert werden. Das ist trivial - dafür muss die Kommando-Verarbeitung allerdings vorher entschieden haben, wann ein Bonuspunkt-Event aufzuzeichnen ist.</p>
+<p>Die Frame-/Bonuswürdigkeit-Lösungen vereinfachen die Logik der Query-Verarbeitung nicht weiter; die bleibt trivial. Die zusätzlichen Events wirken sich vielmehr auf das Command-Handling differenzierend aus. Vielleicht wächst die Logik dort noch ein wenig, vor allem scheint es mir aber einfacher, in der Kommando-Verarbeitung Verantwortlichkeiten zu trennen: festzustellen, ob/ab wann ein Bonus gewährt wird, und einen Bonus zuzuweisen, sind eben zwei verschiedene Aufgaben.</p>
+<p>Interessant finde ich, dass keine Lösung einen Event zur Anzeige eines Spielendes definiert.<a href="#fn5">5</a> Ist das kein Aufzeichnungswürdiges Ereignis? Oder war die Aufgabe so formuliert, dass alle angenommen haben, dass am Spielende der Eventstrom verschwindet? Dagegen spricht, dass einige Lösungen auch die Aufzeichnung einer Game ID vorgeschlagen haben. Da wurde augenscheinlich größer gedacht.</p>
+<p>Oder war die Aufgabe unterspezifiziert insofern, als dass nicht angegeben war, was passieren soll, wenn ein Wurf über die maximale Wurfzahl eines Spiels hinaus gemeldet wird? Damit war sozusagen das Spielende kein Thema in der Aufgabenbeschreibung? Hm…🤔</p>
+<h3>Diskussion</h3>
+<p>Was tun mit einem Spektrum an Lösungen? Sind sie alle gleichwertig, gleich gut? Welches Für und Wider gibt es? Genau um diese Erkenntnis ging es mir ja, als ich die Aufgabe gestellt habe.</p>
+<p>Augenfällig ist zunächst der Unterschied zwischen den Minimallösungen und den anderen in der Verortung der Logik. Die Minimallösungen brauchen gewiss viel Logik während des Query-Handlings - wie viel sie im Command-Handling tun, ist eine Frage des Anspruchs an Validation/Konsistenzprüfung. Im einfachsten Fall ist dort im Grunde gar keine Logik nötig.</p>
+<p>Das Argument der Vertreter dieses Ansatzes ist sehr simpel: „Ein Event reicht.“ Und das ist wahr. Aufzuzeichnen, dass ein Wurf gemacht wurde bedeutet, ein reales Ereignis in der Umwelt aufzuzeichnen. Das wird über ein Kommando gemeldet und ist die einzige Anweisung zur Zustandsänderung. Wenn man sich das merkt, kann der Rest jederzeit daraus abgeleitet werden.</p>
+<p>Wenn es so einfach funktioniert, warum sind dann aber 60% der Einreicher auf weitere Events gekommen? Ich denke, das liegt an der Abhängigkeit, die mit der Minimallösung einhergeht: Ein bei der Query nach außen gemeldeter Zustand ist vollständig abhängig von Logik. Ändern sich z.B. die Regeln, können die Ergebnisse alter Spiele u.U. nicht mehr nachvollzogen werden.</p>
+<p>Das mag ok sein, wenn eine solche Änderung nicht zu erwarten ist, weil die Domäne sehr stabil ist. Oder es mag ok sein für ein so kleines Beispiel mit angenommener Kurzlebigkeit. Für „richtige“ Software jedoch scheint mir da eine Gefahr fehlender Reproduzierbarkeit zu liegen.</p>
+<p>Event Sourcing Lösungen sind mehr von Logik abhängig als Lösungen, die Zustand in einem dauerhaften Modell aktuell halten, weil ständig Projektionen von Events auf temporäre, grundsätzlich flüchtige Modelle stattfinden. Deshalb würde ich mich nicht auf nur den einen minimal notwendigen Event verlassen wollen.</p>
+<p>Wie viele Events mehr sollen es dann aber sein?</p>
+<p>Events repräsentieren Weggabelungen in der Entwicklung der Welt. Wenn etwas passiert, dann kollabiert ein Möglichkeitsraum; ein Weg ist eingeschlagen worden. Vor dem ersten Wurf ist es noch möglich, dass nach dem Wurf 10, 9, …, 1, 0 Pins abgeräumt sein werden; nach dem Wurf ist klar, dass genau z.B. 4 Pins abgeräumt wurden.</p>
+<p>Dasselbe ist der Fall bei Entscheidungen: Sie lassen einen Möglichkeitsraum zusammenschnurren auf genau eine Möglichkeit, nämlich die, für die sich entschieden wurde. Vor einer Entscheidung ist es noch möglich, dass z.B. beim Sturz eines Fußballspielers nach Zusammenstoß mit einem anderen ein Fowl gepfiffen wird oder nicht. Der Schiedsrichter kann sich für oder gegen Fowl entscheiden und er kann sich sogar für ein Fowl mit oder ohne Vorteil entscheiden (wenn ich es recht erinnere). Mit der Entscheidung des Schiedsrichters erst schnurrt der Möglichkeitsraum zusammen auf genau ein Urteil; was passiert ist, ist dann ganz klar z.B. ein Fowl gewesen.</p>
+<p>Entscheidungen lassen nichts direkt passieren. Vielmehr deuten sie etwas, das passiert ist - und lassen als Ergebnis wieder etwas passieren. Ein Urteil, eine Entscheidung ist ebenfalls ein Ereignis. Mit jeder Entscheidung verändert sich der Weg eines Systems, d.h. sein Zustand. Wer sich nach links wendet, ist in einem anderen Zustand, als hätte er sich nach rechts gewendet.</p>
+<p>Die Aufzeichnung des per Kommando gemeldeten Pins betrifft also quasi ein Ereignis 1. Ordnung, ein unmittelbares Ereignis. Das Programm „erleidet“ dieses Ereignis, es kann nichts dafür.</p>
+<p>Die Einreicher von Lösungen oberhalb der Minimallösung haben sich nun überlegt, dass es hilfreich wäre, weitere Ereignisse aufzuzeichnen. Die nenne ich mal Ereignisse 2. und höherer Ordnung. Sie repräsentieren Entscheidungen der Spiellogik.</p>
+<p>Bei @sebastian wird nur festgehalten, dass die Logik im Command-Handling erkannt hat, dass ein Wurf als Bonus für einen vorhergehenden Frame zu zählen ist. Das reicht aus, um die Query-Logik drastisch zu vereinfachen.</p>
+<p>Die Angriffsfläche von Regeländerungen auf die Berechnung eines Spielergebnisses ist damit deutlich kleiner geworden, würde ich sagen. Es muss zwar immer noch summiert werden, doch das liegt auf der Hand, würde ich sagen. Nur ein Spielende-Ereignis, in dem man das Ergebnis festschreibt, würde noch mehr Robustheit gegenüber Regeländerungen versprechen.</p>
+<p>Und was ist mit den darüber hinaus gehenden Events der Lösungen von @phj und @ralfw? Sie dokumentieren auch Entscheidungen; oder ich könnte es auch Erkenntnisse nennen. Die Logik entscheidet, dass mit einem Wurf ein Frame abgeschlossen wurde. Die Logik erkennt den Abschluss eines Frame.</p>
+<p>Warum diese Entscheidungen auch noch aufzeichnen? Die Ergebnisberechnung profitiert davon nicht mehr. Vielleicht wird es mit diesen Events aber einfacher, einen Bonuswurf zu erkennen? Das könnte sein. Dann wären es „funktionale“ Events.</p>
+<p>Oder dienen sie nur der Dokumentation von Entscheidungen, damit die dauerhaft nachvollziehbar und für zukünftige Nachrichtenbehandlungen nützlich sind? Dann wären es zunächst „dokumentierende“ Events.</p>
+<p>@phj hat sein Denken so erklärt:</p>
+<blockquote>
+<p>[M]it nur “roll made” wäre ja nur eine nach events aussehende Fassade vor eine nicht wirklich event-orientierte Lösung gekommen. Das wichtige bei ES ist - und das habe ich versucht damit etwas herauszustellen - dass Logik nur in den Command Handlern, aber nicht in den Projektionen stattfindet. Die Entscheidungen, was ein Frame ist, wann ein Bonus erforderlich wird, etc. mussten damit vor dem Veröffentlichen von Events geschehen, und erfordern daher dann auch spezifische Events.</p>
+</blockquote>
+<p>Etwas zugespitzt formuliert ist der für mich wesentliche Punkt: <em>„dass [Entscheidungsl]ogik nur in Command Handlern“</em> steht.</p>
+<p>@phj sagt weiter:</p>
+<blockquote>
+<p>dass in den Projektionen keine Entscheidungen […] getroffen werden dürfen, [weil] die eventuell nicht dauerhaft in ihrer Struktur oder Parametrisierung sind. […] Ansonsten würde eine zukünftige Regeländerung zu einer nachträglich anderen Interpretation von bereits durchgeführten Spielen führen. Also müssen die Events die Struktur der Vorbedingungen und der Entscheidungsergebnisse der Geschäftslogik festhalten</p>
+</blockquote>
+<p>Das deckt sich mit meinem Verständnis; nicht umsonst sind wir auf sehr ähnliche Lösungen gekommen😉</p>
+<h2>Ergebnis</h2>
+<p>Events zu finden für gegebene Kommandos und Queries lässt Raum für Kreativität. Hier wie auch sonst in der Softwareentwicklung ist eine Balance zwischen dem unzweifelhaft jetzt Erkennbaren und dem möglichen Zukünftigen zu finden. Auch beim Schneiden von Events kann man ansonsten wohl vorzeitig optimieren.</p>
+<p>Allerdings scheinen mir lieber mehr als weniger Events tendenziell eine relativ harmlose und billige Optimierung im Hinblick auf zukünftige Nachvollziehbarkeit und Events als Ausgangsmaterial für weitere Nachrichtenverarbeitungen.</p>
+<p>Sich beim einmaligen Schreiben etwas mehr Mühe zu geben, erleichtert später das häufige Lesen aus unterschiedlichen Blickwinkeln. Event Sourcing unterscheidet sich da nicht von der Programmierung, würde ich sagen.</p>
+<p>Die Kunst des Event Sourcing besteht dann wohl darin, schon aus den Anforderungen die wesentlichen, aufzeichnungswürdigen, zu stabilisierenden Entscheidungen herauszudestillieren.</p>
+<p>Zu berücksichtigen sind dabei Kommandos wie Queries. Und was man da an Entscheidungen findet, ist in Events zu gießen, die beim Command-Handling generiert werden.</p>
+<p>Dass ein Wurf stattgefunden hat, ist keine Entscheidung innerhalb einer Lösung. Aber wenn die Regeln von Frames sprechen, wenn es besondere Wurf-Kombinationen gibt und Boni zugesprochen werden… dann stecken dahinter Entscheidungen und die lohnen der Aufzeichnung „für die Nachwelt“.</p>
+<p>Dazu mag noch kommen, Begriffe der Domäne materialisieren. Wenn in den Regeln „Frame“, „Spare“, „Strike“, „Bonus“ als Begriffe vorkommen, dann liegt es nahe zu erwarten, sie in einem Eventstrom zu finden.</p>
+<p>Das sind lohnende Erkenntnisse aus der Übung. Ein schönes Beispiel für <em>deliberate practice</em>. Für mich hat sich die Challenge also gelohnt. Ich bin mir klarer geworden über Prinzipien und Heuristiken des Event Sourcing. Damit werde ich in die nächste Challenge gehen… Stay tuned!😁</p>
+<p>Endnoten:</p>
+<ol>
+<li>Materialismus verstehe ich hier als Haltung, die annimmt, dass es außerhalb von Software eine Realität gibt, die es sich lohnt, 1:1 innerhalb der Software mit stabilen Datenstrukturen abzubilden.
+   Konstruktivismus hingegen macht für mich keine solche Annahme. Er konstruiert nach Bedarf immer wieder neue Repräsentationen aus „rohen Wahrnehmungen“, die nicht mehr und nicht weniger als nützlich sind. Ob sie einer „objektiven Realität“ entsprechen oder nicht, ist ihm einerlei. <a href="#ffn1">↩</a></li>
+<li>Antifragil ist Software bzw. die Softwareentwicklung für mich, wenn sie Änderungswünsche begrüßt. Dann trägt jede Änderung dazu bei, dass Software besser wird und sogar besser im besser werden. <a href="#ffn2">↩</a></li>
+<li>Auf eine CRUD-Aufgabe habe ich verzichtet, weil die wohl Naserümpfen bei einigen Event Sourcing Freunden hervorgerufen hätte. Die Meinung, dass Event Sourcing sich nicht für CRUD-Szenarien lohne, hält sich noch. Ich bin allerdings anderer Ansicht. Aber davon ein andermal mehr. <a href="#ffn3">↩</a></li>
+<li>Und das Ergebnis scheinen mir dann auch oft Domänenevents zu sein, die ich in CQNS <a rel="noopener" href="https://ralfw.de/command-query-notification-separation-cqns/">Notifications</a> nenne.
+   Domänenevents sind für mich Nachrichten, die zwischen „Akteuren“ fließen. Das bedeutet nicht, dass sie 1:1 in einem Eventstrom aufgezeichnet werden. <a href="#ffn4">↩</a></li>
+<li>Nur bei @sebastian gibt es eine Frame-Nummer, die implizit eine relativ leichte Erkennung des Spielendes erlaubt, weil jedes Spiel aus 10 Frames besteht. <a href="#ffn5">↩</a></li>
+</ol></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

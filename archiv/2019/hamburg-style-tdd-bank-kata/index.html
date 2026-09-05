@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hamburg Style TDD - Bank Kata — ralfw.de Archiv</title>
+<meta name="description" content="There are already a few different styles of TDD out there. Still, though, my feeling is something is missing in the realm of test-first or test-driven development. I tried to expla">
+<link rel="canonical" href="https://ralfw.de/archiv/2019/hamburg-style-tdd-bank-kata/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hamburg Style TDD - Bank Kata — ralfw.de Archiv">
+<meta property="og:description" content="There are already a few different styles of TDD out there. Still, though, my feeling is something is missing in the realm of test-first or test-driven development. I tried to expla">
+<meta property="og:url" content="https://ralfw.de/archiv/2019/hamburg-style-tdd-bank-kata/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-01)"></span>ralfw.de</p>
+    <h1>Hamburg Style TDD - Bank Kata</h1>
+    <div class="doc-meta"><span>25. Juli 2019</span><span>Erstveröffentlichung: ralfw.de</span><span><a href="https://ralfw.de/hamburg-style-tdd-bank-kata/" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2019/hamburg-style-tdd-bank-kata/</code></span></div>
+    <div class="art"><p>There are already a few different styles of TDD out there. Still, though, my feeling is something is missing in the realm of test-first or test-driven development. I tried to explain that in my posting introducing the „<a rel="noopener" href="https://ralfw.de/hamburg-style-tdd/">Hamburg style TDD</a>“. And then I showed what that meant in practice in a second article <a rel="noopener" href="https://ralfw.de/hamburg-style-tdd-diamond-kata/">applied to the Diamond kata</a>.</p>
+<p>But knowing how hard it is to get the nuances (or even the obvious aspects) of a method across in writing (or with a video), I think I need to provide more examples of the application of Hamburg style TDD.</p>
+<p>As a second example I’m choosing the kata Macro Emrich used to compare the established TDD styles: the Bank kata. If you like, check out Marco’s code samples in <a rel="noopener" href="https://www.dropbox.com/s/94k73jylzprcbss/schools_of_tdd.pdf?dl=0">this presentation</a> he did at the <a rel="noopener" href="https://www.developer-week.de/">DWX 2019 conference</a>.</p>
+<p>Following I’ll share my version of the kata like I did with the Diamond kata. It differs from the Diamond kata in quite some aspects. Problem solving requires some breadth of approaches. Red-green-refactor + KISS is too simplistic.</p>
+<h2>Problem description</h2>
+<p>This is what I’ve distilled from descriptions of the Bank kata I found on the web. It’s a bit more specific than usual, I guess. But I like it that way. Without specific requirements software development is bound to become even more complex.</p>
+<p>An excerpt from my in-project <code>.md</code> documentation of my „stream of consciousness“ while working on the problem:</p>
+<pre><code>A user should be able to deposit/withdraw funds from a bank
+account (object).
+At any time a statement can be &quot;printed&quot; (requested) listing the
+timestamped transactions and the updated account balance.
+
+Example:
+
+`
+Date       Amount  Balance
+1.7.2019    +1000     1000
+2.7.2019     -200      800
+3.7.2019     +500     1300
+`
+
+Integer amounts are sufficient as are transaction timestamps with dates only.
+
+No transaction is rejected, even if it leads to a negative account balance.
+</code></pre>
+<h2>1. Analysis</h2>
+<p>With the problem description in hand I sit down and analyze it. I log my thoughts in a <code>.md</code> file. (The more I do that, the more I like it. It makes my thinking open for scrutiny.)</p>
+<pre><code>## Analysis
+Essentially the problem is about an event stream for which a report
+is generated.
+
+There are two commands:
+
+* deposit
+* withdraw
+
+And a single query:
+
+* print statement
+
+For testing purposes and also as to not dilute the responsibility of
+the account the statement should not really be printed
+(output to a device), but just generated as a data structure.
+
+For the timestamp the current time is used, ie. a dependency to the
+system is needed.
+
+Transactions will not be persisted. An account's state will be limited
+to the lifetime of it's object.
+
+### 1. Functions
+
+#### Deposit command
+`
+void Deposit(int amount)
+`
+
+#### Withdraw command
+`
+void Withdraw(int amount)
+`
+
+#### Print statement query
+`
+Statement PrintStatement()
+`
+
+#### Classes
+The request handling functions can be aggregated by a single class `Account`.
+
+More classes are needed for the statement if access to the statement
+details is needed:
+
+`
+class Statement
+    Transaction* Transactions
+
+class Transaction
+    DateTime Date // set by the Account class
+    int Amount
+    int Balance
+`
+
+### 2. Test Cases
+`
+Input  | State            || State'
+Amount | Date   | Balance || Balance'
++100     1.1.19         0        100
++200     1.1.19       100        300
+-50      2.1.19       300        250
+-300     3.1.19       250        -50
+`
+
+This development of an account will be expressed in a growing
+statement (output) after each transaction:
+
+`
+v1
+1.1.19,+100,100
+
+v2
+1.1.19,+100,100
+1.1.19,+200,300
+
+v3
+1.1.19,+100,100
+1.1.19,+200,300
+2.1.19,-50,250
+
+v4
+1.1.19,+100,100
+1.1.19,+200,300
+2.1.19,-50,250
+3.1.19,-300,-50
+`
+</code></pre>
+<p>This time I came up with an acceptance test case of my own. It’s exercising not just one function, though, but all functions I derived from the requirements. The acceptance test thus is more like a whole use case.</p>
+<p>Also note that this problem leads to several classes. In the Diamond kata classes were of no concern. But here they are needed to aggregate functions and data.</p>
+<p>But the modularization is straightforward. It’s quite obvious, I’d say, because it is directly tied to the user’s needs. That’s why I would not say the classes are a product of design. I’m still in the analysis phase.</p>
+<p>Maybe noteworthy is that I decided to not deliver a formatted textual account statement. Why should an account (object) care about report layout? It delivers a statement as a data structure some other part of a program can turn into a neatly layouted report.</p>
+<p>Finally I encode my understanding:</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/bb9f6dca8f02b7dd.png" /></p>
+<p>There’s only one thing strange about this, I guess: why that kind of constructors on the <code>Account</code> class?</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/abd8897f7926b05c.png" /></p>
+<p>During analysis I identified a dependency of my <em>system under test</em> (SUT, or system under development): It depends on the current date since the statement contains a date in each transaction, but requesting the transactions (<code>Deposit</code>, <code>Withdraw</code>) does not pass in a date.</p>
+<p>How could an automated test running on an arbitrary date have an expectation regarding transaction dates? Without making „date acquisition“ configurable that would be hard. Hence the public ctor for production, and the internal for testing. The public one sees to that the current date is used; but the acceptance test uses the internal one to pass in a substitute function to deliver a date from a fixed set for each transaction.</p>
+<p>That makes the test case a kind of whitebox test because it encodes an assumption about how many dates are required. But in this case that’s not severe, I’d say. Four transactions, four dates: that’s pretty obvious.</p>
+<h2>2. Design</h2>
+<p>Starting from the analysis I do some design. That’s not much, though. The problem is very simple. It’s just that I stop for a moment to gather my thoughts…</p>
+<pre><code>## 2. Design
+The `Account` class pretty much is an event stream with an
+aggregator attached.
+
+* The commands add events to the stream. No checking is needed, all
+amounts are ok. But the date is added to the tx.
+* The statement is an aggregation of the events in the stream where
+the balance is constantly updated.
+
+The main functionality is statement generation. And within that it's
+updating the balance. That suggests a function (or even class of its own).
+
+The event stream is a simple append-only list for (internal) transcactions.
+
+// Open question: What should happen if a negative amount is passed to
+// `Deposit()` or `Withdraw()`?
+</code></pre>
+<p>After that I feel comfortable to start the implementation.</p>
+<h2>3. Implementation</h2>
+<h3>Recording transactions</h3>
+<p>This is an article about some form of test-first development. So what I’m doing here when I start the implementation of the <code>Account</code> class might seem horrible to you: I write logic without a test. I start with production code right away.😱</p>
+<p>But after my design recording transactions (functions <code>Deposit</code> and <code>Withdraw</code>) seems so simple that I don’t see much of a danger therein.</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/a6f393ab514b6280.jpg" /></p>
+<p>There really is not much to test anyway. And if I wanted to test the effect of each function I would need to look under the hood of <code>Account</code>; it would only work with more whiteboxing.</p>
+<p>So I reason that in the end the correctness of transaction recording will show up immediately during statement production: If statement production is working, but delivers the wrong statements, then something must be wrong with recording transactions. In that case I would closer at the transaction methods.</p>
+<p>One word about the <code>Transaction</code> class inside of <code>Account</code>: It looks similar to the same named class inside of <code>Statement</code>. Why two classes for transactions? Because their „nature“ (or purpose) is different.</p>
+<p><code>Statement.Transaction</code> is visible from the outside. It’s a class used for interaction with the system under development (a DTO). It’s subject to the user’s whim at any moment. I expect it to change due to changing requirements quite often.</p>
+<p><code>Account.Transaction</code> on the other hand is an event object. It’s for recording what’s happening to the state of an <code>Account</code> object. (Never mind that it’s not phrased in the past tense.) This class is purely internal, an implementation detail. It’s not under direct stress from user requirements. I expect changing requirements not to lead to changes there, rather more events will be needed.</p>
+<p>Two classes with the same name is simply a matter of decoupling. That’s a good architectural style. It’s clean code in my view.</p>
+<p>Or let me say it the other way round more bluntly: Clean code does not mean the least amount of code possible to implement some runtime behavior! Just because you see more code than you think is technically needed, does not mean it’s smelling. The question always is: Why? Why more core than fore the bare functional necessity? And the answer has to show that future readers are kept in mind.</p>
+<p>Yes, future readers over future requirements. It’s not that I don’t value future requirements on the right, but I find concern for future readers more important.</p>
+<h3>Printing the statement</h3>
+<p>Printing the statement is what the whole kata is about. It’s the crucial part and I want to get it right. Also I want to be able to work on it straightforwardly and independently.</p>
+<p>If I wrote a test for just the <code>PrintStatement</code> function, though, I would need to open the <code>Account</code> class in order to gain control over its state; <code>PrintStatement</code> is relying on that.</p>
+<p>To avoid this hassle I decide to switch to <a rel="noopener" href="https://cumulative-hypotheses.org/2011/08/30/tdd-as-if-you-meant-it/">TDD as if you meant it (TDDaiymi)</a> from Keith Braithwaite. That means I use tests as my sole development environment; I won’t touch the production code until I’ve finished the functionality.</p>
+<p>Also I’ll be moving forward with incremental tests since I’m not really sure how to solve this problem.</p>
+<h4>Iteration 1</h4>
+<p>Here’s my first iteration: What should the statement look like if there are no transactions yet? It should be empty.</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/747dbd48da868daa.jpg" /></p>
+<p>I know this code looks pretty stupid. But it „simulates“ the situation in production: there are no transaction events (<code>new Account.Transaction[0]</code>). And the statement’s number of transactions mirrors that.</p>
+<p>As simple as lines 13 and 14 might look, they are crucial and I expect them to stay the same in next test cases. They are like a seed to grow the solution from. There is a small insight encoded in them.</p>
+<h4>Iteration 2</h4>
+<p>The next incremental test is about just one transaction event. I set that up with fixed data in line 23:</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/38e1c2f3e86c5f3e.jpg" /></p>
+<p>Line 24 is the same as 13 in the first test. But it’s followed by a manual mapping of the transaction event to the statement transaction.</p>
+<p>Line 28 is the only noteworthy line here: It could be reduced to <code>accountTransactions[0].Amount</code>, but by including <code>0 +</code> I make clear right away that I know the transaction’s <code>Balance</code> is an accumulating value.</p>
+<h4>Iteration 3</h4>
+<p>When doing TDDaiymi I actually often create new test cases by copying previous test cases and only change the expectation first. That way it’s immediately red and I’m forced to solve the problem: adjust the test input data, then adapt the logic. This is what I’m doing for iteration 3, too.</p>
+<p>Now it’s two transaction events to „print“. The expectations (58ff) and input data (40ff) are set up accordingly. Line 45 and 56 still match 13 and 14 of the first iteration as expected.</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/eee2362d9c0408c7.jpg" /></p>
+<p>And in between I copy the mapping from the previous test and adapt the second copy by changing the indexes.</p>
+<p>Plus I need to think about how to carry over the balance from the previous statement transaction (line 54).</p>
+<h4>Refactoring 1</h4>
+<p>My impression is I’ve solved the statement printing problem. I know how it’s gonna work. Now I just need to generalize it. Currently the number of transaction events is hardcoded. This is along the lines of the <a rel="noopener" href="https://blog.cleancoder.com/uncle-bob/2013/05/27/TheTransformationPriorityPremise.html">Transformation Priority Premise</a>, I guess: <em>(constant-&gt;scalar)</em> and <em>(statement-&gt;recursion)</em>.</p>
+<p>I refactor the hardcoded solution to a variable solution:</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/527e7921a3e07e49.jpg" /></p>
+<p>The basic mapping stays the same (lines 50 to 54), but I move the balance update up because I want to use a variable for it (line 49).</p>
+<p>The loop around the mapping is trivial: for each transaction event a statement transaction is created. The same as before, just automatically done.</p>
+<h4>Refactoring 2</h4>
+<p>With the refactored/generalized logic still getting the test to green I extract it to the production code. I’m confident it will work there, too:</p>
+<p><img loading="lazy" alt="" src="/assets/01-ralfw.de/d5f3e78c44014ba2.jpg" /></p>
+<p>The only adjustment I need to make is changing the source of the transaction events to the <code>Account</code> class’ global state <code>_transactions</code>.</p>
+<p>With <code>PrintStatement</code> filled in I check the acceptance test. It should be green now - if the implementation of the transaction functions was correct.</p>
+<p>And indeed it is!🎉</p>
+<p>Problem solved.😎🕺</p>
+<h2>Refactoring</h2>
+<p>What’s left is to restrict the accessibility of functions and classes to <code>private</code> where necessary. The surface of the production code should be minimal.</p>
+<p>That’s only affecting the <code>Account.Transaction</code> class which I set to <code>internal</code> while going through the TDDaiymi iterations.</p>
+<p>Now that it’s hidden, however, the TDDaiymi test becomes flagged. The incremental tests cannot be compiled anymore. Their true nature is revealed: they were <a rel="noopener" href="https://ralfw.de/hamburg-style-tdd-diamond-kata/"><em>scaffolding tests</em></a> all along. That means they now have to be deleted.</p>
+<p>The acceptance test remains as the only test. That makes me free to refactor the solution below the surface at any time without breaking tests targeting details.</p>
+<h2>Summary</h2>
+<p>This problem required a somewhat different treatment compared to the Diamond kata: not writing tests for functions, doing TDDaiymi… That might feel new or uncomfortable to you. But I stand by my opinion: it’s legitimate, it’s even easier than sticking to one of the other schools of TDD.</p>
+<p>In the end it’s all about the result. How straightforwardly can you move towards functional and clean code? If ADC and TBC can help, then you should employ them.</p>
+<p>But Hamburg style TDD actually is not in opposition of Chicago style etc. Rather it’s embracing them all - and adding a twist. This twist is the recommendation to do explicit analysis and explicit design and to avoid functional dependencies. And that in turn leads to tests with no (or less) need for substitutes, i.e. less complexity.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

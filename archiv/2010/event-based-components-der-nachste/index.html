@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Event-Based Components – Der nächste Schritt der Komponentenorientierung? — ralfw.de Archiv</title>
+<meta name="description" content="Wie wäre es eigentlich, wenn wir Komponenten zwar synchron, aber nachrichtenorientiert koppeln würden? Wie wäre es, wenn EDA – Event-Driven Architecture – nicht nur eine Sache groß">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/event-based-components-der-nachste/">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Event-Based Components – Der nächste Schritt der Komponentenorientierung? — ralfw.de Archiv">
+<meta property="og:description" content="Wie wäre es eigentlich, wenn wir Komponenten zwar synchron, aber nachrichtenorientiert koppeln würden? Wie wäre es, wenn EDA – Event-Driven Architecture – nicht nur eine Sache groß">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/event-based-components-der-nachste/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-02)"></span>One Man Think Tank</p>
+    <h1>Event-Based Components – Der nächste Schritt der Komponentenorientierung?</h1>
+    <div class="doc-meta"><span>21. Feb. 2010</span><span>Erstveröffentlichung: blog.ralfw.de</span><span><a href="http://blog.ralfw.de/2010/02/event-based-components-der-nachste.html" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/event-based-components-der-nachste/</code></span></div>
+    <div class="art"><p>Wie wäre es eigentlich, wenn wir Komponenten zwar synchron, aber nachrichtenorientiert koppeln würden? Wie wäre es, wenn EDA – Event-Driven Architecture – nicht nur eine Sache großer Anwendungen wäre, sondern in Form von Event-Based Components (EBC) auch kleine Applikationen evolvierbarer gestalten helfen würde?</p>
+<p>Über die Vorteile von Komponentenorientierung an sich möchte ich mich hier nicht schon wieder auslassen ;-) <strong>Komponenten als binäre Codeeinheiten mit separatem Kontrakt sind für mich schlicht die Basis jeder bewussten Anwendungsarchitektur.</strong></p>
+<p>Wie solche Komponenten aber definiert und dann in Code gegossen werden, darüber lässt sich immer wieder nachdenken. Bisher habe ich den folgenden Ansatz vertreten:</p>
+<ul>
+<li>Die Architektur einer Software resultiert in einem Komponentenabhängigkeitsdiagramm.<ul>
+<li>Die Implementation der Komponenten verteilt sich auf zwei Assemblies: eine für den Kontrakt, eine für die Funktionalität.</li>
+<li>Wenn Komponenten andere brauchen, d.h. von ihnen abhängig sind, dann werden diese Komponenten der abhängigen von einem DI Container injiziert.</li>
+</ul>
+</li>
+</ul>
+<h2>Komponentenorientierung “traditionell”</h2>
+<p>Hier eine ganz einfache Architektur mit drei Komponenten für ein Szenario, dass Ihnen bekannt vorkommen sollte ;-)</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/e1be1ae120193b3d.png" /></p>
+<p>Daraus ergäben sich die Assemblies:</p>
+<ul>
+<li>compiler.contract.dll<ul>
+<li>compiler.dll</li>
+<li>parser.contract.dll</li>
+<li>parser.dll</li>
+<li>codegenerator.contract.dll</li>
+<li>codegenerator.dll</li>
+</ul>
+</li>
+</ul>
+<p><em>compiler.dll</em> würde <em>compiler.contract.dll</em> referenzieren, weil sie deren Kontrakt exportiert, d.h. implementiert. Und <em>compiler.dll</em> würde <em>parser.contract.dll</em> sowie <em>codegenerator.contract.dll</em> referenzieren, weil sie deren Kontrakte importiert. Zur Laufzeit braucht <em>compiler.dll</em> dann natürlich Implementationen dieser Kontrakte. Kennen tut sie deshalb <em>parser.dll</em> und <em>codegenerator.dll</em> nicht. Dependency Injection macht es möglich.</p>
+<p>Und wie sehen die Kontrakte aus? Das hängt von den Diensten der Komponenten ab. <strong>Üblicherweise wird jede Komponente mindestens durch ein Interface für seine “Hauptdienstleistung” definiert.</strong></p>
+<p>compiler.contract.dll:</p>
+<p>interface ICompiler</p>
+<p>{</p>
+<p>Func Compile(string formel);</p>
+<p>}</p>
+<p>parser.contract.dll:</p>
+<p>interface IParser</p>
+<p>{</p>
+<p>ASTNode Parse(string formal);</p>
+<p>}</p>
+<p>codegenerator.contract.dll:</p>
+<p>interface ICodeGenerator</p>
+<p>{</p>
+<p>Func Translate(ASTNode program);</p>
+<p>}</p>
+<p>Und wo ist der ominöse <em>ASTNode</em> definiert? Da zwei Komponenten ihn brauchen, die nicht von einander abhängen, brauchen wir noch eine weitere Assembly:</p>
+<p>compiler.datenmodell.contract.dll:</p>
+<p>class ASTNode</p>
+<p>{</p>
+<p>…</p>
+<p>}</p>
+<p>Diese reine Kontraktassembly wird von allen anderen referenziert. Sie enthält einen allen gemeinsame Vorstellung davon, wie Code im Compiler repräsentiert werden sollte: als abstrakter Syntaxbaum.</p>
+<p>Die Implementationen der Komponenten ist wenig spannend. Nur den Compiler möchte ich hervorheben. Er ist ja abhängig von den anderen beiden Komponenten und muss daher Instanzen von ihnen zur Laufzeit bekannt gemacht bekommen:</p>
+<p>class Compiler : ICompiler</p>
+<p>{</p>
+<p>private readonly IParser parser;</p>
+<p>private readonly ICodeGenerator codegenerator;</p>
+<p>public Compiler(IParser parser, ICodeGenerator codegenerator)</p>
+<p>{</p>
+<p>this.parser = parser;</p>
+<p>this.codegenerator = codegenerator;</p>
+<p>}</p>
+<p>public Func Compile(string formel)</p>
+<p>{</p>
+<p>var program = this.parser.Parse(formel);</p>
+<p>return this.codegenerator.Translate(program);</p>
+<p>}</p>
+<p>}</p>
+<p>Diese Bekanntmachung ist kein Hexenwerk. Mit einem DI Container ist das ganz einfach. Der übernimmt die Befüllung der Ctor-Parameter bei Instanzierung eines <em>Compiler</em>-Objektes. Hier ein Beispiel mit Microsoft Unity:</p>
+<p>IUnityContainer uc = new UnityContainer();</p>
+<p>uc.RegisterType();</p>
+<p>uc.RegisterType();</p>
+<p>uc.RegisterType();</p>
+<p>ICompiler c = uc.Resolve();</p>
+<p>var f = c.Compile("2*x");</p>
+<p>Soweit meine bisherige Vorstellung von Komponentenorientierung. Das funktioniert alles wunderbar. Ist erprobt. Läuft. Alles kein Problem.</p>
+<p>Und doch… irgendwie bin ich nicht so ganz zufrieden damit. Mich sticht der Zweifel, ob das schon der Weisheit letzter Schluss ist in Bezug auf “Composability”. Kann man Komponenten, also die architekturellen Grundbausteine von Software, in dieser Weise schon optimal “zusammenstecken”?</p>
+<h2>Kritik der “traditionellen” Komponentenorientierung</h2>
+<p>Wenn Komponenten Bausteine sein sollen wie Lego-Bausteine oder elektronische Bauteile, dann, so glaube ich, widerspricht dem, wie wir mit ihren Abhängigkeiten umgehen.</p>
+<p><strong>Erstens dürfen Komponenten beim “traditionellen” Ansatz überhaupt Abhängigkeiten haben.</strong> Das scheint mir nicht ganz passend in Bezug auf den Baustein-Begriff. Ein Lego-Baustein braucht keine anderen. Er passt mit anderen zusammen, aber er braucht sie nicht. Dasselbe gilt für einen Transistor oder einen Widerstand oder auch einen Prozessor. Keines dieser Bauteile braucht ein anderes zum Funktionieren. Es braucht Signale (Input) im Rahmen einer Spezifikation, aber woher diese Signale kommen und wohin der eigene Output geht… das ist den Bauteilen egal. Davon wissen sie nichts. Dafür ist die Platine zuständig, in der sie stecken.</p>
+<p>Zweitens injizieren wir die Abhängigkeiten in Komponenteninstanzen. <strong>Wir verändern die Komponenten also zur Laufzeit, um ihre dynamischen Abhängigkeiten zu befriedigen.</strong> Das fühlt sich zumindest irgendwie merkwürdig im Vergleich zu realweltlichen Bausteinen an. Und es kann für Testzwecke relativ aufwändig sein, wenn dafür Attrappen gebaut werden müssen.</p>
+<p>Drittens sind die Abhängigkeiten gewöhntlich definiert in Form von Interfaces. Es geht also immer um Bündel von Operationen. <strong>Eine abhängige Komponente läuft damit aber Gefahr, Zugriff auf Operationen zu bekommen, die sie nichts angehen.</strong> Im obigen Beispiel wird das nicht deutlich, aber sobald Servicekomponenten mehreren Clientkomponenten dienen, wachsen ihre Kontrakte schnell über das hinaus, was einer dieser Clients von Ihnen braucht.</p>
+<p><strong>Viertens ist die Spezifikation einer Komponente nicht sehr kompakt, wenn ich dafür mehrere Kontrakte anschauen muss.</strong> Sie besteht ja aus dem exportierten und allen importierten Kontrakten. Wenn ich wissen will, wie eine Komponente zu implementieren ist, dann sind 1+n Kontrakte zu konsultieren. Es gibt keinen einen Ort, an dem kompakt beschrieben ist, wie eine Komponente mit ihrer Umwelt interagiert.</p>
+<p><strong>Fünftens tue ich mich immer noch schwer mit der Schachtelung von Komponenten.</strong> Im Beispiel oben habe ich zwar drei hübsche Komponenten, aber eigentlich würde ich sie anders bezeichnen und in eine umfassendere einschachteln wollen:</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/16e5a2244a1614ab.png" /></p>
+<p>Erst diese umfassende Codeeinheit wäre der Compiler. Die bisherigen sind nur seine Bausteine. Mit der bisherigen Komponentenorientierung finde ich das zu planen aber nicht so einfach. Wie soll die umfassende Codeeinheit auch eine Komponente sein, wenn es ihre Konstituenten auch sind?</p>
+<p>Das sind für mich genügend Gründe, weiter darüber nachzudenken, wie Komponenten noch besser gebaut werden können, so dass Software wahrhaft aus Bausteinen besteht.</p>
+<p>Ein Ansatz dafür, den ich gerade spannend finde, ist die konsequente Ereignisorientierung.</p>
+<h2>Komponentenkommunikation über Ereignisse</h2>
+<p>Fünf Gründe, über die “traditionelle” Komponentenorientierung nachzudenken. Aber geht es anders irgendwie auch fünf Mal besser? Ich glaube, schon. Mit der Ereignisorientierung lösen sich manche Probleme in Luft auf und anderes wird klarer, wie mir scheint.</p>
+<p><a rel="noopener" href="http://www.amazon.de/Event-Based-Programming-Taking-Events-Limit/dp/1590596439/ralfwestphalh-21"></a> Auf geht´s… Was bedeutet Ereignisorientierung für Komponenten? Zum Thema gibt es ein interessantes Buch: <a rel="noopener" href="http://www.amazon.de/Event-Based-Programming-Taking-Events-Limit/dp/1590596439/ralfwestphalh-21">Event-based Programming</a> von Ted Faison. Das hat mich auf die Spur von Event-Based Components gebracht. Allerdings weicht meine Vorstellungen in einigen Punkte von der des Buches ab. Mir ist seine Darstellung gerade bei der Praxis ein wenig zu allgemein. Aber die Grundgedanken darin finde ich sehr spannend… Hier deshalb meine Version ihrer Implementation.</p>
+<p>Ich fange mal mit einer etwas anderen Notation an als der bisherigen. Die ist den Wire-Diagrams (Signaldiagramme) des Buches angelehnt. Hier zum warm werden eine ganz simle Event-Based Component (EBC), die als Dienstleistung die Verarbeitung eines Kommandos anbietet. Kommando bedeutet dabei im Sinne der <a rel="noopener" href="http://en.wikipedia.org/wiki/Command-query_separation">Command-Query Separation</a>, dass kein Resultat an den Aufrufer geliefert wird.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/115d29e57d2786e1.png" /></p>
+<p>Ein Rechteck statt eines Kreises bzw. einer Ellipse ist nur ein oberflächlicher Unterschied zwischen den Diagrammen. Die wahre Andersartigkeit steckt in der Implementation. Hier der Kontrakt für die Komponente:</p>
+<p>interface IEventBasedComponent</p>
+<p>{</p>
+<p>void ProcessIncomingCommand(IncomingCommand cmd);</p>
+<p>}</p>
+<p><strong>Wie bei der “traditionellen” Komponentenorientierung ist der Kontrakt einer EBC ein Interface.</strong> Für jede eingehende Nachricht, die eine Komponente "versteht”, gibt es darin eine Methode mit einem Parameter. Der hat einen für jede Nachricht spezifischen Typ.</p>
+<p>Ob die Methode dann wie oben den Typ ihrer Nachricht im Namen widerspiegeln sollte oder nicht, weiß ich noch nicht so recht. Im Augenblick ist das mal meine Konvention inklusive eines Prefixes wie “Process”/”Execute” (für Kommandos) oder “Fulfill”/“Inquire” (für Queries).</p>
+<p><strong>EBC-Methoden für eingehende Nachrichten haben damit keine normale Signatur mit vielen Parametern oder einem Return-Wert. Es sind immer nur void-Methoden mit nur einem Parameter.</strong></p>
+<p>Jetzt zu ausgehenden Nachrichten oder besser zum Output. Denn um nichts anderes handelt es sich, auch wenn solche Nachrichten eine Antwort erwarten, wenn sie eine Komponente verlassen.</p>
+<p><img loading="lazy" alt="" src="/assets/02-blog.ralfw.de/889d784ae0a19a77.png" /></p>
+<p>Hier unterscheiden sich Event-Based Components nun deutlich von den “traditionellen”. <strong>Output-Nachrichten werden ausschließlich über Events verschickt.</strong> Der Kontrakt sieht dafür dann so aus:</p>
+<p>interface IEventBasedComponent</p>
+<p>{</p>
+<p>event Action OnOutgoingCommand;</p>
+<p>}</p>
+<p>Das ist der Trick an der ganzen Sache mit der Ereignisorientierung: <strong>Nachrichten an andere Komponenten werden als Events verschickt. Wieder haben die Methoden nur einen Parameter und keinen Rückgabewert.</strong></p>
+<p>Bei der Benennung der Delegaten folge ich wieder einem Muster. Als Name verwende ich wieder den Nachrichtentyp und setze einen Präfix davor, z.B. “On” oder “Issue” (für Kommandos) oder “Request” (für Queries).</p>
+<p>Hört sich irgendwie nicht so spektakulär an, oder? Ich glaube aber nach erster Evaluation, dass die Beschränkung der Kommunikation auf synchrone Input- und Output-Nachrichten in dieser Weise grundsätzliche und positive Folgen hat. Doch davon ein andermal…</p>
+<h2>Kommentare</h2>
+<p><strong>Golo Roden</strong> (2010-02-22):</p>
+<p>Hallo Ralf,</p>
+<p>vor ein paar Tagen hat mich Peter Bucher auf ebendieses Buch aufmerksam gemacht, wir fanden es beide interessant und es liegt nun bereit, gelesen zu werden.</p>
+<p>Eventuell wären mir Deine Ausführungen nach der Lektüre klarer, doch im Moment muss ich noch ohne vorlieb nehmen.</p>
+<p>Prinzipiell schlägst Du ja drei Sachen vor:</p>
+<ol>
+<li>
+<p>Parameter eingehender Kommunikation werden in einem Kommando-Objekt gekapselt.</p>
+</li>
+<li>
+<p>Der Rückgabetyp ist immer void.</p>
+</li>
+<li>
+<p>Ergebnisse werden - wenn es sich um eine Query und kein Command handelt - per Event "verschickt", wobei ebenfalls wieder ein Kommando-Objekt verwendet wird.</p>
+</li>
+</ol>
+<p>Prinzipiell kann ich das alles nachvollziehen, und finde es zunächst - wie Du ja selbst schreibst - nicht sonderlich spektakulär.</p>
+<p>Allesdings habe ich noch zwei Fragen dazu:</p>
+<ol>
+<li>
+<p>Welchen Vorteil bringt es, alle eingehenden Parameter in ein gemeinsames Objekt zu kapseln? Dieses Verfahren wendet man ja auch ohne EBC manchmal an, wenn die Anzahl der Parameter zu hoch ist oder viele Änderungen zu erwarten sind, damit man nicht ständig die Signatur der Methode anpassen / erweitern muss. Doch warum aus diesem =&gt; manchmal &lt;= sinnvollen Ansatz eine Regel machen? Wo liegt der Vorteil, wenn ich wirklich ALLES in ein Optionsobjekt verpacke (und um nichts anderes handelt es sich ja letztlich)?</p>
+</li>
+<li>
+<p>Du hast bemängelt, dass Komponenten bislang Abhängigkeiten haben dürfen, was aber eigentlich der Idee des "Lego-Bausteins" widerspricht. Bislang sehe ich den Zusammenhang zwischen der Idee, Komponenten stärker zu isolieren und den EBCs noch nicht. Inwiefern kann ich die Abhängigkeiten durch die Verwendung des von Dir vorgestellten Musters verringern? Salopp gesagt: Wieso brauchen die Kommando-verarbeitenden Methoden weniger Abhängigkeiten, nur weil die Parameter anders gewählt werden?</p>
+</li>
+</ol>
+<p>Was ich letzten Endes also nicht schaffe, ist, Dein Beispiel bestehend aus Compiler, Parser und Codegenerator derart auf EBC umzusetzen, dass auch nur einer der fünf Kritikpunkte entfallen würde.</p>
+<p>Kannst Du mir hier eventuell auf die Sprünge helfen?</p>
+<p>Viele Grüße,</p>
+<p>Golo</p>
+<p>PS: Nichtsdestotrotz ein sehr spannendes Konzept, das mich an das Muster des Pipelinings und das Erstellen von Workflows an Hand von Prozessor-Komponenten erinnert ...</p>
+<hr />
+<p><strong>Matthias</strong> (2010-02-22):</p>
+<p>Hallo Ralf,</p>
+<p>Ich finde den Ansatz sehr spannend, da er mal über den Tellerrand von DI etc. hinausschaut und beleuchtet, wie man es noch anders machen kann. Sehr schön! Ich will den Ansatz auf jeden Fall mal in einem Demoprojekt umsetzen und vll. einige Blogbeiträge (www.minddriven.de) dazu schreiben.</p>
+<p>Kennst du das Reactive Framework (Rx)? Dieses würde bei diesem Ansatz passen wie die Faust auf's Auge! Statt dem Event würdest du dann ein IObservable bereitstellen, auf welchem du ein Subscribe() ausführen könntest.</p>
+<p>@Golo: ach, du auch hier? ;-)
+Zu 1.) Die Grundidee ist imho der Nachrichten-basierte Ansatz. D.h. wir reden nicht über Methoden und deren Parameter, sondern über die Nachricht IncomingCommand (oder besser IncomingMessage?) und eine Schnittstellenmethode, welche diese konsumiert.
+Zu 2.) Hier würde ich Golo zunächst recht geben. Ein eventbasierter Ansatz löst zunächst nicht von den Abhängigkeiten los. Da fehlt noch ein wichtiges Puzzlestück: die Weiterleitung und Verteilung von Nachrichten. Um hier die Abhängigkeiten los zu werden, müsste z.B. ein Bussystem eingesetzt werden. Doch dann frage ich mich: warum überhaupt explizit Events publizieren/konsumieren?</p>
+<p>Golo's Kommentar (danke!) hat mir gezeigt, dass da noch einige Fragen offen sind. Ich bin mal auf die Antwort gespannt.</p>
+<p>Grüße, Matthias</p>
+<hr />
+<p><strong>Golo Roden</strong> (2010-02-22):</p>
+<p>Hallo Matthias,</p>
+<p>ja - natürlich ich auch hier ;-).</p>
+<p>Ad 1: Wo ist aber letztlich der Unterschied zu dem Aufruf einer Methode, der ich ein Parameterobjekt übergebe, das alle für die Methodenverarbeitung notwendigen Parameter enthält? Nichts anderes ist ein Kommando doch letztlich - oder übersehe ich hier etwas wesentliches?</p>
+<p>Viele Grüße,</p>
+<p>Golo</p>
+<hr />
+<p><strong>Matthias</strong> (2010-02-22):</p>
+<p>Hallo Golo,</p>
+<p>Wenn du die Kopplung z.B. über nServiceBus herstellst (um mal eine konkrete Technologie zu nennen), dann geht die Kommunikation immer nur über ganzheitliche Messages, d.h. Abstraktionen von deinen Parametern. Ansonsten würde ich dir rechtgeben: wenn man nicht in Nachrichten denkt, dann ist man schnell wieder bei normalen Parametern...</p>
+<p>Grüße, Matthias</p>
+<hr />
+<p><strong>Golo Roden</strong> (2010-02-22):</p>
+<p>Hi Matthias,</p>
+<p>korrigiere mich, wenn ich falsch liege (mit Servicebus-Systemen im Allgemeinen und nServiceBus im Speziellen habe ich so gut wie keine Erfahrung), aber geht es bei Servicebus-Systemen mit nachrichtenorientierter Kommunikation nicht eh um asynchrone Kommunikation?</p>
+<p>Und Ralf bezog sich ja explizit auf synchrone Kommunikation, zudem sind Komponenten für mich erst mal nur innerhalb einer Anwendung zu finden - wenn es über Anwendungsgrenzen hinweg geht, kommunzieren Komponenten ja nicht mehr direkt miteinander, sondern Anwendungen mit Anwendungen.</p>
+<p>Das mag jetzt spitzfindig erscheinen, macht IMHO aber einen wesentlichen Unterschied, und klar, man kann einen Servicebus auch anwendungsintern nutzen, aber das ist ja zumindest derzeit doch eher noch die Ausnahme.</p>
+<p>Ich bin ja mal gespannt, wie Ralf unsere Punkte bzw Fragen sieht ...</p>
+<p>Viele Grüße,</p>
+<p>Golo</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-02-22):</p>
+<p>@Golo: Einige deiner Fragen mögen sich durch mein aktuelles Blogposting schon geklärt haben.</p>
+<p>Hier aber trotzdem nochmal kurz: Warum Methoden auf 1 Parameter beschränken?</p>
+<p>Weil damit alles möglich ist.</p>
+<p>Ich komme immer mehr zur Geradlinigkeit und klaren Regeln. Und die Regel "Input und Output sind jeweils 1 Parameter" ist klar und geradlinig und schränkt niemanden ein.</p>
+<p>Außerdem: Wer so lernt schon bei sync Kommunikation zu denken, der hat später viel weniger Probleme, async und gar verteilt zu denken. Und genau darum geht es mir. Ein sanft ansteigender Pfad von lokaler sync Kommunikation hin zu verteilter async Kommunikation.</p>
+<p>Es geht also mal wieder nicht darum, was möglich ist, sondern was systematisch Verständlichkeit und Evolvierbarkeit und Korrektheit fördert.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>Golo Roden</strong> (2010-02-22):</p>
+<p>Hallo Ralf,</p>
+<p>ich habe gerade Deinen neuen Eintrag gelesen, und Du hast nicht nur meine beiden offenen Fragen beantwortet, sondern mich auch zum Staunen gebracht.</p>
+<p>Zum Staunen deshalb, weil ich beeindruckt bin von dem Konzept an sich, seiner Leichtigkeit und zugleich dem Grad der Unabhängigkeit, der sich erreichen lässt ...</p>
+<p>So skeptisch ich nach diesem Beitrag war, so gut gefällt mir das ganze jetzt bereits :-).</p>
+<p>Viele Grüße,</p>
+<p>Golo</p>
+<hr />
+<p><strong>Andreas Ländle</strong> (2010-03-01):</p>
+<p>Ist dieser Ansatz nicht sehr ähnlich dem 'Signal &amp; Slot'-Konzept der Qt Bibliothek?</p>
+<p>Wenn ich mir das so überlege, wundert es mich, dass sich diese Art der "Vernetzung" von Komponenten bislang nicht durchsetzten konnte.
+Gibt es da etwa ein Akzeptanzproblem?</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-03-01):</p>
+<p>@Andreas: Danke für die Hinweis auf Qt. Ja, sieht so aus, als wollten EBCs dasselbe wie Qt mit seinen Signals und Slots (http://de.wikipedia.org/wiki/Signal-Slot-Konzept). Sehr cool.</p>
+<p>Warum hat das bisher keine größere Verbreitung gefunden? Die C++ Gemeinde ist halt sehr für sich; da fließt dann nicht unbedingt etwas zum Rest der Programmierwelt. Dann sind Signals/Slots auch dort wieder - so scheint es - eine Sache, die mit GUI assoziiert ist. Aber warum?</p>
+<p>Mir scheint, bisher haben solche sync ereignisorientierten Konzepte keine größere Verbreitung gefunden, weil sie im Schatten von GUIs stehen und natürlich eine Umgewöhnung bedeuten. Es geht ja anders, direkter. Da fragt sich Joe Developer schon, warum er so einen Aufstand machen soll.</p>
+<p>Aber das entmutigt mich nicht. Der Druck ist heute höher. Evolvierbarkeit wird immer wichtiger. Die Zeit für Ereignisorientierung auf breiterer Basis ist gekommen. Auch wenn es ein wenig mehr Mühe machen sollte.</p>
+<p>Schön, dass es erfolgreiche Beispiele in anderen Bereichen gibt. Jetzt muss nur eine Übersetzung in die .NET Welt stattfinden.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>tboerner</strong> (2010-03-19):</p>
+<p>Hi Ralf,</p>
+<p>ich hatte dir ja erzählt, dass ich EBC auf PHP umgesetzt hab, damit ich auch den Service meiner Lesezeichenanwendung in EBC umbauen kann. Und ich muss sagen, dass ich gelinde gesagt begeistert bin. Jede Komponente wie Deserializer oder Authenticator ist jetzt getestet. (Vorher gar nicht).</p>
+<p>Warum jetzt schon? Weil das einfach total cool geht, weil jede Einheit für sich ist und für sich - ohne Abhängigkeiten - getestet werden kann.</p>
+<p>Länger überlegt und ausprobiert habe ich bei der Einheit Configuration, also die Komponente, die Settings etwa für Zugänge oder Pfade liefert. Auch das hab ich anfänglich mit EBC umgesetzt. Eine Komponente, die einen Wert aus Configuration braucht, hat quasi zwei zusätzliche Pins: über den einen fragt sie einen Wert von Configuration ab und über den anderen meldet Configuration diesen zurück.</p>
+<p>Das funktioniert, allerdings wird das ganze - zumindest in PHP - ziemlich komplex und ist nicht mehr eingängig.</p>
+<p>Also hab ich das wieder umgebaut und injiziere jetzt etwa in den Authenticator die Configuration.
+Klar schaffe ich damit Abhänigkeit, aber die ist deshalb hinnehmbar, weil ich Configuration testen kann und eine Komponente, die Config-Settings braucht, nur diese eine Abhängigkeit hat.</p>
+<p>Wie siehst du das mit zentralen Einheiten, auf die mehrere Komponenten zugreifen?</p>
+<p>Tilman</p>
+<hr />
+<p><strong>Ralf Westphal - One Man Think Tank</strong> (2010-03-19):</p>
+<p>@tboerner: Ich freue mich sehr, dass die EBCs so gut gefallen.</p>
+<p>Aber EBCs sind nicht allein seligmachend. Es kann ruhig weiterhin "traditionelle" Komponenten geben. Bei einem ConfigAdpter könnte das der Fall sein. Den sehe ich als Blatt auch in einer "traditionelle" komponentenorientierten Architektur. Wenn du den also nicht als EBC realisierst, dann hast du kaum Nachteile - aber ein etwas einfacheres Programmiermodell.</p>
+<p>Aber Achtung: Bei EBCs ist es auch nicht immer nötig, zwischen zwei Komponenten für einen Request zwei Drähte zu spannen. Mit einem Request&lt;,&gt; Objekt kannst du auch auf einem Draht einen Wert anfragen und bekommen.</p>
+<p>Und mit etwas Extension Method Magie kannst du dann fast so programmieren wie "normal":</p>
+<p>var authInfo = this.Out_GetConfig.Request(new GetAuthenticationInfo()).Return();</p>
+<p>Das ist immer noch EBC - aber sieht ein wenig einfacher aus.</p>
+<p>-Ralf</p>
+<hr />
+<p><strong>tboerner</strong> (2010-03-19):</p>
+<p>Hi Ralf,</p>
+<p>pretty Extension-Method please with sugar on top gibt es leider in PHP nicht. :-)</p>
+<p>Aber ja, so könnte es gehen. Wobei man dann tierisch aufpassen muss, dass man nicht in einer Endlosschleife landet.</p>
+<p>Tilman</p>
+<hr />
+<p><strong>(anonym)</strong> (2012-04-10):</p>
+<p>Kein Grund zur Euphorie. Was mit EBCs beschrieben wird, wurde schon 1996 mit den Architekturstilen "Event-Based, Implicit Invocation" und "Pipes and Filters" in dem Buch "Software Architecture: Perspectives on an Emerging Discipline" (ISBN-13: 978-0131829572) angegeben.
+In "Pattern-orientierte Software-Architektur" (ISBN-13: 978-3827312822) aus 1998 wird auch das Compiler-Beispiel mit Pipes and Filters behandelt. Interessant ist dort auch die Beschreibung des Event-Channels (OMG) im Rahmen des Publisher-Subscriber-Musters.</p>
+<hr /></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 592 Beiträge aus fünf Publikationen, geschrieben zwischen 2007 und 2022.
+      <span class="miss">Die Jahre 2003–2007 werden noch aus der Wayback Machine zurückgeholt.</span>
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>
