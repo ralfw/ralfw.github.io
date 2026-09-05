@@ -15,14 +15,14 @@
 @font-face{font-family:"IBM Plex Mono";src:url("../fonts/IBMPlexMono-Medium.woff2") format("woff2");font-weight:500;font-style:normal;font-display:swap}
 
 :root{
-  --paper:#f1f2ee;
-  --raised:#e9ebe4;
-  --sunk:#e1e4da;
+  --paper:#f8f9f6;
+  --raised:#eef0ea;
+  --sunk:#e6e9e0;
   --ink:#1b1f1d;
-  --ink-soft:#5c635d;
-  --ink-faint:#888f88;
-  --rule:#d2d7cb;
-  --rule-strong:#b6bcae;
+  --ink-soft:#555c56;
+  --ink-faint:#6b726b;
+  --rule:#dbdfd4;
+  --rule-strong:#bcc2b4;
   --accent:#0d5c5c;
   --accent-wash:#dfeae7;
   --loss:#8a5a10;
@@ -43,7 +43,7 @@
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --paper:#16181a; --raised:#1e2124; --sunk:#121415;
-    --ink:#e6e8e3; --ink-soft:#9aa199; --ink-faint:#6f766f;
+    --ink:#e6e8e3; --ink-soft:#9aa199; --ink-faint:#7d857d;
     --rule:#2e3335; --rule-strong:#454b4c;
     --accent:#5bb0ab; --accent-wash:#17302f;
     --loss:#c79445; --loss-wash:#33291a;
@@ -52,7 +52,7 @@
 }
 :root[data-theme="dark"]{
   --paper:#16181a; --raised:#1e2124; --sunk:#121415;
-  --ink:#e6e8e3; --ink-soft:#9aa199; --ink-faint:#6f766f;
+  --ink:#e6e8e3; --ink-soft:#9aa199; --ink-faint:#7d857d;
   --rule:#2e3335; --rule-strong:#454b4c;
   --accent:#5bb0ab; --accent-wash:#17302f;
   --loss:#c79445; --loss-wash:#33291a;
@@ -123,7 +123,8 @@ button,input{font:inherit;color:inherit}
 .tl-swatch{width:9px;height:9px;border-radius:50%;flex:none}
 .tl-lane-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tl-plot{position:relative;flex:1;min-width:0;padding-bottom:26px;cursor:grab;touch-action:pan-y}
-.tl-plot.drag{cursor:grabbing}
+.tl-plot.over-dot{cursor:pointer}   /* über einem Artikelpunkt */
+.tl-plot.drag,.tl-plot.drag.over-dot{cursor:grabbing}
 .tl-plot canvas{display:block;width:100%;height:100%;position:absolute;inset:0}
 .tl-axis{position:absolute;left:0;right:0;bottom:0;height:24px;pointer-events:none}
 .tl-tick{
@@ -180,13 +181,16 @@ button,input{font:inherit;color:inherit}
   display:flex;align-items:baseline;gap:12px;margin-bottom:14px;font-family:var(--mono);
   font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);
 }
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:1px;background:var(--rule)}
+/* Trennlinien als Schlagschatten je Karte statt als Hintergrund des Rasters —
+   sonst bleiben ungenutzte Rasterzellen als graue Blöcke stehen. */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:1px;background:transparent}
 .main.open .cards{grid-template-columns:repeat(auto-fill,minmax(232px,1fr))}
 .card{
   background:var(--paper);border:none;text-align:left;cursor:pointer;padding:15px 16px 14px;
   display:flex;flex-direction:column;gap:9px;transition:background .12s;min-width:0;
   font-family:inherit;color:inherit;text-decoration:none;
 }
+.card{box-shadow:0 0 0 1px var(--rule)}
 .card:hover{background:var(--raised)}
 .card.is-on{background:var(--accent-wash)}
 .card-top{display:flex;align-items:center;gap:7px;min-width:0}
@@ -291,3 +295,37 @@ button,input{font:inherit;color:inherit}
   .tl-ctrl{margin-left:0}
 }
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+/* ---------- Beitrag groß in der Mitte lesen ---------- */
+.panel-wide{
+  margin-left:auto;background:none;border:1px solid var(--rule);border-radius:2px;
+  padding:4px 9px;font-family:var(--mono);font-size:10px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--ink-soft);cursor:pointer;white-space:nowrap;
+}
+.panel-wide:hover{border-color:var(--rule-strong);color:var(--ink)}
+.panel-bar .panel-x{margin-left:8px}
+
+.main.open.wide{grid-template-columns:212px minmax(0,1fr)}
+.main.open.wide .panel{
+  position:fixed;top:calc(var(--hd-h) + 26px);left:50%;right:auto;bottom:auto;
+  transform:translateX(-50%);
+  width:min(920px, calc(100vw - 56px));
+  max-height:calc(100vh - var(--hd-h) - 52px);
+  height:auto;z-index:60;
+  border:1px solid var(--rule-strong);border-radius:3px;
+  box-shadow:0 26px 64px rgba(20,22,20,.30);
+  overflow-y:auto;
+}
+.main.open.wide ~ .scrim{opacity:1;pointer-events:auto}
+.main.open.wide .panel-body{max-width:74ch;margin:0 auto;padding:34px 44px 90px}
+.main.open.wide .art{font-size:16.5px;line-height:1.72}
+.main.open.wide .doc-title{font-size:30px;letter-spacing:-.02em}
+.main.open.wide .art img{margin:2em auto}
+
+@media(max-width:1080px){
+  .main.open.wide .panel{
+    width:calc(100vw - 24px);top:calc(var(--hd-h) + 12px);
+    max-height:calc(100vh - var(--hd-h) - 24px);
+  }
+  .main.open.wide .panel-body{padding:26px 22px 80px}
+}

@@ -104,7 +104,7 @@ function tAt(px){ return view.a + px / cv.clientWidth * (view.b - view.a); }
 
 function draw(){
   var w = plot.clientWidth, h = plot.clientHeight, dpr = window.devicePixelRatio || 1;
-  if(!w) return;
+  if(!w || !dens.length) return;   // vor dem Laden der Daten gibt es nichts zu zeichnen
   cv.width = w*dpr; cv.height = h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
   ctx.clearRect(0,0,w,h);
   var rule = cssv("--rule"), ruleS = cssv("--rule-strong"), faint = cssv("--ink-faint");
@@ -239,6 +239,7 @@ function nearest(px, py){
 }
 function hover(px, py){
   var a = nearest(px, py);
+  plot.classList.toggle("over-dot", !!a);   // über einem Beitrag: Zeigefinger statt Greifhand
   if(!a){ tip.classList.remove("on"); return; }
   tip.innerHTML = '<span class="d">' + fmt(a.d) + " · " + esc(SRCMAP[a.s].label) + "</span>" + esc(a.t);
   tip.classList.add("on");
@@ -310,6 +311,7 @@ var cache = {};
 function open(a, push){
   current = a;
   main.classList.add("open"); panel.hidden = false; panel.scrollTop = 0;
+  main.classList.toggle("wide", wide);
   var s = SRCMAP[a.s];
   var ps = document.getElementById("pSrc");
   ps.innerHTML = '<span class="tl-swatch"></span>' + esc(s.label);
@@ -348,6 +350,20 @@ function close(push){
   document.title = "Archiv — ralfw.de";
   renderCards(); draw();
 }
+/* Lesemodus: seitlich angedockt oder groß in der Mitte. Bleibt für die Sitzung gemerkt. */
+var wideBtn = document.getElementById("pWide");
+var wide = false;
+try { wide = localStorage.getItem("leseModus") === "gross"; } catch(e){}
+function setWide(on){
+  wide = on;
+  main.classList.toggle("wide", wide);
+  if (wideBtn) wideBtn.textContent = wide ? "Andocken" : "Groß lesen";
+  try { localStorage.setItem("leseModus", wide ? "gross" : "seitlich"); } catch(e){}
+  draw();
+}
+if (wideBtn) wideBtn.onclick = function(){ setWide(!wide); };
+setWide(wide);
+
 document.getElementById("pClose").onclick = function(){ close(true); };
 document.getElementById("scrim").onclick = function(){ close(true); };
 document.addEventListener("keydown", function(e){
