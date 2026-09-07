@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software Transactional Memory II - Isolation of Changes to Transactional Objects — ralfw.de Archiv</title>
+<meta name="description" content="In yesterday´s posting I introduced my C implementation (NSTM) of the Software Transactional Memory (STM) concept. It is supposed to make concurrent programming easier than it is t">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/software-transactional-memory-ii-isolation-of-changes-to-transactional-objects/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software Transactional Memory II - Isolation of Changes to Transactional Objects — ralfw.de Archiv">
+<meta property="og:description" content="In yesterday´s posting I introduced my C implementation (NSTM) of the Software Transactional Memory (STM) concept. It is supposed to make concurrent programming easier than it is t">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/software-transactional-memory-ii-isolation-of-changes-to-transactional-objects/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Software Transactional Memory II - Isolation of Changes to Transactional Objects</h1>
+    <div class="doc-meta"><span>4. Juli 2007</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net/ralfw/software-transactional-memory-ii-isolation-of-changes-to-transactional-objects" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/software-transactional-memory-ii-isolation-of-changes-to-transactional-objects/</code></span></div>
+    <div class="art"><p>In <a rel="noopener" href="https://web.archive.org/web/20150910081552/http://weblogs.asp.net/ralfw/archive/2007/07/03/software-transactional-memory-making-multithreading-easier.aspx">yesterday´s posting</a> I introduced my C# implementation (NSTM) of the Software Transactional Memory (STM) concept. It is supposed to make concurrent programming easier than it is today using explicit locking of shared in-memory resources. With NSTM multithreaded processing becomes as easy as accessing RDBMS from multiple applications isolated from each other with transactions.</p>
+<h3>How ACID is NSTM?</h3>
+<p>Since NSTM provides transactionality on some resource and you´ve come to love the usual transaction <a rel="noopener" href="https://web.archive.org/web/20150910081552/http://en.wikipedia.org/wiki/ACID">ACID properties of database transactions</a> [1], I should quickly explain in how far NSTM supports them:</p>
+<ul>
+<li>Atomicity: The whole purpose of NSTM is to provide atomicity across several operations on in-memory data. Any changes applied to <em>INstmObject</em>s between opening a NSTM transaction with <em>NstmMemory.BeginTransaction()</em> and closing it with <em>INstmTransaction.Commit()</em> are either all successful or none of them.</li>
+<li>Consistency: NSTM does not have a metadata concept so there are no independent consistency rules that could be observed during a transaction. If, for example, you want to implement a transactional queue data structure which of course internally defines some consistency rules, then your code needs to take care of enforcing consistency. However, you´ll get some help for this from the Isolation property of NSTM transactions.</li>
+<li>Isolation: Like with Atomicity the whole purpose of NSTM is to isolate changes to shared in-memory data structures from each other if they happen in different transactions which at the same time means on different threads. Changes during one transaction become only visible to others upon committing the transaction.</li>
+<li>Durability: Durability, i.e. protecting committed data against unexpected process abortion (e.g. through a power outage),  obviously is of no concern when working just in-memory ;-) Volatile data is just that: volatile.</li>
+</ul>
+<p>NSTM is not ACID, but just AI. But I think that´s perfectly ok. It´s not a lack, it´s a feature ;-) ACID properties are not absolute, but mirror what can go wrong when concurrently accessing databases. A non-persistent resource with no inherent rules thus does not need C and D. But how does it ensure A and I?</p>
+<h3>Transactional Objects</h3>
+<p>The basic unit of NSTM transactional memory is the <em>INstmObject<T></em> which can be called a transactional object or txo for short. It´s allocated on the heap, so you can trust the .NET garbage collection to take care of it once it´s not needed anymore. Each txo wraps a piece of your application data ranging from scalar type values to complex object models, e.g.</p>
+<p>1 INstmObject<int> i;</p>
+<p>2 INstmObject<string> s;</p>
+<p>3 INstmObject<MyStruct> r;</p>
+<p>4 INstmObject<MyClass> c;</p>
+<p>with <em>MyStruct</em> and <em>MyClass</em> defined as:</p>
+<p>1 struct MyStruct</p>
+<p>2 {</p>
+<p>3     public int j;</p>
+<p>4</p>
+<p>5     public MyStruct(int value)</p>
+<p>6     {</p>
+<p>7         this.j = value;</p>
+<p>8     }</p>
+<p>9 }</p>
+<p>10</p>
+<p>11 class MyClass : ICloneable</p>
+<p>12 {</p>
+<p>13     public int i;</p>
+<p>14</p>
+<p>15     public MyClass(int value)</p>
+<p>16     {</p>
+<p>17         this.i = value;</p>
+<p>18     }</p>
+<p>19</p>
+<p>20     #region ICloneable Members</p>
+<p>21</p>
+<p>22     public object Clone()</p>
+<p>23     {</p>
+<p>24         return new MyClass(this.i);</p>
+<p>25     }</p>
+<p>26</p>
+<p>27     #endregion</p>
+<p>28 }</p>
+<p>You can allocate space for any type in transactional memory provided its values can be cloned by the NSTM infrastructure. Scalar types and strings don´t pose a problem here. Value types (<em>struct)</em> are easy too, as long as they just aggregate scalar type values. All other types need to implement <em>ICloneable</em> to let NSTM create a copy of their instances.</p>
+<p><em>ICloneable</em> is used instead of <em>[Serializable]</em> because so far it seemed to me that serialization leads to more problems than it solves:</p>
+<ul>
+<li>Serialization is slower by nature than cloning.</li>
+<li>Serialization (or deserialization to be more precise) leads to problems if your own txo types contain references to other transactional objects, since they must not be serialized and need to regain their identity during deserialization. Some overall management of txo would be necessary.</li>
+</ul>
+<p>Values of transactional objects need to be cloneable to isolate transactions from each other. The default mode of NSTM transactions is <em>CloneOnRead</em>. That means, when you first read a txo in a transaction its value is cloned. Any subsequent reads will then also return the cloned value (or any changes you made to it). If some other transaction overwrites the txo´s value in the meantime you won´t see those changes. You keep on working with your own clone. This makes working with NSTM threadsafe out of the box. No need for you to worry about locking your own values stored in transactional objects.</p>
+<p>If a transaction is opened in <em>CloneOnWrite</em> mode, though, the values of transactional objects are not cloned by default when you just read them. That makes working with NSTM a little bit faster, but it opens the door to inconsistencies. If after first reading a txo and later on reading it again another transaction commits a new value to the txo, then two different values would be returned within the same transaction. However, <em>CloneOnWrite</em> might be ok for you, if you keep an eye on when and how often you read from a txo.</p>
+<h3>Reading and Writing Transactional Memory</h3>
+<p>Reading from and writing to transactional objects unfortunately are very explicit:</p>
+<p><em>int iValue = i.Read();</em></p>
+<p>This is due to the difficulty to intercept regular memory access. If I had chosen to not allow scalar types for txo I could have used some form of proxy to intercept read/write to transactional object values. But I did not want to limit the type range in that way. Maybe in the future I find some easier way to interact with txo values or to get rid of explicit transactional objects alltogether. Code enhancing could be a way to achieve that. But right now I opted for a quick implementation with a reasonable programming model instead of the most intuitive and unobtrusive one.</p>
+<p>Just calling <em>Read()</em> on a txo opens it in <em>ReadWrite</em> mode, though. Again, this is the safest option: Even if the clone mode is not <em>CloneOnRead</em> a clone of the current value is created, because the read mode signals, that your application intends to write to the txo at some point in the future.</p>
+<p><em>i.Read()</em></p>
+<p>is the same as</p>
+<p><em>i.Read(NstmReadOption.ReadWrite)</em></p>
+<p>However, if you know you will never write to a txo you can spare NSTM the effort to clone it (except for if clone mode is <em>CloneOnRead).</em> Just state <em>ReadOnly</em> as the read mode:</p>
+<p><em>i.Read(NstmReadOption.ReadOnly)</em></p>
+<p>Inconsistencies that might occur due to changes to transactional objects you read in your transaction by other transactions committing their changes in the meantime are then of course still detected. Either on the next read access to the txo or during commit of your transaction.</p>
+<p>If you don´t care for such inconsistencies and want to save the effort of this kind of validation - e.g. because you just want to traverse a couple of txo - then read from a txo with <em>PassingReadOnly</em>:</p>
+<p><em>i.Read(NstmReadOption.PassingReadOnly)</em></p>
+<p>No consistency checks will be performed upon future reads with this option or during commit - unless you´ve subsequently read the txo with another option.</p>
+<p>So much for reading from transactional objects. It´s explicit, but it´s simple.</p>
+<p>Changing txo works likewise. You just call <em>Write()</em> and pass the new value to it:</p>
+<p><em>i.Write(99);</em></p>
+<p>If the value had already been cloned the clone is overwritten. In any case will the new value not yet be visible to any other parallel transaction. You have to call <em>Commit()</em> on the transaction to make new values public. Until then they are kept in a transaction local buffer, the transaction log.</p>
+<p>Explicitly writing to a txo is the surest way for changing its value. And it´s the only way for scalar types and strings and any other value type. Objects, however, can also be changed implicitly. That´s why there is the <em>ReadWrite</em> read option:</p>
+<p>1 MyClass x = c.Read();</p>
+<p>2 x.i = 99;</p>
+<p><em>Read()</em> returns a clone of c´s value which then is changed. Although no explicit write happens afterwards the txo´s value is changed and can be committed. Were it not for the automatic clone of the txo´s value due to <em>ReadWrite</em> assigning 99 would change the original and "true" value of c. But that must not happen in order to isolate transactions from each other. That´s why the default read option is <em>ReadWrite</em>.</p>
+<p>You could habe read the value with <em>ReadOnly</em> and change the field and NSTM would not have detected this violation, though. I did not build in any checks against that as explained above. Some form of proxy would have been necessary. So the only checks are the <em>ReadWrite</em> default read option and the <em>CloneOnRead</em> default clone option for transactions.</p>
+<p>If you change them, NSTM assumes you know what you´re doing ;-) Feel free to do so and you´ll find many places in my collection implementations where I did it. But be careful! It´s a form of optimization and should not be done too easily.</p>
+<h3>What´s next?</h3>
+<p>Single transactional objects are isolated from each other by making changes only to copies of their values. But where are those changes kept? How are changes detected? How is the Atomicity of all changes ensured? That´s all a matter of the transaction log and will be explained in my next posting.</p>
+<h3>Resources</h3>
+<p>[1] Wikipedia, ACID, <a rel="noopener" href="https://web.archive.org/web/20150910081552/http://en.wikipedia.org/wiki/ACID" title="http://en.wikipedia.org/wiki/ACID">http://en.wikipedia.org/wiki/ACID</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

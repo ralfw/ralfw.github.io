@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Component orientation explained - Modern software development viewed from a musical perspective — ralfw.de Archiv</title>
+<meta name="description" content="You´re fluent in object oriented programming. But now and again you´re wondering what the fuzz about component orientation is? There is supposed to be more to it than just using 3r">
+<link rel="canonical" href="https://ralfw.de/archiv/2008/component-orientation-explained-modern-software-development-viewed-from-a-musical-perspective/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Component orientation explained - Modern software development viewed from a musical perspective — ralfw.de Archiv">
+<meta property="og:description" content="You´re fluent in object oriented programming. But now and again you´re wondering what the fuzz about component orientation is? There is supposed to be more to it than just using 3r">
+<meta property="og:url" content="https://ralfw.de/archiv/2008/component-orientation-explained-modern-software-development-viewed-from-a-musical-perspective/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Component orientation explained - Modern software development viewed from a musical perspective</h1>
+    <div class="doc-meta"><span>2. März 2008</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net/ralfw/component-orientation-explained-modern-software-development-viewed-from-a-musical-perspective" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2008/component-orientation-explained-modern-software-development-viewed-from-a-musical-perspective/</code></span></div>
+    <div class="art"><p>You´re fluent in object oriented programming. But now and again you´re wondering what the fuzz about component orientation is? There is supposed to be more to it than just using 3rd party controls in your user interfaces. But, what and how?</p>
+<p>Component orientation is about higher productivity, easier maintenance, better testability, more flexibility, and - if you´re fond of it - reusability.</p>
+<p>But how´s that? How does component orientation reach all those lofty goals? The trick is pretty simple: component orientation takes the basic design principle of loose coupling very seriously. But instead of now explaining contract-first design (CfD), IoC containers, binary code units, and component workbenches, let me demonstrate component orientation in a more tangible way with a musical example.</p>
+<h5>Requirements</h5>
+<p>The requirements for my musical project are: Produce a recording of the simple piece "Bell-ringers" (<em>Source: "Bell-ringers" by Katherine and Hugh Colledge, (c) 1988 by Boosey and Hawkes Music Publishers Ltd.</em>) as depicted below:</p>
+<p><img loading="lazy" alt="Bild nicht mehr verfügbar" src="/assets/_shared/placeholder-missing-image.svg" /></p>
+<p><em>(Bild nicht mehr verfügbar – in der Wayback-Aufnahme nicht mitgespeichert. Ursprünglicher Dateiname: image_3.png)</em></p>
+<p>The requirements are clear, since a complete requirements document has been provided by the imaginary customer. Additionally the customer has stated, he´d prefer the piece played on the violin.</p>
+<p>However... although I can read and understand the requirements I can´t play the violin. But that´s not really much different from software development, isn´t it? Often a solution needs to be developed with a technology you´re not familiar with; or you are supposed to adopt a process you´ve no experience with. So I guess the requirements are pretty realistic, even though it´s just an analogy.</p>
+<h5></h5>
+<h5>Product</h5>
+<p>Out of didactic considerations now let me already present the product I developed according to the above requirements. So first just listen to my "Bell-ringers" recording:</p>
+<p>Something went wrong :(</p>
+<p>Ruffle failed to load the required ".wasm" file component.</p>
+<p>If you are the server administrator, please ensure the file has correctly been uploaded.</p>
+<p>If the issue persists, you may need to use the "publicPath" setting: please consult the Ruffle wiki for help.</p>
+<ul>
+<li><a rel="noopener" href="https://web.archive.org/web/20150926075201mp_/https://github.com/ruffle-rs/ruffle/wiki/Using-Ruffle#configuration-options">View Ruffle Wiki</a></li>
+<li><a rel="noopener" href="https://web.archive.org/web/20150926075201/http://weblogs.asp.net/ralfw/component-orientation-explained-modern-software-development-viewed-from-a-musical-perspective#">View Error Details</a></li>
+</ul>
+<p>Download all save files</p>
+<p>100%</p>
+<p>It looks like hardware acceleration is disabled. While Ruffle may work, it could be very slow. You can find out how to enable hardware acceleration by following the link below:<a rel="noopener" href="https://web.archive.org/web/20150926075201mp_/https://github.com/ruffle-rs/ruffle/wiki/Frequently-Asked-Questions-For-Users#chrome-hardware-acceleration">FAQ - Chrome Hardware Acceleration</a></p>
+<h2>Copying and pasting in Ruffle</h2>
+<p><strong>Command+C</strong>⁨ ⁩ for copy</p>
+<p><strong>Command+X</strong>⁨ ⁩ for cut</p>
+<p><strong>Command+V</strong>⁨ ⁩ for paste</p>
+<p>Maybe it´s not exactly what you or the customer expected, but it´s on its way to what a true violin expert like Nigel Kennedy whould have produced ;-) In that, though, it´s also close to reality, isn´t it? Who has ever given a customer what she had expected for a first release?</p>
+<h5>Component oriented development</h5>
+<p>Now that you know the requirements and what I delivered to the customer, let me take you backstage. How did my component oriented development process work?</p>
+<h6>1. Decomposition into components</h6>
+<p>First I determined the components the final product should be build from. For you to understand this let me define component in a somewhat unorthodox way as:</p>
+<p><em>A component is a part of the product that can be produced independently of other parts.</em></p>
+<p><img loading="lazy" alt="Bild nicht mehr verfügbar" src="/assets/_shared/placeholder-missing-image.svg" /></p>
+<p><em>(Bild nicht mehr verfügbar – in der Wayback-Aufnahme nicht mitgespeichert. Ursprünglicher Dateiname: image_6.png)</em></p>
+<p>For a musical composition like "Bell-ringers" these parts or basic building blocks are all the different musical notes. I identified a, h, c'#, e, d', a', g'#, f'# and e' to be needed for a "Bell-ringers" production. To the right you see my original "analysis document".</p>
+<p>In order to compose something from such components, though, more is needed: the relationships between the components have to clear. Components are not just dump parts but serve a purpose. They provide a service to other components. Here´s an addition for the above definition of component:</p>
+<p><em>Components have a clear specification as to what services they provide and which other components´ services they depend on. This specification needs to be separate from any component´s realization.</em></p>
+<p>Unfortunately here the analogy somewhat breaks. The relationships between musical notes are obvious from the musical score and are very, very simple. Their services are self-contained, so to speak.</p>
+<p>Nevertheless there are relationships between the musical components. Each musical component (note) has a predecessor and a successor. That´s at least two relationships. And there can be more, e.g. in a chord with several musical notes played at the same time.</p>
+<h6>2. Component implementation</h6>
+<p>After I had identified all the components necessary to build the requested product I produced them independently. This was possible due to their loose coupling. I was able to arrange production in any order I saw fit. And if I had wanted to employ other musicians/developers I could have done so. They could have worked completely independent from me and in parallel. Thus components not only make the order of production flexible, but they also allow for very high productivity.</p>
+<p>Here you see the "implementation" of two of the components. Yes, I implemented them not just as mp3-files, but videos. Above you just listened to the sound. But at the end you'll get the full monty :-)</p>
+<p>Sample component <em>a</em>:</p>
+<p>[<img loading="lazy" alt="Bild nicht mehr verfügbar" src="/assets/_shared/placeholder-missing-image.svg" /></p>
+<p><em>(Bild nicht mehr verfügbar – in der Wayback-Aufnahme nicht mitgespeichert. Ursprünglicher Dateiname: video62dd8a5607ff.jpg)</em>](https://web.archive.org/web/20150926075201/http://video.google.com/videoplay?docid=-8147399752840676708)</p>
+<p>Sample component <em>d'</em>:</p>
+<p>[<img loading="lazy" alt="Bild nicht mehr verfügbar" src="/assets/_shared/placeholder-missing-image.svg" /></p>
+<p><em>(Bild nicht mehr verfügbar – in der Wayback-Aufnahme nicht mitgespeichert. Ursprünglicher Dateiname: video6d40c87132f8.jpg)</em>](https://web.archive.org/web/20150926075201/http://video.google.com/videoplay?docid=3370420129296982121)</p>
+<p>Now you might think this kind of isolated production of components can only be done for musical components. But that´s not the case. My customers and I do it all the time in software projects. Admittedly then it´s a tad more difficult to determine which components to produce and what their dependencies are - but nevertheless it´s possible and it´s feasible. With a little component planning the stated benefits can easily be reaped.</p>
+<p>(A word on the surroundings you can see in the video clips: Since I can´t play the violin I had to ask my little daughter, Verena (7 years old), to show me how to play the notes. So I´m sitting in her room while I´m implementing the components. And by the way: this all happened quite ad hoc some on some Sunday morning ;-)</p>
+<h6>3. Component integration</h6>
+<p>In monolithic projects, i.e. projects whose source code is just composed of classes but no components, the solution is finished as soon as all classes have been developed. With component orientation that´s different. The price to pay for higher productivity and increased flexibility is a separate integration phase. The components developed independently need to be integrated into a whole.</p>
+<p>For the musical production this step consisted of connecting the components according to the relationships defined by the musical score. Here you see the components in the story board view of my video editing software:</p>
+<p>[<img loading="lazy" alt="Bild nicht mehr verfügbar" src="/assets/_shared/placeholder-missing-image.svg" /></p>
+<p><em>(Bild nicht mehr verfügbar – in der Wayback-Aufnahme nicht mitgespeichert. Ursprünglicher Dateiname: image_thumb_2.png)</em>](https://web.archive.org/web/20150926075201/https://mscblogs.blob.core.windows.net/media/ralfw/WindowsLiveWriter/Componentorientationfinallymadeeasytound_C8D7/image_8.png)</p>
+<p>From left to right it´s the components "a", "b"/"h", "c'#", "a" etc. But for now they are just roughly put together. To make them really cooperate their services need to be finetuned. This means I also need to adjust the lengths of the musical components. That´s what´s happening in the main editing view of the video software:</p>
+<p>[<img loading="lazy" alt="Bild nicht mehr verfügbar" src="/assets/_shared/placeholder-missing-image.svg" /></p>
+<p><em>(Bild nicht mehr verfügbar – in der Wayback-Aufnahme nicht mitgespeichert. Ursprünglicher Dateiname: image_thumb_3.png)</em>](https://web.archive.org/web/20150926075201/https://mscblogs.blob.core.windows.net/media/ralfw/WindowsLiveWriter/Componentorientationfinallymadeeasytound_C8D7/image_10.png)</p>
+<p>The duration of each "component instance" (remember: all components and even sequences of components (composite components) are reused several times) is adjusted to the requirements. Also you can see I added some "infrastructure" like a trailer and an intro.</p>
+<p>While I tried to implement each component by itself with highest quality - call this unit testing if you like ;-) - it was only during integration I was able to see (or hear), if the individual qualities really added up to an overall acceptable quality.</p>
+<p>As it turned out during integration, I had forgotten to implement one of the components. So I had to set up the video equipment again and do a retake. If you look closely you´ll be able to spot this component ;-)</p>
+<p>But - thanks to component oriented production - this was the only thing I needed to do to save the whole production. Had I chosen the usual monolithic approach I would have had to redo everything. But component orientation made it possible to insert the additional implementation within the "network of building blocks" just where it was needed. That´s what I call flexibility!</p>
+<h6>4. Deployment</h6>
+<p>Finally, once all components were arranged, I let the video editing software encode the whole sequence into a single mp3-file (listen above) and a video file (see below). These files I then could deliver to the imaginary customer.</p>
+<p>Here´s the whole product not only to hear, but also to see:</p>
+<p>[<img loading="lazy" alt="Bild nicht mehr verfügbar" src="/assets/_shared/placeholder-missing-image.svg" /></p>
+<p><em>(Bild nicht mehr verfügbar – in der Wayback-Aufnahme nicht mitgespeichert. Ursprünglicher Dateiname: video3be80cd41357.jpg)</em>](https://web.archive.org/web/20150926075201/http://video.google.com/videoplay?docid=6304012843818161329)</p>
+<p>It´s the same sound as above - but since you´re looking under the hood you can actually see (!) it´s not monolithic, but component oriented. The customer experience is like it should be: smooth - although not yet perfect ;-) But the architecture of the whole is flexible. There is no tightly knit fabric of sounds, but sound bits (components) produced independently and then integrated in a way so that they form a seamless product.</p>
+<h5>The blessings of component orientation</h5>
+<p>Let me point out again the blessings of component orientation for this production:</p>
+<ul>
+<li>Components let me produce the whole in separate bits according to my liking. I could have arranged component implementation with regard to difficulty or availability of my coach Verena. Or I could have outsourced production of individual components. Components made the implementation flexibile and highly productive.</li>
+<li>Component quality could be checked individually. In order to attain high overall quality I did not need to produce a whole right from the start like in a live concert. I would have had to rehearse a lot for that. Rather I was able to hone the quality of small parts of the whole in isolation. Components made the implementation much easier to test.</li>
+<li>As the integration phase showed, components made it easy to modify the whole by inserting (or replacing or deleting or changing) just isolated parts. Again I did not need to play the whole piece again just to compensate for a mistake. I just implemented the component I had forgotten and inserted it where needed. The component oriented architecture was easy to maintain.</li>
+</ul>
+<p>Well, what can I say? Component orientation rocks!</p>
+<p>PS: As you can see from the trailer of the video, the video was planned as a hommage to some Lasse Gjertsen. You can find the at YouTube with several videos which inspired me. He´s done some awsome stuff. Check out his <a rel="noopener" href="https://web.archive.org/web/20150926075201/http://en.wikipedia.org/wiki/Lasse_Gjertsen">list of productions</a>. But if you don´t have much time and are mainly interested in component orientation, view at least <a rel="noopener" href="https://web.archive.org/web/20150926075201/http://www.youtube.com/watch?v=JzqumbhfxRo">his video "Amateur"</a>. It shows a "distributed application" developed by "two teams" ;-)</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

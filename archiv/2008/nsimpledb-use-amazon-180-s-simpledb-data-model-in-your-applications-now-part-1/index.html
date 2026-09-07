@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NSimpleDB - Use Amazon´s SimpleDB data model in your applications now - Part 1 — ralfw.de Archiv</title>
+<meta name="description" content="Have you heard about Amazon´s online &quot;database service&quot; SimpleDB? They describe it like this: &quot;Amazon SimpleDB is a web service for running queries on structured data in real time.">
+<link rel="canonical" href="https://ralfw.de/archiv/2008/nsimpledb-use-amazon-180-s-simpledb-data-model-in-your-applications-now-part-1/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="NSimpleDB - Use Amazon´s SimpleDB data model in your applications now - Part 1 — ralfw.de Archiv">
+<meta property="og:description" content="Have you heard about Amazon´s online &quot;database service&quot; SimpleDB? They describe it like this: &quot;Amazon SimpleDB is a web service for running queries on structured data in real time.">
+<meta property="og:url" content="https://ralfw.de/archiv/2008/nsimpledb-use-amazon-180-s-simpledb-data-model-in-your-applications-now-part-1/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>NSimpleDB - Use Amazon´s SimpleDB data model in your applications now - Part 1</h1>
+    <div class="doc-meta"><span>18. Jan. 2008</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net/ralfw/nsimpledb-use-amazon-180-s-simpledb-data-model-in-your-applications-now-part-1" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2008/nsimpledb-use-amazon-180-s-simpledb-data-model-in-your-applications-now-part-1/</code></span></div>
+    <div class="art"><p>Have you heard about Amazon´s online "database service" <a rel="noopener" href="https://web.archive.org/web/20160909041759/http://www.amazon.com/gp/browse.html?node=342335011">SimpleDB</a>? They describe it like this: "Amazon SimpleDB is a web service for running queries on structured data in real time." So it´s not a RDBMS, because Amazon does not call the data "relational", but just "structured". And you use a web service based API to access the data, not good old ADO.NET. Currently SimpleDB is in beta. You can get a test account to play around with it - if you´re patient. As of this writing (Jan 08) evaluation is limited; you need to apply and queue up to be assigned a test account. I have about 2 weeks ago, but haven´t heard from Amazon since then.</p>
+<p>But why should you care? Well, SimpleDB would allow you to store data in a database without any setup costs. You don´t have to care about backup or moving to another ISP. You´re data, lots of data, can just stay with Amazon. Just add a web service proxy to you web (or desktop) application and off you go. This certainly make some (or a lot, or at least a growing number of) applications easier to implement.</p>
+<p>Another reason to care about Amazon´s SimpleDB is its simplicity. In an age where dynamic programming becomes ever more popular and static whatever (e.g. typing, binding) loses value, making persistence more dynamic sure should look attractive. But exactly this is what Amazon´s SimpleDB is about: highly dynamic persistence of structured data.</p>
+<h3>SimpleDB data model</h3>
+<p>With SimpleDB you don´t define a database schema anymore. Your "data space" with Amazon is structured in a very simple way: it´s devided into sub-spaces called "domains" which each contain so called "items" which each contain so called "attributes". That´s it. And you can change the structure of this "data space" at any time. There is no distinction between meta data and data. Creating a domain (which resembles a table in a relational database) is a web service operation like storing an item in a domain.</p>
+<p>[<img loading="lazy" alt="Bild nicht mehr verfügbar" src="/assets/_shared/placeholder-missing-image.svg" /></p>
+<p><em>(Bild nicht mehr verfügbar – in der Wayback-Aufnahme nicht mitgespeichert. Ursprünglicher Dateiname: image_thumb.png)</em>](https://web.archive.org/web/20160909041759/https://aspblogs.blob.core.windows.net/media/ralfw/WindowsLiveWriter/NSimpleDBPutAmazonsSimpleDBonyourdesktop_A98D/image_2.png)</p>
+<p>To make it very clear: You divide your "data space" into domains at your leisure. (Amazon currently just artificially limits the number of domains to 100.) And you stuff items of any structure into these domains. You never define a schema for a domain. The items stored in a domain don´t have to look the same. They can contain any number of attributes; all can differ in their number of attributes.</p>
+<p>Attributes are name-value-pairs. So items are tuples of arbitrary aritiy. That means, SimpleDB is not a relational database, but a <a rel="noopener" href="https://web.archive.org/web/20160909041759/http://en.wikipedia.org/wiki/Tuple_space">tuplespace</a>. Just throw items/tuples into your SimpleDB instance at your leisure. That´s all their is to SimpleDB persistence. If you like, separate tuples into different domains - but if you do it or not does not make a big difference. For distinguishing between, say, customers and invoices that´s not necessary. It might even be contraproductive, since querying items is limited to one domain at a time. There is no such thing as a SQL Join.</p>
+<h5>The use of domains</h5>
+<p>So why are there domains at all? Probably they help Amazon to make replication of items between servers easier. And it might speed up queries if you distribute your data across domains. So think of domains as easy to set up data partitions in case you have to deal with huge amounts of data.</p>
+<h5>Multi-valued attributes</h5>
+<p>But not only don´t you have to define a schema for a domain and all items/tuples can have a different structure, there´s another deviation from relational thinking: Attributes can have multiple values! So items don´t even comply with the relational first normal form. See the "Phone" attribute in the following item:</p>
+<p><img loading="lazy" alt="Bild nicht mehr verfügbar" src="/assets/_shared/placeholder-missing-image.svg" /></p>
+<p><em>(Bild nicht mehr verfügbar – in der Wayback-Aufnahme nicht mitgespeichert. Ursprünglicher Dateiname: image_8.png)</em></p>
+<p>It´s not just several phone numbers separated by commas. No! The "Phone" attribute is really structured. You can retrieve (and query for) each phone number separatley. SimpleDB would return the item like this:</p>
+<p><img loading="lazy" alt="Bild nicht mehr verfügbar" src="/assets/_shared/placeholder-missing-image.svg" /></p>
+<p><em>(Bild nicht mehr verfügbar – in der Wayback-Aufnahme nicht mitgespeichert. Ursprünglicher Dateiname: image_11.png)</em></p>
+<p>Think of what this means: Finally you can set up "natural references" between persistent data like in memory. A parent objekt points to its children. But when you persist these objects in a relational database, you usually invert the references. The child records will contain a foreign key to denote their parent record.</p>
+<p>But with SimpleDB you can let parent items point to their child tuples:</p>
+<p>[<img loading="lazy" alt="Bild nicht mehr verfügbar" src="/assets/_shared/placeholder-missing-image.svg" /></p>
+<p><em>(Bild nicht mehr verfügbar – in der Wayback-Aufnahme nicht mitgespeichert. Ursprünglicher Dateiname: image_thumb_4.png)</em>](https://web.archive.org/web/20160909041759/https://aspblogs.blob.core.windows.net/media/ralfw/WindowsLiveWriter/NSimpleDBPutAmazonsSimpleDBonyourdesktop_A98D/image_13.png)</p>
+<p>See how all children are referenced with their id values from their parents? See how the number of attributes differ across the items? That´s all just fine with SimpleDB.</p>
+<h5>Just text</h5>
+<p>A drawback of SimpleDB might be its limitation to text. All attribute values are stored as just text. So comparison is alphanumeric and leads to effects like this: 20 &gt; 100 because in fact the the comparison is "20" &gt; "100". So be sure to take this into account when storing your non-text values like numbers or dates. Pad numbers with leading zeros (e.g. store "00012" instead of "12"), use a sortable date format (e.g. "2008-01-18"). If you expect to store negative numbers, move them into the positive range of numbers, e.g. instead of "-12" and "12" store "0" and "24" if you expect the value range to start from -12.</p>
+<p>On the other hand SimpleDB in this regard does not differ from XML. Text simply is the least common denominator for storing data. Also, this makes SimpleDB more efficient, since it can be optimized for handling text (e.g. in terms of indices).</p>
+<h3>What´s next?</h3>
+<p>That´s pretty much all there is to say about SimpleDB´s data model. It´s simple. It´s dynamic.</p>
+<p>In my next posting I´ll introduce you to the SimpleDB API. It´s simple, too. Just a couple of easy operations.</p>
+<p>But if you want to move forward more quickly, have a look at the <a rel="noopener" href="https://web.archive.org/web/20160909041759/http://developer.amazonwebservices.com/connect/entry.jspa?externalID=1107&amp;categoryID=146">SimpleDB documentation</a> on the Amazon website. You can also try out my Open Source implementation of the SimpleDB data model and API. It´s called NSimpleDB and is <a rel="noopener" href="https://web.archive.org/web/20160909041759/http://code.google.com/p/nsimpledb/">hosted with Google</a>. More about this too in a future posting.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

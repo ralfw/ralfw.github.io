@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Doing asynchronous distributed request/response service calls without WCF — ralfw.de Archiv</title>
+<meta name="description" content="In my previous blog post I hopefully was able to demonstrate how low the entry barrier is to asynchronous remote communication. It´s as easy as hosting a service like this">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/doing-asynchronous-distributed-request-response-service-calls-without-wcf/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Doing asynchronous distributed request/response service calls without WCF — ralfw.de Archiv">
+<meta property="og:description" content="In my previous blog post I hopefully was able to demonstrate how low the entry barrier is to asynchronous remote communication. It´s as easy as hosting a service like this">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/doing-asynchronous-distributed-request-response-service-calls-without-wcf/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Doing asynchronous distributed request/response service calls without WCF</h1>
+    <div class="doc-meta"><span>15. März 2010</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net/ralfw/doing-asynchronous-distributed-request-response-service-calls-without-wcf" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/doing-asynchronous-distributed-request-response-service-calls-without-wcf/</code></span></div>
+    <div class="art"><p>In <a rel="noopener" href="https://web.archive.org/web/20150926022431/http://weblogs.asp.net/ralfw/archive/2010/03/15/easy-remote-communication-without-wcf.aspx">my previous blog post</a> I hopefully was able to demonstrate how low the entry barrier is to asynchronous remote communication. It´s as easy as hosting a service like this</p>
+<p>10 using(var serverSpace = new CcrSpace().ConfigureAsHost("wcf.port=8000"))</p>
+<p>11 {</p>
+<p>12     serverSpace.HostPort(</p>
+<p>13                     serverSpace.CreateChannel<string>(t =&gt; Console.WriteLine(t)),</p>
+<p>14                     "MyService");</p>
+<p>and connecting to such a service like this:</p>
+<p>16 using(var clientSpace = new CcrSpace().ConfigureAsHost("wcf.port=0"))</p>
+<p>17 {</p>
+<p>18     var s = clientSpace.ConnectToPort<string>("localhost:8000/MyService");</p>
+<p>19 </p>
+<p>20     s.Post("hello, world!");</p>
+<p>Under the hood this is net.tcp WCF communication like Microsoft wants you to do it. But on the surface the <a rel="noopener" href="https://web.archive.org/web/20150926022431/http://code.google.com/p/ccrspace/">CCR Space</a> in conjunction with the <a rel="noopener" href="https://web.archive.org/web/20150926022431/http://xcoappspace.codeplex.com/">Xcoordination Application Space</a> provides you with an easy to use asynchronous API based on *Microsoft´s Concurrency Coordination Runtime.</p>
+<h4>Request/Response</h4>
+<p>Calling a service and not expecting a response, though, is not what you want to do most of the time. Usually you call a service to have it process some data and return a result to the caller (client). So the question is, how can you do this in an asynchronous communication world? WCF and the other sync remote communication APIs make that a no brainer. That´s what you love them for. So in order to motivate you to switch to an async API I need to prove that such service usage won´t become too difficult, I guess.</p>
+<p>What do you need to do to have the server not only dump the message you sent it to the console, but to return it to the caller? How to write the most simple echo service? Compared to the ping service you saw in <a rel="noopener" href="https://web.archive.org/web/20150926022431/http://weblogs.asp.net/ralfw/archive/2010/03/15/easy-remote-communication-without-wcf.aspx">my previous posting</a> this is not much of a difference. Here´s the <strong>service implementation</strong>:</p>
+<p>11 public static string Echo(string text)</p>
+<p>12 {</p>
+<p>13     Console.WriteLine("SERVER - Processing Echo Request for '{0}'", text);</p>
+<p>14     return text;</p>
+<p>15 }</p>
+<p>Yes, that´s right. It´s a method with a return value like you would have used it in a WCF service. Just make sure the request and the response message types are <em>[Serializable]</em>.</p>
+<p>And this is the code to <strong>host this service</strong>:</p>
+<p>19 using(var serverSpace = new CcrSpace().ConfigureAsHost("wcf.port=8000"))</p>
+<p>20 {</p>
+<p>21     var chService = serverSpace.CreateChannel<string, string>(Echo);</p>
+<p>22     serverSpace.HostPort(chService, "Echo");</p>
+<p>The only difference is in the two type parameters to <em>CreateChannel()</em>. They specify this is request/response channel. The first type is for the request type, the second for the response type.</p>
+<p>When does it start to become difficult, you might ask? Async communication is supposed to be difficult. Well, check out the client code. First it needs to connect to the service:</p>
+<p>40 using(var clientSpace = new CcrSpace().ConfigureAsHost("wcf.port=0"))</p>
+<p>41 {</p>
+<p>42     var chServiceProxy = clientSpace.ConnectToPort<string, string>("localhost:8000/Echo");</p>
+<p>This isn´t difficult, or is it? Like before for the one-way ping service the client just needs to specify the address of the service. But of course the local channel needs to match the remote channel´s signature. So the client passes in two type parameters for the request and response message types.</p>
+<p>And now the final part: sending the remote service a message and receiving a response. Sure, this looks a bit different from your usual remote function call. But I´d say it´s not all too inconvenient:</p>
+<p>44 chServiceProxy</p>
+<p>45     .Request("hello!")</p>
+<p>46     .Receive(t =&gt; Console.WriteLine("Answer from echo service: {0}", t));</p>
+<p>You send the request by calling the <em>Request()</em> method with the request message. Then you wait for the response using the <em>Receive()</em> method passing it a continuation. It´s a method to be called once the response arrives at the caller.</p>
+<p>Remember: This is asynchronous communication. That means the code after the <em>Receive()</em> will be very likely executed before (!) that of the continuation. So if you want to have a conversation between client and service you´d need to be a bit careful how you model it. Don´t just write <em>channel.Request().Receive()</em> statements one after another. But let that be a topic for a future posting.</p>
+<p>For now I  hopefully was able to show you how easy request/response communication can be even in the async world. There are of course other ways to accomplish this, but here I wanted to show you the most simple way so you can get started without jumping through too many mental async hoops.</p>
+<h4>Request/Response in WinForms Applications</h4>
+<p>This is all well and good – but it won´t work in your WinForms application. Because when the response arrives it arrives on a different thread than the request had been issued from. And that means you can just simply display the result in a WinForms control. That can only be done on the WinForms thread.</p>
+<p>I take up the challenge and demonstrate to you this is easy too using the CCR Space. Check out this tiny WinForms application:</p>
+<p><img loading="lazy" alt="Bild nicht mehr verfügbar" src="/assets/_shared/placeholder-missing-image.svg" /></p>
+<p><em>(Bild nicht mehr verfügbar – in der Wayback-Aufnahme nicht mitgespeichert. Ursprünglicher Dateiname: image_005456C6.png)</em></p>
+<p>Whatever you type into the text box gets sent to the echo service and returned in upper case letters only. You can guess how easy such a service will look:</p>
+<p>17 using (var serverSpace = new CcrSpace().ConfigureAsHost("wcf.port=8000"))</p>
+<p>18 {</p>
+<p>19     serverSpace.HostPort(</p>
+<p>20                     serverSpace.CreateChannel<string, string>(t =&gt; t.ToUpper()),</p>
+<p>21                     "Echo");</p>
+<p>Also the client is as easy as before:</p>
+<p>23 using (var clientSpace = new CcrSpace().ConfigureAsHost("wcf.port=0"))</p>
+<p>24 {</p>
+<p>25     var chService = clientSpace.ConnectToPort<string, string>("localhost:8000/Echo");</p>
+<p>But then to let the client form know about the service, the service channel is injected like any other ordinary dependency:</p>
+<p>29 Application.Run(new Form1(chService));</p>
+<p>…</p>
+<p>15 public partial class Form1 : Form</p>
+<p>16 {</p>
+<p>17     private Port<CcrsRequest\<string, string>> echoService;</p>
+<p>18</p>
+<p>19     public Form1(Port<CcrsRequest\<string, string>> echoService)</p>
+<p>20     {</p>
+<p>21         InitializeComponent();</p>
+<p>22</p>
+<p>23         this.echoService = echoService;</p>
+<p>24     }</p>
+<p>And how does the client form interact with the service so there will be no cross-thread calling problem?</p>
+<p>26 private void button1_Click(object sender, EventArgs e)</p>
+<p>27 {</p>
+<p>28     this.echoService</p>
+<p>29             .Request(this.textBox1.Text)</p>
+<p>30             .Receive(t =&gt; listBox1.Items.Add(t),</p>
+<p>31                      CcrsHandlerModes.InCurrentSyncContext);</p>
+<p>32 }</p>
+<p>It´s the same pattern as above: call <em>Request()</em> on the channel and append <em>Receive()</em> to this call. However, as the final parameter to <em>Receive()</em> pass in <em>CcrsHandlerModes.InCurrentSyncContext</em>. This advises the client Space to switch to the WinForms synchronization context before executing the response message handler.</p>
+<p>Notice, however, the signature of the remote service port. It´s <em>Port<CcrsRequest\<TRequest, TResponse>></em>. By wrapping the application message in a <em>CcrsRequest&lt;,&gt;</em> message the <em>channel.Request().Receive()</em> magic is possible.</p>
+<h4>Summary</h4>
+<p>Asynchronous communication certainly is different from synchronous. It takes some time wrap your head around it. And you certainly don´t want to start with it slinging threads yourself. But with a pretty high level async API like the CCR and the CCR Space provides, it´s not beyond the average developers reach, I´d say.</p>
+<p>What´s next? I guess you want to know how errors are handled in distributed async scenarios. Let that be the topic of my next posting. Until then trust me: It´s much easier than with WCF ;-)</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

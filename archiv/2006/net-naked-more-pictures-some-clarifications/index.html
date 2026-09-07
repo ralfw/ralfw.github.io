@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>.NET naked - More pictures, some clarifications — ralfw.de Archiv</title>
+<meta name="description" content="I seem to have stumble upon something here with my look under the hood of the .NET Framework an other tools. Many readers where surprised and fascinated by what you can actually do">
+<link rel="canonical" href="https://ralfw.de/archiv/2006/net-naked-more-pictures-some-clarifications/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content=".NET naked - More pictures, some clarifications — ralfw.de Archiv">
+<meta property="og:description" content="I seem to have stumble upon something here with my look under the hood of the .NET Framework an other tools. Many readers where surprised and fascinated by what you can actually do">
+<meta property="og:url" content="https://ralfw.de/archiv/2006/net-naked-more-pictures-some-clarifications/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>.NET naked - More pictures, some clarifications</h1>
+    <div class="doc-meta"><span>28. Aug. 2006</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/.NET-naked-_2D00_-More-pictures_2C00_-some-clarifications" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2006/net-naked-more-pictures-some-clarifications/</code></span></div>
+    <div class="art"><p>I seem to have stumble upon something here <a rel="noopener" href="https://web.archive.org/web/20160430150549/http://weblogs.asp.net/ralfw/archive/2006/08/27/.NET-naked-_2D00_-See-these-hitherto-unpublished-pictures-of-the-.NET-Framework-architecture.aspx">with my look under the hood</a> of the .NET Framework an other tools. Many readers where surprised and fascinated by what you can actually do with quality assessment tools like <a rel="noopener" href="https://web.archive.org/web/20160430150549/http://www.lattix.com/">Lattix LDM</a> or a simple concept like DSM (Dependency Structure Matrix) with its easy to understand and scalable depiction of the dependencies within a software.</p>
+<p>However, my posting also raised inevitable and justified concerns which I quickly want to address:</p>
+<p>-Did I set out to do Microsoft bashing? Definitely no. I like the .NET Framework and many things Microsoft does quite a lot. But that does not hinder me to try to look behind their marketing veil or utter concern or even criticizm. It´s just that I use the .NET Framework a lot, so I wanted to take a peek inside. Whoever is proficient in Java should do the same for that platform. Also, since I advocate the publication of software quality measurements and will try to follow my own advice, I think it´s fair to help bring more clarity about for tools in wide use like the .NET Framework. I´m very open for any explanation Microsoft might give as to why mscorlib.dll seems to have so many cyclic dependencies and why this might be inevitable or even a good thing. If such an explanation exists, let me hear it. Otherwise I have to assume my questioning was very relevant.</p>
+<p>-Why did I choose <a rel="noopener" href="https://web.archive.org/web/20160430150549/http://www.vistadb.net/">VistaDB</a> as a second example? Because it happened to be on my laptop. And because it seems to be a fairly complicated piece of software being a full blown database server engine. That´s the only reason. I don´t own any shares of Vista Software :-) Please note, I also showed a DSM of Spring.Net - which also happens to be on my laptop. And to round of my little gallery here´s another tool that I happen to use: <a rel="noopener" href="https://web.archive.org/web/20160430150549/http://www.vanatec.com/en">Vanatec´s O/R Mapper Open Access</a>. What do you think of it´s architectural clarity?</p>
+<p><a rel="noopener" href="https://web.archive.org/web/20160430150549/http://www.ralfw.de/weblog/images/sq-voa.jpg"><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/348b41df112144ed.jpg" /></a></p>
+<p><em>Fig. 1: DSM of O/R Mapper Vanatec Open Access. (Click on picture to see a larger version.)</em></p>
+<p>-Some reader´s assumed, the high coupling of mscorlib.dll was a general feature of the .NET Framework. But as I already tried to say in my original posting, that´s not really the case. Some parts of the .NET Framework seem to be much better structured. Here´s the WinForms subsystem:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/53a159d6565421b1.jpg" /></p>
+<p><em>Fig. 2: The WinForms subsystem is an example of a pretty well structured part of the .NET Framework</em></p>
+<p>It looks quite neat and the main culprit for cyclic dependencies - again - is the "general bucket" root namespace Windows.Forms.</p>
+<p>-Some readers also speculated if a general purpose library/framework like the .NET Framework somewhat necessarily has to be structured as it is. Well, there sure is some truth to this thought. A broad and basic framework like the BCL inevitably has a different structure than the next CRM system. But then... If cyclic dependencies are as fundamentally bad as software architecture has it, why should we exculpate Microsoft from them? Given they cannot be avoided completely in such a complicated piece of software like the .NET Framework, why are so many of them necessary? I´m concerned about the number of cycles, not the mere existence of any. And the more fundamental a piece of software is, the longer it needs to live, there more worried I´m about such signs of bad architecture.</p>
+<p>Anyway, I´m happy about each and every comment. And I´m looking forward to seeing more and more public quality reports on software of all sorts coming online. Maybe I should set up a dedicated site...?</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Becoming asynchronous – The first step towards distributed applications — ralfw.de Archiv</title>
+<meta name="description" content="In my previous blog post I argued WCF was not the most usable and most easy to learn way for communication in distributed applications. This is due to its focus on synchronous comm">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/becoming-asynchronous-the-first-step-towards-distributed-applications/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Becoming asynchronous – The first step towards distributed applications — ralfw.de Archiv">
+<meta property="og:description" content="In my previous blog post I argued WCF was not the most usable and most easy to learn way for communication in distributed applications. This is due to its focus on synchronous comm">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/becoming-asynchronous-the-first-step-towards-distributed-applications/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Becoming asynchronous – The first step towards distributed applications</h1>
+    <div class="doc-meta"><span>21. Feb. 2010</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net/ralfw/becoming-asynchronous-the-first-step-towards-distributed-applications" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/becoming-asynchronous-the-first-step-towards-distributed-applications/</code></span></div>
+    <div class="art"><p>In my <a rel="noopener" href="https://web.archive.org/web/20151009085046/http://weblogs.asp.net/ralfw/archive/2010/02/20/wcf-is-not-the-solution-but-the-problem.aspx">previous blog post</a> I argued WCF was not the most usable and most easy to learn way for communication in distributed applications. This is due to its focus on synchronous communication (even though you can do asynchronous communication as well).</p>
+<p><strong>Distributed applications by their very nature <em>cannot</em> communicate synchronously.</strong> Their parts are running on different threads (or even machines). And communication between threads is asynchronous. Always. And if it appears otherwise then there is some machinery behind the scenes working hard on that.</p>
+<p><strong>Now, if distributed functional units are running on different threads, why would anyone even try to hide that fact?</strong> Why do Web services, Enterprise Services, .NET Remoting, and also WCF abstract away this inherent parallelism? Well, it´s because asynchronous communication and asynchronous systems are harder to reason about.</p>
+<p>Great, you could say. That´s what I want: easy to reason about systems. Isn´t that purpose of abstraction? Making complex things easy?</p>
+<p>Well, sure. We love C# as an abstraction for how to command a processor. Nobody would want to go back to low level assembler coding.</p>
+<p><strong>But not just any abstraction is a good abstraction.</strong> Some abstractions are, well, “unhealthy” or plain wrong. Think of the abstraction “man is like a machine” and all its implications for the health industry.</p>
+<p>Abstractions usually have a limited scope. Treating humans like a machine when “repairing” a wounded finger might be ok. But when treating cancer, physicians surely should view their patients differently.</p>
+<p>So the question is: When to stop using an abstraction? Or whether to use it at all.</p>
+<p>That´s what I´m asking myself regarding WCF. <strong>When should I stop using it and start coping with the asynchronous nature of distributed systems myself?</strong></p>
+<p>My current answer is: I should not even start to do remote communication with any synchronous API. And my reason is simple:</p>
+<ol>
+<li>The communication paradigm (sync vs async) is very fundamental to any application. Switching it in mid course is usually very hard.</li>
+<li>Async communication is the <em>sine qua non</em> for truely scalable systems.</li>
+<li>Our industry is notoriously bad at forseeing the course of development of applications. Many start small, as a prototype – just to become mission critical with the need to scale far beyond the initial purpose. (I´m sure you too know at least one of those MS Access applications that have become unmaintainable but need to live on because today maybe hundreds of people are depending on them.)</li>
+</ol>
+<p>Taken together this means: Systems start small, even when distributed. So they use a sync communication API. Then they grow, need to scale, and thus need to switch to async communication – which then is probably infeasible or very hard to accomplish.</p>
+<p><strong>So when I´m saying, “You should not even start to do remote communication with any synchronous API.”, I´m just trying to apply lessons learned.</strong> If we know switching from sync to async is hard, and if it´s very likely this switch will be necessary some time in the future (because, well, “you never know” ;-)… then, I´d say, it´s just prudent to not go down the path, that might be easier at the moment, but will be much harder in the future.</p>
+<p><strong>There´s a time and place to do synchronous communication between functional units. And there´s a time and place to do asynchronous communication. The latter being always the case when developing multi-processor code or distributed code.</strong></p>
+<p>The earlier a developer learns to see this boundary the better.</p>
+<p>Enough with theory for now. Let´s get our hands dirty with some code.</p>
+<h2>Switching from sync to async using the CCR</h2>
+<p>How can you start with asynchronous programming? Let me say that much: <strong>Don´t even try to manage threads yourself!</strong> Instead leave that to some framework or runtime. <strong>Concentrate on an easy programming model.</strong></p>
+<p>The programming model I´m going to use is purely message oriented and based on “pipes” through which those messages flow. A client “poures” message into such a “pipe”, and a service at the other end “ladles” them out in order to work on them.</p>
+<p>You can implement such a programming model using queues. But I recommend you don´t think about doing it yourself ;-) Instead use an existing component like Microsoft´s <a rel="noopener" href="https://web.archive.org/web/20151009085046/http://msdn.microsoft.com/en-us/library/bb648752.aspx">Concurrency Coordination Runtime (CCR)</a>. It´s part of <a rel="noopener" href="https://web.archive.org/web/20151009085046/http://msdn.microsoft.com/en-us/robotics/default.aspx">Robotics Studio</a>, but can also be use standalone. <strong>All I´m gonna show you in terms of async and distributed communication will be based on the CCR.</strong> I just love it :-)</p>
+<p>Here´s the notorious Hello World code snippet to show you, how messages are sent using the CCR:</p>
+<p>using Microsoft.Ccr.Core;</p>
+<p>…</p>
+<p>var p = new Port<string>();</p>
+<p>p.Post("hello, world!");</p>
+<p>The “pipes” I was referring to are called Ports in CCR lingo. They are queues – but thread-safe ones.</p>
+<p>So this is how a client sends a message off to some service. It just stuffs it into a Port and forgets about it. The message is processed asynchronously by the service.</p>
+<p>To let a service listen for messages on a Port is somewhat cumbersome using just the CCR. But I´ll show you anyway, even though later on abstraction layers on top of the CCR will shield you from such details (most of the time).</p>
+<p>Assume there is a service method like this:</p>
+<p>void ProcessText(string text)</p>
+<p>{</p>
+<p>Console.WriteLine("processing: {0}", text);</p>
+<p>}</p>
+<p>Never mind its simplicity. For the purpose of explaining the communication basics it´s sufficient. What you want to learn is how to make it listen on a Port. Here´s how:</p>
+<p>Arbiter.Activate(</p>
+<p>new DispatcherQueue(),</p>
+<p>Arbiter.Receive(</p>
+<p>true,</p>
+<p>p,</p>
+<p>ProcessText</p>
+<p>)</p>
+<p>);</p>
+<p>You need to set up a so called Receiver on the Port. The Receiver is associating the service method (<em>ProcessText()</em>) with the Port (<em>p</em>) as an event handler. The <em>DispatcherQueue</em> then is used to schedule event handling by the service method on some thread from a pool. Messages posted to the Port are automatically processed asynchronously and in parallel on background threads.</p>
+<p>But as I said: Don´t feel frustrated right now. You won´t need to wire-up event handlers like that very often just to do distributed communication the async way. If you nevertheless want to learn more about the CCR, feel free to browse <a rel="noopener" href="https://web.archive.org/web/20151009085046/http://msdn.microsoft.com/en-us/library/bb648752.aspx">its documentation</a>.</p>
+<p>The only thing you have to remember is: <strong>Async communication flows through CCR Ports from clients to services as messages.</strong> You can even call those Ports channels, if you like – and feel at home since WCF has channels, too ;-) for the same reason as the CCR. Because WCF is message oriented and deep down internally even works asynchronously. It just does not show that to you very often or in an elegant way.</p>
+<h2>Why asynchronicity for distribution?</h2>
+<p>Before I move on to API details a quick word about why I think asynchronicity is fundamental for communication in distributed applications. Look at this code:</p>
+<p>IService s = …</p>
+<p>s.ProcessText("hello, world!");</p>
+<p>What expectations to do have about how the service is delivered? Think about it for a moment…</p>
+<p>If you´re like me, you probably thought at least…</p>
+<ul>
+<li><em>ProcessText()</em> better be fast because the client is waiting for the result.</li>
+<li>You need not bother to think about how often to call the service object. Why should you?</li>
+<li>There is no doubt there is an object where <em>s</em> is pointing to. So there is no doubt the service <em>ProcessText()</em> will be delivered.</li>
+<li>The order the client is giving the service will of course reach it, and the result the service produces will sure reach the client.</li>
+<li>There is of course no security risk in calling the service. Why should there be?</li>
+</ul>
+<p>Or maybe only the first thought occurred to you? That would be quite naturally, I guess. Because why should you even think about the other points at all? They are non-issues for method calls.</p>
+<p><strong>And that´s what I find important: Since the usual Web service-, .NET Remoting-, Enterprise Services-, WCF-call is a method call like any other local method call, developers tend to don´t even think about all that what is so different in remote communication.</strong></p>
+<ul>
+<li><strong>You cannot assume any particular performance from a remote service</strong> because you don´t know anything about its load at call time. So your client better is prepared to wait just a little longer for a response.</li>
+<li>Since remote communication is 3 or more orders of magnitude slower than local stack based communication <strong>you need to very cautious about how often to call a service</strong>. Roundtrips are very expensive.</li>
+<li><strong>You cannot be sure a remote service is running when you issue a call to it.</strong> Maybe it has crashed, maybe it hasn´t started yet, maybe it has been taken offline for whatever reason… So waiting for a quick response is not such a good idea.</li>
+<li><strong>Even if the remote service is running you don´t know if the client can reach it.</strong> Maybe the connection is down? Maybe the connection is going down after the order is issued but before a result could be returned? Another reason why you should not rely on a response to be delivered in a time frame it would be worth while waiting for on the client side.</li>
+<li><strong>And what about eavesdroppers on the line between client and service?</strong> Have measures be taken to thwart them?</li>
+</ul>
+<p><strong>As long as you cannot decide by looking at a service usage whether it´s a local service or a remote service you can´t be sure if all this has been taken into account.</strong> That I find very disturbing. To me a remote service usage through a regular method call like above thus is kind of misleading, fostering falling prey to <a rel="noopener" href="https://web.archive.org/web/20151009085046/http://en.wikipedia.org/wiki/Fallacies_of_Distributed_Computing">fallacies</a>, or simply lying. It´s lying about very basic properties, because 99% of the time we´re looking at method calls and don´t have to bother about all this.</p>
+<p>Now, that´s all different when you see this in a code base:</p>
+<p>Port<ProcessTextMsg> service = …</p>
+<p>service.Post(new ProcessTextMsg{Text = "hello, world!"});</p>
+<p>You immediately realize: This is not just any ordinary request for a service. This is special, because it´s asynchronous and clearly message oriented. And then you start thinking about whether the properties of this service usage are really like what you expect.</p>
+<ol>
+<li><strong>Performance is not so much of an issue anymore</strong> because the client is not waiting for a result.</li>
+<li>True message orientation is a tad more cumbersome to use. This makes you (more) aware of the price you´re paying when requesting remote services. <strong>You automatically become cautious about roundtrips.</strong> This will guide you when designing a service contract.</li>
+<li>If the remote service is not running, <strong>the request can easily be put into a queue</strong> which can be volatile or persistent.</li>
+<li><strong>If the connection to the service is down or goes down, then queues can help again.</strong> They can even be transactional.</li>
+<li>Since you´re aware of the nature of the connection to the service <strong>you are more prone to give security at least a thought.</strong></li>
+</ol>
+<p><strong>You see, I don´t want to take away the usual sync method call for remote communication from you lightly. I think there are at least 5 good reasons why distributed communication should always be async.</strong> Always.</p>
+<p>But of course, you don´t want to pay too high a price for such “honest communication”. So let´s see what we can do about usability when going asynchronous. Stay tuned for my next blog post…</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

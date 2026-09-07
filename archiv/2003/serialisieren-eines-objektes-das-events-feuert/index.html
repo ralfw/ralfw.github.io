@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Serialisieren eines Objektes, das Events feuert — ralfw.de Archiv</title>
+<meta name="description" content="Objektserialisierung ist mit dem .NET Framework denkbar einfach. Sie müssen eine Klasse nur mit einem Attribut als Serialisierbar markieren. Die Serialisierung erfolgt dann entwede">
+<link rel="canonical" href="https://ralfw.de/archiv/2003/serialisieren-eines-objektes-das-events-feuert/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Serialisieren eines Objektes, das Events feuert — ralfw.de Archiv">
+<meta property="og:description" content="Objektserialisierung ist mit dem .NET Framework denkbar einfach. Sie müssen eine Klasse nur mit einem Attribut als Serialisierbar markieren. Die Serialisierung erfolgt dann entwede">
+<meta property="og:url" content="https://ralfw.de/archiv/2003/serialisieren-eines-objektes-das-events-feuert/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Serialisieren eines Objektes, das Events feuert</h1>
+    <div class="doc-meta"><span>25. Juni 2003</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/posts/9254.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2003/serialisieren-eines-objektes-das-events-feuert/</code></span></div>
+    <div class="art"><p>Objektserialisierung ist mit dem .NET Framework denkbar einfach. Sie müssen eine Klasse nur mit einem Attribut als Serialisierbar markieren. Die Serialisierung erfolgt dann entweder implizit, wenn eine Instanz einer solchen Klasse über eine Remoting-Grenze bewegt wird. Oder Sie führen sie explizit durch, weil Sie z.B. das Objekt speichern oder per TcpClient verschicken wollen. Für die (De)Serialisierung sind Formatter-Objekte zuständig.</p>
+<p>So weit, so gut. Im Rahmen des Projektes der Developer LAN Party (<a rel="noopener" href="https://web.archive.org/web/20030913173905/http://www.devlanparty.de/">www.devlanparty.de</a>), die Christof Sprenger und ich am 20./21.6. in der TU München veranstaltet haben, funktionierte die Serialisierung jedoch nicht so einfach.</p>
+<p>Innerhalb der von den Teilnehmern zu realisierenden Anwendung sollte das Model-View-Controller (MVC) Pattern angewandt werden. Ein Model hielt Daten, ein Controller war verantwortlich für deren Manipulation durch die Methoden der Model Objekthierarchie und ein View sollte den Zustand des Model nach Veränderung anzeigen.</p>
+<p>Das Pattern zu realisieren war auch kein Problem. Das Model feuerte einen Event, um angeschlossene Views zu informieren, dass es vom Controller verändert wurde. Eine Implementation "nach dem Buch":</p>
+<p>Public Class Model<br />
+    Public Event OnChange(...)<br />
+    ...<br />
+    Public Sub DoSomething(...)<br />
+        ...<br />
+        RaiseEvent OnChange(...)<br />
+    End Sub<br />
+End Class</p>
+<p>Dann aber sollte das Model bei Bedarf auch noch an einen anderen Prozess verschickt werden. Dafür wurde es als serialisierbar markiert:</p>
+<p><Serializable> _<br />
+Public Class Model<br />
+    Public Event OnChange(...)<br />
+    ...<br />
+End Class</p>
+<p>Bei der Serialisierung trat dann aber ein Fehler auf:</p>
+<p>imports System.Runtime.Serialization.Formatters.Binary<br />
+...<br />
+private withevents _m as new Model()<br />
+...<br />
+_m.DoSomething(...)<br />
+...<br />
+dim ms as New IO.MemoryStream<br />
+dim s as New BinaryFormatter<br />
+s.Serialize(ms, _m)</p>
+<p>Serialize() meldete, dass das Formular, in dem _m mit WithEvents deklariert war, nicht serialisierbar sei! Was war los?</p>
+<p>Die Lösung liegt im Verständnis, wie Events im .NET Framework implementiert sind. Events sind Delegate-Typen und eine Event-Deklaration in einer Klasse fügt ihr eine weitere Member-Variable hinzu. Die Model-Klasse sah also intern etwas so aus:</p>
+<p>Public Delegate Sub OnChangeDelegate(...)</p>
+<p><Serializable> _<br />
+Public Class Model<br />
+    Public onChange as OnChangeDelegate<br />
+    ...<br />
+    Public Sub DoSomething(...)<br />
+        ...<br />
+        onChange(...)<br />
+    End Sub<br />
+End Class</p>
+<p>Und im Formular passierte folgendes, um den Eventhandler an das Model zu binden:</p>
+<p>Private _m as new Model()<br />
+...<br />
+Private Sub _m_OnChange(...)<br />
+End Sub<br />
+...<br />
+_m.onChange = new OnChangeDelegate(AddressOf _m_OnChange)</p>
+<p>Damit enthielt die Model-Instanz in onChange einen verweis auf das Formular in Form eines Delegate, der nicht nur die Adresse der Aufzurufenden Funktion speichert, sondern auch einen Verweis auf das Objekt, auf dem sie aufgerufen werden soll.</p>
+<p>Da die Serialisierung rekursiv verläuft und immer einen ganzen Objektbaum ausgehend von der an Serialize() übergebenen Wurzel versucht zu serialisieren, stolperte sie natürlich auch über onChange und stellte fest, dass das angebundene Formular eben nicht serialisierbar war.</p>
+<p>Ein Ausschluss der Event-Definition von der Serialisierung war allerdings nicht (!) möglich:</p>
+<p><Serializable> _<br />
+Public Class Model<br />
+    <NonSerialized> _<br />
+    Public Event OnChange(...)<br />
+    ...<br />
+End Class</p>
+<p>Die Lösung brachte erst eine Implementation des ISerializable-Interface:</p>
+<p><Serializable> _<br />
+Public Class Model<br />
+    implements <strong>ISerializable</strong></p>
+<p>Event OnChange(...)</p>
+<p>Private _myMember as Integer</p>
+<p>public sub new(info as SerializationInfo, context as StreamingContext)<br />
+        _myMember = info.GetInt32("myMember")<br />
+    End Sub</p>
+<p>Public Sub <strong>GetObjectData</strong>(ByVal info As System.Runtime.Serialization.SerializationInfo, _<br />
+                             ByVal context As System.Runtime.Serialization.StreamingContext) _<br />
+                             Implements System.Runtime.Serialization.ISerializable.GetObjectData<br />
+        info.AddValue("myMember", _myMember)<br />
+    End Sub<br />
+End Class</p>
+<p>In der Methode GetObjectData() des Interface wurden nur die wirklich zu serialisierenden Member-variablen des Objekts in den Serialisierungsdatenstrom geschrieben und in einem speziellen Konstruktor auch nur genau diese Member wieder ausgelesen. Der versteckte Member für den Eventhandler-Delegate wurde also ausgespart. Damit war das Model problemfrei zwischen Prozessen übertragbar.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

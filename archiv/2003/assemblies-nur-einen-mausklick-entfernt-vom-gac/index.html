@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assemblies nur einen Mausklick entfernt vom GAC — ralfw.de Archiv</title>
+<meta name="description" content="So, jetzt hab ich keine Lust mehr. Ich hab keine Lust mehr, Aufwand zu treiben, um Assemblies im GAC zu installieren: Consolenfenster auf, in das Assembly-Verzeichnis wecheln, gacu">
+<link rel="canonical" href="https://ralfw.de/archiv/2003/assemblies-nur-einen-mausklick-entfernt-vom-gac/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Assemblies nur einen Mausklick entfernt vom GAC — ralfw.de Archiv">
+<meta property="og:description" content="So, jetzt hab ich keine Lust mehr. Ich hab keine Lust mehr, Aufwand zu treiben, um Assemblies im GAC zu installieren: Consolenfenster auf, in das Assembly-Verzeichnis wecheln, gacu">
+<meta property="og:url" content="https://ralfw.de/archiv/2003/assemblies-nur-einen-mausklick-entfernt-vom-gac/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Assemblies nur einen Mausklick entfernt vom GAC</h1>
+    <div class="doc-meta"><span>10. Juli 2003</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/posts/9918.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2003/assemblies-nur-einen-mausklick-entfernt-vom-gac/</code></span></div>
+    <div class="art"><p>So, jetzt hab ich keine Lust mehr. Ich hab keine Lust mehr, Aufwand zu treiben, um Assemblies im GAC zu installieren: Consolenfenster auf, in das Assembly-Verzeichnis wecheln, gacutil aufrufen, beim Deinstallieren vergessen, dass der Dateiname ohne Extension geschrieben werden muss usw. usf.</p>
+<p>Mit dem folgenden Utility ist das Problem einfürallemal gelöst. Und sie leistet noch mehr.</p>
+<p>Installation:<br />
+Code in ein VB Console App Projekt einsetzen und compilieren. Einmal aufrufen. Das Programm trägt sich in der Registry ein, so dass es per Kontextmenü auf DLL-Dateien aufgerufen werden kann (Eintrag "GacUtils").</p>
+<p>Anwendung:<br />
+-Kontextmenü im Explorer auf einer Assembly öffnen.<br />
+-GacUtils auswählen.<br />
+-Aus dem Menü im Konsolenfenster wählen. Das Programm kann Assemblies im GAC registrieren und sie wieder daraus entfernen. Gleichzeitig kann es auch das Verzeichnis der Assembly so registrieren, dass die Assemblies darin in der VS.NET "Add Reference" Dialogbox gelistet werden, wie die .NET Framework Assemblies (s. dazu: <a rel="noopener" href="https://web.archive.org/web/20030830005752/http://support.microsoft.com/default.aspx?scid=kb%3Ben-us%3B306149">http://support.microsoft.com/default.aspx?scid=kb%3Ben-us%3B306149</a>).</p>
+<p>Vielleicht baue ich auch noch die automatische Registrierung in COM+ ein. Mal schauen. Stay tuned.</p>
+<p>Viel Spaß erstmal damit.</p>
+<p>imports Microsoft.Win32</p>
+<p>Module Module1</p>
+<p>Sub Main(args() as string)<br />
+        Dim shellKey as RegistryKey = Registry.ClassesRoot.CreateSubKey("dllfile\Shell\GacUtils\Command")<br />
+        shellKey.SetValue("", string.Format("{0} ""%1""", Reflection.Assembly.GetExecutingAssembly.Location))</p>
+<p>if args.Length &lt;&gt; 1 then<br />
+            msgbox("Usage: GacUtils ", MsgBoxStyle.Information)<br />
+            exit sub<br />
+        End If</p>
+<p>dim ass as Reflection.Assembly = Reflection.Assembly.LoadFrom(args(0))<br />
+        dim assName as String = ass.FullName.Split(",")(0)</p>
+<p>Console.WriteLine("1=Register in GAC, 2=Unreg from GAC, 3=Affect 'Add references' dialog")<br />
+        Console.Write("  multiple commands allowed: ")<br />
+        dim cmds as String = console.ReadLine<br />
+        dim p as Process</p>
+<p>if cmds.IndexOf("2") &gt;= 0 then<br />
+            ' delete from GAC<br />
+            console.WriteLine("gacutil.exe " &amp; string.Format("/u {0}", assName))<br />
+            dim psi as New ProcessStartInfo("gacutil.exe", string.Format("/u {0}", assName))<br />
+            psi.UseShellExecute = false<br />
+            p = New Process<br />
+            p.Start(psi)</p>
+<p>if cmds.IndexOf("3") &gt;= 0 then AffectAddRefListing(assName)<br />
+        End If</p>
+<p>if cmds.IndexOf("1") &gt;= 0 then<br />
+            ' reg in GAC<br />
+            console.WriteLine("gacutil.exe " &amp; string.Format("/i {0}.dll", assName))<br />
+            dim psi as New ProcessStartInfo("gacutil.exe", string.Format("/i {0}.dll", assName))<br />
+            psi.UseShellExecute = false<br />
+            p = new Process<br />
+            p.Start(psi)</p>
+<p>if cmds.IndexOf("3") &gt;= 0 then AffectAddRefListing(assName, IO.Path.GetDirectoryName(args(0)))<br />
+        End If</p>
+<p>if cmds = "3" then<br />
+            AffectAddRefListing(assName, IO.Path.GetDirectoryName(args(0)))<br />
+        End If</p>
+<p>console.readline<br />
+    End Sub</p>
+<p>private sub AffectAddRefListing(assemblyName as String, optional path as string = "")<br />
+        console.WriteLine<br />
+        if path &lt;&gt; "" then<br />
+            console.WriteLine("Registering directory {0} for inclusion in 'Add references'", path)<br />
+            dim refKey as RegistryKey = Registry.LocalMachine.CreateSubKey("Software\Microsoft.NETFramework\AssemblyFolders\" &amp; assemblyName)<br />
+            refKey.SetValue("", path)<br />
+        else<br />
+            console.WriteLine("Unregistering directory {0} from 'Add references'", path)<br />
+            Registry.LocalMachine.DeleteSubKey("Software\Microsoft.NETFramework\AssemblyFolders\" &amp; assemblyName)<br />
+        End If<br />
+    End Sub<br />
+End Module</p>
+<p>Was mich ein wenig Zeit gekostet hat bei der Entwicklung: Wenn man ein Programm über das Kontextmenü startet, dann wir der Name, der Datei, auf die man geklickt hat, als erster Kommandozeilenparameter übergeben. Aber - und das ist der Trick - in seiner Kurzform: alle Namen sind im 8.3 Format. Damit kann gacutil.exe aber nichts anfangen.</p>
+<p>Meine Tests hatte ich aus VS.NET mit einem vollständigen Pfad gemacht und alles funktionierte. Sobald ich dann aber über das Kontextmenü gegangen bin, lief es aber schief. Es hat einen Moment gedauert, bis ich darauf gekommen bin. Dafür habe ich dann auch gacutil.exe nicht in einem eigenen Konsolenfenster gestartet (psi.UseShellExecute=false), sondern im Fenster der Utility. Damit konnte ich dann erstmal überhaupt sehen, dass gacutil.exe verschnupft war.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

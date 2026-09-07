@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software Transactional Memory - Making multithreading easier — ralfw.de Archiv</title>
+<meta name="description" content="A while ago Carl Rosenberger - chief architect of db4o - mentioned in a personal conversation the concept of Software Transactional Memory (STM) [1, 8]. I was immediately intrigued">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/software-transactional-memory-making-multithreading-easier/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software Transactional Memory - Making multithreading easier — ralfw.de Archiv">
+<meta property="og:description" content="A while ago Carl Rosenberger - chief architect of db4o - mentioned in a personal conversation the concept of Software Transactional Memory (STM) [1, 8]. I was immediately intrigued">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/software-transactional-memory-making-multithreading-easier/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Software Transactional Memory - Making multithreading easier</h1>
+    <div class="doc-meta"><span>3. Juli 2007</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net/ralfw/software-transactional-memory-making-multithreading-easier" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/software-transactional-memory-making-multithreading-easier/</code></span></div>
+    <div class="art"><p>A while ago <a rel="noopener" href="https://web.archive.org/web/20150910143845/http://developer.db4o.com/blogs/carl/">Carl Rosenberger</a> - chief architect of <a rel="noopener" href="https://web.archive.org/web/20150910143845/http://www.db4o.com/">db4o</a> - mentioned in a personal conversation the concept of <a rel="noopener" href="https://web.archive.org/web/20150910143845/http://en.wikipedia.org/wiki/Software_transactional_memory">Software Transactional Memory</a> (STM) [1, 8]. I was immediately intrigued by the idea - but the conversation went on. So I sat down later and read up on STM. And what I found made me very confident, STM was a very useful idea. Microsoft has recognized this too and is working on two versions of STM: a <a rel="noopener" href="https://web.archive.org/web/20150910143845/http://channel9.msdn.com/Showpost.aspx?postid=231495">Haskell implementation</a> [2, 3] and a more palatable version for mere mortal C# programmers called <a rel="noopener" href="https://web.archive.org/web/20150910143845/http://research.microsoft.com/research/downloads/Details/6cfc842d-1c16-4739-afaf-edb35f544384/Details.aspx">SXM</a> [4].</p>
+<p>However, these implementations are either not so close to the usual transactional programming model or need some unmanaged code like LibCMT [5] with its <a rel="noopener" href="https://web.archive.org/web/20150910143845/http://libcmt.sourceforge.net/index.php?page=CSharp_API">C# API</a>. That made think about an easy to use purely managed code STM. And here it is: the <a rel="noopener" href="https://web.archive.org/web/20150910143845/http://www.codeplex.com/netstm">.NET Software Transactional Memory</a>. It´s written entirely in C# and integrates well with the overall .NET Framework, I´d say. But see for yourself...</p>
+<h3>What is a Software Transactional Memory all about?</h3>
+<p>So what´s the fuzz about STM? They make it much, much easier to program multithreaded code sharing in-memory resources. And I´d like to emphasize, an STM makes it <em>easier</em>, not necessarily more performing.</p>
+<p>Parallel programming traditionally is quite hard. Once you go beyond starting just a couple of threads in the background using the .NET <em>ThreadPool</em> and try to access shared in-memory structures you´ll realize, multithreading is not for the faint of heart. Synchronizing access to those shared data structures can become very difficult to get right. Juggling around with all the locking options of the .NET Framework to avoid deadlock and not make the whole thing too slow by locking in a too coarse grained fashion quickly uses up a lot of your brainpower. And then comes debugging multiple threads...</p>
+<p>To make a long story short: Multithreading with access shared in-memory resources today is much too difficult for the masses really exploit it. That means, all the brandnew multi-core/multi-processor power is of little use at least for your own applications. Sad, isn´t it?</p>
+<p>But fortunately STM comes to the rescue. It promises to aleviate you from all the nitty gritty detail of shared data structure access synchronization by giving you the same programming model for in-memory data access as you are used to for database access. Instead of locking individual records in a database you just wrap all your access code in a transaction and let the database engine do the locking.</p>
+<p>That´s right what STM offers: just wrap a transaction around your in-memory work and in the end commit all changes. <a rel="noopener" href="https://web.archive.org/web/20150910143845/http://msdn.microsoft.com/msdnmag/issues/05/12/transactions/default.aspx">Juval Löwy has already demonstrated something along this line</a> based on the System.Transactions namespace [6]. However, his transaction aware collections are very coarse grained. Also .NET Transactions don´t care for threadsafety. They isolate work done on volatile data structures in different transactions - but they don´t help avoiding access conflicts of concurrently running code.</p>
+<p>Sounds too abstract to you? Ok, let´s look at some code...</p>
+<h3>Simple Example</h3>
+<p>The canonical example for transactions probably is transfering money between two accounts. So why deviate from this? Here´s how such a transfer could look in memory:</p>
+<p>1 static void Main()</p>
+<p>2 {</p>
+<p>3     double myAccount;</p>
+<p>4     double yourAccount;</p>
+<p>5</p>
+<p>6     myAccount = 1000;</p>
+<p>7     yourAccount = 500;</p>
+<p>8</p>
+<p>9     double amountToTransfer = 150;</p>
+<p>10     myAccount -= amountToTransfer;</p>
+<p>11     yourAccount += amountToTransfer;</p>
+<p>12 }</p>
+<p>All´s fine as long as nothing bad happens between subtracting the amount to be transferred from one account and adding it to the other account. If an error occurred during some processing between above lines 10 and 11 the accounts would be in an inconsistent state. It´s right the same as with databases. And as with databases the solution to the problem are transactions.</p>
+<p>There´s the solution to the same problem using .NET Software Transactional Memory:</p>
+<p>1 static void Main(string[] args)</p>
+<p>2 {</p>
+<p>3     INstmObject<double> myAccount;</p>
+<p>4     INstmObject<double> yourAccount;</p>
+<p>5</p>
+<p>6     myAccount = NstmMemory.CreateObject<double>(1000);</p>
+<p>7     yourAccount = NstmMemory.CreateObject<double>(500);</p>
+<p>8</p>
+<p>9     using (INstmTransaction tx = NstmMemory.BeginTransaction())</p>
+<p>10     {</p>
+<p>11         double amountToTransfer = 150;</p>
+<p>12</p>
+<p>13         myAccount.Write(myAccount.Read() - amountToTransfer);</p>
+<p>14         yourAccount.Write(yourAccount.Read() + amountToTransfer);</p>
+<p>15</p>
+<p>16         tx.Commit();</p>
+<p>17     }</p>
+<p>18</p>
+<p>19     Console.WriteLine("My account balance: {0}", myAccount.Read());</p>
+<p>20     Console.WriteLine("Your account balance: {0}", yourAccount.Read());</p>
+<p>21 }</p>
+<p>The code structure has not changed - but the outcome is threadsafe and transactional at the same time. No explicit locks needed.</p>
+<p>The only price to pay: You have to allocate transactional volatile data as <em>NstmObject</em>s in the transactional memory represented by <em>NstmMemory</em>. Instead of</p>
+<p><em>double myAccount;</em></p>
+<p>you write</p>
+<p><em>INstmObject<double> myAccount;</em></p>
+<p>And instead of calling new on the type you ask the transactional memory as a factory to create instances:</p>
+<p><em>myAccount = NstmMemory.CreateObject<double>(1000);</em></p>
+<p>This also entails an explicit Read() and Write() to get at the data wrapped in <em>INstmObject</em>s. Although, I think this is not too high a price to pay at the moment, I´d have liked to make the programming model easier. Microsoft´s STM implementations provide somewhat more simplicity in this regard - but overall I found them not really easy to use. For the time being and version 1.0 of my NSTM I´ll stick with the above approach. At least you´ll find it in other publications, too ;-) (see [7] for example)</p>
+<p>But although it´s a little bit clumsy to have this indirection of <em>INstmObject</em> in the programming model I deem the translation from non-transactional, not threadsafe code to transactional <em>and</em> threadsafe code very straightforward. It becomes even more straightforward, if you switch to System.Transactions for the transaction handling:</p>
+<p>1 using System.Transactions;</p>
+<p>2 using NSTM;</p>
+<p>3</p>
+<p>4 namespace SimpleSample</p>
+<p>5 {</p>
+<p>6     class Program</p>
+<p>7     {</p>
+<p>8         static void Main(string[] args)</p>
+<p>9         {</p>
+<p>10             INstmObject<double> myAccount;</p>
+<p>11             INstmObject<double> yourAccount;</p>
+<p>12</p>
+<p>13             myAccount = NstmMemory.CreateObject<double>(1000);</p>
+<p>14             yourAccount = NstmMemory.CreateObject<double>(500);</p>
+<p>15</p>
+<p>16             NstmMemory.SystemTransactionMode = NstmSystemTransactionMode.EnlistOnAccess;</p>
+<p>17             using (TransactionScope tx = new TransactionScope())</p>
+<p>18             {</p>
+<p>19                 double amountToTransfer = 150;</p>
+<p>20</p>
+<p>21                 myAccount.Write(myAccount.Read() - amountToTransfer);</p>
+<p>22                 yourAccount.Write(yourAccount.Read() + amountToTransfer);</p>
+<p>23</p>
+<p>24                 tx.Complete();</p>
+<p>25             }</p>
+<p>26</p>
+<p>27             Console.WriteLine("My account balance: {0}", myAccount.Read());</p>
+<p>28             Console.WriteLine("Your account balance: {0}", yourAccount.Read());</p>
+<p>29         }</p>
+<p>Microsoft does not even offer this for its own STM implementations.</p>
+<h3>Looking ahead</h3>
+<p>STM promises to make parallel programming tasks on shared in-memory data structures much easier than it is today using all those pretty locking facilities. But of course there is more to it than the above simple example shows. How about isolation levels? How does the STM actually make concurrent access threadsafe? What about all those beloved collection data structures?</p>
+<p>If you like, stay tuned. I´ll talk about all this in a future posting.</p>
+<h3>Download</h3>
+<p>You can download NSTM (short for .NET Software Transactional Memory) from its Google project hosting site: <a rel="noopener" href="https://web.archive.org/web/20150910143845/http://code.google.com/p/nstm/">http://code.google.com/p/nstm/</a>.</p>
+<p>Enjoy - and let me know how you like it, how it performs for you, or what you think needs to be improved.</p>
+<h3>Resources</h3>
+<p>[1] Wikipedia, Software transactional memory, <a rel="noopener" href="https://web.archive.org/web/20150910143845/http://en.wikipedia.org/wiki/Software_transactional_memory" title="http://en.wikipedia.org/wiki/Software_transactional_memory">http://en.wikipedia.org/wiki/Software_transactional_memory</a></p>
+<p>[2] Microsoft Channel9, Programming in the Age of Concurrency: Software Transactional Memory, <a rel="noopener" href="https://web.archive.org/web/20150910143845/http://channel9.msdn.com/Showpost.aspx?postid=231495" title="http://channel9.msdn.com/Showpost.aspx?postid=231495">http://channel9.msdn.com/Showpost.aspx?postid=231495</a></p>
+<p>[3] Tim Harris et al., Composable Memory Transactions, <a rel="noopener" href="https://web.archive.org/web/20150910143845/http://research.microsoft.com/%7Esimonpj/papers/stm/stm.pdf" title="http://research.microsoft.com/~simonpj/papers/stm/stm.pdf">http://research.microsoft.com/~simonpj/papers/stm/stm.pdf</a></p>
+<p>[4] Microsoft Research, C# Software Transactional Memory, <a rel="noopener" href="https://web.archive.org/web/20150910143845/http://research.microsoft.com/research/downloads/Details/6cfc842d-1c16-4739-afaf-edb35f544384/Details.aspx" title="http://research.microsoft.com/research/downloads/Details/6cfc842d-1c16-4739-afaf-edb35f544384/Details.aspx">http://research.microsoft.com/research/downloads/Details/6cfc842d-1c16-4739-afaf-edb35f544384/Details.aspx</a></p>
+<p>[5] Duilio Protti, LibCMT, <a rel="noopener" href="https://web.archive.org/web/20150910143845/http://libcmt.sourceforge.net/">http://libcmt.sourceforge.net</a></p>
+<p>[6] Juval Löwy, Can´t Commit: Volatile Resource Managers in .NET Bring Transactions to the Common Type, <a rel="noopener" href="https://web.archive.org/web/20150910143845/http://msdn.microsoft.com/msdnmag/issues/05/12/transactions/default.aspx" title="http://msdn.microsoft.com/msdnmag/issues/05/12/transactions/default.aspx">http://msdn.microsoft.com/msdnmag/issues/05/12/transactions/default.aspx</a></p>
+<p>[7] Maurice Herlihy et al., Software Transactional Memory for Dynamic-Sized Data Structures, <a rel="noopener" href="https://web.archive.org/web/20150910143845/http://www.cs.rice.edu/%7Ewns1/papers/2003-PODC-DSTM.pdf" title="http://www.cs.rice.edu/~wns1/papers/2003-PODC-DSTM.pdf">http://www.cs.rice.edu/~wns1/papers/2003-PODC-DSTM.pdf</a></p>
+<p>[8] Derrick Coetzee, Developing for Developers: Software Transactional Memory, <a rel="noopener" href="https://web.archive.org/web/20150910143845/http://blogs.msdn.com/devdev/archive/2005/10/20/483247.aspx" title="http://blogs.msdn.com/devdev/archive/2005/10/20/483247.aspx">http://blogs.msdn.com/devdev/archive/2005/10/20/483247.aspx</a></p>
+<p>[9] Robert Ennals, Software Transactional Memory Should Not Be Obstruction-Free, <a rel="noopener" href="https://web.archive.org/web/20150910143845/http://web.cecs.pdx.edu/%7Ewalpole/class/cs510/papers/19.pdf" title="http://web.cecs.pdx.edu/~walpole/class/cs510/papers/19.pdf">http://web.cecs.pdx.edu/~walpole/class/cs510/papers/19.pdf</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

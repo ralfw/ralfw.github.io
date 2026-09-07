@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software Transactional Memory IV - Thread-Bound Transactions — ralfw.de Archiv</title>
+<meta name="description" content="I´ve explained in my previous posting, how a single transaction weaves its magic of isolating changes to transactional objects (txo) and atomically making them visible on commit. B">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/software-transactional-memory-iv-thread-bound-transactions/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software Transactional Memory IV - Thread-Bound Transactions — ralfw.de Archiv">
+<meta property="og:description" content="I´ve explained in my previous posting, how a single transaction weaves its magic of isolating changes to transactional objects (txo) and atomically making them visible on commit. B">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/software-transactional-memory-iv-thread-bound-transactions/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Software Transactional Memory IV - Thread-Bound Transactions</h1>
+    <div class="doc-meta"><span>6. Juli 2007</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net/ralfw/software-transactional-memory-iv-thread-bound-transactions" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/software-transactional-memory-iv-thread-bound-transactions/</code></span></div>
+    <div class="art"><p>I´ve explained <a rel="noopener" href="https://web.archive.org/web/20150910082452/http://weblogs.asp.net/ralfw/archive/2007/07/05/software-transactional-memory-iii-making-transactions-atomic.aspx">in my previous posting</a>, how a single transaction weaves its magic of isolating changes to transactional objects (txo) and atomically making them visible on commit. But what´s the "reach" or "scope" of a NSTM transaction? How many transaction can be open at the same time?</p>
+<h3>Transactions are kept in TLS</h3>
+<p>To answer these questions it´s vital to understand where transactions are stored: in thread local storage (TLS). NSTM transactions are bound to a single thread, the thread they were created on. This is different from System.Transactions which are thread-independent (see <a rel="noopener" href="https://web.archive.org/web/20150910082452/http://msdn.microsoft.com/msdnmag/issues/05/12/transactions/default.aspx">[1]</a> for details). But binding NSTM transactions to a thread is on purpose. NSTM is supposed to make multithreaded programming easier by isolating the work done in parallel on shared in-memory data structures. Thus transactions need to thread-local to keep changes made to txos in local transaction logs (txlog).</p>
+<p>Application code in each thread works with its own transactions which of course can work on the same txos:</p>
+<p>[<img loading="lazy" alt="Bild nicht mehr verfügbar" src="/assets/_shared/placeholder-missing-image.svg" /></p>
+<p><em>(Bild nicht mehr verfügbar – in der Wayback-Aufnahme nicht mitgespeichert. Ursprünglicher Dateiname: image_thumb.png)</em>](https://web.archive.org/web/20150910082452/https://mscblogs.blob.core.windows.net/media/ralfw/WindowsLiveWriter/SoftwareTransactionalMemoryIVThreadBound_122FB/image.png)</p>
+<p>A txo is just briefly locked during access to avoid inconsistencies during single reads/writes. Since a txo is not just a singel value but containes at least a value and a version number which must not get out of step that´s necessary. But this kind of locking is hidden from you. Don´t worry about it. Nothing is permanently locking for the duration of a transaction. No deadlocks can occur. Rather NSTM bets on optimistic locking as already explained: txos are validated during commit (at latest) to check if they were changed by some other transaction and if so, the transaction fails. It´s the same as with ADO.NET when saving changes made to a <em>DataSet</em>.</p>
+<p>When you call <em>Read()</em> or <em>Write()</em> on a <em>INstmObject</em> the object retrieves the current NSTM transaction from TLS and delegates further processing of your request to the transaction.</p>
+<h3>The usual transaction scopes</h3>
+<p>TLS does not just point to a single transaction, though. Rather it contains a stack of transactions (txstack) because you can nest them. Check out this code:</p>
+<p>1 using (INstmTransaction txOuter = NstmMemory.BeginTransaction())</p>
+<p>2 {</p>
+<p>3     ...</p>
+<p>4     using (INstmTransaction txInner = NstmMemory.BeginTransaction(NstmTransactionScopeOption.RequiresNew, ...))</p>
+<p>5     {</p>
+<p>6         ...</p>
+<p>7     }</p>
+<p>8     ...</p>
+<p>9 }</p>
+<p>In line 3 there is one transaction on the TLS txstack, in line 6 there are two on txstack with <em>txInner</em> being the topmost. In line 8 it´s again just one transaction: <em>txOuter</em>.</p>
+<p>[<img loading="lazy" alt="Bild nicht mehr verfügbar" src="/assets/_shared/placeholder-missing-image.svg" /></p>
+<p><em>(Bild nicht mehr verfügbar – in der Wayback-Aufnahme nicht mitgespeichert. Ursprünglicher Dateiname: image_thumb_1.png)</em>](https://web.archive.org/web/20150910082452/https://mscblogs.blob.core.windows.net/media/ralfw/WindowsLiveWriter/SoftwareTransactionalMemoryIVThreadBound_122FB/image_1.png)</p>
+<p>Each transaction of course keeps its own transaction log. By default they are independent. However, they need to be ended in reverse order despite their independence. A transaction opened while another was active needs to be committed or rolled back first. That´s why you should nest transactions like above with <em>using</em> statements. They ensure the right order.</p>
+<p>But there are several transaction scope options. Above the inner transaction is opened with <em>RequiresNew</em>. This ensures a new transaction is opened although another one is already active. The default however is just <em>Required:</em></p>
+<p>10 using (INstmTransaction txOuter = NstmMemory.BeginTransaction())</p>
+<p>11 {</p>
+<p>12     ...</p>
+<p>13     using (INstmTransaction txInner = NstmMemory.BeginTransaction())</p>
+<p>14     {</p>
+<p>15         ...</p>
+<p>16     }</p>
+<p>17     ...</p>
+<p>18 }</p>
+<p>The inner transaction is opened with the default scope <em>Required</em> which means, a new transaction is only created if none is active yet. But in line 13 there is already <em>txOuter</em> active so no new transaction is started and <em>txInner</em> equals <em>txOuter</em>. In line 15 there´s still only one transaction on the txstack. This mirrors what EnterpriseServices or System.Transactions have offered all the time.</p>
+<h3>Truely nested transactions</h3>
+<p>NSTM goes beyond that, though, by providing for real nested transactions:</p>
+<p>100 using (INstmTransaction txOuter = NstmMemory.BeginTransaction())</p>
+<p>101 {</p>
+<p>102     ...</p>
+<p>103     using (INstmTransaction txInner = NstmMemory.BeginTransaction(NstmTransactionScopeOption.RequiresNested, ...))</p>
+<p>104     {</p>
+<p>105         ...</p>
+<p>106     }</p>
+<p>107     ...</p>
+<p>108 }</p>
+<p>Using <em>RequiresNested</em> not only ensures there is a new transaction active in line 105, but also that any changes committed with <em>txInner</em> can be undone by rolling back <em>txOuter!</em> In the first sample above txOuter and txInner were independent. Whatever <em>txInner</em> committed <em>txOuter</em> could not undo. Although syntactically nested the transactions had no more to do with each other than transactions on different threads. But nested transactions are different: When <em>txInner</em> is started in line 103 is clones the txlog of txOuter and thus sees all changes already made to txos. And when <em>txInner</em> it commits, it does not write any changes to the txos, but just to its parent transaction <em>txOuter</em>. That means, changes of inner transactions are not visible "to the public" until its parent transactions "reaffirms" them by also committing.</p>
+<p>Finally there is the <em>RequiredOrNested</em> scope option. If there is already a transaction running no new one is created, as long the options (scope, isolation level, clone mode) of this transaction are "compatible" with the options stated for the new transaction. If the existing transaction´s options are less strict, though, then a nested transaction is created. This option seems useful for library developers who don´t want to necessarily open new transactions for whatever their library code does - but also don´t want to sacrifice transactional strictness. Consider this scope option an experiment and food for thought ;-)</p>
+<h3>Summary</h3>
+<p>See, there answers to the initial questions were easy: A transactions scope is the thread. And you can have as many transactions open as you like. They just cannot overlap, but the can truely be nested. Threadsafety is guaranteed for transactions as a whole and <em>INstmObject</em> transactional objects. If you use <em>CloneOnRead</em> you´re pretty much on the safe side also for the values of txos, though. But this depends on how deep your clones are. For scalar types and value types containing just scalars you don´t have to worry. Deep object hierarchies, though, are not locked in any way! Take this into account when you implement <em>ICloneable</em>. Nevertheless NSTM is a very convenient and efficient way to parallelize work.</p>
+<h3>What´s next?</h3>
+<p>You know almost everything about my Software Transactional Memory implementation. There´s only the integration with System.Transactions missing - but not for long ;-)</p>
+<h4>Resources</h4>
+<p>[1] Juval Löwy, Can´t Commit: Volatile Resource Managers in .NET Bring Transactions to the Common Type, <a rel="noopener" href="https://web.archive.org/web/20150910082452/http://msdn.microsoft.com/msdnmag/issues/05/12/transactions/default.aspx">http://msdn.microsoft.com/msdnmag/issues/05/12/transactions/default.aspx</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

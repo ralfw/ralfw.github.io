@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suchen mit Google ganz einfach — ralfw.de Archiv</title>
+<meta name="description" content="Habe heute bei Christoph Sprenger (Microsoft SE) einen netten kleinen Trick gesehen, wie man sehr einfach insb. Internetverzeichnisse wie Google oder dict.leo.org im Browser anspre">
+<link rel="canonical" href="https://ralfw.de/archiv/2003/suchen-mit-google-ganz-einfach/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Suchen mit Google ganz einfach — ralfw.de Archiv">
+<meta property="og:description" content="Habe heute bei Christoph Sprenger (Microsoft SE) einen netten kleinen Trick gesehen, wie man sehr einfach insb. Internetverzeichnisse wie Google oder dict.leo.org im Browser anspre">
+<meta property="og:url" content="https://ralfw.de/archiv/2003/suchen-mit-google-ganz-einfach/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Suchen mit Google ganz einfach</h1>
+    <div class="doc-meta"><span>20. März 2003</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/posts/4099.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2003/suchen-mit-google-ganz-einfach/</code></span></div>
+    <div class="art"><p>Habe heute  bei Christoph Sprenger (Microsoft SE) einen netten kleinen Trick gesehen, wie man sehr einfach insb. Internetverzeichnisse wie Google oder dict.leo.org im Browser ansprechen kann. Statt auf ihre Suchseite zu gehen und dort ein Suchwort in ein Formularfeld einzugeben, kann man direkt in der IE Adressenzeile die Suche formulieren. In Google kann man dann z.B. mit</p>
+<p>g .net framework</p>
+<p>suchen. Oder die Übersetzung für ein englisches Wort mit</p>
+<p>l database</p>
+<p>in dict.leo.org.</p>
+<p>Google-Toolbar und Favoriteneinträge und umständliche URL-Eingaben spart man sich damit. Cool.</p>
+<p>Und so funktioniert´s: In der Registry müssen einfach nur Einträge bei den IE SearchUrls gemacht werden, die einem Platzhalter (s.o. "g" oder "l") eine URL zuweisen, in die dann der Text, der hinter dem Platzhalter steht, mit "%s" eingesetzt werden kann. Hier der Inhalt eines .reg-Files, das genau das tut:</p>
+<p>Windows Registry Editor Version 5.00<br />
+<br />
+[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\SearchUrl\g]<br />
+@="<a rel="noopener" href="https://web.archive.org/web/20030913173832/http://www.google.com/keyword/%s">http://www.google.com/keyword/%s</a>"  </p>
+<p>[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\SearchUrl\l]<br />
+@="<a rel="noopener" href="https://web.archive.org/web/20030913173832/http://dict.leo.org/?search=%s">http://dict.leo.org?search=%s</a>"</p>
+<p>Ausschneiden, als .reg-Datei speichern, aufrufen, fertig.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

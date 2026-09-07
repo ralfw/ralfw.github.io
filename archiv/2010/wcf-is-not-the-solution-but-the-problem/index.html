@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WCF is not the solution but the problem — ralfw.de Archiv</title>
+<meta name="description" content="The title of this post has caught your attention? So let me explain what I mean by it: I think WCF is great. It´s the best communication framework Microsoft ever has come up with. ">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/wcf-is-not-the-solution-but-the-problem/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="WCF is not the solution but the problem — ralfw.de Archiv">
+<meta property="og:description" content="The title of this post has caught your attention? So let me explain what I mean by it: I think WCF is great. It´s the best communication framework Microsoft ever has come up with. ">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/wcf-is-not-the-solution-but-the-problem/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>WCF is not the solution but the problem</h1>
+    <div class="doc-meta"><span>20. Feb. 2010</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/wcf-is-not-the-solution-but-the-problem" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/wcf-is-not-the-solution-but-the-problem/</code></span></div>
+    <div class="art"><p>The title of this post has caught your attention? So let me explain what I mean by it: I think WCF is great. It´s the best communication framework Microsoft ever has come up with. WCF solves a lot of problems of its predecessors, it is tremendously extensible, and it supports the main communication paradigms (sync, async, P2P). <strong>WCF certainly is a solution of some kind.</strong></p>
+<p><strong>But to whom?</strong> Who benefits from all these capabilities of WCF? Is it the average application programmer? I doubt it.</p>
+<p>Remember when first Webservices and .NET Remoting came out? The Microsoft developer community rejoiced. What a relieve compared to sophisticated COM+ and raw TCP socket programming. Developers were so glad, remote communication finally became easy, usable.</p>
+<p>Unfortunately this did not last long. Webservices hit their limits and needed to be amended with tons of WS-* standards. .NET Remoting hit its limits when it turned out that remote stateful objects really were a bad idea in terms of scalability.</p>
+<p>So Microsoft set out to unify remote communication and do close any conceptual holes. Out came true message oriented WCF, the one size fits all communication API.</p>
+<p>Well, great. I love WCF for this.</p>
+<p><strong>But I don´t like it for two things:</strong></p>
+<ul>
+<li>I strongly believe that remote communication should always be asynchronous. Yes, always. Because that´s how autonomous systems communicate. And if you deny that fact you <a rel="noopener" href="https://web.archive.org/web/20150510025450/http://en.wikipedia.org/wiki/Fallacies_of_Distributed_Computing">run in all sorts of problems</a>. It´s a case of <a rel="noopener" href="https://web.archive.org/web/20150510025450/http://en.wikipedia.org/wiki/Leaky_abstraction">LOLA</a>. So <strong>WCF is betting on the wrong horse with its focus on synchronous communication.</strong> (And I say “focus” because you can do async communication with WCF. But do you really want to?)</li>
+<li><strong>WCF tries to be a Jack of all Trades. Its drive to unification is so strong it has lost sight of usability.</strong> Webservices and .NET Remoting had so much appeal because they promised to finally make remote communication simple. But then they failed. Not because their APIs did not live up to the promise of simplicity, but because they too bet on the wrong horse: synchronicity.</li>
+</ul>
+<p>Let me say it like this: WCF is great in the hands of experts. But Microsoft should not expect developers to become WCF experts en masse.</p>
+<p>I feel reminded of the early 1990s. Back then there was the Windows API for doing Windows programming. And you could do cool stuff with it. But, let´s be honest, you had to be an expert for doing that. And even Charles Petzold had not been able to turn masses of developers into expert Windows GUI programmers.</p>
+<p>Enter VB 1.0.</p>
+<p>And the world changed completely. Suddenly just about any developer was able to do Windows GUI programming. Maybe not all outcomes were as beautiful and usably as their creators thought, but anyway. Windows GUI programming had become a mass phenomenom almost overnight.</p>
+<p><strong>Today WCF to me seems to be the new Windows API. So much is possible – if you´re an expert.</strong> But even Don Box and Juval Löwy together won´t be able to turn developers into WCF experts en masse.</p>
+<p><strong>That´s why I think WCF is not the solution but the problem. By its very nature it stands in the way of solving the remote communication problems for Joe Developer.</strong> It has made it much easier to do certain things for many developes. But still the average developer is baffled by its complexity.</p>
+<p>Almost three years ago I wrote a small blog article on how to start using WCF: <a rel="noopener" href="https://web.archive.org/web/20150510025450/http://weblogs.asp.net/ralfw/archive/2007/04/14/a-truely-simple-example-to-get-started-with-wcf.aspx">A truely simple example to get started with WCF</a>. And since then it´s one of the most popular articles in this blog. Why´s that so? Because WCF is so darn difficult to learn, you really need all the help you can get.</p>
+<p>That said, what can we do? Put up with WCF? I don´t think so. <strong>We need the equivalent of VB for the world of remote communication.</strong> We need some layer of abstraction on top of WCF lie VB was on top of the Windows API.</p>
+<p>WCF is here to stay. Great!</p>
+<p><strong>But as an application developer I certainly don´t want to need to use WCF directly.</strong> To an application programmer WCF like Tcp Sockets are a problem, not a solution. A learning and usability problem.</p>
+<p><strong>We need some communication API which brings back usability and understandability</strong> like .NET Remoting, but at the same time gets it right. That means at least it must not be synchronous but asynchronous.</p>
+<p>If you agree with me, say aye ;-)</p>
+<p>Next time I´m going to give you an idea of how such an API might look.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

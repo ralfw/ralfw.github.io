@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aspect-Oriented Programming made easy with Event-Based Components — ralfw.de Archiv</title>
+<meta name="description" content="Aspect-Oriented Programming (AOP) can help to clearly separate concerns. But it´s kinda cumbersome to do without a tool. At least if you want to do it along the beaten path of obje">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/aspect-oriented-programming-made-easy-with-event-based-components/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Aspect-Oriented Programming made easy with Event-Based Components — ralfw.de Archiv">
+<meta property="og:description" content="Aspect-Oriented Programming (AOP) can help to clearly separate concerns. But it´s kinda cumbersome to do without a tool. At least if you want to do it along the beaten path of obje">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/aspect-oriented-programming-made-easy-with-event-based-components/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Aspect-Oriented Programming made easy with Event-Based Components</h1>
+    <div class="doc-meta"><span>10. Aug. 2010</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/aspect-oriented-programming-made-easy-with-event-based-components" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/aspect-oriented-programming-made-easy-with-event-based-components/</code></span></div>
+    <div class="art"><p><img loading="lazy" alt="image" src="/assets/04-weblogs.aspnet/b1e239b18a39f1d8.png" /></p>
+<p>Aspect-Oriented Programming (AOP) can help to clearly separate concerns. But it´s kinda cumbersome to do without a tool. At least if you want to do it along the beaten path of object orientation. But things become much more easy, when you switch your thinking to a different paradigm at least during high level design.</p>
+<p>In a three part series on AOP with Event-Based Components (EBC) I´ve describe how this can be done. Easy AOP without a tool is possible. And it even makes your designs more understandable, I believe.</p>
+<p><a rel="noopener" href="https://web.archive.org/web/20150901081609/http://geekswithblogs.net/theArchitectsNapkin/archive/2010/08/04/aspect-oriented-programming-made-easy-with-event-based-components-ndash-part.aspx">Part I</a> introduces a scenario to apply AOP to. It´s a text file indexing application. In <a rel="noopener" href="https://web.archive.org/web/20150901081609/http://geekswithblogs.net/theArchitectsNapkin/archive/2010/08/05/aspect-oriented-programming-made-easy-with-event-based-components-ndash-part-again.aspx">Part II</a> I show how to beef up the application with simple aspects like logging, exception handling and validation. Then in <a rel="noopener" href="https://web.archive.org/web/20150901081609/http://geekswithblogs.net/theArchitectsNapkin/archive/2010/08/08/going-asynchronous---aop-made-easy-with-event-based-components-ndash.aspx">Part III</a> I use AOP to make the whole application multi-core friendly. Some parts become asynchronous, other´s are run in parallel. And the domain logic stays oblivious to that.</p>
+<p>Come on over an read about EBC and AOP on <a rel="noopener" href="https://web.archive.org/web/20150901081609/http://geekswithblogs.net/theArchitectsNapkin">The Architect´s Napkin</a>…</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

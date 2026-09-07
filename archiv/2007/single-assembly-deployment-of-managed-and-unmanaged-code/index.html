@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Single Assembly Deployment of Managed and Unmanaged Code — ralfw.de Archiv</title>
+<meta name="description" content=".NET developers love XCOPY deployment. And they love single assembly components. At least I always feel kinda uneasy, if I have to use some component and need remember a list of fi">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/single-assembly-deployment-of-managed-and-unmanaged-code/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Single Assembly Deployment of Managed and Unmanaged Code — ralfw.de Archiv">
+<meta property="og:description" content=".NET developers love XCOPY deployment. And they love single assembly components. At least I always feel kinda uneasy, if I have to use some component and need remember a list of fi">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/single-assembly-deployment-of-managed-and-unmanaged-code/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Single Assembly Deployment of Managed and Unmanaged Code</h1>
+    <div class="doc-meta"><span>4. Feb. 2007</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/single-assembly-deployment-of-managed-and-unmanaged-code" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/single-assembly-deployment-of-managed-and-unmanaged-code/</code></span></div>
+    <div class="art"><p>.NET developers love XCOPY deployment. And they love single assembly components. At least I always feel kinda uneasy, if I have to use some component and need remember a list of files to also include with the main assembly of that component. So when I recently had to develop a managed code component and had to augment it with some unmanaged code from a C DLL (thx to <a rel="noopener" href="https://web.archive.org/web/20140614172636/http://www.heege.net/">Marcus Heege</a> for helping me with this!), I thought about how to make it easier to deploy the two DLLs. If this were just two assemblies I could have used ILmerge to pack them up in just one file. But this doesn´t work for mixed code components with managed as well as unmanaged DLLs.</p>
+<p>So here´s what I came up with for a solution:</p>
+<ol>
+<li>I include whatever DLLs I want to deploy with my component´s main assembly as embedded resources.</li>
+<li>Then I set up a class constructor to extract those DLLs like below. The class ctor is called just once within each AppDomain so it´s a neglible overhead, I think.</li>
+</ol>
+<p><em>namespace MyLib<br />
+{<br />
+    public class MyClass<br />
+    {<br />
+        static MyClass()<br />
+        {<br />
+            ResourceExtractor.ExtractResourceToFile("MyLib.ManagedService.dll", "managedservice.dll");<br />
+            ResourceExtractor.ExtractResourceToFile("MyLib.UnmanagedService.dll", "unmanagedservice.dll");<br />
+        }</em></p>
+<p><em>...</em></p>
+<p>In this example I included two DLLs as resources, one being an unmanaged code DLL, and one being a managed code DLL (just for demonstration purposes), to show, how this technique works for both kinds of code.</p>
+<p>The code to extract the DLLs into files of their own is simple:</p>
+<p><em>public static class ResourceExtractor<br />
+{<br />
+    public static void ExtractResourceToFile(string resourceName, string filename)<br />
+    {<br />
+        if (!System.IO.File.Exists(filename))<br />
+            using (System.IO.Stream s = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))<br />
+                using (System.IO.FileStream fs = new System.IO.FileStream(filename, System.IO.FileMode.Create))<br />
+                {<br />
+                    byte[] b = new byte[s.Length];<br />
+                    s.Read(b, 0, b.Length);<br />
+                    fs.Write(b, 0, b.Length);<br />
+                }<br />
+    }<br />
+}</em></p>
+<p>Working with a managed code assembly like this is the same as usual - almost. You reference it (here: <em>ManagedService.dll</em>) in your component´s main project (here: <em>MyLib</em>), but set the Copy Local property to <em>false</em>. Additionally you link in the assembly as an <em>Existing Item</em> and set the <em>Build Action</em> to <em>Embedded Resource</em>.</p>
+<p>For the unmanaged code (here: <em>UnmanagedService.dll</em>) you just link in the DLL as an <em>Existing Item</em> and set the <em>Build Action</em> to <em>Embedded Resource</em>. To access its functions use the <em>DllImport</em> attribute as usual, e.g.</p>
+<p><em>[DllImport("unmanagedservice.dll")]<br />
+public extern static int Add(int a, int b);</em></p>
+<p>That´s it! As soon as you create the first instance of the class with the static ctor the embedded DLLs get extracted into files of their own and are ready to use as if you deployed them as separate files. As long as you have write permissions for the execution directory this should work fine for you. At least for prototypical code I think this way of single assembly deployment is quite convenient.</p>
+<p>Enjoy!</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software Transactional Memory VI - Becoming Aspect Oriented with PostSharp — ralfw.de Archiv</title>
+<meta name="description" content="The API for my .NET Software Transactional Memory (NSTM) I´ve described so far is straightforward, I´d say. It´s close to what you´re used to from transactional dabase access and i">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/software-transactional-memory-vi-becoming-aspect-oriented-with-postsharp/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software Transactional Memory VI - Becoming Aspect Oriented with PostSharp — ralfw.de Archiv">
+<meta property="og:description" content="The API for my .NET Software Transactional Memory (NSTM) I´ve described so far is straightforward, I´d say. It´s close to what you´re used to from transactional dabase access and i">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/software-transactional-memory-vi-becoming-aspect-oriented-with-postsharp/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Software Transactional Memory VI - Becoming Aspect Oriented with PostSharp</h1>
+    <div class="doc-meta"><span>12. Juli 2007</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net/ralfw/software-transactional-memory-vi-becoming-aspect-oriented-with-postsharp" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/software-transactional-memory-vi-becoming-aspect-oriented-with-postsharp/</code></span></div>
+    <div class="art"><p>The API for my .NET Software Transactional Memory (NSTM) <a rel="noopener" href="https://web.archive.org/web/20150910083053/http://weblogs.asp.net/ralfw/archive/tags/Software+Transactional+Memory/default.aspx">I´ve described so far</a> is straightforward, I´d say. It´s close to what you´re used to from transactional dabase access and <a rel="noopener" href="https://web.archive.org/web/20150910083053/http://weblogs.asp.net/ralfw/archive/2007/07/10/software-transactional-memory-v-integration-with-system-transactions.aspx">it´s even integrated with System.Transactions</a>: open a transaction, do some stuff with transactional objects, commit the transaction. All very explicit.</p>
+<p>Despite its familiarity this explicitness kind of stands in the way of what a piece of object oriented code is supposed to accomplish. It´s something you´ve to concern yourself with although it does not add to the raw functionality you want to achieve. And by being imperative it´s prone be done incorrectly. A more declarative way to do in-memory transactions and less explicitness thus would be nice now that objects have become transactional and automatically threadsafe in general.</p>
+<p>I thought about that from the being when I started to work on NSTM. Microsofts STM implementation <a rel="noopener" href="https://web.archive.org/web/20150910083053/http://research.microsoft.com/research/downloads/Details/6cfc842d-1c16-4739-afaf-edb35f544384/Details.aspx">SXM</a> shows, how transactionality could be made more declarative and "invisible": With SXM you just adorn a class with the attribute <em>[Atomic]</em> to make its instances transactional. That´s cool - but so far I did not consider it for NSTM, since it seemed to require fiddling around with proxies. That´s why with SXM you need to instanciate transactional objects through a factory which you´ve to create for each transactional class:</p>
+<p>1 [Atomic]</p>
+<p>2 public class Node</p>
+<p>3 {</p>
+<p>4     private int value;</p>
+<p>5     private Node next;</p>
+<p>6     ...</p>
+<p>7 }</p>
+<p>8 ...</p>
+<p>9 XObjectFactory factory = new XObjectFactory(typeof(Node));</p>
+<p>10 Node node = (Node)factory.Create(value);</p>
+<p>The benefits of using an attribute to make classes transactional to me seem to be lost through this cumbersome instanciation process. That´s why I did not go down this road until now.</p>
+<h3>PostSharp to the rescue</h3>
+<p>But then one day - lo and behold! - a very, very cool tool was revealed to me by <a rel="noopener" href="https://web.archive.org/web/20150910083053/http://www.infoq.com/">InfoQ</a> (which I´ve come to like as much as <a rel="noopener" href="https://web.archive.org/web/20150910083053/http://www.theserverside.net/">theserverside.net</a>):</p>
+<p><a rel="noopener" href="https://web.archive.org/web/20150910083053/http://www.postsharp.org/">PostSharp</a> from Gael Fraiteur is a godsend! It´s one of those technologies you´ve waited for all along without really knowing. It´s a technology that will change how you approach software development. At least that´s what his done for me since I first read about it.</p>
+<p>What PostSharp does is not new, though. It´s a kind of <a rel="noopener" href="https://web.archive.org/web/20150910083053/http://en.wikipedia.org/wiki/Aspect-oriented_programming">Aspect Oriented Programming (AOP)</a> weaver. And it´s a tool to alter the MSIL code in assemblies. But there are already several APO frameworks out there - also for .NET -, so why another one? There are already tools to alter assemblies like <a rel="noopener" href="https://web.archive.org/web/20150910083053/http://research.microsoft.com/phoenix/">Phoenix from Microsoft</a> and <a rel="noopener" href="https://web.archive.org/web/20150910083053/http://www.mono-project.com/Cecil">Cecil from the Mono project</a>.</p>
+<p>What makes PostSharp so remarkable to me, though, is in which way it combines AOP with MSIL modification. It makes it so dead easy!</p>
+<ul>
+<li>You´re not forced to learn MSIL.</li>
+<li>The weaving is done automagically for you by an invisible post build step.</li>
+<li>No factories needed to instanciate classes annotated with aspects, because no proxies are used.</li>
+<li>For many common types of aspects (e.g. pre/post processing of method calls, field access interception) there are templates that help you get your own aspects up and running in just a few minutes.</li>
+</ul>
+<p>Congratulations Gael! And thanks for being so responsive to questions and bug reports!</p>
+<h3>Aspect oriented transactions</h3>
+<p>The first thing I tried with PostSharp to make NSTM transactions declarative. This seemed to be easy to do and would result in an also familiar transactional programming model. COM+/EnterpriseServices, ASMX, and not WCF all sport some attribute to make methods transactional. Here´s an excerpt from <a rel="noopener" href="https://web.archive.org/web/20150910083053/http://msdn.microsoft.com/msdnmag/issues/07/05/Foundations/default.aspx?loc=en">Juval Löwy´s article [1]</a> on  that topic:</p>
+<p>1 [ServiceContract]</p>
+<p>2 interface IMyContract</p>
+<p>3 {</p>
+<p>4    [OperationContract]</p>
+<p>5    [TransactionFlow(TransactionFlowOption.Mandatory)]</p>
+<p>6    void MyMethod(...);</p>
+<p>7 }</p>
+<p>8</p>
+<p>9 class MyService : IMyContract</p>
+<p>10 {</p>
+<p>11    [OperationBehavior(TransactionScopeRequired = true)]</p>
+<p>12    public void MyMethod(...)</p>
+<p>13    {</p>
+<p>14       ...</p>
+<p>17    }</p>
+<p>18 }</p>
+<p><em>MyMethod</em> in the service contract is declared as to be wrapped in a mandatory transaction. The service implementation does not have to do anything imperatively for that. The WCF infrastructure will create a new System.Transactions transaction if necessary behind the scene.</p>
+<p>That´s what I wanted for NSTM, too, and what now seemed within reach through PostSharp. And indeed it was very easy to implement. Here´s my transactional aspect whipped up in some 30 minutes after downloading PostSharp:</p>
+<p>1 [Serializable]</p>
+<p>2 [AttributeUsage(AttributeTargets.Method |</p>
+<p>3                 AttributeTargets.Property |</p>
+<p>4                 AttributeTargets.Constructor)]</p>
+<p>5 public class NstmAtomicAttribute : OnMethodBoundaryAspect</p>
+<p>6 {</p>
+<p>7     private NstmTransactionScopeOption transactionScope;</p>
+<p>8     private NstmTransactionIsolationLevel isolationLevel;</p>
+<p>9     private NstmTransactionCloneMode cloneMode;</p>
+<p>10     private bool createdNewTx;</p>
+<p>...</p>
+<p>35     public override void OnEntry(MethodExecutionEventArgs eventArgs)</p>
+<p>36     {</p>
+<p>37         NstmMemory.BeginTransaction(this.transactionScope,</p>
+<p>38                                     this.isolationLevel,</p>
+<p>39                                     this.cloneMode,</p>
+<p>40                                     out this.createdNewTx);</p>
+<p>41     }</p>
+<p>42</p>
+<p>43     public override void OnException(MethodExecutionEventArgs eventArgs)</p>
+<p>44     {</p>
+<p>45         if (this.createdNewTx) NstmMemory.Current.Rollback();</p>
+<p>46     }</p>
+<p>47</p>
+<p>48     // will always be called, also after OnException()</p>
+<p>49     public override void OnExit(MethodExecutionEventArgs eventArgs)</p>
+<p>50     {</p>
+<p>51         // only commit, if no exception has been thrown</p>
+<p>52         if (eventArgs.Exception == null &amp;&amp; this.createdNewTx)</p>
+<p>53             NstmMemory.Current.Commit();</p>
+<p>54     }</p>
+<p>55 }</p>
+<p>How does it work? First have a look at some code which uses this attribute:</p>
+<p>1 static INstmObject<int> myAccount, yourAccount;</p>
+<p>2</p>
+<p>3 static void Main()</p>
+<p>4 {</p>
+<p>5     myAccount = NstmMemory.CreateObject<int>(1000);</p>
+<p>6     yourAccount = NstmMemory.CreateObject<int>(500);</p>
+<p>7</p>
+<p>8     try</p>
+<p>9     {</p>
+<p>10         TransferMoney(350);</p>
+<p>11     }</p>
+<p>12     catch (Exception ex)</p>
+<p>13     {</p>
+<p>14         Console.WriteLine("*** {0}", ex.Message);</p>
+<p>15     }</p>
+<p>16</p>
+<p>17     Console.WriteLine("my account: {0}", myAccount.Read());</p>
+<p>18     Console.WriteLine("your account: {0}", yourAccount.Read());</p>
+<p>19 }</p>
+<p>20</p>
+<p>21 [NstmAtomic()]</p>
+<p>22 static void TransferMoney(int amountToTransfer)</p>
+<p>23 {</p>
+<p>24     myAccount.Write(myAccount.Read() - amountToTransfer);</p>
+<p>25     yourAccount.Write(yourAccount.Read() + amountToTransfer);</p>
+<p>26     throw new ApplicationException("Money transaction failed!");</p>
+<p>27 }</p>
+<p>The method <em>TransferMoney()</em> does not open explicitly a transaction. Rather this is done by the NSTM infrastructure because the method is adorned with the <em>[NstmAtomic()]</em> attribute. The default then is to commit the transaction when the method returns; but it´s aborted if the method throws an unhandled exception.</p>
+<p>Of course, if you like, you can pass a transaction scope or isolationlevel etc. to the attribute to influence how the transaction is created. By default the scope is <em>Required</em> so nested calls don´t each created new transactions.</p>
+<p>Now, how is this magic woven (sic!) by PostSharp? I won´t explain PostSharp in depth here, but a quick glimpse behind the curtain won´t hurt, wouldn´t it ;-)</p>
+<p>Remember, PostSharp modifies the original assembly in a post build step like an <a rel="noopener" href="https://web.archive.org/web/20150910083053/http://object-relational-mapping.blogspot.com/2007/03/how-automatic-persistence-magic-is_25.html">O/R Mapper´s enhancer</a> (e.g. <a rel="noopener" href="https://web.archive.org/web/20150910083053/http://weblogs.asp.net/controlpanel/blogs/www.vanatec.com">Vanatec OpenAccess</a>) or an obfuscator (e.g. <a rel="noopener" href="https://web.archive.org/web/20150910083053/http://www.xenocode.com/">Xenocode</a>). So here´s the "enhanced" TransferMoney() method as seen through Reflector:</p>
+<pre><code>private static void TransferMoney(int amountToTransfer)  
+{  
+    MethodExecutionEventArgs args;  
+    try  
+    {  
+        object[] arguments = new object[] { amountToTransfer };  
+        args = new MethodExecutionEventArgs(methodof(Program.TransferMoney, Program), null, arguments);  
+        ~PostSharp~Laos~Implementation.~aspect~1.OnEntry(args);  
+        if (args.FlowBehavior != FlowBehavior.Return)  
+        {  
+            myAccount.Write(myAccount.Read() - amountToTransfer);  
+            yourAccount.Write(yourAccount.Read() + amountToTransfer);  
+            throw new ApplicationException(&quot;Money transaction failed!&quot;);  
+            ~PostSharp~Laos~Implementation.~aspect~1.OnSuccess(args);  
+        }  
+    }  
+    catch (Exception exception)  
+    {  
+        args.Exception = exception;  
+        ~PostSharp~Laos~Implementation.~aspect~1.OnException(args);  
+        switch (args.FlowBehavior)  
+        {  
+            case FlowBehavior.Continue:  
+            case FlowBehavior.Return:  
+                return;  
+        }  
+        throw;  
+    }  
+    finally  
+    {  
+        ~PostSharp~Laos~Implementation.~aspect~1.OnExit(args);  
+    }  
+}
+</code></pre>
+<p>I greyed out the original method body so you can more clearly what PostSharp has woven around it. Basically it´s a try-catch-block which calls the <em>On...()</em> methods of <em>NstmAtomicAttribute</em>. Where .NET needs context bound objects and proxies at runtime to let you intercept calls PostSharp does it by statically inserting code which calls your interception methods.</p>
+<h3>Aspect oriented transactional data</h3>
+<p>Since success was so easy to gain with PostSharp I did not want to stop with transactional methods. Wouldn´t it be nice to hide transactionality almost altogether? If enhancer based O/R Mappers can hide persistence behind an attribute and don´t require object creation through factories, why shouldn´t I be able to do the same? If SXM falls short of this, that´s not my problem ;-)</p>
+<p>So I set down with PostSharp and had a close look at the <a rel="noopener" href="https://web.archive.org/web/20150910083053/http://doc.postsharp.org/UserGuide/Laos/AspectKinds.html#idHelpTOCNode445163520">different kinds of aspect</a> it provides out of the box. And really there was a way to accomplish what O/R Mapper enhancers have done before. I just had to combine a "generic field" aspect with a "type composition" aspect using a "compound" aspect. And here´s the result:</p>
+<p>1 [NstmTransactional]</p>
+<p>2 public class Account</p>
+<p>3 {</p>
+<p>4     private int amount;</p>
+<p>5     private int maxOverdraftAmount;</p>
+<p>6</p>
+<p>7     public Account()</p>
+<p>8     {</p>
+<p>9         this.amount = 0;</p>
+<p>10         this.maxOverdraftAmount = 0;</p>
+<p>11     }</p>
+<p>12</p>
+<p>13     public Account(int initialAmount, int maxOverdraftAmount)</p>
+<p>14     {</p>
+<p>15         this.amount = initialAmount;</p>
+<p>16         this.maxOverdraftAmount = maxOverdraftAmount;</p>
+<p>17     }</p>
+<p>18</p>
+<p>19     public int Amount</p>
+<p>20     {</p>
+<p>21         get</p>
+<p>22         {</p>
+<p>23             return this.amount;</p>
+<p>24         }</p>
+<p>25         set</p>
+<p>26         {</p>
+<p>27             if (value &lt; maxOverdraftAmount)</p>
+<p>28                 throw new ApplicationException(...);</p>
+<p>29             this.amount = value;</p>
+<p>30         }</p>
+<p>31     }</p>
+<p>32 }</p>
+<p>Put the <em>[NstmTransactional]</em> on an ordinary class to make it transactional. That´s it. It´s the same as wrapping <em>INstmObject<T></em> around it. NSTM will care for buffering writes to instances and committing any changes at the end of a transaction. The money transfer example thus looses almost any trait of its transactionality:</p>
+<p>35 static Account myAccount, yourAccount;</p>
+<p>36</p>
+<p>37 static void Main()</p>
+<p>38 {</p>
+<p>39     myAccount = new Account(1000, 0);</p>
+<p>40     yourAccount = new Account(500, 0);</p>
+<p>41</p>
+<p>42     try</p>
+<p>43     {</p>
+<p>44         TransferMoney(1001);</p>
+<p>45     }</p>
+<p>46     catch (Exception ex)</p>
+<p>47     {</p>
+<p>48         Console.WriteLine("*** {0}", ex.Message);</p>
+<p>49     }</p>
+<p>50</p>
+<p>51     Console.WriteLine("my account: {0}", myAccount.Amount);</p>
+<p>52     Console.WriteLine("your account: {0}", yourAccount.Amount);</p>
+<p>53 }</p>
+<p>54</p>
+<p>55</p>
+<p>56 [NstmAtomic()]</p>
+<p>57 static void TransferMoney(int amountToTransfer)</p>
+<p>58 {</p>
+<p>59     myAccount.Amount -= amountToTransfer;</p>
+<p>60     yourAccount.Amount += amountToTransfer;</p>
+<p>61 }</p>
+<p>This is just ordinary object oriented code. (Please don´t get too critical with my account business logic ;-) With PostSharp´s AOP the impact of Software Transactional Memory on your code is reduced to two attributes: make classes transactional with <em>[NstmTransactional]</em> and wrap transactions around methods with <em>[NstmAtomic]</em>.</p>
+<p>If you don´t have a class you want to make transactional, but just a scalar type or a struct, then use <em>NstmTransactional<T></em>:</p>
+<p>1 static NstmTransactional<int> myAccount, yourAccount;</p>
+<p>2</p>
+<p>3 static void Main()</p>
+<p>4 {</p>
+<p>5     myAccount = 1000;</p>
+<p>6     yourAccount = 500;</p>
+<p>7</p>
+<p>8     try</p>
+<p>9     {</p>
+<p>10         TransferMoney(1001);</p>
+<p>11     }</p>
+<p>12     catch (Exception ex)</p>
+<p>13     {</p>
+<p>14         Console.WriteLine("*** {0}", ex.Message);</p>
+<p>15     }</p>
+<p>16</p>
+<p>17     Console.WriteLine("my account: {0}", myAccount.Value);</p>
+<p>18     Console.WriteLine("your account: {0}", yourAccount.Value);</p>
+<p>19 }</p>
+<p>20</p>
+<p>21</p>
+<p>22 [NstmAtomic()]</p>
+<p>23 static void TransferMoney(int amountToTransfer)</p>
+<p>24 {</p>
+<p>25     myAccount.Value -= amountToTransfer;</p>
+<p>26     yourAccount.Value += amountToTransfer;</p>
+<p>27</p>
+<p>28     if (myAccount &lt; 0)</p>
+<p>29         throw new ApplicationException("No overdraft allowed!");</p>
+<p>30 }</p>
+<p><em>NstmTransactional<T></em> works almost like <em>Nullable<T></em>. It´s just for scalar and value types. However <em>NstmTransactional<T></em> is a class, not a struct! This is due to the need for identity and addressability of transactional data. When a transaction commits it needs to update a memory location it knows the address of. That´s not possible for value types which live on the stack. So if you want a value type to be transactional you need to be make it into an object.</p>
+<p>Please note: <em>[NstmAtomic]</em> keeps only track of changes to one level of an object hierarchy! If you want to make more than one level transactional, you need to put <em>[NstmAtomic]</em> on all classes on all levels!</p>
+<p>In this example a contact has an address. If you want to work transactionally with both, it´s not sufficient to just adorn the <em>Contact</em> class with <em>[NstmAtomic]</em>, though! The attribute does not cause NSTM to track changes recursively on all objects pointed to by a <em>Contact</em>. Rather you need to make <em>Address</em> also transactional.</p>
+<p>1 [NstmTransactional]</p>
+<p>2 class Contact</p>
+<p>3 {</p>
+<p>4     private string name;</p>
+<p>5</p>
+<p>6     public string Name</p>
+<p>7     {</p>
+<p>8         get { return name; }</p>
+<p>9         set { name = value; }</p>
+<p>10     }</p>
+<p>11</p>
+<p>12     private Address location;</p>
+<p>13</p>
+<p>14     public Address Location</p>
+<p>15     {</p>
+<p>16         get { return location; }</p>
+<p>17         set { location = value; }</p>
+<p>18     }</p>
+<p>19 }</p>
+<p>20</p>
+<p>21 [NstmTransactional]</p>
+<p>22 class Address</p>
+<p>23 {</p>
+<p>24     private string city;</p>
+<p>25</p>
+<p>26     public string City</p>
+<p>27     {</p>
+<p>28         get { return city; }</p>
+<p>29         set { city = value; }</p>
+<p>30     }</p>
+<p>31 }</p>
+<p>With all levels of the object model made transactional code like this works correctly:</p>
+<p>1 Contact c = new Contact();</p>
+<p>2 c.Name = "John Doe";</p>
+<p>3 c.Location = new Address();</p>
+<p>4 c.Location.City = "Hamburg";</p>
+<p>5</p>
+<p>6 using (INstmTransaction tx = NstmMemory.BeginTransaction())</p>
+<p>7 {</p>
+<p>8     c.Name = "Peter Doe";</p>
+<p>9     c.Location.City = "Berlin";</p>
+<p>10 }</p>
+<p>11</p>
+<p>12 Console.WriteLine(c.Name);</p>
+<p>13 Console.WriteLine(c.Location.City);</p>
+<p>Neither the contact name nor the location´s city are changed, since the transaction is aborted.</p>
+<p>This of course means, you cannot use the .NET collection classes as is. For example you could set up a contact with several addresses like this:</p>
+<p>1 [NstmTransactional]</p>
+<p>2 class ContactWithManyAddresses</p>
+<p>3 {</p>
+<p>4     private string name;</p>
+<p>5     private List<Address> addresses;</p>
+<p>6</p>
+<p>7     public ContactWithManyAddresses()</p>
+<p>8     {</p>
+<p>9         this.addresses = new List<Address>();</p>
+<p>10     }</p>
+<p>11</p>
+<p>12     public string Name</p>
+<p>13     {</p>
+<p>14         get { return name; }</p>
+<p>15         set { name = value; }</p>
+<p>16     }</p>
+<p>17</p>
+<p>18     public List<Address> Addresses</p>
+<p>19     {</p>
+<p>20         get { return this.addresses; }</p>
+<p>21     }</p>
+<p>22 }</p>
+<p>Then you would want to be able to do the following:</p>
+<p>100 ContactWithManyAddresses c = new ContactWithManyAddresses();</p>
+<p>101 c.Name = "John Doe";</p>
+<p>102 Address a = new Address();</p>
+<p>103 a.City = "Hamburg";</p>
+<p>104 c.Addresses.Add(a);</p>
+<p>105</p>
+<p>106 using (INstmTransaction tx = NstmMemory.BeginTransaction())</p>
+<p>107 {</p>
+<p>108     c.Name = "Peter Doe";</p>
+<p>109     c.Addresses[0].City = "Berlin";</p>
+<p>110</p>
+<p>111     a = new Address();</p>
+<p>112     a.City = "Munich";</p>
+<p>113     c.Addresses.Add(a);</p>
+<p>114 }</p>
+<p>115</p>
+<p>116 Console.WriteLine(c.Name);</p>
+<p>117 foreach (Address b in c.Addresses)</p>
+<p>118     Console.WriteLine(b.City);</p>
+<p>But the output at the end of this code would surprise you:</p>
+<p><img loading="lazy" alt="Bild nicht mehr verfügbar" src="/assets/_shared/placeholder-missing-image.svg" /></p>
+<p><em>(Bild nicht mehr verfügbar – in der Wayback-Aufnahme nicht mitgespeichert. Ursprünglicher Dateiname: image_1.png)</em></p>
+<p>The name of the contact and the city of the first address were rolled back correctly. But there is a second city in the list of addresses without a name. That´s the object to which the code assigned "Munich" and which was added to the address collection. The city of this address also got rolled back correctly, but the entry in the <em>ArrayList</em> was not. That´s because standard .NET collections are not transactional.</p>
+<p>So, how then should you model 1:n relationships between transactional objects? True transactional collections are needed. I´m already working on some, so stay tuned. Or start building your own transactional list, queue, stack, tree etc. and let me know.</p>
+<h3>Preliminary conslusion</h3>
+<p>I´ve presented you my view of Software Transactional Memory for .NET. NSTM is written in C#, so it´s fully managed code. You can download the sources and play around with it. What will it gain you in terms of ease, productivity, or performance? Find out yourself. It´s programming model at least promises to make many multithreading tasks much easier. No need to think about locking, but rather work on on graphs of objects like on databases: open a transaction, do your work, commit the transaction. If something goes wrong, no changes are visible. That´s also an interesting propsal for GUI programming where you often want to display objects in dialogs, let the user enter changes, but also let him discard all changes. Especially with nested dialogs the nested NSTM transactions could help quite a bit to keep the frontend code straightforward, where <em>IEditableObject</em> falls short.</p>
+<p>Enjoy!</p>
+<p>PS: NSTM is not finished, of course. I´ll continue working on transactional collections. And there are some concepts from STM research I´d like to add, like a <em>Retry()</em> operation and blocking reads and notifications.</p>
+<h3>Download</h3>
+<p>You can download NSTM (short for .NET Software Transactional Memory) from the <a rel="noopener" href="https://web.archive.org/web/20150910083053/http://code.google.com/p/nstm/">Google project hosting site</a>.</p>
+<p>Enjoy - and let me know how you like it, how it performs for you, or what you think needs to be improved.</p>
+<h3>Installation</h3>
+<ol>
+<li>Download PostSharp from <a rel="noopener" href="https://web.archive.org/web/20150910083053/http://www.postsharp.org/">www.postsharp.org</a> and install it.</li>
+<li>Download NSTM and install it by unzipping the file.</li>
+<li>Open the solution in the NSTM directory and try to compile it.<br />
+   (It might fail due to incorrect references to PostSharp assemblies. The remedy is to update the PostSharp.Laos and PostSharp.Public references in the NSTM projects.)</li>
+</ol>
+<p>There are a lot of NUnit compatible tests in the source code. You can use <a rel="noopener" href="https://web.archive.org/web/20150910083053/http://www.mailframe.net/products/testrunner/">Testrunner</a> like I do to run them in VS2005, or you can use NUnit itself. If you want to throw out all tests, just compile in Release mode.</p>
+<h3>Resources</h3>
+<p>[1] Juval Löwy, WCF Transaction Propagation, <a rel="noopener" href="https://web.archive.org/web/20150910083053/http://msdn.microsoft.com/msdnmag/issues/07/05/Foundations/default.aspx?loc=en" title="http://msdn.microsoft.com/msdnmag/issues/07/05/Foundations/default.aspx?loc=en">http://msdn.microsoft.com/msdnmag/issues/07/05/Foundations/default.aspx?loc=en</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

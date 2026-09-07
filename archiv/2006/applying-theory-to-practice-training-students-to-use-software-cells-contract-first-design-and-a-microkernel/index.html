@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Applying theory to practice - Training students to use Software Cells, Contract-First-Design and a Microkernel — ralfw.de Archiv</title>
+<meta name="description" content="The week before last Neno Loje and I did a workshop at the Computer Science department of the University of Hamburg, Germany, to verify a couple of our ideas on software developmen">
+<link rel="canonical" href="https://ralfw.de/archiv/2006/applying-theory-to-practice-training-students-to-use-software-cells-contract-first-design-and-a-microkernel/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Applying theory to practice - Training students to use Software Cells, Contract-First-Design and a Microkernel — ralfw.de Archiv">
+<meta property="og:description" content="The week before last Neno Loje and I did a workshop at the Computer Science department of the University of Hamburg, Germany, to verify a couple of our ideas on software developmen">
+<meta property="og:url" content="https://ralfw.de/archiv/2006/applying-theory-to-practice-training-students-to-use-software-cells-contract-first-design-and-a-microkernel/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Applying theory to practice - Training students to use Software Cells, Contract-First-Design and a Microkernel</h1>
+    <div class="doc-meta"><span>21. Aug. 2006</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/Applying-theory-to-practice-_2D00_-Training-students-to-use-Software-Cells_2C00_-Contract_2D00_First_2D00_Design-and-a-Microkernel" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2006/applying-theory-to-practice-training-students-to-use-software-cells-contract-first-design-and-a-microkernel/</code></span></div>
+    <div class="art"><p>The week before last <a rel="noopener" href="https://web.archive.org/web/20160430150544/http://www.dotnet-online.de/">Neno Loje</a> and I did a workshop at the <a rel="noopener" href="https://web.archive.org/web/20160430150544/http://www.informatik.uni-hamburg.de/">Computer Science department</a> of the University of Hamburg, Germany, to verify a couple of our ideas on software development. We offered this workshop to the university for free, to give students of unfortunately notoriously underfinanced public educational institutions a chance to "get in touch with the real world". Their usual curriculum does not cover .NET much and their approach to software development is quite different from how real project teams work in the Microsoft universe. So we wanted to introduce them to .NET in general, but our focus was on working with a team according to how we think a software project should be approached. For that we had 5 days.</p>
+<p>Some 15 students applied for participation in the workshop. They all had gone through a one week C# training the week before our workshop, so almost all of them were pretty new to the .NET Framework. But that was not bad for our purposes. Right to the contrary: We could assume they were not "spoiled" by current practices of professional software development. They just had to overcome university-instilled Java bias ;-)</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/cd134967c519f895.jpg" /></p>
+<p><em>As it turned out not all students were capable of enduring two days of theory without access to a PC. <br />
+Some brought their own laptops, some developed headaches or insourmountable sleepyness due to email deprivation ;-)</em></p>
+<p>The goal of our experiment was to see how easy it was to teach an audience our view of a minimal systematic and pragmatic approach to software production from analysis to deployable code. Our approach consisted of:</p>
+<ul>
+<li>an overall process inspired by Feature-Driven Development (<a rel="noopener" href="https://web.archive.org/web/20160430150544/http://en.wikipedia.org/wiki/Feature_Driven_Development">FDD</a>).</li>
+<li><a rel="noopener" href="https://web.archive.org/web/20160430150544/http://weblogs.asp.net/ralfw/archive/tags/Software+Cells/default.aspx">Software Cells</a> for guiding the modelling process</li>
+<li><a rel="noopener" href="https://web.archive.org/web/20160430150544/http://www.dotnetpro.de/articles/onlinearticle1703.aspx">Contract-First Design</a> for laying the foundation for easy testing and parallel implementation</li>
+<li>a <a rel="noopener" href="https://web.archive.org/web/20160430150544/http://weblogs.asp.net/ralfw/archive/2006/08/02/Dynamic-component-binding-made-easier-_2D00_-An-easy-to-use-Microkernel-to-help-reap-Contract_2D00_First_2D00_Design-benefits-in-.NET-programs.aspx">Microkernel</a> for easy testing and weaving together the whole program at runtime</li>
+<li><a rel="noopener" href="https://web.archive.org/web/20160430150544/http://www.finalbuilder.com/">FinalBuilder</a> for continuous integration</li>
+</ul>
+<p>When we do consulting, we usually don´t have the opportunity to teach a team "new tricks" in such a comprehensive way. That´s why we gladly took the opportunity of the workshop.</p>
+<p><strong>Day 1</strong>: On day one we first selected a problem scenario to develop a software for. The students liked the idea of a pizza delivery service quite a bit. So Neno became Tonio, the owner of such a service, who wants his small company to get more efficient and open new markets by offering an online ordering service in addition to ordering pizzas by calling in or coming by. Within a couple of hours we defined several user roles and together came up with a list of some 20 essential features for the PizzaTornado solution.</p>
+<p>With Tonios help we arranged those features into a release plan and then started to model the solution. Since the students were not familiar with a component oriented modelling approach, we first introduced our view of the overall production phases from analysis to deployment and the modelling stages from feature list to component specification. To round off the day we made a short presentation on how to use a Microkernel to dynamically bind components.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/f46af86941e6f6ad.jpg" /></p>
+<p><em>Our sketch of the software production process. Note the arched arrows back to previous phases: you see, the process is iterative.<br />
+(If you can read what´s written on the blackboard don´t worry. Neither can I anymore ;-) That´s why the students needed to take notes themselves.)</em></p>
+<p><strong>Day 2</strong>: On day two the whole group continued modelling the solution. After finding the essential 15+ components and combining them into separately running software cells...</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/8b979a3a78c23410.jpg" /></p>
+<p><em>It´s me explaining the component architecture of PizzaTornado. <br />
+Note the larger circles, that´s the six software cells of the solution, each representing a host process running its own logic. <br />
+Three of the software cells work in C/S fashion, because they run in a LAN; <br />
+two others (a mobile client and the website) use an application server software cell to synchronize their local data with the central database.</em></p>
+<p>...we started to model the contracts by defining the value streams for the features of the first release (see the right flipchart sheet in the below picture).</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/df55b0f277ab2641.jpg" /></p>
+<p><em>On the right flipchart sheet you see the value streams describing the cooperation between components to "produce" a feature.</em></p>
+<p><strong>Day 3, 4 and 5</strong> saw the students happily implementing feature after feature of the PizzaTornado solution. We started out with release 1, but later managed to also tackle features from release 2. Pairs of students were assigned the responsibility to implement a certain component. And several of these pairs were then combined to form feature teams to implement each feature.</p>
+<p>Each component was set up in its own Visual Studio solution together with a test client project as well as mock-ups as necessary. Each component owning team just saw the sources of its component. Instead of collective code ownership we bet on clear responsibilities - and everybody liked it. There were no discussions about what this or that code was supposed to mean because component owners focused on their own code and had to deal with other´s code only through clearly defined contracts.</p>
+<p>To our great delight this did not slow the project down when some students left the workshop. Their components were assigned to someone else who was able to rely on a set of unit tests once he started to change the code he did not write.</p>
+<p>Also Contract-First Design turned out not to be a bottleneck. Since we only defined the contracts necessary for the features in the current release, the upfront effort was fairly small - but the gain war large: We were able to start working on many components in parallel without interference. Discussions between component owners focused on understanding the contracts, not each other´s code. What a relief! This way we held upright the decomposition of the solution during development.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/89413db819d5f8c9.jpg" /></p>
+<p><em>Although we modelled the solution using Software Cells in the end it turned out all subsystens (consisting of one or more components) could be nicely arranged in layers.</em></p>
+<p>As predicted, though, contracts were not stable after their initial design. But that did not cause trouble. When necessary we changed them and redistributed them to the component teams. Only once, when I applied some major changes too quickly without final consent from the owners of the components relying on this contract I earned some angry gnarling. Technically, though, changing contracts during component implementation is no problem.</p>
+<p>Once each component owning team was satisfied with its work, they checked it into our central repository (unfortunately running on VSS). Our automatic build process then periodically checked out all Visual Studio component solutions, compiled them, ran the tests, and on success put the binaries in a second repository for integration tests. First we started out with a plain long MSBuild "batch" to do all this - but then we discovered <a rel="noopener" href="https://web.archive.org/web/20160430150544/http://www.finalbuilder.com/">FinalBuilder</a>. It was a godsend and we can only recommend you download a trial immediately. I´d say, it does for the build process what VB1 did for graphical user interface programming.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/90841bb97c9d41a4.jpg" /></p>
+<p><em>Neno, our master of the continous integration process, in front of another successful FinalBuilder run. We all quickly got addiceted to the green bars of FinalBuilder which assured us all components compiled correctly and were tested correctly and now are available for everybody to use.</em></p>
+<p>Integration of the components developed in parallel by independent owners was a snap. It even surprised me how smoothly the parts of the solution fit together. We just selected the necessary components for the different software cells, copied them to separate integration folders, and started the host EXE. And they ran without flaw from the first complete build on - although with functionality limited to the respective release. A great help was the small <a rel="noopener" href="https://web.archive.org/web/20160430150544/http://weblogs.asp.net/ralfw/archive/2006/08/02/Dynamic-component-binding-made-easier-_2D00_-An-easy-to-use-Microkernel-to-help-reap-Contract_2D00_First_2D00_Design-benefits-in-.NET-programs.aspx">Microkernel</a> we used: It did not require the setup of any mapping file but bound interfaces to implementations automatically upon startup. That way integration of a solution without static references between components was as easy as developing a program using one large Visual Studio solution - but without the need to devulge all code to all developers.</p>
+<p>It was so relieving: We did not run into any version control conflicts, no merges were necessary, no confusion about who was responsible for what. Using the Microkernel we were able to carry over a clean model into a clean implementation. And it was so easy for the students, they even modelled the features for release 2 all on their own. Designing the GUIs for the different user roles, and designing the database could be done in parallel; following the internal component contracts were defined. Everybody felt guided by a simple to comprehend process and capable to use the intuitive graphical notation of Software Cells.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/2ab68f957655bf53.jpg" /></p>
+<p><em>A sketch of part of the GUI of PizzaTornado. It shows the main user interface elements and all necessary operations - without going into detail how they get triggert. This kind of simple GUI design is enough to start the Contract-First Design process along feature oriented value streams through the mesh of components.</em></p>
+<p>To monitor and verify the quality of our architecture and implementation, we invited <a rel="noopener" href="https://web.archive.org/web/20160430150544/http://www.software-tomography.com/">Software Tomography</a> to try out their new version of Sotograph for C# on our solution. They sent over Jan Kühl who continually assessed PizzaTornado´s state of quality.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/e634d184e5db42a2.jpg" /></p>
+<p><em>Jan Kühl from Software Tomography in front of the Sotograph management view of his final quality measurement for PizzaTornado. As the top green shapes show: Not only our model, but the actual implementation are of highest quality according to well known architectural metrics.</em></p>
+<p>And as it turned out after five days of modelling and implementation, the code was of very high quality according to the host of measurements built into Sotograph. Jan attributed this to the systematic modelling approach culminating in clear contracts and the rigorous separation of the development of the components.</p>
+<p>Of course, the scenario was comparatively small, nevertheless the solution is not trivial. After day 3 some 12 components were under development each with several classes. So we think there was a chance stray from the path of virtue. But as the analysis showed, the implementation did not suffer from any of the many usual anti-patterns like "code duplication", "cyclic references", or "interface violations".</p>
+<p>This made us very, very happy. We take it as a promising sign for being on the right path with our quiver of concepts and technologies.</p>
+<p>Despite this satisfying bottom line we also learned a lot, e.g.:</p>
+<ul>
+<li>A domain model should be modelled at the same time as the database. The domain model is the fundamental contract.</li>
+<li>For components on which many others are dependent mockups (or lightweight versions) should be made available by the respective owners pretty early in the development process.</li>
+<li>An explicit build/integration step is not only useful to check the quality of the code, but also as a way to reflect on the architecture. When assembling the build script you sure will discover any cyclic dependencies among the components. That´s your chance to resolve them.</li>
+<li>Don´t take anything for granted when booking a university´s computer lab! You should specify every detail of how the computers need to be set up - from the basic development tools down to the last TCP port. Or even better: get admin rights for all computers. You´ll need them.</li>
+</ul>
+<p>Thanks to all who participated in the workshop! Thanks to the University of Hamburg to letting us do the workshop. Thanks to Microsoft Academia - Markus Kobe - for supporting the workshop.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

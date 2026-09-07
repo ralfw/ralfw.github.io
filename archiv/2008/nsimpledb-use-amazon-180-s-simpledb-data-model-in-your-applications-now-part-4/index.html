@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NSimpleDB - Use Amazon´s SimpleDB data model in your applications now - Part 4 — ralfw.de Archiv</title>
+<meta name="description" content="As explained in my previous postings, I implemented a local/embeddable version of the Amazon SimpleDB data model and API in C. You can download the sources from my NSimpleDB Google">
+<link rel="canonical" href="https://ralfw.de/archiv/2008/nsimpledb-use-amazon-180-s-simpledb-data-model-in-your-applications-now-part-4/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="NSimpleDB - Use Amazon´s SimpleDB data model in your applications now - Part 4 — ralfw.de Archiv">
+<meta property="og:description" content="As explained in my previous postings, I implemented a local/embeddable version of the Amazon SimpleDB data model and API in C. You can download the sources from my NSimpleDB Google">
+<meta property="og:url" content="https://ralfw.de/archiv/2008/nsimpledb-use-amazon-180-s-simpledb-data-model-in-your-applications-now-part-4/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>NSimpleDB - Use Amazon´s SimpleDB data model in your applications now - Part 4</h1>
+    <div class="doc-meta"><span>28. Jan. 2008</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net/ralfw/nsimpledb-use-amazon-180-s-simpledb-data-model-in-your-applications-now-part-4" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2008/nsimpledb-use-amazon-180-s-simpledb-data-model-in-your-applications-now-part-4/</code></span></div>
+    <div class="art"><p>As explained in my <a rel="noopener" href="https://web.archive.org/web/20150927185206/http://weblogs.asp.net/ralfw/archive/tags/Amazon+SimpleDB/default.aspx">previous postings</a>, I implemented a local/embeddable version of the Amazon SimpleDB data model and API in C#. You can download the sources from my <a rel="noopener" href="https://web.archive.org/web/20150927185206/http://code.google.com/p/nsimpledb/">NSimpleDB Google Code Project</a> and build the tuple space engine yourself, or you download the <a rel="noopener" href="https://web.archive.org/web/20150927185206/http://code.google.com/p/nsimpledb/downloads/list">demo application</a> which includes the engine as a single assembly: <em>NSimpleDB.dll</em>.</p>
+<p>Using the SimpleDB API then can be as easy as referencing the engine assembly and opening a local tuple space file like this:</p>
+<p>using NSimpleDB.Service.Contract;</p>
+<p>ISimpleDBService ts;</p>
+<p>ts = new NSimpleDB.Service.VistaDb.VistaDbSimpleDBService("hello.ts");</p>
+<p>...</p>
+<p>ts.Close();</p>
+<p>See my previous posting for <a rel="noopener" href="https://web.archive.org/web/20150927185206/http://weblogs.asp.net/ralfw/archive/2008/01/19/nsimpledb-use-amazon-180-s-simpledb-data-model-in-your-applications-now-part-3.aspx">detailed examples</a>.</p>
+<h5>Access to Amazon SimpleDB</h5>
+<p>The API I devised for the SimpleDB purposedly was quite "service oriented", although the implementation was just local. I did this so my implementation and Amazon´s eventually could be used interchangeably. Back then, though, I did not have access to SimpleDB due to the limited beta.</p>
+<p>But that has changed in the meantime. I was able to use SimpleDB online and thus have now implemented access to it through the same <em>ISimpleDBService</em> interface. Just instanciate a different service implementation:</p>
+<p>ts = new NSimpleDB.Service.Amazon.AmazonSimpleDBService("<accessKeyId>", "<secretAccessKey>");</p>
+<p>Instead of the placeholders pass in your Amazon access key id and your secret access key and you´re done. From then on all operations through the interface will run on your online SimpleDB space.</p>
+<p>Here´s a small example of what you could do: create a domain, store some items into that domain, query the items, retrieve the found items, delete the domain.</p>
+<p>ts.CreateDomain("mydomain");</p>
+<p>ts.PutAttributes("mydomain", "1",</p>
+<p>new SimpleDBAttribute("name", "peter"),</p>
+<p>new SimpleDBAttribute("city", "london"));</p>
+<p>ts.PutAttributes("mydomain", "2",</p>
+<p>new SimpleDBAttribute("name", "paul"),</p>
+<p>new SimpleDBAttribute("city", "berlin"));</p>
+<p>ts.PutAttributes("mydomain", "3",</p>
+<p>new SimpleDBAttribute("name", "mary"),</p>
+<p>new SimpleDBAttribute("city", "london"));</p>
+<p>string nextToken = null;</p>
+<p>string[] itemNames;</p>
+<p>itemNames = ts.Query("mydomain", "['city'='london']", ref nextToken);</p>
+<p>foreach (string itemName in itemNames)</p>
+<p>{</p>
+<p>Console.WriteLine("item: {0}", itemName);</p>
+<p>ISimpleDBAttribute[] attributes;</p>
+<p>attributes = ts.GetAttributes("mydomain", itemName);</p>
+<p>foreach (ISimpleDBAttribute attr in attributes)</p>
+<p>Console.WriteLine("  {0}={1}", attr.Name, attr.Value);</p>
+<p>}</p>
+<p>ts.DeleteDomain("mydomain");</p>
+<p>(With regard to my previous API descriptions only a minor changes has occurred: you need to always pass in the <em>nextToken</em> as a <em>ref</em> parameter instead of an <em>out</em> parameter. But that´s a detail, I guess.)</p>
+<p>This code runs locally as well as against SimpleDB online without change.</p>
+<p>Under the hood I´m using Amazon´s own C# API for accessing SimpleDB. It was easy to program against - but I would not want to expose it as an API. For that I don´t find its usability too low. Too much meta data in the way of getting your problem solved.</p>
+<h5>Access to SimpleDB operation meta data</h5>
+<p>In order provide access to the meta data the Amazon SimpleDB API provides without compromising the simplicity of my <em>ISimpleDBService</em> interface, I decided to define a second interface: <em>ISimpleDBDashboard</em>.</p>
+<p>Like a dashboard in your car this interface optionally "displays" what´s going on inside an <em>ISimpleDBService</em> implementation. <em>AmazonSimpleDBService</em> implements this interfaces and through it provides access to the response and exception meta data returned from the internally used Amazon API. To use it, just cast the service object like this:</p>
+<p>ISimpleDBDashbord db = (ts as ISimpleDBDashbord);</p>
+<p>There are only two properties on the dashboard interface: <em>LastResponseMetaData</em> and <em>LastExceptionData</em>. They give access to the meta data/exception data of the last operation issued on the current thread. So even in case you use the same service implementation on different threads, you always will be able to exactly see, what the status of the individual operations is. This is how I tried to avoid always returning some meta data object like Amazon does. It makes for a simpler API, I´d say. Call the dashboard properties right after any operation, if you like, e.g.</p>
+<p>ts.DeleteDomain("mydomain");</p>
+<p>Console.WriteLine("request id: {0}", db.LastResponseMetaData.RequestId);</p>
+<p>Console.WriteLine("box usage: {0}", db.LastResponseMetaData.BoxUsage);</p>
+<h5>What´s next?</h5>
+<p>Well, that´s it for now. I have reached my initial goals of 1) provide a local version of the SimpleDB data model and API for all who want to play with it more easily than online, and 2) make the use the local tuple space and the real online SimpleDB equally possible and simple.</p>
+<p>Of course I still have some ideas as to what can be improved (see the <a rel="noopener" href="https://web.archive.org/web/20150927185206/http://code.google.com/p/nsimpledb/issues/list">issue list online</a>), but I now need to give the project a little rest. Please feel free, though, to use it and give me feedback on it via <em>info [at] ralfw [dot] de</em>, if you like.</p>
+<p>Enjoy!</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

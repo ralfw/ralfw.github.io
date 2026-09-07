@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Easy .NET architecture analysis from within VS2005 - Visualizing your code dependencies with a Dependency Structure Matrix — ralfw.de Archiv</title>
+<meta name="description" content="Constant software quality assessment might be deemed important by almost all developers. But it´s a long way from agreeing or preaching something to actually living it in your proj">
+<link rel="canonical" href="https://ralfw.de/archiv/2006/easy-net-architecture-analysis-from-within-vs2005-visualizing-your-code-dependencies-with-a-dependency-structure-matrix/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Easy .NET architecture analysis from within VS2005 - Visualizing your code dependencies with a Dependency Structure Matrix — ralfw.de Archiv">
+<meta property="og:description" content="Constant software quality assessment might be deemed important by almost all developers. But it´s a long way from agreeing or preaching something to actually living it in your proj">
+<meta property="og:url" content="https://ralfw.de/archiv/2006/easy-net-architecture-analysis-from-within-vs2005-visualizing-your-code-dependencies-with-a-dependency-structure-matrix/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Easy .NET architecture analysis from within VS2005 - Visualizing your code dependencies with a Dependency Structure Matrix</h1>
+    <div class="doc-meta"><span>9. Sept. 2006</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net/ralfw/archive/2006/09/09/Easy-.NET-architecture-analysis-from-within-VS2005-_2D00_-Visualizing-your-code-dependencies-with-a-Dependency-Structure-Matrix.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2006/easy-net-architecture-analysis-from-within-vs2005-visualizing-your-code-dependencies-with-a-dependency-structure-matrix/</code></span></div>
+    <div class="art"><p>Constant software quality assessment might be deemed important by almost all developers. But it´s a long way from agreeing or preaching something to actually living it in your projects. It often needs good tools to make theory easy to implement in practice. NUnit, NMock, NAnt, ReSharper are examples of such tools which make testing, building, refining your code easier. And NDepend could be one such tool too for quality assessment - but at least in my view it tries to do too much to be easy to adopt while being under pressure in a tight project schedule.</p>
+<p>In an <a rel="noopener" href="https://web.archive.org/web/20060926055316/http://weblogs.asp.net/ralfw/archive/2006/08/27/.NET-naked-_2D00_-See-these-hitherto-unpublished-pictures-of-the-.NET-Framework-architecture.aspx">earlier posting</a> I showed Dependency Structure Matrices (DSM, Fig. 1) using a tool called <a rel="noopener" href="https://web.archive.org/web/20060926055316/http://www.lattix.com/">Lattix LDM</a> as an alternative to NDepend. I deem it easy to use and understand and not too expensive. I find it quite intuitive to start a habit of constant quality assessment with.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/efc3e019084f0703.jpg" /></p>
+<p><em>Fig. 1: Sample DSM showing the pretty wellformed dependencies within the .NET Framework WinForms subsystem.</em></p>
+<p>However, so far its Java heredity made it more difficult to use than necessary. But this has changed now! The most recent relase (version 2.7.2) which came out on Sep 8 2006 supports a number of command line parameters which allows for an integration into VS2005 as an External Tool (Fig. 2).</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/d84091e6209b1f4b.jpg" /></p>
+<p><em>Fig. 2: Setup for Lattix LDM as an External Tool in VS2005</em></p>
+<p>Enter the path to the Lattix LDM executable into the Command field of the External Tool dialog of the Tools menu in VS2005. Then add the following line into the Arguments field:</p>
+<p><em>-process:dotnet "$(ProjectDir)$(ProjectFileName).ldz" "*.exe" "*.dll" -createFileSubsystem -save</em></p>
+<p>This means, the tool is used in .NET-mode (<em>-process:dotnet</em>), creates or updates a DSM project file (file extension .ldz) in the VS2005 project directory and with the name of the VS2005 project (<em>"$(ProjectDir)$(ProjectFileName).ldz"</em>, e.g. <em>"c:\myproject\myassembly.csproj.ldz"</em>), analyzes all EXE and all DLL assemblies in the output directory (<em>"*.exe" "*.dll"</em>), and creates DSM subsystems for each assembly (see the larger squares in Fig. 1 as examples for subsystems). <em>-save</em> tells Lattix LDM to save the resulting DSM.</p>
+<p>Set the Initial Directory for the External Tool to the Debug or Release directory of the VS2005 project and off you go... Just click on a project in your VS2005 solution and call your new External Tool. Lattix LDM will start and generate (or update) a DSM for your .NET project in no time. You can then rearrange the subsystems to find patterns in your dependencies. This works best if used on an "integration project" in your solutions, e.g. a Winforms or Console assembly referencing other projects/assemblies.</p>
+<p>With this External Tool in place checking a project´s basic architecture is a snap. And it´s interesting to see how one can quickly get addicted to a "green bar" regarding architecture; seeing a clean DSM after some work on your solution is like running all your unit tests again and getting a "green bar". It lets you sleep better at night :-)</p>
+<p>PS: Here´s an overview of the Lattix LDM command line options:</p>
+<p>Just open an existing DSM file:</p>
+<p><em>lattixldm <file.ldz></em></p>
+<p>Create/update a DSM file from a set of assemblies:</p>
+<p><em>lattixldm -process:dotnet [<file.ldz>] [-input files] [Component Options] [-createFileSubsystem] [-flatSubsystems] [-save]</em></p>
+<p>Component Options:<br />
+<em>-dotnet_include_prefix:<Class Namespace Prefix>[,<Class Namespace Prefix>...]<br />
+  -logfile:<File Name></em></p>
+<p><em>-createFileSubsystem</em>: A subsystem will be created for each input source specified in the project.<br />
+<em>-flatSubsystems</em>: All subsystems will be created as siblings with no hierarchy.</p>
+<p>PPS: Some people speculated whether I have any commercial interest in Lattix LDM, since I´m sounding so excited about it. Well, the truth is: I don´t receive any money from Lattix Inc, I don´t have any shares of them (if there exist any ;-), I don´t sell their tool. I just stumbled across it and found it exciting. That´s it. And this can happen again any day with some other tool - about which I then might write equally excited. In a .NET world, where everybody seems either "super excited" about Microsofts technologies, some hype like SOA, or some Open Source project, why -just for a change - shouldn´t I be excited about something completely different: a 3rd party product (like Lattix LDM) or concept (e.g. <a rel="noopener" href="https://web.archive.org/web/20060926055316/http://weblogs.asp.net/ralfw/archive/tags/Virtual+Shared+Memory/default.aspx">eXtensible Virtual Shared Memory</a> or a <a rel="noopener" href="https://web.archive.org/web/20060926055316/http://weblogs.asp.net/ralfw/archive/tags/Pile/default.aspx">System of Pure Relations like Pile</a>)?</p>
+<p><strong>Share this post:</strong> <a rel="noopener" href="https://web.archive.org/web/20060926055316/mailto:/?body=Thought%20you%20might%20like%20this:%20http://weblogs.asp.net/ralfw/archive/2006/09/09/Easy-.NET-architecture-analysis-from-within-VS2005-_2D00_-Visualizing-your-code-dependencies-with-a-Dependency-Structure-Matrix.aspx&amp;subject=Easy+.NET+architecture+analysis+from+within+VS2005+-+Visualizing+your+code+dependencies+with+a+Dependency+Structure+Matrix" title="Email Easy+.NET+architecture+analysis+from+within+VS2005+-+Visualizing+your+code+dependencies+with+a+Dependency+Structure+Matrix">Email it!</a> | <a rel="noopener" href="https://web.archive.org/web/20060926055316/http://del.icio.us/post?url=http://weblogs.asp.net/ralfw/archive/2006/09/09/Easy-.NET-architecture-analysis-from-within-VS2005-_2D00_-Visualizing-your-code-dependencies-with-a-Dependency-Structure-Matrix.aspx&amp;title=Easy+.NET+architecture+analysis+from+within+VS2005+-+Visualizing+your+code+dependencies+with+a+Dependency+Structure+Matrix" title="Submit Easy+.NET+architecture+analysis+from+within+VS2005+-+Visualizing+your+code+dependencies+with+a+Dependency+Structure+Matrix to del.icio.us">bookmark it!</a> | <a rel="noopener" href="https://web.archive.org/web/20060926055316/http://www.digg.com/submit?url=http://weblogs.asp.net/ralfw/archive/2006/09/09/Easy-.NET-architecture-analysis-from-within-VS2005-_2D00_-Visualizing-your-code-dependencies-with-a-Dependency-Structure-Matrix.aspx&amp;phase=2" title="Submit Easy+.NET+architecture+analysis+from+within+VS2005+-+Visualizing+your+code+dependencies+with+a+Dependency+Structure+Matrix to digg.com">digg it!</a> | <a rel="noopener" href="https://web.archive.org/web/20060926055316/http://reddit.com/submit?url=http://weblogs.asp.net/ralfw/archive/2006/09/09/Easy-.NET-architecture-analysis-from-within-VS2005-_2D00_-Visualizing-your-code-dependencies-with-a-Dependency-Structure-Matrix.aspx&amp;title=Easy+.NET+architecture+analysis+from+within+VS2005+-+Visualizing+your+code+dependencies+with+a+Dependency+Structure+Matrix" title="Submit Easy+.NET+architecture+analysis+from+within+VS2005+-+Visualizing+your+code+dependencies+with+a+Dependency+Structure+Matrix to reddit.com">reddit!</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

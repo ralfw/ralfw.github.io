@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assemblies zur Laufzeit ersetzen II — ralfw.de Archiv</title>
+<meta name="description" content="Um Assemblies zur Laufzeit zu ersetzen, d.h. eine neue Version (quasi) jederzeit einbinden zu können, müssen nicht mehr benötigte Assembly-Versionen aus dem Speicher entfernt werde">
+<link rel="canonical" href="https://ralfw.de/archiv/2003/assemblies-zur-laufzeit-ersetzen-ii/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Assemblies zur Laufzeit ersetzen II — ralfw.de Archiv">
+<meta property="og:description" content="Um Assemblies zur Laufzeit zu ersetzen, d.h. eine neue Version (quasi) jederzeit einbinden zu können, müssen nicht mehr benötigte Assembly-Versionen aus dem Speicher entfernt werde">
+<meta property="og:url" content="https://ralfw.de/archiv/2003/assemblies-zur-laufzeit-ersetzen-ii/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Assemblies zur Laufzeit ersetzen II</h1>
+    <div class="doc-meta"><span>24. Juni 2003</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/posts/9193.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2003/assemblies-zur-laufzeit-ersetzen-ii/</code></span></div>
+    <div class="art"><p>Um Assemblies zur Laufzeit zu ersetzen, d.h. eine neue Version (quasi) jederzeit einbinden zu können, müssen nicht mehr benötigte Assembly-Versionen aus dem Speicher entfernt werden. Darum ging es gestern.</p>
+<p>Wie aber weiß ein Prozess, dass sich überhaupt eine Assembly verändert hat und er mit einer neuen Version arbeiten soll? Am einfachsten wäre es, wenn man die bisherige Assembly auf der Festplatte durch eine neue ersetzte. Das könnte der Prozess mit einem FileSystemWatcher feststellen:</p>
+<p>private withevents _fsw as IO.FileSystemWatcher<br />
+...</p>
+<p>_fsw = new IO.FileSystemWatcher("c:\myapp\bin", "myassembly.dll)<br />
+_fsw.NotifyFilter = IO.NotifyFilters.LastWrite<br />
+_fsw.EnableRaisingEvents = true<br />
+...</p>
+<p>Private Sub _fsw_Changed(ByVal sender As Object, _<br />
+                         ByVal e As System.IO.FileSystemEventArgs)  _<br />
+                         Handles _fsw.Changed<br />
+    ' tausche Assembly aus...<br />
+End Sub</p>
+<p>Solange eine Assembly allerdings geladen ist, kann sie nicht auf der Festplatte ersetzt werden. Die Datei ist gesperrt.</p>
+<p>Um das zu vermeiden, kann eine AppDomain jedoch angewiesen werden, Assemblies nicht im Original zu laden, sondern sie vorher zu kopieren. Die kopierten Assemblies nennt der .NET Framework "Shadow Copies". Sie werden für die Anwendung transparent in einem temporären Verzeichnis vor dem Laden erzeugt. Dort sind sie zwar immer noch gesperrt, aber das ist dann unerheblich.</p>
+<p>Denn am ursprünglichen Ort können sie überschrieben werden.</p>
+<p>Die Dokumentation zu Shadow Copies ist leider nicht ausführlich und so hat es mich einige Zeit gekostet, die "wahre Funktionsweise" herauszufinden.</p>
+<p>Beim Erzeugen einer AppDomain werden ihr einige Pfade mitgeteilt, in denen sie zu ladende Assemblies suchen soll:</p>
+<p>dim info as New AppDomainSetup()<br />
+with appdomain.CurrentDomain.SetupInformation<br />
+    info.ApplicationBase = "c:\inetpub\wwwroot\myapplication"<br />
+    info.PrivateBinPath = "bin"<br />
+end with</p>
+<p>ApplicationBase ist das Wurzelverzeichnis der Anwendung, also meist das, wo die EXE-Datei liegt. Bei Web-Anwendungen ist es allerdings das Verzeichnis für die Virtual Root der Applikation.</p>
+<p>PrivateBinPath enthält eine durch ";" getrennte Liste von relativen (!) Pfaden für Verzeichnisse, in denen unterhalb (!) der ApplicationBase vom CLR Lader auch nach Assemblies gesucht werden soll. Ist die Liste leer, dann werden nur Assemblies im ApplicationBase-Verzeichnis gefunden.</p>
+<p>PrivateBinPath könnte also z.B. gesetzt werden auf ".", "bin" oder "bin;plug-ins", aber nicht auf "c:\mylibraries" oder "..".</p>
+<p>Um mit Shadow Copies zu arbeiten, sind noch zwei weitere Eigenschaften einer AppDomain zu setzen. Mit</p>
+<p>info.ShadowCopyFiles = "true"</p>
+<p>wird der Mechanismus eingeschaltet. (Achtung: Der zugewiesene Wert ist ein String ("true" oder "false"), kein Boolean-Wert!)</p>
+<p>Ohne weitere Angaben werden jetzt alle Assemblies in der ApplicationBase und in den PrivateBinPath-Verzeichnissen nur als Kopien geladen. D.h. in diesen Verzeichnissen sind sie nun nicht mehr gesperrt und können ersetzt werden.</p>
+<p>Falls allerdings nur Assemblies aus einer Untermenge von PrivateBinPath-verzeichnissen als Shadow Copies geladen werden sollen, kann das über die Property ShadowCopyDirectories angegeben werden, z.B.:</p>
+<p>info.ApplicationBase = "c:\myapplication"<br />
+info.PrivateBinPath = "plug-ins"<br />
+info.ShadowCopyDirectories = "c:\myapplication\plug-ins"</p>
+<p>ShadowCopyDirectories ist optional und nimmt auch wieder eine Liste von ";"-separierten Verzeichnissen auf. Aber Achtung: Hier sind absolute (!) Pfade anzugeben. Leider ist das der .NET Framework Dokumentation nicht zu entnehmen und es hat mich einige Zeit gekostet, darauf zu kommen, als meine Tests nicht funktionierten.</p>
+<p>Die Schritte für den Austausch von Assemblies zur Laufzeit - so wie es in ASP.NET funktioniert - sind damit klar:</p>
+<p>-Assemblies in eine separate AppDomain laden und nur über ein Proxy-Objekt darauf zugreifen.<br />
+-AppDomain mit Shadow Copies arbeiten lassen.<br />
+-FileSystemWatcher einrichten, um festzustellen, wann sich Assemblies verändert haben.<br />
+-AppDomain entladen und neu aufbauen mit veränderten Assemblies.</p>
+<p>Die Realisierung gerade des letzten Schrittes ist aber natürlich nicht trivial. Wie kann Ab- und Aufbau einer AppDomain vor Client-Code verborgen werden? Auch das Proxy-Objekt wird ja verworfen. Die Entkopplung muss also eigentlich noch stärker sein. Vielleicht über einen TCP/IP-Kanal?</p>
+<p>Und auch noch andere Fragen sind zu klären: Wie können mehrere zusammengehörige Assemblies ausgetauscht werden? (Das ist selbst bei ASP.NET nicht wirklich möglich.) Und was soll passieren, wenn neue Assembly-Versionen eigentlich einen Anwendungsneustart erfordern?</p>
+<p>Hm... darüber muss ich ein andermal nachdenken.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software Transactional Memory III - Making Transactions Atomic — ralfw.de Archiv</title>
+<meta name="description" content="Now that the basic data unit of my .NET Software Transactional Memory (NSTM) has been introduced - transacational objects (txo) aka INstmObject - who implement the Isolation proper">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/software-transactional-memory-iii-making-transactions-atomic/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software Transactional Memory III - Making Transactions Atomic — ralfw.de Archiv">
+<meta property="og:description" content="Now that the basic data unit of my .NET Software Transactional Memory (NSTM) has been introduced - transacational objects (txo) aka INstmObject - who implement the Isolation proper">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/software-transactional-memory-iii-making-transactions-atomic/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Software Transactional Memory III - Making Transactions Atomic</h1>
+    <div class="doc-meta"><span>5. Juli 2007</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net/ralfw/software-transactional-memory-iii-making-transactions-atomic" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/software-transactional-memory-iii-making-transactions-atomic/</code></span></div>
+    <div class="art"><p>Now that the basic data unit of my .NET Software Transactional Memory (NSTM) <a rel="noopener" href="https://web.archive.org/web/20150910141048/http://weblogs.asp.net/ralfw/archive/2007/07/04/software-transactional-memory-ii-isolation-of-changes-to-transactional-objects.aspx">has been introduced</a> - transacational objects (txo) aka <em>INstmObject</em> - who implement the Isolation property of transactions, the question is, where Atomicity comes from. Enter: the transaction log.</p>
+<h3>Recording Memory Interactions</h3>
+<p>The transaction log (txlog) records all objects you tackle during during a transaction. Whenever you write to a txo that´s logged in the txlog. Whenever you read from a txo that´s logged in the txlog. So the txlog contains a list of all objects interacted with in a transaction including their current values. Even though my previous posting might have suggested txo maintain a clone for their value it is in fact the txlog attached to each transaction.</p>
+<p>[<img loading="lazy" alt="Bild nicht mehr verfügbar" src="/assets/_shared/placeholder-missing-image.svg" /></p>
+<p><em>(Bild nicht mehr verfügbar – in der Wayback-Aufnahme nicht mitgespeichert. Ursprünglicher Dateiname: image_thumb_1.png)</em>](https://web.archive.org/web/20150910141048/https://mscblogs.blob.core.windows.net/media/ralfw/WindowsLiveWriter/SoftwareTransactionalMemoryIIIMakingTran_C357/image_1.png)</p>
+<p>When you read from or write to a txo you don´t really directly access its value. Rather the <em>INstmObject</em> goes to the current transaction and asks it what to do, which value to return or where to store a new value. The transaction then consults with its transaction log:</p>
+<ul>
+<li>If an object is accessed for the first time during the transaction a log entry for it is added to the txlog.</li>
+<li>If a txo is written to, the new value is put into its txlog entry instead of the txo itself. This is to isolate changes made to the same txo in different transactions from each other.</li>
+<li>If a txo is read from, the transaction checks which value to return. If a new value is already present then that´s chosen. If no new value has been assigned the current value is returned. Either the real current value from the txo - or the current value as cloned on the first read access if the clone option is <em>CloneOnRead</em>.</li>
+<li>Also the txo is validated if the transaction´s isolation level is <em>Serializable.</em> That means the current version number of the txo is compared to the version number when it was first access during the transaction. Validation fails if those versions do not match, which means some other transaction has committed changes to the object in the meantime. This is to avoid inconsistencies in the form of different values read from the same txo during a transaction. If you want to allow such changes then set the isolation level to<em>ReadCommitted</em>.</li>
+</ul>
+<p>Any changes to transactional objects during a transaction are accumulated in the transaction log. Txo are thus never changed directly by an application. This provides Isolation and the first half of Atomicity: nothings happens to transactional objects if a transaction fails. Because if it fails, all changes recorded in the txlog are lost.</p>
+<h3>Ending a Transaction</h3>
+<p>A transaction can be ended in two ways: either by rolling it back and discarding all changes or by committing it.</p>
+<p>Rolling back is easy: the transaction log simply is discarded. That´s it. No further effort is needed. No locks were helt on txo which would need unlocking. No changes were made which would need to be undone.</p>
+<p>Committing a transaction on the other hand is a two step process:</p>
+<ol>
+<li>First all txo read from with more than just <em>PassingReadOnly</em> mode are validated. (Currently this is also true for <em>ReadWrite</em> mode txo, but I´m unsure if that´s necessary. Also currently I´m not content with how to switch between validation on <em>Commit()</em> only and validation on each <em>Read()</em>.) During validation all transactional objects opened in <em>ReadWrite</em> mode also are locked. This is to freeze the current view on transactional memory for the duration of the commit. No other transactions must commit at the same time to the same txo.<br />
+   Where locking comes into play deadlocks need to be avoided. Therefore all txos are kept in a sorted list so each transaction would lock them in the same order. This is a common way to give deadlocks no chance.<br />
+   If any transactional object cannot be validated the commit is aborted and the transaction is rolled back.</li>
+<li>Second all locked txos written to are visited again to copy their new values to the txo itself. At the same time the version number of each txo is incremented to allow for easy optimistic locking aka validation. Afterwards the txo is unlocked.</li>
+</ol>
+<p>By locking modified txos (for a very short time) during commit Atomicity is ensured. An application either sees no changes at all when a transaction is rolled back - or all changes at once after <em>Commit()</em> has finished and all modified objects have been updated and unlocked.</p>
+<h3>What´s next?</h3>
+<p>Now that I´ve explained how a single transaction works it´s time to look at how mutiple concurrent transactions on one or more threads are managed. Stay tuned if you are interested to see how NSTM implements truely nested transactions.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

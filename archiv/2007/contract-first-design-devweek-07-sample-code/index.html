@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contract-first Design - DevWeek 07 Sample Code — ralfw.de Archiv</title>
+<meta name="description" content="For those who just attended my talk on Contract-first Design and microkernel usage at DevWeek 2007 in London here´s the sample code.">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/contract-first-design-devweek-07-sample-code/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Contract-first Design - DevWeek 07 Sample Code — ralfw.de Archiv">
+<meta property="og:description" content="For those who just attended my talk on Contract-first Design and microkernel usage at DevWeek 2007 in London here´s the sample code.">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/contract-first-design-devweek-07-sample-code/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Contract-first Design - DevWeek 07 Sample Code</h1>
+    <div class="doc-meta"><span>1. März 2007</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2007/03/01/contract-first-design-devweek-07-sample-code.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/contract-first-design-devweek-07-sample-code/</code></span></div>
+    <div class="art"><p>For those who just attended my talk on Contract-first Design and microkernel usage at <a rel="noopener" href="https://web.archive.org/web/20080118104131/http://www.devweek.com/">DevWeek 2007</a> in London <a rel="noopener" href="https://web.archive.org/web/20080118104131/http://www.ralfw.de/download/devweek07sample.zip">here´s the sample code</a>.</p>
+<p>It implements a very simple scenario, where a user can select from a list of calculation routines a function to generate a list of numbers. But the point was not to implement sophisticated functionality; rather I wanted to show, how a solution can be split up into true components which can be developed and tested in isolation. Here´s a sketch of the application´s architecture:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/b3108c35cfa46671.jpg" /></p>
+<p>All components are treated as black boxes who don´t reveal any internals to their clients. The clients just know the exported contracts of their service components, the components they are depending on.</p>
+<p>Which contract implementation actually services a client is not hard coded in the client as usual via static references. Rather clients are either told which implementation to use by injecting it into them - or they use a microkernel/servicelocator to discover it. That way productivity and testability are much increased. And I think it´s the only way to come to a higher level of industrialization and systematic software development.</p>
+<p>PS: This was my first time at DevWeek. And I have to say I like the conference. The delegates are quite experienced .NET developers so the general level of discussion and technical presentations is high. And the organizers are dedicated to deliver a professional event. The number of delegates speaks for itself: more than 600 attendees, the conference was sold out. Great Job, Nick!</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Easy remote communication without WCF — ralfw.de Archiv</title>
+<meta name="description" content="If you´ve read my previous posts about why I deem WCF more of a problem than a solution and how I think we should switch to asynchronous only communication in distributed applicati">
+<link rel="canonical" href="https://ralfw.de/archiv/2010/easy-remote-communication-without-wcf/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Easy remote communication without WCF — ralfw.de Archiv">
+<meta property="og:description" content="If you´ve read my previous posts about why I deem WCF more of a problem than a solution and how I think we should switch to asynchronous only communication in distributed applicati">
+<meta property="og:url" content="https://ralfw.de/archiv/2010/easy-remote-communication-without-wcf/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Easy remote communication without WCF</h1>
+    <div class="doc-meta"><span>15. März 2010</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net/ralfw/easy-remote-communication-without-wcf" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2010/easy-remote-communication-without-wcf/</code></span></div>
+    <div class="art"><p>If you´ve read my previous posts about why I deem <a rel="noopener" href="https://web.archive.org/web/20150926020407/http://weblogs.asp.net/ralfw/archive/2010/02/20/wcf-is-not-the-solution-but-the-problem.aspx">WCF more of a problem than a solution</a> and how I think we <a rel="noopener" href="https://web.archive.org/web/20150926020407/http://weblogs.asp.net/ralfw/archive/2010/02/21/becoming-asynchronous-the-first-step-towards-distributed-applications.aspx">should switch to asynchronous only communication</a> in distributed application, you might be wondering, how this could be done in an easy way.</p>
+<p>Since a <a rel="noopener" href="https://web.archive.org/web/20150926020407/http://weblogs.asp.net/ralfw/archive/2007/04/14/a-truely-simple-example-to-get-started-with-wcf.aspx">truely simple example to get started with WCF</a> still is drawing quite some traffic to this blog, let me pick up on that and show you, how to accomplish the same but much easier with an async communication API.</p>
+<p>For simplicities sake let me put all the code of client and server in just one file. In the following sections I´ll walk you through this file. The service it implements is simple. I start with a ping service. The client sends a text message to the server; the server dumps the text to the console.</p>
+<p>The implementation is based on <a rel="noopener" href="https://web.archive.org/web/20150926020407/http://msdn.microsoft.com/en-us/library/bb648752.aspx">Microsoft´s CCR</a> and two layers of abstraction encapsulating the CCR as well as WCF. See, I´m not saying WCF is bad per se; I just don´t want to use it in my application code. As a low level communication infrastructure the WCF is just great.</p>
+<p>The two layers of abstraction on top of the CCR and WCF are the <a rel="noopener" href="https://web.archive.org/web/20150926020407/http://code.google.com/p/ccrspace/">CCR Space</a> and <a rel="noopener" href="https://web.archive.org/web/20150926020407/http://xcoappspace.codeplex.com/">Xcoordination Application Space</a> (or AppSpace for short). Both are open source. The CCR Space wraps CCR concepts and the AppSpace to make it easier to work with them. And the AppSpace enables you to use CCR ports for remote communication.</p>
+<p>From now on I´ll refer to both as “the Spaces” or “Space based communication”.</p>
+<p>If you want to follow along my samples download the binaries from the CCR Space project site and reference the <em>CCRSpace.dll</em> as well as <em>microsoft.ccr.core.dll</em>.</p>
+<h5>Service implementation</h5>
+<p>With the Spaces it´s easy to define a service. <strong>No special service contract is needed. You can use any method with just one parameter and no return value. The parameter type needs to be serializable, though.</strong> Use the <em>[Seriablizable]</em> attribute for your own message types.</p>
+<p>1 using System;</p>
+<p>2 using System.Threading;</p>
+<p>3 </p>
+<p>4 using CcrSpaces.Core;</p>
+<p>5 </p>
+<p>6 namespace AsyncSimple.Server</p>
+<p>7 {</p>
+<p>8     public class Program</p>
+<p>9     {</p>
+<p>10         public static void Ping(string name)</p>
+<p>11         {</p>
+<p>12             Console.WriteLine("SERVER - Processing Ping('{0}')", name);</p>
+<p>13         }</p>
+<p>Of course there are ways to define services with several methods (or to say it differently: which can process different message types). But for now let´s keep the service as simple as possible, like I did in the <a rel="noopener" href="https://web.archive.org/web/20150926020407/http://weblogs.asp.net/ralfw/archive/2007/04/14/a-truely-simple-example-to-get-started-with-wcf.aspx">WCF sample</a>.</p>
+<h5>Service hosting</h5>
+<p><strong>Next you need to host the service. For that you create a CCR Space (<em>CcrSpace</em>) and configure it as a host using a certain transport layer (line 17).</strong> I´m using WCF with net.tcp binding as a transport, but I could also have used raw TCP sockets or WCF with named pipes or Jabber or MSMQ.</p>
+<p>By passing “wcf.port=8000” to the configuration method the transport layer type is selected and the listening port specified.</p>
+<p>15 public static void Main(object state)</p>
+<p>16 {</p>
+<p>17     using(var serverSpace = new CcrSpace().ConfigureAsHost("wcf.port=8000"))</p>
+<p>18     {</p>
+<p>19         var chService = serverSpace.CreateChannel<string>(Ping);</p>
+<p>20         serverSpace.HostPort(chService, "Ping");</p>
+<p>21 </p>
+<p>22         Console.WriteLine("SERVER - Running...");</p>
+<p>23         Console.ReadLine(); // keep alive</p>
+<p>24     }</p>
+<p>25 }</p>
+<p><strong>Once the Space is running, the service is bound to a channel (line 19). The channel is used to send messages to the service.</strong></p>
+<p><strong>To make the channel available for remote clients it´s hosted in the Space (line 20).</strong> This defines an address for the service listening on the channel. The service can now be reached over all registered transports by using their addresses combined with the service name; here that´s “localhost:8000” for WCF plus “Ping”: localhost:8000/Ping.</p>
+<p>Is you leave out <em>ConfigureAsHost()</em> and <em>HostPort()</em> you get local communication instead of remote. <strong>With the Spaces it´s easy to switch between the two communication modes. The communication paradigm stays the same.</strong> No other changes are needed to your code. The only differene between local and remote async communication is hosting a port or not (and how you connect to a port depending on it being local or remote).</p>
+<h5>Client implementation</h5>
+<p>Since this is a self-contained example the client starts with kicking off the server:</p>
+<p>30 namespace AsyncSimple.Client</p>
+<p>31 {</p>
+<p>32     class Program</p>
+<p>33     {</p>
+<p>34         static void Main(string[] args)</p>
+<p>35         {</p>
+<p>36             ThreadPool.QueueUserWorkItem(AsyncSimple.Server.Program.Main);</p>
+<p>Then comes the important part: connecting the client to the server and calling the service:</p>
+<p>38 using(var clientSpace = new CcrSpace().ConfigureAsHost("wcf.port=0"))</p>
+<p>39 {</p>
+<p>40     var chServiceProxy = clientSpace.ConnectToPort<string>("localhost:8000/Ping");</p>
+<p>41 </p>
+<p>42     chServiceProxy.Post("world!");</p>
+<p>43 </p>
+<p>44     Console.ReadLine(); // keep alive</p>
+<p>45 }</p>
+<p><strong>Like the server the client needs to instantiate a CCR Space. Async communication is symmetric.</strong> So both parties communicating need to look the same. Both “are” Spaces.</p>
+<p>Since the client does not publish any services, its port is of no interest so I set it to 0 for the AppSpace to choose. But of course the client Space needs to use the same transport layer like the server (line 38).</p>
+<p><strong>Then the client connects to the service´s remote port using its address (line 40).</strong> From now on the client can send messages to the service through the channel (line 42).</p>
+<h5>Summary</h5>
+<p>That´s it. This is how easy async communication can be. <strong>This is how easy remote communication can be.</strong> The application does not bother itself with complicated WCF configuration. Think of all the concepts and terms you need to understand for that, e.g. <em>ServiceContract</em>, <em>OperationContract</em>, <em>ServiceBehaviour</em>, <em>InstanceContextMode</em>, <em>ServiceHost</em>, and <em>ChannelFactory</em>.</p>
+<p>With the Spaces you just need a <em>CcrSpace</em> and a <em>Port</em> (aka channel). <strong>Create a space, create a channel and bind your service methode to it, host/publish the channel on the server, connect to the channel on the client.</strong></p>
+<p><strong>Once you grog the communication paradigm (async message oriented communication) it´s only 4 lines of code to set up service and client.</strong></p>
+<p>And now tell me: Can it become any easier, and stay true to the nature of remote communication? I doubt it.</p>
+<p>Please get me right, I´m not saying those Spaces are a panacea or the ultimate communication API. I´m just challenging WCF´s position as the one-size-fits-all solution to remote communication. There are alternatives to WCF. Service busses like <a rel="noopener" href="https://web.archive.org/web/20150926020407/http://www.nservicebus.com/">NServiceBus</a> or <a rel="noopener" href="https://web.archive.org/web/20150926020407/http://code.google.com/p/masstransit/">Mass Transit</a> are alternatives, but I think to use them seems to be an overkill for developers in many scenarios. That´s why I´m trying to show you a another alternative: Space based communication. It kind of looks like regular service communication, but it´s all asynchronous like the busses.</p>
+<p>Ok, if this still sounds interesting to you, you sure have a couple of questions. How to do return a result from a service? How to notify clients of service progress? How to deal with service failures? Bear with me, I´ll try to answer them in the next couple of postings. For now I just wanted to show you how easy it is to get async remote communication running at all.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

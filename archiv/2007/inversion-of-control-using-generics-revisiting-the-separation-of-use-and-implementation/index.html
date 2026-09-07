@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inversion of Control Using Generics - Revisiting the Separation of Use and Implementation — ralfw.de Archiv</title>
+<meta name="description" content="Martin Fowler in his famous article &quot;Inversion of Control Containers and the Dependency Injection pattern&quot; has compiled a number of ways how to dynamically bind a client to a servi">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/inversion-of-control-using-generics-revisiting-the-separation-of-use-and-implementation/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Inversion of Control Using Generics - Revisiting the Separation of Use and Implementation — ralfw.de Archiv">
+<meta property="og:description" content="Martin Fowler in his famous article &quot;Inversion of Control Containers and the Dependency Injection pattern&quot; has compiled a number of ways how to dynamically bind a client to a servi">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/inversion-of-control-using-generics-revisiting-the-separation-of-use-and-implementation/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Inversion of Control Using Generics - Revisiting the Separation of Use and Implementation</h1>
+    <div class="doc-meta"><span>17. Jan. 2007</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2007/01/17/inversion-of-control-using-generics-revisiting-the-separation-of-use-and-implementation.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/inversion-of-control-using-generics-revisiting-the-separation-of-use-and-implementation/</code></span></div>
+    <div class="art"><p>Martin Fowler in his famous article <a rel="noopener" href="https://web.archive.org/web/20070221220635/http://www.martinfowler.com/articles/injection.html">"Inversion of Control Containers and the Dependency Injection pattern"</a> has compiled a number of ways how to dynamically bind a client to a service. I now would like to add two points to the discussion: firstly a distinction regarding what is injected, and secondly a new pattern for injection based on generics. During my discusson I´ll use the same sample scenario as Martin to make it easy to see what I´m trying to add. Here´s a quick recap using C#.</p>
+<p>Martin is talking about a client component or class called a <em>MovieLister</em> which is supposed to filter a list of movies to find the ones directed by a particular director:</p>
+<p>class MovieLister</p>
+<p>{</p>
+<p>IMovieFinder finder;</p>
+<p>…</p>
+<p>public Movie[] MoviesDirectedBy(string directorName)</p>
+<p>{</p>
+<p>List<Movie> resultset = new List<Movie>();</p>
+<p>foreach (Movie m in finder.FindAll())</p>
+<p>if (m.Director == directorName)</p>
+<p>resultset.Add(m);</p>
+<p>return resultset.ToArray();</p>
+<p>}</p>
+<p>}</p>
+<p>class Movie</p>
+<p>{</p>
+<p>…</p>
+<p>public string Director { get { … } }</p>
+<p>}</p>
+<p>Now, this client class is depending on a service managing all the movies and getting a list of them. To the client this service is only known through an interface, though – <em>IMovieFinder</em> –, to decouple it from any concrete implementations:</p>
+<p>interface IMovieFinder</p>
+<p>{</p>
+<p>List<Movie> FindAll();</p>
+<p>}</p>
+<p>The question Martin´s article revolves around is: How does the <em>MovieLister</em> get at an instance of <em>IMovieFinder</em>? Obviously it´s no option to just instanciate, say, a class <em>MovieFinder</em>, which might implement the interface <em>IMovieFinder</em> in <em>MovieLister</em>´s constructor. That would make <em>MovieLister</em> dependent on a particular implementation of the interface and is exactly what´s to be avoided to keep the <em>MovieLister</em> class easily testable.</p>
+<p>Martin´s answer consists of a number of patterns of how to <em>inject</em> an instance of a <em>IMovieFinder</em> implementation into the <em>MovieLister</em>. I won´t repeat them here in detail but rather just show a code snippet to bring them into the world of C#. For explanations see Martin´s article.</p>
+<h3>Constructor Injection</h3>
+<p>Pass in an instance of <em>IMovieFinder</em> when creating a <em>MovieLister</em>:</p>
+<p>class MovieLister</p>
+<p>{</p>
+<p>public MovieLister(IMovieFinder finder)</p>
+<p>{</p>
+<p>this.finder = finder;</p>
+<p>}</p>
+<p>…</p>
+<h3>Setter Injection</h3>
+<p>Set the <em>finder</em> of a <em>MovieLister</em> object at any time through a property or setter method:</p>
+<p>class MovieLister</p>
+<p>{</p>
+<p>public IMovieFinder Finder</p>
+<p>{</p>
+<p>set</p>
+<p>{</p>
+<p>this.finder = value;</p>
+<p>}</p>
+<p>}</p>
+<p>…</p>
+<h3>Interface Injection</h3>
+<p>Separate the injection method into an interface of its own:</p>
+<p>interface IInjectMovieFinder</p>
+<p>{</p>
+<p>void InjectFinder(IMovieFinder finder);</p>
+<p>}</p>
+<p>class MovieLister : IInjectMovieFinder</p>
+<p>{</p>
+<p>public void InjectFinder(IMovieFinder finder)</p>
+<p>{</p>
+<p>this.finder = finder;</p>
+<p>}</p>
+<p>…        </p>
+<h3>Service Locator</h3>
+<p>Ask a service locator object or class to provide an instance:</p>
+<p>static class ServiceLocator</p>
+<p>{</p>
+<p>public static IMovieFinder GetMovieFinder()</p>
+<p>…</p>
+<p>}</p>
+<p>}</p>
+<p>class MovieLister</p>
+<p>{</p>
+<p>public MovieLister()</p>
+<p>{</p>
+<p>this.finder = ServiceLocator.GetMovieFinder();</p>
+<p>}</p>
+<p>…</p>
+<h3>Type Injection or Instance Injection</h3>
+<p>As valuable as these patterns are, I found their discussion somewhat incomplete, since it lacks a distinction. Martin´s article seems to be talking only about instances of a service described by an interface. But in fact it´s not that simple.</p>
+<p>True, the injection patterns push an instance of an interface implementation into the client object. But what does the service locator do? It enables the client to create an instance of a service at any time. Essentially that´s the same functionality the <em>new</em> operator provides. A service locator is a factory, and thus it´s just an indirection for instanciating a type.</p>
+<p>That very fact I think should be made clear when talking about dependency injection and inversion of control. There are two kinds of it: injecting instances and injecting types. Injecting an instance is useful whereever a client just needs one instance of an unknown implementation type. Injecting a type, though, is useful whereever a client needs to be able to create instances of an unknown implementation type at will.</p>
+<p>Service locator is just one pattern for “injecting” a service type into a client, i.e. making a client independent of concrete implemenations. Types also can be injected through other means; the instance injection patterns described by Martin can be used for type injection, too. Here´s just one example, constructor type injection:</p>
+<p>class MovieLister</p>
+<p>{</p>
+<p>public MovieLister(Type movieFinderType)</p>
+<p>{</p>
+<p>this.finder = (IMovieFinder)Activator.CreateInstance(movieFinderType);</p>
+<p>}</p>
+<p>…</p>
+<p>Instead of passing an instance to the constructor, just the type implementing <em>IMovieFinder</em> is injected. The client then can use the .NET <em>Activator</em> class to instanciate any number of objects of <em>IMovieFinder</em> implemenation. The client can even call <em>CreateInstance()</em> with parameters to be passed on to the constructor of the otherwise unkown type.</p>
+<p>Setter type injection and interface type injection work accordingly. Just pass in a type instead of an instance of that type. However, there´s a drawback to this kind of type injection: it´s not type-safe. You can pass in any type, not just implementations of <em>IMovieFinder</em>. There´s no compiletime check against it. Fortunately, help´s on its way…</p>
+<h3>Generics Type Injection or Type Parameter Injection</h3>
+<p>Now for a type injection specific pattern: generic type injection or type parameter injection.</p>
+<p>When you think of constructors as a means to pass objects to an instance during creation, then you can think of generics as a means to pass types to an instance during creation. That suggests using them for type injection:</p>
+<p>class MovieLister<IMovieFinderClass></p>
+<p>where IMovieFinderClass : IMovieFinder, new()</p>
+<p>{</p>
+<p>private IMovieFinder finder;</p>
+<p>public MovieLister()</p>
+<p>{</p>
+<p>this.finder = new IMovieFinderClass();</p>
+<p>}</p>
+<p>…</p>
+<p>Passing a type to an instance by using a generics type parameters solves the problem of the unspecific <em>Type</em> used in the previous type injection example. You can constrain the generics type parameter to match a number of criteria. For example the above <em>MovieLister</em> forces any types injected to really implement the <em>IMovieFinder</em> interface and also provide a default constructor. Any instanciation of a <em>MovieLister</em> not matching these criteria will be flagged at compiletime!</p>
+<h3>Conclusion</h3>
+<p>When talking about separating use, specification and implemenation, I mostly use some kind of service locator to “inject” types at runtime into my components. That way of dynamically binding implementations to me simply is close to the way how I would program, would I knew the exact implementation types at development time. But since I just know their specifications (interfaces), I ask the service locator to look up a matching implementation.</p>
+<p>However, when developing a standalone component for use in multiple, possible yet unknown contexts, I don´t always want to burden it with a service locator framework. The user of the component would need not only to learn my component, but also the service locator framework I chose. In those cases I like to use one of the true injection patterns. And recently I came to like very much generics type injection, because it´s type-safe and allows the client code to instanciate any number of service objects.</p>
+<p><strong>Share this post:</strong> <a rel="noopener" href="https://web.archive.org/web/20070221220635/mailto:/?body=Thought%20you%20might%20like%20this:%20http://weblogs.asp.net/ralfw/archive/2007/01/17/inversion-of-control-using-generics-revisiting-the-separation-of-use-and-implementation.aspx&amp;;subject=Inversion+of+Control+Using+Generics+-+Revisiting+the+Separation+of+Use+and+Implementation" title="Post http://weblogs.asp.net/ralfw/archive/2007/01/17/inversion-of-control-using-generics-revisiting-the-separation-of-use-and-implementation.aspx">email it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070221220635/http://del.icio.us/post?url=http://weblogs.asp.net/ralfw/archive/2007/01/17/inversion-of-control-using-generics-revisiting-the-separation-of-use-and-implementation.aspx&amp;;title=Inversion+of+Control+Using+Generics+-+Revisiting+the+Separation+of+Use+and+Implementation" title="Post http://weblogs.asp.net/ralfw/archive/2007/01/17/inversion-of-control-using-generics-revisiting-the-separation-of-use-and-implementation.aspx">bookmark it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070221220635/http://www.digg.com/submit?url=http://weblogs.asp.net/ralfw/archive/2007/01/17/inversion-of-control-using-generics-revisiting-the-separation-of-use-and-implementation.aspx&amp;;phase=2" title="Post http://weblogs.asp.net/ralfw/archive/2007/01/17/inversion-of-control-using-generics-revisiting-the-separation-of-use-and-implementation.aspx">digg it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070221220635/http://reddit.com/submit?url=http://weblogs.asp.net/ralfw/archive/2007/01/17/inversion-of-control-using-generics-revisiting-the-separation-of-use-and-implementation.aspx&amp;title=Inversion+of+Control+Using+Generics+-+Revisiting+the+Separation+of+Use+and+Implementation" title="Post http://weblogs.asp.net/ralfw/archive/2007/01/17/inversion-of-control-using-generics-revisiting-the-separation-of-use-and-implementation.aspx">reddit!</a> | <a rel="noopener" href="https://web.archive.org/web/20070221220635/http://www.dotnetkicks.com/submit/?url=http://weblogs.asp.net/ralfw/archive/2007/01/17/inversion-of-control-using-generics-revisiting-the-separation-of-use-and-implementation.aspx&amp;;title=Inversion+of+Control+Using+Generics+-+Revisiting+the+Separation+of+Use+and+Implementation" title="Post http://weblogs.asp.net/ralfw/archive/2007/01/17/inversion-of-control-using-generics-revisiting-the-separation-of-use-and-implementation.aspx">kick it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070221220635/https://favorites.live.com/quickadd.aspx?marklet=1&amp;;mkt=en-us&amp;;url=http://weblogs.asp.net/ralfw/archive/2007/01/17/inversion-of-control-using-generics-revisiting-the-separation-of-use-and-implementation.aspx&amp;;title=Inversion+of+Control+Using+Generics+-+Revisiting+the+Separation+of+Use+and+Implementation&amp;;top=1" title="Post http://weblogs.asp.net/ralfw/archive/2007/01/17/inversion-of-control-using-generics-revisiting-the-separation-of-use-and-implementation.aspx">live it!</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

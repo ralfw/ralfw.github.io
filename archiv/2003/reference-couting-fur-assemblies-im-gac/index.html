@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reference couting für Assemblies im GAC — ralfw.de Archiv</title>
+<meta name="description" content="Eine kleine Erkenntnis für zwischendurch: Gerade habe ich versucht, eine Assembly aus dem GAC zu löschen. Zuerst wollte ich es über den Windows Explorer machen, der verweigerte abe">
+<link rel="canonical" href="https://ralfw.de/archiv/2003/reference-couting-fur-assemblies-im-gac/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Reference couting für Assemblies im GAC — ralfw.de Archiv">
+<meta property="og:description" content="Eine kleine Erkenntnis für zwischendurch: Gerade habe ich versucht, eine Assembly aus dem GAC zu löschen. Zuerst wollte ich es über den Windows Explorer machen, der verweigerte abe">
+<meta property="og:url" content="https://ralfw.de/archiv/2003/reference-couting-fur-assemblies-im-gac/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Reference couting für Assemblies im GAC</h1>
+    <div class="doc-meta"><span>30. Juni 2003</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/posts/9485.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2003/reference-couting-fur-assemblies-im-gac/</code></span></div>
+    <div class="art"><p>Eine kleine Erkenntnis für zwischendurch: Gerade habe ich versucht, eine Assembly aus dem GAC zu löschen. Zuerst wollte ich es über den Windows Explorer machen, der verweigerte aber den Dienst mit dem Hinweis <em>xyz.dll could not be uninstalled because it is required by other applications</em>. Hm... eine Anwendung, die die Assembly aber (gerade) benutzte, war mir nicht bekannt. Also habe ich es nochmal zu Fuß mit gacutil.exe probiert. Mit dem selben schlechten Erfolg - aber dafür einer etwas ausführlicheren Fehlermeldung: <em>Unable to uninstall: assembly is required by one or more applications Pending references: SCHEME:   ID:   DESCRIPTION :</em> .</p>
+<p>Die Erklärung ist also: Wenn eine Assembly mit dem Windows Installer im GAC installiert wird, dann kann auch nur der Windows Installer sie wieder deinstallieren.</p>
+<p>Das war im ersten Moment eine Überraschung für mich; ich hatte es nicht gewusst. Nach einem kleinen Moment des Nachdenkens ist es aber eine sehr positive Überraschung. Ich würde sagen: So und nicht anders sollte es sein. Hier ein Statement von Microsoft aus einem Chat dazu:</p>
+<p><em>You should avoid using GACUtil to install managed assemblies for several reasons. First, you lose the ability to trace installation references in the GAC, unless you use the /r option to add tracking references. Second, GACUtil is part of the frameworks SDK, and is not guaranteed to be on all target machines - it's also not marked as redistributable, so you'd need to check the licensing to make sure you can actually ship it in your package. </em><em>Third, MSI installation gets you repair and servicing for free, where GACUtil doesn't.</em><em> Finally, GACUtil is more about populating an empty GAC from the start (as in the case of the frameworks installer) than about installing assemblies on a running system.</em></p>
+<p>Es weist auch auf den allgemeinen Mechanismus hin, der da am Werk ist: Installationen von Assemblies in den GAC können mit Referenzen versehen werden. So wie bei COM-Objekten gibt es auch im GAC ein "reference counting". Jede Installation einer Assembly kann die Referenzen der Assembly hochzählen, jede Deinstallation wieder herunter zählen. (Das bedeutet auch, Sie können die selbe Assembly mehrfach im GAC installieren, aber sie liegt darin in Wirklichkeit nur einmal - allerdings mit mehreren Referenzen.)</p>
+<p>Anders als bei COM ist der Referenzzähler einer Assembly keine simple Zahl (Anzahl der Referenzen), sondern eine Liste von Referenzen. Es gibt mehrere Arten von Referenzen (s. .NET Framework Doku zum Stichwort "gacutil.exe"). Eine Referenzenart ist z.B. FILEPATH, d.h. Sie können den Namen einer Assembly angeben, die die im GAC zu registrierende benötigt. Ein <em>GacUtil.exe</em> Aufruf sieht dann z.B. so aus:</p>
+<p>gactutil.exe /i mylib.dll <strong>/r FILEPATH c:\myapp\myapp.exe MeineAnwendung</strong></p>
+<p>Auf FILEPATH folgt der vollständige Pfad zur Assembly, die von <em>mylib.dll</em> abhängig ist, "MeineAnwendung" ist nur eine Kurzbeschreibung dieser Referenz.</p>
+<p>Die einfache Deinstallation mit gacutil.exe /u mylib ist jetzt nicht mehr möglich. Solange noch Referenzen an einer Assembly im GAC hängen, müssen Sie genau angeben, welche Referenz Sie deinstallieren wollen, z.B.</p>
+<p>gactutil.exe /u mylib/r FILEPATH c:\myapp\myapp.exe MeineAnwendung</p>
+<p>Erst wenn die Liste der Referenzen leer ist, wird die Assembly tatsächlich aus dem GAC gelöscht. Damit ist sichergestellt, dass nur derjenige, der eine Assembly im GAC installiert, sie auch wieder deinstallieren kann. Programminstallationen, die Assemblies im GAC ablegen, können also genauso robust und gefeit gegen unwillkürliche Löschungen "im System" sein, wie lokal installierte.</p>
+<p>Ein wenig relativiert sich Microsofts Kommentar damit schließlich auch ein wenig: Sie können <em>gacutil.exe</em> schon anwenden, aber sie sollten zumindest darauf achten, dass Sie immer Referenzen angeben.</p>
+<p>(Als Trost für alle, die die /r Option von gacutil.exe auch nicht gekannt haben: Sie ist schlecht dokumentiert. Im .NET Fx SDK ist sie zwar zu finden, aber online habe ich sie nicht auf der korrespondierenden Seite <a rel="noopener" href="https://web.archive.org/web/20030830012335/http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cptools/html/cpgrfglobalassemblycacheutilitygacutilexe.asp">http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cptools/html/cpgrfglobalassemblycacheutilitygacutilexe.asp</a> gefunden. Nur eine externe Quelle hat auch ein Beispiel geliefert: <a rel="noopener" href="https://web.archive.org/web/20030830012335/https://mailserver.di.unipi.it/pipermail/dotnet/msg00074.html">https://mailserver.di.unipi.it/pipermail/dotnet/msg00074.html</a>.)</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A truely simple example to get started with WCF — ralfw.de Archiv</title>
+<meta name="description" content="Recently I needed to set up some simple code to demonstrate WCF (as an alternative to some other means of communication in distributed applications). But when I googled around, I c">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/a-truely-simple-example-to-get-started-with-wcf/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="A truely simple example to get started with WCF — ralfw.de Archiv">
+<meta property="og:description" content="Recently I needed to set up some simple code to demonstrate WCF (as an alternative to some other means of communication in distributed applications). But when I googled around, I c">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/a-truely-simple-example-to-get-started-with-wcf/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>A truely simple example to get started with WCF</h1>
+    <div class="doc-meta"><span>14. April 2007</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/a-truely-simple-example-to-get-started-with-wcf" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/a-truely-simple-example-to-get-started-with-wcf/</code></span></div>
+    <div class="art"><p>Recently I needed to set up some simple code to demonstrate WCF (as an alternative to some other means of communication in distributed applications). But when I googled around, I could not find a really, really simple WCF example. Sure, there are lots of WCF introductions, but they all explain a lot of stuff I did not really want to know at that time. Also they most often spread the code across many files and even across languages (C# and XML). And that´s what I really, really hate! When I first try out a new API like WCF I want to have everything needed in one (!) place. I want all that´s required to be the minimum and in my favorite programming language. This way I can focus best on what´s really essential without getting distracted by syntax and unnecessary (but cool) "fluff".</p>
+<p>Finally I resorted to a book I wrote together with co-author <a rel="noopener" href="https://web.archive.org/web/20140616072807/http://blogs.thinktecture.com/cweyer/">Christian Weyer</a>: "<a rel="noopener" href="https://web.archive.org/web/20140616072807/http://www.amazon.de/NET-3-0-kompakt-Ralf-Westphal/dp/382741458X">.NET 3.0 kompakt</a>" (German). As you can imagine, I did not write the chapter on WCF, though ;-) In our book I found the most simple/gentle introduction to WCF and finally was able to set up my sample program within some 20 minutes. I only had to experiment a little for getting the client code to run without resorting to XML, since Christian did not show imperative code for it in the book.</p>
+<p>Now, to make life easier for you, I present to you the most simple WCF application I can think of in one piece. Copy the pieces into a VS 2005 console project, reference the <em>System.ServiceModel</em> library from <a rel="noopener" href="https://web.archive.org/web/20140616072807/http://www.netfx3.com/">.NET 3.0</a> and off you go. The code should run right out of the box. (Or <a rel="noopener" href="https://web.archive.org/web/20140616072807/http://www.ralfw.de/weblog/wcfsimple.txt">download it here</a>.)</p>
+<p>Although I don´t want to repeat what´s been said in our book or in others like <a rel="noopener" href="https://web.archive.org/web/20140616072807/http://www.amazon.com/Programming-WCF-Services-Juval-Lowy/dp/0596526997">"Programming WCF Services" by Juval Löwy</a> or elsewhere on the web about WCF (e.g. here <a rel="noopener" href="https://web.archive.org/web/20140616072807/http://msdn2.microsoft.com/en-us/library/aa480190.aspx" title="http://msdn2.microsoft.com/en-us/library/aa480190.aspx">http://msdn2.microsoft.com/en-us/library/aa480190.aspx</a> or here <a rel="noopener" href="https://web.archive.org/web/20140616072807/http://www.devx.com/dotnet/Article/29414" title="http://www.devx.com/dotnet/Article/29414">http://www.devx.com/dotnet/Article/29414</a> or <a rel="noopener" href="https://web.archive.org/web/20140616072807/http://bloggingabout.net/blogs/dennis/archive/2006/10/18/WCF-Part-0-_3A00_-Introduction.aspx" title="http://bloggingabout.net/blogs/dennis/archive/2006/10/18/WCF-Part-0-_3A00_-Introduction.aspx">here http://bloggingabout.net/blogs/dennis/archive/2006/10/18/WCF-Part-0-_3A00_-Introduction.aspx</a>), I think it´s in order to give you a quick tour through my code:</p>
+<h3>Service definition</h3>
+<p>1 using System;</p>
+<p>2 using System.Collections.Generic;</p>
+<p>3 using System.Text;</p>
+<p>4</p>
+<p>5 using System.ServiceModel;</p>
+<p>6</p>
+<p>7</p>
+<p>8 namespace WCFSimple.Contract</p>
+<p>9 {</p>
+<p>10     [ServiceContract]</p>
+<p>11     public interface IService</p>
+<p>12     {</p>
+<p>13         [OperationContract]</p>
+<p>14         string Ping(string name);</p>
+<p>15     }</p>
+<p>16 }</p>
+<p>My simple sample service is of course trivial, since I´m not interested in service functionality but getting the WCF infrastructure to run. So my service <em>WCFSimple.Contract.IService</em> just consists of a single method - <em>Ping()</em> - which accepts a name and responds with a greeting. Passing in "Peter" returns "Hello, Peter".</p>
+<p>Defining a WCF service means defining its functionality in a so called service contract which is given as an interface here. That this interface is a service contract and which of its methods should be published is signified by the attributes.</p>
+<h3>Service implementation</h3>
+<p>19 namespace WCFSimple.Server</p>
+<p>20 {</p>
+<p>21     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall)]</p>
+<p>22     class ServiceImplementation : WCFSimple.Contract.IService</p>
+<p>23     {</p>
+<p>24         #region IService Members</p>
+<p>25</p>
+<p>26         public string Ping(string name)</p>
+<p>27         {</p>
+<p>28             Console.WriteLine("SERVER - Processing Ping('{0}')", name);</p>
+<p>29             return "Hello, " + name;</p>
+<p>30         }</p>
+<p>31</p>
+<p>32         #endregion</p>
+<p>33     }</p>
+<p>Once you´ve defined a service you can implement it. Just define a class that implements the service´s interface (line 22, 26..30). The <em>ServiceBehaviour</em> attribute in this case tells the WCF infrastructure to create a fresh instance of the service class for each call to the service´s methods. It´s the same as .NET Remoting´s <em>SingleCall</em> wellknown objects. Of course, though, I could have chosen a different instanciation mode, but I wanted to avoid any side effects due to state issues.</p>
+<h3>Hosting the service, implementing the server</h3>
+<p>36     public class Program</p>
+<p>37     {</p>
+<p>38         private static System.Threading.AutoResetEvent stopFlag = new System.Threading.AutoResetEvent(false);</p>
+<p>39</p>
+<p>40         public static void Main()</p>
+<p>41         {</p>
+<p>42             ServiceHost svh = new ServiceHost(typeof(ServiceImplementation));</p>
+<p>43             svh.AddServiceEndpoint(</p>
+<p>44                 typeof(WCFSimple.Contract.IService),</p>
+<p>45                 new NetTcpBinding(),</p>
+<p>46                 "net.tcp://localhost:8000");</p>
+<p>47             svh.Open();</p>
+<p>48</p>
+<p>49             Console.WriteLine("SERVER - Running...");</p>
+<p>50             stopFlag.WaitOne();</p>
+<p>51</p>
+<p>52             Console.WriteLine("SERVER - Shutting down...");</p>
+<p>53             svh.Close();</p>
+<p>54</p>
+<p>55             Console.WriteLine("SERVER - Shut down!");</p>
+<p>56         }</p>
+<p>57</p>
+<p>58         public static void Stop()</p>
+<p>59         {</p>
+<p>60             stopFlag.Set();</p>
+<p>61         }</p>
+<p>62     }</p>
+<p>63 }</p>
+<p>I chose to set up the server for my service implementation just on a separate thread in my sample app. But to make it easier for you to move it to a process/project of its own, I let it look like the default class of a console application.</p>
+<p>In order to host a service, the <em>Main()</em> method creates a <em>ServiceHost</em> to manage any service implementation instances and publish the service on any number of endpoints. I chose to make the service accessible just through one endpoint, though. And this I do explicitly in code - instead of through some <em>App.Config</em> settings. That way I get to know how the WCF parts work together.</p>
+<p>The endpoint takes as a first argument the service definition (contract), since the class I passed to the <em>ServiceHost</em> could possibly implement several services. Then I specify the "communication medium", the binding. TCP seems to be suffcient for my purposes. Finally I set up the endpoint at a particular address that surely needs to match the binding. For TCP I specify an IP address (or domain name) and a port.</p>
+<p>That´s it. WCF can be as simple as the ABC: Address+Binding+Contract=Endpoint.</p>
+<p>Now I just need to start the <em>ServiceHost</em> with <em>Open()</em> and later on finish it with <em>Close()</em>. However, since the service host is doing its work on a separate thread, I cannot just move on after <em>Open()</em>. I have to wait for a signal telling the server to stop. For that purpose I set up a <em>WaitHandle</em> - <em>stopFlag</em> - which can be signalled from the outside through the <em>Stop()</em> method.</p>
+<p>If you put the server in a console app of its own, you can remove the <em>WaitHandle</em> stuff and replace the <em>stopFlag.WaitOne()</em> with just a <em>Console.ReadLine()</em>.</p>
+<p>Warning: The <em>Close()</em> takes at least 10 sec to complete, as it seems. This is to give any still connected clients the chance to disconnect, as far as I understand right now. So if you don´t happen to see the "Shut down!" message when running the sample, don´t worry.</p>
+<h3>Running the server, implementing the client</h3>
+<p>66 namespace WCFSimple</p>
+<p>67 {</p>
+<p>68     class Program</p>
+<p>69     {</p>
+<p>70         static void Main(string[] args)</p>
+<p>71         {</p>
+<p>72             Console.WriteLine("WCF Simple Demo");</p>
+<p>73</p>
+<p>74             // start server</p>
+<p>75             System.Threading.Thread thServer = new System.Threading.Thread(WCFSimple.Server.Program.Main);</p>
+<p>76             thServer.IsBackground = true;</p>
+<p>77             thServer.Start();</p>
+<p>78             System.Threading.Thread.Sleep(1000);  // wait for server to start up</p>
+<p>79</p>
+<p>80             // run client</p>
+<p>81             ChannelFactory<WCFSimple.Contract.IService> scf;</p>
+<p>82             scf = new ChannelFactory<WCFSimple.Contract.IService>(</p>
+<p>83                         new NetTcpBinding(),</p>
+<p>84                         "net.tcp://localhost:8000");</p>
+<p>85</p>
+<p>86             WCFSimple.Contract.IService s;</p>
+<p>87             s = scf.CreateChannel();</p>
+<p>88</p>
+<p>89             while (true)</p>
+<p>90             {</p>
+<p>91                 Console.Write("CLIENT - Name: ");</p>
+<p>92                 string name = Console.ReadLine();</p>
+<p>93                 if (name == "") break;</p>
+<p>94</p>
+<p>95                 string response = s.Ping(name);</p>
+<p>96                 Console.WriteLine("CLIENT - Response from service: " + response);</p>
+<p>97             }</p>
+<p>98             (s as ICommunicationObject).Close();</p>
+<p>99             // shutdown server</p>
+<p>100             WCFSimple.Server.Program.Stop();</p>
+<p>101             thServer.Join();</p>
+<p>102         }</p>
+<p>103     }</p>
+<p>104 }</p>
+<p>The client in this sample has two tasks: 1) start the server, 2) call the server.</p>
+<p>To run client and server in the same process, the server is started in a background thread of its own (lines 75..77). To give it some time to become ready to serve requests, a delay of 1 sec is added afterwards. Also this avoids a mess of messages shown in the console window at start up ;-)</p>
+<p>Next the client sets up a channel along which the request can flow between it and the server. To create a channel, a channel factory is needed (line 81f), though. It can create channels for a certain contract, a specific binding, and targeting an address (lines 82..84). Again the ABC of WCF.</p>
+<p>Creating a channel with the channel factory then returns a proxy of the remote server which looks like the implementation - but in fact is a channel, i.e. a WCF object (line 86f).</p>
+<p>The rest of the code is just a bit of frontend logic: a loop to ask for a name, passing it to the service, and displaying the returned greeting. Just hit enter without a name to end the loop.</p>
+<p>Once the loop is terminated, the server is stopped. Before that, though, you should close the proxy! Otherwise the shutdown of the server will take some time, because it first waits for the client.</p>
+<h3>Summary</h3>
+<p>That´s it. That´s my very simplest WCF example. It lets you play around with WCF in a single process. Or you can easily distribute the code across several assemblies: one for the server and implementation, one for the client, and one for the contract shared between the two.</p>
+<p>Just be sure to download .NET 3.0 and reference <em>System.ServiceModel</em>. The rest is just copying the above code parts in order into a console project and hit F5. (Or <a rel="noopener" href="https://web.archive.org/web/20140616072807/http://www.ralfw.de/weblog/wcfsimple.txt">download the code here</a>.)</p>
+<p>Enjoy!</p>
+<p>PS: If you wonder, how I got those pretty listings into my posting, let me point you to CopySourceAsHtml (CSAH): <a rel="noopener" href="https://web.archive.org/web/20140616072807/http://www.jtleigh.com/people/colin/software/CopySourceAsHtml/" title="http://www.jtleigh.com/people/colin/software/CopySourceAsHtml/">http://www.jtleigh.com/people/colin/software/CopySourceAsHtml/</a>. It´s a great tool for anybody who wants to paste code into a blog at least while using Windows Live Writer. Although I have to switch to HTML view to do that, which is a bit cumbersome, I love both tools.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

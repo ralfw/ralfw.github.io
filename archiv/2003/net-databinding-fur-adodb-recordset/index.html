@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>.NET Databinding für ADODB.Recordset? — ralfw.de Archiv</title>
+<meta name="description" content="Für den Einstieg in das Schreiben für die dotnetpro hatte ich neulich als Thema gewählt, Databinding für ADODB.Recordset Objekte zu realisieren. Ich wollte Recordsets wie DataTable">
+<link rel="canonical" href="https://ralfw.de/archiv/2003/net-databinding-fur-adodb-recordset/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content=".NET Databinding für ADODB.Recordset? — ralfw.de Archiv">
+<meta property="og:description" content="Für den Einstieg in das Schreiben für die dotnetpro hatte ich neulich als Thema gewählt, Databinding für ADODB.Recordset Objekte zu realisieren. Ich wollte Recordsets wie DataTable">
+<meta property="og:url" content="https://ralfw.de/archiv/2003/net-databinding-fur-adodb-recordset/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>.NET Databinding für ADODB.Recordset?</h1>
+    <div class="doc-meta"><span>22. Juni 2003</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/posts/9099.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2003/net-databinding-fur-adodb-recordset/</code></span></div>
+    <div class="art"><p>Für den Einstieg in das Schreiben für die dotnetpro hatte ich neulich als Thema gewählt, Databinding für ADODB.Recordset Objekte zu realisieren. Ich wollte Recordsets wie DataTables an WinForms/WebForms UIs binden können. Complex und simple binding wollte ich realisieren.</p>
+<p>Nach 1-2 Tagen Herumexperimentieren habe ich das Thema allerdings (vorläufig?) zu den Akten gelegt. Zwei Wege schienen mir grundsätzlich gangbar:</p>
+<ol>
+<li>Erstellung eines Containers, der selbst gebunden werden kann. Dem Container würde das Recordset zugewiesen und er würde die für´s Databinding notwendigen Schnittstellen implementieren-</li>
+<li>Erstellung eines Containers, der wie ein XmlDataDocument an ein DataSet gekoppelt werden kann. Bei der Kopplung würde das Recordset im Container in das DataSet kopiert (über OleDbDataAdapter.Fill()) und anschließend über das DataSet gebunden. Veränderungen am DataSet würden über Events im Container abgefangen und an das Recordset weitergeleitet werden - und umgekehrt.</li>
+</ol>
+<p>Lösung 2. schien mir schwieriger und ich habe sie wg. der Kürze der Zeit (es war leider ein "Schnellschuss-Artikel" notwendig) nicht ausprobiert.</p>
+<p>Lösung 1. habe ich angefangen und ein gutes Stück voran getrieben. Die ganze Zeit habe ich mich allerdings nicht wohl gefühlt. Ein Zeichen dafür war wiederholtes Nachdenken darüber, ob ich für die Bindung die Arten der erlaubten Cursor einschränken sollte. Am liebsten wäre mir gewesen, mich auf disconnected Recordsets zu beschränken. Das wäre aber dem Zwecke einer nahtlosen Bindung von Recordsets, also einer Gleichstellung von ADODB mit ADO.NET in dieser Hinsicht, zuwider gelaufen. Also habe ich versucht, quasi alle Cursor zu erlauben und maximale Databinding-Funktionalität bereit zu stellen (d.h. listen, einzelne Sätze binden und bearbeiten).</p>
+<p>Unterm Strich war der Erfolg jedoch bescheiden bzw. der Aufwand schien angesichts der Einschränkungen bei bestimmten Cursorn (z.b. keine Kenntnis über Anzahl der Sätze bei Dynamic Cursor) zu hoch. Mein persönliches Resultat: Gerade weil ein ADODB.Recordset ein Cursor ist (und keine Objekte enthält und eigentlich also auch nicht frei positionierbar ist), wiederspricht es dem Programmiermodell des .NET Databinding. Beide passen einfach nicht gut zusammen. Symbolisiert wird das durch die Eigenschaften Current und Position des Currency Managers für eine Datenquelle. Current verweist auf das aktuelle Objekt in einer Liste von Objekten. Ein Recordset enthält aber weder Objekte, noch sind sie (immer) direkt über einen Index (AbsolutePosition) adressierbar.</p>
+<p>Recordset-Databinding in .NET beim Anspruch voller Funktionalität ist daher quasi ein Widerspruch in sich. In Teilen ließe es sich aber wohl doch realisieren, z.B. so wie auch DataReader in ASP.NET bindbar sein.</p>
+<p>Als neues Thema für den dotnetpro Artikel habe ich nun die Realisierung einer Komponente zur Speicherung von Anwendungseinstellungen in Angriff genommen.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

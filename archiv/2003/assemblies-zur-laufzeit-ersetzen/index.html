@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assemblies zur Laufzeit ersetzen — ralfw.de Archiv</title>
+<meta name="description" content="Seit meinem TechTalk über &quot;Kompilieren statt Interpretieren&quot; treibt mich die Frage um, wie Assemblies zur Laufzeit ausgetauscht werden können.">
+<link rel="canonical" href="https://ralfw.de/archiv/2003/assemblies-zur-laufzeit-ersetzen/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Assemblies zur Laufzeit ersetzen — ralfw.de Archiv">
+<meta property="og:description" content="Seit meinem TechTalk über &quot;Kompilieren statt Interpretieren&quot; treibt mich die Frage um, wie Assemblies zur Laufzeit ausgetauscht werden können.">
+<meta property="og:url" content="https://ralfw.de/archiv/2003/assemblies-zur-laufzeit-ersetzen/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Assemblies zur Laufzeit ersetzen</h1>
+    <div class="doc-meta"><span>23. Juni 2003</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/posts/9148.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2003/assemblies-zur-laufzeit-ersetzen/</code></span></div>
+    <div class="art"><p>Seit meinem TechTalk über "Kompilieren statt Interpretieren" treibt mich die Frage um, wie Assemblies zur Laufzeit ausgetauscht werden können.</p>
+<p>Ausgangspunkt der Überlegung sind zwei Probleme:</p>
+<ol>
+<li>Assemblies können nicht einzeln aus einem Prozess entladen werden.</li>
+<li>Assemblies sind auf der Festplatte gesperrt, sobald sie in einem Prozess geladen wurden.</li>
+</ol>
+<p>Für das erste Problem ist der Lösungsansatz einfach: Assemblies werden in AppDomains geladen und AppDomains können auch wieder entladen werden. Damit verschwinden auch die darin geladenen Assemblies aus dem Speicher. Um Assemblies nach Gebrauch entsorgen zu können, müssen sie also nur in eine eigene AppDomain geladen werden.</p>
+<p>dim info as New AppDomainSetup()<br />
+with appdomain.CurrentDomain.SetupInformation<br />
+    info.ApplicationBase = .ApplicationBase<br />
+    info.PrivateBinPath = "."<br />
+end with</p>
+<p>dim app as AppDomain<br />
+app = AppDomain.CreateDomain("MyDomain", _ <br />
+                    AppDomain.CurrentDomain.Evidence, info)</p>
+<p>dim c as Class1<br />
+c = app.CreateInstanceAndUnwrap("MyLib", "MyLib.Class1")<br />
+...<br />
+appdomain.Unload(app)</p>
+<p>Class1 in diesem Beispiel muss allerdings von MarshalByRefObject abgeleitet sein, da sonst kein Cross-AppDomain-Aufruf möglich ist.</p>
+<p>Allerdings tritt auch dann nicht der gewünschte Effekt ein, da die aufrufende AppDomain ebenfalls die Assembly <em>MyLib.dll</em> laden muss, um den Proxy für die Class1-Instanz in der neuen AppDomain zu erzeugen.</p>
+<p>Das bedeutet: Um eine Assembly mit einer AppDomain auch wieder zu entladen, darf außerhalb der AppDomain keinerlei Bezug zu der Assembly existieren! Um mit Typen aus der Assembly zu arbeiten, müssen alle Interaktionen durch Objekte laufen, deren Assemblies nicht entladen werden müssen. Für das obige Beispiel würde das z.B. bedeuten:</p>
+<p>dim c as Class1Proxy<br />
+c = app.CreateInstanceAndUnwrap("MyApp", "MyApp.Class1Proxy")</p>
+<p>Die Klasse Class1Proxy könnte zum Beispiel in der aufrufenden Assembly definiert sein, die schon in der aufrufenden AppDomain geladen ist. Diese Assembly würde dann zwar auch noch einmal in die neue AppDomain geladen, aber das macht nichts. Sie ist ja ohnehin schon im Speicher und soll daraus nicht verschwinden.</p>
+<p>Zu beachten ist dann allerdings, dass innerhalb von Class1Proxy kein Typ aus der "wahren" zu ladenden Assembly an ihrer Schnittstelle auftaucht. Also keine Member-Variable und kein Parameter eine Methode darf von einem Typ der zu ladenden Assembly sein, denn sonst wird sie auch in der aufrufenden AppDomain benötigt, um den Proxy zu bauen.</p>
+<p>Problem 1 ist damit gelöst: Zur Laufzeit kann ein Programm nicht mehr benötigte Assemblies los werden. Und Problem 2? Dazu morgen mehr.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

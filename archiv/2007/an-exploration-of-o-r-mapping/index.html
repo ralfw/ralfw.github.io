@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>An Exploration of O/R Mapping — ralfw.de Archiv</title>
+<meta name="description" content="I started a new blog. I want to explore the world of O/R Mapping more closely and will report my findings in my blog O/R Mapping Adventures.">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/an-exploration-of-o-r-mapping/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="An Exploration of O/R Mapping — ralfw.de Archiv">
+<meta property="og:description" content="I started a new blog. I want to explore the world of O/R Mapping more closely and will report my findings in my blog O/R Mapping Adventures.">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/an-exploration-of-o-r-mapping/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>An Exploration of O/R Mapping</h1>
+    <div class="doc-meta"><span>4. März 2007</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net/ralfw/an-exploration-of-o-r-mapping" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/an-exploration-of-o-r-mapping/</code></span></div>
+    <div class="art"><p>I started a new blog. I want to explore the world of O/R Mapping more closely and will report my findings in my blog <a rel="noopener" href="https://web.archive.org/web/20150926075302/http://object-relational-mapping.blogspot.com/">O/R Mapping Adventures</a>.</p>
+<p>It´s a subjective view of the topic as I dig deeper into it. Although I´ll start with some simple stuff, my true interest lies in exploring more advanced scenarios like distributed systems and optimizing the loading of objects. I want to go beyond the usual trivial examples of O/R Mapping and see, how far I can go with it - and where I need to resort to good old ADO.NET. Currently my belief is, the future lies with hybrid data access: O/R Mapping + ADO.NET. But we´ll see... In any case I want to try to put O/R Mapping into perspective with application architecture. What does this approach to persistence mean for modelling code?</p>
+<p>If you like, follow me along in my exploration. I´m open to any comments on what I´m doing.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

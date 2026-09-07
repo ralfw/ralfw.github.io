@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dynamic component binding made easier - An easy to use Microkernel to help reap Contract-First-Design benefits in .NET programs — ralfw.de Archiv</title>
+<meta name="description" content="I think true component oriented programming requires Contract-First-Design (CFD) and usage of a Microkernel to bind contracts to implementations at runtime. But while CFD is a matt">
+<link rel="canonical" href="https://ralfw.de/archiv/2006/dynamic-component-binding-made-easier-an-easy-to-use-microkernel-to-help-reap-contract-first-design-benefits-in-net-programs/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Dynamic component binding made easier - An easy to use Microkernel to help reap Contract-First-Design benefits in .NET programs — ralfw.de Archiv">
+<meta property="og:description" content="I think true component oriented programming requires Contract-First-Design (CFD) and usage of a Microkernel to bind contracts to implementations at runtime. But while CFD is a matt">
+<meta property="og:url" content="https://ralfw.de/archiv/2006/dynamic-component-binding-made-easier-an-easy-to-use-microkernel-to-help-reap-contract-first-design-benefits-in-net-programs/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Dynamic component binding made easier - An easy to use Microkernel to help reap Contract-First-Design benefits in .NET programs</h1>
+    <div class="doc-meta"><span>1. Aug. 2006</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/Dynamic-component-binding-made-easier-_2D00_-An-easy-to-use-Microkernel-to-help-reap-Contract_2D00_First_2D00_Design-benefits-in-.NET-programs" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2006/dynamic-component-binding-made-easier-an-easy-to-use-microkernel-to-help-reap-contract-first-design-benefits-in-net-programs/</code></span></div>
+    <div class="art"><p>I think true component oriented programming requires Contract-First-Design (CFD) and usage of a <em>Microkernel</em> to bind contracts to implementations at runtime. But while CFD is a matter of your resolution and will, using a Microkernel requires a piece of technology fitting into your existing toolchest. There are of course a couple of these technologies readily available - like <a rel="noopener" href="https://web.archive.org/web/20160430150540/http://www.springframework.net/">Spring.Net</a> and <a rel="noopener" href="https://web.archive.org/web/20160430150540/http://www.picocontainer.org/">Picocontainer</a> -, but they are not lightweight enough to my taste. It´s hard to enter the world of dynamic binding using them. That´s why I devised a small Microkernel of my own as an easy starting point and platform to try out a couple of ideas.</p>
+<p>If you like, you can <a rel="noopener" href="https://web.archive.org/web/20160430150540/http://www.ralfw.de/download/microkernel2.zip">download Ralf´s Microkernel here</a>. It´s written in C# and comes with a couple of unit tests (NUnit style). Feel free to use the binary in your projects and play around with the source. Although it´s not much code, I hope you will be able to gain quite a bit from its essential Microkernel functions. Here is how it works...</p>
+<h3>Contract-First-Design</h3>
+<p>I don´t want to explain CFD at length here, but to set the scene for the Microkernel some hints as to what it means are in order.</p>
+<p>CFD views software as consisting of components. To avoid any heated discussion on what this term could possibly mean, let me try a very practical explanation: <em>Think of a component as an assembly or a set of related assemblies. This assembly (or set of assemblies) you want to use together with other components to build a software solution.</em></p>
+<p>That´s it.</p>
+<p>Don´t think of "components are made for reuse" or "components require a market" or "components as units of independent versioning". That´s all good and well, but can get in your way when starting out with components. So just think: Components encapsulate some functionality I want to separate from other functionality in other components.</p>
+<p>Now, when using components there are two basic kinds of them:  client components (or consumers) and service components (or producers). A client component uses one or more service components to do its work.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/0c9ef076ea5ac0e0.gif" /></p>
+<p>When using VS2005 you´d set up two projects, one for the client component and one for the service component and then the client component would refrence the service component. That´s necessary to instanciate service component classes.</p>
+<p>Although this is how most of the developers do it most of the time, it´s not how you should do it. There are at least two reasons, why this is hampering your work:</p>
+<ul>
+<li>For to code the client component you need any service component to already exist. Only existing service components can be referenced in VS2005 projects. That´s ok for the grid component you use - but what about the components you develop yourself? You´d need to develop them strictly bottom-up. But that´s bad for your productivity.</li>
+<li>When testing the client component it always needs to use the real service component. That might be bad for your testing speed, though, because the service component might need a long time for its operations. Testing would be easier if you could exchange the service component for some stand-in or mock-up to ease testing of the client component. But usage of the service component is hard wired into the client which instanciates classes from it.</li>
+</ul>
+<p>So, what can you do to overcome these hurdles in component oriented software development?</p>
+<p>Use Contract-First-Design!</p>
+<p>CFD changes the above picture like this:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/eb4b042862c76180.gif" /></p>
+<p>A client component no longer references its service components, but only so called contracts. Each contract describes the services of a service component in terms of interfaces and other data types independent of any service implementation. The contracts of one or more components can be assembled in a contract assembly. However I prefer a one-to-one mapping: each contract gets its own assembly and each assembly is contains only one contract.</p>
+<p>Contract-First-Design then means, you define all contracts before you implement them. You create contract assemblies before their service components which implement the interfaces described in their contracts.</p>
+<p>Then - and this is crucial to CFD! - client components only reference contracts. Client components don´t reference service components anymore! During design time client components don´t know which service components will fulfill their requests during runtime. There is no more static binding between client and service components.</p>
+<p>That´s why you can´t instanciate classes from a service component anymore in a client component. You simply don´t know the class implementing a service contract´s interface.</p>
+<p>This might sound grim to you - and it is considering support of this style of programming in VS2005. <br />
+But don´t despair! Help´s on its way.</p>
+<p>But first: How does CFD solve the above two problems?</p>
+<ul>
+<li>Since you no longer reference a service component in your client but just its contract assembly, you are free to develop components in any order you like or in parallel. Only the contract assemblies need to be present - that´s why it´s called Contract First (!) Design.</li>
+<li>Since service components are no longer referenced there are no dependencies on their types in a client component´s code anymore. As long as some component is available during testing which adheres to the contract required by the client, the client can be tested. There needs just a way to map the contract to a concrete implementation during runtime. If this implementation then is just a mock-up or "the real thing" is of no concern for the client component´s code.</li>
+</ul>
+<h3>A Microkernel to the rescue</h3>
+<p>So if there is no static binding between client and service anymore, how and when is a client component then bound to a service component? This binding happens dynamically during runtime - and is done by a <em>Microkernel</em>. (I prefer the term Microkernel (or the simpler <em>Service Locator</em>) instead of <em>Dependency Injecttion</em> or <em>Inversion of Control</em> framework, since I want to keep the concept of dynamic binding separate from the initialization of objects and am skeptical about automatically weaving large dependency networks.)</p>
+<p>A Microkernel helps a client component to overcome its ignorance regarding the service implementation. A Microkernel makes the impossible possible: it lets you instanciate an interface! Instead of</p>
+<p>... = new MyServiceClass();</p>
+<p>you write something doing the equivalent of</p>
+<p>.. .= new IMyService();</p>
+<p>Or to be more concrete, here´s how you´d do it using my little Microkernel:</p>
+<p>using ralfw.Microkernel;<br />
+...<br />
+<strong>... = DynamicBinder.GetInstance(typeof(IMyService));</strong></p>
+<p>Of course a Microkernel is not smarter than VS2005 or the .NET Framework. So in order to accomplish its feat, the Microkernel needs some help. Before it can instanciate an interface it needs to know to the implementing class. Please note: The Microkernel needs to know this mapping between interface (contract) and class (service implementation), not the client component. This might sound like a small difference compared to how you usually work, but in fact it is not. It´s a major difference separating would be component orientation from real and true component orientation.</p>
+<p>To help the Microkernel you need to provide it with the required mapping information: For each interface of a contract a client should be able to instanciate you need to state the class to instanciate behind the scene. You need to bind interfaces to implementations, e.g. "Interface <em>ServiceContract.IMyService</em> is implemented by class <em>AllMyServices.MyServiceClass</em> in assembly <em>AllMyServices.dll</em>."</p>
+<p>This mapping can be done either imperatively:</p>
+<p>DynamicBinder.AddBinding(typeof(IMyService), <br />
+                         "AllMyServices.MyServiceClass, AllMyServices", <br />
+                         false);</p>
+<p>or in a XML mapping file (which can be the <em>app.config</em> of your program):</p>
+<?xml version="1.0" encoding="utf-8" ?>
+<p><configuration><br />
+    <configSections><br />
+        <sectionGroup name="microkernel"><br />
+           <section name="objects" <br />                    type="ralfw.Microkernel.ConfigSectionMappingAdapter, ralfw.Microkernel" /><br />
+        </sectionGroup><br />
+    </configSections></p>
+<p><microkernel><br />
+        <objects><br />
+            <object name="ServiceContract.IMyService" <br />                    type="AllMyServices.MyServiceClass, AllMyServices" /><br />
+        </objects><br />
+    </microkernel><br />
+</configuration></p>
+<p>That´s it! More you don´t need to do.</p>
+<ol>
+<li>Design your contracts and formalize them as assemblies in their own right.</li>
+<li>Bind client components to contract assemblies instead of service components.</li>
+<li>Define the mapping between contract interfaces and service component classes implementing them.</li>
+<li>Use a Microkernel to instanciate service component classes through their contract interfaces.</li>
+</ol>
+<p>Easy, isn´t it?</p>
+<h3>The downside of using a Microkernel</h3>
+<p>Well, you could stop reading here and start using my little Microkernel or any other like dynamic binding framework. They all work alike.</p>
+<p>However, sooner or later you´ll find a couple of things disturbing the rosy picture of just outlined:</p>
+<ul>
+<li>Setting up the mapping - even a declarative mapping like the XML above - is tedious and error prone. If you truely subscribe to component oriented programming and decompose your software solution into a larger number of components and also keep these components in different (!) VS2005 solutions to enforce component oriented thinking and ease of parallel development, then you´ll end up defining a lot of mappings. And each one, even the most straightforward ones, require some setup effort.</li>
+<li>If your client components no longer reference service components directly then VS2005 cannot help gather all assemblies in the execution directory of a solution´s startup project. You´ll have to somehow copy the relevant files manually before running a project.</li>
+<li>Components often read some parameters for their work from an external file. The .NET Framework provides an easy means for this via its <em>System.Configuration.ConfigurationManager</em> object. Just put any parameters into the <em>app.config</em> of your program. This might be just fine as long as you develop your software within a single large VS2005 solution. But as soon as you set up separate VS2005 solutions for each component you´ll need to merge settings from several <em>app.config</em> files whenever you integrate several components.</li>
+</ul>
+<p>This is the downside of using a Microkernel: If you subscribe to CFD and want to let the organization of your code reflect your component oriented design, then you loose quite some convenience provided by VS2005.</p>
+<p>Or to put it the other way around: Microkernels are a great way to reach higher productivity and better testability - but this comes at quite some price. It´s less convient than using VS2005 like Microsoft is promoting it.</p>
+<p>Since I deem the Microkernel concept core to true component orientation and found it unnerving to deal with the above problems, I´m trying to overcome them with my own little Microkernel and some guidance.</p>
+<h3>Solution 1: Semi-automatic gathering of assemblies</h3>
+<p>Once you no longer reference service components but just contracts, VS2005 does not help you anymore gathering all necessary assemblies in your EXE-project´s <em>bin</em> directory. Fortunately it´s quite easy to "simulate" the VS behavior. Here´s my guideline:</p>
+<p>In the VS2005 project supposed to integrate several componets, add the components´ assemblies manually using the "Add existing item...". Be sure to link (!) them and set the "Copy to output directory" flag to <em>true</em>!</p>
+<p>Here´s an example: Consider the following simple component oriented architecture.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/04e496a8b199cb4d.gif" /></p>
+<p>Three components. The frontend is the client of the businesslogic, which in turn is the client of the DB adapter. Two contract isolate the clients from any concrete implementations of the services they depend on.</p>
+<p>Following CFD the contracts are defined first and then implemented as distinct VS2005 projects:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/87af795b8337c1f3.gif" /></p>
+<p>Since the DB adapter does not rely on any further service component, it´s straightforward to implement:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/65f4bdf9d9cffd89.gif" /></p>
+<p>Put it in a VS2005 solution of its own and add a test project which could contain unit tests for the component. The whole solution I call a <em>component test bed</em>, because it not only contains the component itself but also any tests and possible mock-up (as stand-ins for service components required by the component under development).</p>
+<p>Enter the Microkernel: The client of the DB adapter is the businesslogic component. It too is put into a test bed solution of its own:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/f9b96ce204d65d6b.gif" /></p>
+<p>Since the businesslogic needs the service of the DB adapter, it refrences the respective contract as well as the Microkernel. In code it then instanciates the DB adapter using the <em>DynamicBinder</em> class:</p>
+<p>namespace microkernel.demo.logic<br />
+{<br />
+    public class Businesslogic : contract.IBusinesslogic<br />
+    {<br />
+        private microkernel.demo.dbadapter.contract.IDBAdapter db;  </p>
+<p>public Businesslogic()<br />
+        {<br />
+            db = (microkernel.demo.dbadapter.contract.IDBAdapter)<br />
+<strong>ralfw.Microkernel.DynamicBinder.GetInstance(</strong><br />
+<strong>typeof(</strong>microkernel.demo.dbadapter.contract.<strong>IDBAdapter))</strong>;<br />
+        }<br />
+        ...</p>
+<p>Using the Microkernel in the businesslogic means, any integrator of components including the businesslogic needs to provide a <em>IDBAdapter</em> implementation. In the above sample that´s the task of the <em>test businesslogic</em> project.</p>
+<p>But since neither it nor the businesslogic can or should reference the <em>DBAdapter</em> component in the regular way, how can this be accomplished? How can the test project provide a <em>IDBAdapter</em> implementation during runtime? By linking the DBAdapter component into the project (see highlighted project item above) and setting its "Copy to Output Directory" property to <em>true</em>. VS2005 will then see to that the <em>bin\debug</em> or <em>bin\release</em> directory will always contain the latest copy of this file. And that´s like VS2005 behaves for ordinarily referenced assemblies.</p>
+<p>If you want to be able to step into a component linked into a project like this be sure to also link in its <em>.pdb</em> file. The same is true for any supporting files the component needs (e.g. other assemblies it depends on or configuration files).</p>
+<p>By following this guideline you can get the same level of convenience you´re used to from using VS2005 and regular assembly references. It requires slightly more effort - but it ensures you can reap the benefits of using a Microkernel.</p>
+<p>To sum up:</p>
+<ul>
+<li>A project implementing a contract references the contract assembly as usual. It´s exporting this contract. See the DBAdapter project above.</li>
+<li>A project using a contract references the contract assembly as usual. It´s importing this contract. In addition it references the Microkernel and uses it to instanciate contract interfaces. See the Businesslogic project above.</li>
+<li>A project hosting components which use the Microkernel at least needs to link in the assemblies of any service component required in the described way. See test project for businesslogic above.</li>
+</ul>
+<h3>Solution 2: Automatic mapping</h3>
+<p>Once all required service components have been gathered in a host´s runtime directory a mapping has to be built. Any contract interfaces to be instanciated by client components need to be bound to classes in service components implementing them.</p>
+<p>This is usually done using a declarative mapping in the <em>app.config</em> of the hosting project (e.g. the test project for businesslogic above) or in a separate XML mapping file. Here´s a sample <em>app.config</em>:</p>
+<?xml version="1.0" encoding="utf-8" ?>
+<p><configuration><br />
+    <configSections><br />
+        <sectionGroup name="microkernel"><br />
+           <section name="objects" <br />                    type="ralfw.Microkernel.ConfigSectionMappingAdapter, ralfw.Microkernel" /><br />
+        </sectionGroup><br />
+    </configSections></p>
+<p><microkernel><br />
+        <objects><br />
+            <object name="microkernel.demo.dbadapter.contract.IDBAdapter" <br />                    type="microkernel.demo.dbadapter.DBAdapter, microkernel.demo.dbadapter" /><br />
+        </objects><br />
+    </microkernel><br />
+</configuration></p>
+<p>Please note the config section handler defined at the top. It´s needed for the Microkernel to access the <em><microkernel></em> section. This mapping section can be either named <em><microkernel></em> or <em><spring></em>, because its <em><objects></em> element looks like the one from Spring.Net, although it´s stripped down to the essential mapping information.</p>
+<p>Each <em><object></em> binding consists of a name for the binding and the type to be instanciated for this name. The type information is given as the fully qualified class name followed by the assembly name containing the class. It´s the usual .NET Framework format for such kind of information.</p>
+<p>The name of the binding is arbitrary - however I prefer to set it to the fully qualified name of the interface type to be instanciated and which is implemented by the type referenced. The Microkernel supports this convention by providing a <em>GetInstance()</em> overload which takes an interface type and uses its full name as the name for the binding to look up in the mapping.</p>
+<p>In order to load mappings from the <em>app.config</em> call</p>
+<p>ralfw.Microkernel.DynamicBinder.LoadBindings();</p>
+<p>right after start of the hosting code.</p>
+<p>If you want to keep the mapping info in a separate XML file like this:</p>
+<?xml version="1.0" encoding="utf-8" ?>
+<p><microkernel><br />
+   <objects><br />
+       <object name="microkernel.demo.dbadapter.contract.IDBAdapter" <br />               type="microkernel.demo.dbadapter.DBAdapter, microkernel.demo.dbadapter" /><br />
+   </objects><br />
+</microkernel></p>
+<p>then call</p>
+<p>ralfw.Microkernel.DynamicBinder.LoadBindings("mymappings.xml");</p>
+<p>instead.</p>
+<p><em>LoadBindings()</em> will read the bindings, build a map and load the referenced assemblies. When you later call <em>DynamicBinder.GetInstance()</em> the Microkernel will look up the name and instanciate the type referenced implementation type. Either a new instance is created each time or a singleton is created once. This you can determine by setting the singleton attribute of the mapping.</p>
+<object name="microkernel.demo.dbadapter.contract.IDBAdapter"   
+        type="microkernel.demo.dbadapter.DBAdapter, microkernel.demo.dbadapter"  
+**singleton="true"** />
+
+<p>The default is <em>false</em>.</p>
+<p>That´s all nice and well - but it´s quite cumbersome. Especially when you start using a Microkernel you´ll hate to get the mapping right first before you can see your program running. That´s why my little Microkernel provides a third way of setting up the mapping.</p>
+<p>When you call</p>
+<p><strong>ralfw.Microkernel.DynamicBinder.CompileBindings();</strong></p>
+<p>the Microkernel will determine the mappings all by itself. It will scan all assemblies in the runtime directory of the host and check if they contain contract interfaces or contract interface implementations. Interfaces will automatically bound to implementations. No explicit mapping is needed on your side. Just ensure all service component assemblies are there.</p>
+<p>In addition only one small hint you need to give to the Microkernel: You need to annotate contract interface which client components should be able to instanciate with an attribute:</p>
+<p>namespace microkernel.demo.dbadapter.contract<br />
+{<br />
+    [<strong>ralfw.Microkernel.Bindable()</strong>]<br />
+    public interface IDBAdapter<br />
+    {<br />
+        ...</p>
+<p>That´s all. The Microkernel will now be able to spot relevant contract interfaces and find any class implementing them in the assemblies present in the runtime directory.</p>
+<p>One word of caution: This is a feature to help you enter the realm of true component oriented development. It´s targeted at pretty small projects with maybe 10, 20, 30 assemblies in the runtime directory. So please don´t blame it on the Microkernel, if <em>CompileBindings()</em> takes too long for your taste, if you use it with hundreds of components. It´s not targeted for such large scenarios - at least not performance wise.</p>
+<h3>Solution 3: Distributed settings</h3>
+<p>Once you start developing components in a way like I described above, where you set up test bed solutions for each component, you´ll soon realize, it´s hard to merge all the different <em>app.config</em> settings required by the components. In many test beds you´ll define special settings for just this component which later will have to be copied to the <em>app.config</em> of the integrating host project. That´s tedious and error prone work.</p>
+<p>To make the handling of settings (or external component parameters) easier, I propose component local config files. Here´s an example:</p>
+<p>Let´s assume the DBAdapter requires a connection string it wants to load from an external setting file. Instead of putting it into the <em>app.config</em> create a XML setting file in the DBAdapter´s project with a name of your choice, e.g. <em>microkernel.demo.dbadapter.config</em>. It could look like this:</p>
+<?xml version="1.0" encoding="utf-8" ?>
+<p><configuration><br />
+    <appSettings><br />
+        <add key="connectionstring" value="server=..."/><br />
+    </appSettings><br />
+</configuration></p>
+<p>Then add a reference to the Microkernel to the DBAdapter even though it does not want to instanciate any service components. Rather the Microkernel is used to load the setting (instead of the usual <em>System.Configuration.ConfigurationManager</em>):</p>
+<p>namespace microkernel.demo.dbadapter<br />
+{<br />
+    public class DBAdapter : contract.IDBAdapter<br />
+    {<br />
+        public int[] LoadValues(string filename)<br />
+        {<br />
+            string connectionstring;<br />
+<strong>connectionstring = ralfw.Microkernel.ConfigurationManager.Settings("microkernel.demo.dbadapter.config")["connectionstring"];</strong>            ...</p>
+<p>The <em>Settings()</em> method returns a <em>ConfigFile</em> object which - for now - allows access to <em><appSettings></em> settings in the file specified.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/8b0f2ec793f33b1b.gif" /></p>
+<p>In order to have your own config file available where it´s needed during runtime, link it into the integrating host project like a component assembly (see highlighted file in  the above picture) and set its "Copy to Output Directory" flag to <em>true</em>.</p>
+<p>This way you can set up individual settings for each component in several XML files and avoid merging them into a single file for integration. Instead you just link in all necessary settings files and use a single API to access them, the Microkernel´s <em>ConfigurationManager</em>.</p>
+<p>This is close to how the .NET Framework handles such settings. So it´s easy to understand and use. Currently the <em>ConfigFile</em> class is limited to accessing <em><appSettings></em> only, but if distributing settings in this way appears practical, then it´s easy to add support for config section handlers.</p>
+<h3>Summary</h3>
+<p>Even though my little Microkernel does not sport an array of features like Spring.Net etc. it does a decent job of dynamically binding contract implementations. But what´s most important, it´s much easier to start with than other service locator frameworks, since it can build the interface-implementation mapping automatically and let´s you keep component settings separate.</p>
+<p>The guideline for linking in components manually helps you to enforce a true distributed development of components in their own test beds and still benefit from some VS2005 help during integration. That´s ok for a start, I´d say. But in the long run, I want to provide some tool support for this too. But that´s a different story. Stay tuned!</p>
+<p>For now, have fun using <a rel="noopener" href="https://web.archive.org/web/20160430150540/http://www.ralfw.de/download/microkernel2.zip">my little Microkernel</a> and feel free to let me know what you think of it.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

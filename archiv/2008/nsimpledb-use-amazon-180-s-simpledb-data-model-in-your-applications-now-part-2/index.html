@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NSimpleDB - Use Amazon´s SimpleDB data model in your applications now - Part 2 — ralfw.de Archiv</title>
+<meta name="description" content="Amazon´s SimpleDB is an exciting new player in the database world. It´s free, it´s online, it´s not relational. SimpleDB is a dynamic database implementing a tuple space. Currently">
+<link rel="canonical" href="https://ralfw.de/archiv/2008/nsimpledb-use-amazon-180-s-simpledb-data-model-in-your-applications-now-part-2/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="NSimpleDB - Use Amazon´s SimpleDB data model in your applications now - Part 2 — ralfw.de Archiv">
+<meta property="og:description" content="Amazon´s SimpleDB is an exciting new player in the database world. It´s free, it´s online, it´s not relational. SimpleDB is a dynamic database implementing a tuple space. Currently">
+<meta property="og:url" content="https://ralfw.de/archiv/2008/nsimpledb-use-amazon-180-s-simpledb-data-model-in-your-applications-now-part-2/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>NSimpleDB - Use Amazon´s SimpleDB data model in your applications now - Part 2</h1>
+    <div class="doc-meta"><span>19. Jan. 2008</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net/ralfw/nsimpledb-use-amazon-180-s-simpledb-data-model-in-your-applications-now-part-2" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2008/nsimpledb-use-amazon-180-s-simpledb-data-model-in-your-applications-now-part-2/</code></span></div>
+    <div class="art"><p>Amazon´s <a rel="noopener" href="https://web.archive.org/web/20160909040757/http://www.amazon.com/gp/browse.html?node=342335011">SimpleDB</a> is an exciting new player in the database world. It´s free, it´s online, it´s not relational. SimpleDB is a dynamic database implementing a <a rel="noopener" href="https://web.archive.org/web/20160909040757/http://en.wikipedia.org/wiki/Tuple_space">tuple space</a>. Currently SimpleDB (as of Jan 08) is in beta - but not everyone can get his hands on it. You have to apply and line up for one of the limited test accounts.</p>
+<p>Nevertheless it´s worthwhile to take a closer look at SimpleDB. It´s a brave step forward by Amazon to offer an online database (accessible via a web service) that´s deviating from the mainstream data model of RDBMS.</p>
+<p>In <a rel="noopener" href="https://web.archive.org/web/20160909040757/http://weblogs.asp.net/ralfw/archive/2008/01/18/nsimpledb-use-amazon-180-s-simpledb-data-model-in-your-applications-now-part-1.aspx">part 1</a> of the series of postings I described this data model: You store tuples (aka items) consisting of name-value pairs (aka attributes) in a SimpleDB "data space" without the need of any configuration. No schema design necessary. No tuple needs to look like an other. Just so called domains are a structuring concept to group tuples. But it´s nowhere written you have to use more than one domain. Even different kinds of items don´t force you to distribute them across domains. Domains that way are more of a concern regarding scalability and quantitative constraints Amazon put on them.</p>
+<h3>A simple SimpleDB API</h3>
+<p>The data model of SimpleDB is simple, so is its API. It´s not based on a query language (although it provides set selection, see below), but rather follows the tuple space concept in that it defines just a small number of methods to read item from and write item to the "data space".</p>
+<p>Following I´ll use pseudo code to describe the API. I think will be pretty self explaining. In reality Amazon offers a web service to work with SimpleDB, so you´ll use some kind of proxy class in your code. Amazon even published a <a rel="noopener" href="https://web.archive.org/web/20160909040757/http://developer.amazonwebservices.com/connect/kbcategory.jspa?categoryID=148">.NET binding</a> - but hasn´t gotten rave reviews so far. There is much room for improvement.</p>
+<h5>Attributes as smallest data units</h5>
+<p>The smallest piece of data with SimpleDB is an attribute. An attribute is a name value pair like <em>"Name"("Peter")</em> or <em>"Amount due"("000000300.00")</em> or <em>"DOB"("2000-05-12")</em> or <em>"Marked for deletion"("1")</em>.</p>
+<p>As you can see, values are just strings. It´s like with XML. Attribute names are also strings - and they can contain white space. This makes them easier to read and use as labels in frontends.</p>
+<p>In addition - and in stark deviation from the relational data model - attributes can have multiple values, e.g. <em>"Phone numbers"("05195-7234", "040-413 823 090", "0170-233 4439")</em>.</p>
+<p>Amazon suggests, you don´t try to store large pieces of data in attributes, e.g. a multi-MB image. Rather you should put such byte-blobs into some other store - e.g. a file on an FTP-server or <a rel="noopener" href="https://web.archive.org/web/20160909040757/http://aws.amazon.com/s3">Amazon´s S3</a> - and use the attribute value as a reference.</p>
+<h5>Items as containers for attributes</h5>
+<p>Attributes belong to items. In principle items can contain any number of attributes, but Amazon put some limitations on them. Currently only 256 attributes are allowed in each item.</p>
+<p>Items can be written as tuples and are identified by an explicit id you have to provide, e.g. <em>"123"["Name"("Peter"), "City"("Berlin")]</em>. The id is called "item name" an again is a string.</p>
+<p>As you can see, attributes are tuples with unnamed elements, but items are tuples whose elements are named.</p>
+<h5>Domains as containers for items</h5>
+<p>Items are stored in domains. Like them, domains have an id, the domain name. No schema needs to be defined for them. Just pour items of any structure into them as you like, e.g. <em>"contacts"{"123"["Name"("Peter"), "Addresses"("a", "b")], "a"["City"("London"), "Country"("GB")], "b"["City"("Hamburg"), "Country"("Germany")]}</em>.</p>
+<p>As you can see, domains are tuples, too. Their elements are named tuples, the items.</p>
+<h5>Writing data</h5>
+<p>Roughly you can say, domains are like tables, items are like records in a table, attributes are table columns. So storing data with SimpleDB means: write items with their attributes to a domain. That´s like writing records with their column data to a table.</p>
+<p>SimpleDB provides a single operation for writing data: <em>PutAttributes()</em>. Identify where you want to put the attributes - into which item in which domain -, hand in the attributes - and you´re done.</p>
+<p>This command would write a single attribute to the item with name "123" in domain "contacts":</p>
+<p><em>PutAttributes("contacts", "123", ["Name"("Peter")])</em></p>
+<p>But now watch! If you then issue this command</p>
+<p><em>PutAttribute("contacts", "123", ["Addresses"("a")])</em></p>
+<p>you don´t overwrite what´s been stored in the item, but add to it! The same is true for this command:</p>
+<p><em>PutAttribute("contacts", "123", ["Addresses"("b")])</em></p>
+<p>Remember that attributes can have several values. Item "123" now looks like this: <em>"123"["Name"("Peter"), "Addresses"("a", "b")]</em>. So you better also write the referenced addresses to the domain:</p>
+<p><em>PutAttribute("contacts", "a", ["City"("London"), "Country"("GB")])</em><em>PutAttribute("contacts", "b", ["City"("Hamburg"), "Country"("Germany")])</em></p>
+<p>But how then can you overwrite data, e.g. change the name of tis contact? If you just issue a <em>PutAttributes()</em> with the new name, the name will be added as a second value to the existing attribute. To overwrite you need to add a replace-flag to an attribute (I´ll denote it with a "!" after the attribute name):</p>
+<p><em>PutAttributes("contacts", "123", ["Name"!("Paul")])</em></p>
+<p>Replacing an attribute like this deletes all (!) existing attribute values and replaces them with the new value.</p>
+<p>A word of caution: Amazon´s SimpleDB is supposed to scale. That´s why they distribute it across many servers and need to replicate data all the time. That in turn means, it will take some time until changes you made by <em>PutAttributes()</em> and the other operations ripple through to all relevant servers. So don´t expect to see changes right after you applied them! Otherwise, if you issue a <em>PutAttributes()</em> followed right away by a <em>GetAttributes()</em> for the same data - this could run on a different thread - you might be in for a surprise.</p>
+<h5>Reading data</h5>
+<p>Reading items back from the SimpleDB "data space" is even easier than writing them. Just send the <em>GetAttributes()</em> command addressing an item in a domain and pass the names of the attributes to retrieve:</p>
+<p><em>GetAttributes("contacts", "123", "Name")</em></p>
+<p>will return <em>["Name"("Paul")]</em>. Of course you can specify more attributes to be retrieved. And since you only state their name, they´ll be returned with all their values.</p>
+<p>Item data can only be retrieved like this! Queries (see below) just return item names, but no attributes. Think of them as SQL statements like this:</p>
+<p><em>select attributeName1, attributeName2, ... from domainName where itemName="..."</em></p>
+<p>Looking up data thus always is a two step process: 1. Issue query and receive a list of matching items, 2. retrieve item´s attributes with an item name from the query result.</p>
+<h5>Deleting data</h5>
+<p>You can´t delete items explicitly. You can only delete attributes from them - and if none are left in the item, the item is deleted automatically.</p>
+<p><em>DeleteAttributes("contacts", "123", "Addresses")</em></p>
+<p>only deletes the references to the other items, but the contact item remains in the domain. You also need to delete its name attribute, plus, of course, the parentless addresses:</p>
+<p><em>DeleteAttributes("contacts", "123", "Name")</em><em>DeleteAttributes("contacts", "a", "City", "Country")</em><em>DeleteAttributes("contacts", "b", "City", "Country")</em></p>
+<h5>Creating a domain</h5>
+<p>Working with domains as the containers for items is easy. You can create a domain at any time. Just call</p>
+<p><em>CreateDomain("contacts")</em></p>
+<p>and that´s it. Just pass in a unique domain name. From then on, you can use this domain name in item-operations.</p>
+<h5>Deleting a domain</h5>
+<p>Deleting a domain is as easy as creating it:</p>
+<p><em>DeleteDomain("contacts")</em></p>
+<p>The items and attributes in that domain will be gone then. But this might take up to 10 seconds, Amazon says, due to the distributed nature of SimpleDB.</p>
+<h5>Querying domains</h5>
+<p>If you want to get an overview of the domains in your SimpleDB "data space", just call <em>ListDomains():</em></p>
+<p><em>ListDomains(10, &amp;nextToken)</em></p>
+<p>It returns a list of domain names. This resultset is paged, though. The first parameter to <em>ListDomains()</em> specifies the size of these pages, e.g. 10 domain names per page, the second parameter is a token you can use to retrieve the next page.</p>
+<p>Passing in a token to <em>ListDomains()</em> returns that page´s domain names and sets the token to the next page, if there is any.</p>
+<p><em>nextToken = ""<br />
+domainNames = ListDomains(10, &amp;nextToken)<br />
+// process first page of domain names<br />
+domainNames = ListDomains(10, &amp;nextToken)<br />
+// process second page of domain names<br />
+...</em></p>
+<h5>Querying data</h5>
+<p>Finally, there is also a way to query items. SimpleDB sports a simple query language. You can think of the queries as the where-clause of a SQL select statement, e.g.</p>
+<p><em>select itemName from domainName where </em><em>simpleDB-query</em>**</p>
+<p>Queries are limited to a single domain and return just item names as paged resultsets like <em>ListDomains()</em>.</p>
+<p>The building blocks of queries are <em>predicates</em>. A predicate is a logical expression made up of attribute comparisons, e.g.</p>
+<p><em>['City' = 'Hamburg' OR 'City' = 'London']</em></p>
+<p>Both attribute name and attribute value need to be put in single quotes. SimpleDB sports the usual comparison operators like =, != etc. and a <em>STARTS-WITH</em> which resembles the SQL like, e.g. <em>like 'A%'</em>.</p>
+<p><em>['Name' STARTS-WITH 'A']</em></p>
+<p>Remember, all comparisons are alphanumeric, since SimpleDB only stores texts.</p>
+<p>The logical operators within predicates are <em>AND</em>, <em>OR</em> and <em>NOT</em>.</p>
+<p>You may only query for a single attribute name with one predicate! <em>['City'='Hamburg' OR 'City'='London']</em> is ok, but not <em>['Name'='Peter' AND 'City'='London']</em>!</p>
+<p>To state queries on attributes with different names, you need to separate predicates for each:</p>
+<p><em>['Name'='Peter'] INTERSECT ['City'='London']</em></p>
+<p>The set-operations to combine the resultsets of each predicate into one are <em>INTERSECT</em>, <em>UNION</em> and <em>NOT</em>. <em>INTERSECT</em> calculates the common set of item names of two predicates, <em>UNION</em> merges the item name sets of two predicates. <em>INTERSECTS</em> thus works like the logical <em>AND</em> operator, <em>UNION</em> like the <em>OR</em>.</p>
+<p>Why does Amazon deviate like this from the well established SQL way of defining queries? The reason probably lies with the internal structure of the SimpleDB "data space". Grouping the constraints on attributes with the same name probably makes query execution faster. Maybe SimpleDB is based on a <a rel="noopener" href="https://web.archive.org/web/20160909040757/http://en.wikipedia.org/wiki/Column-oriented_DBMS">column store</a>?</p>
+<h6>EBNF SimpleDB query syntax</h6>
+<p><em>Query ::= ItemSetTerm { "UNION" ItemSetTerm }.</em></p>
+<p><em>ItemSetTerm ::= ItemSetFactor { "INTERSECTION" ItemSetFactor }.<br />
+ItemSetFactor ::= [ "NOT" ] "[" PredicateExpression "]".</em></p>
+<p><em>PredicateExpression ::= PredicateTerm { "OR" PredicateTerm }.<br />
+PredicateTerm ::= PredicateFactor { "AND" PredicateFactor }.<br />
+PredicateFactor ::= [ "NOT" ] PredicateComparison.<br />
+PredicateComparison ::= AttributeName ComparisonOperator AttributeValue.</em></p>
+<p><em>AttributeName ::= Chars enclosed in single quotes, e.g. 'Name'. <br />
+                  All AttributeNames in a PredicateExpression need to be the same.<br />
+                  All quotes in AttributeName need to be properly escaped.<br />
+AttributeValue ::= Chars enclosed in single quotes, e.g. '003.14'.<br />
+                   All quotes in AttributeValue need to be properly escaped.</em></p>
+<p><em>ComparisonOperator ::= "=" | "!=" | "&gt;" | "&gt;=" | "&lt;" | "&lt;=" | "STARTS-WITH".</em></p>
+<h5>What´s missing?</h5>
+<p>SimpleDB´s API is simple. That´s the beauty of it. A simple, dynamic data model plus a simple API sounds like a powerful combination for today´s fast moving software business.</p>
+<p>But this simplicity comes at a price. Common operations like looking up data, are more cumbersome than with SQL. It´s a two step process due to SimpleDB´s queries returning just item names. Also currently transactions are missing completely.</p>
+<p>Another aspect to get used to is the <a rel="noopener" href="https://web.archive.org/web/20160909040757/http://www.allthingsdistributed.com/2007/12/eventually_consistent.html">"eventual consistency"</a> model, that means, changes take time to ripple through to all replicas of your data. Thus after a change there might be a short time where different clients might see the "data space" in a different state.</p>
+<p>But overall, Amazon´s effort is very exciting nevertheless.</p>
+<h5>What´s next?</h5>
+<p>I deem SimpleDB even so exciting, that I wanted to be able to use it now and on my desktop. But there is no desktop/local version of SimpleDB and I don´t know when Amazon will grant me a test account of SimpleDB.</p>
+<p>That´s why I sat down and developed my own Open Source version of SimpleDB: the <a rel="noopener" href="https://web.archive.org/web/20160909040757/http://code.google.com/p/nsimpledb/">.NET SimpleDB or NSimpleDB</a> for short. I believe in the growing importance of <a rel="noopener" href="https://web.archive.org/web/20160909040757/http://en.wikipedia.org/wiki/Tuple_space">tuple spaces</a> in general and thus also am working with the University Vienna on bringing this paradigm to the hands of .NET developers. We call the basic technology "XVSM" for "eXtensible Virtual Shared Memory"; and it´s somewhat like SimpleDB. But on top we place more elaborate data structures so our space is not just partioned into domains but collections and other high level data structures. We envison them to allow for true "Space Based Collaboration" (SBC), which is in our view the foundation for "serverless real-time online collaboration". But I digress.</p>
+<p>Back to SimpleDB: In my next posting I´ll show you, how you can use SimpleDB or the C# implementation of the SimpleDB API in your applications today without reliance on Amazon.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

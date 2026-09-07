@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Code instrumentation with TraceSource - My personal vade mecum — ralfw.de Archiv</title>
+<meta name="description" content="When writing more complex code you cannot really step through during debugging, it´s helpful to put stud it with statements tracing the execution flow. The .NET Framework provides ">
+<link rel="canonical" href="https://ralfw.de/archiv/2007/code-instrumentation-with-tracesource-my-personal-vade-mecum/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Code instrumentation with TraceSource - My personal vade mecum — ralfw.de Archiv">
+<meta property="og:description" content="When writing more complex code you cannot really step through during debugging, it´s helpful to put stud it with statements tracing the execution flow. The .NET Framework provides ">
+<meta property="og:url" content="https://ralfw.de/archiv/2007/code-instrumentation-with-tracesource-my-personal-vade-mecum/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Code instrumentation with TraceSource - My personal vade mecum</h1>
+    <div class="doc-meta"><span>31. Okt. 2007</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/code-instrumentation-with-tracesource-my-personal-vade-mecum" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2007/code-instrumentation-with-tracesource-my-personal-vade-mecum/</code></span></div>
+    <div class="art"><p>When writing more complex code you cannot really step through during debugging, it´s helpful to put stud it with statements tracing the execution flow. The .NET Framework provides for this purpose the System.Diagnostics namespace. But whenever I just quickly wanted to use it, it turned out to be a hassle to get the tracing running properly. That´s why I wrote down the following, to make it easier next time.</p>
+<h3>How to instrument the code?</h3>
+<p>In the code set up different <em>System.Diagnostics.TraceSource</em> objects. For each area to watch define a trace source name, e.g. "BusinessLogic" or "Validation" or "TextFileAdapter". Each such trace source later can be switched on/off separatedly.</p>
+<p>using System.Diagnostics;</p>
+<p>...</p>
+<p>TraceSource ts;</p>
+<p>ts = new TraceSource("HelloWorld", SourceLevels.All);</p>
+<p>A <em>TraceSource</em> object can be instantiated for just one method or can be kept around for a long time as a global (or even static) reference.</p>
+<p>To trace the execution use one of the <em>TraceXYZ()</em> methods of <em>TraceSource</em>. Most of the times one of the following will do. <em>TraceInformation()</em> writes an informational message, i.e. with <em>TraceEventType</em> <em>Information</em>:</p>
+<p>ts.TraceInformation("# of records processed: {0}", n);</p>
+<p>That´s the same as this:</p>
+<p>ts.TraceEvent(TraceEventType.Information, 10, "# of records processed: {0}", n);</p>
+<p>But <em>TraceEvent()</em> can do more. With it you can issue message on different levels, e.g. just informational messages, warnings, error messages. The <em>id</em> (10 above) will show up in the event log in its own column ("Event").</p>
+<p>Since tracing can sometimes produce an overwhelming amount of messages, you can filter them. For example you can restrict the output of messages to errors only. But you should not do so in your code. That´s why you should pass <em>SourceLevels.All</em> to the <em>TraceSource</em> ctor. (Without setting a source level explicitly, the default is <em>Off</em>, so you´d see no messages at all!)</p>
+<p>However, if you want to limit the tracing imperatively to certain levels of messages, you can do so by passing a combination of levels to the ctor, e.g.</p>
+<p>ts = new TraceSource("HelloWorld", SourceLevels.Critical | SourceLevels.ActivityTracing);</p>
+<h3>How to attach tracing to different message sinks?</h3>
+<p>Tracing messages are written to any sink attached to the tracing infrastructure. A sink can be a text file or the console or an event log. Each sink is represented by a <em>TraceListener</em> object. A trace source can have any number of listeners listening for messages and write them to its sink.</p>
+<p>Listeners can be attached to trace sources imperatively in your code - or using the App.Config. I prefer the App.Config, because it allows to you add and remove listeners without touching your code.</p>
+<p>But as long as you´re satisfied with tracing messages being sent to the debug output window of VS.NET, you don´t need an App.Config at all. There is a default listener attached to each trace source.</p>
+<p>If you want to direct the message to other sinks, though, or filter them, then you need to tweak the App.Config. Here is the most simple trace source defined in the App.Config - but its sink still is the debug output.</p>
+<p><configuration></p>
+<p><system.diagnostics></p>
+<p><sources></p>
+<p><source name="HelloWorld"></p>
+<p></source></p>
+<p></sources></p>
+<p></system.diagnostics></p>
+<p></configuration></p>
+<p>The <em>name</em> needs to match the name passed to a <em>TraceSource</em> object in your code.</p>
+<p>Now, you can add listeners to this source element to have the source´s tracing messages sent to different sinks:</p>
+<p><source name="HelloWorld"></p>
+<p><listeners></p>
+<p>&lt;add name="consoleListener"</p>
+<p>type="System.Diagnostics.ConsoleTraceListener"&gt;</p>
+<p></add></p>
+<p></listeners></p>
+<p></source></p>
+<p>This listener´s sink is the console window. By adding it to the source all tracing messages are sent to the console window - plus the debug output window. The default listener is still attached to the source. If you want messages to go to just the sinks you define, remove the default listener:</p>
+<p><source name="HelloWorld"></p>
+<p><listeners></p>
+<p><remove name="Default"/></p>
+<p>&lt;add name="consoleListener"</p>
+<p>type="System.Diagnostics.ConsoleTraceListener"&gt;</p>
+<p></add></p>
+<p></listeners></p>
+<p></source></p>
+<p>Now you can add any number and kind of <em>TraceListener</em> object as within your reach. Here are the ones provided by the .NET Framework:</p>
+<p><system.diagnostics></p>
+<p><sources></p>
+<p><source name="HelloWorld"></p>
+<p><listeners></p>
+<p><remove name="Default"/></p>
+<p>&lt;add name="consoleListener"</p>
+<p>type="System.Diagnostics.ConsoleTraceListener"/&gt;</p>
+<p>&lt;add name="eventlogListener"</p>
+<p>type="System.Diagnostics.EventLogTraceListener"</p>
+<p>initializeData="Application"/&gt;</p>
+<p>&lt;add name="textfileListener"</p>
+<p>type="System.Diagnostics.TextWriterTraceListener"</p>
+<p>initializeData="helloworld.log" /&gt;</p>
+<p>&lt;add name="xmlfileListener"</p>
+<p>type="System.Diagnostics.XmlWriterTraceListener"</p>
+<p>initializeData="helloworld.xml" /&gt;</p>
+<p>&lt;add name="defaultListener"</p>
+<p>type="System.Diagnostics.DefaultTraceListener"/&gt;</p>
+<p></listeners></p>
+<p></source></p>
+<p></sources></p>
+<p></system.diagnostics></p>
+<p>What the sinks of the listeners are, should be pretty obvious from their names. The <em>DefaultTraceListener</em> is the one writing to debug output, though.</p>
+<p>Three of the listeners need to be primed with additional data specifying the message sink. Pass a filename to the <em>XmlWriterTraceListener</em> and the <em>TextWriterTraceListener</em>. Pass an event log name to the <em>EventLogTraceListener</em>. Use the attribute <em>initializeData</em> for these parameters.</p>
+<p><strong>Please note</strong>: The <em>TextWriterTraceListener</em> works best, if you set the <em>autoflush</em> attribute of the <Trace/> element to <em>true</em>:</p>
+<p><system.diagnostics></p>
+<p><trace autoflush="true"/></p>
+<p>Otherwise the log file might be empty, because the listener did not get properly closed. <em>autoflush</em> lets the trace source call <em>Flush()</em> on all listeners after each message, so no messages get lost.</p>
+<h3>How to share listeners between sources?</h3>
+<p>Adding a listener to a source by putting its definition into the source is a bit cumbersome, if you have several sources and want to use the same listener in all of them. But there´s a simpler way. Define a shared listener and reference it in the <em><add/></em> element.</p>
+<p><system.diagnostics></p>
+<p><sources></p>
+<p><source name="HelloWorld"></p>
+<p><listeners></p>
+<p><remove name="Default"/></p>
+<p><add name="textfileListener"/></p>
+<p></listeners></p>
+<p></source></p>
+<p><source name="GoodBye"></p>
+<p><listeners></p>
+<p><remove name="Default"/></p>
+<p><add name="textfileListener"/></p>
+<p></listeners></p>
+<p></source></p>
+<p></sources></p>
+<p><sharedListeners></p>
+<p>&lt;add name="textfileListener"</p>
+<p>type="System.Diagnostics.TextWriterTraceListener"</p>
+<p>initializeData="helloworld.log" /&gt;</p>
+<p></sharedListeners></p>
+<p></system.diagnostics></p>
+<p>If you want to (temporarily) limit a (shared) sink to the messages from just one source, then you can set up a filter in the listener´s definition:</p>
+<p><sharedListeners></p>
+<p>&lt;add name="textfileListener"</p>
+<p>type="System.Diagnostics.TextWriterTraceListener"</p>
+<p>initializeData="helloworld.log"&gt;</p>
+<p>&lt;filter type="System.Diagnostics.SourceFilter"</p>
+<p>initializeData="GoodBye"/&gt;</p>
+<p></add></p>
+<p></sharedListeners></p>
+<p>Just name the only source the listener should listen to.</p>
+<h3>How to limit tracing to certain message levels?</h3>
+<p>The number of messages produced by instrumented code can be huge sometimes. So what you want to do pretty often is, filter the messages according to some criteria. The tracing API lets you do that quite easily for the trace level of the messages.</p>
+<p>As was shown above regarding the <em>TraceSource</em> ctor and TraceEvent() method, each message belongs to a trace message level or category. To block messages belonging to certain levels you can do two things: set up a switch or set up a filter.</p>
+<p>The switch switches on/off a source according to the message level. That´s most simple by using the <em>switchValue</em> attribute of the <em><source/></em> element:</p>
+<p><source name="HelloWorld" switchValue="Warning"></p>
+<p><listeners></p>
+<p><remove name="Default"/></p>
+<p>&lt;add name="consoleListener"</p>
+<p>type="System.Diagnostics.ConsoleTraceListener"&gt;</p>
+<p></add></p>
+<p></listeners></p>
+<p></source></p>
+<p>Enter any of the <em>SourceLevels</em> enum names shown in the following table:</p>
+<p><img loading="lazy" alt="Bild nicht mehr verfügbar" src="/assets/_shared/placeholder-missing-image.svg" /></p>
+<p><em>(Bild nicht mehr verfügbar – in der Wayback-Aufnahme nicht mitgespeichert. Ursprünglicher Dateiname: image_1.png)</em></p>
+<p>The correspond to the <em>SourceLevels</em> parameter of the <em>TraceSource</em> ctor. The table shows which trace message levels are let through or are blocked by each switch value.</p>
+<p>Alternatively use the TraceLevel integer values shown in the following table:</p>
+<p><img loading="lazy" alt="Bild nicht mehr verfügbar" src="/assets/_shared/placeholder-missing-image.svg" /></p>
+<p><em>(Bild nicht mehr verfügbar – in der Wayback-Aufnahme nicht mitgespeichert. Ursprünglicher Dateiname: image_3.png)</em></p>
+<p>If you want to share switches among several sources, you can set up a switch definition and reference it:</p>
+<p><system.diagnostics></p>
+<p><switches></p>
+<p><add name="mySwitch" value="Information"/></p>
+<p></switches></p>
+<p><sources></p>
+<p><source name="HelloWorld" switchName="mySwitch"></p>
+<p>...</p>
+<p></source></p>
+<p><source name="GoodBye" switchName="mySwitch"></p>
+<p>...</p>
+<p></source></p>
+<p>Now, what if you want to send some messages to a certain sink and others to another sink? For exeample you want to separate error messages from informational messages? Then you use filters on listeners again:</p>
+<p>&lt;add name="consoleListener"</p>
+<p>type="System.Diagnostics.ConsoleTraceListener"&gt;</p>
+<p>&lt;filter type="System.Diagnostics.EventTypeFilter"</p>
+<p>initializeData="Critical"/&gt;</p>
+<p></add></p>
+<p>Pass to an <em>EventTypeFilter</em> a <em>SourceLevels</em> enum name and it will listen only for messages on that level.</p>
+<p>That´s pretty much it to get code basically instrumented:</p>
+<ul>
+<li>Use several trace sources to be able to switch on/off tracing for different parts of your code independently.</li>
+<li>Choose trace listeners to direct messages where you can easily analyse the execution flow.</li>
+<li>Choose switches and filters to limit the messages written to the sinks so you are not burried under a pile of irrelevant details.</li>
+</ul></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

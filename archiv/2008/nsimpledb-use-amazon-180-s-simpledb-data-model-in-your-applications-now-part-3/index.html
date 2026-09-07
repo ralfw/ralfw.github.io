@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NSimpleDB - Use Amazon´s SimpleDB data model in your applications now - Part 3 — ralfw.de Archiv</title>
+<meta name="description" content="In my previous postings about Amazon´s SimpleDB data model and API I explained, what Amazon´s online database service - or to be more precise: tuple space - has to offer in general">
+<link rel="canonical" href="https://ralfw.de/archiv/2008/nsimpledb-use-amazon-180-s-simpledb-data-model-in-your-applications-now-part-3/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="NSimpleDB - Use Amazon´s SimpleDB data model in your applications now - Part 3 — ralfw.de Archiv">
+<meta property="og:description" content="In my previous postings about Amazon´s SimpleDB data model and API I explained, what Amazon´s online database service - or to be more precise: tuple space - has to offer in general">
+<meta property="og:url" content="https://ralfw.de/archiv/2008/nsimpledb-use-amazon-180-s-simpledb-data-model-in-your-applications-now-part-3/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>NSimpleDB - Use Amazon´s SimpleDB data model in your applications now - Part 3</h1>
+    <div class="doc-meta"><span>19. Jan. 2008</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2008/01/19/nsimpledb-use-amazon-180-s-simpledb-data-model-in-your-applications-now-part-3.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2008/nsimpledb-use-amazon-180-s-simpledb-data-model-in-your-applications-now-part-3/</code></span></div>
+    <div class="art"><p>In my previous postings about <a rel="noopener" href="https://web.archive.org/web/20080612120308/http://aws.amazon.com/simpledb">Amazon´s SimpleDB</a> <a rel="noopener" href="https://web.archive.org/web/20080612120308/http://weblogs.asp.net/ralfw/archive/2008/01/18/nsimpledb-use-amazon-180-s-simpledb-data-model-in-your-applications-now-part-1.aspx">data model</a> and <a rel="noopener" href="https://web.archive.org/web/20080612120308/http://weblogs.asp.net/ralfw/archive/2008/01/19/nsimpledb-use-amazon-180-s-simpledb-data-model-in-your-applications-now-part-2.aspx">API</a> I explained, what Amazon´s online database service - or to be more precise: tuple space - has to offer in general. If this sounds interesting to you, then now welcome to the desktop. Because it´s the desktop on which you can actually experience what it´s like to use such a tuple space. SimpleDB currently (as of Jan 08) is just in limited beta and you have to line up to get one of the limited test accounts.</p>
+<p>But you don´t need to wait for Amazon to open up more. I implemented the SimpleDB data model and API in C# for you to integrate in your desktop or web applications. It´s an Open Source project at Google Code called <a rel="noopener" href="https://web.archive.org/web/20080612120308/http://code.google.com/p/nsimpledb/">NSimpleDB</a> as short for .NET SimpleDB. I´d say it pretty much offers all features SimpleDB - but as an embeddable database engine instead of an online service.</p>
+<h3>Installing NSimpleDB</h3>
+<p>There are two ways for you to use NSimpleDB: Either you download the <a rel="noopener" href="https://web.archive.org/web/20080612120308/http://code.google.com/p/nsimpledb/source">source code</a> from the subversion repository of the NSimpleDB site. Then you can browse the sources and compile it yourself. But please note, you need to also install a <a rel="noopener" href="https://web.archive.org/web/20080612120308/http://www.vistadb.net/">VistaDb database engine</a>. NSimpleDB internally is based on VistaDb and needs its libraries. As you can imagine I did not want do develop a whole persistence engine just to implement SimpleDB´s tuple space. But you can download an eval copy of VistaDb and need not fear to incur any costs right away. Also VistaDb is working on a free community edition, which I will of course use for NSimpleDB once it´s available.</p>
+<p>Or, if you don´t want to mess around with the NSimpleDB source code, you can download the small demo application from the <a rel="noopener" href="https://web.archive.org/web/20080612120308/http://code.google.com/p/nsimpledb/downloads/list">download area</a>, which comes with a complete NSimpleDB engine as just one assembly: <em>NSimpleDB.dll</em>.</p>
+<h3>Using NSimpleDB</h3>
+<p>If you´re using the precompiled version of NSimpleDB just reference NSimpleDB.dll from your .NET project. If you compiled NSimpleDB yourself, though, reference <em>NSimpleDB.Service.Contract.dll</em> as well as <em>NSimpleDB.Service.VistaDb.dll</em> from the global <em>bin</em> folder of the source code tree. Also be sure to either have VistaDb installed on the same machine or copy <em>VistaDB.NET20.dll</em> into your projects´s output folder.</p>
+<p>In any case you then should "open" the following namespaces in your source code:</p>
+<p>using NSimpleDB.Service.Contract;</p>
+<p>using NSimpleDB.Service.VistaDb;</p>
+<h3>Opening a NSimpleDB database</h3>
+<p>To work with NSimpleDB you need to manage a connection to a database file like with any regular RDBMS product. You can do it with the method pair <em>Open()</em>/<em>Close()</em> like this:</p>
+<p>VistaDbSimpleDBService ts = new VistaDbSimpleDBService();</p>
+<p>ts.Open("hello.ts");</p>
+<p>...</p>
+<p>ts.Close();</p>
+<p>Just be sure to call <em>Close()</em> at the end. Pass in any name you like to give to your database file. NSimpleDB does not require a certain filename extension.</p>
+<p>Or you can rely on the compile to generate the code to automatically close the connection. <em>VistaDbSimpleDBSevice</em> implements <em>IDisposable</em>:</p>
+<p>using (VistaDbSimpleDBService ts = new VistaDbSimpleDBService("hello.ts"))</p>
+<p>{</p>
+<p>...</p>
+<p>}</p>
+<h3>Working with domains</h3>
+<p>In order to store any data in your NSimpleDB tuple space you need to create a domain first. It´s as simple as this:</p>
+<p>ts.CreateDomain("contacts");</p>
+<p>No return value, nothing. This operation is idempotent. You can´t create a domain twice. From then on you can use the domain name in other operations.</p>
+<p>To delete a domain, call the opposite operation:</p>
+<p>ts.DeleteDomain("contacts");</p>
+<p>This operation also is idempotent, don´t worry. And it´s asynchronous. Although the domain will become inaccessible right away for future operations, current operations are not interrupted and the actual deletion will take place at a later time.</p>
+<p>Reflecting on domains then can be as easy as this:</p>
+<p>string[] domainNames;</p>
+<p>domainNames = ts.ListDomains();</p>
+<p>foreach (string d in domainNames)</p>
+<p>Console.WriteLine(d);</p>
+<p>But this is just the NSimpleDB way of doing it. Amazon´s SimpleDB does not provide such a simple way for retrieving all domain names. Instead the resultset is returned in pages. You determine the page size on the initial call to <em>ListDomains()</em>:</p>
+<p>domainNames = ts.ListDomains(10, out nextToken);</p>
+<p>Also you pass a token variable into which the method puts an identifier for the next page. To retrieve it, call <em>ListDomains()</em> again just with this token:</p>
+<p>domainNames = ts.ListDomains(ref nextToken);</p>
+<p>If there are no more pages, the token is set to null.</p>
+<p>Here´s how you can retrieve all domain names in a pagewise manner using these operations:</p>
+<p>string[] domainNames;</p>
+<p>string nextToken;</p>
+<p>domainNames = ts.ListDomains(3, out nextToken);</p>
+<p>while (domainNames.Length &gt; 0)</p>
+<p>{</p>
+<p>foreach (string d in domainNames)</p>
+<p>Console.WriteLine(d);</p>
+<p>domainNames = ts.ListDomains(ref nextToken);</p>
+<p>}</p>
+<h3>Working with items and attributes</h3>
+<h5>Storing items</h5>
+<p>Once you created a domain you can start storing items in it. Each item is uniquely identified by the domain name and its item name. The attributes to put into the item are passed as <em>ISimpleDBAttribute</em> objects. NSimpleDB for this reason provides the <em>SimpleDBAttribute</em> class:</p>
+<p>ts.PutAttributes("contacts",</p>
+<p>"123",</p>
+<p>new SimpleDBAttribute("Firstname", "John"),</p>
+<p>new SimpleDBAttribute("Lastname", "Doe"));</p>
+<p>You can freely choose an item name. You even need to choose one. It´s the primary key of the item, so to speak.</p>
+<p>To later add an attribute to an item, just call <em>PutAttributes()</em> again and pass it the additional attribute:</p>
+<p>ts.PutAttributes("contacts",</p>
+<p>"123",</p>
+<p>new SimpleDBAttribute("DOB", "1972-10-23"));</p>
+<p>Adding attributes is so easy, because they can contain multiple values. In the relational data model you would need to define more than one column or even set up a second table for this kind of 1:n relationship. Not so with (N)SimpleDB:</p>
+<p>ts.PutAttributes("contacts",</p>
+<p>"123",</p>
+<p>new SimpleDBAttribute("Phone", "555-1234"),</p>
+<p>new SimpleDBAttribute("Phone", "0170-332 3483"));</p>
+<p>But then, how do you replace an attribute´s value? Pass it by explicitly stating you want it to be replaced:</p>
+<p>ts.PutAttributes("contacts",</p>
+<p>"123",</p>
+<p>new SimpleDBAttribute("Firstname", "Peter", true));</p>
+<p>Create the attribute object with <em>true</em> for the replace parameter.</p>
+<h5>Retrieving attributes</h5>
+<p>Retrieving an item is even easier than storing it. What you get is an array of <em>ISimpleDBAttribute</em> objects:</p>
+<p>ISimpleDBAttribute[] attributes;</p>
+<p>attributes = ts.GetAttributes("contacts", "123");</p>
+<p>foreach (ISimpleDBAttribute a in attributes)</p>
+<p>Console.WriteLine("{0}={1}", a.Name, a.Value);</p>
+<p>The default is to return all attributes with all their values. But you can limit the number of attributes by passing in explicit attribute names:</p>
+<p>attributes = ts.GetAttributes("contacts", "123", "Firstname", "Phone");</p>
+<h5>Deleting attributes and items</h5>
+<p>You can delete attributes from an item at any time. Just specify their names. They´ll be purged from the item with all their values:</p>
+<p>ts.DeleteAttributes("contacts", "123", "Phone");</p>
+<p>Once all attributes are gone, the item is gone as well. To make this easier, there is a shortcut. Just don´t specify any attribute name at all:</p>
+<p>ts.DeleteAttributes("contacts", "123");</p>
+<h5>Querying for items</h5>
+<p>Use <em>GetAttributes()</em> to retrieve a single item. But for that you have to know the item´s name. Where do you get this item name from, though? Just use a query:</p>
+<p>string[] itemNames;</p>
+<p>itemNames = ts.Query("contacts", "['Firstname'='John']");</p>
+<p>SimpleDB´s query syntax is just about conditions the items, you´re looking for, have to fulfill. So it´s not a full blown data retrieval/manipulation language like SQL, but more just like a syntax for logical expressions. Here´s a second example to illustrate this:</p>
+<p>itemNames = ts.Query("contacts", "['Firstname'='John' OR 'Firstname'='Peter'] UNION ['Lastname'='Davis']");</p>
+<p>To load the attributes for the found items, just call <em>GetAttributes()</em> in a second step:</p>
+<p>foreach (string itemName in itemNames)</p>
+<p>{</p>
+<p>Console.WriteLine(itemName);</p>
+<p>ISimpleDBAttribute[] attributes;</p>
+<p>attributes = ts.GetAttributes("contacts", itemName);</p>
+<p>foreach (ISimpleDBAttribute a in attributes)</p>
+<p>Console.WriteLine("{0}={1}", a.Name, a.Value);</p>
+<p>}</p>
+<p>That´s it. Easy - but different from working with SQL.</p>
+<p>Read more about the query syntax in <a rel="noopener" href="https://web.archive.org/web/20080612120308/http://weblogs.asp.net/ralfw/archive/2008/01/19/nsimpledb-use-amazon-180-s-simpledb-data-model-in-your-applications-now-part-2.aspx">my previous posting</a>.</p>
+<p>Since a query potentially matches a large number of items, SimpleDB´s querying is paged. NSimpleDB sports an unpaged version (see above), but of course also paged querying. It works like paged domain retrieval:</p>
+<p>string[] itemNames;</p>
+<p>string nextToken;</p>
+<p>itemNames = ts.Query("contacts",</p>
+<p>"...",</p>
+<p>10,</p>
+<p>out nextToken);</p>
+<p>while (itemNames.Length &gt; 0)</p>
+<p>{</p>
+<p>foreach (string itemName in itemNames)</p>
+<p>{</p>
+<p>...</p>
+<p>}</p>
+<p>itemNames = ts.Query(ref nextToken);</p>
+<p>}</p>
+<h3>Conclusion</h3>
+<p>This is NSimpleDB. A simple data persistence API - but unlike your regular RDBMS. Nevertheless I find it very interesting an am looking forward for Amazon to open up its beta program for SimpleDB. But until then you can get acquaintant with SimpleDB´s data model by using <a rel="noopener" href="https://web.archive.org/web/20080612120308/http://code.google.com/p/nsimpledb/">NSimpleDB</a> locally. Enjoy!</p>
+<p>PS: Let me know any questions and suggestions you might have. Just email me via <a rel="noopener" href="https://web.archive.org/web/20080612120308/http://www.ralfw.de/impressum.html">my homepage</a>.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 656 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>
