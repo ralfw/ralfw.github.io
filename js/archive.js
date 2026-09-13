@@ -34,7 +34,10 @@ function fmt(d){
 }
 
 /* ---------------------------------------------------------------- Start */
-fetch(BASE + "data/articles.json")
+/* Die Datendateien tragen dieselbe Versionskennung wie CSS und JS, sonst zeigt
+   ein zwischengespeichertes articles.json ein veraltetes Archiv an. */
+var DV = window.__dataV || {};
+fetch(BASE + "data/articles.json" + (DV.a ? "?v=" + DV.a : ""))
   .then(function(r){ return r.json(); })
   .then(function(data){
     SRCMAP = {}; data.sources.forEach(function(s){ SRCMAP[s.key] = s; });
@@ -393,7 +396,7 @@ function loadSearch(){
   if(searchState !== "idle") return;
   searchState = "loading";
   stateEl.textContent = "Volltextindex wird geladen …";
-  fetch(BASE + "data/search.json")
+  fetch(BASE + "data/search.json" + (DV.s ? "?v=" + DV.s : ""))
     .then(function(r){ return r.json(); })
     .then(function(j){
       SEARCH = j; searchState = "ready";
