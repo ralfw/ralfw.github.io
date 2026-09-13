@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Our view of applications and databases needs to change: Think more services! — ralfw.de Archiv</title>
+<meta name="description" content="After 5 locations of Microsoft DevDays tour throughout Germany and my talk on building a data access layer and several conversations with colleagues and attendees, I´m now convince">
+<link rel="canonical" href="https://ralfw.de/archiv/2004/our-view-of-applications-and-databases-needs-to-change-think-more-serv/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Our view of applications and databases needs to change: Think more services! — ralfw.de Archiv">
+<meta property="og:description" content="After 5 locations of Microsoft DevDays tour throughout Germany and my talk on building a data access layer and several conversations with colleagues and attendees, I´m now convince">
+<meta property="og:url" content="https://ralfw.de/archiv/2004/our-view-of-applications-and-databases-needs-to-change-think-more-serv/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Our view of applications and databases needs to change: Think more services!</h1>
+    <div class="doc-meta"><span>12. Mai 2004</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2004/05/12/130367.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2004/our-view-of-applications-and-databases-needs-to-change-think-more-serv/</code></span></div>
+    <div class="art"><p>After 5 locations of Microsoft DevDays tour throughout Germany and my talk on building a data access layer and several conversations with colleagues and attendees, I´m now convinced of the following:</p>
+<p>-How application development currently is "sold" is wrong. Developers still - after 8 years of Microsoft application server - don´t really understand the concept of application server or the value of business logic components. (And I mean "real" business logic with a service oriented interface.)</p>
+<p>The culprit I identified: How we draw pictures of applications. In those pictures the frontend still gets to much weight. The business logic is not at the center of attention.</p>
+<p>That needs to change!</p>
+<p>The business logic has to be emphasized as the "real" application, its heart.</p>
+<p>And this business logic then communicates with resources or services to do its job. Plus, it gets triggered by clients. And I mean "triggered". What a WinForms frontend does or a WSH script is firing an event in the business logic. Nothing more.</p>
+<p>So any specific frontend is optional. Sure there needs to be some, but it can be veeeery simple, e.g. WSH script calling one method on the BL, setting it thereby off to work for weeks.</p>
+<p>-Secondly I´m now sure we need to change our view of interaction with databases (or resources in general). Databases need to be viewed as services, i.e. we need to look at them through a set of interfaces. "We" in this means any client of a database, e.g. a business logic layer.</p>
+<p>Clients of databases must not only be free of db API calls (e.g. there should be no ADO.NET use in BL), but also of any SQL statements.</p>
+<p>Clients should definitively view databases only through a list of high level methods. Whether these methods are then implemented by a Data Access Layer as inline SQL or a stored proc, the clients don´t care about.</p>
+<p>If data access is implemented this way, binding to a database can be as simple as referencing an assembly or accessing a webservice. The database looks just like a set of methods for retrieving/storing/manipulating its data. And those methods mirror the concepts found during requirements analysis. Those methods know of "Customers" or "Orders" etc. They are specific to a problem domain, not generic. They deal with business entities, not abstract entities like tables.</p>
+<p>More in a future posting.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

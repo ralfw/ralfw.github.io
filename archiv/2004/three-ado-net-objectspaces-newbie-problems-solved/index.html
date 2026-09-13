@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Three ADO.NET ObjectSpaces Newbie Problems Solved — ralfw.de Archiv</title>
+<meta name="description" content="When I started playing with Whidbey´s ADO.NET ObjectSpaces object persistence technology (see [[1]](https://web.archive.org/web/20070212184229/http://www.microsoft.com/belux/nl/msd">
+<link rel="canonical" href="https://ralfw.de/archiv/2004/three-ado-net-objectspaces-newbie-problems-solved/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Three ADO.NET ObjectSpaces Newbie Problems Solved — ralfw.de Archiv">
+<meta property="og:description" content="When I started playing with Whidbey´s ADO.NET ObjectSpaces object persistence technology (see [[1]](https://web.archive.org/web/20070212184229/http://www.microsoft.com/belux/nl/msd">
+<meta property="og:url" content="https://ralfw.de/archiv/2004/three-ado-net-objectspaces-newbie-problems-solved/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Three ADO.NET ObjectSpaces Newbie Problems Solved</h1>
+    <div class="doc-meta"><span>2. Feb. 2004</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2004/02/02/66164.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2004/three-ado-net-objectspaces-newbie-problems-solved/</code></span></div>
+    <div class="art"><p>When I started playing with Whidbey´s ADO.NET ObjectSpaces object persistence technology (see <a rel="noopener" href="https://web.archive.org/web/20070212184229/http://www.microsoft.com/belux/nl/msdn/community/columns/jtielens/objectspaces.mspx">[1]</a> for an introductory article) I immediately ran into two nasty problems costing me a long time to solve:</p>
+<ol>
+<li>
+<p>Trying to avoid problems I started with a sample from Microsoft. But it won´t run at all. Instead it threw the exception "Can not load System.Data.Objectspaces.dll". I was very surprised, since Whidbey otherwise installed ok. So I thought, maybe the wrong versions were referenced in the Microsoft sample project. But that wasn´t the case. Then some newsgroup postings suggested to use absolute paths in the mapping schema file for the OSD/RSD references. This didn´t help either.<br />
+Finally the unlikely - or very likely - solution was, to just register System.Data.Objectspaces.dll in the GAC, since it turned out, it hadn´t been registered during installation.<br />
+Why this wasn´t done beats me. And I wonder, why only one source in some newsgroup in a slavic language I don´t speak recommended to check, if the assembly had been registered in the GAC.</p>
+</li>
+<li>
+<p>After I had solved the first problem I was optimistic to now be able to really dive down into ObjectSpaces. But when running my VB.NET console app I again wasn´t able to get past the second line of code:</p>
+</li>
+</ol>
+<p>Sub Main()<br />
+    Dim conn As New SqlConnection("data source=localhost;database=northwind;integrated security=true")<br />
+    Dim os As New ObjectSpace("map.xml", conn)<br />
+End Sub</p>
+<p>Instanciation of ObjectSpace now failed with the error message "Cannot locate a domain structure for Customer". (Customer being my sample class.) I again tried to put in absolute paths to the mapping files and add namespaces to class names. Nothing helped. Then I moved the type definition from the library project in my solution to the main project - and the error message at least changed. Then I added a namespace to the class name only in the mapping schema file, and the error message changed again.</p>
+<p>What that means is: ObjectSpaces requires all types referenced by mapping schemas to be already in memory when it gets instanciated. This is of course no problem in the usual Microsoft demo scenarios, where everything is put into just one project. But real solutions consist of many projects, and class definitions for persistent objects mostly will not be located where ObjectSpaces are created.</p>
+<p>So the solution is simple: Either put everything in just one project, or load all assemblies containing types needed by OS mapping schemas before instanciating an ObjectSpace. The simple solution for me was to first instanciate an object of the only type I needed in my main program:</p>
+<p>Sub Main()<br />
+<strong>Dim x As New ClassLibrary1.Customer</strong>    Dim conn As New SqlConnection("data source=localhost;database=northwind;integrated security=true")<br />
+    Dim os As New ObjectSpace("map.xml", conn)<br />
+End Sub</p>
+<ol start="3">
+<li>When I switched from my console application to a winforms app, the above code did not work anymore. The mapping file map.xml could not be loaded. I tried to prefix the filename with the path from Environment.CurrentDirectory - but to no avail. CurrentDirectory does not point to the bin or bin\debug directory of a winforms project during development time. Instead it points to the solution root directory. So I used instead:</li>
+</ol>
+<p>IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.CodeBase)</p>
+<p>But this did not solve the problem, but just moved it. Now the mapping files referenced my by mapping schema could not be found. So I finally needed to make the paths in the Location attributes absolute:</p>
+<p><m:Schema Location="c:\...\bin\osd.xml" /></p>
+<p><strong>Resources</strong>[1] Jan Tielens, <a rel="noopener" href="https://web.archive.org/web/20070212184229/http://www.microsoft.com/belux/nl/msdn/community/columns/jtielens/objectspaces.mspx">Getting Started with ObjectSpaces</a></p>
+<p><strong>Share this post:</strong> <a rel="noopener" href="https://web.archive.org/web/20070212184229/mailto:/?body=Thought%20you%20might%20like%20this:%20http://weblogs.asp.net/ralfw/archive/2004/02/02/66164.aspx&amp;;subject=Three+ADO.NET+ObjectSpaces+Newbie+Problems+Solved" title="Post http://weblogs.asp.net/ralfw/archive/2004/02/02/66164.aspx">email it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070212184229/http://del.icio.us/post?url=http://weblogs.asp.net/ralfw/archive/2004/02/02/66164.aspx&amp;;title=Three+ADO.NET+ObjectSpaces+Newbie+Problems+Solved" title="Post http://weblogs.asp.net/ralfw/archive/2004/02/02/66164.aspx">bookmark it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070212184229/http://www.digg.com/submit?url=http://weblogs.asp.net/ralfw/archive/2004/02/02/66164.aspx&amp;;phase=2" title="Post http://weblogs.asp.net/ralfw/archive/2004/02/02/66164.aspx">digg it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070212184229/http://reddit.com/submit?url=http://weblogs.asp.net/ralfw/archive/2004/02/02/66164.aspx&amp;title=Three+ADO.NET+ObjectSpaces+Newbie+Problems+Solved" title="Post http://weblogs.asp.net/ralfw/archive/2004/02/02/66164.aspx">reddit!</a> | <a rel="noopener" href="https://web.archive.org/web/20070212184229/http://www.dotnetkicks.com/submit/?url=http://weblogs.asp.net/ralfw/archive/2004/02/02/66164.aspx&amp;;title=Three+ADO.NET+ObjectSpaces+Newbie+Problems+Solved" title="Post http://weblogs.asp.net/ralfw/archive/2004/02/02/66164.aspx">kick it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070212184229/https://favorites.live.com/quickadd.aspx?marklet=1&amp;;mkt=en-us&amp;;url=http://weblogs.asp.net/ralfw/archive/2004/02/02/66164.aspx&amp;;title=Three+ADO.NET+ObjectSpaces+Newbie+Problems+Solved&amp;;top=1" title="Post http://weblogs.asp.net/ralfw/archive/2004/02/02/66164.aspx">live it!</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

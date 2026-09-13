@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hürde beim Warten auf ein Prozessende — ralfw.de Archiv</title>
+<meta name="description" content="In meinem Code von gestern habe ich gacutil.exe gestartet, um die (De)Registrierung einer Assembly im GAC vorzunehmen:">
+<link rel="canonical" href="https://ralfw.de/archiv/2003/hurde-beim-warten-auf-ein-prozessende/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hürde beim Warten auf ein Prozessende — ralfw.de Archiv">
+<meta property="og:description" content="In meinem Code von gestern habe ich gacutil.exe gestartet, um die (De)Registrierung einer Assembly im GAC vorzunehmen:">
+<meta property="og:url" content="https://ralfw.de/archiv/2003/hurde-beim-warten-auf-ein-prozessende/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Hürde beim Warten auf ein Prozessende</h1>
+    <div class="doc-meta"><span>11. Juli 2003</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/posts/9964.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2003/hurde-beim-warten-auf-ein-prozessende/</code></span></div>
+    <div class="art"><p>In meinem Code von gestern habe ich gacutil.exe gestartet, um die (De)Registrierung einer Assembly im GAC vorzunehmen:</p>
+<p>dim psi as New ProcessStartInfo("gacutil.exe", string.Format("/i {0}.dll", assName))<br />
+psi.UseShellExecute = false<br />
+p = new Process<br />
+p.Start(psi)</p>
+<p>Das war schön und gut und hat funktioniert. Zwischendurch hatte ich dann mal gedacht, ich sollte vielleicht nach Start() darauf warten, dass der Prozess beendet wird. Also habe ich</p>
+<p>p.WaitForExit()</p>
+<p>danach eingesetzt. Allerdings hat das immer zu einem Fehler geführt :-( Da es nicht so wichtig war, habe ich es dann 'raus genommen.</p>
+<p>Letztlich hat es mich aber nicht in Ruhe gelassen. Warum sollte so ein simpler Aufruf nicht funktionieren? Was konnte ich potenziell falsch gemacht haben? Also habe ich grad mal ein Testprogramm zusammengeklimpert, um das Problem zu isolieren:</p>
+<p>dim psi as New ProcessStartInfo("notepad.exe")<br />
+psi.UseShellExecute = false<br />
+dim p as new Process()<br />
+p.Start(psi)<br />
+p.WaitForExit</p>
+<p>Auch hier trat der Fehler auf. Gut so, also habe ich ein wenig herumexperimentiert. Bei WaitForExit() habe ich in der Doku einen Hinweis darauf gefunden, dass die Methode fehlschlägt, wenn dem Prozess keine Id oder kein Handle zugewiesen ist. Also habe ich mal Folgendes getestet:</p>
+<p>...<br />
+p.Start(psi)<br />
+console.writeline(p.Id)</p>
+<p>Das führte auch zu einem Fehler. Die Spur war also richtig. Aber warum sollte der Prozess, den ich mit new Process() erzeuge, keine Id haben??? Weil die Variable p auf keinen endgültig initialisierten Prozess verweist! Die Anweisungen</p>
+<p>dim p as new Process()<br />
+p.Start(psi)</p>
+<p>erzeugen nämlich zwei Prozessobjekte! Auf eines verweist p, ein anderes wird durch p.Start(psi) generiert, weil die Methode Start(ProcessStartInfo) eine statische Methode der Klasse Process ist. Wer hätte das gedacht? Hätte ich geschrieben</p>
+<p>dim p as new Process()<br />
+p.StartInfo = psi<br />
+p.Start()</p>
+<p>wäre alles gut gewesen. Der VS.NET Editor für VB.NET hatte mir jedoch auf p auch die Start()-Methode mit dem ProcessStartInfo-Parameter via IntelliSense gelistet, so dass ich mir das Setzen der Property StartInfo sparen wollte. Ich bin also in eine IntelliSense-Falle getappt. Für VB.NET listet VS.NET auf Instanzvariablen auch statische Methoden ihrer Klasse; der C# Codeeditor tut das nicht. Dort wäre mir das Problem nicht untergekommen.</p>
+<p>Korrekt funktioniert es also in jedem Fall wie folgt:</p>
+<p>dim p as Process = Process.Start(psi)<br />
+p.WaitForExit</p>
+<p>Die statische Factory-Methode liefert ein vollständig initialisiertes Prozessobjekt zurück, auf dem dann WaitForExit() aufgerufen werden kann.</p>
+<p>So schön VB.NET also ist, hier muss man ein wenig aufpassen. Klassenmethoden auf Instanzen aufrufen zu können, ist vielleicht doch keine so gute Idee. Mir fällt auch grad kein Grund ein, warum es nötig sein sollte. Guter OOP-Stil ist es jedenfalls nicht.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

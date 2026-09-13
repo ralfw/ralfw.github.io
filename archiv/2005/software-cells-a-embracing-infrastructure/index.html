@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software Cells #A: Embracing Infrastructure — ralfw.de Archiv</title>
+<meta name="description" content="In a previous posting I already tackled the topic of infrastructure. But I feel, it needs some more thoughts.">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/software-cells-a-embracing-infrastructure/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software Cells #A: Embracing Infrastructure — ralfw.de Archiv">
+<meta property="og:description" content="In a previous posting I already tackled the topic of infrastructure. But I feel, it needs some more thoughts.">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/software-cells-a-embracing-infrastructure/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Software Cells #A: Embracing Infrastructure</h1>
+    <div class="doc-meta"><span>5. Juni 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2005/06/05/410417.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/software-cells-a-embracing-infrastructure/</code></span></div>
+    <div class="art"><p>In <a rel="noopener" href="https://web.archive.org/web/20070302134155/http://weblogs.asp.net/ralfw/archive/2005/05/20/408027.aspx">a previous posting</a> I already tackled the topic of infrastructure. But I feel, it needs some more thoughts.</p>
+<p>At the beginning of my journey into Software Cells was an uneasyness about the term "application". It seemed, developers were not all too clear about it. Now, as it turns out, I feel the same about "infrastructure". My impression is, in software projects distinguish not enough between problem domain and infrastructure. By that I don´t mean, nobody takes into account a HTTP like IIS is needed to host the code of an intranet application. And of course all developers are aware they have to rely on an OS or even some other runtime.</p>
+<p>What I mean is a distinction for the code you write yourself. Developers are used to categorize their code along the software layer model; so they split the solution up into frontend code, businesslogic code and data access code. But when it come to security, validation, caching, internationalization etc. they have a hard time to tell, where this belongs to. The software layer model then offers to put it somewhat on the side:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/51dee4ed7e5b16f8.jpg" /></p>
+<p>But this is an after thought of the software layer model. There was no infrastructure in the picture at the beginning and if you look at the literature, infrastructure is treated differently or not at all. Examples: for Robert Chartier is is <a rel="noopener" href="https://web.archive.org/web/20070302134155/http://www.15seconds.com/issue/011023.htm">part of the layers (see his proxy tier)</a>, or Malveau and Mowbray <a rel="noopener" href="https://web.archive.org/web/20070302134155/http://www.phptr.com/articles/article.asp?p=169547&amp;seqNum=6&amp;rl=1">don´t paint infrastructure into their pictures at all</a>.</p>
+<p>I now think, this is very contraproductive, misleading and causes confusion among developers. A completely different view of software is necessary, where the distinction between primary problem domain (the customers problem we need to solve) and any infrastructure needs to be a top priority.</p>
+<p>Since the software layer does not offer any clear means to intregate infrastructure into the whole picture of a solution, it is another sign of its little use today. Software layers had their time back in the 1990s when they provided a more structured view on software; they were one of the first architectural patterns following new technological options like easy network communication, HTTP server, and application server.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/753c60274f1dce53.gif" /></p>
+<p>Before the layer model there were just software monoliths - maybe accessing a database server with some stored procs. But they lacked an explicit and generally accepted categorization of their functionality (although being based on OOP principles).</p>
+<p>Software layers back then were a valueable step forward. But they failed to stay abreast with further technological developments, since at their heart still was a single "application" (or Solution in Software Cell terminology). Software layers are not made for networks of Solutions/Applications where there is not a strict front to back communication.</p>
+<p>But these kind of applications are now state of the art and they also require more infrastructure. They require more OS and runtime infrastructure, but they also require you to develop more infrastructure code like for caching or accessing user preferences.</p>
+<p>That´s were Software Cells claim to fill the gap. As has been shown they easily allow you to depict complex architectures <a rel="noopener" href="https://web.archive.org/web/20070302134155/http://weblogs.asp.net/ralfw/archive/2005/05/05/405728.aspx">on different levels of abstraction</a>. However, so far, the message on infrastructure has not been so clear. That´s what I want to change today by saying:</p>
+<p><strong>Software spans a multilevel and multidimensional holarchy (or universe, if you like).</strong> (The following picture only shows the top 4 levels, the remaining levels Assembly, Type and Methods are left out just because it was easier to draw it like this ;-)</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/2b537d7b80866e7d.gif" /></p>
+<p><strong>That means, each holon is a multidimensional entity.</strong></p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/bd99b7df5bc2469a.gif" /></p>
+<p>Each holon can consist of holons in several dimensions. Unfortunately it´s hard to draw more than three dimensions, so I´ll adopt a somewhat unusal style from here on, which allows me to depict at least 4 dimensions:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/35ca06b6b101b32d.gif" /></p>
+<p>Each quadrant of the coordinate system represents a dimension. There can of course be more than 4, but often 4 are enough, and to depict more is hard. Please note, I´m very conciously talking about dimensions and not layers. And I don´t want to depict the dimensions as some kind of layers, although it would become much easier to draw them. Layers are fraught with different meanings and suggest different levels of abstractions or certain dependencies.</p>
+<p>But there is no particular pre-defined dependency between the dimensions and the holons can be on different levels of abstraction with regard to their dimension. They just are holons of the same kind and on the same level and are parts of a holon at the next higher level of the holarchy.</p>
+<p>The n-dimensional space of a holon always has at least 1 dimension: the Problem Domain dimension. That´s the dimensionall the code belongs to, that directly contributes to the solution of the user's problem. If the user´s problem is "write and print an invoice", then a Method to calculate the sum of the invoice goes here, or a Type to represent an Invoice belongs into that dimension. But a Method to serialize an Invoice instance does not belong there.</p>
+<p>In addition to the Problem Domain dimension, there can be an arbitrary number of Infrastructure dimensions, each representing a concern separate from the Problem Domain. Take security for example: If you decide to protect invoices with a password and encrypt them, then all the holons concerned with this belong to the security dimension. The reason is simple: "writing and printing an invoice" would work perfectly well without encrypting the invoice. Of course that doesn´t mean, security is of lower value! It just means, it is an orthogonal concern with respect to the Problem Domain.</p>
+<p>Dimensions are not about priority or importance! They are a way to structure your code and find the "right box" to put it in. If software layers suggest to put frontend and businesslogic and data access in different entites (e.g. classes, libraries), then Software Cells suggest to implement different concerns in different holons.</p>
+<p>The message of Software Cells is:</p>
+<p><strong>Always be aware on which level of the holarchy you´re thinking.</strong></p>
+<p><strong>Always be aware of the dimension of the holarchy you´re thinking in.</strong></p>
+<p>My feeling is, that much misunderstanding in communicating about software architecture stems from not being clear what you´re talking about in terms of level and dimension. Also, when you´re not minding the dimensions you´re neglecting a chance to modularize your software along very natural lines.</p>
+<p>The following picture hopefully shows, how multiple dimensions help to modularize a Solution without leaving out any concern and at the same time always keep your picture focused and clean:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/c0034bf15fc0be5a.jpg" /></p>
+<p>Two Applications (on the vertical dimension) communicate with each other. They belong to the Problem Domain. The view is focused on whatever is necessary to solve the user´s problem. From that perspective, the communication between the Applications is direct.</p>
+<p>In reality, though, the communication is mediated by another Application on the Infrastructure dimension. That Application also has some Core logic of its own kind, maybe some routing algorithm specific to the problem to solve - but which does not belong to the Problem Domain.</p>
+<p>All three Applications are crucial to the whole Solution, so you want to be able to view how they interplay. But at other times you want to focus on one or the other concern of your solution and leave out unnecessay details. That´s where the dimensions literally enter the picture. They allow you to concentrate on certain aspects of a project without loosing sight of the whole. (Aspect Oriented Programming (AOP) might be a help to map the conceptual dimensions to code.)</p>
+<p>You can use the n-dimensional Software Cell space like a cube and rotate it any way you want. Each surface representing a dimension. Whatever surface you´re looking at is your focus at the moment and you can assume all artifcats on other surfaces as given. There existence is transparent to you. Thus you always have an uncluttered picture of your system at a level of abstraction you desire.</p>
+<p>I hope, the now again expanded Software Cells model helps you, to structure your software better while exploiting all the technological options available.</p>
+<p><strong>Share this post:</strong> <a rel="noopener" href="https://web.archive.org/web/20070302134155/mailto:/?body=Thought%20you%20might%20like%20this:%20http://weblogs.asp.net/ralfw/archive/2005/06/05/410417.aspx&amp;;subject=Software+Cells+%23A%3a+Embracing+Infrastructure" title="Post http://weblogs.asp.net/ralfw/archive/2005/06/05/410417.aspx">email it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070302134155/http://del.icio.us/post?url=http://weblogs.asp.net/ralfw/archive/2005/06/05/410417.aspx&amp;;title=Software+Cells+%23A%3a+Embracing+Infrastructure" title="Post http://weblogs.asp.net/ralfw/archive/2005/06/05/410417.aspx">bookmark it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070302134155/http://www.digg.com/submit?url=http://weblogs.asp.net/ralfw/archive/2005/06/05/410417.aspx&amp;;phase=2" title="Post http://weblogs.asp.net/ralfw/archive/2005/06/05/410417.aspx">digg it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070302134155/http://reddit.com/submit?url=http://weblogs.asp.net/ralfw/archive/2005/06/05/410417.aspx&amp;title=Software+Cells+%23A%3a+Embracing+Infrastructure" title="Post http://weblogs.asp.net/ralfw/archive/2005/06/05/410417.aspx">reddit!</a> | <a rel="noopener" href="https://web.archive.org/web/20070302134155/http://www.dotnetkicks.com/submit/?url=http://weblogs.asp.net/ralfw/archive/2005/06/05/410417.aspx&amp;;title=Software+Cells+%23A%3a+Embracing+Infrastructure" title="Post http://weblogs.asp.net/ralfw/archive/2005/06/05/410417.aspx">kick it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070302134155/https://favorites.live.com/quickadd.aspx?marklet=1&amp;;mkt=en-us&amp;;url=http://weblogs.asp.net/ralfw/archive/2005/06/05/410417.aspx&amp;;title=Software+Cells+%23A%3a+Embracing+Infrastructure&amp;;top=1" title="Post http://weblogs.asp.net/ralfw/archive/2005/06/05/410417.aspx">live it!</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software Cells #2: Basic structures — ralfw.de Archiv</title>
+<meta name="description" content="In my last posting I introduced the term Software Cell to describe a software application. The minimally necessary ingrediences - a Host and my code to solve a problem (logic) - ju">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/software-cells-2-basic-structures/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software Cells #2: Basic structures — ralfw.de Archiv">
+<meta property="og:description" content="In my last posting I introduced the term Software Cell to describe a software application. The minimally necessary ingrediences - a Host and my code to solve a problem (logic) - ju">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/software-cells-2-basic-structures/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Software Cells #2: Basic structures</h1>
+    <div class="doc-meta"><span>24. April 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/404049" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/software-cells-2-basic-structures/</code></span></div>
+    <div class="art"><p>In my last posting I introduced the term <a rel="noopener" href="https://web.archive.org/web/20160124201449/http://weblogs.asp.net/ralfw/archive/2005/04/23/403986.aspx">Software Cell</a> to describe a software application. The minimally necessary ingrediences - a Host and my code to solve a problem (logic) - just looked like an organic cell once I drew some pictures of applications consisting of a Host EXE that contains some assemblies.</p>
+<p>In this posting I want to drill down into the details of a software cell. Like organic cells it has a structure: A software cell has to deal with the outside world and I find it benefical to extract the necessary functionality for communication from the core. It´s a separation of concerns.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/93e59ff4a31efd45.jpg" /></p>
+<p>If an application is not selfsufficient but needs to get information from the outside world - or serves other applications as an information source -, then it needs structures to connect with or to be connected thru.</p>
+<p>There are two categories of basic communication structures: Adapters and Portals.</p>
+<p>Adapters reach out to other information sources/sinks, and adapt their interfaces to the needs of the core. The Core does not want to concern itself with the details of communication. It wants to live in its world of domain concepts and is shielded from the rough outside world by the adapters, who translate its requests to whatever the communication partners require.</p>
+<p>Since there exist at least two general kinds of information sinks/sources, they are matched by two kinds of adapters:</p>
+<p>A <strong>Resource Adapter</strong> connects to a "low level" data resource like a database or a FTP server or the file system. The abstraction level of the resource´s API is low compared to the level of the Core, there is quite an impedance mismatch to overcome. A Resource Adapter thus needs to do some "heavy lifting" in terms of adapting the low level data structures/operations of the resource (e.g. tables, rows or lines in text files) to the needs of the Core (e.g. Customer objects, SMS messages). (Although I used the common database barrell as a picture for a resource it´s perfectly ok to think of a resource as an application of itself. Unless however I write code to be hosted in the resource´s Host, I would not draw a triangle for it.)</p>
+<p>An <strong>Application Adapter</strong> on the other hand connects to another application by a much higher level interface. Whether that´s a Web service or some other means is not important, though. The distinguishing characteristic of an Application Adapter as opposed to a Resource Adapter is the smaller (or even non-existing) impedance mismatch between the data model of the communication partner and the Core. If an Adapter does not need to do "heavy lifting" in order to connect the application to the outside world, I consider it an Application Adapter.</p>
+<p>With both adapters the control flows from Core to the outside world.</p>
+<p>Each Software Cell can contain an arbitrary number of adapters of both kinds.</p>
+<p>If the outside world wants to use services of the Core, however, it needs to go through an Application Portal. The portal provides an interface of some kind thru which operations can be initiated and data can passed to the application. Control flow is from the outside into the application. Whether the portal is implemented as a SOAP Web service or as a custom protocol on top of TCP/IP is not important. The portal just defines some communication endpoint to connect to.</p>
+<p>Of course each Software Cell can contain an arbitrary number of portals.</p>
+<p>Now, after code for communication has been extracted from the core, what remains in the Core? The Core contains only code necessary for solving the problem. Call this logic or domain logic or business logic or whatever. For calculating prime numbers this could be just one method implementing Erathostenes´ sieve. That´s all. But it also could be many assemblies all working in concert to do some complex data analysis. The Core´s task is to do the problem solving, nothing more, nothing less. And when it needs to access outside information, it uses adapters. In turn, if the Core´s work is to help other applications, it is sent requests thru a portal.</p>
+<p>For me it´s very important to distinguish the Core´s functionality from data access and data presentation. In essence, an applicaton should be able to do it´s work without any user interface. (Yes, even a highly visual game.) My recommendation is to design the "blind" Core of an application first without thinking of specific presentation requirements and the details of information access. Later on you can worry about all that, but don´t let uncertainities about a datagrid or database API distract you from your real business: solving a domain problem. Adapters, portals and even the user interface thus are more or less "infrastructure". And we all don´t want to waste too much time working on infrastructure; we´ve more important things to do ;-) (Yes, I know somebody has to position those text boxes and read the data from the database. I´m just trying to say, most of the time that´s not really the important stuff.)</p>
+<p>Since I have mentioned the user interface what about it? Where does it fit into the Software Cell picture? I think, it should be another structure within the Cell:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/0dab063ae3dee3fe.jpg" /></p>
+<p>The user interface is implemented by the User Portal. The User Portal is a portal, because again, control is flowing towards the core. The user controls the operations of the core by clicking buttons and menu items and entering data. But since it´s a less uni-directional communication than thru an Application Portal and (often) has to do with visualization, I used a pentagon as the shape for the User Portal to distinguish it from the Application Portal.</p>
+<p>To finish off let me show you a couple of drawings for common Solutions:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/a38ecd74edad9d2a.jpg" /></p>
+<p>(Please excuse me leaving the little lines with arrows out for the moment. I guess the informaiton flow is obvious.)</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/05c9ab9ac0291b1b.jpg" /></p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/4deef141785a2cd2.jpg" /></p>
+<p>To me these little drawings are quite easy to understand. The clearly show the boundaries of each application and they show how much work has to go into "communication infrastructure" in each application, i.e. which adapters and portals are needed.</p>
+<p>What´s left now? We need to talk about the substructures of adapters and portals. We need to talk about interfaces. And we need to talk about the "inter software celluar space". And, yes, I guess I need to say a couple of words about why I think this kind of model is valuable even though we have layered architectures and onions and fiefdoms.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software Cells #8: Of Customer Problem Domain and Infrastructure - Mind the Dimension — ralfw.de Archiv</title>
+<meta name="description" content="After I put Software Cells into perspective with other architectural models, several people approached me with the question &quot;Now, then, what are Software Cells for?&quot; followed with ">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/software-cells-8-of-customer-problem-domain-and-infrastructure-mind-th/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software Cells #8: Of Customer Problem Domain and Infrastructure - Mind the Dimension — ralfw.de Archiv">
+<meta property="og:description" content="After I put Software Cells into perspective with other architectural models, several people approached me with the question &quot;Now, then, what are Software Cells for?&quot; followed with ">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/software-cells-8-of-customer-problem-domain-and-infrastructure-mind-th/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Software Cells #8: Of Customer Problem Domain and Infrastructure - Mind the Dimension</h1>
+    <div class="doc-meta"><span>20. Mai 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2005/05/20/408027.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/software-cells-8-of-customer-problem-domain-and-infrastructure-mind-th/</code></span></div>
+    <div class="art"><p>After I <a rel="noopener" href="https://web.archive.org/web/20060317021248/http://weblogs.asp.net/ralfw/archive/2005/05/18/407378.aspx">put Software Cells into perspective</a> with other architectural models, several people approached me with the question "Now, then, what are Software Cells for?" followed with some problem scenario. And I can tell you, those scenarios made me sweat for a while ;-) But I want to spare you the details and focus on my findings while trying to put Software Cells to good use on those problems.</p>
+<p>First of all to answer the question: Software Cells currently are just about helping you to model a solution in software to a problem. That´s why at the center of Software Cells are physical Software Solutions as a set of Software Cells aka Applications. One problem = one Software Solution. For example the problem is "Build an online shop", then a Software Cells model would contain several Applications distributed across several computers, e.g.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/a003710f3f270a6f.jpg" /></p>
+<p>Software Cells want to help you model the distribution of your logic. Since Hosts and technologies for communicating between Hosts (Adapters/Portals) are explicit entities in the Software Cell world, the force you to make concious decisions:</p>
+<ul>
+<li>Across how many hosts do I distribute my logic?</li>
+<li>Which Hosts do I choose?</li>
+<li>How do I do I/O in and between my Software Cells?</li>
+</ul>
+<p>But what if I find, my solution needs some multi-protocol load balacing server? Or what if I find, that the interplay between several Cells in my application becomes very complex? Is there only one level of abstraction in a Software Cell diagram? Is there only one problem domain dimension in my model.</p>
+<p>For simple to moderately complex problems I´d say yes. That´s where Software Cells came from. And that´s the problem space most of my customers usually live in. Their Solutions consist of maybe 1 to 4 Applications on average.</p>
+<p>But if the problems become larger you need to be able to structure them more. Remember the motto of the ancient Romans: <em>divide et impera</em> ;-) You need not only to modularize one Solution but also the whole large problem. So as a first step I´d say: chop your problem up in sub-problems. For each sub-problem develop a Software Solution. So what you end up doing is developing a Software Society. The modules of very complex software are not assemblies or Software Components (consisting of several assemblies), but Software Solutions.</p>
+<p>You have a small/medium problem, you develop one Solution:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/245cfc299387f24c.gif" /></p>
+<p>You have a much, much bigger problem, you split it up into sub-problems and solve it with several Solutions:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/86f53cc07782995d.jpg" /></p>
+<p>But still, each Solution focusses on solving a customer problem - albeit this can happen on different levels of abstraction.</p>
+<p>The first two questions above (concerning a multi-protocol load balancing server and the complex interplay of Cells), though, are not concerned with solving a customer problem. They are concerned with infrastructure. For most problems all the tools you need probably already exist. There is an array of powerful Hosts and there is a large number of communication technologies to choose from. Choose the right Host and write Adapters/Portals to make the I/O APIs palatable to the logic Cores of your Applications. Depict Hosts in your Software Cells diagram, label the connecting edges between your Hosts with the communication technologies used - but otherwise don´t show any infrastructure. The MSMQ server is necessary for using the System.Messaging API - but there is no place for it in a Software Cells diagram. It´s transparent to your Applications. Likewise a load balacing server. Software Cells in so far are a logical model and don´t show deployment configurations. If a IIS/ASP.NET based Software Cell later on runs on multiple hardware servers with a load balacer distributing requests among these instances is not of concern to the Software Cells model.</p>
+<p>However, large problems can hit the limits of existing technologies. You could find an existing load balacing product too limiting (or even don´t know of it ;-) Or you could find repeating patterns in your Solutions with respect to the communication between the Cells that begs for a generalization.</p>
+<p>So what can happen is, you try to fill a gap in the infrastructure. And although infrastructure programming usually should be avoided it sometimes might be necessary. So what can you do? How does the Software Cell model help you?</p>
+<p>I´d say, Software Cells can help you in two ways:</p>
+<ol>
+<li>
+<p>Software Cells give you a clear framework to categorize the infrastructure you´re thinking about. Do you need a better communication infrastructure? Or do you need a better Host? Very often the lacking infrastructure belongs to one or the other category. The above missing multi-protocol load balancer falls into the category of communication infrastructure because it connects Software Cells. On the other hand, a relief for the complex interplay of Applications could fall into the category of Hosts and could be called a "Business Process Server" (something like BizTalk).</p>
+</li>
+<li>
+<p>Software Cells diagrams let you depict your overall solution along several dimensions: customer problem dimension, communication infrastructure dimension, and Host infrastructure dimension. (And I guess, there could be even more dimensions.)</p>
+</li>
+</ol>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/b30a8281a32c4613.gif" /></p>
+<p>For each infrastructural entity you decide to develop you have to ask yourself:</p>
+<ul>
+<li>Is it just an API I need to write, e.g. a general abstraction on top of System.IO maybe?</li>
+<li>Or do I need to accompany the API with some kind of server, e.g. for load balacing? (A new server without its own API on the other hand does not make much sense, I´d say.)</li>
+<li>Or do I even want to have my own server run problem domain logic, i.e. do I need my own Host?</li>
+</ul>
+<p>System.IO is an example for just an API. System.Messaging is an example for an API that also needed a server (MSMQ). And .NET Remoting is an example for an API and a server which also is a Host.</p>
+<p>Once you identified the infrastructural pieces you need to solve the original customer problem, I´d say, set up separate projects for them and solve them independently from the customer problem. What you then get is some kind of Solution hierarchy along the above dimensions. Here´s a picture for a 2-dimensional Solution:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/29696f18af9d600b.jpg" /></p>
+<p>Along one dimension you see the "regular" Solution to the customer problem consisting of two Software Cells which communicate using some concrete I/O API. However, since you developed that API and provided an infrastructure for it, you know, it´s only a logical connection.</p>
+<p>The physical connection runs along the infrastructural dimension or - so to speak - on a different level which is not directly seen by the problem domain Software Cells. For them the new infrastructure is transparent and hidden behind the new API.</p>
+<p>The bottom line: Software Cells provide a model for any software. But beware to put too much into a single Solution diagram. If Solutions become too complex, split them up and start developing a Society. If you´re realy, really missing infrastructure, then separate these concerns from the customer problem domain and set up distinct projects with their own solutions - which you later fit into the "main" project as infrastructure "components".</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

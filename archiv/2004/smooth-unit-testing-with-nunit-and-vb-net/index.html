@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smooth unit testing with NUnit and VB.NET — ralfw.de Archiv</title>
+<meta name="description" content="Unit testing .NET Fx projects basically is easy with NUnit and I don´t want to add to the literature on unit testing at this point.">
+<link rel="canonical" href="https://ralfw.de/archiv/2004/smooth-unit-testing-with-nunit-and-vb-net/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Smooth unit testing with NUnit and VB.NET — ralfw.de Archiv">
+<meta property="og:description" content="Unit testing .NET Fx projects basically is easy with NUnit and I don´t want to add to the literature on unit testing at this point.">
+<meta property="og:url" content="https://ralfw.de/archiv/2004/smooth-unit-testing-with-nunit-and-vb-net/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Smooth unit testing with NUnit and VB.NET</h1>
+    <div class="doc-meta"><span>28. Juli 2004</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="https://weblogs.asp.net/ralfw/199588/" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2004/smooth-unit-testing-with-nunit-and-vb-net/</code></span></div>
+    <div class="art"><p>Unit testing .NET Fx projects basically is easy with <a rel="noopener" href="https://web.archive.org/web/20260614130337/http://www.nunit.org/download.html">NUnit</a> and I don´t want to add to the literature on unit testing at this point.</p>
+<p>However, the devil´s in the detail. To make unit testing a really smooth experience from within VS.NET, the test run should behave like a regular program run as much as possible. Even or especially when testing functionality in a DLL.</p>
+<p>For me that means at least:</p>
+<p>-Code tested needs access to an app.config file.<br />
+-Debugging should be possible if necessary.<br />
+-Test errors should be treated like compilation errors in that I can easily find the offending source code line.</p>
+<p>Fortunately NUnit fulfills all three requirements, but needs to be tweaked a little bit.</p>
+<p><strong>1. Your VS.NET project</strong></p>
+<p>Setup your VS.NET project as usual.</p>
+<p>Be sure, though, to include a reference to the nunit.framework assembly.</p>
+<p>Then add test fixture classes to the project.</p>
+<p>Compile the project.</p>
+<p><strong>2. App.Config</strong></p>
+<p>Add an app.config file to the VS.NET project if needed.</p>
+<p>Do not rename the config file!</p>
+<p><strong>3. Setup NUnit project</strong></p>
+<p>Start the NUnit GUI and setup an NUnit project for your VS.NET project. Reference your project´s assembly.</p>
+<p>Then go to <em>Project|Edit</em> and change the <em>Config file name</em> to App.Config.</p>
+<p>Save the NUnit project which should be named like your VS.NET project and located in the same directory.</p>
+<p><strong>4. Autostart NUnit When Debugging</strong></p>
+<p>Go back to your VB.NET VS.NET project, and open the project properties.</p>
+<p>Go to <em>Configuration properties|Debugging</em> and enter into <em>Start external program:</em></p>
+<p>C:\Program Files\NUnit V2.1\bin\nunit-console.exe</p>
+<p>(If needed adapt the path to <em>nunit-console.exe</em>.)</p>
+<p>Enter into <em>Start Options|Command line arguments</em>:</p>
+<p>"..\myapp.nunit" /wait /nologo</p>
+<p>The first parameter is the path pointing to the NUnit project located in the same directory as your <em>myapp.vbproj</em> file.</p>
+<p>(Change "myapp" to the name of your application´s name. The ".." is necessary, since the startup dir for <em>nunit-console.exe</em> is the <em>bin</em> directory of your application.)</p>
+<p>Now run the library project in debug mode by pressing F5 in VS.NET. The NUnit console test runner should start, run all tests and show the results. If you like, you can set breakpoints in your code and the test runner will be halted when it reaches them. And you can access your app.config file as usual from within your code, since the test runner will register it with the application domain it creates for executing the tests.</p>
+<p>Only one item is still missing from the above requirements lists:</p>
+<p><strong>5. Create a Debug Version of NUnit</strong></p>
+<p>When running the console test runner all results are shown in its console window. That´s informative, but puts the burden on you to locate the errorenous lines in your source code.</p>
+<p>Now the NUnit documentation states, the test runner would detect if it´s run in VS.NET debug mode and output error messages to the VS.NET output window. By clicking on them you are supposed to be taken to the source code.</p>
+<p>Alas, at least in my version of NUnit (2.1) this did not work out of the box. No messages showed up in the VS.NET output pane. The reason for this obviously is, the nunit-console.exe test runner included in the .msi installation file has been compiled in release mode.</p>
+<p>So what you have to do is open the <em>NUnit V2.1\src\nunit-console\nunit-console.csproj</em> project and recompile the test runner source in debug mode. (No changes to the source code are necessary. But to accomplish that, it´s best to copy the <em>nunit-console</em> directory someplace else (e.g. desktop), open the project, and add references to the nunit.framework.dll and nunit.util.dll. If you don´t do that, you end up opening a pretty large solution with lot´s of NUnit projects in it.)</p>
+<p>Once you compiled the <em>nunit-console.exe</em> test runner, copy it to the <em>NUnit V2.1\bin</em> directory.</p>
+<p>Now, if you start up your VS.NET project again, the test runner should come up fine, but also show its test results in the output pane of VS.NET. And if you click on one of the failure lines you´ll be taken to the source code line it was caused by.</p>
+<p>Happy unit testing!</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

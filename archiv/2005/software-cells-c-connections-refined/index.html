@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software Cells #C: Connections refined — ralfw.de Archiv</title>
+<meta name="description" content="Ok, with software layers finally embraced and infrastructure integrated, I can no longer avoid the tricky topic of connections in the Software Cells model. I´d say they are the har">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/software-cells-c-connections-refined/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software Cells #C: Connections refined — ralfw.de Archiv">
+<meta property="og:description" content="Ok, with software layers finally embraced and infrastructure integrated, I can no longer avoid the tricky topic of connections in the Software Cells model. I´d say they are the har">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/software-cells-c-connections-refined/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Software Cells #C: Connections refined</h1>
+    <div class="doc-meta"><span>5. Juni 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/410467" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/software-cells-c-connections-refined/</code></span></div>
+    <div class="art"><p>Ok, with <a rel="noopener" href="https://web.archive.org/web/20140720195821/http://weblogs.asp.net/ralfw/archive/2005/06/05/410456.aspx">software layers finally embraced</a> and <a rel="noopener" href="https://web.archive.org/web/20140720195821/http://weblogs.asp.net/ralfw/archive/2005/06/05/410417.aspx">infrastructure integrated</a>, I can no longer avoid the tricky topic of connections in the Software Cells model. I´d say they are the hardest and maybe the most important part of the picture.</p>
+<p>Let me start by going back to <a rel="noopener" href="https://web.archive.org/web/20140720195821/http://weblogs.asp.net/ralfw/archive/2005/04/23/403986.aspx">the beginning of the Software Cells adventure</a>: What boggled my mind was the question, how to come to a more precises definition of the term "application". And my answer were Software Cells as a combination of some Core logic and connectors (Adapters and Portals) to communicate with the outside world. So what I essentially said was: The process is the Application. But why? Why has this entity been so elusive and underspecified? And why does it again and again step into the foreground when thinking about modern software aka distributed Solutions and services?</p>
+<p>It seems, Applications have some kind of prominent position in the Software Universe, as if their level in the holarchy was somehow special:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/a81877fcaa72f010.gif" /></p>
+<p>After some thinking, I guess I know, what makes Applications so special. It´s because the signify the transition from stack based communication to stream based communication:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/c9d9dd133dbd9d37.gif" /></p>
+<p>Communication between holons from Method up to Component are stack based. It´s simple method calls. Within an Application all holons (usually) communicate in that way, because they live in the same address/memory space.</p>
+<p>But since the Application is synonymous with a process (Host), communication with other Applications cannot go via the stack. All Applications live in different memory spaces. Communication has to use other means which are (usually) on the lowest levels streams, and data to pass between holons has to be (de-)serialized.</p>
+<p>That also means, in essence, all communication is either done via stack between methods - or it is done via streams between applications. Even if you don´t depict it in a Software Cell diagram, be aware of this. Again: Know the level you´re planning on and if you´re talking about intra or inter holon communication (although this only makes a difference when you´re on the Application level).</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/e69bf1fa931fcc9c.jpg" /></p>
+<p>One reason why MTS/COM+ and later also Web services suffered from less than expected adoption was, that this break in how holons communicate had not been honored. Instead of showing a picture like the above of the grim reality to the developer community and tell it, the communication paradigm necessarily has to change, Microsoft in both cases tried to gloss over the differences. COM+ as well as the early SOAP/HTTP based Web services tried to continue the method call stack based communication into the realm of messages and streams. Had there existed a model like the Software Cells holarchy back in 1996 or 2000, there would have been no misunderstanding. It would have been clear to everybody, that RPC is not really the same as method calls via a stack. It looks the same - but transforming stack frames into messages takes its toll. (Please get me right, I´m not saying nobody new, what was going on ;-) The guys who knew the ins and outs of marshalling where the kings of those days. Unfortunately I didn´t, because I happily lived in my little VB world back in 1996.)</p>
+<p>And maybe here also lies the reason why the term "application" so far was so elusive. It´s because an "application" is on the border between stack and stream based communication. Coming from the world of software monoliths developers wanted an "application" to be a process; but coming from the networking world of enterprise programming, there was a force trying to pull "applications" into the stream based communication world beyond monoliths. The misleading term "distributed applications" was born.</p>
+<p>With Software Cells, I hope, such kind of pitfalls won´t happen again. Since the take into view not just one underspecified level of software, but a continuum of levels of abstraction, stumbling blocks like a switch in communication paradigm can be foreseen.</p>
+<p>Now, what I take away from this lesson is, how important it is to model connections. So let me propose some rules for connecting holons. The <a rel="noopener" href="https://web.archive.org/web/20140720195821/http://weblogs.asp.net/ralfw/archive/2005/05/13/406732.aspx">basics as defined earlier</a> of course are unchanged. But I´d like to unify the shapes and connection lines.</p>
+<p><strong>Rule 1: Only holons on the same level within the same encompassing holon can be connected directly.</strong></p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/faec903b610605cf.jpg" /></p>
+<p><em>(Green connections are correct, red ones are incorrect.)</em></p>
+<p>Connecting a sub-holon to the encompassing holon (its container) very obviously does not make sense. But also connections between holons on different levels and across holon boundaries should not be made in order to always be very clear about the level of abstraction you´re working on.</p>
+<p><strong>Rule 2: To connect holons on the same level but in different encompassing holons, you have to define Connection Points.</strong></p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/905782a2d597d3aa.jpg" /></p>
+<p>A Connection Point defines where a connection between sub-holons on the same level crosses the boundary of their container holons.</p>
+<p>Connection Points in most cases are empty and just of conceptual or structural value. They make Software Cell diagrams easier to read. Within the realms of stack based or stream based communication, there need not be any functionality assigned to Connection Points. But where communication switsches from stack to stream, at the boundary of Applications, Connection Points need to transform data. That´s also why there have been Adapters and Portals from the start in Software Cells and why they are still needed after introducing Connection Points as the general term:</p>
+<p><strong>Rule 3: Connection Points on the rim of an Application have to be classified as either Adapter or Portal.</strong></p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/b4235421618527da.jpg" /></p>
+<p><strong>The distinction between Application Adapter and Resource Adapter is given up.</strong> How much work an Adapter/Portal has to do to bridge the gap between the API and problem domain data models depends on the communication medium. I don´t think it´s necessary to officially categorize Adapters/Portals. If you want to do so, feel free.</p>
+<p><strong>Likewise the distinction between User Portal and Application Portal is removed.</strong> If shoule be clear from a Software Cell diagram what the purpose of a Portal is depending on what kind of client is connecting to it (Application or Human).</p>
+<p>Also, as you can see in the pictures here, <strong>the triangle as the shape for an Application is given up</strong>. At this point I think depicting holons on any level should be done using the same shape (a circle or ellipse). As long as you clearly mark the level of abstraction of a Software Cell diagram, there should be no confusion as to what the holons depicted are: Applications or Methods or Solutions or Assemblies. The old notation...</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/87f77da75ee81bc6.gif" /></p>
+<p>becomes...</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/c658f2f5f7d84617.jpg" /></p>
+<p>Although triangles are still used for Adapter/Portal, they are Component holons like any other within the Application holon.</p>
+<p>I hope you find this notation as much simpler as I do. Changing the pretty unique Application triangles to the ubiquitous circle wasn´t easy for me. But I think the gain is obvious: Easier drawing and more similarity on the different levels.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

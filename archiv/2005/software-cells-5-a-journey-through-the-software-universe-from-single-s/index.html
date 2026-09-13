@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software Cells #5: A journey through the software universe from single statement to Software Societies — ralfw.de Archiv</title>
+<meta name="description" content="So, where are we with Software Cells? In my last posting I talked about Contract First design, and I guess, we now need to tie together the various bits and pieces. We need to talk">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/software-cells-5-a-journey-through-the-software-universe-from-single-s/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software Cells #5: A journey through the software universe from single statement to Software Societies — ralfw.de Archiv">
+<meta property="og:description" content="So, where are we with Software Cells? In my last posting I talked about Contract First design, and I guess, we now need to tie together the various bits and pieces. We need to talk">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/software-cells-5-a-journey-through-the-software-universe-from-single-s/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Software Cells #5: A journey through the software universe from single statement to Software Societies</h1>
+    <div class="doc-meta"><span>5. Mai 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2005/05/05/405728.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/software-cells-5-a-journey-through-the-software-universe-from-single-s/</code></span></div>
+    <div class="art"><p>So, where are we with Software Cells? In <a rel="noopener" href="https://web.archive.org/web/20051207053001/http://weblogs.asp.net/ralfw/archive/2005/04/30/405133.aspx">my last posting</a> I talked about Contract First design, and I guess, we now need to tie together the various bits and pieces. <br />
+We need to talk about how to connect Software Cells. For that it´s beneficial, to put Software Cells into perspective. So let´s first vary the scale of our software map. Let´s get on a journey thru the "software universe"! What can we see, if we look thru a microsope? What can we see, if you look thru a telescope?</p>
+<p>The smallest relevant units of software development are single <strong>statements</strong>, I´d say. We can write programs by just adding statement to statement to statement etc.<br />
+Here´s how such a list of statements could look like:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/47a66aaa8e32bf46.gif" /></p>
+<p>If we increase the scale of our map, we can see the first unit of aggregation. If we come across groups of statements, that appear several times in our code, we can lump them together to form <strong>subroutines</strong>.<br />
+With subroutines we can start to structure our code:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/60bd5b2a1c528cbc.gif" /></p>
+<p>On the next level we group subroutines which somehow belong together to form <strong>classes</strong> (or more general: types):</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/db0bf1171710f264.gif" /></p>
+<p>If we crank up the scale of our software map, <strong>assemblies</strong> come into view. Each assembly implements one or more types which in turn contain our statements organized into methods:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/ed2e0d33851fa2ea.gif" /></p>
+<p>One or more assemblies together can constitute a <strong>component</strong>. Of course, not every assembly (or group of assembly) can be viewed as a component. But if several assemblies together solve a (sub)problem and publish their service thru an interface, than they can be labeled "component":</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/ccd4af057ddcb3ef.gif" /></p>
+<p>But standalone componente don´t make much sense. Components always run in a <strong>Software Application</strong> (or <strong>Software Cell</strong>) whereas the Host and the implicit Microkernel, too, are components (albeit given infrastructure components):</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/1d4f1b70dcd18212.gif" /></p>
+<p>If you´re missing the Software Cell structures in the above picture (e.g. Core, Application Adapter), fear not! I have not forgotten about them :-) During our journey thru the software map using varying scales, though, I chose not to depict them, because they are logical enities, whereas statement, method, class, assembly, component, and Application are physical entities. E.g. a component consisting of several assemblies is a VS.NET solution with several projects. An Application comprises a Host EXE and several DLL assemblies, its physical unit is a directory (with subdirectories) (lets leave aside for a moment assemblies installed in the GAC). But where´s the phyiscal boundary around a Software Cell´s Core or Adapter? A Portal can consist of one or more components. But there is no "natural" physical tie holding them together. (Although, this makes me think, if maybe Cell structures should always be deployed in separate sub directories of the Application directory. Hm... I guess, that whould be a good idea. But for now, I won´t include it here in this series of pictures.)</p>
+<p>Another reason, why I do not show Core, Adapter etc. is, they are different kinds of "containers". However, what I´m trying to show here is, how entities of the same kind tied together form a new kind of entity on a higher abstraction level: Many statements taken together constitue methods, many components taken together form Applications etc. The structure of an entity on a given level thus always is homogeneous. Applications just contain components. Components just contain assemblies, assemblies just contain types etc.</p>
+<p>Of course, then the question is, what do several Applications taken together form? Applications put together to solve a problem constitute a <strong>Software Solution</strong>:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/8799d3d1901dffc4.gif" /></p>
+<p>Several Software Solutions communicating with each other are the subject of the discussion around "Service Oriented Architectures" (SOA). But SOA is not a name of the entity formed by several cooperating solutions. SOA is concerned about the <em>How</em> of combining solutions, but is not and neither coins a name for the entity that is made up of those solutions. So, I gues, I´m free to choose a name, since the term "system" sounds too general. Inspired by <a rel="noopener" href="https://web.archive.org/web/20051207053001/http://www.amazon.com/exec/obidos/tg/detail/-/0671657135">Marvin Minsky´s "Society of Mind"</a> I call several solutions working together a <strong><em>Software Society</em></strong>, and it´s the last level of abstraction I´m going to depict:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/72bc52527b8ee3f6.jpg" /></p>
+<p>The longer I think about the name "Software Society" the more I´m satisfied with it. "Society" implies the living/working together of many individuals. And since services in SOA are to be seen as autonomous entities, the almost look like individuals with their own agendas.</p>
+<p>Now lets step back to get an overview of the "software universe" we just travelled thru. (If this reminds you of <a rel="noopener" href="https://web.archive.org/web/20051207053001/http://www.amazon.com/exec/obidos/tg/detail/-/0716760037">"Powers of Ten"</a> I´m glad, because this book somewhat inspired me to take you on this journey thru the different abstraction levels of software.)</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/15f403785a84242e.jpg" /></p>
+<p>I would have liked to provide you with a single tool and an extensive example to zoom thru just moving a scale slider up or down like you can do in <a rel="noopener" href="https://web.archive.org/web/20051207053001/http://mappoint.msn.com/">Mappoint</a>. But, alas, I neither know of a single tool, that lets you view software structures from whole Software Societies down to single statements, nor do I have an example of such a large system. But I hope you get an idea of what I wanted to show you: Software exists and can be talked/thought about on different levels of abstraction. And as usual, it´s best, if you always know on which level you are in your work. It´s good to know that in order to apply the right tools, patterns, concepts, as well as terminology.</p>
+<p>Also, I find it quite enlightening to see the similarieties among the different levels of abstractions. Firstly the constituents on each level are of the same kind and consist of homogenous substrcutures. Secondly, on each level structures define (or should define) an interface and then implement that interface. The more explicit, the better :-) Since each statement can be expressed as a subroutine call, small scale interfaces are equal to method signatures. A the type level, the sum of subroutine signatatures on a type form its implicit default interface, but we can define an explicit one. So far all´s well.</p>
+<p>However, I now find it strange, that on medium and large scale levels of abstractions above the type level there is no explicit interface "structure". Instead, it´s a lot about conventions and "you should". The interface of assemblies, components, applications, and solutions is always just the sum of the interfaces on the lower levels. But a "sum" is a very weak definition. WSDL can be seen as an effort to counter that and to attach an explicit interface to an Application. But components and Software Societies lack such explicit interface descriptions. Thus, the interfaces of assemblies and components and even solutions are the implementations. And that´s exactly what should not happen. An interface should be separately defined from its (possibly many) implementations.</p>
+<p>But there are more aspects that come to my mind, when I look at the "software universe" with it´s levels of abstraction. They have to do with sciences we know well, but usually are not connected to software development: social science, biology/chemistry, and physics. Try this:</p>
+<ul>
+<li>Look at the levels of abstractions as the path of development of the "civilization" of software artifacts. At the bottom you see individuals (statements) and the higher up you go, the larger the groups those individuals form. They start out with small groups (methods), then methods flock together to form types etc. Although each level´s structure is physically homogeneous, logically the substructures are different. This is like the ongoing trend of specialization and division of labour found in our human societies.</li>
+<li>Or look at the "software universe" as different levels of organizational forms in living organisms. At the lowest levels they are made up of molecules. Then molecules form cells, cells flock together for constitue tissues and organs. On each level information is exchanged in various ways, cells have interfaces, and organs like a heart or brain have interfaces.</li>
+<li>Or look at how the parts on each level are connected. On the lowest levels the connection is very tight. Tight coupling is beneficial between methods and classes and even assemblies to provide performance. Since on those levels a single human being can keep the complexity in his/her head, tight coupling also seems ok from the perspective of maintainability. But above the level of assemblies the coupling between the parts becomes ever looser. This is like in physics. The tightes coupling exists between quarks that make up neutrons and protons. The farther you try to pull them apart, the higher the force binding them together. But this is contrary to our experience on the mikro or makro level. There forces like gravitation or electro-magnetic fields descrease with increasing distance between parts. The same is (or should be) true for the "force" of coupling in software: it becomes weaker and weaker the higher the level of abstraction.</li>
+</ul>
+<p>Most literature you come across in developer magazines and books, deals with small to medium scale scenarios. Often, though, the component level is not discussed. Then Web services and SOA came along and brought Software Societies into the picture (although without giving them a name). But neither SOA nor OOP clearly defined what Applications and Solutions were. So there was a gap, I´d say. OOP is concerned with small to medium scale software concepts and structures. Component Based Development (CBD, or Component Oriented Development (COD)) is less of an official diciplin but is concerned with medium scale concepts. SOA is about the top end of large scale software concepts. But what about the lower end of the large scale concepts? What about a connection between components and societies.</p>
+<p>That´s were Software Cells step in. I figure, they close a gap by clearly defining aggregates of components running within a host as Software Cells (aka Applications) and aggregates of Applications as Software Solutions which then are the consituent parts of Software Societies.</p>
+<p>My, oh, my, this journey thru the "software universe" has taken me longer than I thought. I guess, I´ve to postpone talking about connecting Software Cells. What out for my next posting when we will see, how Applications are tied together to form Software Solutions and even Software Societies. Then, finally, technologies like .NET Remoting and Web services fall into their places within this large puzzle :-)</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

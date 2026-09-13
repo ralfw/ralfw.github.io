@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>On the right number of methods, classes or DLLs in a project - or: Just cut a few and it will be perfect — ralfw.de Archiv</title>
+<meta name="description" content="Udi Dahan did a posting on a question he received from a developer the other day: The developer asked him, why Udi was so much in favor of so many DLLs in a project? Wouldn´t the l">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/on-the-right-number-of-methods-classes-or-dlls-in-a-project-or-just-cu/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="On the right number of methods, classes or DLLs in a project - or: Just cut a few and it will be perfect — ralfw.de Archiv">
+<meta property="og:description" content="Udi Dahan did a posting on a question he received from a developer the other day: The developer asked him, why Udi was so much in favor of so many DLLs in a project? Wouldn´t the l">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/on-the-right-number-of-methods-classes-or-dlls-in-a-project-or-just-cu/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>On the right number of methods, classes or DLLs in a project - or: Just cut a few and it will be perfect</h1>
+    <div class="doc-meta"><span>28. Nov. 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2005/11/28/431673.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/on-the-right-number-of-methods-classes-or-dlls-in-a-project-or-just-cu/</code></span></div>
+    <div class="art"><p>Udi Dahan <a rel="noopener" href="https://web.archive.org/web/20070116225218/http://udidahan.weblogs.us/archives/033734.html">did a posting</a> on a question he received from a developer the other day: The developer asked him, why Udi was so much in favor of so many DLLs in a project? Wouldn´t the large number of DLLs make the project unnecessarily complicated?</p>
+<p>I agree with Udi´s response and I hear the same question, too, quite often. But it always reminds me of <a rel="noopener" href="https://web.archive.org/web/20070116225218/http://www.imdb.com/title/tt0086879/quotes">a dialog in the movie "Amadeus"</a>:</p>
+<p><em>Emperor Joseph II</em>: "Your work is ingenious. It's quality work. But there are simply too many notes, that's all. Just cut a few and it will be perfect." <br />
+<em>Wolfgang Amadeus Mozart</em>: "Which few did you have in mind, Majesty?"</p>
+<p>As if there was a maximum to the number of notes in a musical piece - as long as it fulfilled its purpose to please. Too many notes is a rediculous concept.</p>
+<p>But so is the idea of too many DLLs in a project - as long as it fulfills its purposes. Interestingly, I think the same developer would not have asked Udi, if there were too many classes in the whole project. He just saw more DLLs than usually and that made him uneasy.</p>
+<p>There is no such thing as a maximum number of methods or maximum number of classes or maximum number of DLLs in a software project! It´s all about the right (!) number of software artifacts.</p>
+<p>But what´s the right number of classes or DLLs?</p>
+<p>To answer this obvious question we´ve to ask, what the purpose of software artifacts is. What´s the purpose of methods oder classes in general? What´s the purpose of a certain class or DLLs?</p>
+<p>Methods combine statements to form a unit of function. Statements that belong together go into the same method. The same is true for methods forming a class. It´s a question of concerns. Put together what belongs together. Keep apart, what is sufficiently different. Low coupling, high cohesion should be the mantra of every software designer.</p>
+<p>But that´s not so new, is it? It´s pretty well understood on the level of methods and classes. 15 years of OOP should have driven this point home.</p>
+<p>However, developers lack a bigger picture of software. They lack established levels of abstraction above the class level. But there´s more to the world of software as the <a rel="noopener" href="https://web.archive.org/web/20070116225218/http://weblogs.asp.net/ralfw/category/9899.aspx?Show=All">Software Universe and Software Cells</a> model describe:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/f30d61787180862f.jpg" /></p>
+<p>Method and Class are just the lowest levels of abstraction when designing software. So what Udi´s developer is lacking is a bigger picture and tools/concepts to manage complexity. Software is a <a rel="noopener" href="https://web.archive.org/web/20070116225218/http://en.wikipedia.org/wiki/Polylogic">polylogic</a> entity, so trying to handle it by just reducing some number of artifacts is plain wrong.</p>
+<p>Instead, we need to develop an awareness of the intersecting hierarchies (of different logical domains, e.g. structural hierarchy, logical hierarchy, derivation hierarchy) and also rules of how artifacts should or should not be delineated and connected in each of those hierarchies.</p>
+<p>Each of those hierarchies with its logic can be viewed as a separate dimension in a n-dimensional Software Universe (of which the above picture only shows one dimension, the structural hierarchy) thus making software an n-dimensional concept. This might not sound very helpful, but in fact it is, because when the different "facets" of software are undenieable it is better to have a clear frame of reference for them instead of always mulling them together.</p>
+<p>So what is needed is not fewer classes or DLLs, but rather models and tools to manage complexity. Software developers better get used to that. Because the complexity of software is only increasing as we move forward in our industry. So let´s get real: It´s not the number of DLLs that´s irritating some of us. It´s the lack of knowledge of how to manage them (e.g. with regard to deployment, dependency management, versioning, development).</p>
+<p><strong>Share this post:</strong> <a rel="noopener" href="https://web.archive.org/web/20070116225218/mailto:/?body=Thought%20you%20might%20like%20this:%20http://weblogs.asp.net/ralfw/archive/2005/11/28/431673.aspx&amp;;subject=On+the+right+number+of+methods%2c+classes+or+DLLs+in+a+project+-+or%3a+Just+cut+a+few+and+it+will+be+perfect" title="Post http://weblogs.asp.net/ralfw/archive/2005/11/28/431673.aspx">email it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070116225218/http://del.icio.us/post?url=http://weblogs.asp.net/ralfw/archive/2005/11/28/431673.aspx&amp;;title=On+the+right+number+of+methods%2c+classes+or+DLLs+in+a+project+-+or%3a+Just+cut+a+few+and+it+will+be+perfect" title="Post http://weblogs.asp.net/ralfw/archive/2005/11/28/431673.aspx">bookmark it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070116225218/http://www.digg.com/submit?url=http://weblogs.asp.net/ralfw/archive/2005/11/28/431673.aspx&amp;;phase=2" title="Post http://weblogs.asp.net/ralfw/archive/2005/11/28/431673.aspx">digg it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070116225218/http://reddit.com/submit?url=http://weblogs.asp.net/ralfw/archive/2005/11/28/431673.aspx&amp;title=On+the+right+number+of+methods%2c+classes+or+DLLs+in+a+project+-+or%3a+Just+cut+a+few+and+it+will+be+perfect" title="Post http://weblogs.asp.net/ralfw/archive/2005/11/28/431673.aspx">reddit!</a> | <a rel="noopener" href="https://web.archive.org/web/20070116225218/http://www.dotnetkicks.com/submit/?url=http://weblogs.asp.net/ralfw/archive/2005/11/28/431673.aspx&amp;;title=On+the+right+number+of+methods%2c+classes+or+DLLs+in+a+project+-+or%3a+Just+cut+a+few+and+it+will+be+perfect" title="Post http://weblogs.asp.net/ralfw/archive/2005/11/28/431673.aspx">kick it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070116225218/https://favorites.live.com/quickadd.aspx?marklet=1&amp;;mkt=en-us&amp;;url=http://weblogs.asp.net/ralfw/archive/2005/11/28/431673.aspx&amp;;title=On+the+right+number+of+methods%2c+classes+or+DLLs+in+a+project+-+or%3a+Just+cut+a+few+and+it+will+be+perfect&amp;;top=1" title="Post http://weblogs.asp.net/ralfw/archive/2005/11/28/431673.aspx">live it!</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

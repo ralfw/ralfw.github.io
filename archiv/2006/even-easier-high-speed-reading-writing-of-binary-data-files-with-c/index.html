@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Even easier high speed reading/writing of binary data files with C# — ralfw.de Archiv</title>
+<meta name="description" content="In my previous posting I presented a way to avoid unnecessarily copying data during read/write of binary files by using low level C CTR file functions like fread() instead of Syste">
+<link rel="canonical" href="https://ralfw.de/archiv/2006/even-easier-high-speed-reading-writing-of-binary-data-files-with-c/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Even easier high speed reading/writing of binary data files with C# — ralfw.de Archiv">
+<meta property="og:description" content="In my previous posting I presented a way to avoid unnecessarily copying data during read/write of binary files by using low level C CTR file functions like fread() instead of Syste">
+<meta property="og:url" content="https://ralfw.de/archiv/2006/even-easier-high-speed-reading-writing-of-binary-data-files-with-c/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Even easier high speed reading/writing of binary data files with C#</h1>
+    <div class="doc-meta"><span>19. März 2006</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2006/03/19/440575.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2006/even-easier-high-speed-reading-writing-of-binary-data-files-with-c/</code></span></div>
+    <div class="art"><p>In my <a rel="noopener" href="https://web.archive.org/web/20060414182805/http://weblogs.asp.net/ralfw/archive/2006/03/04/439580.aspx">previous posting</a> I presented a way to avoid unnecessarily copying data during read/write of binary files by using low level C CTR file functions like <em>fread()</em> instead of <em>System.IO</em>. This works just fine - but requires you to link in an unmanaged code C DLL if not even doing programming in C yourself.</p>
+<p>Now, thanks to Christof Sprenger at Microsoft Germany, this hurdle has been removed. He showed me how to use the existing low level file handle of a stream with the <em>kernel32.dll</em> <em>ReadFile()</em>/<em>WriteFile()</em> functions. No more C programming is necessary, although unsafe code is still needed. But that´s ok, I´d say.</p>
+<p>Here´s an example how simple your code is if you use the new <em>BinaryFileStream</em> class:</p>
+<p>struct ID3v1Tag<br />
+{<br />
+    ...<br />
+};</p>
+<p>ID3v1Tag tag;  </p>
+<p><strong>BinaryFileStream bfs = new BinaryFileStream("track01.mp3", System.IO.FileMode.Open);</strong><br />
+bfs.Seek(-128, System.IO.SeekOrigin.End);<br />
+unsafe<br />
+{<br />
+<strong>bfs.Read<ID3v1Tag>(&amp;tag);</strong>}  </p>
+<p>tag.Title = ...;<br />
+...<br />
+<strong>bfs.Write<ID3v1Tag>(&amp;tag);</strong></p>
+<p>bfs.Close();</p>
+<p>And here´s the <em>BinaryFileStream</em> itself:</p>
+<p>using System.Runtime.InteropServices;</p>
+<p>namespace System.IO<br />
+{<br />
+<strong>public unsafe class BinaryFileStream : FileStream</strong>    {<br />
+        #region CTORs</p>
+<p>public BinaryFileStream(string path, FileMode mode) <br />
+            : base(path, mode)<br />
+        {}</p>
+<p>public BinaryFileStream(string path, FileMode mode, FileAccess access)<br />
+            : base(path, mode, access)<br />
+        {}</p>
+<p>public BinaryFileStream(string path)<br />
+            : base(path, FileMode.Open)<br />
+        { }</p>
+<p>#endregion</p>
+<p><strong>public int Read<StructType>(void* buffer) where StructType : struct</strong>        {<br />
+            return Read(buffer, Marshal.SizeOf(typeof(StructType)));<br />
+        }</p>
+<p><strong>public void Write<StructType>(void* buffer) where StructType : struct</strong>        {<br />
+            Write(buffer, Marshal.SizeOf(typeof(StructType)));<br />
+        }</p>
+<p>#region Low-level file access</p>
+<p><strong>protected int Read(void* buffer, int count)</strong>        {<br />
+            int n = 0;</p>
+<p>if (!ReadFile(this.SafeFileHandle, buffer, count, out n, 0))<br />
+                throw new IOException(string.Format("Error {0} reading from file!", Marshal.GetLastWin32Error()));</p>
+<p>return n;<br />
+        }</p>
+<p><strong>protected void Write(void* buffer, int count)</strong>        {<br />
+            int n = 0;</p>
+<p>if (!WriteFile(this.SafeFileHandle, buffer, count, out n, 0))<br />
+                throw new IOException(string.Format("Error {0} writing to file!", Marshal.GetLastWin32Error()));<br />
+        }</p>
+<p>[DllImport("kernel32", SetLastError = true)]<br />
+        private static extern unsafe bool ReadFile(<br />
+            Microsoft.Win32.SafeHandles.SafeFileHandle hFile,<br />
+            void* pBuffer,            <br />
+            int numberOfBytesToRead,  <br />
+            out int numberOfBytesRead,<br />
+            int overlapped            <br />
+            );</p>
+<p>[DllImport("kernel32.dll", SetLastError = true)]<br />
+        private static extern unsafe bool WriteFile(<br />
+            Microsoft.Win32.SafeHandles.SafeFileHandle handle, <br />
+            void* bytes, <br />
+            int numBytesToWrite, <br />
+            out int numBytesWritten, <br />
+            int overlapped <br />
+            );</p>
+<p>#endregion<br />
+    }<br />
+}</p>
+<p>Copy and enjoy!</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

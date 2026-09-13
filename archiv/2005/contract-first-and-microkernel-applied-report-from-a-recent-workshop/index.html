@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contract First and Microkernel applied - Report from a recent workshop — ralfw.de Archiv</title>
+<meta name="description" content="Finally I find time to blog about a recent workshop I did with 12 developers in Austria and where I applied Microkernels in a training.">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/contract-first-and-microkernel-applied-report-from-a-recent-workshop/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Contract First and Microkernel applied - Report from a recent workshop — ralfw.de Archiv">
+<meta property="og:description" content="Finally I find time to blog about a recent workshop I did with 12 developers in Austria and where I applied Microkernels in a training.">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/contract-first-and-microkernel-applied-report-from-a-recent-workshop/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Contract First and Microkernel applied - Report from a recent workshop</h1>
+    <div class="doc-meta"><span>21. Mai 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2005/05/21/408183.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/contract-first-and-microkernel-applied-report-from-a-recent-workshop/</code></span></div>
+    <div class="art"><p>Finally I find time to blog about a recent workshop I did with 12 developers in Austria and where I applied Microkernels in a training.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/7f5692ee4684f07f.jpg" /></p>
+<p>I was hired to bring the development team up to speed with the .NET Framework. The group was heterogenous: some VB6 developers, some C++ programmers, alls had only some experience using .NET.</p>
+<p>Instead of going thru a prefab curriculum with them, what I did was to do a so called "Developer LAN Party" (DLP). Thats a training format I developed with Microsoft Germany´s Christof Sprenger and now also offer together with my <a rel="noopener" href="https://web.archive.org/web/20070301013126/http://www.dotnettwins.de/">.NET Twin</a> brother <a rel="noopener" href="https://web.archive.org/web/20070301013126/http://weblogs.asp.net/cweyer">Christian Weyer</a>.</p>
+<p>In a DLP the attendees are not bombarded with features of a certain technology, but rather learn how to use many technologies in a very pragmatic and hands-on way: by developing an application from start to finish. First a problem is described. Then the whole group defines the requirements and architects/designs the solution together. The picture shows a snap shot of one of the "design documents" on a whiteboard while I´m helping the attendees structuring their ideas.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/a7ace65072ac82ce.jpg" /></p>
+<p>Once the solution is designed, the attendees split up in groups to each implement one aspect of the solution. And that´s where the fun really starts :-) For the trainer ut´s always a challenge to get groups coordinated in their efforts; and for the attendees it´s a challenge to use technologies they are not very familiar with.</p>
+<p>But as the results of all Developer LAN Parties show, every attendee in the end is impressed by the group dynamics that develop, the fun - and the knowledge he/she gains by researching the technologies him/herself. Of course, I someone has a question the trainer is there to help. But the focus is on learning while you go. It´s "project oriented learning" where you get familiar with a technology by applying it right away.</p>
+<p>In addition - and that´s very important - the developers (maybe for the first time) see the development process in its entirety from start to finish, from requirements analysis to integration and deployment. An experience most of them find fascinating and enlightening, since it gives them a new perspective on what they do every day. Also, not to be neglected, a DLP requires the attendees to cooperate with other individuals (they sometimes don´t know before). A DLP thus is also about team playing and group spirit. (The following picture shows some of the attendees during a final wrap-up stand-up meeting.)</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/df01de1c7e6d0576.jpg" /></p>
+<p>Now, what about <strong>Microkernels</strong>? The problem to solve during this DLP was, to steer a blind mouse thru a maze, i.e. build an application that can show and generate a maze and allows an experimenter to steer a robot mouse through the labyrinth. What made it difficult was, that the experimenter had no knowledge about the layout of the maze and the mouse only gave simple feedback like "hit wall" or "cheese found". I was inspired to pose this as a problem to the group by <a rel="noopener" href="https://web.archive.org/web/20070301013126/http://blogs.msdn.com/mattwar/archive/2005/02/03/366498.aspx">a blog posting by Mat Warren</a>.</p>
+<p>A Microkernel came into play, when we split the solution into components. We had 5 components that needed to be developed - but in what order? The data access component (for loading a maze) of course was most basic, so should one group start developing it and the others wait for it to finish? Clearly not! All groups should be able to start at the same time with their work. So what we did was Contract First Design (see here for a discussion of <a rel="noopener" href="https://web.archive.org/web/20070301013126/http://weblogs.asp.net/ralfw/archive/2005/04/30/405133.aspx">Contract First</a> in the context of the <a rel="noopener" href="https://web.archive.org/web/20070301013126/http://weblogs.asp.net/ralfw/category/9899.aspx">Software Cell architecture model</a>).</p>
+<p>In the design phase we not only split up the solution into modules/components, but also defined precise interfaces (contracts) for those components. I coded them right away up front before the eyes of the attendees, and once we were satisfied with the contracts, compiled them into an assembly.</p>
+<p>This contract assembly was handed to each group. It was the only assembly they were allowed to reference in their component projects (besides general infrastructure).</p>
+<p>So what they needed to do was come up with mock-up implementations of components they needed during they development. E.g. the group responsible for the frontend component needed a mock-up implementation of a maze, because they needed to visualize it. So they code a very, very simple maze component which implemented the maze interface. At the same time the maze component was developed by some other group which needed not be concerned with the frontend groups progress - as well as the other way around. Each group was able to move forward at its own pace without hindering any other group.</p>
+<p>All attendees where amazed how little they needed to communicated with the other groups. The only questions revolved around clarifying the semantics of the interfaces defined. But all in all there was little traffic between groups in the workshop room. They all simply ploughed thru their assigned problems, looking up technologies, coding mostly in pairs, sometimes consulting with me about implementation details. Clearly the most difficult component was the one for the algorithm to move the mouse thru the maze. There were two, sometime three groups working on competing implementations.</p>
+<p>Now, in order to be able to easily exchange a mock-up implementation with a real implementation of a component and to later on integrate everything to form a running application, a Microkernel was used. Every group used it as part of the infrastructure and never instanciated types from another component directly. Instead they requested an instance of another component´s type from the Microkernel. This was a fundamental necessity to actually implement Contract First and move beyond just a lip service.</p>
+<p>In the end, lo and behold, after there was at least one implementation for each component available, we stichted together the whole application by writing up one "mapping file" (which contained the mapping between interfaces and assemblies and types implementing the interface) - and it worked. It was so amazingly easy, all attendees were stunned. Of course, the problem/solution was comparatively simple, but still... To strictly develop an application according to the Contract First principle and live by it using a Microkernel was new to them and dispelled their scepticism.</p>
+<p>For me it was another proof that software development can only move forward, if component orientation move from literature to the reality of projects. The technologies are there. But the developers must learn how to actually apply the theory. Again a Developer LAN Party has shown its value in doing exactly this: bridge the gap between theory and practice.</p>
+<p><em>PS: Thanks to Gerald for the photographs!</em></p>
+<p><strong>Share this post:</strong> <a rel="noopener" href="https://web.archive.org/web/20070301013126/mailto:/?body=Thought%20you%20might%20like%20this:%20http://weblogs.asp.net/ralfw/archive/2005/05/21/408183.aspx&amp;;subject=Contract+First+and+Microkernel+applied+-+Report+from+a+recent+workshop" title="Post http://weblogs.asp.net/ralfw/archive/2005/05/21/408183.aspx">email it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070301013126/http://del.icio.us/post?url=http://weblogs.asp.net/ralfw/archive/2005/05/21/408183.aspx&amp;;title=Contract+First+and+Microkernel+applied+-+Report+from+a+recent+workshop" title="Post http://weblogs.asp.net/ralfw/archive/2005/05/21/408183.aspx">bookmark it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070301013126/http://www.digg.com/submit?url=http://weblogs.asp.net/ralfw/archive/2005/05/21/408183.aspx&amp;;phase=2" title="Post http://weblogs.asp.net/ralfw/archive/2005/05/21/408183.aspx">digg it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070301013126/http://reddit.com/submit?url=http://weblogs.asp.net/ralfw/archive/2005/05/21/408183.aspx&amp;title=Contract+First+and+Microkernel+applied+-+Report+from+a+recent+workshop" title="Post http://weblogs.asp.net/ralfw/archive/2005/05/21/408183.aspx">reddit!</a> | <a rel="noopener" href="https://web.archive.org/web/20070301013126/http://www.dotnetkicks.com/submit/?url=http://weblogs.asp.net/ralfw/archive/2005/05/21/408183.aspx&amp;;title=Contract+First+and+Microkernel+applied+-+Report+from+a+recent+workshop" title="Post http://weblogs.asp.net/ralfw/archive/2005/05/21/408183.aspx">kick it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070301013126/https://favorites.live.com/quickadd.aspx?marklet=1&amp;;mkt=en-us&amp;;url=http://weblogs.asp.net/ralfw/archive/2005/05/21/408183.aspx&amp;;title=Contract+First+and+Microkernel+applied+-+Report+from+a+recent+workshop&amp;;top=1" title="Post http://weblogs.asp.net/ralfw/archive/2005/05/21/408183.aspx">live it!</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

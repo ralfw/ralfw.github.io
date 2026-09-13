@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why I´m in love with applications as host-code-combinations: Software Cells #1 — ralfw.de Archiv</title>
+<meta name="description" content="If you´re still sceptical and don´t believe the proposed definition of software applications as a combination of a host plus my problem solving code has any merit over the so far d">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/why-i-m-in-love-with-applications-as-host-code-combinations-software-c/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Why I´m in love with applications as host-code-combinations: Software Cells #1 — ralfw.de Archiv">
+<meta property="og:description" content="If you´re still sceptical and don´t believe the proposed definition of software applications as a combination of a host plus my problem solving code has any merit over the so far d">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/why-i-m-in-love-with-applications-as-host-code-combinations-software-c/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Why I´m in love with applications as host-code-combinations: Software Cells #1</h1>
+    <div class="doc-meta"><span>23. April 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2005/04/23/403986.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/why-i-m-in-love-with-applications-as-host-code-combinations-software-c/</code></span></div>
+    <div class="art"><p>If you´re still sceptical and don´t believe the <a rel="noopener" href="https://web.archive.org/web/20051123165735/http://weblogs.asp.net/ralfw/archive/2005/04/23/403948.aspx">proposed definition of software applications as a combination of a host plus my problem solving code</a> has any merit over the so far diffuse usage of the term "application", maybe I can convince you to rethink your position with a couple of pictures?</p>
+<p>I think, once we are able to clearly delineate an application in the proposed way, we can start drawing pictures of software solutions in a new way. Let´s start with a single application:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/0b252267db8d53cf.gif" /></p>
+<p>I think, this is a simple picture and it is easy to understand. It does not imply much. There is just host and my assemblies. I think, all of your applications look like this, with one distinction: Except for when you develop an ASP.NET solution or a ServicedComponent, your Host is an assembly containing some custom logic specific to the solution you develop. But let that not stand in our way for the moment.</p>
+<p>First let me make the picture even easier, let me replace the curved outline of the host:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/b8bc00db89c4d254.gif" /></p>
+<p>I chose the simplest 2D shape to depict the host and put the custom assemblies right in the center in an opaque shape so we don´t get disturbed by to many details right now.<br />
+What we get is a Host with a custom code core at its center. The purpose of the core is to solve some problem, the purpose of the Host is to provide a convenient environment for the core to do its work.</p>
+<p>Now let expand our picture: As you know, I think of the combination SQL Server + stored procs as a separate application. Then this is the simplied picture of a C/S solution consisting of two applications:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/9c065fe954ac7614.gif" /></p>
+<p>If we leave out the question how those applications communicate with one another, I´d say, this is a pretty simple picture: Two applications that belong together to form a solution. Their vicinity very naturally suggests a cooperation between the two. No statement is made and does not have to be made at this point about where those applications are deployed. They might run on the same machine or on different machines. But by distributing our code which solves a problem across two applications we know there is some gap between the distributed parts. Very likely this gap is expensive to bridge and needs special consideration.</p>
+<p>But let´s move on to more complicated scenarios. How about a WinForms application (frontend) calling a Web service which functions as a facade for a COM+ component which in turn uses stored procedures in the backend?</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/bd3f658a6c461946.gif" /></p>
+<p>I just needed to add a couple of triangles/Hosts and need not worry about the details of their cores.</p>
+<p>I was just concerned with how the applications communicate with one another. But an intuitive premise of this kind of picture is: information flows between applications where they border on one another. That means, I could have drawn the picture also like follows to resemble the common 3 layered architectures:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/4d2979fbaf000b20.jpg" /></p>
+<p>You see, my definition of applications so far nicely complements our beloved application layer architecture model.</p>
+<p>But before I dig any further into this new picture or model for application design - there a many details to flesh out -, let me give it a name.</p>
+<p>Let me call those little triangles with the black core <em>Software Cells</em>, because putting many applications next to each other - e.g. in a large SOA picture - looks like a united cell structure from a biology text book, e.g.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/5ead08db2b323640.jpg" /></p>
+<p><em>Source: <a rel="noopener" href="https://web.archive.org/web/20051123165735/http://www.biolution.net/">http://www.biolution.net</a></em></p>
+<p>or</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/4537a2079159c5cc.jpg" /></p>
+<p><em>Source: <a rel="noopener" href="https://web.archive.org/web/20051123165735/http://www.digitalefolien.de/">http://www.digitalefolien.de</a></em></p>
+<p>Each application for me thus is a software cell. The exact form does not really matter. A triangle is just the simplest 2D shape; so if you like, use squares, octagons or whatever you like to depict the outline of your application, to give it a surface other software cells can connect to. You can even go 3D: use a tetraeder or cube. Each edge or surface, though, should connect only two software cells/applications.</p>
+<p>Also it´s ok, if you find regular shapes limiting to depict larger solutions consisting of many applications. A complex network of applications might need an n-dimensional space to connect all those software cells thru adjacency. But that´s hard to draw on a piece of paper :-) So what I suggest for complex networks is to view software cells not as simple onion cells (see 2nd picture above), but as nerve cells:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/9ea1b816b4c9ed26.jpeg" /></p>
+<p><em>Source: <a rel="noopener" href="https://web.archive.org/web/20051123165735/http://www.digitalefolien.de/">http://www.mpg.de</a></em></p>
+<p>Nerve cells reach out to other cells near and far. So can software cells. (Interestingly, the communication between nervce cells across synapses can be thought of a form of marshalling: electrical impulses have to be"serialized" into chemical messages (!) to cross the gap between two nervce cells.)</p>
+<p>But more of that in an future posting.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

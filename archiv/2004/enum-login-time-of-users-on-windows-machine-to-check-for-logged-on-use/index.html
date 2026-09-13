@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enum login time of users on Windows machine to check for logged on user — ralfw.de Archiv</title>
+<meta name="description" content="In my previous posting (&quot;Check for logged on user on Windows machine&quot;) I showed a WMI-based method to check, if a certain user was logged on. Andreas Häber then suggested in a comm">
+<link rel="canonical" href="https://ralfw.de/archiv/2004/enum-login-time-of-users-on-windows-machine-to-check-for-logged-on-use/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Enum login time of users on Windows machine to check for logged on user — ralfw.de Archiv">
+<meta property="og:description" content="In my previous posting (&quot;Check for logged on user on Windows machine&quot;) I showed a WMI-based method to check, if a certain user was logged on. Andreas Häber then suggested in a comm">
+<meta property="og:url" content="https://ralfw.de/archiv/2004/enum-login-time-of-users-on-windows-machine-to-check-for-logged-on-use/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Enum login time of users on Windows machine to check for logged on user</h1>
+    <div class="doc-meta"><span>4. Jan. 2004</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2004/01/04/47442.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2004/enum-login-time-of-users-on-windows-machine-to-check-for-logged-on-use/</code></span></div>
+    <div class="art"><p>In my previous posting ("<a rel="noopener" href="https://web.archive.org/web/20120705084721/http://weblogs.asp.net/ralfw/archive/2004/01/04/47388.aspx">Check for logged on user on Windows machine</a>") I showed a WMI-based method to check, if a certain user was logged on. Andreas Häber then suggested in a comment, to use the Win32 API function NetUserEnum instead. Since WMI always sounds to me like a heavyweight technology, I liked the idea to resort to "simple" Win32 API calls to solve the problem. Below you find the result of my attempt wrapped in a VB.NET module.</p>
+<p><strong>Usage</strong>:</p>
+<p>Call <em>GetUsersLastLogOn()</em> to retrieve an array of all users of the machine running the code. The array contains <em>UserLastLogOn</em> objects providing a <em>username</em> and the date/time of the user´s last logon (<em>lastLoggedOn</em>).</p>
+<p>Dim users() As LogOnInfo.UserLastLogOn<br />
+users = LogOnInfo.<strong>GetUsersLastLogOn</strong>()<br />
+For Each user As LogOnInfo.UserLastLogOn In users<br />
+    Console.WriteLine(user.username &amp; ", " &amp; user.lastLoggedOn)<br />
+Next</p>
+<p>To solve the problem of a Windows service checking for logged on users you need to compare the logon time of the users to a timestamp (e.g. the start time of the Windows service process (call <em>Process.GetCurrentProcess.StartTime()</em>)).</p>
+<p>However, although a user might have logged on after the Windows service started, you never know, if he/she still is logged on. The <em>last_logoff</em> information in the <em>USER_INFO_2</em> structure is not used by Windows.</p>
+<p>That´s the main reason why I find this solution inferior to the one using WMI. Plus, it cost much more effort to code it (compiling information, translating the <em>USER_INFO_2</em> structure to VB.NET, finding a way to convert UTC seconds to <em>DateTime</em> (easy, but eluded me for quite some time)).</p>
+<p><strong>How does it work:</strong></p>
+<p><em>NetUserEnum</em> returns a list of <em>USER_INFO_2</em> structures containing information about users of a certain machine. Passing <em>nothing</em> as the first parameter to <em>NetUserEnum</em> requests users from the local machine, passing 2 as the second parameter requests the info to be returned as <em>USER_INFO_2</em> structures.</p>
+<p><em>GetUsersLastLogOn()</em> iterates over all <em>USER_INFO_2</em> structures, extracts the user name and the <em>last_logon</em> time expressed in UTC seconds since 1/1/1970. The time is converted to a <em>DateTime</em> structure with a simple calculation: add the seconds to midnight of 1/1/1970. The extracted information is wrapped in <em>UserLastLogOn</em> objects and returned as an array.</p>
+<p><strong>Limitation:</strong></p>
+<p><em>NetUserEnum</em> returns several <em>USER_INFO_2</em> structures with each call. Calling it once on my system thus is enough. On machines with far more user accounts, though, it might be necessary to call the function several times. However, I did not test that scenario.</p>
+<p><strong>Code</strong>:</p>
+<p>Imports System.Management<br />
+Imports System.Runtime.InteropServices</p>
+<p>Module <strong>LogOnInfo</strong><br />
+    <StructLayout(LayoutKind.Sequential, CharSet:=CharSet.Unicode)> _<br />
+    Friend Structure <strong>USER_INFO_2</strong>        Public name As String<br />
+        Public password As String<br />
+        Public password_age As Integer<br />
+        Public priv As Integer<br />
+        Public home_dir As String<br />
+        Public comment As String<br />
+        Public flags As Integer<br />
+        Public script_path As String<br />
+        Public auth_flags As Integer<br />
+        Public full_name As String<br />
+        Public usr_comment As String<br />
+        Public param As String<br />
+        Public workstations As String<br />
+        Public last_logon As Integer<br />
+        Public last_logoff As Integer<br />
+        Public acct_expires As Integer<br />
+        Public max_storage As Integer<br />
+        Public units_per_week As Integer<br />
+        Public logon_hours As Byte<br />
+        Public bad_pw_count As Integer<br />
+        Public num_logons As Integer<br />
+        Public logon_server As String<br />
+        Public country_code As Integer<br />
+        Public code_page As Integer<br />
+    End Structure</p>
+<p>Public Declare Function <strong>NetUserEnum</strong> Lib "Netapi32.dll" ( _<br />
+        <MarshalAs(UnmanagedType.LPWStr)> ByVal servername As String, _<br />
+        ByVal level As Integer, _<br />
+        ByVal filter As Integer, _<br />
+        ByRef bufptr As IntPtr, _<br />
+        ByVal prefmaxlen As Integer, _<br />
+        ByRef entriesread As Integer, _<br />
+        ByRef totalentries As Integer, _<br />
+        ByRef resume_handle As Integer) As Integer</p>
+<p>Public Declare Function <strong>NetApiBufferFree</strong> Lib "Netapi32.dll" (ByVal buffer As IntPtr) As Integer</p>
+<p>Public Class <strong>UserLastLogOn</strong><br />
+        Private _username As String<br />
+        Private _lastLoggedOn As DateTime</p>
+<p>Friend Sub New(ByVal ui As USER_INFO_2)<br />
+            _username = ui.name<br />
+            _lastLoggedOn = #1/1/1970#.AddSeconds(ui.last_logon)<br />
+        End Sub</p>
+<p>Public ReadOnly Property username() As String<br />
+            Get<br />
+                Return _username<br />
+            End Get<br />
+        End Property</p>
+<p>Public ReadOnly Property lastLoggedOn() As DateTime<br />
+            Get<br />
+                Return _lastLoggedOn<br />
+            End Get<br />
+        End Property<br />
+    End Class</p>
+<p>Public Function <strong>GetUsersLastLogOn</strong>() As UserLastLogOn()<br />
+        Dim users As New ArrayList</p>
+<p>Dim entriesRead, totalEntries, hResume As Integer<br />
+        Dim bufPtr As IntPtr</p>
+<p>NetUserEnum(Nothing, 2, 2, bufPtr, -1, entriesRead, totalEntries, hResume)<br />
+        If entriesRead &gt; 0 Then<br />
+            Dim iter As IntPtr = bufPtr<br />
+            For i As Integer = 0 To entriesRead - 1<br />
+                users.Add(New UserLastLogOn(Marshal.PtrToStructure(iter, GetType(USER_INFO_2))))<br />
+                iter = New IntPtr(iter.ToInt32 + Marshal.SizeOf(GetType(USER_INFO_2)))<br />
+            Next<br />
+        End If<br />
+        NetApiBufferFree(bufPtr)</p>
+<p>Return users.ToArray(GetType(UserLastLogOn))<br />
+    End Function</p>
+<p>Public Function <strong>IsUserLoggedOn</strong>(ByVal userName As String) As Boolean<br />
+        Dim mc As New ManagementClass("Win32_Process")<br />
+        Dim moc As ManagementObjectCollection = mc.GetInstances<br />
+        Dim mo As ManagementObject<br />
+        For Each mo In moc<br />
+            Dim p As New ROOT.CIMV2.Process(mo)</p>
+<p>Dim processDomain, processUser As String<br />
+            p.GetOwner(processDomain, processUser)<br />
+            If processUser = userName Then<br />
+                Return True<br />
+            End If<br />
+        Next<br />
+    End Function<br />
+End Module</p>
+<p><strong>Resources</strong>:</p>
+<p>-Documentation of NetUserEnum Win32 API function<br />
+<a rel="noopener" href="https://web.archive.org/web/20120705084721/http://msdn.microsoft.com/library/default.asp?url=/library/en-us/netmgmt/netmgmt/netuserenum.asp">http://msdn.microsoft.com/library/default.asp?url=/library/en-us/netmgmt/netmgmt/netuserenum.asp</a></p>
+<p>-Documentation of USER_INFO_2 structure:<br />
+<a rel="noopener" href="https://web.archive.org/web/20120705084721/http://msdn.microsoft.com/library/default.asp?url=/library/en-us/netmgmt/netmgmt/user_info_2_str.asp">http://msdn.microsoft.com/library/default.asp?url=/library/en-us/netmgmt/netmgmt/user_info_2_str.asp</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

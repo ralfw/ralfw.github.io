@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How partial classes can help Unit Testing — ralfw.de Archiv</title>
+<meta name="description" content="Testing a class for correctness using Unit Tests means to exercise all methods of a class. This is especially easy for public methods. You can freely choose where to locate your te">
+<link rel="canonical" href="https://ralfw.de/archiv/2006/how-partial-classes-can-help-unit-testing/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="How partial classes can help Unit Testing — ralfw.de Archiv">
+<meta property="og:description" content="Testing a class for correctness using Unit Tests means to exercise all methods of a class. This is especially easy for public methods. You can freely choose where to locate your te">
+<meta property="og:url" content="https://ralfw.de/archiv/2006/how-partial-classes-can-help-unit-testing/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>How partial classes can help Unit Testing</h1>
+    <div class="doc-meta"><span>14. April 2006</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/442836" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2006/how-partial-classes-can-help-unit-testing/</code></span></div>
+    <div class="art"><p>Testing a class for correctness using Unit Tests means to exercise all methods of a class. This is especially easy for public methods. You can freely choose where to locate your test code, it always has access to public methods of the class. But how about internal/friend methods for example? They are only visible to test code located in the same project/assembly as the class to be tested. And how about private methods? And how about methods without any "directly visible effect", i.e. methods which change only the private state of an object of the class to be tested?</p>
+<p>I favor separating test code from implementation code. My "component test beds" look like this:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/357cf61326f5bc6b.jpg" /></p>
+<p>Let´s assume, I´m developing a stack component called "MyStack". I´d  then create a Visual Studio solution, e.g. <em>MyStack Component.sln</em>, and realize the component as an assembly (Visual Studio project), e.g.  <em>MyStack.csprj</em>. All tests for that componet, though, would go into a separate project, e.g. <em>test.MyStack.csprj</em>. Why´s this? Because then I potentially can reuse the tests for different implementations. However, this depends on defining an interface/contract for the component and requires the test to dynamically load an implementation.</p>
+<p>Although the above example does not define a separate interface for the component, I nevertheless put the tests in their own project. Call it a habit, if you like ;-)</p>
+<p>Now, on to testing the component. Here´s an outline of the class <em>MyStack</em>:</p>
+<p>public partial class MyStack<T><br />
+{<br />
+    private List<T> stackElements = new List<T>();  </p>
+<p>public void Push(T element)...  </p>
+<p>public T Pop()...  </p>
+<p>public int Count...  </p>
+<p>public bool IsEmpty...<br />
+}  </p>
+<p>Which method to test first? Well, I´d say Push() should be tested first, since all other methods´ functionality somewhat depend on Push() working correctly.</p>
+<p>How could a test for Push() look like? Maybe something like this:</p>
+<p>using NUnit.Framework;<br />
+...<br />
+[Test]<br />
+public void TestPush()<br />
+{<br />
+    MyStack<int> s = new MyStack<int>();<br />
+    s.Push(42);<br />
+    Assert.AreEqual(1, s.stackElements.Count, "Push failed");<br />
+    Assert.AreEqual(42, s.stackElements[0], "Element not on stack after Push");<br />
+    ...<br />
+}  </p>
+<p>Please note: Since I just want to test the Push() method, I don´t want to rely on Count or Pop() to check if Push() worked correctly. If a test like</p>
+<p>s.Push(42);<br />
+Assert.AreEqual(42, s.Pop());</p>
+<p>failed, I would not know, whether Push() or Pop() was not correct. That´s why I want to check Push()´s success by looking at the private state - stackElements - of the MyStack object.</p>
+<p>Since this state is not visible to any client of a MyStack object, be it within the same component or outside, I can´t put this test in my separate test project.</p>
+<p>But there´s a solution to this dilemma: I put the test code in a static method of the class to be tested - and call it from my test project. However, I don´t want to clutter the code of the MyStack class with additional test methods, so I separate any test methods - probably it´s just a few of this kind, that need to be that close to the code under test - into another file by making MyStack a partial class:</p>
+<p><em>MyStack.csprj/MyStack.cs:</em></p>
+<p>public <strong>partial</strong> class MyStack<T><br />
+{<br />
+    private List<T> stackElements = new List<T>();  </p>
+<p>public void Push(T element)...<br />
+    ...<br />
+}  </p>
+<p><em>MyStack.csprj/tests.cs:</em></p>
+<p>public <strong>partial</strong> class MyStack<T><br />
+{<br />
+    public <strong>static</strong> void TestPush()<br />
+    {<br />
+        MyStack<int> s = new MyStack<int>();<br />
+        s.Push(42);<br />
+        Assert.AreEqual(1, s.stackElements.Count, "Push failed");<br />
+        Assert.AreEqual(42, s.stackElements[0], "Element not on stack after Push");<br />
+        ...<br />
+    }<br />
+}</p>
+<p>Now, you might be asking:</p>
+<ul>
+<li>Why not a regular Unit Test method instead of a static method? Because a Unit Testing framework like NUnit cannot instanciate a generic class like MyStack<T>. A static method, though, does not require a prior instanciation of the class, but creates an object itself.</li>
+<li>Why a test in the class to be tested? Because only this way the test can access private members of a class´ instance.</li>
+</ul>
+<p>Although the intra-component test method is static and not a regular Unit Test, if uses the NUnit framework by calling Assert methods. So it acts as much like a Unit Test method as possible. In order to execute it, though, it needs to be called from a regular Unit Test method, which I locate in the test client project:</p>
+<p><em>test.MyStack.csprj/tests.cs:</em></p>
+<p>[Test]<br />
+public void TestPush()<br />
+{<br />
+    MyStack<int>.TestPush();<br />
+}</p>
+<p>That´s it! All tests are factored out into a separate test client - except just for a few which need to be very close to the class to be tested. Those live in static methods to which tregular test methods delegate their work.</p>
+<p>There´s only one drawback so far: The MyStack component now contains a test method which any client could call. That´s not how production code should look like.</p>
+<p>To get rid of this problem, I surround the static test method as well as the regular Unit Test method calling it with a</p>
+<h1>if DEBUG</h1>
+<p>...  </p>
+<h1>endif</h1>
+<p>preprocessor statement.</p>
+<p>My component test bed now looks like this:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/a91b45bad8470e20.jpg" /></p>
+<p>And I´m very happy with its as clear as possible separation between implementation and tests. Using a partial class for the few necessary tests within the component under development makes them very easy to spot and maintain and exclude in release code.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

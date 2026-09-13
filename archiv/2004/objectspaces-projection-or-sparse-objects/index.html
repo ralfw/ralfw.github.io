@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ObjectSpaces: Projection or sparse Objects? — ralfw.de Archiv</title>
+<meta name="description" content="Am I proposing just an ordinary projection feature for ObjectSpaces (OS)? I don´t think so, because with a projection in SQL (or relational databases), you get different results wh">
+<link rel="canonical" href="https://ralfw.de/archiv/2004/objectspaces-projection-or-sparse-objects/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ObjectSpaces: Projection or sparse Objects? — ralfw.de Archiv">
+<meta property="og:description" content="Am I proposing just an ordinary projection feature for ObjectSpaces (OS)? I don´t think so, because with a projection in SQL (or relational databases), you get different results wh">
+<meta property="og:url" content="https://ralfw.de/archiv/2004/objectspaces-projection-or-sparse-objects/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>ObjectSpaces: Projection or sparse Objects?</h1>
+    <div class="doc-meta"><span>23. März 2004</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="https://asp-blogs.azurewebsites.net/ralfw/94385" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2004/objectspaces-projection-or-sparse-objects/</code></span></div>
+    <div class="art"><p>My <a rel="noopener" href="https://web.archive.org/web/20241127123646/http://weblogs.asp.net/ralfw/archive/2004/03/19/92538.aspx">previous blog entry</a> raised some comments I´d like to respond to.</p>
+<p>Am I proposing just an ordinary projection feature for ObjectSpaces (OS)? I don´t think so, because with a projection in SQL (or relational databases), you get different results when you issue <em>select colA, colB from myTable</em> vs <em>select colA from myTable</em>. Hence you need a generic data structure like a cursor (e.g. a <em>ADODB.RecordSet</em>) or a ADO.NET <em>DataTable</em>/<em>DataRow</em> to accomodate for the different number of columns.</p>
+<p>With OS (or any O/R-mapping (ORM) tool), though, generic data structures are less important. That´s the purpose of ORM. With ORM you define a persistent class like</p>
+<p><em>class Customer<br />
+{<br />
+  public string id;<br />
+  public string name;<br />
+  public string city;<br />
+  public string zip;<br />
+}</em></p>
+<p>and hopefully there is also a corresponding typed collection for each persistent class, e.g.</p>
+<p><em>class CustomerCollection : IList<br />
+{<br />
+  ...<br />
+  public Customer  item(int index) {<br />
+    get {<br />
+      ...<br />
+    }<br />
+  }<br />
+  ...<br />
+}</em></p>
+<p>More you don´t want. For a given entity (e.g. customers in some database table) you don´t want to define more than one persistent class.</p>
+<p>Then, when you query for customers, you define a selection of entities by formulating a condition on their fields/columns, e.g.</p>
+<p><em>select ... from tbCustomers </em><em>where name like 'a%'</em>**</p>
+<p>The collection class represents the result of this operation.</p>
+<p>But also, you define how much data to load for each entity. O/R-mapping tools usually support at least two modes: The default is ("full mode"), you load all columns of a table and create a full blown persistent object for each entity returned:</p>
+<p><em>select </em><em>*</em><em> from tbCustomers ...</em></p>
+<p>Or you specify to only load "hollow object"s ("hollow mode"), i.e. only IDs of entities matching the query criteria:</p>
+<p><em>select </em><em>id</em><em> from tbCustomers ...</em></p>
+<p>Object creation then is delayed until you actually access an object (thru the collection class). Of course, then a specific query has to be issued to load the data:</p>
+<p><em>select </em><em>*</em><em> from tbCustomers </em><em>where id="..."</em>**</p>
+<p>"Hollow objects" reduce the memory footprint and the amount of data transferred initially by the query, but cause additional roundtrips later on.</p>
+<p>From the outside, though, what is returned from a query are always fully populated persistent objects. The delayed loading of "hollow objects" is transparent to client code of the ORM API.</p>
+<p>Now, what I´m proposing is a third mode ("sparse mode") of retrieving persistent objects. I propose to be able to load sparsely populated objects by issuing a query specifying a subset of columns/fields to be returned for each entity, e.g.</p>
+<p><em>select </em><em>id, name</em><em> from tbCustomers ...</em></p>
+<p>From this data persistent objects are created, but of course not all their fields can be populated. But from the outside, when getting a persistent object from a collection, it still is an object of the persistent class with all its fields/properties - like with "hollow object"s. There is no perceivable difference between an object loaded in first or second or third mode.</p>
+<p>And that´s the reason why I rather would not call it projections what I´m proposing - although a SQL projection query is underlying this third mode.</p>
+<p>I´d call it "sparsely populating persistent objects", because there still is just one persistent class for a persistent entity, but which sometimes is populated with more column data from the database, sometimes with less.</p>
+<p>These kind of "sparse objects" cause less memory footprint than objects loaded in "full mode" or "hollow mode", because in both modes, all columns' data is loaded, before you can access any field/property of a persistent object. Both modes only differ with regard to the time, when the data is loaded. In "sparse mode", though, maybe more than the loaded columns are never needed. "Sparse mode" thus combines the small number of roundtrips of "full mode" with a much smaller mem. consumption.</p>
+<p>Like "hollow objects", though, "sparse objects" always look fully populated, because when you access a property, whose data has not been loaded by the initial query, the missing data is fetched (preferrably all missing columns). The query could look like this when accessing the city field/property for the first time</p>
+<p><em>select </em><em>city</em><em> from tbCustomers where id="..."</em></p>
+<p>and only load the missing column or columns. Or it could look like this:</p>
+<p><em>select </em><em>city, zip</em><em> from tbCustomers where id="..."</em></p>
+<p>and load all columns missing so far. Or it could look like this:</p>
+<p><em>select * from tbCustomers where id="..."</em></p>
+<p>to refresh the object´s data.</p>
+<p>Of course this is an additional roundtrip to the database, but then it´s hopefully only rarely necessary, because the fields/properties most often needed in a particular context are specified with the query.</p>
+<p>The "sparse mode" thus combines <strong>small mem. footprint</strong> (thru only needed fields/properties populated) with <strong>high performance</strong> (thru rare roundtrips) and <strong>full read/write access</strong> to all fields/properties when needed (thru transparent delayed loading of missing columns).</p>
+<p>On the outside it´s still just one persistent class. But on the inside it´s more flexibility than with just "full mode" or "hollow mode". With "sparse mode", "full mode" as well as "hollow mode" are only special cases. "Full mode" loads all columns and never needs an additional roundtrip to the database, "hollow mode" always causes a roundtrip for each object.</p>
+<p>When to use which mode? Use "full mode" in editing scenarios, where a persistent object maybe is displayed for modification. Use "sparse mode" in read-only or read-mostly scenarios (but also, when just a couple of fields/properties need to be edited).</p>
+<p>Never use "hollow mode"! There is no use for it. Or maybe there is? It´s not important, since "hollow mode" comes free once the "sparse mode" is implemented.</p>
+<p>The implementation of "sparse mode", however, requires access to missing fields/properties can be detected. Thus it requires all persistent fields to be encapsulated by property methods for access interception. This is obviously not necessary for "full mode", but also not for "hollow mode". In "hollow mode", only proxies are loaded initially, which cause the (transparent) delayed load of the full object.</p>
+<p>Now, since property methods are needed for "sparse mode", ObjectSpaces cannot currently support it. To require properties is against its vision of making an arbitrary class persistent.</p>
+<p>But then, as you might know by now or have guessed: To be able to provide object persistence for any class is a lofty goal - and in my view not important to reach for many, many scenarios. Many developers could live without it, and would be happy to define their persistent classes in some special ways (e.g. by deriving from a persistent base class, annotate them with attributes, or model them with a tool or language). Developers are mostly not concerned with the purity or generality of a solution. That is not to say, that sometimes the very general approach of OS is just what a project needs. But at least the companies I´m talking to don´t need such generality.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

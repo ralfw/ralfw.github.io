@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data is just an abstraction of associations - or: A philosophical interlude — ralfw.de Archiv</title>
+<meta name="description" content="In my previouse posting I´ve described the Pile view of the &quot;world of data&quot;: focus on associations, not data. Todays I wanted to put meat on this theoretical skelleton and show you">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/data-is-just-an-abstraction-of-associations-or-a-philosophical-interlu/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Data is just an abstraction of associations - or: A philosophical interlude — ralfw.de Archiv">
+<meta property="og:description" content="In my previouse posting I´ve described the Pile view of the &quot;world of data&quot;: focus on associations, not data. Todays I wanted to put meat on this theoretical skelleton and show you">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/data-is-just-an-abstraction-of-associations-or-a-philosophical-interlu/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Data is just an abstraction of associations - or: A philosophical interlude</h1>
+    <div class="doc-meta"><span>23. Dez. 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2005/12/23/433915.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/data-is-just-an-abstraction-of-associations-or-a-philosophical-interlu/</code></span></div>
+    <div class="art"><p>In my <a rel="noopener" href="https://web.archive.org/web/20070624213236/http://weblogs.asp.net/ralfw/archive/2005/12/21/433714.aspx">previouse posting</a> I´ve described the <a rel="noopener" href="https://web.archive.org/web/20070624213236/http://www.pileworks.org/">Pile</a> view of the "world of data": focus on associations, not data. Todays I wanted to put meat on this theoretical skelleton and show you code I wrote. But first let me insert a little philosophical deviation. It might help to distinguish Pile from other (more or less novel) approaches to "data management" - and either draw more fire from the RDBMS camp or drive them off altogether :-) We´ll see...</p>
+<p>In the past days while trying to explain Pile to others I stumbled across two insights I´d like to share with you. Hope they help you as much as they helped me. Please give them a chance.</p>
+<h4>Elementary particles instead of bricks</h4>
+<p>We´re all used to seeing the world through data centric glasses. First come tables and rows and objects and files. Then come relationships between those data entities. That kind of thinking is so ingrained in our brains (and education) it´s hard to shed it. But do we need to? Well, since we can solve so many problems looking through this pair of glasses, it seems as if it´s sufficient. Sure, to be content with this conceptual tool because it solves problems, is ok. That´s the purpose of any world view and theory or model.</p>
+<p>But ability to solve problems does not mean being the only possible interpretation of the world or any inherent "truth".</p>
+<p>So once you hit a wall with an established world view (or theory or model) it seems prudent to question it. This questioning must be allowed at any time. Whoever denies this is dogmatic - that´s how I understand scientific thinking. Asking questions all the time is at the very heart of science.</p>
+<p>One of the questions I asked the established data models was: What´s your granularity? And my impression is: the granularity when talking of objects and tables/rows is very, very coarse. Tables/rows and objects and files are bricks to build a data world with. And that´s great! So many buildings can be constructed using bricks.</p>
+<p>But let´s be honest: In the end you can only do so much with bricks. There are inherent limits to what you can do with them. You can try to ignore those limitations, but finally you will succumb to them.</p>
+<p>Now look at the world. Is it build from bricks? No, it´s not bricks, but something much, much smaller. <a rel="noopener" href="https://web.archive.org/web/20070624213236/http://en.wikipedia.org/wiki/Elementary_particle">Elementary particles</a> are the building block of our world. And even though there are not so many different elementary particles (proton, neutron, electron to constitute atoms), the world is so, so, so rich in materials and forms. How can that be? Well, that´s because elementary particles can be related to each other in an infinite number of ways. It´s the associations between the few different elementary particles which makes possible the variety of the universe.</p>
+<p>Now, when I say, objects and tables/rows are bricks, what are the elementary particles of data structures? It´s associations or relations like in Pile. With objects or files you can build only so much. But when modelling (data) structures with just Pile relations, you can build everything. There´s no limit to what you can model.</p>
+<p>Or look at the field of 3D graphics: There is only so much you can model with spheres or torusses or cubes. But you can model any shape using triangles! They are the most basic building blocks for geometric structures/bodies, they are the elementary particles of 3D models:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/431248594fd6b849.gif" /></p>
+<p><em>(Source: <a rel="noopener" href="https://web.archive.org/web/20070624213236/http://www.computing-objects.com/en/meshtools_gallery_3dr.html">http://www.computing-objects.com/en/meshtools_gallery_3dr.html</a>)</em></p>
+<p>Now look at Pile´s relations. They are triangles too! A relation connects two "things" and itself again is a new "thing". I´d say, you cannot get more basic than that - and be equally simple and powerful.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/42e71ae45e141443.gif" /></p>
+<p>You might say, "Hey, why do I need AB in this picture? Why not draw a straight line between A and B? Wouldn´t that be even more simple?" You´re right, that would look simpler, but it would introduce a data - relation dichotomie. "Data" (A and B) would be different from the relation (the connecting line) between them. In so far I´d say, in the end this would not be simpler, because there would be more concepts than in Pile which only knows relations.</p>
+<p>My bottom line: Pile describes the most fundamental model for informational structures there is. So in essence it would be wrong to say "Hey, you can model a Pile using an RDBMS!". Rather you should think "I can model an RDBMS or a file system using Pile relations!" That´s a fundamental shift in thinking!</p>
+<p>As important this focus switch is, of course it is important to have concepts and structures on a higher level of abstraction. You want to have bricks to build houses and not arrange elementary particles. So to have RDBMS and files and objects is a good thing. But it´s also important to know they are just convenient abstractions. It´s like looking at a fridge and using a fridge - but knowing in the end it´s just made up of elementary particles.</p>
+<p>Sometimes it´s good to see things as high level entities - and sometimes it´s good to see them as aggregations of low level entities. The ability to switch perspective is valuable, I´d say.</p>
+<h4>Data is an abstraction</h4>
+<p>Once I had this picture of associative triangles in my mind, I then thought about the nature of data. What is data anyway, if it´s so important to us? If you look at <a rel="noopener" href="https://web.archive.org/web/20070624213236/http://en.wikipedia.org/wiki/Data">Wikipedia´s definition</a> you read: "data are numbers, word, images etc." or "statement[s] accepted at face value". And I´d add: data are units of meaning as a statement is supposed to mean something. (Let´s leave context dependency out of the picture for the moment.) A number is a "unit of meaning", a letter is, an image file too.</p>
+<p>Now, what is data made of? Just 1 and 0. Numbers, letters, files are just sequences of bits. You determine where a unit of meaning starts and ends. You determine the interpretation of a sequence of bits.</p>
+<p>1/0, On/Off themselves are no data. They only become data when you interpret them. By themselves they are only "signals" (or a signal and a missing signal). So a number or a letter is a sequence of signals. Data emergence from this sequence only if you assign it meaning, e.g. taking 8 signals and saying "This is a byte and it means 'A'."</p>
+<p>Datum "A" thus is this sequence of signals: 01000001 (hex 41). And interpreting these signals as "A" is moving to a higher level of abstraction. You give up detail to get a more manageable entity, e.g. a letter instead of a sequence of signals.</p>
+<p>So I´d say: There is no data. Data is just a necessary and useful abstraction. What there is are only signals and associations of signals.</p>
+<p>With regard to Pile that means: There need not even be any data outside a Pile. The very "atoms" of a Pile are the only two signal values 1 and 0. From them anything you want can be built.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/c7b8c917a16616fb.gif" /></p>
+<p>Only 1 and 0 are left outside the (world of) Pile. And since they are so basic, you could even get rid of them and make them axiomatic concepts of Pile as the only really needed Terminal values.</p>
+<p>Can you see now, why I think, Pile is so fundamental? Data is just an abstraction and Pile´s relations are enough to tie together the basic signals of 1 and 0 to form larger units which then can be interpreted as data in any way you like.</p>
+<p>Ok, now, enough with philosophy! Next time I´m gonna show you down to earth C# code. How´s that?</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

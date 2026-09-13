@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A C# Set class based on enums - You don´t want to be without it when constructing a compiler ;-) — ralfw.de Archiv</title>
+<meta name="description" content="To refresh myself from obscure information models like Pile and restless thinking about software architecture I decided to pick up a new hobby: compiler construction ;-) Or rather ">
+<link rel="canonical" href="https://ralfw.de/archiv/2006/a-c-set-class-based-on-enums-you-don-t-want-to-be-without-it-when-cons/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="A C# Set class based on enums - You don´t want to be without it when constructing a compiler ;-) — ralfw.de Archiv">
+<meta property="og:description" content="To refresh myself from obscure information models like Pile and restless thinking about software architecture I decided to pick up a new hobby: compiler construction ;-) Or rather ">
+<meta property="og:url" content="https://ralfw.de/archiv/2006/a-c-set-class-based-on-enums-you-don-t-want-to-be-without-it-when-cons/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>A C# Set class based on enums - You don´t want to be without it when constructing a compiler ;-)</h1>
+    <div class="doc-meta"><span>7. Jan. 2006</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2006/01/07/434774.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2006/a-c-set-class-based-on-enums-you-don-t-want-to-be-without-it-when-cons/</code></span></div>
+    <div class="art"><p>To refresh myself from obscure information models like <a rel="noopener" href="https://web.archive.org/web/20060110183055/http://weblogs.asp.net/ralfw/category/10111.aspx">Pile</a> and restless thinking about <a rel="noopener" href="https://web.archive.org/web/20060110183055/http://weblogs.asp.net/ralfw/category/9899.aspx">software architecture</a> I decided to pick up a new hobby: compiler construction ;-) Or rather I decided to apply my long time interest in this topic to a good cause: <a rel="noopener" href="https://web.archive.org/web/20060110183055/http://weblogs.asp.net/ralfw/archive/2005/11/23/431403.aspx">When I talked to Niklaus Wirth</a> - the father of Pascal - in November at the iX conference he told me, he was about to release an updated version of his book <em>"Compiler Construction"</em> (read the complete book here: <a rel="noopener" href="https://web.archive.org/web/20060110183055/http://www.oberon.ethz.ch/WirthPubl/CBEAll.pdf">[PDF]</a>) - which happens to be one of my all time favorite computer text books.</p>
+<p>However, when I asked him, if he intended to bring his classical introduction to the world of .NET, he declined. He said, he deliberately chose Oberon as the implementation language for all examples in his book.</p>
+<p>Now, since I´m a great fan of the book as well as the .NET Framework, I have the idea of translating all code samples in the book to C# to make the text more accessible to .NET developers. This sure is some undertaking and I don´t know, if I will find the time to really complete this effort - but at least I want to start.</p>
+<p>So, here is my first very small piece of the puzzle: a set class. It´s very handy when you write a parser to check, if a symbol belongs to a certain set of expected symbols, e.g.</p>
+<p><em>IF symbol IN [number, identifier, leftParent, minusOp] THEN ...</em></p>
+<p>This checks, if the current symbol of the parser is a number or identifier etc. which means, if it might signify the start of an expression.</p>
+<p>A set data type exists in Pascal and Oberon, but not in C# or VB. That´s pretty sad, because it´s sometimes quite convenient. Of course there exist some implementations like [1] and [2], but I thought, why not try it again using .NET 2.0 Generics? Also I though, enum data types were an ideal foundation to build a set on.</p>
+<p>Why not be able to write:</p>
+<p>public enum Colors<br />
+{<br />
+   red, blue, green<br />
+}</p>
+<p>Set<Colors> sc = new Set<Colors>();<br />
+sc.Add(Colors.red);<br />
+sc.Add(Colors.green);</p>
+<p>Set<Colors> sc2 = new Set<Colors>();<br />
+sc2.Add(Colors.blue);</p>
+<p>sc.Add(sc2); // union</p>
+<p>Console.WriteLine(sc); // prints: [red,blue,green]</p>
+<p>With such a set data type setting up a scanner and parser would be as easy as with Pascal, e.g.</p>
+<p>public enum Symbols<br />
+{<br />
+   identifier, number, string, leftParent, rightParent, ...<br />
+}</p>
+<p>Set<Symbols> firstExpressions = new Set<Symbols>();<br />
+firstExpressions.Add(Symbols.identifier);<br />
+firstExpressions.Add(Symbols.number);<br />
+...</p>
+<p>Symbols currentSymbol;<br />
+...</p>
+<p>if(firstExpressions.Contains(currentSymbol))<br />
+{<br />
+   ...<br />
+}</p>
+<p>I find using enums as a starting point very convenient. They look pretty much like the Pascal sets, but just lack any operations. So I devised a generic Set data type in C# to wrap an enum. So far it works ok for me:</p>
+<p>public class Set<TEnum></p>
+<p>{</p>
+<p>#region "Data"</p>
+<p>bool flagsEnum;</p>
+<p>System.Collections.BitArray members;</p>
+<p>System.Collections.Generic.Dictionary<TEnum, int> mapMember2Index;</p>
+<p>#endregion</p>
+<p>#region "ctors"</p>
+<p>public Set()</p>
+<p>{</p>
+<p>Initialize();</p>
+<p>members = new System.Collections.BitArray(mapMember2Index.Count);</p>
+<p>}</p>
+<p>private Set(System.Collections.BitArray members)</p>
+<p>{</p>
+<p>Initialize();</p>
+<p>this.members = members;</p>
+<p>}</p>
+<p>private void Initialize()</p>
+<p>{</p>
+<p>if (typeof(TEnum).BaseType != typeof(System.Enum))</p>
+<p>throw new ApplicationException(string.Format("Generic type parameter &lt;{0}&gt; is not an enum type!",<br />
+                                                             typeof(TEnum).FullName));</p>
+<p>flagsEnum = typeof(TEnum).GetCustomAttributes(typeof(System.FlagsAttribute), true).Length &gt; 0;</p>
+<p>int i = 0;</p>
+<p>mapMember2Index = new Dictionary<TEnum, int>();</p>
+<p>foreach (TEnum m in Enum.GetValues(typeof(TEnum)))</p>
+<p>mapMember2Index.Add(m, i++);</p>
+<p>}</p>
+<p>#endregion</p>
+<p>#region "Working with the set"</p>
+<p>public void Clear()</p>
+<p>{</p>
+<p>members.SetAll(false);</p>
+<p>}</p>
+<p>public Set<TEnum> Add(TEnum member)</p>
+<p>{</p>
+<p>members.Set(mapMember2Index[member], true);</p>
+<p>return this;</p>
+<p>}</p>
+<p>public Set<TEnum> Add(Set<TEnum> otherSet)</p>
+<p>{</p>
+<p>if(otherSet != null) members.Or(otherSet.members);</p>
+<p>return this;</p>
+<p>}</p>
+<p>public Set<TEnum> Remove(TEnum member)</p>
+<p>{</p>
+<p>members.Set(mapMember2Index[member], false);</p>
+<p>return this;</p>
+<p>}</p>
+<p>public Set<TEnum> Remove(Set<TEnum> otherSet)</p>
+<p>{</p>
+<p>if (otherSet != null)</p>
+<p>for (int i = 0; i &lt; members.Count; i++)</p>
+<p>if (otherSet.members[i])</p>
+<p>members[i] = false;</p>
+<p>return this;</p>
+<p>}</p>
+<p>public Set<TEnum> Intersect(Set<TEnum> otherSet)</p>
+<p>{</p>
+<p>if (otherSet != null) members.And(otherSet.members);</p>
+<p>return this;</p>
+<p>}</p>
+<p>public bool Contains(TEnum member)</p>
+<p>{</p>
+<p>return members[mapMember2Index[member]];</p>
+<p>}</p>
+<p>public int Cardinality</p>
+<p>{</p>
+<p>get</p>
+<p>{</p>
+<p>return members.Length;</p>
+<p>}</p>
+<p>}</p>
+<p>#endregion</p>
+<p>#region "Overrides"</p>
+<p>public override bool Equals(object obj)</p>
+<p>{</p>
+<p>return this == (Set<TEnum>)obj;</p>
+<p>}</p>
+<p>public override int GetHashCode()</p>
+<p>{</p>
+<p>return members.GetHashCode();</p>
+<p>}</p>
+<p>public override string ToString()</p>
+<p>{</p>
+<p>string[] names = Enum.GetNames(typeof(TEnum));</p>
+<p>StringBuilder memberNames = new StringBuilder("[");</p>
+<p>for (int i = 0; i &lt; members.Count; i++)</p>
+<p>if (members[i])</p>
+<p>{</p>
+<p>if (memberNames.Length &gt; 1) memberNames.Append(",");</p>
+<p>memberNames.Append(names[i]);</p>
+<p>}</p>
+<p>memberNames.Append("]");</p>
+<p>return memberNames.ToString();</p>
+<p>}</p>
+<p>#endregion</p>
+<p>#region "Operators"</p>
+<p>// intersection</p>
+<p>public static Set<TEnum> operator &amp;(Set<TEnum> left, Set<TEnum> right)</p>
+<p>{</p>
+<p>System.Collections.BitArray result = new System.Collections.BitArray(new bool[left.members.Count]);</p>
+<p>result.Or(left.members);</p>
+<p>if(right != null) result.And(right.members);</p>
+<p>return new Set<TEnum>(result);</p>
+<p>}</p>
+<p>// union</p>
+<p>public static Set<TEnum> operator |(Set<TEnum> left, Set<TEnum> right)</p>
+<p>{</p>
+<p>System.Collections.BitArray result = new System.Collections.BitArray(new bool[left.members.Count]);</p>
+<p>result.Or(left.members);</p>
+<p>if(right != null) result.Or(right.members);</p>
+<p>return new Set<TEnum>(result);</p>
+<p>}</p>
+<p>public static bool operator ==(Set<TEnum> left, Set<TEnum> right)</p>
+<p>{</p>
+<p>if (right != null)</p>
+<p>{</p>
+<p>for (int i = 0; i &lt; left.members.Count; i++)</p>
+<p>if (left.members[i] != right.members[i]) return false;</p>
+<p>return true;</p>
+<p>}</p>
+<p>else</p>
+<p>return false;</p>
+<p>}</p>
+<p>public static bool operator !=(Set<TEnum> left, Set<TEnum> right)</p>
+<p>{</p>
+<p>return !(left == right);</p>
+<p>}</p>
+<p>#endregion</p>
+<p>#region "Iterator"</p>
+<p>public IEnumerator<TEnum> GetEnumerator()</p>
+<p>{</p>
+<p>TEnum[] memberValues = (TEnum[])Enum.GetValues(typeof(TEnum));</p>
+<p>for (int i = 0; i &lt; members.Count; i++)</p>
+<p>if (members[i])</p>
+<p>yield return memberValues[i];</p>
+<p>}</p>
+<p>#endregion</p>
+<p>}</p>
+<p>The only drawbacks so far: The generic parameter type <em>TEnum</em> cannot be constrained to the base class <em>System.Enum</em>, and I left out handling bit field enumerations. (Currently if you pass <em>Colors.red | Colors.green</em> to <em>Add()</em> it will crash.) (Yes, yes, and the class is not thread-safe, I know.)</p>
+<p>Enjoy!</p>
+<p>PS: It seems there is one less excuse to not start translating the Compiler Construction sources... Let´s see when I really find time for that. Stay tuned!</p>
+<p>[1] <a rel="noopener" href="https://web.archive.org/web/20060110183055/http://www.codeproject.com/csharp/dotnetset.asp">A Generic Set Data Structure</a>[2] <a rel="noopener" href="https://web.archive.org/web/20060110183055/http://www.codeproject.com/csharp/yaset.asp">Yet Another C# set class</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

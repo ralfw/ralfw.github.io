@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Winforms Data Binding: Auf die Quelle kommt es an — ralfw.de Archiv</title>
+<meta name="description" content="Gestern habe ich mich ein paar Stunden mit WinForms Data Binding auseinandersetzen müssen. Puh, keine so leichte Sache. Microsoft hat es bestimmt gut gemeint dabei - aber ob wirkli">
+<link rel="canonical" href="https://ralfw.de/archiv/2003/winforms-data-binding-auf-die-quelle-kommt-es-an/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Winforms Data Binding: Auf die Quelle kommt es an — ralfw.de Archiv">
+<meta property="og:description" content="Gestern habe ich mich ein paar Stunden mit WinForms Data Binding auseinandersetzen müssen. Puh, keine so leichte Sache. Microsoft hat es bestimmt gut gemeint dabei - aber ob wirkli">
+<meta property="og:url" content="https://ralfw.de/archiv/2003/winforms-data-binding-auf-die-quelle-kommt-es-an/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Winforms Data Binding: Auf die Quelle kommt es an</h1>
+    <div class="doc-meta"><span>24. Juli 2003</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2003/07/24/10472.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2003/winforms-data-binding-auf-die-quelle-kommt-es-an/</code></span></div>
+    <div class="art"><p>Gestern habe ich mich ein paar Stunden mit WinForms Data Binding auseinandersetzen müssen. Puh, keine so leichte Sache. Microsoft hat es bestimmt gut gemeint dabei - aber ob wirklich am Ende etwas rundum Gutes herausgekommen ist? Hm... Ich weiß nicht, ich weiß nicht. Es funktioniert zwar auf weite Strecken ganz nett, aber so richtig reibungslos ist es in nicht trivialen Szenarien nicht. Trotzdem habe ich mich damit durchaus angefreundet und es erleichtert die Arbeit gerade beim Prototyping.</p>
+<p>Eine meiner Erkenntnisse ist z.B.: Übersichts- und Bearbeitungsfenster müssen an dieselbe Datenquelle gebunden werden, wenn Data Binding Spaß machen soll.</p>
+<p>Ok, was meine ich mit "Übersichts- und Bearbeitungsfenster"? Ein typisches Szenario bei der Datenbankprogrammierung ist, eine Liste von Datensätzen in einem Fenster anzuzeigen (Übersicht) und den Anwender zur Bearbeitung daraus einen Datensatz auswählen zu lassen.</p>
+<p>Die Bearbeitung findet dann in einem eigenen Fenster (Bearbeitung) statt. Die Datenbindung im Übersichtsfenster ist einfach und wie zu erwarten:</p>
+<p>Private _ds as DataSet<br />
+Private _dv as DataView<br />
+...</p>
+<p>Dim conn As New SqlConnection("...;database=northwind")<br />
+Dim adap As New SqlDataAdapter("select ..., companyname from customers", conn)</p>
+<p>_ds = New DataSet<br />
+adap.Fill(_ds, "customers")</p>
+<p>_dv = New DataView(_ds.Tables("customers"))<br />
+<strong>DataGrid1.DataSource = _dv</strong></p>
+<p>Daten laden, Daten binden. Fertig. Allerdings: Gebunden werden sollte immer ein expliziter DataView. Man kann zwar auch eine DataTable oder ein DataSet binden, aber meine Empfehlung ist, einen eigenen DataView zu erzeugen.</p>
+<p>Damit hat man die Möglichkeit, z.B. jederzeit die Bearbeitung der Übersicht einzuschränken, z.B.</p>
+<p>_dv.AllowEdit = false</p>
+<p>Außerdem hat man damit ein Objekt in der Hand, das auch bei weiteren Bindungen genutzt werden kann. Wenn man z.B. Daten der Tabelle im Übersichtsfenster auch nochmal in einer Textbox anzeigen möchte, dann ist das kein Problem:</p>
+<p>TextBox1.DataBindings.Add("text", _dv, "companyname")</p>
+<p>Entscheidend ist, dabei auch wieder _dv als Quelle anzugeben, um die Zahl der <a rel="noopener" href="https://web.archive.org/web/20040619164712/http://msdn.microsoft.com/library/en-us/vbcon/html/vbconconsumersofdataonwindowsforms.asp">CurrencyManager</a>zu minimieren. Für DataGrid1 und TextBox1 wäre in diesem Fall derselbe CurrencyManager zuständig, d.h. wenn man im Grid weiterblättert, ändert sich auch die Anzeige in der Textbox.</p>
+<p>Soweit so gut. Das hatte ich gestern im Grunde auch gemacht. Ein Problem trat aber auf, als ich dann ein Bearbeitungsfenster öffnen wollte. Was habe ich da so ganz naiv gemacht? Im Übersichtsfenster habe ich den zu bearbeitenden Satz ermittelt und ihn an das Bearbeitungsfenster übergeben:</p>
+<p>Dim frmBearb As New Bearbeitungsfenster()<br />
+Dim bm As BindingManagerBase = Me.BindingContext(_dv)<br />
+Dim rv As DataRowView = bm.Current<br />
+frmBearb.ShowDlg(<strong>rv</strong>)</p>
+<p>Das schien mir völlig plausibel. Warum sollte das Bearbeitungsfenster mehr kennen, als den zu bearbeitenden Satz? Im Bearbeitungsfenster habe ich dann wie folgt gebunden:</p>
+<p>Private _rv as DataRowView</p>
+<p>Public Sub ShowDlg(ByVal rv As DataRowView)<br />
+    TextBox1.DataBindings.Add("text", rv, "companyname")<br />
+    _rv = rv<br />
+    Me.ShowDialog()<br />
+End Sub</p>
+<p>Auch kein Problem. Und alles wäre gut geblieben, wenn ich denn den Inhalt der anzuzeigenden Spalte companyname nur durch Eingabe in die Textbox im Bearbeitungsfenster hätte verändern wollen.</p>
+<p>Ich wollte aber etwas anderes! Einige gebundene Spalten sollten durch Code verändert werden, z.B.</p>
+<p>_rv("companyname") = "..."</p>
+<p>Das funktioniert auch, man sieht die Änderung in der Tabelle des Übersichtsfensters - aber sie erscheint nicht (!) in der Textbox des Bearbeitungsfenster. Warum das so ist, ist mir nicht wirklich klar.</p>
+<p>Dafür habe ich aber einen Workaround gefunden, den ich unterm Strich ohnehin für den konsequenteren Weg halte. Das Übersichtsfenster übergibt nicht mehr die in Bearbeitungs befindliche Tabellenzeile, sondern die Datenquelle, an die das Grid bebunden ist inkl. der Position, auf der es gerade steht:</p>
+<p>Dim frmBearb As New Bearbeitungsfenster()<br />
+Dim bm As BindingManagerBase = Me.BindingContext(_dv)<br />
+frmBearb.ShowDlg(<strong>_dv, bm.position</strong>)</p>
+<p>Und das Bearbeitungsfenster bindet an dieselbe Datenquelle wie das Übersichtsfenster:</p>
+<p>Public Sub ShowDlg(ByVal dv as DataView, index as Integer)<br />
+    TextBox1.DataBindings.Add("text", dv, "companyname")<br />
+<strong>me.BindingContext(dv).Position = index</strong>    _rv = me.BindingContext(dv).Current<br />
+    Me.ShowDialog()<br />
+End Sub</p>
+<p>Damit dann aber auch dort der richtige Satz angezeigt wird, muss noch der CurrencyManager auf den selben Satz wie das Übersichtsfenster gestellt werden.</p>
+<p>Das mag etwas weniger intuitiv sein, als den zu bearbeitenden Satz zu übergeben, aber der Effekt ist der selbe und dieser Weg bietet mehr Freiheiten. Jetzt ist die Veränderung der angezeigten Daten auch über eine Zuweisung an den DataRowView möglich.</p>
+<p><strong>Fazit</strong>: Beim Data Binding sollte man sorgfältig darauf achten, dass alle Controls, die grundsätzlich an der selben Datenquelle hängen, auch wirklich über das selbe Objekt (am besten bzw. in den meisten Fällen ein DataView) gebunden werden.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

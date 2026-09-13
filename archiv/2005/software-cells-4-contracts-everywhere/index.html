@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software Cells #4: Contracts everywhere — ralfw.de Archiv</title>
+<meta name="description" content="In my last posting I drilled down into the details of a Software Cells. We looked at the substructures of the Core, the Adapters and the Portals. But altough I think, those substru">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/software-cells-4-contracts-everywhere/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software Cells #4: Contracts everywhere — ralfw.de Archiv">
+<meta property="og:description" content="In my last posting I drilled down into the details of a Software Cells. We looked at the substructures of the Core, the Adapters and the Portals. But altough I think, those substru">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/software-cells-4-contracts-everywhere/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Software Cells #4: Contracts everywhere</h1>
+    <div class="doc-meta"><span>30. April 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2005/04/30/405133.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/software-cells-4-contracts-everywhere/</code></span></div>
+    <div class="art"><p>In <a rel="noopener" href="https://web.archive.org/web/20051207052932/http://weblogs.asp.net/ralfw/archive/2005/04/27/404587.aspx">my last posting</a> I drilled down into the details of a Software Cells. We looked at the substructures of the Core, the Adapters and the Portals. But altough I think, those substructures make much sense and should be taken as a guidance when designing an Application, I´m very open for deviations and different ideas. Should a User Portal always implement the MVC pattern? I´d say, yes, try to map your problem to MVC, start out with MVC - but if it does not match your specific problem, then do the User Portal some other way. Most important is to see the User Portal as a separate entity from Core, Adapters and Application Portal. The same goes for other structures of a Software Cell.</p>
+<p>Now, if the substructures are merely recommendations (or even "best practices"), why stick to the structures anyway? Why mandate a Core and differentiate Adapters and Portals? Because to have them means to separate responsibilities within an Application. Current software development lacks a strict (!) recipe to structure a Solution. Software layers are just a logical model for software. They leave it up to you how to split a Solution up into Applications and Applications into components. The Software Cells model on the other hand very cleary states:</p>
+<ul>
+<li>A Solution consists of one or more Applications. The exact number you´ve to find out by analysing your problem and designing a Solution.</li>
+<li>An Application has at least two physically separate parts: a Host EXE and a Core DLL. Mostly the Host will be prefab so you just have to choose an appropriate one. The Core, though, is your minimum responsibility to develop.</li>
+<li>Since an Application with just a Core and no way to interact with the environment is rarely of any real world use ;-) you need more in your Application. You need means to interact with the Application´s environment. So a real world Application needs at least one Portal or Adapter, since it needs to be able to access other applications/resources to read and/or write data. Since the inception of software it was all about IO. In German we even link it to the beginning of (christian) time ;-) and call this basic principle <em>EVA</em> for <strong>E</strong>ingabe-<strong>V</strong>erarbeitung-<strong>A</strong>usgabe which stands for Input-Processing-Output. So the basic demand of Software Cells is: <em>Think about your IO explicitly and separate it from the domain logic of your Solution</em>. Then Software Cells go beyond this obvious principle and categorize IO. They say, you should differentiate between IO with a user, IO with resources with comparatively low level APIs and communication partners with high level APIs (i.e. other Applications).</li>
+</ul>
+<p>That´s to summarize what I´ve described so far in my postings. Now, today I want to add two more very clear statements to this list:</p>
+<ul>
+<li>Software Cell structures define their services using explicit contracts.</li>
+<li>If a Software Cell offers a service to other Software Cells, then this service is described by an explicit contract.</li>
+</ul>
+<p>If you view a Software Cell as a service as in SOA then the last statement should come at no surprise to you. Software Cells fully embrace the SOA tenets and want to help you architecting SOA solutions.</p>
+<p>But since Software Cells see solutions as distinct physical units and consisting of physical entities they carry the Contract First idea into the realm of "ordinary" software development. This, too, is not new - emphasizing the importance of separating interfaces from implementation is at least as old as the Modula language let alone Corba´s IDL and COM´s reliance on interfaces -, but it has been neglected in the past years. The .NET Framework has made deployment of multi-DLL programs so easy, it seemed less important to design clear interfaces first.</p>
+<p>But if you really want to realize the benefits of component oriented programming (COP) and modularization, then clear and explicit interfaces are as important as they were 20 years ago. To make this plausible think about this for a moment:</p>
+<p>In SOA each service is an autonomous entity. But not only at runtime! Also at design time it is treated as a separate unit of development. Ususally its development is even not under your control. It is developed by some other party you can´t even influence. You don´t know (and you are not supposed to know) any details of its implementation. And I´d even say, you should be glad about it! It relieves you from thinking about details that don´t matter to the solution of your own problem. You treat another service as a black box and just see its published interfaces. That´s it. So easy! Focus on your own task and just see to that you use the service´s interfaces correctly.</p>
+<p>Likewise it is very prudent to see your Solution and within it a single Application as a set of "services" or black boxes. From the point of view of one Application in your Solution other Applications should be opaque. No details are visible - except for their published interfaces. Likewise within a single Application the Core should view Adapters as black boxes, and Portals should see the Core as a black box.</p>
+<p>And to go even further, each component within one of those structures should see other components as black boxes. To add to the common definition of components as separately versionable and deployable entities Software Cells state, a piece of software can only be considered a component if it draws an explicit boundary around itself. A component needs to publish its services thru interfaces. Only what is defined by a component's explicit interfaces can be accessed from the outside.</p>
+<p>Components thus are physical entities of isolation at design time as well as runtime. To use a component means to program against its interfaces. It means, at design time you don´t even know the implementation of those interfaces. The component your code will use during runtime might not even exist while you´re developing it. So your component cannot bind statically to the other component. Only by decoupling components in such a strict way true independece can be reached. And only if components are so independent of one another they can truely be developed in parallel.</p>
+<p>This is what happens <em>per definitionem</em> in SOA. And this is what should be done in each and every application.</p>
+<p>If you want to reach higher productivity for your team, you can either scale up or scale out. Scaling up would mean to make each developer more productive. Maybe you can teach him/her to type and think faster. Maybe you give him/her a better development tool. But in the end you´ll always reach the limit of what an average developer with the best tools you can afford can accomplish.</p>
+<p>To scale out your development, though, means to add programmers to your software project. But not late in the process, because we know, that makes it later ;-) Rather you can do it proactively early on during the project. Nobody needs to wait to start developing the Core of an Application. Since its interfaces as well as the Adapters´ interfaces are defined, Core development can start at the same time as Adapter and Portal development. Even developing Core components can start in parallel - if you´ve the manpower.</p>
+<p>But explicit interfaces within a Solution or Application don´t only decouple components from one another and make parallel development possible or at least easier, they also provide very valuable endpoints for automatic testing. And that sure helps to improve the quality of your Solution.</p>
+<p>Now, after my pleadings for Contract First design within Software Cells, lets have a quick look at where those Constracts are located.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/f7deeaf3f701fbff.jpg" /></p>
+<p>There are at least two categories of Contracts in each appliction:</p>
+<ul>
+<li>Contracts defined by the the Core to regulate access from Portals.</li>
+<li>Contracts defined by Adapters to regulate access from the Core.</li>
+</ul>
+<p>In general, a contract needs to be defined whereever there is a Component (i.e. functionality you want to isolate):</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/6f57bbc8c97c6bc9.gif" /></p>
+<p>The Contract describes the operations that can be called, the data that is passed to and fro, and the events the component can fire to notify callers asynchronously.</p>
+<p>The outside world can access a Software Cells thru the sum of its Portals´ Contracts. Application Portals define formal contracts, but User Portals don´t. User Portal Contracts consist of the user accessible frontend controls (e.g. dialogs, buttons, menu items).</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/7f9e4a55c9ee3841.jpg" /></p>
+<p>Intra-Application Contracts are defined using the CTS. They only contain interfaces! No class definitions, not even abstract classes should be used in Contracts. (Abstract classes, even though, they don´t contain statements, are a form of implementation code. The force both the caller and the implementor of a component into a class hierarchy.)</p>
+<p>Inter-Application Contracts should be defined using WSDL and XML Schema to make Applications independent of their implementation technologies. However, within a Solution, that means among several Applications solving the same problem, and being implemented by the same team, this requiredment can be loosened. As long as an Application is only called by other Applications from the same solution and (!) both interacting partners are implemented using the .NET Framework, a CTS based Contract definition is ok, I´d say. It´s easier to write and understand, and it can later be converted automatically to WSDL/XML Schema, if need be.</p>
+<p>However, Inter-Solutoin Contracts should without exception be defined using WSDL and XML Schema.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/bc31e168c2cc307b.jpg" /></p>
+<p>Defining Contracts first, when designing an Solution with its Applications is core to Software Cells. Without explicit Contracts there is no real decoupling. (Why should a Core know how another Application is accessed? Why should it care about the transport technology used?) Without decoupling there is no real componet orientation. Without component orientation there is no highly productive parallel development. Without real separation of responsibilities among teams there is no feeling for responsibility to test "your own shit" ;-)</p>
+<p>Now, where are we? Customer problems are solved by developing Software Solutions. Software Solutions consist of Applications which can be described as Software Cells. At their heart is some sub-problem solving Core-functionality. Around the Core exist Adapters and Portals to connect the Core to the outside world, i.e. to other Applications within and outside the Solution and to the user. All structures of an Application run within a Host and consist of Components. Components are black boxes whose services are described by Contracts. To use the services of another Component code only binds to the Component´s contract (interface), but never to its implementation (a concrete assembly). Which actual implementation fulfills service requests according to the interface is only resolved at runtime. Contract implementations thus are dynamically bound to emphasize decoupling and allow for real parallel development.</p>
+<p>Ok, so much for Contracts.</p>
+<p>But what about communication between Software Cells? What about the inter cellular space? What about SOA? Watch out for my next posting ;-)</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

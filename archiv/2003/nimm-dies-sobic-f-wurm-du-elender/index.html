@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nimm dies, Sobic F Wurm, du Elender! — ralfw.de Archiv</title>
+<meta name="description" content="Aus, vorbei! No more Mr. Niceguy! Jetzt ist Schluss! Ich hab diesen unseligen, nervenden, grau-en-haf-ten &quot;Sobig.F-Wurm&quot; (oder was immer es ist) satt, satt, satt. Stündlich dutzend">
+<link rel="canonical" href="https://ralfw.de/archiv/2003/nimm-dies-sobic-f-wurm-du-elender/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Nimm dies, Sobic F Wurm, du Elender! — ralfw.de Archiv">
+<meta property="og:description" content="Aus, vorbei! No more Mr. Niceguy! Jetzt ist Schluss! Ich hab diesen unseligen, nervenden, grau-en-haf-ten &quot;Sobig.F-Wurm&quot; (oder was immer es ist) satt, satt, satt. Stündlich dutzend">
+<meta property="og:url" content="https://ralfw.de/archiv/2003/nimm-dies-sobic-f-wurm-du-elender/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Nimm dies, Sobic F Wurm, du Elender!</h1>
+    <div class="doc-meta"><span>24. Aug. 2003</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2003/08/24/25116.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2003/nimm-dies-sobic-f-wurm-du-elender/</code></span></div>
+    <div class="art"><p>Aus, vorbei! No more Mr. Niceguy! Jetzt ist Schluss! Ich hab diesen unseligen, nervenden, grau-en-haf-ten "Sobig.F-Wurm" (oder was immer es ist) satt, satt, satt. Stündlich dutzende Emails ohne Sinn und Verstand mit PIF-Anhang in meiner Outlook Inbox. Wenn das die Zukunft der Email ist, dann sag ich mal gute Nacht.</p>
+<p>Aber nun ist´s vorbei damit! Ha! In einem Anfall von völliger Angenervtheit habe ich einen Sobig-Interceptor gebastelt. Und er funktioniert. Zumindest für meine Zwecke :-)</p>
+<p>Mein Problem war, dass mein POP3-Server sehr simpel ausgestattet ist und nicht selbst den Wurm aus der eingehenden Post aussondert, bevor ich sie mit Outlook abhole. In Outlook hatte ich zwar eine simple Regel, die das nachholte, aber das war eben recht spät, wenn die hunderte Emails schon auf meinen Rechner gelangt waren.</p>
+<p>Der Sobig-Interceptor (s.u. den Code) setzt nun früher an. Er prüft periodisch selbst mein POP3-Postfach und entfernt schon dort die Wurm-Emails, so dass ich sie erst gar nicht mehr heruntergeladen werden.</p>
+<p>Der Algorithmus ist denkbar simpel: Mit einer POP3-Komponente hole ich die Betreffzeilen der Emails in meinem POP3-Postfach und entscheide danach, welche Emails zu löschen sind. Die Wurm-Emails zeichnen sich ja zum Glück durch charakteristische Betreff-Inhalte wie "Wicked Screensaver" aus. Der Interceptor ist als regelbasiert. Und die Regel ist eine Prüfung nur der Betreffzeilen darauf, ob einer von mehreren Strings in ihnen vorkommen. Aber warum auch komplizierter, wenn es auch so einfach geht?</p>
+<p>Das unten stehende Modul ist eine vollständige Console Application. Nach dem Start ruft sie periodisch über einen Timer die Methode KillWorm() auf, die das Postfach prüft.</p>
+<p>Über ein Mini-UI kann man aber auch die Überprüfung jederzeit erzwingen bzw. das Programm beenden.</p>
+<p>Ich lasse es immer im Hintergrund minimiert laufen. Mit mehr Perfektionsdrang könnte ich sicher daran noch einiges tun (z.B. in den System Tray einbauen, Windows Service draus machen, mehrere Email-Accounts unterstützen, RegEx-Regeln usw.) - aber das alles war mir grad nicht wichtig. Es ging allein um die Bekämpfung dieses unseligen Wurms. Und die ist auch mit der jetzigen Ausbaustufe und dem hingerotzten Code effektiv.</p>
+<p>Das Programm arbeitet mit einer frei erhältlichen POP3-Komponente. Download unter <a rel="noopener" href="https://web.archive.org/web/20040108220346/http://www.codeproject.com/csharp/pop3client.asp">http://www.codeproject.com/csharp/pop3client.asp</a>. Einfach den Code herunterladen, die Solution öffnen, eine Console Application hinzufügen, das unten stehende Modul einsetzen und die POP3-Komponente referenzieren. Fertig.</p>
+<p>Würd mich freuen, wenn es anderen Wurm-gebeutelten dort draußen ein wenig hülfe!</p>
+<p>Module Module1</p>
+<p>dim traits() as String = new String() _<br />
+        { "re: that movie", _<br />
+          "re: my details", _<br />
+          "thank you!", _<br />
+          "re: details", _<br />
+          "re: your application", _<br />
+          "re: wicked screensaver", _<br />
+          "re: approved", _<br />
+          "your details", _<br />
+          "report to sender", _<br />
+          "failure notice", _<br />
+          "worldsecure", _<br />
+          "mail system error", _<br />
+          "returned mail", _<br />
+          "returned to sender", _<br />
+          "security issue" }</p>
+<p>Sub Main()<br />
+        dim t as New Threading.Timer(new Threading.TimerCallback(AddressOf KillWorm), nothing, 0, 60000)<br />
+        console.WriteLine("Killing...")<br />
+        while true<br />
+            console.WriteLine("F(orce interception now, eX(it: ")<br />
+            dim cmd as String = console.ReadLine<br />
+            select case cmd<br />
+                case "f", "F"<br />
+                    t.Change(0, 60000)<br />
+                case "x", "X"<br />
+                    exit While<br />
+            End Select<br />
+        end while<br />
+    End Sub</p>
+<p>sub KillWorm(state as Object)<br />
+        dim p as New pop3.Mail.Pop.Pop3<br />
+        p.Username = "..."<br />
+        p.Password = "..."<br />
+        p.Host = "..."</p>
+<p>p.Connect<br />
+        p.Login<br />
+        try<br />
+            p.GetAccountStat<br />
+            console.WriteLine(p.MessageCount)</p>
+<p>dim ms as New ArrayList<br />
+            dim m as pop3.Mail.Pop.Pop3Message<br />
+<br />
+            for i as Integer = 1 to p.MessageCount<br />
+                m = p.GetMessageHeader(i)<br />
+                ms.Add(m)<br />
+            Next</p>
+<p>dim log as New IO.StreamWriter("log.txt" , True)<br />
+            log.WriteLine(now)</p>
+<p>dim nDel as integer<br />
+            for i as Integer = 0 to ms.Count - 1<br />
+                m = ms(i)<br />
+                console.Write(m.Subject)<br />
+                for each trait as String in traits<br />
+                    if m.Subject.ToLower.IndexOf(trait) &gt;= 0 then<br />
+                        console.Write(" ---")<br />
+                        log.WriteLine("-" &amp; m.Subject)<br />
+                        p.DeleteMessage(i+1)<br />
+                        nDel += 1<br />
+                        exit For<br />
+                    End If<br />
+                Next<br />
+                console.WriteLine<br />
+            Next<br />
+<br />
+            log.WriteLine(now &amp; ": " &amp; ms.Count &amp; " message(s), " &amp; nDel &amp; " deleted")<br />
+            log.Close</p>
+<p>console.WriteLine(now &amp; ": " &amp; ms.Count &amp; " message(s), " &amp; nDel &amp; " deleted", MsgBoxStyle.Information)<br />
+        catch ex as Exception<br />
+            console.WriteLine("*** " &amp; ex.Message)<br />
+        finally<br />
+            p.Close<br />
+        end try<br />
+    End Sub<br />
+End Module</p>
+<p>PS: Die Liste der verräterischen Phrasen enthält solche für unzustellbare Emails, weil der Wurm mit meinem Absender (auch wenn er nie auf meinem Rechner gelaufen ist) auf anderen Rechnern Emails an nicht existente Empfänger geschickt hat.</p>
+<p>Wenn gewünscht kann die Liste der Phrasen natürlich auch um Begriffe erweitert werden, mit denen sich Spam sehr leicht schon an der Betreffzeile erkennen lässt.</p>
+<p>PPS: Um die Arbeit des Interceptors über längere Zeit verfolgen zu können, schreibt er auch eine kleine Log-Datei.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

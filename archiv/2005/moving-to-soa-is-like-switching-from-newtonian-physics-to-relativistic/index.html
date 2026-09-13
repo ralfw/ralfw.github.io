@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moving to SOA is like switching from Newtonian physics to relativistic physics — ralfw.de Archiv</title>
+<meta name="description" content="I just read an article (&quot;Dealing with the &#x27;Melted Cheese Effect&#x27;&quot; by Maarten Mullender in collaboration with my fellow thinktect Christian Weyer) on how to prepare for change in SO">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/moving-to-soa-is-like-switching-from-newtonian-physics-to-relativistic/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Moving to SOA is like switching from Newtonian physics to relativistic physics — ralfw.de Archiv">
+<meta property="og:description" content="I just read an article (&quot;Dealing with the &#x27;Melted Cheese Effect&#x27;&quot; by Maarten Mullender in collaboration with my fellow thinktect Christian Weyer) on how to prepare for change in SO">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/moving-to-soa-is-like-switching-from-newtonian-physics-to-relativistic/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Moving to SOA is like switching from Newtonian physics to relativistic physics</h1>
+    <div class="doc-meta"><span>3. Juli 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2005/07/03/417507.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/moving-to-soa-is-like-switching-from-newtonian-physics-to-relativistic/</code></span></div>
+    <div class="art"><p>I just read an article (<a rel="noopener" href="https://web.archive.org/web/20070812061703/http://msdn.microsoft.com/architecture/default.aspx?pull=/library/en-us/dnbda/html/MeltedCheese.asp">"Dealing with the 'Melted Cheese Effect'"</a> by Maarten Mullender in collaboration with my fellow thinktect <a rel="noopener" href="https://web.archive.org/web/20070812061703/http://weblogs.asp.net/cweyer/">Christian Weyer</a>) on how to prepare for change in SOA architectures. Although the article itself does not contain many new insights - however it´s the start of an interesting looking series - of course it tackles an important problem: How can you replace the moving parts in a machine running 24x7? We´ll see, what Maarten has to say about that in his future postings.</p>
+<p>What I´m grateful for, though, is a thought this article sparked in me. I suddenly realized the size of change we´re talking about when we move from "ordinary applications" to "SOA systems". My thought was, this change has to be compared to the switsch from Newtonian physics to relativistic physics.</p>
+<p>Newton and Galileo looked at physical systems that were so small, speed of impulse was of (almost) no concern. Impulses travelled in zero time from origin to destination. Galileo was not able to determine a particular speed of light. Likewise, up to a few years ago, most software systems were so small, "speed of impulse" was of little concern. Data and meta data (changes in interfaces and implementation) travelled in zero time.</p>
+<p>Newtonian physics were replaced (or complemented) by relativistic physics. Relativistic physics is concerned with systems so large, speed of impulse is important - and is even bound by the speed of light. Where Galileo might be compared to someone remotely controlling a model aircraft, Einstein might be compared to someone remotely controlling a mars probe. While controlling your model aircraft, your steering impulses immediately have an effect on your plane. But whatever you know about your mars probe is some 3 minutes old (at best). And whatever impuls you send to it will reach it only some 3 minutes in the future (at best). So, steering a mars probe in real time does not make sense.</p>
+<p>What does this mean for the world of software? Today much more software (if not most software) is so large, that "speed of impulse" is of high concern to it. Data does not travel between servers and clients in zero time - and also meta data does not travel in zero time.</p>
+<p>However, from the first RPC protocols on, this fundamental change in software "physics" was denied. The purpose of RPC in all its variations (like DCOM, RMI etc.) and its uses (like EJB, MTS/COM+, .NET Remoting etc.) tried to hide the difference between steering a model aircraft and controlling a mars probe. RPC et al. suggests, you can use the same remote control panel for a model aircraft and a mars probe. But that´s of course in the end a rediculous suggestion.</p>
+<p>How rediculous this is, now becomes apparent with SOA. Large numbers of developers educated in "Newtonian physics" try to develop software systems that are governed by "relativistic physics". And not only do they need to switch their thinking to new (or expanded or generalized) laws of "physics", they try to solve "relativistic problems" with their tools from the "Galilean toolchest". That´s of course bound to fail.</p>
+<p>The task of the SOA movement thus is:</p>
+<ol>
+<li>To make clear the distinction between "Newtonian physics" and "relativistic physics" in software development and its implications. We need to build systems that account for obvious and finite impulse velocity regarding exchange of data.</li>
+<li>To provide tools, techniques and guidance how to best deal with "relativistic physics", i.e. exchanging parts in a large system where also changes travel with finite velocity and thus don´t reach all areas at the same time.</li>
+</ol>
+<p>So far, programming components was about software running on a single machine. With SOA programming components has moved up to programming components (services) for software running in a network. It´s important to not forget this similarity - CBD and SOA are about components-, but it´s also important to see where differences in "physics" demand different solutions.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

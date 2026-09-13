@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software Cells #7: Putting Software Layers et al. into Perspective — ralfw.de Archiv</title>
+<meta name="description" content="In my previous posting I added the missing pieces to the Software Cell puzzle: communication technologies like .NET Remoting, MSMQ, but also ADO.NET. Now you know all the basic str">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/software-cells-7-putting-software-layers-et-al-into-perspective/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software Cells #7: Putting Software Layers et al. into Perspective — ralfw.de Archiv">
+<meta property="og:description" content="In my previous posting I added the missing pieces to the Software Cell puzzle: communication technologies like .NET Remoting, MSMQ, but also ADO.NET. Now you know all the basic str">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/software-cells-7-putting-software-layers-et-al-into-perspective/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Software Cells #7: Putting Software Layers et al. into Perspective</h1>
+    <div class="doc-meta"><span>18. Mai 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2005/05/18/407378.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/software-cells-7-putting-software-layers-et-al-into-perspective/</code></span></div>
+    <div class="art"><p>In my <a rel="noopener" href="https://web.archive.org/web/20070301051122/http://weblogs.asp.net/ralfw/archive/2005/05/13/406732.aspx">previous posting</a> I added the missing pieces to the Software Cell puzzle: communication technologies like .NET Remoting, MSMQ, but also ADO.NET. Now you know all the basic structures of any software:</p>
+<ul>
+<li>At the heart of your solution always is processing logic, the Core.</li>
+<li>Processing logic always needs to communicate with the outside, because software still is about processing input and producing output. I/O is done via Adapters and Portals.</li>
+<li>Core as well as Adapters and Portals run inside and under control of a Host. Logic + Host make up an Application or Software Cell.</li>
+<li>If non-functional requirements require it, you can split up your Core logic into several pieces that run in different Hosts. By distributing logic across severeal Hosts you produce a distributed Software Solution consisting of several Applications.</li>
+<li>Hosts can be chosen from a readily available set to which belong COM+, IIS/ASP.NET, BizTalk, and SQL Server, but also MS Word, MS Outlook, and even simple Console or WinForms EXE assemblies. Host differ in their offering of infrastructure.</li>
+<li>The communication technology for each Adapter and Portal can also be chosen from a set of technologies like Web Services, MSMQ, .NET Remoting, System.Net, System.IO, ADO.NET and many others. Which technology to choose depends again on non-functional requirements, but also on whatever the communication partner on the other end supports/requests.</li>
+</ul>
+<p>So much for a wrap-up of the details of Software Cells. But what about the big picture? In how far Software Cells close <a rel="noopener" href="https://web.archive.org/web/20070301051122/http://weblogs.asp.net/ralfw/archive/2005/05/05/405728.aspx">a gap in the software universe</a>, I tried to explain in a previous posting. But that still leaves the question, how Software Cells compare to the traditional Software Layer architecture and others?</p>
+<h3>Software Layers</h3>
+<p>First of all, <a rel="noopener" href="https://web.archive.org/web/20070301051122/http://www.internet.com/icom_cgi/print/print.cgi?url=http://www.15seconds.com/issue/011023.htm">Software Layers</a> are a conceptual model of software, whereas Software Cells are very concrete. Software Layers distinguish between three fundamental parts within a software: frontend, business logic, data access.</p>
+<p>This is all good and well, and it helps in structuring your thinking. But it does not help you much when you start implementing. Layers can´t really help you decide for example, where to put business logic. Also, the distinction between business logic and data access sometimes is not very clear. (Hence the ever recurring question from developers: "Should I put business logic in the frontend? Is it ok to have business logic in my database as stored procs?" Or to say it more generally: Software Layers don´t provide much help on deciding how many tiers your software needs and on which tier to put your code.</p>
+<p>Also, Software Layers lack a sense of orientation. Where are they in terms of the software universe? Are Software Layers about a single application? Or are they about multiple applications?</p>
+<p>According to the Software Cell terminology, though, Software Layers suddenly fall into place: Software Layers are a conceptual model for Software Solutions. If anything, they help you to structure your thinking about a whole solution - which possibly may later on consist of several Applications.</p>
+<p>However, in my opinion, the importance of Software Layers is largely exaggerated. They are a concept from the mid 1990s when there was only single or two tier software and we needed a model to describe software with a third tier: an application server like MTS. But since then the world has moved on and we have a lot more choices for hosts of logic and we have a lot more connections between parts within the same Software Solution as well as different Solutions.</p>
+<p>I´d even say, Software Layers stand in the way of flexible software architecture because they suggest, a Solution mainly consists only of three tiers (or Applications in Software Cell speak) and those tiers are strictly building upon each other (plus some orthogonal functionality like security, caching etc.). But this view is too limited. Why shouldn´t I distribute (business) logic across 5 Software Cells if this leads to a good solution? Why shouldn´t I encapsulate security functionality in a separate Application? Software Layers either don´t provide answers to these questions or they suggest this kind of thinking as inappropriate.</p>
+<p>Now for my last blow to Software Layers: I think it is absolutely contraproductive Software Layers stack the frontend on top of the other layers. This has led to countless misunderstandings and bad designs, because it lures developers into giving the frontend a higher priority than other parts of the software. Again and again it seems to suggest starting development by thing about the frontend was ok. But it isn´t! "Frontend first" is maybe the most widespread reason for bad architectures/designs.</p>
+<p>I see only one way to save the spirit of Software Layers, that´s by giving up the layering...</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/c1375ada63bc775d.jpg" /></p>
+<p>...and instead arrange the logical party of an application in a way so none has a higher priority than the others. This way, we´d retain whatever is helpful from Software Layers and get rid of their limitations and invalid suggestions.</p>
+<h3>Onions</h3>
+<p>To face new challenges brought upon by Web services, fellow Microsoft Regional Director Clemens Vasters and Microsoft´s Steve Swartz have come up with a variation and evolution of Software Layers: <a rel="noopener" href="https://web.archive.org/web/20070301051122/http://staff.newtelligence.net/clemensv/PermaLink,guid,2892db4d-e9d7-4fd0-ac62-5dc1b68e24f5.aspx">the Onion</a>.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/dfa717d67e0fa861.jpg" /></p>
+<p>Source: <a rel="noopener" href="https://web.archive.org/web/20070301051122/http://www.newtelligence.com/">www.newtelligence.com</a></p>
+<p>They wrapped the layers around a center which led to concentric circles, and renamed the layers.</p>
+<p>And this is indeed a step forward, I´d say.</p>
+<p>But first, let´s see, what Onions are about: They are about services, that means, they are about software that´s accessible via SOAP/WS-* From the point of view of Software Cells that means, they are about Software Solutions and collections of Solutions aka Software Societies. How a service is structured (if it´s a single Application or several) is not important to the Onion model. Onions thus are on the next higher level of abstraction above Software Layers. And what they are trying to say is: Several cooperating solutions are structured like a single solution, there is some frontend, some inner logic and some data/resource access:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/5a1b7bd8017d4c77.jpg" /></p>
+<p>Source: <a rel="noopener" href="https://web.archive.org/web/20070301051122/http://www.newtelligence.com/">www.newtelligence.com</a></p>
+<p>This really makes for nice drawings, I´d say. The Software Universe almost looks fractal: You can drill down and down and down and on each level you find more details. (However, as opposed to the usual fractal structures, each level of detail looks the same. It´s always public interface, implementation, resource access.)</p>
+<p>Theoretical this has some appeal, but in the end I don´t find it very enlightening. What does this notation add to software layers? Why use circles instead of layers? The only benefit I see is a circle has a clear surface. This suggests all access to the implementation has to go thru the outer Onion layer. Hm... ok, that´s not bad. But other than that... the fractality of the model could have been depicted with real layers, too.</p>
+<p>And I´d even say, the circular nature of Onions is not helpful in depicting larger systems.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/50b125e749c14fb7.jpg" /></p>
+<p>Source: <a rel="noopener" href="https://web.archive.org/web/20070301051122/http://www.newtelligence.com/">www.newtelligence.com</a></p>
+<p>Can you imagine to draw a Society consiting of several Solutions with their Applications using these Onions? I can´t. So where I see the Onions is at the level of very coarse grained architectural thinking. Thinking of a Solution or Society as a shape with a clear surface is beneficial.</p>
+<p>However, I think also the Onion suffers from a wrong suggestion of priorities: At their center is the resource access, at their rim is the frontend/public interface. The logic, that what really is the heart of any Solution is just a thin layer wedged between input and output.</p>
+<p>From the point of view of Clemens this might be understandable. He´s concerned with SOAP, WSDL; WS-*, Indigo and the like which are all commuication technologies. So in his mind the outer interface service layer and the resource access at the Onions´ core are on his mind all the time. But in the end they are of comparatively little importance. What is most important is the processing logic of any Application or Solution or Society. It´s what needs to be done, not where the data comes from or goes to.</p>
+<p>Please, get me right: Without I/O there is no processing. But the whole purpose of software is processing and not I/O. So I´d say, we should put processing at the heart of our thinking, models, and designs. Just because communication technologies need to mature for real world cross-platform interop does not make them more important than the processing logic.</p>
+<p>Also, I don´t see, why Onions list COM on the public interface and not as a resource access technology. Or why isn´t "WS" (for Web service) a public interface option? Why do Onions put communication technologies into two categories at all? As Clemens says <em>"On the next higher level of abstraction, presentation services may very well play the role of data services to other services. And so it all repeats."</em> But why doesn´t this insight show up in the model? It means on service´s output is another service´s input, and that means, both ends need to use the same I/O technology. If one service outputs data to a database (resource access and "SQL" in the Onion picture), then another service is going to read it from there thru it public interface.</p>
+<p>Or, hm, do Onions want to limit us to communicating between services via the technologies listed on the public interface? I don´t want to believe that.</p>
+<p>So, what do I think about Onions? I´d say, I like them for trying to provide a model for describing cooperating Solutions. The step up Software Layers from the Solution-only view to a Software Society view. But I don´t like them for being inconsistent in their statement about communication technologies and limiting in their visualization capabilities.</p>
+<h3>Fiefdoms</h3>
+<p>Microsoft´s Pat Helland has introduced the term <a rel="noopener" href="https://web.archive.org/web/20070301051122/http://msdn.microsoft.com/msdnmag/issues/03/07/DesignPatterns/">"Fiefdom"</a> into the discussion about software architecture. Fiefdom stands for an autonomous piece of software that performs a task, guards its resources and allows access from the outside to its service in a controlled way. Hence Fiefdom is a metaphorical description of a service as in SOA (Service Oriented Architecture).</p>
+<p>Fiefdoms thus are a pure conceptual construct and are orthogonal to the notion of Software Cells etc. A Fiefdom can be a single Application, or a Solution, or a Society. It depends all on your point of view, the level of abstraction you´re on in the Software Universe.</p>
+<p>As long as Fiefdoms are not misunderstood as implementation guidelines, I think they really help to "think in services." Or to say it the other way ´round: Fiefdoms are not concerned with implementation. They don´t want to guide you in choosing how to distribute logic across Hosts like COM+ or IIS. They don´t guide you in choosing between SOAP over HTTP vs MSMQ. They just say: Think clearly about your boundaries! And view whatever is within the boundaries as an autonomous entity.</p>
+<p>And that´s a very helpful message - right in the line of Software Cell´s Contract First thinking.</p>
+<p>Side note: Interestingly Pat Helland has had <a rel="noopener" href="https://web.archive.org/web/20070301051122/http://blogs.msdn.com/pathelland/archive/2004/03/11/88058.aspx">some difficulties with the term "application"</a> like I had before Software Cells. And he has come to almost the same conclusion: <em>"I would propose that we use the word application exactly as it has meant in the past. An application is a collection of functionality that is tightly interrelated. For the most part, applications have historically stood alone."</em> Yes, let Application be something that stands alone and can be clearly identified. But we differ fundamentally in our final conclusion! Pat says <em>"An application may be implemented out of services."</em>, but Software Cells map services to a group of Applications. Since the world´s software still mostly is not a service and Applications as the Software Cells model defines them fills a gap in the Software Universe I´m sorry to say, but I don´t see any value in Pat´s use of the term "application" and his discouragement of using it. "Application" is a valuable term if clearly defined.</p>
+<h3>SOA</h3>
+<p>Now, at last a word about SOA. What is SOA? Or is there SOA at all? Clemens Vasters in the meantime has come to the conclusion, <a rel="noopener" href="https://web.archive.org/web/20070301051122/http://staff.newtelligence.net/clemensv/PermaLink,guid,535d4a96-2cc3-4306-8b56-9a96c7c6fa39.aspx">there is no such thing as SOA</a> - and I agree with him. The SOA hype was/is around communication technologies. But communication does  not equal architecture (which is also about how to arrange structures).</p>
+<p>Nevertheless let me describe what SOA could have ment in terms of Software Cells: In Software Cell terminology a service is a Software Solution, or: a service is a special case of a Solution. Not any Solution is a service, but every service is a Solution. And it´s only a special case again, if a Solution consist only of a single Application. So in general a SO architecture looks like this:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/26798cb654e29a3a.gif" /></p>
+<p>Several Solutions communicate with each other to fulfill an overall purpose thereby forming a Software Society.</p>
+<p>Since there is not physical container for a solution, each application in a Society could belong to several Solutions at the same time (or even several Societies). Solutions and Societies are just logical concepts, whereas Applications are tangible entities.</p>
+<p>What Clemens is saying: SOA never made a statement about how code is hosted or arranged but mostly talks about how Solutions are connected (e.g. by using SOAP/HTTP or MSMQ). SOA thus talks about communication technologies and maybe Adapters/Portals, but nothing more. From a SOA perspective a service (Solution) has its own contract(s). To translate this into the Software Cell world I maybe could depict a Society like this:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/387d7b51db2560bf.jpg" /></p>
+<p>Communication always flows thru Adapters and Portals, so Solutions should have Adapters and Portals, too. Or shouldn´t they? Logically they sure define contracts. But physically they don´t implement them, since Solutions themselves are no physical entities. The contract of a Solution (service) is the sum of the contracts published by its Applications for inter-Solution communication. So I´d rather say, the Adapters and Portals of a Solution are logical or even virtual, whereas the Applications´s Adapters/Portals are real and tangible:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/467d4c31d5c549ad.jpg" /></p>
+<p>Any Application within a Solution can contribute a Portal to the Solutions contract. And any Application within a Solution can access another´s published Portals via an Adapter that matches the contract. I don´t think it is necessary to introduce the logical notion of special "surface applications", who are the only ones allowed to publish a contract to other Solutions. I don´t think, it´s benefical to categorically assign Applications to one of the Onion´s layers.</p>
+<p>However, I think communication between (!) Solutions should be limited to cross-platform technologies, which today means to contracts defined by XML Schema/WSDL and WS-*. Why? To grant Solutions full autonomy in terms of implementation. Which means they are free to choose the number of Applications needed to provide their service(s). And they are free to choose the Application Hosts. And they are free to choose how they keep state. (This is along the lines of Fiefdoms.)</p>
+<p>So, my bottom lines for SOA is: It´s true, the SOA discourse does not really revolve around architecture but around communication. But if you like, you can perfectly well and easily map SOA´s concepts to the Software Cells model. And I´d even go further and say, Software Cells make it clear, that SO lacks a clear definition of what is the contract of a service (consisting of several Applications all publishing contracts). There is no physical place where the potentially many pieces of a service´s contract come together or are defined. A service´s contract is just a set of several Application contracts logically tied together. And it´s even worse than the set of public types in an assembly which are at least bound by the assembly manifest.</p>
+<h3>A general word about architectural patterns</h3>
+<p>Besides popular patterns like Software Layers or Onions there are many others, e.g. <a rel="noopener" href="https://web.archive.org/web/20070301051122/http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnpag/html/despipesandfilters.asp">Pipes and Filters</a> or Enterprise Bus. What do Software Cells mean for them? Or do those patterns stand in the way of Software Cells and are incompatible with them?</p>
+<p>No, right to the contrary! Software Cells embrace all those patterns and provide a vocabulary to guide their implementation. Take Pipes and Filters for example:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/3e7d6751b3ff9117.jpg" /></p>
+<p>The pipes&amp;filters picture in the middle is from the Microsoft document. And as you can see, Software Cells allow for a variety of implementations. (You could even think about pipes as Applications/Solutions if you like.)</p>
+<p>Software Cells are a very general model for software. You can use it to depict any architecture. Just be clear about:</p>
+<ul>
+<li>Where/what are my Applications? How do I map conceptual entities to physical entities?</li>
+<li>What´s the best Host for an Application?</li>
+<li>Where are Solution boundaries? Think about Contracts!</li>
+<li>Which communication technologies do I choose?</li>
+</ul>
+<p><strong>Share this post:</strong> <a rel="noopener" href="https://web.archive.org/web/20070301051122/mailto:/?body=Thought%20you%20might%20like%20this:%20http://weblogs.asp.net/ralfw/archive/2005/05/18/407378.aspx&amp;;subject=Software+Cells+%237%3a+Putting+Software+Layers+et+al.+into+Perspective" title="Post http://weblogs.asp.net/ralfw/archive/2005/05/18/407378.aspx">email it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070301051122/http://del.icio.us/post?url=http://weblogs.asp.net/ralfw/archive/2005/05/18/407378.aspx&amp;;title=Software+Cells+%237%3a+Putting+Software+Layers+et+al.+into+Perspective" title="Post http://weblogs.asp.net/ralfw/archive/2005/05/18/407378.aspx">bookmark it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070301051122/http://www.digg.com/submit?url=http://weblogs.asp.net/ralfw/archive/2005/05/18/407378.aspx&amp;;phase=2" title="Post http://weblogs.asp.net/ralfw/archive/2005/05/18/407378.aspx">digg it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070301051122/http://reddit.com/submit?url=http://weblogs.asp.net/ralfw/archive/2005/05/18/407378.aspx&amp;title=Software+Cells+%237%3a+Putting+Software+Layers+et+al.+into+Perspective" title="Post http://weblogs.asp.net/ralfw/archive/2005/05/18/407378.aspx">reddit!</a> | <a rel="noopener" href="https://web.archive.org/web/20070301051122/http://www.dotnetkicks.com/submit/?url=http://weblogs.asp.net/ralfw/archive/2005/05/18/407378.aspx&amp;;title=Software+Cells+%237%3a+Putting+Software+Layers+et+al.+into+Perspective" title="Post http://weblogs.asp.net/ralfw/archive/2005/05/18/407378.aspx">kick it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070301051122/https://favorites.live.com/quickadd.aspx?marklet=1&amp;;mkt=en-us&amp;;url=http://weblogs.asp.net/ralfw/archive/2005/05/18/407378.aspx&amp;;title=Software+Cells+%237%3a+Putting+Software+Layers+et+al.+into+Perspective&amp;;top=1" title="Post http://weblogs.asp.net/ralfw/archive/2005/05/18/407378.aspx">live it!</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

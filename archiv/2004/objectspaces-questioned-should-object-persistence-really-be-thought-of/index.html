@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ObjectSpaces questioned: Should object persistence really be thought of as orthogonal functionality? — ralfw.de Archiv</title>
+<meta name="description" content="I know, by asking the question in the subject line, some will view me as a haeretic or as naive or something else. But still, I cannot shed the feeling, that striving for this orth">
+<link rel="canonical" href="https://ralfw.de/archiv/2004/objectspaces-questioned-should-object-persistence-really-be-thought-of/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ObjectSpaces questioned: Should object persistence really be thought of as orthogonal functionality? — ralfw.de Archiv">
+<meta property="og:description" content="I know, by asking the question in the subject line, some will view me as a haeretic or as naive or something else. But still, I cannot shed the feeling, that striving for this orth">
+<meta property="og:url" content="https://ralfw.de/archiv/2004/objectspaces-questioned-should-object-persistence-really-be-thought-of/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>ObjectSpaces questioned: Should object persistence really be thought of as orthogonal functionality?</h1>
+    <div class="doc-meta"><span>4. Feb. 2004</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="https://weblogs.asp.net/ralfw/67262" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2004/objectspaces-questioned-should-object-persistence-really-be-thought-of/</code></span></div>
+    <div class="art"><p>I know, by asking the question in the subject line, some will view me as a haeretic or as naive or something else. But still, I cannot shed the feeling, that striving for this orthogonality - as Microsoft ObjectSpaces (OS) does - could be harmful. (For my exculpation let me say: since the early 90s I have been a fan of ODBMS and I very much like the thought of transparent object persistence. So I´m all in for a good O/R technology.)</p>
+<p>Why do I think so? Because I saw what happened to MTS and then COM+. Many developers did not understand, that designing classes to be run in an application server is different from designing class to be run in a rich client (aka winforms client). Microsoft made it too easy (!) to deploy almost any COM object in an app server application. People could do anything they liked, e.g. keep state, have properties in their app server classes. And that made them unhappy in the end, because performance often was low. But not due to a immature technology, but due to misuse.</p>
+<p>So I hope you can agree, that deployment in an app server is not completely orthogonal to the design of my classes. I need to forethink what I´m gonna do with my classes.</p>
+<p>The same is true, I now come to think more and more, for persistence. Let me say, at least in many cases. (Maybe sometimes orthogonality is really ok and even desirable. Applications for scientific labs come to my mind, which are more algorithm oriented that database oriented.)</p>
+<p>The cases, where I think, orthogonality is not desirable are the typical business applications, the ERP systems etc. Developers know exactly which classes will be filled from a database. They know their persistent objects from the start of the design on. And which objects need to be persisted does not likely change over the lifetime of an application.</p>
+<p>So, why should it be suggested to them: forget your knowledge? As long as they still need to explicitly persist changes and even register new objects with OS for change tracking, transparent persistence is not reached in imperative code. Why then should transparent persistence in deklarative code (type definitions) be so important?</p>
+<p>Because there already exist classes, whose objects all of a sudden need to be stored using OS? I doubt it. The amount of work to be done in code is still huge.</p>
+<p>Because it is so much easier to not think about persistence when designing a class and leave it to some other guy to come up with a mapping? I doubt it. It puts much burden on the persistence engine. And it keeps the gulf between OO world and relation world wide open, because it suggests: don´t talk to each other. You database guy, do whatever you want. And you OO guy, do whatever you want. My experience is, this leads to poor performance in the end, when trying to bridge the gap.</p>
+<p>Or because class design should not be tied to a certain persistence technology, be it OS or some other tool? Well, I guess, that´s the real driving force behind the orthogonality idea.</p>
+<p>But my feeling is, keeping class design absolutely clean and just spread mapping info across several resources, is the wrong solution.</p>
+<p>My suggestion would be instead: Give developers a "domain specific language" (DSL) for the definition of persistent classes. No, don´t try to do it in C#/VB.NET with attributes! Because then you would not be free to maybe sometimes derive from a PersistentObject base class. Instead persistent class should be defined in a special language hiding all implementation details from the developer.</p>
+<p>Like HTML is used as a special language compiled to IL in ASP.NET. HTML is a DSL for the realm of presentation layer programming. And we´re all pretty happy with that. So why not have a special language for data persistence programming?</p>
+<p>I also suggest, this DSL should not be a fully fledged programming language. No imperative code should be able to be written with it. Whatever business logic needs to be added to persistent classes (to make them less anemic ;-), can be added by derivation or aggregation later on.</p>
+<p>My conclusion: A DSL would not interfere with how objects are persisted in code. A DSL still would keep the definition of persistent types clean of any persistence tool specifica. A DSL would make it clear to a developer, he´s dealing with a persistent class. A DSL would help close the gap between OO world and relational world.</p>
+<p>From my experience what went wrong with the MTS/COM+ message, I´d love to see it done better for solutions to the object persistence problem.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

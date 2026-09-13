@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software Cells #E: Splitting the General Software Architecture Framework from the Prescriptive Model and Coming to Terms with UML — ralfw.de Archiv</title>
+<meta name="description" content="After I did my previous posting on the &quot;Big Picture&quot;, I felt qualms as to whether my vision was a little bit too grant. Does the world really need my view on software? Isn´t there ">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/software-cells-e-splitting-the-general-software-architecture-framework/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software Cells #E: Splitting the General Software Architecture Framework from the Prescriptive Model and Coming to Terms with UML — ralfw.de Archiv">
+<meta property="og:description" content="After I did my previous posting on the &quot;Big Picture&quot;, I felt qualms as to whether my vision was a little bit too grant. Does the world really need my view on software? Isn´t there ">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/software-cells-e-splitting-the-general-software-architecture-framework/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Software Cells #E: Splitting the General Software Architecture Framework from the Prescriptive Model and Coming to Terms with UML</h1>
+    <div class="doc-meta"><span>13. Juni 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net/ralfw/412077" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/software-cells-e-splitting-the-general-software-architecture-framework/</code></span></div>
+    <div class="art"><p>After I did my <a rel="noopener" href="https://web.archive.org/web/20150914131411/http://weblogs.asp.net/ralfw/archive/2005/06/08/410898.aspx">previous posting on the "Big Picture"</a>, I felt qualms as to whether my vision was a little bit too grant. Does the world really need my view on software? Isn´t there already UML covering almost everything you need to know in terms of modelling software? After having slept bad for a couple of nights ;-) the following answer came to me: Yes, trying to stuff everything into just one model is too much. And I´m not trying to replace UML; in fact UML can be used to express my Software Cells´ concepts.</p>
+<p>So, how can my "Big Picture" be chopped up into more manageable pieces? I´d say, it´s best to separate the overall framework from concrete advice. Thus from now there are two different models building on one another:</p>
+<p><strong>Software Universe</strong></p>
+<p>The Software Universe is supposed to be a general framework for thinking about software. It consists of...</p>
+<ul>
+<li>The holarchy of software artifacts from Method up to Society</li>
+<li>An arbittrary number of Concerns to which artifacts can belong and which are orthogonal to each other</li>
+<li>A hiearchy of logical Categories to which each artifact can belong</li>
+</ul>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/299c013cb7cc9391.gif" /></p>
+<p>Also, artifacts communicate with each other and can form a communication network:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/7b70d0b26e64f6ff.jpg" /></p>
+<p>Arifacts communicate directly on the same level within the same encompassing holon and through Connection Points if they need to cross boundaries. Connection points define and follow Contracts governing how one holon can use another one. There is no conceptual limit as to how holons can be connected, no hierarchy, no direction. Software is supposed to be able to form arbitrary networks on each level of the holarchy.</p>
+<p>That´s all there is to the Software Universe. I guess it´s simple but nevertheless helpful in its generality. It provides a framework for thinking about software, a framework you can hook into your own models - with the only "limitation" being the holarchy with its predefined levels of abstraction which describe "software containers" and map to real world software artifacts:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/5c6047f08f5d2fef.jpg" /></p>
+<p>However, the Software Universe is open and extensible. For example, I´m thinking if it would make sense to introduce a new holon level between Application and Solution called "Culture". A Culture would contain all Applications running on the same platform within a Solution. This level could make sense because it would clearly mark where communication crosses an important boundary. Let me know what you think of this idea, if you like.</p>
+<p>Any extensions to the Software Universe, though, would need to fit into the existing scheme or be orthogonal to it. Also they would need to be on the same level of generality and abstraction.</p>
+<p>That brings me to...</p>
+<p><strong>Software Cells</strong></p>
+<p>Software Cells make very concrete statements about how software should look on a certain level of the Software Universe holarchy. Software Cells thus are on a different level of abstraction than the Software Universe. They are an application of the Software Universe concepts and don´t constitute it. That´s why I pulled them from the holarchy etc. and instead set them apart as a model in its own right. Software Cells can be explained without the Software Universe - but it´s easier, I´d say, if Software Cells are based on the Software Universe.</p>
+<p>So what do Software Cells talk about? They zoom into the Software Universe and describe how an Application holon should look like:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/6248d163d09d5cdc.jpg" /></p>
+<p>A Software Cell is an Application and is called a cell because it is assumed, that every Application has a basic structure regardless of the problem domain and often is part of a network of cooperating applications thus forming something like a biological united cell structure:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/2c2f747c9d8b4052.jpg" /></p>
+<p>The most important part of a Software Cell is its Core which contains the main problem solving logic of the application. The Core consists of at least one Component holon which needs to be run by some kind of Host (a standalone executable). If the Core wants to access other Cells or resources or should be steered by a user, Adapter and Portal Components are the means to do that. A Software Cell thus is an Application holon with the following structural elements:</p>
+<ul>
+<li>Core Component</li>
+<li>Any number of Adapter Components to access other Cells or recourses</li>
+<li>Any number of Portal Components to open up for access by other Cells</li>
+<li>A Host providing infrastructure services to the Core and the Connection Point Components (Adapters, Portals)</li>
+</ul>
+<p>Software Cells resemble the software layer architectural model in so far as they define software to consist of several parts. But where software layers put thos parts in a strict line from frontend to data access and otherwise be not very concrete, Software Cells are more flexible. Firstly they put logic at a more prominent and more appropriate position in the center. It´s no longer wedged between other concepts which might not even be present in a software. Secondly communication doesn´t distinguish between arbitrarily grouped technology but makes all input/output equal. Thus it´s much easier to describe networks of software. Thirdly Software Cells get rid of fuzzy terms like "business logic" and replace them with very concrete structures with concrete tasks: Adapter/Portals do only what is necessary to bridge the impedance mismatch between a communication API and the level of abstraction of the Core logic. Nothing more. So the logic is defined by "whatever doesn´t have to do with communication" - and thereby gets free to float from one Cell to another in a Solution (network of Cells/Applications). If you want, you then can split whatever is done by the Core logic into several categories. That´s just fine and uses another dimension of the Software Universe. However, the Software Cells model does not (yet) make any statement as to how your Cells or Core logic should be structured. So if you want to carry over anything from the software layer model, feel free. Just stick to the clear definitions of the Connection Points, the Core, and the Host. Compared to the software layer model more code will belong to the Core logic Components than to the business logic layer.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/a8d37da58ad0df56.gif" /></p>
+<p>Also be aware that a software layer architecture often will map to several cooperating Software Cells.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/2427b7b1a857bc21.jpg" /></p>
+<p><strong>UML</strong></p>
+<p>Now, finally, what about UML? Do Software Cells duplicate anything UML does? I´d say, no. Although Software Cells come with their own graphical notation (based on the Software Universe), you can depict everything using UML, if you like. Use a UML package diagram for a Software Cell network (aka Solution), use UML components for Core, Adapter, and Portal, if you like. Although I personally find the UML notation too general in many aspects, I don´t see any real reason, you can´t use it.</p>
+<p>UML´s notion of component and package are quite abstract. That make UML widely applicable. Software Cells on the other hand try to be very concrete. A Software Universe´ Component is a set of library files (or .NET assemblies) bound together by a certain purpose. A Software Cell is a Software Universe Application, that means it´s a process hosting Components. UML doesn´t know of .NET assemblies and processes. So you maybe could say, Software Cell diagrams can be drawn as instantiations of UML diagrams with certain stereotypes to denote Software Cell structures and connections.</p>
+<p>Phew, I feel relieved now :-) Splitting the Software Universe from Software Cells makes easier to understand and work with both. And seeing UML not as a rival, but complementing drawing tool could help to approach developers to take a closer look at the Software Cells concepts. (However, I still find it easier to quickly draw a Software Cell diagram like above than using UML notation. Maybe I´ll try to set up a Domain Specific Language for VS2005 at some point :-)</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

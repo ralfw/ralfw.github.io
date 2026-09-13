@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suggestion for a changed view of basic application architecture — ralfw.de Archiv</title>
+<meta name="description" content="Web services were yesterday. Today is SOA (Service Oriented Architecture). And what´s tomorrow? The only constant about buzzwords is change.">
+<link rel="canonical" href="https://ralfw.de/archiv/2004/suggestion-for-a-changed-view-of-basic-application-architecture/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Suggestion for a changed view of basic application architecture — ralfw.de Archiv">
+<meta property="og:description" content="Web services were yesterday. Today is SOA (Service Oriented Architecture). And what´s tomorrow? The only constant about buzzwords is change.">
+<meta property="og:url" content="https://ralfw.de/archiv/2004/suggestion-for-a-changed-view-of-basic-application-architecture/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Suggestion for a changed view of basic application architecture</h1>
+    <div class="doc-meta"><span>13. Mai 2004</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2004/05/13/131016.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2004/suggestion-for-a-changed-view-of-basic-application-architecture/</code></span></div>
+    <div class="art"><p>Web services were yesterday. Today is SOA (Service Oriented Architecture). And what´s tomorrow?<br />
+The only constant about buzzwords is change.</p>
+<p>But as much as I like the SOA idea, I think many, many developers are so far away from the concept in their thinking, in their applications, it will be very hard to get them hooked. Even after 8 years of MTS/COM+ the concept of an Application Server has not taken hold in the (German) developer community. An ad hoc poll among some 100 developers in a session at the recent German DevDays showed: only 5-10% knew what COM+ was, and none (!) used it in their application.</p>
+<p>And even if I´m optimistic, I´d say, only maybe 30% of Microsoft oriented developers have a grasp of COM+. And maybe just 10% of them actually use COM+.</p>
+<p>Given, that not all projects need COM+ or Web services or .NET Remoting, surely many more than todays would profit from those technologies. But developers don´t even give them a try.</p>
+<p>Why? Because their view of the basic application architecture is still rooted in the 1980ies. They think, their applications are whatever they see on screen. For them the frontend is the application. (Even though, they are using objects and are building some components.)</p>
+<p>This like locating your self right behind your eyes in your head. But that´s just one view of the world. Other times have been and other cultures are thinking differently. And it´s even changing in the western world. More holistic views are appearing. A person is not just it´s brain. There is no homunculus in your head.</p>
+<p>But how we view the world determines how we interact with it. Thinking of our selves as sitting behind our eyes and steering a body separated from us models our whole world from interaction with other people to medicine etc.</p>
+<p>So I think, our view of how applications should be architected does the same for our perception and use of technologies.</p>
+<p>The current "canonical" idea of an application architecture, the dominant meme so to speak ;-), looks like this, I´d say:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/520d92dcf60b09c8.gif" /></p>
+<p><em>Current "canonical" application architecture picture.</em></p>
+<p>Frontends are on top (or on the left), the BL is in the middle ("middleware"), and on the opposite side sits the data access layer (invisible for the frontends). This sounds plausible, looks ok, and is not even wrong. (As it is not wrong to locate at least major parts of our self within our heads.)</p>
+<p>But this view of a basic application architecture still suggests, it´s good to start with frontends. Frontends are important. Frontends are hosts for BL. etc.</p>
+<p>But this is only a limited view. It causes the 1980ies thinking to continue. Application servers don´t seem necessary. Hey, why use COM+ oder even a .NET Remoting console application when I can host the BL in my frontend. And if I can do that, why rigorously think about a service facade in front of my BL. Plus: What is BL anyway?</p>
+<p>My opinion is: Unless we change the basic picture of how applications should look, the majority of developers will not change their thinking. They will not adapt (quickly enough) to Web services or any other kind of services. And that will make life more difficult for them in the future.</p>
+<p>Thus I propose to aggressively promote a modified picture of an basic application architecture:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/e567e67a08b0232d.gif" /></p>
+<p><em>Suggested "canonical" application architecture picture.</em></p>
+<p>It contains the same players, the same terminology, but moved around the boxes. Seems a small change, but I think it´s an important one.</p>
+<p>The Businesslogic now sits in the middle and on top! And I replaced the somewhat fuzzy term "Businesslogic" with "Application". The BL is (!) the application. It´s the heart of what a programm is supposed to do.</p>
+<p>All other stuff is nice to have, so to speak ;-) Frontends are nice to have, but not necessary for a particular BL (or application). An application could be started by just loading it into a host (Applicaiton Server).</p>
+<p>Resources are not necessary either. An application could just communicate with frontends and keep state in memory. (Memory is no resource worth mentioning in this picture as are databases, TCP connections, the file system. For resources a special API is needed; memory you access thru objects.)</p>
+<p>So an application should be just this thing in the middle and on top. Nothing more, nothing less.</p>
+<p>Most of the times, though, it is not selfsufficient. It´s no monk meditating in a cave, not eating, not drinking, not speaking. An application needs to interact with the world.</p>
+<p>Applications most often want to access resources. And they might want to communicate with other applications.</p>
+<p>Although an application could perfectly well just churn on data from resources and be driven by some internal rules, sometimes it´s necessary to trigger it from the outside. Or you want to take a look at its current state of processing.</p>
+<p>Only then come frontends into play. I think they should be degraded from primary focus of development to just triggers of events in the application. Frontends trigger processing, they send events to the application and receive data about its state. Sometime this can be accomplished by a scheduled a WSH script, sometimes an elaborate GUI is necessary.</p>
+<p>But in any case, the frontend is just an "add-on" to the application.</p>
+<p><em>Only if we change the weights within the commonly promoted picture of application architectures in this way, I think we can effectively change how developers view Application Servers, (Web) services and the like.</em></p>
+<p>Thanks to <a rel="noopener" href="https://web.archive.org/web/20040602221523/http://weblogs.asp.net/cweyer">Christian Weyer</a> and Markus Baulig for giving me the chance to refine my thinking about this idea in conversations with them.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

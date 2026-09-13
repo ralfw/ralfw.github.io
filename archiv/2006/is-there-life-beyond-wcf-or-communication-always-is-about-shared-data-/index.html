@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Is there life beyond WCF? - or: Communication always is about shared data structures — ralfw.de Archiv</title>
+<meta name="description" content="While pondering about how to get a grip on software architecture, I now and again of course stumble upon questions on communication between distributed software parts. WCF then spr">
+<link rel="canonical" href="https://ralfw.de/archiv/2006/is-there-life-beyond-wcf-or-communication-always-is-about-shared-data-/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Is there life beyond WCF? - or: Communication always is about shared data structures — ralfw.de Archiv">
+<meta property="og:description" content="While pondering about how to get a grip on software architecture, I now and again of course stumble upon questions on communication between distributed software parts. WCF then spr">
+<meta property="og:url" content="https://ralfw.de/archiv/2006/is-there-life-beyond-wcf-or-communication-always-is-about-shared-data-/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Is there life beyond WCF? - or: Communication always is about shared data structures</h1>
+    <div class="doc-meta"><span>2. Feb. 2006</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2006/02/02/437161.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2006/is-there-life-beyond-wcf-or-communication-always-is-about-shared-data-/</code></span></div>
+    <div class="art"><p>While pondering about how to get a grip on software architecture, I now and again of course stumble upon questions on communication between distributed software parts. WCF then springs up as the state-of-the-art technology to answer those questions. But more and more I´m asking myself: Is WCF all there is we need to know about communication in distributed software? Is it the holy grail with its beautiful abstraction over SOAP, WSDL, COM+, HTTP, MSMQ etc.?</p>
+<p>The longer I´m thinking about this, the more I´d say, no WCF is not the end, it´s hardly the beginning. WCF is the foundation for technologies to come which will make it truely easy to communicate in distributed software systems. WCF is (just) a wrapper around many basic intricacies of message based communication. It hides the ugly details of a communication model that´s very different from local method calls. In that it will make communication as much easier as sockets made it easier compared to lower level APIs in the OSI stack of communication layers.</p>
+<p>WCF thus is a necessary and overdue unification and abstraction. But despite all its features WCF still is in the tradition of basic socket communication. WCF is about FIFO and streams of bytes flowing from here to there and maybe back.</p>
+<p>And this made me think. What´s communication in software about anyway?</p>
+<p>Communication always is about a data structure. And thus communication is not different from code, meaning: there is only code and no communication. Or to put it differently: Bits flowing back and forth (mostly) can be neglected from an application programmer´s point of view; what is important, though, is the code and the data structure it implements. Also, what´s important is where the control over a the data structure is at each point in time.</p>
+<p>Let me illustrate what I mean:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/d76d72999ead7ac8.gif" /></p>
+<p>Often our software diagrams contain to different kinds of "entities": software artifacts and communication "lines". We´re describing software using graphs. Code is depicted as vertices, communication is depicted as edges. That´s great and easy to understand.</p>
+<p>But my feeling is, this becomes a problems once you forget, that communication does not come for free. And also I find this depiction limiting, since it lures you into thinking, communication always goes through some kind of pipe. Because what the above picture suggests is something like this:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/c5fd5cfaaae92d28.gif" /></p>
+<p>There are hard working software artifacts at two ends of a pipeline. The pipeline is just some kind of channel to let data flow between the "data factories".</p>
+<h3>Spaces instead of edges</h3>
+<p>Well, that´s a nice analogy that appropriate very often. But unless you´re aware it´s just an analogy and because of that probably only one of many possible analogies, it´s also a limiting view of software interaction.</p>
+<p>Hence let me change the software diagram to show how software communication really works:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/01bd9235cecc49bf.gif" /></p>
+<p>Between the communicating parties there is no direct connection. If you like, you can think of this connection being a hardware cable or a RAM chip. That´s fine - but pretty irrelevant from an application programmer´s point of view. Rather communication always manifests itself in another piece of code. So an edge can be represented as a piece of code sitting between the originally connected software artifacts. Of course this edge-code then is again connected with those software artifacts by edges - which in turn can be represented as a piece of code etc.</p>
+<p>Since edges don´t seem to go away in the above picture, let me use another depiction to make clear, what I mean:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/35521af004c7a785.gif" /></p>
+<p>See, there are no edges anymore. Instead of an edge there is a space where communication takes place. And this space is spanned by some special communication code.</p>
+<h3>Today´s communication structures</h3>
+<p>Now, what does this code facilitating communication do? I like to call it a communication structure or even a coordination structure. This code always implements some kind of data structure sitting between the communicating parties. The purpose of its data structure is to enable communication and not permanently storing data. It helps the coordination of the cooperation of code accessing it.</p>
+<p>Sometime code accesses this coordination structure sequentially, sometimes code accesses it in parallel. (The latter case is the more interesting one ;-)</p>
+<p>You might now ask, "But where is the data structure when calling methods?" And the answer is: It´s the stack. And the whole purpose of the method call and method definition syntax is to hide the stack (or any other data structure, like registers) from you. Local communication (within the same address space) usually uses the stack which is invisible - but nevertheless present:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/c8c49632de64831c.gif" /></p>
+<p>The compiler generates the code to put the actual parameters on the stack, transfer control to the called code, and later on clear the stack. Back in the good ole times when we all were still programming assembler we were aware of this all the time. We had to think hard about whether to pass parameters on the stack or in registers. The communication structure so to speak always was on our mind. Then came higher level languages and we don´t want and need to see it anymore. Great!</p>
+<p>Enter distributed computing! The communication structure between software parts running in parallel or not living in the same address space is not the stack. Instead we´re talking about message orientation, since communication mostly uses streams to pass bytes to and fro. However, RPC and Web services made this fundamental change in the basic communication structure transparent for application programmers. It´s well know how contraproductive this abstraction in many cases was.</p>
+<p>But today with WCF this has changed. WCF is not trying tell you, communication between distributed parts of a software system is like calling code locally. Rather, the WCF message is messages. WCF acknowledges the fundamental difference between a stack and a stream and encourages to adapt your thinking.</p>
+<p>The WCF message is: Be aware of the channel! Because a channel it is, through which communication flows between distributed software parts:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/cb08ce9883d391b6.gif" /></p>
+<p>A stack is a LIFO data structure. A channel is a FIFO data structure. This difference alone should make it obvious how different communication in distributed software is from local method calls.</p>
+<p>Nevertheless, code using WCF to communicate can pretty much look like code communicating via the stack. Why is that? Because a LIFO and a FIFO have well defined "input and output points". Both are not random access, but impose strict rules. Both say: data can only go in here, and data can leave only over there. The single entry and exit to the data structure makes it possible (and pretty intuitive) to model interaction with it using method calls:</p>
+<p>int r = DoSomething(a, b);</p>
+<p>This can mean "Push a and b on the stack, later pop the result off the stack and put it into r." or it could mean "Enque a, enque b, wait for a response on another queue and put it into r."</p>
+<p>At the receiving side the code of DoSomething() can pop the actual parameters off the stack or dequeue them. The code can either be explicitly called to do this or can already run in parallel and wait. In any case, since there is only one place to look for the data (top of stack or head of queue) it can be modelled like an ordinary method receiving its input via parameters.</p>
+<h3>Tomorrow´s communication structures</h3>
+<p>Now, here comes the 10,000 dollar question: Is this all that´s to communication in distributed systems?</p>
+<p>The answer is yes, if you look at current and widely established technology. Code is just using either the stack or a stream/queue to communicate and is happy doing so. Or not? The more I think about it, the more I lean towards no as an answer.</p>
+<p>Stack and queue are just the only communication structures we have. So they are our only hammers - and thus every communication problem looks like a nail. Our thinking is constrained by these to (pre)dominant communication structures.</p>
+<p>But if we´d take a look from 30,000 feet we´d see, they are just two very common, but nevertheless special cases of communication structures. Think of the possibilities you had, if you were not limited in your choice of communication structures. Think how intuitive cooperation between distributed software parts could be modeled, if you could use not only LIFO and FIFO data structures, but lists, trees, arrays, sets, dictionaries and what not!</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/a10274a2b0dc5bb0.gif" /></p>
+<p>And if you like, you can still use a queue in distributed apps. But then you´d always be aware that you have a choice! (Actually you could even use a stack even in distributed solutions ;-)</p>
+<p>Today you have the choice between passing information between local cooperating pieces of your code via stack or global variables. The general rule is to avoid globals variables and use the stack instead because this fosters decoupling. But sometimes global variables are easier and even necessary. Think about how to pass data into another thread. This can only (!) be done using global data structures. (Let´s leave aside the state parameter on <em>ThreadPool.QueueUserWorkItem()</em>. It´s also just hiding a communication structure.)</p>
+<h3>Virtual Shared Memory</h3>
+<p>Using global data structures sometimes even today is necessary for communication. And more choices for communication structures sure are a good thing. I guess you agree here; but you might say, "Well, what´s the point? I can use a global tree or use parameters to get data into a method I call."</p>
+<p>My point is: We have and require this flexibility for local code, code running in the same address space. But we lack this flexibility in distributed systems!</p>
+<p>For local code it´s implicit stack and explicit queue, stack, tree, list, array, set, dictionary etc.</p>
+<p>For remote code it´s implicit stream.</p>
+<p>That´s it.</p>
+<p>I´d say: a poor choice of programming models this is for communication in distributed systems.</p>
+<p>Especially if you consider there are solutions available since long. Tuple Space and Virtual Shared Memory (VSM) implementations are available since the 1980s. But they never really made it onto the Windows/.NET platform. JavaSpaces on the other hand is part of the J2EE platform. Why haven´t we really heard about TSpaces, Linda, Ruple, or Corso? Why have the successes of VSM on Apollo workstations been forgotten?</p>
+<p>I don´t know. I really don´t know. But lately I´ve played with Corso for which a .NET binding exists. And I can tell you: it was great fun. Communication in distributed apps suddenly felt much easier. I even did not mind using a queue explicitly - because I felt I had a choice to change the communication structure at any time.</p>
+<p>So what I´m looking for is a renaissance of VSM on Windows. And I´ll try to help it come about. I´m convinced, more choices are better than less.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/ee8358f8edb911cd.gif" /></p>
+<p>Having a ubiquitous VSM platform available would make programming in the small (local) and programming in the large (distributed) much more symmetrical. And if you´re in doubt and say, "Hey, but then we´d no longer see the fundamental difference between stack and stream based communication, since there would be just data structures and objects!" I´d answer: No, not necessarily. Like today you can hide a queue behind a method call. Or, on the other hand, yes, sure, and: that´s even the point about VSM!</p>
+<p>The bad thing about object orientation in distributed systems in the past was not the objects, but the illusion, method calls were still for free. Hiding the data structure of distributed communication was bad. But once the data structure is visible again, interaction with it is explicit. So you can actually know what you´re doing. And then of course such shared communication structures are transactional meaning, you don´t have to fear interacting with them will drive network traffic through the roof.</p>
+<p>I´d say: Let´s give VSM a try and see how far beyond WCF it can take us. WCF will of course stay important as a fundamental unification of several current concepts and technologies. But that doesn´t mean we can´t move up the abstraction ladder a bit, or does it?</p>
+<p><strong>Share this post:</strong> <a rel="noopener" href="https://web.archive.org/web/20060622152842/mailto:/?body=Thought%20you%20might%20like%20this:%20http://weblogs.asp.net/ralfw/archive/2006/02/02/437161.aspx&amp;subject=Is+there+life+beyond+WCF%3f+-+or%3a+Communication+always+is+about+shared+data+structures" title="Email Is+there+life+beyond+WCF%3f+-+or%3a+Communication+always+is+about+shared+data+structures">Email it!</a> | <a rel="noopener" href="https://web.archive.org/web/20060622152842/http://del.icio.us/post?url=http://weblogs.asp.net/ralfw/archive/2006/02/02/437161.aspx&amp;title=Is+there+life+beyond+WCF%3f+-+or%3a+Communication+always+is+about+shared+data+structures" title="Submit Is+there+life+beyond+WCF%3f+-+or%3a+Communication+always+is+about+shared+data+structures to del.icio.us">bookmark it!</a> | <a rel="noopener" href="https://web.archive.org/web/20060622152842/http://www.digg.com/submit?url=http://weblogs.asp.net/ralfw/archive/2006/02/02/437161.aspx&amp;phase=2" title="Submit Is+there+life+beyond+WCF%3f+-+or%3a+Communication+always+is+about+shared+data+structures to digg.com">digg it!</a> | <a rel="noopener" href="https://web.archive.org/web/20060622152842/http://reddit.com/submit?url=http://weblogs.asp.net/ralfw/archive/2006/02/02/437161.aspx&amp;title=Is+there+life+beyond+WCF%3f+-+or%3a+Communication+always+is+about+shared+data+structures" title="Submit Is+there+life+beyond+WCF%3f+-+or%3a+Communication+always+is+about+shared+data+structures to reddit.com">reddit!</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

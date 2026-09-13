@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Do the Chameleon - Windows Impersonation Made Easy — ralfw.de Archiv</title>
+<meta name="description" content="Recently I again stumbled into a situation where I just wanted to test, if a certain portion of my code would also work, if it ran under different Windows user accounts. But instea">
+<link rel="canonical" href="https://ralfw.de/archiv/2003/do-the-chameleon-windows-impersonation-made-easy/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Do the Chameleon - Windows Impersonation Made Easy — ralfw.de Archiv">
+<meta property="og:description" content="Recently I again stumbled into a situation where I just wanted to test, if a certain portion of my code would also work, if it ran under different Windows user accounts. But instea">
+<meta property="og:url" content="https://ralfw.de/archiv/2003/do-the-chameleon-windows-impersonation-made-easy/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Do the Chameleon - Windows Impersonation Made Easy</h1>
+    <div class="doc-meta"><span>24. Nov. 2003</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="https://weblogs.asp.net/ralfw/39479/" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2003/do-the-chameleon-windows-impersonation-made-easy/</code></span></div>
+    <div class="art"><p>Recently I again stumbled into a situation where I just wanted to test, if a certain portion of my code would also work, if it ran under different Windows user accounts. But instead of switching users by hand, I wanted to impersonate them in my code. How to do this in Managed Code (e.g. C#), is described in quite a few online sources. Here are two examples:</p>
+<p><a rel="noopener" href="https://web.archive.org/web/20260607203814/http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/frlrfSystemSecurityPrincipalWindowsIdentityClassImpersonateTopic.asp">http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/frlrfSystemSecurityPrincipalWindowsIdentityClassImpersonateTopic.asp</a></p>
+<p><a rel="noopener" href="https://web.archive.org/web/20260607203814/http://www.codeproject.com/csharp/lsadotnet.asp">http://www.codeproject.com/csharp/lsadotnet.asp</a></p>
+<p>But what I find deplorable is, there are so few (or even no) copy&amp;paste solutions for such small solutions. What I mean is: Authors mostly just explain the problem and a possible solution (with every little step) - but they don´t provide a ready to use component. Why don´t they put everything needed into just a class? Or if it becomes a little more complex, an assembly? It´s this extra level in abstraction or value, that I´m often missing from explanations found online or offline. For understanding I´m interested in every detail - but for my solution I just need a couple of lines explaining, how to use the solution.</p>
+<p>(Before anyone get´s anry at me for my limited world view: Sure there are also many authors who not just think "explanation" but also "added value" and "component". But, alas, I can´t help thinking, it´s still too few.)</p>
+<p>Never mind.</p>
+<p>Since I badly needed a solution for the impersonation problem, I banged together a small "component" myself from what I found online. (Mainly from the Microsoft source.) So whoever is in the need for quick impersonation, here´s a simple VB.NET class to use. Just put it in your project and become a chameleon in just two lines of code:</p>
+<p>Dim aa As New AliasAccount("mydomain\myusername", "mypassword")<br />
+aa.BeginImpersonation()<br />
+...<br />
+aa.EndImpersonation()</p>
+<p>(See how short an explanation of how to do impersonation can be?)</p>
+<p>It worked find for me within WebForms code behind and WinForms applications.</p>
+<p>Enjoy!</p>
+<p>PS: And here the length details. Read someplace else, what it all means. If you want to use it, just copy the class into your project and you´re set :-)</p>
+<p>Public Class AliasAccount<br />
+    Private _username, _password, _domainname As String</p>
+<p>Private _tokenHandle As New IntPtr(0)<br />
+    Private _dupeTokenHandle As New IntPtr(0)<br />
+    Private _impersonatedUser As System.Security.Principal.WindowsImpersonationContext</p>
+<p>Public Sub New(ByVal username As String, ByVal password As String)<br />
+        Dim nameparts() As String = username.Split("\")<br />
+        If nameparts.Length &gt; 1 Then<br />
+            _domainname = nameparts(0)<br />
+            _username = nameparts(1)<br />
+        Else<br />
+            _username = username<br />
+        End If<br />
+        _password = password<br />
+    End Sub</p>
+<p>Public Sub New(ByVal username As String, ByVal password As String, ByVal domainname As String)<br />
+        _username = username<br />
+        _password = password<br />
+        _domainname = domainname<br />
+    End Sub</p>
+<p>Public Sub BeginImpersonation()<br />
+        Const LOGON32_PROVIDER_DEFAULT As Integer = 0<br />
+        Const LOGON32_LOGON_INTERACTIVE As Integer = 2<br />
+        Const SecurityImpersonation As Integer = 2</p>
+<p>Dim win32ErrorNumber As Integer</p>
+<p>_tokenHandle = IntPtr.Zero<br />
+        _dupeTokenHandle = IntPtr.Zero</p>
+<p>If Not LogonUser(_username, _domainname, _password, LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, _tokenHandle) Then<br />
+            win32ErrorNumber = System.Runtime.InteropServices.Marshal.GetLastWin32Error()<br />
+            Throw New ImpersonationException(win32ErrorNumber, GetErrorMessage(win32ErrorNumber), _username, _domainname)<br />
+        End If</p>
+<p>If Not DuplicateToken(_tokenHandle, SecurityImpersonation, _dupeTokenHandle) Then<br />
+            win32ErrorNumber = System.Runtime.InteropServices.Marshal.GetLastWin32Error()</p>
+<p>CloseHandle(_tokenHandle)<br />
+            Throw New ImpersonationException(win32ErrorNumber, "Unable to duplicate token!", _username, _domainname)<br />
+        End If</p>
+<p>Dim newId As New System.Security.Principal.WindowsIdentity(_dupeTokenHandle)<br />
+        _impersonatedUser = newId.Impersonate()<br />
+    End Sub</p>
+<p>Public Sub EndImpersonation()<br />
+        If Not _impersonatedUser Is Nothing Then<br />
+            _impersonatedUser.Undo()<br />
+            _impersonatedUser = Nothing</p>
+<p>If Not System.IntPtr.op_Equality(_tokenHandle, IntPtr.Zero) Then<br />
+                CloseHandle(_tokenHandle)<br />
+            End If<br />
+            If Not System.IntPtr.op_Equality(_dupeTokenHandle, IntPtr.Zero) Then<br />
+                CloseHandle(_dupeTokenHandle)<br />
+            End If<br />
+        End If<br />
+    End Sub</p>
+<p>Public ReadOnly Property username() As String<br />
+        Get<br />
+            Return _username<br />
+        End Get<br />
+    End Property</p>
+<p>Public ReadOnly Property domainname() As String<br />
+        Get<br />
+            Return _domainname<br />
+        End Get<br />
+    End Property</p>
+<p>Public ReadOnly Property currentWindowsUsername() As String<br />
+        Get<br />
+            Return System.Security.Principal.WindowsIdentity.GetCurrent().Name<br />
+        End Get<br />
+    End Property</p>
+<h1>Region "Exception Class"</h1>
+<p>Public Class ImpersonationException<br />
+        Inherits System.Exception</p>
+<p>Public ReadOnly win32ErrorNumber As Integer</p>
+<p>Public Sub New(ByVal win32ErrorNumber As Integer, ByVal msg As String, ByVal username As String, ByVal domainname As String)<br />
+            MyBase.New(String.Format("Impersonation of {1}{0} failed! [{2}] {3}", username, domainname, win32ErrorNumber, msg))<br />
+            Me.win32ErrorNumber = win32ErrorNumber<br />
+        End Sub<br />
+    End Class  </p>
+<h1>End Region</h1>
+<h1>Region "External Declarations and Helpers"</h1>
+<p>Private Declare Auto Function LogonUser Lib "advapi32.dll" (ByVal lpszUsername As [String], _<br />
+            ByVal lpszDomain As [String], ByVal lpszPassword As [String], _<br />
+            ByVal dwLogonType As Integer, ByVal dwLogonProvider As Integer, _<br />
+            ByRef phToken As IntPtr) As Boolean</p>
+<p>Private Declare Auto Function DuplicateToken Lib "advapi32.dll" (ByVal ExistingTokenHandle As IntPtr, _<br />
+                ByVal SECURITY_IMPERSONATION_LEVEL As Integer, _<br />
+                ByRef DuplicateTokenHandle As IntPtr) As Boolean</p>
+<p>Private Declare Auto Function CloseHandle Lib "kernel32.dll" (ByVal handle As IntPtr) As Boolean</p>
+<p><System.Runtime.InteropServices.DllImport("kernel32.dll")> _<br />
+    Private Shared Function FormatMessage(ByVal dwFlags As Integer, ByRef lpSource As IntPtr, _<br />
+            ByVal dwMessageId As Integer, ByVal dwLanguageId As Integer, ByRef lpBuffer As [String], _<br />
+            ByVal nSize As Integer, ByRef Arguments As IntPtr) As Integer<br />
+    End Function</p>
+<p>Private Function GetErrorMessage(ByVal errorCode As Integer) As String<br />
+        Dim FORMAT_MESSAGE_ALLOCATE_BUFFER As Integer = &amp;H100<br />
+        Dim FORMAT_MESSAGE_IGNORE_INSERTS As Integer = &amp;H200<br />
+        Dim FORMAT_MESSAGE_FROM_SYSTEM As Integer = &amp;H1000</p>
+<p>Dim messageSize As Integer = 255<br />
+        Dim lpMsgBuf As String<br />
+        Dim dwFlags As Integer = FORMAT_MESSAGE_ALLOCATE_BUFFER Or FORMAT_MESSAGE_FROM_SYSTEM Or FORMAT_MESSAGE_IGNORE_INSERTS</p>
+<p>Dim ptrlpSource As IntPtr = IntPtr.Zero<br />
+        Dim prtArguments As IntPtr = IntPtr.Zero</p>
+<p>Dim retVal As Integer = FormatMessage(dwFlags, ptrlpSource, errorCode, 0, lpMsgBuf, messageSize, prtArguments)<br />
+        If 0 = retVal Then<br />
+            Throw New System.Exception("Failed to format message for error code " + errorCode.ToString() + ". ")<br />
+        End If</p>
+<p>Return lpMsgBuf<br />
+    End Function</p>
+<h1>End Region</h1>
+<p>End Class</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

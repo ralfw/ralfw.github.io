@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ausgeschlafen - Reagieren auf Windows Events beim Systemstart nach Standby/Hibernate — ralfw.de Archiv</title>
+<meta name="description" content="Gerade bastle ich an einer kleinen Anwendung, mit der ich mir im System Tray immer die aktuell günstigsten Call-by-Call-Nummern anzeigen lassen kann. Wenn ich dann einen Anruf mach">
+<link rel="canonical" href="https://ralfw.de/archiv/2003/ausgeschlafen-reagieren-auf-windows-events-beim-systemstart-nach-stand/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Ausgeschlafen - Reagieren auf Windows Events beim Systemstart nach Standby/Hibernate — ralfw.de Archiv">
+<meta property="og:description" content="Gerade bastle ich an einer kleinen Anwendung, mit der ich mir im System Tray immer die aktuell günstigsten Call-by-Call-Nummern anzeigen lassen kann. Wenn ich dann einen Anruf mach">
+<meta property="og:url" content="https://ralfw.de/archiv/2003/ausgeschlafen-reagieren-auf-windows-events-beim-systemstart-nach-stand/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Ausgeschlafen - Reagieren auf Windows Events beim Systemstart nach Standby/Hibernate</h1>
+    <div class="doc-meta"><span>9. Sept. 2003</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="https://weblogs.asp.net/ralfw/26908" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2003/ausgeschlafen-reagieren-auf-windows-events-beim-systemstart-nach-stand/</code></span></div>
+    <div class="art"><p>Gerade bastle ich an einer kleinen Anwendung, mit der ich mir im System Tray immer die aktuell günstigsten Call-by-Call-Nummern anzeigen lassen kann. Wenn ich dann einen Anruf machen möchte, muss ich nur die Maus über das Tray Icon bewegen und sehe schon, welche Vorwahl ich wählen muss. Das finde ich einfacher, als eine Seite wie <a rel="noopener" href="https://web.archive.org/web/20230720092610/http://www.telefontarife.de/">www.telefontarife.de</a> im Browser aufzurufen oder gar ein Tarifvergleichsprogramm zu installieren.</p>
+<p>Mein kleines Programm soll einfach im Hintergrund laufen, ein Tray Icon zeigen und periodisch seine Daten durch Zugriff auf ein Informationsangebot im Internet aktualisieren. Das ist auch alles kein Problem - solange ich meinen Laptop nicht schlafen lege. Meist fahre ich den Rechner am Tagesende (oder auch zwischendurch) nicht herunter, sondern schalte ihn nur in den Standby- oder Hibernate-Modus.</p>
+<p>Wenn ich ihn aus einem dieser Modi wieder erwecke, läuft meine Anwendung zwar noch, aber das Timer-Control feuert nicht mehr periodisch. Das Programm aktualisiert seine Daten also nicht mehr automatisch.</p>
+<p>Da andere Programme aber sehr wohl auf die Erweckung aus einem der Schlummerzustände reagieren (Outlook holt dann z.B. die Email ab), dachte ich mir, dass auch meine Anwendung sich über diese Systemzustandsänderung informieren lassen könnte. Wie könnte sie aber an die Ereignisse, die Windows zu diesem Zweck sicherlich wirft, herankommen? Die Antwort liegt im Windows Platform SDK unter dem Stichwort "Power Management".</p>
+<p>Windows meldet Ereignisse des Power Management Systems mit der Windows Nachricht WM_POWERBROADCAST an alle Anwendungen:</p>
+<h1>define WM_POWERBROADCAST               0x0218</h1>
+<p>Der wparam der Nachricht enthält dann einen der folgenden Werte:</p>
+<h1>define PBT_APMQUERYSUSPEND             0x0000</h1>
+<h1>define PBT_APMQUERYSTANDBY             0x0001</h1>
+<h1>define PBT_APMQUERYSUSPENDFAILED       0x0002</h1>
+<h1>define PBT_APMQUERYSTANDBYFAILED       0x0003</h1>
+<h1>define PBT_APMSUSPEND                  0x0004</h1>
+<h1>define PBT_APMSTANDBY                  0x0005</h1>
+<h1>define PBT_APMRESUMECRITICAL           0x0006</h1>
+<h1>define PBT_APMRESUMESUSPEND            0x0007</h1>
+<h1>define PBT_APMRESUMESTANDBY            0x0008</h1>
+<h1>define PBTF_APMRESUMEFROMFAILURE       0x00000001</h1>
+<h1>define PBT_APMBATTERYLOW               0x0009</h1>
+<h1>define PBT_APMPOWERSTATUSCHANGE        0x000A</h1>
+<h1>define PBT_APMOEMEVENT                 0x000B</h1>
+<h1>define PBT_APMRESUMEAUTOMATIC          0x0012</h1>
+<p>Davon sind für meine Zwecke PBT_APMRESUMESUSPEND und PBT_APMRESUMESTANDBY interessant. Die erhält meine Anwendung, wenn der Rechner aufgeweckt wird.</p>
+<p>Um auf die Power-Management-Nachricht zu reagieren, muss ich dann nur die WndProc()-Methode meines Anwendungsfensters überschreiben:</p>
+<p>Public Class Form1<br />
+    Inherits System.Windows.Forms.Form</p>
+<p>...</p>
+<p>Protected Overrides Sub WndProc(ByRef m As System.Windows.Forms.Message)<br />
+        Const WM_POWERBROADCAST As Integer = &amp;H218<br />
+        Const PBT_APMRESUMESUSPEND As Integer = 7<br />
+        Const PBT_APMRESUMESTANDBY As Integer = 8</p>
+<p>If m.Msg = WM_POWERBROADCAST Then<br />
+            If m.WParam.ToInt32 = PBT_APMRESUMESTANDBY Or m.WParam.ToInt32 = PBT_APMRESUMESUSPEND Then<br />
+                Timer1.Enabled = False<br />
+                Timer1.Enabled = True<br />
+            End If<br />
+        End If<br />
+        MyBase.WndProc(m)<br />
+    End Sub</p>
+<p>Private Sub Timer1_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Timer1.Tick<br />
+        ' aktuelle Tarifdaten laden...<br />
+    End Sub<br />
+End Class</p>
+<p>Die WndProc()-Methode schaltet dann nur meinen Timer aus und wieder an und schon läuft alles wieder automatisch - bis zur nächsten Schlafenszeit.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

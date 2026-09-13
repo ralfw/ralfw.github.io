@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Full duplex: How I seem to have tricked Clemens Vasters into mentioning me several times in his blog - but in fact probably just was misunderstood — ralfw.de Archiv</title>
+<meta name="description" content="Well, well, fellow German RD Clemens Vasters obviously found some time to read my blog between his job as a (probably fulltime) &quot;architecture consultant&quot; and writing &quot;more code on ">
+<link rel="canonical" href="https://ralfw.de/archiv/2004/full-duplex-how-i-seem-to-have-tricked-clemens-vasters-into-mentioning/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Full duplex: How I seem to have tricked Clemens Vasters into mentioning me several times in his blog - but in fact probably just was misunderstood — ralfw.de Archiv">
+<meta property="og:description" content="Well, well, fellow German RD Clemens Vasters obviously found some time to read my blog between his job as a (probably fulltime) &quot;architecture consultant&quot; and writing &quot;more code on ">
+<meta property="og:url" content="https://ralfw.de/archiv/2004/full-duplex-how-i-seem-to-have-tricked-clemens-vasters-into-mentioning/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Full duplex: How I seem to have tricked Clemens Vasters into mentioning me several times in his blog - but in fact probably just was misunderstood</h1>
+    <div class="doc-meta"><span>16. Mai 2004</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2004/05/16/132673.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2004/full-duplex-how-i-seem-to-have-tricked-clemens-vasters-into-mentioning/</code></span></div>
+    <div class="art"><p>Well, well, fellow German RD <a rel="noopener" href="https://web.archive.org/web/20040619015930/http://staff.newtelligence.net/clemensv/PermaLink.aspx?guid=04a4e6e5-89c9-4d11-959f-0e16ef5ecd4f">Clemens Vasters</a> obviously found some time to read my blog between his job as a (probably fulltime) "architecture consultant" and writing "more code on a monthly basis than some full-time application developers"; so <a rel="noopener" href="https://web.archive.org/web/20040619015930/http://staff.newtelligence.net/clemensv/PermaLink.aspx?guid=2892db4d-e9d7-4fd0-ac62-5dc1b68e24f5">in his blog entry</a> he honors me with some mentions of my recent "discoveries".</p>
+<p>Unfortunately I see some misunderstandings between us. So let me reply on a couple of aspects of his posting:</p>
+<p>:::<em>"The 'onion' [...] resembles the notation that Steve Swartz and I introduced":</em> Well, I´d say, I did not claim, I invented "the onion". And neither invented Steve and Clemens it. It is a common design pattern.</p>
+<p>Also, not any two things looking the same, actually mean the same. Clemens' picture of an onion in his post is a picture of a service. My intention, though, was not to describe a service. Right to the contrary: So far I haven´t made any explicit statement about how I´d say an "application" should be structured. Rather I left this to SOA. I´m (currently) explicitly not concerned with inter service communication.</p>
+<p>:::<em>"What Ralf descibes [...] is in fact a 'data service' as per our definition."</em>: Well, Clemens seems to want to map any circle to a service. But he overlooked that I explicitly said, my (!) resource components (usually) live in the application process. And I mean it. There is no necissity to put data access into a service and deploy it pretty far away from its clients. Sometime it might make sense, sometimes it doesn't.</p>
+<p>:::<em>"Delegating resource access to autonomous services instead of 'just' encapsulating it [...]"</em>: As already said, sometimes it is good to set up a service for accessing a resource. But I don´t want to belittle the option of "just" encapsulating a resource in an in-proc layered component. If you have a hammer, everything looks like a nail. So if you´re working on service infrastructure, like Clemens does, probably most everything looks like a candidate to be made into a service. But as much as I like simplification and unification, I don´t think we should see everything thru service glasses.</p>
+<p>:::<em>"Now... Ralf [is] very concerned about streaming data"</em>: No, I´m not very concerned about it, but saw a deficiency in Microsoft´s message to the developers. Microsoft´s (current) view on data access is expressed in it´s implementation of ADO.NET. And this view leaves out streaming data access (to databases). (No, DataReaders are not enough. And pointing to ADO Classic is not enough either.) I just said, I understood the point many developers wanted to make, when they asked, what to do with huge amounts of data.</p>
+<p>My intention was to give two clear rules: 1. Never use streaming access between frontend and application (service). 2. Streaming access within (!) an application (service) is ok.</p>
+<p><em>:::"Now, I consider data consolidation [...]"</em>: I don´t see, why data consolidation (here: reporting) should be inherent to a data store. As the term says, a data store stores data. Why should it print a report on it? Although traditionally it is like this, it need not to continue to be like this. Consider, for example, "data consolidation" across several data stores. Which data store should be responsible for it?</p>
+<p>Sure, a data store like a database can and should provide aggregation functions, cross-tabs and the like. But it should be devoid of a presentation layer like a report engine.</p>
+<p><em>:::"A reporting rendering tool shat get pre-consolidated data"</em>: I totally agree. A reporting tool should only be concerned with formatting consolidated data. No calculations necessary any more.</p>
+<p><em>:::"Also, Ralf´s proposed delivery of data to a reporting engine in chunks"</em>: I´m not proposing delivery in chunks. My point was just to push data to a reporting engine, rather than let the reporting engine pull it from a resource directly (and even do consolidation work on it). Reporting engines must not circumvent application logic!</p>
+<p>:::<em>"[...] doesn´t avoid [...] co-locate all received data"</em>: I don´t make any statement as to how and where a reporting engine should store data or how it should handle it. If data is consolidated within the application and pushed to the reporting engine in the right order, the reporting engine probably needs not store much data during report production.<br />
+(This is of course may be different, if Clemens means a reporting engine stores all data in an intermediate format first.)</p>
+<p>By the way, if a reporting engine is designed as an application itself, it could host application specific resource components and get streaming pull access to them. That´s fine with me.</p>
+<p>:::"<em>What Ralf leaves a bit in the fog is really how the reporting engine learns of a new reporting job, [...]":</em> Yes, sure, why should I clear the fog. My intention was not to talk much about the details of reporting.</p>
+<p>How should a reporting engine learn about a new job? Maybe by establishing a TCP/IP connection with it and sending some appropriate information? Remember, from the point of view of an application, a reporting engine is a data sink. So streaming push access is allowed.</p>
+<p>Where should results be delivered to a reporting engine? Maybe thru a TCP/IP connection? Maybe thru a service call? It´s the responsibility of the reporting engine´s resource data sink component.</p>
+<p>How to deal with concurrency? What does Clemens mean? Concurrent data access? Or several reporting tasks at the same time?</p>
+<p>:::<em>"Ralf doesn´t mention context and how it is established and also doesn´t loop his solution back to the layering model he found."</em>:  Hm... which context does Clemens mean? In his posting he has a tendency to become a bit obscure when things get interesting (e.g. "context", "but I don´t want to get carried away here"). And what does he mean by "loop back his solution"? I embedded my view on reporting/stream data access in my application model. And I did not intend to be more specific with regard to reporting.</p>
+<p>:::<em>"The reporting service shall be autonomous"</em>: Maybe to Clemens´ surprise this is ok with me. If so, though, it is important, the reporting service cannot circumvent my application logic. It would need to go thru either the application or one of its data source resource components.</p>
+<p>:::<em>"What´s needed is simple a message/call exchange pattern [...]"</em>: Sounds good. Sure there should be duplex communication between services. But this should not be limited to message exchange. Message exchange is good to span larger distances between components. But not all components need to be set far apart. This is why in app architecture picture I distinguish between applications and resources. Applications and frontends or other applications are removed from one another. But applications (or business logic) and resources can reside in close vicinity.</p>
+<p>Again, even though we need to move to more service oriented thinking, not everything is a service.</p>
+<p><em>"Bottom line [...]"</em>: I agree with Clemens here: Sometime pull is good, sometimes push, and to have duplex communication is excellent.</p>
+<p>To wrap it up: I don´t want to replace Clemens' and Steve´s view, but rather complement it or refine it here and there. As much as I like their approach, I still think it provides too few concrete rules. Plus, it starts at a point, where many developers are not yet. Without first changing the developers´ view of application architecture slightly by bringing application logic into the center of their thinking, they won´t be able nor willing to jump on the service bandwaggon. That´s what I´m concerned with.</p>
+<p>First shift application logic into the center of the app architecture view, then explain what happens with frontends and data access. Then wait for this change to settle in. And not before several months (even years?) have passed expect the majority of developers to breath SOA.</p>
+<p>We´ve seen the MTS/COM+ desaster: barely anybody knowing or using Microsoft´s Applicaton Server. This must not happen to the next technology. So, rather than wading knee deep in theoretical discussions I prefer to pick up developers where they are right now and provide them with a "migration path" for their thinking.</p>
+<p>Well, what is left now is to say: Hey, Clemens let´s drink a beer and push the knives back into our boots, ok? ;-) (Upps, look at this, mine was just a rubber knife anyway :-)</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

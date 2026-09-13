@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drill down into a view on application architecture: Communication between frontends and application — ralfw.de Archiv</title>
+<meta name="description" content="In my last blog entry I suggested a new view on basic application architecture (at least for &quot;business applications&quot;). The purpose: to change the patterns in which developers think">
+<link rel="canonical" href="https://ralfw.de/archiv/2004/drill-down-into-a-view-on-application-architecture-communication-betwe/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Drill down into a view on application architecture: Communication between frontends and application — ralfw.de Archiv">
+<meta property="og:description" content="In my last blog entry I suggested a new view on basic application architecture (at least for &quot;business applications&quot;). The purpose: to change the patterns in which developers think">
+<meta property="og:url" content="https://ralfw.de/archiv/2004/drill-down-into-a-view-on-application-architecture-communication-betwe/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Drill down into a view on application architecture: Communication between frontends and application</h1>
+    <div class="doc-meta"><span>14. Mai 2004</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2004/05/14/131988.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2004/drill-down-into-a-view-on-application-architecture-communication-betwe/</code></span></div>
+    <div class="art"><p>In my last blog entry I suggested a new view on basic application architecture (at least for "business applications"). The purpose: to change the patterns in which developers think, so concepts like Application Server no longer are deemed esoteric tools for only a few.</p>
+<p>However, yesterday´s post only showed a very high level picture. Today I want to clarify two things and drill down a bit.</p>
+<p>First, as <a rel="noopener" href="https://web.archive.org/web/20040619190141/http://weblogs.asp.net/cweyer">Christian Weyer</a> pointed out, the picture left it open, if a frontend would be allowed to access a resource directly. The answer of course if no! So the picture now puts the application and the resources in a box, and the only entry point into that box is the application.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/541d9acdd83ca8a7.jpg" /></p>
+<p><em>The frontend is not allowed to access any resource directly.</em></p>
+<p>Second, the question arises, where does SOA (Service Oriented Architecture) fit into my view? As far as I understand SOA, it´s all about communication between services. Since in my view applications are the equivalent of services, I´d say, SOA is concerned with connecting different applications. SOA is about the orange boxes and the red lines in the following picture:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/85bea9e5e69a8861.jpg" /></p>
+<p><em>SOA is about communication between services, so it´s about connecting applications.</em></p>
+<p>Sure, this is a broad generalization, but I guess I´m at least not mistaken when saying, SOA is not concerned with frontends, nor with resource access.</p>
+<p>That said, now for the drill down. Several parts of my view of the application architecture need refinement. Let´s start on the left of the picture. The relationship between frontends and application:</p>
+<p><strong>Frontends interact with the application thru service interfaces.</strong> Whether these are implemented as Web services or Serviced Components or something else, is of no concern here. That´s an implementation detail. <strong>Most important is...</strong></p>
+<ul>
+<li><strong>those interfaces are just plain lists of functions.</strong></li>
+<li><strong>data is exchanged between frontends and application by value. (All parameter data types need to be serializable.)</strong></li>
+</ul>
+<p><strong>Complex data (e.g. database records) needs to be put in a container.</strong></p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/dd5d6791e61d1312.jpg" /></p>
+<p><em>Communication between frontends and application always uses containers for data transport.</em></p>
+<p>That means, communication between frontends and application essentially is message based. All data passed to frontends is disconnected from its source. So don´t even think about scrolling thru some 5,000,000 records in a grid in some WinForms frontend.</p>
+<p>Frontends don´t do any (heavy) data processing. So there should be no need to return large amounts of data to them from the application or pass large amounts of data to the application. Yes, that means, frontends don´t do data import themselves. And frontends also don´t do reporting (on large amounts of data). There is no streaming data access by a frontend!</p>
+<p>If you feel the urge to retrieve large amounts of data (where large means, you don´t trust a dataset with it) whatever component you´re thinking of, it can´t be in the frontend!</p>
+<p>This might sound rigorous and it is. I mean it.</p>
+<p>Why? Because we need firm (!) guidelines for architecting applications. And my opinion is, this is a good guideline for 98% of all business applications. (Ok, maybe just 95% of all business applications ;-)</p>
+<p>It provides several benefits:</p>
+<ul>
+<li>It decouples frontend and application.</li>
+<li>It makes the relationship between frontend and application robust.</li>
+<li>It makes it easy to understand.</li>
+<li>It makes it easy to test.</li>
+<li>It allows for orthogonal services on the service interfaces.</li>
+<li>It assigns clear responsibilities.</li>
+<li>It is the foundation for distributing frontends and application to increase scaleability.</li>
+</ul>
+<p>Does that mean, an application system necessarily is a distributed system? No. But more on that on another day.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

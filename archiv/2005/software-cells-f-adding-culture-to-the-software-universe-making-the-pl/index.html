@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software Cells #F: Adding Culture to the Software Universe - Making the Platform Visible in the Holarchy — ralfw.de Archiv</title>
+<meta name="description" content="Some time has past since my previous posting, which separated the Software Universe as a basic framework for software design from Software Cells as a pragmatic prescription as to h">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/software-cells-f-adding-culture-to-the-software-universe-making-the-pl/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software Cells #F: Adding Culture to the Software Universe - Making the Platform Visible in the Holarchy — ralfw.de Archiv">
+<meta property="og:description" content="Some time has past since my previous posting, which separated the Software Universe as a basic framework for software design from Software Cells as a pragmatic prescription as to h">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/software-cells-f-adding-culture-to-the-software-universe-making-the-pl/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Software Cells #F: Adding Culture to the Software Universe - Making the Platform Visible in the Holarchy</h1>
+    <div class="doc-meta"><span>26. Juni 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2005/06/26/415658.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/software-cells-f-adding-culture-to-the-software-universe-making-the-pl/</code></span></div>
+    <div class="art"><p>Some time has past since <a rel="noopener" href="https://web.archive.org/web/20051101192029/http://weblogs.asp.net/ralfw/archive/2005/06/13/412077.aspx">my previous posting</a>, which separated the Software Universe as a basic framework for software design from Software Cells as a pragmatic prescription as to how to structure Application level holons in general.</p>
+<p>In the meantime I had the chance to apply the Software Universe as well as Software Cells to customer problems and wrote an article on Software Cells. Also a friend working at BEA used it to simplify his message for their <a rel="noopener" href="https://web.archive.org/web/20051101192029/http://dev2dev.bea.com/lpt/a/389">ESB Quicksilver</a> product.</p>
+<p>I'm happy to report, Software Universe/Cells lived up to what I expected in term of making software design easier. But I also realized, some refinements to the model are in order.</p>
+<p>The first refinement I´d like to introduce is a new holon level for the platform software is build/running on. I call it the <em>Culture</em> holon. A Culture holon consist of all the Application holons running on the same platform within a Solution. "Culture" seems to be an appropriate term for this kind of entity, since a platform like .NET or Java defines a set of rules and technologies for software running on them, like a social culture does for the individuals living in it.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/22a0c55f64ee311c.gif" /></p>
+<p>A second change you can see in the above picture is I renamed the Solution level to Product. The word "solution" simply has such a general meaning, it can cause confusion. You need to find solutions to all sorts of problems on all holon levels, so it seems better to not assign the term to a holon level.</p>
+<p>So when you develop software for a customer, you develop a Product. Sounds reasonable, doesn´t it :-)</p>
+<p>This Product in turn consists of one or many Cultures, i.e. pieces of software running on different platforms, e.g. a WinForms frontend talking to Oracle running on Linux.</p>
+<p>Each Culture is made up of one or more Applications, i.e. processes running Hosts as containers for Components.</p>
+<p>And here comes the third change to the holarchy: I dropped the Assembly level. Components consist of Types. That´s it. No intermediate Assembly level anymore. Why? Because assemblies are a platform dependent artifact and don´t really add any "value" to the holarchy. If a developer decides to implement a Component as one or more assemblies is a neglectable detail, I´d say.</p>
+<p>Components contain Types, they draw a boundary around types solving a specific sub-problem.</p>
+<p>So, why are Cultures important? Because they describe another change in communication between holons. In addition to stack based and stream based communication in general there is platform specific and platform independent communication sitting on top of them! Cultures in the holarchy make this explicit - that´s important. Platform independent communication or communication crossing platform boundaries requires different technologies/knowledge than platform specific communication. In addition different platforms offer different technological options, e.g. Hosts.</p>
+<p>With Cultures introduced to the Software Universe, you can´t forget to take platforms into account when thinking about software, you can´t forget to make conscious decisions about the contracts visible to software on other platforms. I think, that´s expressiveness a general model for software needs.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

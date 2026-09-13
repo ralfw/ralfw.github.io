@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software as a poly-hierarchical mesh — ralfw.de Archiv</title>
+<meta name="description" content="I fired a little too fast when I did my previous posting. Although I wouldn´t say what I wrote is wrong, I´d say it´s not in proper shape yet. There are quite some aspects (sic!) t">
+<link rel="canonical" href="https://ralfw.de/archiv/2006/software-as-a-poly-hierarchical-mesh/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software as a poly-hierarchical mesh — ralfw.de Archiv">
+<meta property="og:description" content="I fired a little too fast when I did my previous posting. Although I wouldn´t say what I wrote is wrong, I´d say it´s not in proper shape yet. There are quite some aspects (sic!) t">
+<meta property="og:url" content="https://ralfw.de/archiv/2006/software-as-a-poly-hierarchical-mesh/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Software as a poly-hierarchical mesh</h1>
+    <div class="doc-meta"><span>3. Jan. 2006</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2006/01/03/434365.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2006/software-as-a-poly-hierarchical-mesh/</code></span></div>
+    <div class="art"><p>I fired a little too fast when I did my <a rel="noopener" href="https://web.archive.org/web/20060507020257/http://weblogs.asp.net/ralfw/archive/2005/12/31/434275.aspx">previous posting</a>. Although I wouldn´t say what I wrote is wrong, I´d say it´s not in proper shape yet. There are quite some aspects (sic!) to take into account concerning software design and I´m not yet satisfied with what I have. <a rel="noopener" href="https://web.archive.org/web/20060507020257/http://weblogs.asp.net/ralfw/category/9899.aspx?Show=All">Software Cells and Software Universe</a> was a good starting point, they help a lot in practice - but still they are limiting and need to be refocused. So for the moment you should forget about the "Classifyiing bubbles" part of the previous posting, where I introduced very concrete levels of abstraction for software. They are not entirely wrong, but I´d like to present them differently in the future. However, I´m still content with the new emphasis I put on edges! They will become even more important today.</p>
+<p>Since I´m still not clear about all details of the next evolution of the Software Universe, please regard what follows here as thinking aloud. I just need to put my thoughts down somewhere... and isn´t that the purpose of a blog? ;-)</p>
+<h4>What´s complexity?</h4>
+<p>The longer I try to grasp software in its entirety or its very nature, the more I´m aware of its complexity. Software is not only complicated, no, it is <em>complex</em>. "Complex" stems from the latin <em>complexus</em> meaning <em>to encompass</em>, <em>to braid</em>. So complexity enters whereever different aspects or contexts or viewpoints or logics or systems are interwoven.</p>
+<p>Now, a single context or viewpoint or system usually can be charaterized by a tree, a hierarchy. Such a hierarchy allows us to break up something complicated into smaller, easier to understand pieces. And in the end the tree is the space of all that´s within the system or belongs to a context. Thus a hierarchy defines a boundary between the inside and the outside of a system. Take a formal language as an example: The language definition is a tree of productions describing which sequences of letters are valid sentences and thus belong to the language. Or take the hierarchy of software artifacts constituing an assembly: there´s the assembly at the top, it contains type definitions, they in turn contain data definitions and methods, which contain statements. Or take the organigram of your company as an example: boss at the top, department heads below, clerks and workers below them etc. Or take your body as an example: the whole is you body, but it´s made up of organs, which are made up of cells etc.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/82bf3121b44ad184.gif" /></p>
+<p>So much for describing complicated systems using hierarchies. Now enter complexity: If you take two or more complicated systems and "combine" them, you get complexity. A person for example is a complex entity, since it belongs to several systems at the same time: there is a biological system (human body) which at the same time is part of a sociological system (e.g. society) and at the same time is part of an organizational system (e.g. in a company) and at the same time is part of familial system and at the same time is part of the traffic system etc. (Whereas each of the systems of course can be complex itself.)</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/3471f0e45e025176.gif" /></p>
+<h4>Software is complex</h4>
+<p>Back to software: I think we all agree, software can be described by a tree or hierarchy of bubbles, like I did in my previous posting:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/fe2175e5fe01f669.gif" /></p>
+<p>The exact terms for the nodes in this hierarchy are not important at the moment. My point just is: software can be viewed as a tree of nodes - which are even interconnected.</p>
+<p>Now comes the twist: a single software system can be viewed from several different perspectives...</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/0e9a2f64113f560a.gif" /></p>
+<p>...and each perspective again is defined by its own hierarchy! You determine, what those views are, but the most dominating one sure is the problem domain.</p>
+<p>Whenever you set out to design a new software system, you will start to find it´s hierarchy of parts to fulfill the functional requirements stated by your customer. While you do that, though, you´ll stumble across aspects of the system, that don´t really fit into that view. An encryption component does not really add anything to the functionality, but serves a non-functional security requirement. Or what about the question where to deploy the different parts?</p>
+<p>Both security and deployment (and a lot of other concerns) can be described by their own hierarchies of notions which also contain the software parts you initially set out to find. And that´s where complexity is created: certain entities become part of several hierarchies at the same time. The different hierarchies, so to speak, are braided together at and by those entities forming a poly-hierarchical mesh:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/cfe047ab47b76b5d.gif" /></p>
+<p>The above picture shows just two very simple hierarchies for a software system: on the left side the structural hierarchy of software artifacts is depicted. There is a Solution (in line with the Software Universe) consisting of two Applications. The right side sketches the hardware equipment to run the Solution consisting of a LAN with three computers. These two hierarchies are woven together by mappings between Applications and computers: Which software entity is going to run on which hardware entity? Software and hardware systems are related with each other to form a complex whole. The relationships are transcending the hierarchical boundaries.</p>
+<p>Now add 3 or 5 or 10 views to a software system and make each view more complicated (i.e. staff its hierarchy with more nodes). What you get is a very, very complex overall system.</p>
+<h4>Getting rid of bubbles - or: relationships are everything you need</h4>
+<p>So far, what I said is not really new, even if you haven´t thought of software like this. It´s just the nature of complex systems, software being one of it. Nevertheless I thought, laying the grounds for what I´m gonna say now, would be helpful. Ok, buckle up... here comes the "thinking aloud" part...</p>
+<p>Looking at the picture above, we can see two kinds of relationships: a hierarchical relationship (some entity contains others) and a relationship across hierarchies (some entity is connected to some other entity in another hierarchy). Also, entities can of course be connected within a hiearchy (e.g. to signify communication between them).</p>
+<p>In addition to the relationships there are entities. When you first think about entities you sure view them as tangible "hard facts". I´d like to ask you, though, to not do so. Don´t see those entities as blobs or black boxes - but as bubbles with structure. Each bubble then consists (or can consist) of smaller bubbles. And those bubbles again can consist of even smaller bubbles etc. What you then end up with is... bubbles or entities are not so important anymore. What´s more important are the relationships between bubbles. Bubbles so to speak shrink to dots connected to other dots. And then you promote connections to the levels of dots, you make connections as tangible as bubbles thereby giving up any difference between vertices and edges, bubbles and connections.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/940417f912c633ad.gif" /></p>
+<p>What you´re left with are just binary relations.</p>
+<p>Let that sink in a minute and read <a rel="noopener" href="https://web.archive.org/web/20060507020257/http://weblogs.asp.net/ralfw/category/10111.aspx">my postings on Pile</a>, because I think, Pile could help to decribe a complex system like software. I´d even say it shines when put to this task.</p>
+<h4>Using Pile to describe software systems</h4>
+<p>We´ve now reduced software to the most basic concept: associations. (But fear not, if you read up on Pile, you´ll see, your code and everything is not lost ;-) Software with arbitrary possible viewpoints can be viewed as a complex associative system with arbitrary granularity, with any number levels of abstractions encoded in it. They beauty of having only associations in the Pile way is, there is absolutely no redundancy, and there is natural poly-contextual interconnection of every "notion" without hitting the wall of any hierarchical system or notation.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/ad42a74ce7f5a369.gif" /></p>
+<p>Although the above picture simplyfies the Pile describing a software system (e.g. there are only two contexts, relations are not connected to detailing relations) I hope it becomes clear, how regular and homogeneous a pure associative description of software could be. There is no limit to the detail you can model using Pile associations. You can go right down to single bits without leaving the Pile model.</p>
+<p>Since you probably have some XML and/or RDBMS background let me point out again the major differences between Pile and other data description models:</p>
+<ul>
+<li>With Pile every artifact or structure or relationship already encoded in the system is reused.</li>
+<li>With Pile connecting any artifact with any other is possible at all times. You need not think of that beforehand.</li>
+<li>With Pile any relation can be refined in whatever way you like.</li>
+</ul>
+<p>The essence of this is: If we´d use Pile instead of XML or an RDBMS we can start representing software in almost any way without painting ourselves into a corner. You could start by encoding (or assimilating, as it is called) just one hierarchy in a Pile, e.g. the software artifacts. Think of doing that in a very, very, very fine grained way, e.g. representing single letters with relations and building words and files etc. on top of those relations. Then your next idea might be to augment your system with logical categories. You assimilate a hierarchy of categories into the Pile and can associate any category with any level of detail of your software artifacts. You could even assign categories to single statements (if, for example, you represented you code as an abstract syntax tree). Or you assimilate the hardware target system into the Pile - down to single processors. You then could easily relate LAN sub-systems or machines or processes or even processors to software artifacts, e.g. mapping assemblies to run in a certain container process on a certain machine.</p>
+<p>At any time you could regenerate your views and completely new views from the Pile by traversing the relations - and as long as you were careful to assimilate any information in a very fine grained way, you´d not even have to try to think of all the possible systems or contexts you might someday want to store in such a "database". At any time you can attach new relations to any relation there already is. If that´s not extensible, I don´t know what is ;-)</p>
+<p>I find such a unifying, homogeneous, and inherently flexible model very intriguing for describing software. Instead of juggling an ever increasing number of tables in an RDBMS or trying to keep a growing amount of XML files in sync, you just manage one network of associations.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

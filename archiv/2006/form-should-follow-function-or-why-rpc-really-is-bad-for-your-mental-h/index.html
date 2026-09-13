@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Form should follow function - or: Why RPC really is bad for your mental health — ralfw.de Archiv</title>
+<meta name="description" content="The 3GL syntax hides all the low level details like allocating a stack frame, pushing actual parameters on the stack, jumping to the subroutines address, and later retrieving its r">
+<link rel="canonical" href="https://ralfw.de/archiv/2006/form-should-follow-function-or-why-rpc-really-is-bad-for-your-mental-h/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Form should follow function - or: Why RPC really is bad for your mental health — ralfw.de Archiv">
+<meta property="og:description" content="The 3GL syntax hides all the low level details like allocating a stack frame, pushing actual parameters on the stack, jumping to the subroutines address, and later retrieving its r">
+<meta property="og:url" content="https://ralfw.de/archiv/2006/form-should-follow-function-or-why-rpc-really-is-bad-for-your-mental-h/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Form should follow function - or: Why RPC really is bad for your mental health</h1>
+    <div class="doc-meta"><span>23. Feb. 2006</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net/ralfw/438879" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2006/form-should-follow-function-or-why-rpc-really-is-bad-for-your-mental-h/</code></span></div>
+    <div class="art"><p>What is a subroutine call like the following?</p>
+<p>int r = Calc(a, b);</p>
+<p>It is an abstraction and a promise!</p>
+<p>It is an abstraction of something like this</p>
+<p>push a<br />
+push b<br />
+call 1234<br />
+pop r</p>
+<p>The 3GL syntax hides all the low level details like allocating a stack frame, pushing actual parameters on the stack, jumping to the subroutines address, and later retrieving its result from the stack. Maybe even no stack is used at all. Maybe the parameters are passed in registers. In order to solve your customers problem you don´t want to be concerned with all this nitty gritty detail and any machine dependencies.</p>
+<p>In addition the subroutine is a promise to return a result pretty fast. It says, "Hey, you´ll get the requested result in just a moment. I´ll be back in a hurry. It´s worthwhile to wait right here." This promise is implicit, though. The usual notation like above does not contain this promise. Rather it stems from your practice with such kind of subroutines. And you become aware of it whenever a subroutine takes an overly long time to return and thus hampers the performance of your program.</p>
+<h3>Form follows function promise</h3>
+<p>Now, let´s look at a couple of other well known abstractions and promises:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/41f4d4c715810d2a.gif" /></p>
+<p>What are the abstractions? Instead of doing the switching of lines you use a telephone and dial a number. Instead of growing vegetables and milking cows yourself, you go to the supermarket. Instead of going going to a theater play or produce a movie yourself you switch on the TV. (Yeah, I know, maybe the "abstractions" are not 100% correct. But in any case, these tokens of civilization hide uncomfortable details, don´t they? They make life easier for you, don´t they? Since making something easier is the purpose of abstraction, I´d say they are abstraction. Ok?)</p>
+<p>And what are the promises? The phone promises a direct link and fluent conversation with your beloved ones. With today´s mobile phones even "... whereever and whenever you like!" is appended to it. The super market promises fresh food and a huge choice almost 24x7. And the TV promises at least moving pictures - sometimes even matching your current mood.</p>
+<p>This all great, I´d say. We love these abstractions and promises. And we are very used to their form. Maybe we even love their form, because it´s so easy to use. Their form therefore is a representation of their services and promises we are very familiar with. Or to turn it around: Whenever we encouter the form, we immeditately associtate a certain promise with it.</p>
+<p>Now, what happens, if the promise is not fullfilled? We are disappointed. If you want to talk to your friend on the phone to impart some exicting news and keep hearing just her answering machine, you are frustrated. If you go to the super market and they don´t carry the type of bread or beer, you are frustraed. If you switched on the TV and all you could see were interviews or stills of an exciting event, you´d be frustrated.</p>
+<p>If some technical gadget or service does not keep its promise... you´d rather like to know so you can switch to an alternative that´s better suited to what you want or what is available.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/6d98c7f50120a346.gif" /></p>
+<p>If communication via phone degrades to leaving messages on answering machines, you probably will resort to letters, faxes or emails as means for asynchronous communication. If a super market does not provide fresh food next to beer and next to magazines you probably prefer to get really fresh vegetables at a local farmers´ market with the added chance to actually bargain your price. And if a TV program deteriorates to pretty pictures, why not look at them in a nice book at any time and at any place and as often as you want?</p>
+<p>Letters, farmers´ markets,  and books hold different promises than phones, super markets, and TVs. So their form is different, it´s optimized for their kind of services.</p>
+<p>Why am I talking about phones, letters, books in a posting on software? Because I believe in "form follows function" - and I guess, you do so too. What strikes me odd, then, is how little we care about form when it comes to communication in today´s distributed software.</p>
+<p>To say it bluntly: If a subroutine call is the accepted form for fullfilling the promise of swift and synchronous execution of a request, then, why would anyone use the same form, if this promise cannot be kept?</p>
+<p>I have to admit, for a long time I liked the programming model of .NET Remoting and RPC-style Web services, or even the former DCOM. But just recently I came to the conclusion that using the syntax of subroutine calls is fundamentally wrong whenever the promise that´s tied to it cannot be kept, i.e. when what happens under the hood is completely different.</p>
+<p>I´m not just talking about switching to message oriented "thinking" when designing distributed software. I´m talking about the need for actually seek appropriate manifestations for communication.</p>
+<p>If you look at a phone or book you immediately know what kind of service you can expect from it. Also you have a pretty clear idea of the quality of the service.</p>
+<h3>RPC is the wrong form</h3>
+<p>When you look at a subroutine call, though, you might have an idea of the service, the subroutine´s function - but nowadays you cannot really know anything about the non-functional aspects of the service. Will it keep the promise of the subroutine call syntax and return fast? Will the service execute synchronously or asynchronously? Will the service run in the same address space, on the same thread, or on a different machine in a far away country? Can I be sure the request reaches the service worker at all? Is the service worker available? Can I be sure to receive the result?</p>
+<p>By looking at</p>
+<p>int r = myservice.Calc(a, b);</p>
+<p>you can´t answer any of these questions. That´s what I find fundamentally wrong with today´s communication offerings - even with WCF. Because it does not really make a difference if I write the above or the following:</p>
+<p>RequestMessage req = new RequestMessage(a, b);<br />
+ResponseMessage resp = myservice.Calc(req);<br />
+int r = resp.result;</p>
+<p>The latter form is only slightly different. It´s still a subroutine call promising at least guaranteed, synchronous and immediate processing of my request.</p>
+<p>So what I want to say is:</p>
+<p><strong>Whenever the promise of a subroutine call syntax - guaranteed, synchronous and immediate processing - cannot be kept by a service, then don´t use subroutine call syntax for communication.</strong></p>
+<p>You´re asking why? Well, it´s bad for your mental health ;-) Mental health, I´d say, depends on trust. The less you can trust an environment, the more uneasy you feel - leading to paranoia in extreme cases. Trust is fundamental for your wellbeing. And trust starts with looking at something and immediately be able to categorize it, to infer its properties. But if you look at the above subroutine call you cannot infer its properties, which leads to a lack of trust. You don´t necessarily get what you see. And that´s bad - as you might also understand if you´re a proponent of WYSIWYG ;-)</p>
+<p>Fundamental for productive and healthy communication is to be clear and outspoken. Say what you mean, make obviouse what you can do and cannot do. And I think that´s also true for any communication related with software. For example that´s the reason everybody likes understandable and informative subroutine names.</p>
+<p>If you subscribe to that, then you should understand why I think RPC remote (or non-stack based) communication mostly (or maybe even always) is bad for your mental health. It violates the above basic requirements for any communication because it suggests non-functional properties it mostly does not have.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

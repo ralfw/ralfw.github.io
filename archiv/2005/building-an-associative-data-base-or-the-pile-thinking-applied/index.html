@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Building an associative (data)base - or: The Pile thinking applied — ralfw.de Archiv</title>
+<meta name="description" content="Ok, finally - after another digression on Pile fundamentals (and I guess, more needs to be said, but not right now) - I´ll quickly describe my prototype implementation of a Pile en">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/building-an-associative-data-base-or-the-pile-thinking-applied/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Building an associative (data)base - or: The Pile thinking applied — ralfw.de Archiv">
+<meta property="og:description" content="Ok, finally - after another digression on Pile fundamentals (and I guess, more needs to be said, but not right now) - I´ll quickly describe my prototype implementation of a Pile en">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/building-an-associative-data-base-or-the-pile-thinking-applied/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Building an associative (data)base - or: The Pile thinking applied</h1>
+    <div class="doc-meta"><span>27. Dez. 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2006/01/04/434033.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/building-an-associative-data-base-or-the-pile-thinking-applied/</code></span></div>
+    <div class="art"><p>Ok, finally - after <a rel="noopener" href="https://web.archive.org/web/20060106092022/http://weblogs.asp.net/ralfw/archive/2005/12/26/434002.aspx">another digression on Pile fundamentals</a> (and I guess, more needs to be said, but not right now) - I´ll quickly describe my prototype implementation of a Pile engine as well as a Pile agent/client to use it for searching in plain text files.</p>
+<p>As stated earlier, the general architecture for my little full text search solution is simple:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/d4fc894b20704e6e.gif" /></p>
+<p>There is just one application (process) hosting the GUI frontend...</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/c4dab0db019e7ab8.gif" /></p>
+<p>...the Pile agent which actually does the full text search, and the basic Pile management code split into a Pile engine and a Pile space engine.</p>
+<p>Of course much can be improved in my code. So take it as a first prototype and venture into the realm of Pile. It´s implements just an in-memory Pile and is not fit for multithreading. But it helped me to switch my thinking from data to associations.</p>
+<p>Lets start from the bottom up...</p>
+<h3>A prototype Pile space engine</h3>
+<p>The Pile space engine is the low level component encapsulating a Pile. The Pile space engine provides an interface to manage the 2D Pile handle space described in <a rel="noopener" href="https://web.archive.org/web/20060106092022/http://weblogs.asp.net/ralfw/archive/2005/12/21/433714.aspx">my previous posting</a>. Remember the coordinate system?</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/e93b2df145393446.gif" /></p>
+<p>To view relations as points in this 2D space with an additional 3rd axis to map them back to their parents, is as fundamental as you can get, I think. Each relation is a point addressed by an x and y coordinate handle(r)=(handle(x), handle(y)). Each such point in the 2D space has a value, it´s handle, which also encodes the relation´s Qualifier.</p>
+<p>x and y are the parent relations of r. And the x/y-coordinates are the handles of the parents.</p>
+<p>To map a relation back to it´s parents the z-axis is introduced. Each point on it corresponds to a relation and contains the handles of its parents. (handle(x), handle(y)) = z(handle(r)).</p>
+<p>How such a Pile space is implemented, I though, should be hidden within a component or at least behind an interface. So I set up this C# interface to describe all necessary operations to create and traverse relations in the Pile space:</p>
+<p>namespace pile.engine32.contracts<br />
+{<br />
+    public interface IPileHandleSpace<br />
+    {<br />
+        int CreateHandle(byte qualifier);<br />
+        void SetHandle(int xHandle, int yHandle, int h);  </p>
+<p>int[] GetCorrdinatesForHandle(int h);<br />
+        int GetHandleByCoordinates(int xHandle, int yHandle);<br />
+        int[] FindHandlesByCoordinate(int coordHandle, bool followNormativeManner, byte qualifierFrom, byte qualifierTo);  </p>
+<p>byte GetQualifier(int handle);<br />
+    }<br />
+}</p>
+<p><em>CreateHandle()</em> creates a new handle for a given Qualifier out of nothing. The Pile space engine does not set up a relation by itself, but just manages some 2D space of handles. So there is no need to pass informations on parents of a new relation to <em>CreateHandle()</em>.</p>
+<p><em>SetHandle()</em> stores a handle at the given coordinates in the space. Also it registers the handle on the z-axis to be able to get at its parents.</p>
+<p><em>GetCoordinatesForHandle()</em> retrieves the parent handles for a handle. The int-array contains to items - or is empty is the handle does not exist.</p>
+<p><em>GetHandleByCoordinates()</em> retrieves the handle at a specific x/y-coordinate in the Pile space.</p>
+<p><em>FindHandlesByCoordinate()</em> retrieves for a given handle all the handles to which it is a x- or y-coordinate. Whether <em>coordHandle</em> is to interpreted as an x- or y-coord signifies <em>followNormativeManner</em>. It the flag is <em>true</em>, the handle is the x-coord, otherwise the y-coord. The Qualifier parameters are supposed to constrain the handles returned to a range of Qualifier values. Example: Retrieve all handles, where <em>coordHandle</em> is the x-coord (<em>followNormativeManner == true</em>) and the Qualifier is between 10 and 12.</p>
+<p>Relations are represented by 32-bit integers in my Pile implementation. Qualifiers are 8-bit values.</p>
+<p>For each Qualifier the Pile space engine keeps a counter. Creating a new handle thus is just a matter of incrementing this counter.</p>
+<p>private int[] qualifierCounters = new int[256];</p>
+<p>public int CreateHandle(byte qualifier)<br />
+{<br />
+    return ((int)qualifier) &lt;&lt; 24 | ++qualifierCounters[qualifier];<br />
+}  </p>
+<p>Since the 2D space is only sparsely populated with handles, it cannot be represented by a 2D-array. I thus chose a two level data structure consiting of dictionaries:</p>
+<p>private Dictionary<int, Dictionary\<int, int>> xAxis = new Dictionary<int,Dictionary\<int,int>>();<br />
+private Dictionary<int, Dictionary\<int, int>> yAxis = new Dictionary<int, Dictionary\<int, int>>();  </p>
+<p><em>xAxis[xHandle]</em> stores a list of y-handles together with the handles both are pointing to:</p>
+<p><em>rHandle = xAxis[xHandle][yHandle]</em></p>
+<p>This is sufficient for <em>GetHandleByCoordinate()</em> and <em>SetHandle()</em> and <em>FindHandlesByCoordinate()</em> with <em>followNormativeManner==true</em>. If <em>followNormativeManner</em> is <em>false</em>, though, a second axis data structure is needed to be able to retrieve handles via their y-parent-coordinate.</p>
+<p><em>rHandle = yAxis[yHandle][xHandle]</em></p>
+<p>The z-axis is very simple to model:</p>
+<p>private Dictionary<int, int[]> zAxis = new Dictionary<int,int[]>();</p>
+<p>This implementation of a Pile space works pretty well as a proof-of-concept. To become production ready, though, many things have to be improved. No thread-safety yet, no persistence yet, no transactions, no security yet, no deletions yet etc. Also the data structures need to become more efficient; currently lots of RAM is needed to hold all the relations for a simple text. But that´s all a matter of optimization. My concern for now just was to show (myself), how a Pile engine in general could work.</p>
+<p>Now, that I know, for many improvements it will be sufficient to change just the implementation of the Pile space engine. As long as no changes to the interface are needed, layers on top of it will not be affected. (In fact I alreads implemented a second Pile space engine which replaced all in-memory data structures with simple database tables. It used the table-oriented API of <a rel="noopener" href="https://web.archive.org/web/20060106092022/http://www.vistadb.net/">VistaDb</a>, a nice small SQL database. Unfortunately, though, this implementation of a persistent Pile space engine was very naive and had very poor performance. However, it showed at least, how easy it is, to replace on Pile space engine implementation with another. Since then, though, I´ve learned a bit about how a Pile space can be partitioned as to be able to swap in and out smaller pieces. But that´s maybe a topic of another posting...)</p>
+<h3>A prototype Pile engine</h3>
+<p>The layer above the Pile space engine knows about relations and manners. It also knows about parents and children and Terminal values. Most of the methods of the Pile engine, though, are very thin and just more of less delegate their work to the Pile space engine. The so to speak just translate between terminologies, from relations to Pile space and back.</p>
+<p>namespace pile.engine32<br />
+{<br />
+    public class PileEngine<br />
+    {  </p>
+<p>public class ParentRelations<br />
+        {<br />
+            private int nParent, aParent;  </p>
+<p>internal ParentRelations(int nParent, int aParent)<br />
+            {<br />
+                this.nParent = nParent;<br />
+                this.aParent = aParent;<br />
+            }  </p>
+<p>public int NormativeParent<br />
+            {<br />
+                get<br />
+                {<br />
+                    return nParent;<br />
+                }<br />
+            }  </p>
+<p>public int AssociativeParent<br />
+            {<br />
+                get<br />
+                {<br />
+                    return aParent;<br />
+                }<br />
+            }<br />
+        }     </p>
+<p>public int CreateTop()...  </p>
+<p>public ParentRelations GetParentRelations(int childRelation)...  </p>
+<p>public int GetChildRelation(int normativeParentRelation, int associativeParentRelation)...  </p>
+<p>public byte GetRelationQualifier(int relation)...  </p>
+<p>public int CreateChildRelation(int normativeParentRelation, int associativeParentRelation, byte qualifier)...<br />
+        public int CreateChildRelation(int normativeParentRelation, int associativeParentRelation, byte qualifier, out bool childAlreadyExisted)...  </p>
+<p>public int[] FindNormativeChildRelations(int normativeParentRelation)...<br />
+        public int[] FindNormativeChildRelations(int normativeParentRelation, byte qualifier)...<br />
+        public int[] FindNormativeChildRelations(int normativeParentRelation, byte qualifierFrom, byte qualifierTo)...  </p>
+<p>public int[] FindAssociatveChildRelations(int associativeParentRelation)...<br />
+        public int[] FindAssociatveChildRelations(int associativeParentRelation, byte qualifier)...<br />
+        public int[] FindAssociatveChildRelations(int associativeParentRelation, byte qualifierFrom, byte qualifierTo)...<br />
+    }<br />
+}  </p>
+<p><em>CreateTop()</em> returns a relation without parents. It´s called by a Pile agent to create a representation for a Terminal value or to create a System Definer. The Pile agent needs to keep track of which handle belongs to which Tv.</p>
+<p><em>CreateChildRelation()</em> on the other hand creates a new relation from two parent relations. Because two particular parent relations can only be related once by a child relation, the method returns this child relation if both parents should have been associated before:</p>
+<p>public int CreateChildRelation(int normativeParentRelation, int associativeParentRelation, byte qualifier, out bool childAlreadyExisted)<br />
+{<br />
+    int h = phs.GetHandleByCoordinates(normativeParentRelation, associativeParentRelation);<br />
+    if (h == 0)<br />
+    {<br />
+        h = phs.CreateHandle(qualifier);<br />
+        phs.SetHandle(normativeParentRelation, associativeParentRelation, h);<br />
+        childAlreadyExisted = false;<br />
+    }<br />
+    else<br />
+        childAlreadyExisted = true;  </p>
+<p>return h;<br />
+}</p>
+<p>The method first checks, if the child relation already exists. If not, it creates a new handle for it and stores it at the coordinates of the parent relations.</p>
+<p><em>GetChildRelation()</em> returns the child relation of both parents - or 0 if it does not exist.</p>
+<p><em>GetRelationQualifier()</em> extracts the Qualifier from a relation´s handle.</p>
+<p><em>Find...ChildRelations()</em> returns an array of relations in the specified manner and optionally matching the Qualifiers passed in. The <em>Find...()</em> methods are important when searching in a Pile, because often many relations need to be traversed to check, if the lead to the relation looked for.</p>
+<h3>A prototype full text search Pile agent</h3>
+<p>The Pile agent sits on top of the Pile engine and implements a domain specific solution: search for patterns in plain text files. Only the Pile agent knows, which System Definers, Terminal values and Qualifiers are needed. Usage of the <em>PileAgent</em> class whose methods you see below is very simple. To load texts into the Pile call one of the <em>StoreText()</em> methods:</p>
+<p>PileAgent pa = new PileAgent();<br />
+int tFox = pa.StoreText("The quick brown fox\r\njumps over the lazy dog.");<br />
+int tPeter = pa.StoreText("Peter Piper\r\npicked a pack\r\nof pickled peppers.");</p>
+<p>Pile calls loading data into a Pile <em>assimilating</em> it. It kinda gets "sucked in" and "shreddered" and so to speak looses its identity. You can´t see it anymore as one unit of data. There are only relations of which some are new and other have existed before. But be assured, you can retrieve the text from the Pile, anytime you want :-) What is retrieved, though, is not the original text, but something that looks exactly like it. The text you get back is generated from the associtations in the Pile like a picture in a computer game is generated from an internal model of the game´s world.</p>
+<p>For the Pile agent call one of the <em>Retrieve...()</em> methods. For an assimilated text pass in the handle you got back from <em>StoreText()</em>:</p>
+<p>Console.WriteLine(pa.RetrieveText(tFox));</p>
+<p>Of course the purpose of a full text search Pile agent is searching for patterns and returning all texts containing it. To do this, call <em>FindTexts()</em> and get only the lines with the pattern generated:</p>
+<p>TextFound[] tf = pa.FindTexts("peter", false);  </p>
+<p>foreach(TextFound t in tf)<br />
+    foreach(int l in t.LinesHandles)<br />
+        Console.WriteLine(pa.RetrieveLine(l));</p>
+<p>A <em>TextFound</em> instance represents one texts in which the pattern was found with all the lines containing it. Text as well as lines are returned as relation handles.</p>
+<p>This is a minimal API for a full text search Pile agent. No methods to delete texts, no methods to enumerate the contents of the Pile, no persistence. But for loading texts and searching them it´s ok. Here´s the list of all public (and some private) methods:</p>
+<p>public int StoreText(System.IO.TextReader tr)...<br />
+public int StoreText(string text)...<br />
+private int StoreLine(string text)...  </p>
+<p>public string RetrieveText(int handleOfText)...<br />
+public string RetrieveLine(int handleOfLine)...<br />
+private System.Text.StringBuilder ConstructLine(int handle)...<br />
+private void ConstructStringFromRelations(System.Text.StringBuilder sb, int handle)...  </p>
+<p>public class TextFound<br />
+{<br />
+    ...  </p>
+<p>public int TextHandle...<br />
+    public int[] LineHandles...<br />
+}  </p>
+<p>public TextFound[] FindTexts(string pattern, bool caseSensitiveComparison)...</p>
+<p>If you want to try the Pile prototype application now, <a rel="noopener" href="https://web.archive.org/web/20060106092022/http://weblogs.asp.net/ralfw/admin/EditPosts.aspx#download">download</a> it, assimilate some texts, and check out how long it takes to search for patterns of several sizes. You can find suitable texts at Project Gutenberg (e.g. <a rel="noopener" href="https://web.archive.org/web/20060106092022/http://www.gutenberg.org/dirs/etext99/1ws2611.txt">Hamlet</a>, <a rel="noopener" href="https://web.archive.org/web/20060106092022/http://www.gutenberg.org/dirs/etext97/1ws3410.txt">MacBeth</a>, <a rel="noopener" href="https://web.archive.org/web/20060106092022/http://www.gutenberg.org/dirs/etext90/kjv10.txt">King James Bible</a> (4.5 MB), or <a rel="noopener" href="https://web.archive.org/web/20060106092022/http://www.gutenberg.org/dirs/etext05/koran09ba.txt">The Koran</a> (1,44 MB)) or take the RFC of your choice (e.g. <a rel="noopener" href="https://web.archive.org/web/20060106092022/http://www.faqs.org/rfcs/rfc2616.html">HTML</a>, or <a rel="noopener" href="https://web.archive.org/web/20060106092022/http://www.faqs.org/rfcs/rfc2821.html">SMTP</a>).</p>
+<h4>Text representation</h4>
+<p>You now know how to use the Pile agent. But you sure are also interested in how it works and uses the Pile engine. So let me start with how texts are represented in the Pile.</p>
+<p>As Terminal values I´ve chosen the well known basic 256 characters. For each the Pile agent creates a Top as well as a Root. The Roots, so to speak, are the representations of the Tops within a specific context. This context is spanned by a System Definer.</p>
+<p>The Pile agent has two System Definers: One to keep track of assimilated texts, one for the low level representation of text lines. (I´m not satisfied with this implementation anymore, though. But it works :-) So I leave it as is for now.)</p>
+<p>Even though when implementing the Pile agent I did not define a formal schema, you can think of it like this:</p>
+<p><em>Composit Relations:</em>FullTextPile ::= { Text } .<br />
+Text ::= { line } .</p>
+<p><em>Value Relations and Terminal values:</em>line ::= { letter } .<br />
+letter ::= "A" | "B" | ... | "a" | "b" | ... .</p>
+<p>The "mesh of relations" then consists of three parts:</p>
+<ol>
+<li>There are the Terminal values outside the Pile with their internal representations, the Tops.</li>
+<li>There are Roots and the relations built on top of them to represent individual lines of text. Their tree starts at the <em>sdLetterRoots</em> System Definer.</li>
+<li>There are the relations for texts and lines starting at the <em>sdText</em> System Definer.</li>
+</ol>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/0e11968d7ca19d6a.gif" /></p>
+<p>As you can see, there are two "logics" or contexts or systems in one Pile. One system concerned with handling raw texts lines represented by a single relation on top of a binary tree. And one system concerned with managing texts and lines - and connecting those lines to the text line relations in the other system. The purple relations in the above picture so to speak are transcending the text logic to reach into the basic letter logic.</p>
+<h4>Retrieving text</h4>
+<p>To retrieve text from the above associative structure is easy. If you have a handle of a text or line in your hand, you just recursively traverse the tree of relations down to the Roots or Tops and assemble it letter by letter. See ConstructStringFromRelations(), it´s just some 15 lines of code. Very easy. <em>RetrieveLine()</em> and <em>RetrieveText()</em> build on top of this method.</p>
+<h4>Storing text</h4>
+<p>Storing text or assimilating it into the Pile is a little more difficult, but still straightforward. <em>StoreLine()</em> does it in some 50 lines of code. <em>StoreText()</em> builds on it and just splits the text to store into individual lines and binds together the assimilated lines under a relation for the whole text. Since there is no order in the texts, all text relations have the <em>sdTexts</em> System Definer as their normative as well as associative parent.</p>
+<p><em>StoreLine()</em> first creates relations for pairs of letters in the line. For "The quick brown fox" this would be:</p>
+<p>Th=("T", "h")<br />
+e_=("e", "_")<br />
+qu=("q", "u")<br />
+ic=("i", "c")<br />
+etc.</p>
+<p>Then it creates relations for pairs of those relations, e.g.</p>
+<p>The_=(Th, e_)<br />
+quic=(qu, ic)<br />
+etc.</p>
+<p>This process of pairing is continued, until only one relation representing the whole text line is reached. It´s the top of a binary tree and is returned from <em>StoreLine()</em> to be connected to the relation representing the whole text.</p>
+<p>Two things are to note here:</p>
+<ol>
+<li>If a relation already exists, e.g. Th or quic, because it has been created while assimilating some other text, it is reused!</li>
+<li>Representing a letter of 1 byte with a handle of 4 bytes and connecting two letters with a relation resulting in 12 bytes (for all three handles) sounds like wasting space. But in fact in the long run space is saved. Consider the King James Bible: It´s some 4.5 million bytes, but requires only some 800,000 relations amouting to some 3.2 million bytes. Even though the prototype Pile application uses up much more space, this example should show, using relations is not per se wasting precious bytes.</li>
+</ol>
+<h4>Searching for text</h4>
+<p>Search for patterns in the assimilated texts certainly is the most difficult part of the Pile agent. It took me some 200 lines of code and a couple of days to get it right (or to be precise: almost right ;-) <em>FindTexts()</em> works pretty well, but is not error free yet). A detailed description I´ll leave for some other time, but to get you started in analysing my code, let me explain the basic approach, which is characteristic for Pile applications:</p>
+<p>When searching for a pattern, e.g. "the", you start at the bottom of the binary trees representing the texts. That means, you start at the Roots of the system.</p>
+<p>The algorithm of <em>FindTexts()</em> can be sketched like this:</p>
+<ul>
+<li>Set up a list of relations for the characters in the pattern for look for. That means, find the Root for the letters "t", "h", and "e". The list is called <em>followers</em>.</li>
+<li>Take the first relation and move it to a list of <em>firsts</em>.</li>
+</ul>
+<p>While searching, the pattern is split in two parts: On the left are the relations already found matching the first n letters of the pattern, e.g. the relation th, since "th" has already been found. On the right are the remaining letters that still need to be matched and which follow the first letters, e.g. "e".</p>
+<p><em>firsts</em> needs to be a list, since there might be many locations in a Pile, where a sub pattern occurs, e.g. many lines in which "th" is present. And each of these locations has to be checked, if it also matches the following character.</p>
+<p>With <em>firsts</em> and <em>followers</em> in hand...</p>
+<p>Repeat as long as there are follower characters<br />
+    Repeat for each relation in <em>firsts</em><br />
+        Get the next follower<br />
+        Find a path from the current <em>firsts´</em> relation to the follower<br />
+        If there exists such a path, then remember the relations at the top of this path and add them to the <em>firsts</em> list for the next round</p>
+<p>The difficult part is "Find a path". This really made me scratch my head a lot. You´ll find my solution in the method <em>SearchValley()</em>. The algorithm is called <em>valley search</em> since you start from some relation closer to the roots, wander the binary tree of relations within a line down closer to the top, then wander it up again to the roots.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/a7a815fd90ce137f.gif" /></p>
+<p>You see the "valley" in the picture: the red arrows sketching the search path are going down and up again, like through a valley.</p>
+<p>This Valley Search is not so easy, because you need to consider going down relations along the associative and then normative manner and then going back up along the associative and then normative manner. If there was just one line of text and one location for a pattern within this line, then all would be pretty easy. But many locations in many lines... you really need to keep track in your algorithm of where you are, which path you follow. Recursion helps, though :-)</p>
+<p>But let the details of the search algorithm not deter you from the basic search paradigm: When searching in a Pile you start at the Roots! That´s the fundamental insight you should take away from here.</p>
+<h3>Download</h3>
+<p>You can download the prototype Pile application from my website <a rel="noopener" href="https://web.archive.org/web/20060106092022/http://eh17.s5.domainkunden.de/download/prototype.pile.engine.zip">here</a>. Check it out, toy around with it. I hope you find your way around in my code. I at least tried to structure it so it makes sense to you.</p>
+<p>You need Microsoft Visual Studio 2005 (!) for it to compile. But I guess the express edition, which is very cheap or altogether free, will do.</p>
+<p>Let me know what you think, if you <a rel="noopener" href="https://web.archive.org/web/20060106092022/mailto:info@ralfw.de?subject=Prototype%20Pile%20application">like</a>.</p>
+<p>I guess, this will be the last posting on Pile for a while. I need to learn more about it. I need to move on to other projects I unduely neglected because I´m so infatuated with Pile ;-) But after having written all this I now kinda feel relieved.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

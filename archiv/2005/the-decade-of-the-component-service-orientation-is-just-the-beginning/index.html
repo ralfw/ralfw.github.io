@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Decade of the Component - Service orientation is just the beginning — ralfw.de Archiv</title>
+<meta name="description" content="I guess, before I start my day, I need to get this out of my system: You know what´s happening right now? It´s the decade of the component! The 1970/80ies were the decade of struct">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/the-decade-of-the-component-service-orientation-is-just-the-beginning/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Decade of the Component - Service orientation is just the beginning — ralfw.de Archiv">
+<meta property="og:description" content="I guess, before I start my day, I need to get this out of my system: You know what´s happening right now? It´s the decade of the component! The 1970/80ies were the decade of struct">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/the-decade-of-the-component-service-orientation-is-just-the-beginning/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>The Decade of the Component - Service orientation is just the beginning</h1>
+    <div class="doc-meta"><span>6. Dez. 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2005/12/06/432455.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/the-decade-of-the-component-service-orientation-is-just-the-beginning/</code></span></div>
+    <div class="art"><p>I guess, before I start my day, I need to get this out of my system: You know what´s happening right now? It´s the decade of the component! The 1970/80ies were the decade of structured programming, the 1990ies were the decade of object orientation - and now we´re right in the middle of the decade of component orientation.</p>
+<p>Why am I saying that instead of calling if the decade of service orientation? Because what´s happening is a struggle for a definition and infrastructures of components as building blocks that get manufactured independently. But everybody is talking about services, you say. That´s true. But services are just the starting point of a larger movement. After having been in object orientation up to our chins, there needed to be a next step up the abstraction ladder. Objects (or classes for that matter) are too fine grained as to enable us to build large systems.</p>
+<p>Unfortunately current tools and lots of legacy software and long standing practice made it impossible to gradually move from objects to - let´s call it "real software building blocks" within (!) the boundaries of a process. Sure, I know, the term "component" has been around for a long time. And we all know COM as "Component Object Model". But let´s be honest: Who is building components besides 3rd party user interface control manufacturers or Microsoft? It´s always the others doing component oriented programming (COP), but not your shop, right? ;-)</p>
+<p>Contrary to popular belief, the software industry has not (!) broadly adopted COP. And I can proove it: Look at Visual Studio and tell me, if it actively supports Contract First Design (CFD)?</p>
+<p>It does not! It does not, because Microsoft does not use the term in its communication. It does not, because there is no (official) way to reference a contract instead of an implementation and map the contract to an implementation in a separate place. (I´m not saying, this is not possible using the .NET Fx. I´m just saying, Visual Studio (or Microsoft for that matter) does not favor or even mention this approach.)</p>
+<p>But why´s that a proof? Because without CFD there is no real decoupling of "software building blocks". Only if contracts - or interface descriptions - are separated from the clients and providers of those contracts can they be developed separately. And this separation is at the heart of all industrial production on the planet.</p>
+<p>But that´s just the first step. CFD alone is not enough. It´s just a concept for architecting software. To reap its benefits, client and provider of a contract must not (!) reference each other directly, when you build the software. Because if you depend on them referencing each other, you don´t just depend on the contract anymore. The contracts purpose is to make development of client and provider independent. That means, they don´t know of each other. And that means, they don´t reference each other in Visual Studio. (Binding a client to a provider of a contract later during runtime then sure is a challenge. But there are solutions for it. They are called IoC (Inversion of Control) Frameworks or Microkernel, e.g. Spring.Net or picocontainer.)</p>
+<p>So, since CFD and Microkernels are no concepts with which Microsoft or Visual Studio are conerned, there cannot (!) be real component orientation. Existence of a System.Component class is not enough. Putting a manifest into an assembly is not enough. The fundamental notion of "real building blocks" being separate from their specification (contract) is not implemented in current tools or languages.</p>
+<p>Modula-2 and Eiffell started in that direction. But they are either outdated or not widely adopted. Commercially relevant languages like C# or VB or C++ or Java are not component oriented. Again: don´t let yourself be fooled by container structures like assemblies or some class called Component.</p>
+<p>Enter services. With the advent of Web Services there suddenly was a very natural unit of software that could serve as a "software building block": the process.</p>
+<p>Processes are isolated from each other by definition. They have an explicit boundary around their address spaces and resources. No, they are (!) this explicit boundary, they define it. So if you want to have two processes communicate with one another you need to explicitly define how this should be done.</p>
+<p>Bingo!</p>
+<p>Processes form units of software and need an explicit contract for communication. Processes are thus ideal candidates to manifest the concept of software components as independent software building blocks.</p>
+<p>Although in the beginning (Web) Services were wired together like ordinary assemblies using direkt references, there is a fairly large movement towards CFD in the SOA world. Visual Studio might not yet support it, but it´s on its way - or 3rd parties might provide CFD/Microkernel tools.</p>
+<p>So, what have we? There are classes and there are services. Classes are on a low level of abstraction and not fit to be building blocks for large software systems. Services are on a much higher level of abstraction and fit for building large software systems. Classes are not components, assemblies are not components, but services (or to be more general: processes) can be viewed as components.</p>
+<p>But that´s not enough. Although we should be very happy to have the whole service discussion and a movement towards being able to turn processes into "software building blocks" aka components, it´s a jump too far ahead. There´s a gap between classes/assemblies and services.</p>
+<p>The gap lies within (!) a process. Services are building blocks for large distributed software systems. But not every software needs to be designed as a distributed system. Take for example Microsoft Word. It´s a very complex software system - but yet manifests itself as just one process.</p>
+<p>What´s lacking is components to build single processes. Classes are still not enough, too fine grained. Sure, assemblies can be used to partition classes, which logically belong together, into smaller packages. But that´s not really COP as I tried to explain above.</p>
+<p>Looking at all this, my personal opinion is: Despite all the efforts regarding service orientation, building large systems will not really take off unless we realize, how to build single processes/services from larger grained building blocks than classes.</p>
+<p>That´s why I say, this is not the decade of services, but the decade of components. Because services are just large scale components, but we need real small scale components, too.</p>
+<p><strong>Share this post:</strong> <a rel="noopener" href="https://web.archive.org/web/20070107092538/mailto:/?body=Thought%20you%20might%20like%20this:%20http://weblogs.asp.net/ralfw/archive/2005/12/06/432455.aspx&amp;;subject=The+Decade+of+the+Component+-+Service+orientation+is+just+the+beginning" title="Post http://weblogs.asp.net/ralfw/archive/2005/12/06/432455.aspx">email it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070107092538/http://del.icio.us/post?url=http://weblogs.asp.net/ralfw/archive/2005/12/06/432455.aspx&amp;;title=The+Decade+of+the+Component+-+Service+orientation+is+just+the+beginning" title="Post http://weblogs.asp.net/ralfw/archive/2005/12/06/432455.aspx">bookmark it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070107092538/http://www.digg.com/submit?url=http://weblogs.asp.net/ralfw/archive/2005/12/06/432455.aspx&amp;;phase=2" title="Post http://weblogs.asp.net/ralfw/archive/2005/12/06/432455.aspx">digg it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070107092538/http://reddit.com/submit?url=http://weblogs.asp.net/ralfw/archive/2005/12/06/432455.aspx&amp;title=The+Decade+of+the+Component+-+Service+orientation+is+just+the+beginning" title="Post http://weblogs.asp.net/ralfw/archive/2005/12/06/432455.aspx">reddit!</a> | <a rel="noopener" href="https://web.archive.org/web/20070107092538/http://www.dotnetkicks.com/submit/?url=http://weblogs.asp.net/ralfw/archive/2005/12/06/432455.aspx&amp;;title=The+Decade+of+the+Component+-+Service+orientation+is+just+the+beginning" title="Post http://weblogs.asp.net/ralfw/archive/2005/12/06/432455.aspx">kick it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070107092538/https://favorites.live.com/quickadd.aspx?marklet=1&amp;;mkt=en-us&amp;;url=http://weblogs.asp.net/ralfw/archive/2005/12/06/432455.aspx&amp;;title=The+Decade+of+the+Component+-+Service+orientation+is+just+the+beginning&amp;;top=1" title="Post http://weblogs.asp.net/ralfw/archive/2005/12/06/432455.aspx">live it!</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

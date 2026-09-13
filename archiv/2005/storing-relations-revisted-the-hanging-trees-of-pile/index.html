@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Storing Relations revisted - The hanging trees of Pile — ralfw.de Archiv</title>
+<meta name="description" content="Currently no day goes by without me learning something new about Pile - the idea of storing relations instead of data. Yesterday I introduced you to Pile and talked about trees gro">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/storing-relations-revisted-the-hanging-trees-of-pile/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Storing Relations revisted - The hanging trees of Pile — ralfw.de Archiv">
+<meta property="og:description" content="Currently no day goes by without me learning something new about Pile - the idea of storing relations instead of data. Yesterday I introduced you to Pile and talked about trees gro">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/storing-relations-revisted-the-hanging-trees-of-pile/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Storing Relations revisted - The hanging trees of Pile</h1>
+    <div class="doc-meta"><span>9. Dez. 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2005/12/09/432762.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/storing-relations-revisted-the-hanging-trees-of-pile/</code></span></div>
+    <div class="art"><p>Currently no day goes by without me learning something new about Pile - the idea of storing relations instead of data. <a rel="noopener" href="https://web.archive.org/web/20060507042141/http://ce.eng.usf.edu/pharos/wonders/list.html">Yesterday I introduced you to Pile</a> and talked about trees growing bottom up.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/404a47080d34ee9e.jpg" /></p>
+<p>The roots of these trees are at the bottom and the leaves are at the top. Nodes are pointing upwards.</p>
+<p>Also I had no answer to the question, how to get to a parent node from its two children. I asked for some function p=f(n,a) (n and a being the left/normative and right/associative children of a node) to "calculate" the parent.</p>
+<p>Now, since yesterday I received emails from <a rel="noopener" href="https://web.archive.org/web/20060507042141/http://www.pileworks.org/">www.pileworks.org</a> - thanks Miriam! - and have learned, I was on the wrong track. Although my general description is not altogether wrong, it somewhat mixed up things a bit. So let me start to give you an update of my understanding.</p>
+<p>First of all I learned to see the tree(s) the right way. They actually start at the top and grow down, it´s hanging trees. Each terminal value truely is the root of an arbitrary number of trees. That also means, children are located below parents. And once we switch views we clearly see, altough each node has only two parents (because it´s a relation connecting two other nodes) it can have any number of children.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/782abd19b4a8d593.jpg" /></p>
+<p>Secondly I realized, all query pattern matching always starts at some root/terminal value. That means, when looking for "te" in the Pile for "Peter" I start out with "t" and "e" and want to find the te-node - which is the only child node belonging to both (!) terminal nodes.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/dd6495478edfa9ad.jpg" /></p>
+<p>So what looking for ("t", "e") means is: Calculate the intersection of the sets of child nodes of the "t" and the "e" node. The intersection - if not empty - will only contain one node.</p>
+<p>After I understood that, I realized my problem of finding f(n,a) vanished. There is no need for such a function. Finding ("t", "e") is just a matter of looking thru lists of child nodes. A simple programming excercise. I then was able to develop a tiny Pile engine within one or two hours which is able to store texts and search for patterns. The core Pile database code is just some 150 lines of code. That was really fun! (However, I´ve to admit I still have some problems searching for patterns. Looking for "Pe" or "te" in "Peter Piper..." works just fine; but looking for "et" does not, because there is no relation between the two; there are only relations ("P", "e") and ("t", "e"), but not ("e", "t"). Hm... But I´m sure the pileworks guys will help me out. I sure still lack some unterstanding of the Pile theory.)</p>
+<p>Thirdly I learned from what Miriam wrote and what I saw in a <a rel="noopener" href="https://web.archive.org/web/20060507042141/http://www.pileworks.org/pileworks.org/pile_is_what/III.1.Pile%20&amp;%20Trees(M).pps">Powerpoint presentation</a> (which I highly recommend to you, if you´re interested in Pile) at <a rel="noopener" href="https://web.archive.org/web/20060507042141/http://www.pileworks.org/">www.pileworks.org</a> that Pile distinguishes between two kinds of trees: normative trees and associative trees. The implications of this are not yet clear to me, but I need to adapt my depiction of Piles. If you look at the Powerpoint presentation you´ll see, the pileworks guys have their own diagrams. I kind of find it hard to get used to them. So I try to capture the essence of the two trees in a different way.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/76ca04f4f5e1411e.jpg" /></p>
+<p>The normative tree is a "real" tree. It starts at a root and spans nodes on lower levels. Build it by following only (!) normative read arrows. The normative tree of "P" for example would be:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/4f346e25f78526b5.jpg" /></p>
+<p>The normative tree for "r" on the other hand would contain "r", r_:("r", "_") and r_Pi:(r_, Pi:("P", "i")).</p>
+<p>Associative trees point upwards - although the terminal values are still roots and nodes closer to the top are parents. Here´s the associatve tree for "_" (don´t mind there are no branches in it; that´s due to the simple example):</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/e005bf2ba2134ef1.jpg" /></p>
+<p>The associative tree is build by only following blue lines; either start from a root node and traverse nodes connected by blue lines - or start at the bottom and follow only blue arrows.</p>
+<p>Ah, sigh, I feel relieved now that I clarified this ;-) The pictures now look much more interesting, don´t they? :-)</p>
+<p>However, I´m not sure what the distinction between those kinds of trees actually means. Does it help to solve my pattern matching problem? Should I change the data structures in my tiny Pile engine to reflect the changed direction of the arrows? I´ve to ponder this a while... If I find out something, I´ll let you know.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

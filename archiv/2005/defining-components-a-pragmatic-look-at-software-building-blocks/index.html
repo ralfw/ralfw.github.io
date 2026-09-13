@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Defining Components - A pragmatic look at software building blocks — ralfw.de Archiv</title>
+<meta name="description" content="Yesterday I argued, we´re really living in the decade of the component - and not in the good old objects or service hype days. Also I sketched out what I think is necessary to arri">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/defining-components-a-pragmatic-look-at-software-building-blocks/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Defining Components - A pragmatic look at software building blocks — ralfw.de Archiv">
+<meta property="og:description" content="Yesterday I argued, we´re really living in the decade of the component - and not in the good old objects or service hype days. Also I sketched out what I think is necessary to arri">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/defining-components-a-pragmatic-look-at-software-building-blocks/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Defining Components - A pragmatic look at software building blocks</h1>
+    <div class="doc-meta"><span>7. Dez. 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2005/12/07/432581.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/defining-components-a-pragmatic-look-at-software-building-blocks/</code></span></div>
+    <div class="art"><p>Yesterday I argued, <a rel="noopener" href="https://web.archive.org/web/20070608172046/http://weblogs.asp.net/ralfw/archive/2005/12/06/432455.aspx">we´re really living in the decade of the component</a> - and not in the good old objects or service hype days. Also I sketched out what I think is necessary to arrive at true software building blocks as the next higher level of abstraction above objects/classes: Contract First Design (CFD) and Microkernel based architecture.</p>
+<p>CFD is about separating the interface of components from the components themselves. And Microkernels are about enabling you to benefit from this separation throughout the implementation. Because it´s one thing to have a contract, and another not to circumvent it and directly bind a client component to a provider component implementing this contract. Arriving at a contract is pretty easy, it´s just sitting down and writing it up. But not statically binding components to each other is difficult, because it needs technological support - which is not as readily available as would be preferrable.</p>
+<p>In addition to this we need to think about what a component is in the first place. How does it differ from an assembly, for example?</p>
+<p>First I´d like to make clear, I don´t think, the term "component" carries with it anything about who builds a component or user interface concerns or whether a component has to do with distributed systems. When looking at the literature, though, "component" is heavily overloaded with meaning. Very often "component" is used to describe a shrink wrap user interface control like a grid. On other occassions "component" are pieces of software, that need to be hosted in a service broker or application server.</p>
+<p>I suggest, we rid ourselves of such limiting points of view and stick with a couple of tenets. <a rel="noopener" href="https://web.archive.org/web/20070608172046/http://en.wikipedia.org/wiki/Software_component">Wikipedia</a> refers to Clemens Szyperski and others with the following criteria a piece of software needs to fulfill in order to be called a component:</p>
+<ol>
+<li>Multiple-use</li>
+<li>Non-context-specific</li>
+<li>Composable with other components</li>
+<li>Encapsulated i.e., non-investigable through its interfaces</li>
+<li>A unit of independent deployment and versioning</li>
+</ol>
+<p>That´s not bad, I´d say. But when you read for example Szyperski´s "Component Software" you can´t shed the feeling of some not so explicitly stated premises: For one, components again and again are put in context with CORBA. That hints to components have something to do with distributed applications. Secondly, the term (horizontal or vertical) "component market" is used to hint at them being manufactured by some 3rd party.</p>
+<p>Sure, Microsoft created a very lively "component market" when introducing VBX components. Also, COM+ applications are commonly viewed as components. But I think, it is wrong, to include "market"/3rd parties and distribution into the notion of a software building block. So I´d say, the 5 tenets of components should be:</p>
+<ol>
+<li>A component encapsulates some well separated behaviour and should be viewed as a black box. A client does not not, how a provider component actually fulfills his requests, whether it´s internally build of many parts or is very simpel.</li>
+<li>A component communicates with other components solely along clearly and separately defined contracts. These contracts should define as much syntax and semantics of the communication as possible and necessary, e.g. not only operations and data, but also quality of service requirements or out of band data for security concerns.</li>
+<li>A component can be composed with other components to form a larger whole. For this, components need not be changed. Assembling the whole is done by configuring settings external to the component´s code.</li>
+<li>A component defines its offerings and requirements in a specification listing the contracts it implements as well as the contracts it needs partners for.</li>
+<li>A component can be separately deployed and versioned. As long as the specification has not changed, no other components should need to be changed or replaced.</li>
+</ol>
+<p>In how far differ these tenets from Wikipedia´s definition? C, D, and E are carried over to tenets 3, 1, and 5. Tenets 2 and 4 have been added. Definitions A and B have been droped.</p>
+<p>Why were A and B droped? In my view, they are detrimental to the acceptance of software building blocks. A requires them to be defined in a manner so they can be reused often. But why? Because the definition has a "component market" in the back of its head. However, this would severely limit the use of components. It would put a burden on the architect, because generalization of functionality is often hard to achieve. And it suggests, that components are something you buy and don´t build. No other industry, though, forces this notion upon their building blocks. If a car manufacturer needs a certain building block/part, it builds is itself according to clear specs. Only if that´s too expensive it seeks to outsource the production. Outsourcing might require a notion of building blocks - but not the other way around. But that´s what the software industry is still thinking.</p>
+<p>From B it´s not really clear what is meant: a hosting context for a component or a domain context. Let´s tackle each in turn: Why should a component necessarily be independent of a hosting context? To promote reuse? I don´t think that should be mandatory. Why should it be independent of a domain context? To make it more attractive to a "component market"? I don´t think that should be mandatory.</p>
+<p>You see, to have a highly reusable component that sells well in the "component market" certainly would be great. I´d love to become rich with such a component. But are those parts of the definition really necessary? I don´t think so. They severely limit what components can do for a software project: make it more manageable, more maintainable, easier to understand and test.</p>
+<p>Why have tenets 2 and 4 been added? I think, both are needed to support the others. Without clear contracts (2), there is no real encapsulation. And without a specification (4) there is no composability and independent deployment.</p>
+<p>Now, how do different kinds of todays "components" map to the 5 tenets?</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td>3rd party GUI controls</td>
+<td>COM+ components aka ServicedComponent</td>
+<td>(Web) Services</td>
+</tr>
+<tr>
+<td>Encapsulation</td>
+<td>+++</td>
+<td>+++</td>
+<td>+++</td>
+</tr>
+<tr>
+<td>Contracts</td>
+<td>-</td>
+<td>+</td>
+<td>++</td>
+</tr>
+<tr>
+<td>Composition</td>
+<td>-</td>
+<td>+</td>
+<td>+</td>
+</tr>
+<tr>
+<td>Specification</td>
+<td>---</td>
+<td>---</td>
+<td>---</td>
+</tr>
+<tr>
+<td>Deployment</td>
+<td>++</td>
+<td>++</td>
+<td>+++</td>
+</tr>
+</tbody>
+</table>
+<p>(Web) Service are closest to the "ideal" of components as defined above. That´s easy to understand: (Web) Services build on an inevitable existing "building block": a process. However, they too lack a specification in the above sense. A service is defined by a contract, which describes its offerings. But I don´t know a necessariy definition of the contracts it depends on. Now you might say: Why should there be, that´s an implementation detail and should be hidden. But I say: Sure it should be hidden, what exactly a service (or other component) actually does with another provider component. But it should not be hidden, that it needs some other components. Because if that´s hidden, it cannot be configured from the outside (which I deem necessary for easy replacement). An analogy: To replace the motor of a car, I don´t unwind srews within the motor but only screws attaching it to other parts of the car.</p>
+<p>My bottom line concerning existing component technologies: They are good at encapsulation, but they are not good enough yet at composition. And that stems from a lack of specifications which in turn has to do with how contracts can be and are defined.</p>
+<p>But (Web) Service certainly have made progress compared to local components. Now it´s time to catch up regarding small scale components, i.e. intra-process components.</p>
+<p>PS: I guess, I on thin ice here when suggesting general tenets for a general component concept. Many, many smart people have wrecked their brains about the same topic. But since I don´t see a comprehensive component concept materialize for small scale components, I want to put a stake in the ground to maybe spark a new discussion about this extremely important topic. So, if you like, prove me wrong. I´d be glad to learn, how you achieve easy software system composability today.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

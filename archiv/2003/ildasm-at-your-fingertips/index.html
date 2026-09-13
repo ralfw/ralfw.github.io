@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ILdasm at your fingertips — ralfw.de Archiv</title>
+<meta name="description" content="Es ist schon merkwürdig: Da sind wir auf der einen Seite ganz glücklich darüber, dass die CLR eine Ebene zwischen unseren Sourcecode und das Betriebssystem zieht. Wir begrüßen die ">
+<link rel="canonical" href="https://ralfw.de/archiv/2003/ildasm-at-your-fingertips/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ILdasm at your fingertips — ralfw.de Archiv">
+<meta property="og:description" content="Es ist schon merkwürdig: Da sind wir auf der einen Seite ganz glücklich darüber, dass die CLR eine Ebene zwischen unseren Sourcecode und das Betriebssystem zieht. Wir begrüßen die ">
+<meta property="og:url" content="https://ralfw.de/archiv/2003/ildasm-at-your-fingertips/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>ILdasm at your fingertips</h1>
+    <div class="doc-meta"><span>12. Juli 2003</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/posts/10009.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2003/ildasm-at-your-fingertips/</code></span></div>
+    <div class="art"><p>Es ist schon merkwürdig: Da sind wir auf der einen Seite ganz glücklich darüber, dass die CLR eine Ebene zwischen unseren Sourcecode und das Betriebssystem zieht. Wir begrüßen die Abstraktion von der Maschine. Und auf der anderen Seite haben wir uns (oder zumindest die ehemaligen VB6-Entwickler) seitdem ungleich öfter mit Assemblercode auseinandergesetzt. Zumindest für mich ist IL-Assembler seit meinen Z80-Zeiten der erste Assemblercode, den ich mir oft und gern anschaue.</p>
+<p>Woran das liegt? An den Metadaten, die neben dem Code in den Assemblies stecken. Ein Blick in eine Assembly mit ILdasm zeigt mir sofort, wasfüreine Programmierschnittstelle sie veröffentlicht. Aber es liegt auch daran, dass IL-Code ungleich verständlicher ist. Es ist eine stackbasierte Sprache und im IL-Assemblercode sind Methodenaufrufe gut lesbar. Gerade für Assemblies, zu denen ich keinen Quellcode habe, ist also der Blick in den IL-Code sehr erhellend, was ihre Funktionsweise angeht.</p>
+<p>Microsoft liefert zum Glück dafür ja auch ein brauchbares Tool mit. Den IL-Disassembler ILdasm.exe. Damit jedoch eine Assembly anzuschauen, ist etwas umständlich: Entweder öffne ich ILdasm über das Programmmenü und wähle über File|Open eine Assembly aus, oder ILdasm ist offen und ich ziehe eine Assembly per Drag&amp;Drop darauf. Eine "normale" Funktionalität, aber eine, wie ich finde, umständliche. Denn was möchte ich meist tun? Ich sehe eine Assembly im Windows Explorer und möchte ILdasm sofort damit öffnen. Ich möchte keinen Umweg gehen und das Verzeichnis nochmal in seinem Open-Dialog auswählen und ich möchte mir auch nicht die Finger bei Drag&amp;Drop brechen.</p>
+<p>Die Lösung wäre, ich öffne ILdasm via Kontextmenü der Assembly im Windows Explorer. Dafür muss ILdasm aber als Shell-Kommando für DLL- und EXE-Dateien registriert sein. Hier ein reg-Skript, das genau das leistet:</p>
+<p>[HKEY_CLASSES_ROOT\exefile\shell\ILdasm\Command]<br />
+@="ildasm.exe \"%1\""<br />
+[HKEY_CLASSES_ROOT\dllfile\Shell\ILdasm\Command]<br />
+@="ildasm.exe \"%1\""</p>
+<p>Skriptcode in eine reg-Datei kopieren und die Datei ausführen. Fertig. Fortan gibt es einen neuen Menüpunkt im Kontextmenü von DLLs und EXEs.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

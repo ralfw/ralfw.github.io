@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proposal for a more precise definition of the term &#x27;application&#x27; — ralfw.de Archiv</title>
+<meta name="description" content="I´ve given the question I posed &quot;What is an application?&quot; some more thought. Martin Lercher made a good point, when he wrote &quot;deployed set of executable code, infrastructure and da">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/proposal-for-a-more-precise-definition-of-the-term-application/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Proposal for a more precise definition of the term &#x27;application&#x27; — ralfw.de Archiv">
+<meta property="og:description" content="I´ve given the question I posed &quot;What is an application?&quot; some more thought. Martin Lercher made a good point, when he wrote &quot;deployed set of executable code, infrastructure and da">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/proposal-for-a-more-precise-definition-of-the-term-application/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Proposal for a more precise definition of the term &#x27;application&#x27;</h1>
+    <div class="doc-meta"><span>22. April 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2005/04/22/403888.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/proposal-for-a-more-precise-definition-of-the-term-application/</code></span></div>
+    <div class="art"><p>I´ve given the question I posed "What is an application?" some more thought. <a rel="noopener" href="https://web.archive.org/web/20051120192144/http://www.singhammer.de/">Martin Lercher</a> made a good point, when he wrote "deployed set of executable code, infrastructure and data such that this set is minimal" for a given purpose. And <a rel="noopener" href="https://web.archive.org/web/20051120192144/http://www.thinktecture.com/staff/ingo/weblog/archives/001427.html">Ingo Rammer</a> surely explains it like I would have some time ago by saying, an application is "whatever is contained in one single Visual Studio SLN file." Microsoft surely likes him for that, too :-) But still... there remains a feeling of uneasyness in me with those explanations. For one, I strongly believe, non-trivial applications (or software based solutions) should not be developed within a single VS solution. And then, Ingo says: "A certain <em>solution</em> - or <em>system</em> - however might easily consist of several applications." That means, when I set out to solve a problem and tell the customer "Hey, I´m gonna develop a nice application for you." I might be wrong? I might end up producing several applications? If that´s the case - and I believe it is - then we should define the term "application" much stricter.</p>
+<p>I therefore propose the following:</p>
+<p><strong>Whatever we produce as response to a customer requesting "an application" from us is a <em>Software Solution</em>.</strong> It might be an Add-In for Word, or a standalone WinForms EXE, or a library to be hosted in COM+ etc. <br />
+A Software Solution is not to be confused with a VS.NET solution file.<br />
+A Software Solution possibly consists of many assemblies and additional files (e.g. database).<br />
+But most importantly, <strong>a Software Solution consists of a number of <em>Software Applications</em> ranging from 1 to n.</strong></p>
+<p><strong>A <em>Software Application</em> in turn consists of at least two things: my code, i.e. 1 or several assemblies, and 1 <em>Application Host</em>.</strong></p>
+<p><strong>The <em>Application Host</em> provides a runtime environment or infrastructure for my code. An Application Host always is an EXE file.</strong> And its infrastructure can be rich or simple to non-existent. The main purpose of the Application Host is loading my code and starting it. (Although the CLR is doing that, I don´t view the CLR as an Application Host. The CLR is the foundation for managed Application Hosts and my code, like the operating system is for all code running on a computer.)</p>
+<p>There already exist quite a few Application Hosts: COM+, IIS/ASP.NET, BizTalk, IE, SQL Server 2005. To complement them for simpler Software Applications I propose we come up with a Console Application Host, a WinForms Application Host, and a NT Service Application Host. For a start, they are very simple to write, just a couple of lines of code. But their impact is considerable:</p>
+<p>Vested with an Application Host battery ranging from Console Application Host over COM+ Application Host to BizTalk Application Host, our Software Applications can become quite simple and regular in their basic structure:</p>
+<p><strong>For each Sofware Application choose an appropriate Application Host - and then write all your code (your application logic) exclusively as library assemblies (DLLs).</strong></p>
+<p>So where does that take us? Does this definition of "application" make anything easier? I´d say so!</p>
+<ul>
+<li>We no longer need to ask ourselves, whether our solution is one or many applications. We just count the number of Application Hosts involved.</li>
+<li>A technology like BizTalk or SQL Server can easily be categorized: they are Application Hosts because they run our code.</li>
+<li>And we don´t have to ponder the question any longer what "distributed application" means. The answer is: There are no distributed applications! <br />
+  There are only distributed Software Solutions. A distributed Software Solution consists of at least 2 Software Applications who communicate with one another. A simple scenario could be...  a desktop app (WinForms Application Host) calling a SQL Server (Database Application Host) stored procedure. Have you ever thought of a C/S scenario as a "truw" distributed one? There is no Application Server like COM+ involved, but still... it is distributed, because there are two Application Hosts runnining our own logic. (Stored procedures of course belong to our own code.)</li>
+</ul>
+<p>The longer I think about "applications" in this way, there more comfortable I feel. I can now use the term "application" very precicely, I can draw a little circle around what makes up an "application": the circle is the Application Host, what´s in the circle is my code hosted by the Application Host. And if I want to distribute my solution I just need to ask, which Application Host provides an adequate infrastructure, break my code apart, keep some in the former Application Host and put the rest into the other one. (Of course I need to observe the prerequisites and constraints of each host.)</p>
+<p>"Application" just seems to be right as a description for whatever a host plus my code is. "Software" would be too broad a term. "Solution" would be too broad a term. "Component" would be too narrow a term.</p>
+<p>But even though I´m quite happy with my new definition, I take suggestions for alternatives.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

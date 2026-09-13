@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VS.NET constrains the application development process — ralfw.de Archiv</title>
+<meta name="description" content="Have you ever pondered the current practice of referencing assemblies from within a VS.NET project? I haven´t much until recently. I just took this way of linking to code for grant">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/vs-net-constrains-the-application-development-process/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="VS.NET constrains the application development process — ralfw.de Archiv">
+<meta property="og:description" content="Have you ever pondered the current practice of referencing assemblies from within a VS.NET project? I haven´t much until recently. I just took this way of linking to code for grant">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/vs-net-constrains-the-application-development-process/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>VS.NET constrains the application development process</h1>
+    <div class="doc-meta"><span>2. April 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2005/04/02/396795.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/vs-net-constrains-the-application-development-process/</code></span></div>
+    <div class="art"><p>Have you ever pondered the current practice of referencing assemblies from within a VS.NET project? I haven´t much until recently. I just took this way of linking to code for granted. It´s how we do dynamic linking today. Great!</p>
+<p>Or isn´t it?</p>
+<p>No, I don´t think it´s that great. I think it limits our thinking on how we develop software. It is just one way to link components together at runtime.</p>
+<p>What´s limiting in referencing assemblies is that it binds the component under development to a certain implementation of other components. Isn´t that, what we want, you might ask? Yes, sure, that´s what we need and want for components that already exist (lets call them libraries) while we develop our own component.</p>
+<p>When I work on my component, I need the services of libraries like the .NET Fx DLLs or the assembly of my favorite DataGrid. Those libraries exist prior to my project, their interfaces are set, their implementation is complete. So, sure, I should be able to include their services into my component by setting a reference to them, thereby importing not only their meta data, but also later on during runtim loading concrete assemblies.</p>
+<p>But when I want to do real component based development (CBD), then I consequentially want to divide my own application up into several modules/components. These components will be developed by several programmers in parallel. This will often lead to situations where a developer working on component A needs component B - which is still under development. But this scenario is not well supported by VS.NET or the .NET Fx.</p>
+<p>I cannot reference an assembly that does not exist yet. So what should I do in my project? There are several ways out of this dilemma. The one chosen most often is not to develop components at all. Next comes building huge solutions with many, many projects in them. Both ways sooner or later lead to tight coupling between components and thus thwart the vision of CBD.</p>
+<p>But there is a third way: I could define interfaces for components first and put them in a separate assembly. This assembly I could readly reference in my component A project. I´d then know how to use component B thru its interface IB. Great!</p>
+<p>Or isn´t it?</p>
+<p>Yes, a very good idea - but no well supported by VS.NET and the .NET Fx. Because this way entails you need to discover the implementation of the interfaces you bind to <em>during runtime</em>. Currently there is no way to accomplish that. You can´t pass an interface type to Activator.CreateInstance() and ask it to instanciate an unknown class implementing that interface.</p>
+<p>But that´s what´s necessary if you truely want to decouple a client component A from the implementation of some interface IB. Because during development of A you might use mock-up component BMockup which implements IB. But later on a client´s system BMockup has to be replaced by BFinal. Or maybe you want to try different implementations of IB, e.g. BStrategy1 and BStrategy2. How do you bind to those different implementations during development? Not at all, because they don´t exist.</p>
+<p>That´s what I mean, when I state, VS.NET contrains the development process. VS.NET and the .NET Fx are targeted towards developing applications where all implementations are well known during development time. It supports well bottom-up development. But it does not support well parallel, independet development. We still need to come up with additional infrastructure to overcome these limitations. We need to build our own <em>Contract First</em> tools for intra application interfaces between components.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

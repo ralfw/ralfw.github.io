@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IDisposable handlich verpackt — ralfw.de Archiv</title>
+<meta name="description" content="Objekte, die Ressourcen halten, sollten diese Ressourcen schnellstmöglich wieder freigeben. Das gilt insbesondere für Unmanaged Resources wie File Handle usw. Eine Ressourcenfreiga">
+<link rel="canonical" href="https://ralfw.de/archiv/2003/idisposable-handlich-verpackt/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="IDisposable handlich verpackt — ralfw.de Archiv">
+<meta property="og:description" content="Objekte, die Ressourcen halten, sollten diese Ressourcen schnellstmöglich wieder freigeben. Das gilt insbesondere für Unmanaged Resources wie File Handle usw. Eine Ressourcenfreiga">
+<meta property="og:url" content="https://ralfw.de/archiv/2003/idisposable-handlich-verpackt/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>IDisposable handlich verpackt</h1>
+    <div class="doc-meta"><span>8. Aug. 2003</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/posts/23185.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2003/idisposable-handlich-verpackt/</code></span></div>
+    <div class="art"><p>Objekte, die Ressourcen halten, sollten diese Ressourcen schnellstmöglich wieder freigeben. Das gilt insbesondere für Unmanaged Resources wie File Handle usw. Eine Ressourcenfreigabe ausschließlich im „Destruktor“ von Klassen erfüllt diese Forderung aber nicht, da ungewiss ist, wann die Garbage Collection ihn aufruft. Trotzdem müssen aber natürlich auch dort allerspätestens die Ressourcen freigegeben werden.</p>
+<p>Public Class MyResourceClass<br />
+    …<br />
+    Protected Overrides Sub Finalize()<br />
+        ' Ressourcen freigeben<br />
+    End Sub<br />
+End Class</p>
+<p>Für eine frühere, explizite Freigabe empfiehlt der .NET Framework eine Dispose()-Methode:</p>
+<p>Public Class MyResourceClass<br />
+    …<br />
+    Public Sub Dispose()<br />
+        ' Ressourcen freigeben<br />
+    End Sub<br />
+<br />
+    Protected Overrides Sub Finalize()<br />
+        Dispose()<br />
+    End Sub<br />
+End Class<br />
+...<br />
+Dim r As New MyResourceClass<br />
+...<br />
+r.Dispose()</p>
+<p>Um eine zumindest halbautomatische frühe Ressourcenfreigabe zu realisieren, bietet C# die using-Anweiung, die am Ende selbstständig Dispose() der in ihrer „Parameterliste“ erzeugten Objekte aufruft:</p>
+<p>using(MyResourceClass r = new MyResourceClass())<br />
+{<br />
+    ...<br />
+}</p>
+<p>Dafür ist allerdings nötig, dass using ohne viel Aufwand erkennen kann, ob eines seiner Objeke eine Dispose()-Methode hat.  Für using zählt daher nur die Dispose()-Methode des Interface IDisposable:</p>
+<p>Interface IDisposable<br />
+    Sub Dispose()<br />
+End Interface</p>
+<p>Damit das obige using-Statement funktioniert, muss MyResourceClass also wie folgt aussehen:</p>
+<p>Public Class MyResourceClass<br />
+    Implements IDisposable<br />
+    …<br />
+    Public Sub Dispose() Implements IDisposable.Dispose<br />
+        ' Ressourcen freigeben<br />
+    End Sub<br />
+<br />
+    Protected Overrides Sub Finalize()<br />
+        Dispose()<br />
+    End Sub<br />
+End Class</p>
+<p>Leider ist es damit aber nicht getan. Bei dieser Implementation besteht die Gefahr, dass Ressourcen mehrfach freigegeben werden, denn Dispose() wird ja immer auch im „Destruktor“ aufgerufen. Dispose() müsste also feststellen, dass es schon die Ressourcen freigegeben hat; und Dispose() sollte darüber hinaus auch noch einen zukünftigen Aufruf des „Destruktors“ – oder genauer: des Finalisierers – unterdrücken, denn er ist ja nicht mehr nötig.</p>
+<p>Die Implementation des IDisposable-Patterns gestaltet sich damit recht kompliziert. Wie kann man es einfacher machen? Durch eine hübsche Basisklasse für alle Ressourcen haltenden Objekte.</p>
+<p>Public MustInherit Class ResourceObject<br />
+    Implements IDisposable</p>
+<p>Private _disposed As Boolean = False</p>
+<p>Public Overloads Sub Dispose() Implements IDisposable.Dispose<br />
+        Dispose(True)<br />
+        GC.SuppressFinalize(Me)<br />
+    End Sub</p>
+<p>Private Overloads Sub Dispose(ByVal calledFromCode As Boolean)<br />
+        If Not Me._disposed Then<br />
+            If calledFromCode Then<br />
+                Me.DisposeManagedResources()<br />
+            End If<br />
+            Me.DisposeUnmanagedResources()<br />
+        End If<br />
+        Me._disposed = True<br />
+    End Sub</p>
+<p>Protected NotOverridable Overrides Sub Finalize()<br />
+        Dispose(False)<br />
+        MyBase.Finalize()<br />
+    End Sub</p>
+<p>Protected MustOverride Sub DisposeManagedResources()<br />
+    Protected MustOverride Sub DisposeUnmanagedResources()<br />
+End Class</p>
+<p>Die Klasse folgt weitgehend dem Pattern, wie es auch in der Microsoft Dokumentation beschrieben ist.</p>
+<p>• Dispose(calledFromCode) implementiert die Freigabe der Ressourcen. Ressourcen werden nur freigegeben, wenn die Methode noch nicht aufgerufen wurde. Das merkt sie sich im Flag _disposed.<br />
+• Ihr Code ruft die Methode Dispose() auf. Sie delegiert die Arbeit an Dispose(calledFromCode) und sorgt dafür, dass der Finalisierer Finalize() nicht mehr aufgerufen wird, denn das ist ja nicht nötig, weil die Ressourcen schon freigegeben wurde.<br />
+• Falls auf einem Objekt Dispose() nicht aufgerufen wurde, läuft am Ende kurz vor Objektzerstörung automatisch Finalize(). In dem Dispose(calledFromCode) dann mit False aufgerufen wird, signalisiert der Finalisierer, dass nur noch Unmanaged Resources (z.B. GDI-Objekte, File Handle) freigegeben werden dürfen. Managed Resources, d.h. „normale“ .NET Framework Objekte dürfen dann nicht mehr angefasst werden, weil unsicher ist, ob ihre Finalisierer – falls vorhanden – schon aufgerufen wurden.</p>
+<p>Kleine Abweichungen der Klasse im Vergleich zu Microsofts Pattern:</p>
+<p>• Ich habe die Finalize()-Methode (den „Destruktor“) als NotOverridable markiert, damit abgeleitete Klassen nicht mit der Arbeitsweise des Pattern interferieren können.<br />
+• Der Parameter der Dispose()-Methode, die die Ressourcen freigibt, heißt calledFromCode und nicht disposing. Der Name zeigt damit deutlicher an, wann er True enthält, nämlich dann, wenn Dispose() von Ihrem Code aus explizit aufgerufen wurde. (Noch lieber hätte ich ihn calledFromFinalizer genannt, aber dann hätte die Bedingung der If-Anweisung eine Negation enthalten (If Not calledFromFinanlizer...).)</p>
+<p>Der Nutzen der Klasse liegt darin, dass Sie sich um die Details – erinnern, ob Dispose() schon aufgerufen wurde, Finalisierung unterdrücken usw. – nicht mehr kümmern müssen. Ressourcen haltende Klasse leiten einfach von ResourceObject ab und implementieren zwei Methoden:</p>
+<p>Public Class MyResourceClass<br />
+    Inherits ResourceObject<br />
+    …<br />
+    Protected Overrides Sub DisposeManagedResources()<br />
+        …<br />
+    End Sub</p>
+<p>Protected Overrides Sub DisposeUnmanagedResources()<br />
+        …<br />
+    End Sub<br />
+End Class</p>
+<p>In DisposeManagedResources() können Sie alle möglichen Ressourcen freigeben, in DisposeUnmanagedResources() jedoch keine “normalen” Objekte mehr. Beide Methoden sind als MustInherit definiert, um dem Implementierer einer abgeleiteten Klasse deutlich vor Augen zu halten, dass er sich dafür entschieden hat, Ressourcen in seinen Objekte zu halten und an welche Arten von Ressourcen er denken muss. (Sollten die Instanzen keine Ressourcen einer der beiden Arten enthalten, kann die Implementation der zugehörigen Dispose-Methode ja leer gelassen werden.)</p>
+<p>Sind aber überhaupt zwei Dispose-Methoden nötig? Ja. Gäbe es nur DisposeManagedResources(), würde Code zur Freigabe von Unmanaged Resources nicht aufgerufen, wenn Ihr Code Dispose() nicht nutzt. Gäbe es nur DisposeUnmanagedResources() würden über den Finalisierer immer auch „normale“ Objekte angesprochen werden müssen. Die Aufteilung macht also Sinn und sorgt dafür, dass im schlimmsten Fall – d.h. wenn Dispose() nicht aufgerufen wurde – Managed Resources erst während der Garbage Collection freigegeben werden.</p>
+<p>Ein letztes Wort: Bei mehrstufigen Vererbungsbäumen sollte am Ende jeder Dispose-Methoden sollte natürlich die der Basisklasse aufgerufen werden:</p>
+<p>Protected Overrides Sub DisposeManagedResources()<br />
+    …<br />
+    MyBase.DisposeManagedResources()<br />
+End Sub</p>
+<p>Anmerkung: Die Idee einer allgemeinen Ressourcenbasisklasse hatte ich allerdings nicht allein. Zumindest einen Artikel habe ich gefunden, als ich schon mit dem Implementation angefangen hatte: The IDisposable design pattern considered harmful. Dort fehlt allerdings eine zusammenhänge Implementation zum Herauskopieren und der Autor unterscheidet nicht wirklich, zu welchem Zeitpunkt Dispose() aufgerufen wird.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

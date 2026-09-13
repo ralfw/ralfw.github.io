@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Easy high speed reading/writing of structured binary files using C# — ralfw.de Archiv</title>
+<meta name="description" content="Quite a bit has been written about reading structured binary data from or writing it to files (see [1,2,3]). [1], for example, compares three different approaches. Unfortunately no">
+<link rel="canonical" href="https://ralfw.de/archiv/2006/easy-high-speed-reading-writing-of-structured-binary-files-using-c/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Easy high speed reading/writing of structured binary files using C# — ralfw.de Archiv">
+<meta property="og:description" content="Quite a bit has been written about reading structured binary data from or writing it to files (see [1,2,3]). [1], for example, compares three different approaches. Unfortunately no">
+<meta property="og:url" content="https://ralfw.de/archiv/2006/easy-high-speed-reading-writing-of-structured-binary-files-using-c/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Easy high speed reading/writing of structured binary files using C#</h1>
+    <div class="doc-meta"><span>4. März 2006</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/439580" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2006/easy-high-speed-reading-writing-of-structured-binary-files-using-c/</code></span></div>
+    <div class="art"><p>Quite a bit has been written about reading structured binary data from or writing it to files (see [1,2,3]). [1], for example, compares three different approaches. Unfortunately none is as straightforward as C/C++ code would be. Here´s how you could read the <a rel="noopener" href="https://web.archive.org/web/20151102202624/http://www.id3.org/id3v1.html">ID3v1 tag</a> from a MP3 file:</p>
+<p>struct ID3v1Tag <br />
+{ <br />
+   char tag[3]; // == "TAG" <br />
+   char title[30]; <br />
+   ... <br />
+};</p>
+<p>ID3v1Tag t;</p>
+<p>FILE *f = fopen("mysong.mp3", "r");</p>
+<p>fseek(f, -128, SEEK_END);</p>
+<p>fread(&amp;t, 1, 128, f);</p>
+<p>printf("%.30s\n", t.title);</p>
+<p>fclose(f);</p>
+<p>Now, if you wanted to accomplish the same with C#... it would not look that easy anymore. The reason: you cannot read data from a file (stream) directly into a struct. A stream always requires a byte array as the target for read operations. Or if you use a <em>BinaryReader</em> the <em>ReadBytes()</em> method returns a byte array. In any case the data read into a byte array needs to be copied into the target struct.</p>
+<p>[1] uses <em>Marshal.PtrToStructure()</em> to do this, and [3] offers a much more elegant solution using an unsafe assignment like this:</p>
+<p>[StructLayout(LayoutKind.Sequential, Pack=1)]<br />
+unsafe struct ID3v1Tag<br />
+{<br />
+    ...</p>
+<p>public ID3v1Tag(byte[] data)<br />
+    {<br />
+       fixed (byte* pData = data)<br />
+       {<br />
+           this = *(ID3v1Tag*)pData;<br />
+       }<br />
+    }<br />
+}</p>
+<p>Alternatively you could read data from an input stream in little chunks using a <em>BinaryReader</em>, which would mean you deserialize the data into each field by hand. This avoids the extra copy of data, but requires much effort on your side. You´re trading performance for lines of code.</p>
+<p>That´s what can be said about reading (and writing) binary data using C# (or managed code in general).</p>
+<p>However, due to a customer engagement I recently started thinking about this. The customer needs to port C++ code which interacts massively with binary files to C#. The approaches found in the literature, though, are too slow for him. The need for an extra data copy really hurts the application´s performance. So he kept essential parts of the code in C++ to benefit from the languages ease of use when accessing binary data.</p>
+<p>I felt challenged by this problem. And here´s my solution: Easy reading/writing of binary structured data using C# 2.0 - without the need for an extra data copy. Look at the following code for reading the ID3v1 tag of a MP3 file:</p>
+<p>[StructLayout(LayoutKind.Sequential, Pack = 1)] <br />
+public unsafe struct ID3v1Tag <br />
+{ <br />
+ private fixed sbyte tag[3]; <br />
+ private fixed sbyte title[30]; <br />
+ ... <br />
+}</p>
+<p>using (System.IO.BinaryFile fmp3 = new System.IO.BinaryFile("myfile.mp3", System.IO.FileMode.Open)) <br />
+{ <br />
+ ID3v1Tag t; <br />
+<br />
+ unsafe <br />
+ { <br />
+  fmp3.Seek(-128, System.IO.SeekOrigin.End); <br />
+  fmp3.ReadStruct<ID3v1Tag>(&amp;t); <br />
+ }</p>
+<p>if (t.Tag == "TAG") <br />
+ { <br />
+  Console.WriteLine("title: " + t.Title); ... <br />
+ } <br />
+}</p>
+<p>I´d say it´s as easy to read/write as the C++ equivalent above. And it´s just generic functions that get called. And no extra copies of data are needed. The ID3v1 tag data is read directly into the <em>ID3v1Tag</em> struct passed to the <em>Read()</em> method.</p>
+<p>How is this done?</p>
+<p>Well, I removed the premise that underlies the usual literature on this topic: I don´t use <em>System.IO</em> to access the file, but the old CRT fxxx() functions. The above <em>BinaryFile</em> class encapsulates the calls to the following C DLL functions:</p>
+<p>[System.Runtime.InteropServices.DllImport("CRTFileIO.dll")] <br />
+private static extern int FileOpen(string filename, string mode);</p>
+<p>[System.Runtime.InteropServices.DllImport("CRTFileIO.dll")] <br />
+private static extern void FileClose(int hStream);</p>
+<p>[System.Runtime.InteropServices.DllImport("CRTFileIO.dll")] <br />
+private unsafe static extern bool FileReadBuffer(int hStream, void* buffer, short bufferLen);</p>
+<p>[System.Runtime.InteropServices.DllImport("CRTFileIO.dll")] <br />
+private unsafe static extern bool FileWriteBuffer(int hStream, void* buffer, short bufferLen);</p>
+<p>[System.Runtime.InteropServices.DllImport("CRTFileIO.dll")] <br />
+private unsafe static extern bool FileSeek(int hStream, int offset, short origin);</p>
+<p>[System.Runtime.InteropServices.DllImport("CRTFileIO.dll")] <br />
+private unsafe static extern bool FileGetPos(int hStream, out int pos);</p>
+<p>[System.Runtime.InteropServices.DllImport("CRTFileIO.dll")] <br />
+private unsafe static extern bool FileFlush(int hStream);</p>
+<p>I just wrote a small unmanaged DLL wrapper around the basic stdio C functions like <em>fopen()</em>, <em>fread()</em> etc. That´s all the magic there is. Look at my C function for reading data from a file:</p>
+<p>extern "C" DLLEXPORT short __stdcall FileReadBuffer(FILE *stream, void *buffer, int bufferLen) <br />
+{ <br />
+ int n = fread(buffer, 1, bufferLen, stream); <br />
+ return n == bufferLen; <br />
+}</p>
+<p>This function is called by a wrapper class´ method to make it easier for application code to work with binary files. <em>BinaryFile</em> hides the CRT file handle and looks much like a <em>FileStream</em> (that´s also the reason why I put <em>BinaryFile</em> into the <em>System.IO</em> namespace):</p>
+<p>public unsafe bool ReadStruct<StructType>(void *buffer) where StructType : struct<br />
+{<br />
+  return Read(buffer, (short)System.Runtime.InteropServices.Marshal.SizeOf(typeof(StructType)));<br />
+}</p>
+<p>public unsafe bool Read(void* buffer, short bufferLen) <br />
+{ <br />
+ ... <br />
+ return FileReadBuffer(hFile, buffer, bufferLen); <br />
+}</p>
+<p>This <em>Read()</em> method you just need to pass the address of the target struct to receive the data from the file and the number of bytes to read. That´s it. <em>fread()</em> will put the data right into the C# struct. No extra <em>byte[]</em>, no explicit deserialization of fields. You just need to be willing to use unsafe code:</p>
+<p>unsafe <br />
+{ <br />
+ fmp3.Read<MyStruct>(&amp;myStructVar); <br />
+}</p>
+<p>I´d say, it cannot become much easier or faster than this, when reading from binary files.</p>
+<p>If you´d like to give this approach a try, you can <a rel="noopener" href="https://web.archive.org/web/20151102202624/http://www.ralfw.de/download/csharpbinrw.zip">download sources here</a>.</p>
+<p>In order to use the BinaryFile class just add a reference to <em>CRTFileIO.Import.dll</em> to your C# project and make sure the C wrapper <em>CRTFileIO.dll</em> gets copied to the same directory as <em>CRTFileIO.Import.dll</em>.</p>
+<p>Enjoy!</p>
+<h4>Resources</h4>
+<p>[1] Anthony Baraff: Fast Binary File Reading with C#, <a rel="noopener" href="https://web.archive.org/web/20151102202624/http://www.codeproject.com/csharp/fastbinaryfileinput.asp">http://www.codeproject.com/csharp/fastbinaryfileinput.asp</a></p>
+<p>[2] Robert L. Bogue: Read binary files more efficiently using C#, <a rel="noopener" href="https://web.archive.org/web/20151102202624/http://www.builderau.com.au/architect/webservices/0,39024590,20277904,00.htm">http://www.builderau.com.au/architect/webservices/0,39024590,20277904,00.htm</a></p>
+<p>[3] Eric Gunnerson: Unsafe and reading from files<a rel="noopener" href="https://web.archive.org/web/20151102202624/http://blogs.msdn.com/ericgu/archive/2004/04/13/112297.aspx">, http://blogs.msdn.com/ericgu/archive/2004/04/13/112297.aspx</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

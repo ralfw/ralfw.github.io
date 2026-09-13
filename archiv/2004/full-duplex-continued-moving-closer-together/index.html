@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Full duplex continued: Moving closer together — ralfw.de Archiv</title>
+<meta name="description" content="Knives back in our boots I like Clemens&#x27; new post quite bit. Or even: I agree with his solutions for the scenarios depicted.">
+<link rel="canonical" href="https://ralfw.de/archiv/2004/full-duplex-continued-moving-closer-together/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Full duplex continued: Moving closer together — ralfw.de Archiv">
+<meta property="og:description" content="Knives back in our boots I like Clemens&#x27; new post quite bit. Or even: I agree with his solutions for the scenarios depicted.">
+<meta property="og:url" content="https://ralfw.de/archiv/2004/full-duplex-continued-moving-closer-together/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Full duplex continued: Moving closer together</h1>
+    <div class="doc-meta"><span>16. Mai 2004</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2004/05/16/132782.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2004/full-duplex-continued-moving-closer-together/</code></span></div>
+    <div class="art"><p>Knives back in our boots I like <a rel="noopener" href="https://web.archive.org/web/20040617120405/http://staff.newtelligence.net/clemensv/PermaLink.aspx?guid=04cfedd9-12d3-4070-ab7c-b52bc67fda2d">Clemens' new post</a> quite bit. Or even: I agree with his solutions for the scenarios depicted.  </p>
+<p>However, I know few developers who are going to build such kind of systems within the next 10 years. Or to be honest: I know none.  </p>
+<p>That doesn´t mean, I think there are none, but only makes a statement about the 5000+ developers I "touch" each year.  </p>
+<p>As useful and necessary Clemens´ solutions are, I don´t think, we can motivate those 5000+ developers to adapt them anytime soon. Plus, I still doubt they make sense for all of them. At least as long as the technology to implement them is not here and easy to use. (Always remember COM+: A good technology and sound concepts below it do not guarantee broad success and adoption of the ideas!)  </p>
+<p>This is why I still cling to the notion of in-proc resource components. Or maybe I should call them light weight services? ;-)  </p>
+<p>Anyway, I don´t see Clemens and me that far apart in our views. We´re just looking at applications of different scale. This becomes clear, when I say, that Clemens´ "data services" are treated as separate applications in my architectural picture. Just because some component delivers data, I don´t think it can only be a resource component. If it´s big enough (or independent/autonomous enough) sure it can be made into an application of its own. SQL Server for example is an application of its own - but my application should communicate with it thru a resource component wrapping an abstraction layer around its services.</p>
+<p>So let me refine my overview picture like this:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/b80927152280e2d0.gif" /></p>
+<p>Resource components (the green boxes) also communicate with applications - if they represent data sources/sinks.</p>
+<p>Now, you could say, make the green boxes part of the orange ones (applications) and you´re in a service only world. Yes, right. But I find it valuable for developers to actually see the resource access components - and have alternatives: Sometimes data access is using another application (service), sometimes not.</p>
+<p>Even though I´m very much in favor of clear rules, I think this much "doubt" (like Clemens calls it) is perfectly ok or even necessary in terms of an easier migration path to a service oriented world.</p>
+<p>Since developers today still think in applications (not services) I want to provide them with a picture as close to their thinking as possible. That means: leave as many concepts in place as possible. That´s why I just moved around the boxes in our common architecture picture. I did not remove "frontend", not did I remove "data access". Me believe is, this way more developers can relate to what I´m proposing.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

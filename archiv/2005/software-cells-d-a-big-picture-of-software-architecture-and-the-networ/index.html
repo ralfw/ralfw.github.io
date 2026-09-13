@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software Cells #D: A Big Picture of Software Architecture and: The Network is the Computer — ralfw.de Archiv</title>
+<meta name="description" content="With my previous postings on the holarchy of the Software Cells model, on how software layers fit in, and what to do with infrastructural concerns in place, I guess it´s time for a">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/software-cells-d-a-big-picture-of-software-architecture-and-the-networ/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software Cells #D: A Big Picture of Software Architecture and: The Network is the Computer — ralfw.de Archiv">
+<meta property="og:description" content="With my previous postings on the holarchy of the Software Cells model, on how software layers fit in, and what to do with infrastructural concerns in place, I guess it´s time for a">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/software-cells-d-a-big-picture-of-software-architecture-and-the-networ/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Software Cells #D: A Big Picture of Software Architecture and: The Network is the Computer</h1>
+    <div class="doc-meta"><span>8. Juni 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2005/06/08/410898.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/software-cells-d-a-big-picture-of-software-architecture-and-the-networ/</code></span></div>
+    <div class="art"><p>With my previous postings on the <a rel="noopener" href="https://web.archive.org/web/20060507042122/http://weblogs.asp.net/ralfw/archive/2005/05/27/409299.aspx">holarchy of the Software Cells model</a>, on <a rel="noopener" href="https://web.archive.org/web/20060507042122/http://weblogs.asp.net/ralfw/archive/2005/06/05/410456.aspx">how software layers fit in</a>, and <a rel="noopener" href="https://web.archive.org/web/20060507042122/http://weblogs.asp.net/ralfw/archive/2005/06/05/410417.aspx">what to do with infrastructural concerns</a> in place, I guess it´s time for a little wrap-up.</p>
+<p>Software Cells seem to be no less than an attempt to find some kind of unified model of software, to fit as much of what you encounter in terms of concepts in your everyday programming life into a single picture. Since I started out with the modest goal of answering just the question "What the heck is an 'application'?" ;-), I´m probably as surprised as you are, how far Software Cells have evolved over the past weeks. From simple triangles arranged like a biological cell structure to the general concept of a holarchy. Wow!</p>
+<p>So let´s step back and see, what we have:</p>
+<p>First, there are now several ways to arrange software artifacts:</p>
+<ul>
+<li>Artifacts exist on several layers of abstraction starting at the bottom with Methods and going up to Societies as a term for a network of interacting Solutions which consist of the ominous Applications.</li>
+<li>Artifacts exist in several dimensions to separate them according to their different fundamental concerns from one another. A caching Component serves an important purpose in an Application - but can easily get in your way, when you try to design the parts of your Application pertinent to the main problem domain. So why not "fold it away" in its own infrastructure dimension. Its workings are supposed to be transparent to other components anyway.</li>
+<li>Artifacts exist in several logical categories, to simply group them according to arbitrary needs. You want to talk about several components which are related to user interaction? Well, put them into a "Frontend" category. You can even build a hierarchy of such categories. That´s perfectly fine and entails none of the drawbacks of the old software layers model.</li>
+</ul>
+<p>Taken together, layers, concerns and categories span a 3D-space:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/8dbd1a30df64fd3c.gif" /></p>
+<p>That means, each software artifact can be located using a tripel like <em>(level, concern, category)</em>, e.g. <em>(Application, Proxy, Communication)</em> or <em>(Method, Security, Businesslogic)</em>. This helps greatly, I´d say, to avoid misunderstandings. You can always know or communicate, what exactly you´re talking about.</p>
+<p>With this in hand, we can also start to locate existing concepts/technologies, e.g.</p>
+<ul>
+<li><strong>Software Layers</strong>: A model concerned with categorizing artifacts up to the level of a single Solution.</li>
+<li><strong>OOP</strong>: A programming paradigm concerned with holons on the levels from Method to Type.</li>
+<li><strong>COP/CBD</strong>: A programming paradigm concerned with Component level holons.</li>
+<li><strong>AOP</strong>: A programming paradigm pertaining to connect Concerns on several dimensions on the Type holon level.</li>
+<li><strong>Design Patterns</strong>: A dictionary of recurring "arrangements" of holons on the Type level.</li>
+<li><strong>Enterprise Patterns</strong>: A dictionary of recurring "arrangements" of holons from Type to Solution level, also concerning communication technologies.</li>
+<li><strong>SOA</strong>: An assortment of concepts regarding holons from Application to Society and infrastructural concerns.</li>
+</ul>
+<p>However, software artifacts rarely are islands. Rather they need to be connected with each other on all levels of the holarchy. So the Software Cells model allows connections between holons. My <a rel="noopener" href="https://web.archive.org/web/20060507042122/http://weblogs.asp.net/ralfw/archive/2005/06/06/410467.aspx">previous posting</a> describes this in details. Just let me summarize here:</p>
+<ul>
+<li>Direct connections only run between holons on the same level of abstraction and within the same encompassing holon.</li>
+<li>Connection can be categorized as stack based or stream based, with stream based connections being the only kind between holons from the Application level upwards. Stack based communication is only possible between holons running in the same Application.</li>
+</ul>
+<p>With this in hand you again can classify communication lines in any Software Cells diagram:</p>
+<p>Connections between holons from Method to Component are (usually) stack based communication lines, that means simple method calls.</p>
+<p>Connections between holons on level from Application up to Society are stream based and need to be described in more detail: which communication medium, which API, which data format? Also, stream based connections need to be wrapped by so called Connection Point components to shield any Problem Domain concern logic from their API details. An Adapter Connection Point serves as a facade before an API on the side of a client, a Portal Connection Point opens an Application for connections from other Applications (or a human user).</p>
+<p>Since communication between holons fundamentally changes from Component (stack) to Application (stream), Applications are somewhat a focal point of the Software Cell holarchy. (They are even synonymous with "Software Cell".) They (currently) need more attention than other holons. Since the very term "application" has been underspecified or fuzzy for so long they even need a more rigid definition and more finegrained structure. That´s why Software Cells define Applications as follows:</p>
+<ul>
+<li>An Application consist of at least one Component holon (the main Application logic) which runs inside of a so called Host.</li>
+<li>The Host is a standalone executable and offers infrastructure to the Components it´s accomodating. Host can be as simple as a console EXE or as complex as COM+, BizTalk, or SQL Server. Host offer different communication technology options to choose from for the Portals of an Application. If you happen to implement your own Host, be sure to locate it in an infrastructure Concern. However, most of the time you´ll choose an existing Host for your Applications, which then does not need to show up in a Software Cell diagram (neither in the holarchy, nor in an infrastructure dimension).</li>
+</ul>
+<p>Othen than this, Software Cells don´t impose any structure on your software. They don´t tell you your need an "User Interface Process" component or a "Business Workflow". They just say, you can connect Applications as easily as Methods or Assemblies. You need to be aware of what you´re doing, so you need to set up Adapters and Portals. That´s it. If your Solutions then consists of one or 10 Applications... it´s up to you. If you want to put "business logic" into some "frontend" Application... that´s perfectly ok. Or use SQL Server as a Host for complicated calculations... just fine, go ahead! From the point of view of  Software Cells those descisions are all about moving holons around in a holarchy. Of course this might entail consequences (e.g. putting a lot of workload into SQL Server makes it harder to scale cheaply), but you don´t need to be feel constrained by some more or less fuzzy prescriptions from some ivory tower.</p>
+<p>If then someone comes along an proposes a certain pattern of how to arrange holons into Categories you can follow his advise - or not. Software Cells are agnostic to those fashions. Or even: Software Cells provide a framework for many such patterns or paradigms, and makes it easy to locate them and put them in relation to others.</p>
+<p>For example, it´s easy to understand was meant by Scott McNealy's famous "The network is the computer". Consider the holarchy and add hardware as a host to the picture:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/b8ad7973bc050fef.jpg" /></p>
+<p>Earlier - maybe until 1993? - only holons up to the Application level were known. That means, problems were solved by single Applications on single Computers (large or small). In the picture the little PC images on white Application holons (also showing the Component and Assembly levels) depict this situation. PCs were the hosts/containers for the then top level holons.</p>
+<p>But today? Today the holarchy goes up to Societies - and the hosts/containers for them are not single computers anymore, but whole networks of computers:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/4595b80d2997c3d8.jpg" /></p>
+<p>The problem solving entity is not an Application anymore. The problem solving entities are Societies. And since problem solving entities (programs) are traditionally run on computers, the "new computers" are networks. To say "The network is the computer" is the same as saying "Society holons are the programs of today."</p>
+<p>That also underlines how ever more coarse grained software parts have become: we started out with Methods, then Types, then Assemblies (libraries, DLLs), now it´s Applications - and tomorrow whole Solutions will be reusable parts. (Strangely, Components - the holons between Assembly and Applications - have been touted the building blocks of Applications for some years, but never produced a mainstream technology to concisely define them. Assemblies certainly are not Components in the Software Cells sense.)</p>
+<p>With the raise of abstraction of holons goes along a trend towards looser coupling. The higher in the holarchy a holon is, the looser the coupling with its peers. Methods need to be very tightly coupled; Applications are supposed to be very loosely coupled. And Solutions as software parts probably need to attain an ever higher degree of decoupling to be reusable.</p>
+<p>A means of decoupling is indirection: you don´t directly bind to and communication with your partner, but first have to determine who it actually is. vtables are a common means of indirection on the Method level. IoC/Microkernels do the same for Assemblies/Components. Message queues are a way to reach this kind of independence for Application. And UDDI can be thought of being the equivalent for Solutions, I´d say.</p>
+<p>You see, a systematic view of software with a model like Software Cells makes it easy to spot trends and recognize similarities. And for new developments it can be a framework to hook into and connect with existing concepts. But of course, the main purpose of Software Cells is to make it easier for you to architect your next software solution to a customer problem - be it a single Solution holon, a whole Society, or just an Application or Component. A single starting point for software architecture, that´s what Software Cells are trying to be: For that they provide a place for the artifacts you produce (holons), technologies to run them (Hosts), and ways to connect them (connections and Connection Points). And in case your pictures get too cluttered - well, there are Concerns (dimensions) and Categories to help you untangle the mess ;-)</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Datenbankpfad einsetzen in Connection String in WinForms und ASP.NET Anwendungen — ralfw.de Archiv</title>
+<meta name="description" content="Bei der Datenbankprogrammierung ist ja immer wieder eine Frage, ob denn der Connectionstring gespeichert werden sollte. Die Optionen reichen von einer Integration in den Code über ">
+<link rel="canonical" href="https://ralfw.de/archiv/2003/datenbankpfad-einsetzen-in-connection-string-in-winforms-und-asp-net-a/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Datenbankpfad einsetzen in Connection String in WinForms und ASP.NET Anwendungen — ralfw.de Archiv">
+<meta property="og:description" content="Bei der Datenbankprogrammierung ist ja immer wieder eine Frage, ob denn der Connectionstring gespeichert werden sollte. Die Optionen reichen von einer Integration in den Code über ">
+<meta property="og:url" content="https://ralfw.de/archiv/2003/datenbankpfad-einsetzen-in-connection-string-in-winforms-und-asp-net-a/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Datenbankpfad einsetzen in Connection String in WinForms und ASP.NET Anwendungen</h1>
+    <div class="doc-meta"><span>31. Juli 2003</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/posts/22053.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2003/datenbankpfad-einsetzen-in-connection-string-in-winforms-und-asp-net-a/</code></span></div>
+    <div class="art"><p>Bei der Datenbankprogrammierung ist ja immer wieder eine Frage, ob denn der Connectionstring gespeichert werden sollte. Die Optionen reichen von einer Integration in den Code über .NET Enterprise Services Constructor Strings bis zu verschlüsselten Dateien.</p>
+<p>Meine Lieblingsoption vor allem während des Prototypings ist allerdings eine UDL-Datei. Man kann sie leicht erzeugen (Datei mit Extension .udl erzeugen und doppelklicken; dann erscheint ein Wizard, um den Connection String zusammenzustellen) und man kann sie leicht an eine Connection übergeben:</p>
+<p>New OleDbConnection("file name=myconnection.udl")</p>
+<p>So muss ich nicht die ganzen Einstellungen für die unterschiedlichen OLEDB Provider im Kopf haben. Sehr bequem!</p>
+<p>Wenn die UDL-Datei dann bei WinForms-Anwendungen im Anwendungsverzeichnis liegt, ist die Welt auch in Ordnung.<br />
+Liegt sie dort nicht, muss man einen Pfad voranstellen, z.B. <em>c:\database\myconnection.udl</em>.</p>
+<p>Besonders lästig ist es nun, wenn man Connections mit dem selben Code in WinForms und ASP.NET Anwendungen erzeugen will. Bei WinForms ist kein Pfad nötig, bei ASP.NET aber doch. Denn dort ist das Anwendungsverzeichnis das System32-Verzeichnis - und dort will man keine UDL-Dateien ablegen.</p>
+<p>Das Problem lässt sich aber durchaus einfach lösen. Zunächst sollte die Erzeugung einer Datenbankverbindung ja ohnehin immer in eine zentrale Methode verpackt werden, z.B. CreateConnection(). In ihr kann dann automatisch ermittelt werden, ob der Code in einer ASP.NET Anwendung läuft:</p>
+<p>Imports System.Web</p>
+<p>Public Function CreateConnection() As OleDbConnection<br />
+    Dim path As String<br />
+    Dim ctx As HttpContext = HttpContext.Current<br />
+    If Not ctx Is Nothing Then path = ctx.Server.MapPath(".") &amp; "\"<br />
+    Return New OleDbConnection(String.Format("file name={0}myconnection.udl", path))<br />
+End Function</p>
+<p>Wenn ein HttpContext-Objekt existiert, dann wird die Methode in einer ASP.NET Anwendung aufgerufen. Und dann lässt sich das Anwendungsverzeichnis über Server.MapPath(".") ermitteln. Die Connectionerzeugung ist damit unabhängig vom Host für den Code.</p>
+<p>Dieses Vorgehen funktioniert natürlich auch, wenn ein Connectionstring an einem anderen Ort liegt und z.B. nur einen Datenbankpfad enthält. Im Connectionstring sollte dann nur auch ein Platzhalter wie "{0}" für den Pfad vorgesehen sein.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spans in ObjectSpaces are not enough - Proposal for sparse population of persistent objects — ralfw.de Archiv</title>
+<meta name="description" content="Matt Warren has provided a look behind the scenes of how features of ObjectSpaces (OS) come into existence in his blog entry &quot;ObjectSpaces: Spanning the Matrix&quot;. The entry plus the">
+<link rel="canonical" href="https://ralfw.de/archiv/2004/spans-in-objectspaces-are-not-enough-proposal-for-sparse-population-of/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Spans in ObjectSpaces are not enough - Proposal for sparse population of persistent objects — ralfw.de Archiv">
+<meta property="og:description" content="Matt Warren has provided a look behind the scenes of how features of ObjectSpaces (OS) come into existence in his blog entry &quot;ObjectSpaces: Spanning the Matrix&quot;. The entry plus the">
+<meta property="og:url" content="https://ralfw.de/archiv/2004/spans-in-objectspaces-are-not-enough-proposal-for-sparse-population-of/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Spans in ObjectSpaces are not enough - Proposal for sparse population of persistent objects</h1>
+    <div class="doc-meta"><span>19. März 2004</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="https://asp-blogs.azurewebsites.net/ralfw/92538" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2004/spans-in-objectspaces-are-not-enough-proposal-for-sparse-population-of/</code></span></div>
+    <div class="art"><p><a rel="noopener" href="https://web.archive.org/web/20240625054312/http://weblogs.asp.net/mattwar/">Matt Warren</a> has provided a look behind the scenes of how features of ObjectSpaces (OS) come into existence in his blog entry <a rel="noopener" href="https://web.archive.org/web/20240625054312/http://weblogs.asp.net/mattwar/archive/2004/03/15/90275.aspx">"ObjectSpaces: Spanning the Matrix"</a>. The entry plus the comments are an interesting read in that they show, how technology features are dependent on single people who advocate them, and how Microsoft watches the market of competive products and needs of developers. Good to know, in the end it´s all just humans at Microsoft :-)</p>
+<p>Concerning the feature in question - spans in OS - I of course like them. Passing span information to a query is a very good idea. But they only describe, how deep you dig into the graph of objects for a given use case.  </p>
+<p>What is lacking but I also find necessary is, to describe how much data should be loaded for each object in the graph retrieved!  </p>
+<p>Example:  </p>
+<p><em>Customers</em> -&gt; <em>Orders</em> -&gt; <em>Items</em>  </p>
+<p>Scenario 1: List Customers and Orders.<br />
+Scenario 2: Edit Order.  </p>
+<p>The object graph is static. The relationships between the tables/classes do not change.  </p>
+<p>But the usage of the classes is different.  </p>
+<p>In scenario 1 I´d like to load maybe only <em>Customers(id, name, city, zip, contactname)</em> and <em>Orders(id, customerid, orderno, amount)</em>.  </p>
+<p>In scenario 2, though, I´d need to load <em>Orders(id, customerid, orderno, amount, order date, shipping date, shipping info, etc.)</em> and <em>Items(id, orderid, qty, price, description, etc.)</em>, <em>Customers(id, name, city)</em>.  </p>
+<p>OS' spans solve the problem of defining whether to load Orders or Items at all when running a query.  </p>
+<p>But they don´t solve the problem of different needs of data population of each object. OS only offers all or nothing with delayed loading. That´s not enough!  </p>
+<p>In scenario 1 I neither want a "hollow object" for each Order, nor do I want the complete object. I just want enough properties populated to be able to show a list of orders (and customers) without additional database roundtrips.   </p>
+<p>This feature I haven´t found in any O/R mapping tool yet. And i don´t know why. (But I´m open to enlightenment from any O/R mapping tool manufacturer.)</p>
+<p>It seems so obvious to me. I´ve implemented it once in my own O/R mapping tool back in 2000 with ADO - and it was very (!) convenient to use. Unfortunately, since then I had not the time to redo it in the .net world :-(  </p>
+<p>So my suggestion for OS would be: Allow for groups of persistent object properties. Here´s some pseudo code:  </p>
+<p><em>Class Customer<br />
+    id (*)<br />
+    companyname (*)<br />
+    city (list, edit, phonelist)<br />
+    zip (list)<br />
+    phone (edit, phonelist)<br />
+    orders<br />
+End Class</em></p>
+<p><em>Class Order<br />
+    id (*)<br />
+    customerid (*)<br />
+    orderno (list, edit)<br />
+    orderdate (edit)<br />
+    items<br />
+End Class</em><br />
+Fields "id" and "companyname" are always retrieved. "city" when fields of group "list", "phonelist" or "edit" are requested. "zip" only for group "list". "phone" only for "edit" and "phonelist".  </p>
+<p>When retrieving objects you could annotate the spans with group info, e.g.</p>
+<p><em>GetObjectSet(gettype(Customer), "companyname like 'a%'", "</em><em>list</em><em>", "orders</em><em>(list)</em><em>")</em></p>
+<p>Each level in the object graph retrieved would then contain enough information for the current use case, or at least maybe 95% of a use case. Each object would only be sparsely populated. But if, while accessing the objects in the graph, code wants to read a property not retrieved, OS transparently could go back to load missing data.</p>
+<p>Advantages of field groups:</p>
+<p>-no roundtrips: all data needed for most usual processing within the context of a use case is present. no additional roundtrips needed - most of the time.<br />
+-dynamic: data needed is specified at runtime where it´s needed.<br />
+-transparent: if data is missing, it is transparently retrieved by OS. Performance would depend how well field groups are designed and used.</p>
+<p>Disadvantage: Even though I think this feature is necessary, I doubt, that OS can implement it easily. It would require that an object can check on property/field access, if the data has beend loaded - and if not, go back to the database and get it. This would require field access interception. And that would violate a premise of OS: Any class can be made persistent. Field access interception would mean IL code enhancement or at least property methods.</p>
+<p>But then: You can´t have the cake and eat it. If convenience and performance are important, maybe this OS premise should be dropped? Is it important to be able to make any class persistent? I don´t think so - <a rel="noopener" href="https://web.archive.org/web/20240625054312/http://weblogs.asp.net/ralfw/archive/2004/02/04/67262.aspx">as I have stated earlier</a>.. I deem it more important to have an easy to use programming model.</p>
+<p>Microsoft might have thought: "Hey, there are so many relational databases out there. And, hey, people have defined so many classes to represent database entities in their software. To servce them well, we need to provide them with a mapping tool between the existing data models: persistent data model, OO data model."</p>
+<p>Sounds plausible to me - from Microsoft´s point of view. But then, the real world is different, I guess. Developers using Microsoft technologies have come up with sophisticated object models much less often, than their colleagues in the Java world. For several reasons. Two being: Microsofts long standing advocacy of data binding to generic container data structures (e.g. ADODB.Recordset and ADO.NET DataSet), and VBs lack of OO concepts for years.</p>
+<p>So I´d say, Microsoft´s vision of OS is an answer to a non existing problem. Of course there are huge amounts of existing relational DBs. But there are not that many existing object models for them. Hence, there is not need for a mapping like OS offers. And hence persistent classes could be defined in any way - that makes using them in the end easier.</p>
+<p>Which again brings me to graphical modelling tools or domain specific languages for defining persistent classes. With them, implementing field groups would be no problem, because no existing classes needed to be kept and served.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

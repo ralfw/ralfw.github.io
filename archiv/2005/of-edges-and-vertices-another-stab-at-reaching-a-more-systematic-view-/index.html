@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Of edges and vertices - another stab at reaching a more systematic view of software — ralfw.de Archiv</title>
+<meta name="description" content="I keep hearing, services (as in SOA) are about edges. If that´s the case, what are these edges connecting? There are no edges without vertices.">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/of-edges-and-vertices-another-stab-at-reaching-a-more-systematic-view-/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Of edges and vertices - another stab at reaching a more systematic view of software — ralfw.de Archiv">
+<meta property="og:description" content="I keep hearing, services (as in SOA) are about edges. If that´s the case, what are these edges connecting? There are no edges without vertices.">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/of-edges-and-vertices-another-stab-at-reaching-a-more-systematic-view-/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Of edges and vertices - another stab at reaching a more systematic view of software</h1>
+    <div class="doc-meta"><span>31. Dez. 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2005/12/31/434275.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/of-edges-and-vertices-another-stab-at-reaching-a-more-systematic-view-/</code></span></div>
+    <div class="art"><p>I keep hearing, services (as in SOA) are about edges. If that´s the case, what are these edges connecting? There are no edges without vertices.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/15da5360e22d6e78.gif" /></p>
+<p>At this point, I don´t yet want to speculate about what the vertices or "bubbles" in the picture are. But I guess I know one thing: they sure have a structure.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/00aae5b8c5ca8e4f.gif" /></p>
+<p>What about services now? Does each of the connections between the inscribed bubbles also have to do with services? I don´t think so. At least not necessarily.</p>
+<p>And are those bubbles now atoms? I don´t think so either. I guess they again can have some structure:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/857b5a64608cf6e0.gif" /></p>
+<p>Every bubble is just a functional unit of a software and exists on a certain level of abstraction. The above pictures thus show a stepwise refinement process start at some level n of abstraction and moving down to level n+1 and then n+2. As long as the bubbles are not mapped to some concrete software artifact (e.g. a class) this process can continue pretty much ad infinitum. You choose which bubbles need to be refined more until you feel confident as to clearly understand what a leaf bubble in this hierarchy does/means.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/a1316c40e37b198b.gif" /></p>
+<p>But not only bubbles or vertices can be refined. Edges can be refined too:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/9f14209633586dd1.gif" /></p>
+<p>And within the edge refinement, again edges and bubbles can be decomposed and so on.</p>
+<p>What do we know now?</p>
+<ul>
+<li>Software consists of a set of "bubbles".</li>
+<li>Bubbles live on different levels of abstraction.</li>
+<li>Bubbles are vertices in a mesh woven by edges between bubbles.</li>
+<li>Edges live on different levels of abstraction.</li>
+</ul>
+<p>And what don´t we know yet?</p>
+<ul>
+<li>What is a bubble?</li>
+<li>What is an edge?</li>
+</ul>
+<p>Following Bertrand Meyer´s famous "Bubbles don´t crash" I´d say, we need to map bubbles to very concrete software artifacts, otherwise they are prone to become stale as soon as their implemenation changes. To paraphrase Bertrand Meyer I´d additionally say "Edges don´t break" unless we map them to very concrete software artifacts.</p>
+<p>This leads to the question: Which software artifact to assign to an edge or bubble?</p>
+<h3>Classifying Edges</h3>
+<p>To reach an answer, we first need to specify, what an edge is: An edge is a communication line between bubbles. Bubbles implementing some partial functionality (of a higher level bubble) need to cooperate and thus need to communicate. How the communication is done is defined by an edge thru its technology (e.g. WCF), its mode (e.g. async) etc.</p>
+<p>What kind of communication is approriate is a function of firstly what the connected bubbles do - not of how they are implemented. So before determining the exact software artifact for a bubble, I´d say it´s best, to define their communication and general relation. Does the communication need to very fast? Does it need to be synchronous? Does it need to be secure? Do the bubbles "know" each other very well, do they trust each other? Is a certain bubble required to be located on a particular machine? All these questions can be answered without exactly knowing yet, what a bubble is.</p>
+<p>The result is an architectural image of a software with different "weights" attached to the edges:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/49c28afee2630b01.gif" /></p>
+<p>How bubbles are related can be expressed by different styles for edges (thick/thin, dotted/dashed/solid, color) and proximity, suggesting the closer together two bubbles are drawn, the more intimate their relationship.</p>
+<p>What can happen when you start classifying the edges is, you find that two bubbles, originally being close together because they were the result of the refinement of an encompassing bubble, move farther apart. Maybe you even feel inclined to move them apart:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/6727b199e94420e3.gif" /></p>
+<p>That´s perfectly ok. Software design is an iterative process. And if you discover some system property only later in a process, that´s ok. Most important than is to stay in the world of software artifacts and refactor your design and not gloss over your discovery.</p>
+<p>Enter services: You just put a lot of thought into the edges of the system. That´s essentially service oriented thinking already. Because by weighing the edges depending on the general functionality of the connected bubbles, you thought a lot about coupling and autonomy of the bubbles. What a service is thus does not so much depend on its representation (what kind of software artifact is used), but on its relationships with other bubbles.</p>
+<p>A service simply is a manifest bubble on some level of abstraction exhibiting properties aligning it with the tenets of SOA. Since autonomy (i.e. very loose coupling) is at the heart of the service definition, service bubbles are even pretty free to move around in your architecture. Take the purple bubble in the above picture as a service: first it worked pretty close to other bubbles within a shared container bubble. Then it was moved out of the container to work stand alone. What changed was just the classification on the edges connecting it to other bubbles.</p>
+<p>So, what do know about edges?</p>
+<ul>
+<li>Edges connect bubbles for them to communicate.</li>
+<li>Edges have properties that need to be specified in order to map them to the world of software artifacts.</li>
+</ul>
+<p>What are properties of communication edges? Here are some coming to my mind, but sure there are more:</p>
+<ul>
+<li>Mode: sync, async</li>
+<li>Style: RPC-style, message based</li>
+<li>Direction: unidirectional, bidirectional</li>
+<li>Proximity: do both bubbles run in the same address space?</li>
+<li>Transactions: is the communication transactional?</li>
+<li>Security: does integrity and/or privacy need to enforced?</li>
+<li>Latency: How long does a signal need to travel between the bubbles</li>
+<li>Bandwidth: How many bubbles can communicate via the connection at the same time?</li>
+<li>Contract: Which operations with what kind of data can be started?</li>
+<li>Technology/API: System.Net, System.Remoting, WCF, ADO.NET, System.Messaging, System.IO, etc.</li>
+</ul>
+<h3>Classifying Bubbles</h3>
+<p>Now on to the bubbles. How can we "root them in reality"? Let´s start by finding the lowest level of abstraction we can equal with a software artifact. I´d say that´s a single statement. When decomposing a software system you don´t want to go deeper than single statements in whatever language you´re later on using for implementation.</p>
+<p>On the other end of the spectrum of abstraction levels is a solution, I´d say. Because when you set out to design a system, you do that with a solution for a particular problem in mind. You customer usually does not request "a class" from you. She´s not concerned with such nitty gritty details, but rather just asks you for "a solution".</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/43977d917dff38cc.gif" /></p>
+<p>Ultimately a Solution thus consists of Statements. But as we all know, it´s impossible for any non trivial problem to get from the problem definition to the necessary statements in just one step. Instead we need to stepwise decomponse the problem - or the Solution bubble as its representation.</p>
+<p>For this stepwise decomposition (which is an iterative process and can be top-down as well as bottom-up) we need more levels of abstraction between Solution and Statement. I propose the following Application, Component, Assembly, Class, Method with more or less obvious manifestations.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/ec65283790198bd1.gif" /></p>
+<p>Each level of those software artifacts corresponding to a level of abstraction can contain many artifacts of the next lower level and itself is part of a container artifact. Following Arthur Koestler these artifacts can be called <em>holons</em> arranged in a <em>holarchy</em>.</p>
+<p>The above picture hopefully looks simple and systematic to you. From my experience in using it with customers I can at least say, it helps a lot in designing software systems (or Solutions for that matter). To have a continuum of abstraction levels at hand is a very convenient guideline for your struggle with complexity.</p>
+<p>However, I´d like to add some refinements to the picture:</p>
+<h4>A context for Solutions</h4>
+<p>Even though what you need to develop is a Solution and thus is the root for the tree of software artifacts you need to produce it is helpful to see a Solution in context, i.e. to see it too as part of a larger whole. I call the container for Solutions a Society.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/8a8dd43d4f667392.gif" /></p>
+<p>The Society simply spans a space in which to locate your Solution (which needs to be designed by decomposition) as well as other, already existing Solutions or systems of some kind that are of importance to your Solution. Your Solution of course communicates with the others in some way, otherwise it would make no sense to depict them at all. However, the other Solutions are black boxes. No details can or should be known about their inner workings. What counts is only the edge between your Solution and them.</p>
+<p><strong>Outlook</strong></p>
+<p>Ok, so much for today. Next time I´m gonna talk about processes and recursive software building blocks.</p>
+<p>For those of your, who already heard of my models called <a rel="noopener" href="https://web.archive.org/web/20060415094442/http://weblogs.asp.net/ralfw/category/9899.aspx?Show=All">Software Universe and Software Cells</a>, what I wrote here should have sounded very familiar. That´s of course on purpose :-) But stay tuned, because you´ll find out, I´m trying to move on and make the Software Universe even more valuable and easy to use.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

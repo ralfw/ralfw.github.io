@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Collective code ownership is limiting software quality — ralfw.de Archiv</title>
+<meta name="description" content="Reading the title of this posting you might think I was out of my mind. But in fact I really mean what I say: After lately thinking quite a bit about the software development proce">
+<link rel="canonical" href="https://ralfw.de/archiv/2006/collective-code-ownership-is-limiting-software-quality/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Collective code ownership is limiting software quality — ralfw.de Archiv">
+<meta property="og:description" content="Reading the title of this posting you might think I was out of my mind. But in fact I really mean what I say: After lately thinking quite a bit about the software development proce">
+<meta property="og:url" content="https://ralfw.de/archiv/2006/collective-code-ownership-is-limiting-software-quality/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Collective code ownership is limiting software quality</h1>
+    <div class="doc-meta"><span>1. April 2006</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/441639" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2006/collective-code-ownership-is-limiting-software-quality/</code></span></div>
+    <div class="art"><p>Reading the title of this posting you might think I was out of my mind. But in fact I really mean what I say: After lately thinking quite a bit about the software development process I´m now pretty sure, collective code ownership (CCO) as it is promoted by eXtreme Programming (XP) [1,2] is at least not just plain right.</p>
+<p>Why´s that? Well, it´s because also CCO is just a coping technique. It´s an answer to certain problems and relies on a couple of premises. Here´s my guess what at least some of these <strong>XP premises</strong> are:</p>
+<ol>
+<li><strong>Software development teams are highly volatile</strong>: For XP software teams seem to be ever changing. People constantly coming on board, leaving the team, being sick or run over by a truck ("truck factor"). You simply can´t rely on a person to be there for a longer period of time to assign him responsibility for any part of a project.</li>
+<li><strong>Changes to software need to be applied immediately</strong>: If a bug is detected or if a customer requests some new functionality, the necessary changes to the software need to be done right away. Since the team cannot rely on any one developer to be there who might know best how to do this, every team member should be able and allowed to jump in. Waiting for a responsible person to be available again in reasonable time (depending on the issue) is no option.</li>
+<li><strong>Specialization of developers is contraproductive</strong>: Developers who specialize themselves in certain technologies (e.g. GUI, database, cryptography) or disciplines (e.g. testing, integration, design) are of limited use to a software project. They just know who to do best one or two things and necessarily are mediocre in doing other stuff. That makes them hard to be assigned to arbitrary tasks on a software project. This makes it hard for them to jump in for other´s who are not available when some issue needs to be taken care of right away. Any kind of specialization thus would limit a team´s flexibility.</li>
+<li><strong>Software quality is primarily determined by functional correctness</strong>: As long as changes to a software don´t break the phalanx of primarily functional unit tests all´s well. How the structure of some part of the code is changed by some developer or how a technology is used to quickly apply a change, is not relevant.</li>
+<li><strong>There is hardly any difference between developing a new software and maintaining and existing software</strong>: XP does not distinguish between software lifecycle phases like "development" and "maintenance". Rather it´s continuous analysis, design, coding, testing. Thus throughout the whole life of a software the same software development skills are needed.</li>
+<li><strong>Knowledge of implementation details should be maximized</strong>: The more details every developer on a team knows about as many parts of the software the easier it is for him to jump in and apply some change to any part. The better his understanding of the intricacies of the implementation, the better his judgement about the impact of a change.</li>
+</ol>
+<p>As you can imagine, since I´m not in favor of CCO, I probably have a problem with one or more of the premises behind it. And you´re right: My thinking is, the premises are just trying to cure symptoms of some fundamental ailment. This ailment is a mixture of cultural ideosyncrasies and global "customs" of the software development industrie. Let me sketch the ailment to which CCO or XP tries to be a remedy by listing some common thought´s of someone suffering from it:</p>
+<ol>
+<li>I better not rely on any developer, because he might be gone tomorrow. (see premises: 1,6)</li>
+<li>I better be in full control of everything! (see premises: 1,2,3,6)</li>
+<li>It is possible for me to know and understand every detail of the software as well as the problem domain. (see premises: 2,3,6)</li>
+<li>It is possible for me to know all relevant technologies for the software sufficiently to choose and apply them for optimal quality. (see premises: 1,3,4)</li>
+<li>The customer is king! His wish is my immediate command. (see premises: 2,5)</li>
+<li>Software is so different from other stuff, I can´t rely on practises from other industries. (see premises: 3,4,5,6)</li>
+</ol>
+<p>Let me put it very bluntly: Looking at these thoughts and the premises my impression is, CCO (and maybe XP) is for people suffering from a lot of fear (a, e), who need to be in control all the time (b, c, d), and are convinced they can be in control all the time (b, c, d, f).</p>
+<p>Thoughts a. and e. for me seem to be "very inspired" by the American way of business. Thoughts b. and d. are prevalent among software developers around the world. The reason probably lying in the nature of software development which suggests maximum control over an infinitely flexible material (software) and thus attracts people in search of control. Thought f. is common not only for software developers but also laymen. The abstractness of the subject suggests it is so different from anything else mankind has dealt with so far, it is hard to apply best practices from other industry to this new one.</p>
+<p>(Ok, ok, I don´t think every developer should get an appointment with a shrink :-) let me say: The "will to control" is very basic in all of us. It´s like a drive - and software makes it easy to satisfy. So whoever has an inclination to abstract thinking or is more on the rational side of life is prone to fall for software development. In addition, seeking control stands in the line of the successes of the 19th/20th century in several areas. For many it´s plain obvious almost anything can be controlled - so why not strive for control?)</p>
+<p>So, what do you think? Is this the case? And if so, is it the way it should be? My guess is, the software industry should overhaul their thinking. Of course that´s not easy. The ailment is hard to cure, because it´s deeply ingrained in our "being as software developers". We grew up at with thoughts c. and f. at least and liked b. at lot. And early successes in software development might have fueled thought c.</p>
+<p>But that´s plain wrong.</p>
+<p>It´s contraproductive and stands in the way of higher quality software.</p>
+<p>My two main premises are:</p>
+<p><strong>Software quality requires specialization:</strong> Number and complexity of software technologies and tools will continue to increase<strong>.</strong> I think it´s obvious, that it becomes ever harder to stay on top of current tools and technologies. 20 years ago database programming was plain simple and required knowledge of one API. Today it´s several APIs, languages, programming models (e.g. ADO.NET, O/R Mapping, SQL XML, SQL), plus the intricacies of database products like SQL Server 2005 (e.g. SQL CLR, T-SQL, Web service interface, SQL Service Broker, SQL Reporting Services). And what about (G)UI programming? There is at least WinForms, WebForms, AJAX, Flash, and WPF around the corner. Add to that a couple of new Smart Client frontend options VSTO and IBF and I guess you see what I mean. It´s impossible for a single developer to know all those and many, many other technologies well enough as to be able to apply them with profound understanding or even choose the best one for a certain problem scenario. Programming no longer is about knowing a language, an editor, and a debugger. Programming is about masterly weaving together a host of complex technologies. That´s also one reason, why software architecture is on the rise. There needs to be someone with an overview of all this and coordinating the weaving: the architect.</p>
+<p>Also the number and complexity of software to develop will continue to increase. Customers are demanding and will continue to be so. They want faster, more scaleable software with slicker and more usable UIs on more devices than today. Fulfilling customer requirements will only be possible by deeply understanding and exploiting the new technologies and tools. Whether a customer requirement really, really makes sense is an altogether different question. Even if some cool feature is not really necessary for some user, it might be a distinguishing feature for your software or your company on the market. Employing more technologies, covering more device options, implementing more features, providing higher flexibility, and integrating with existing systems all require specialization along several dimensions (e.g. technology, problem domain, form factor). Resistance to this trend is futile.</p>
+<p><strong>Coping with complexity requires "not knowing":</strong> Information hiding is a well established notion in computer science. The whole object orientation paradigm rests on it. Then components as black boxes are also well established (even if not yet used to their full potential - but that´s a different topic). Services (as in service orientation (SO)) are the next black box generation knocking on the door. So I´d say  the history of software development among others from subroutines to services is a history of raising the level of abstraction when dealing with code, which means, it´s about "not wanting to know everything all the time": When you "glue together" components or classes you simply don´t want to be concerned with their implementation details. Why is that? Because your capacity for details/system parameters and dependencies is limited. Black box thinking and system decomposition into a hierarchy of subsystems is a way to deal with complexity. The more complex a system is, the deeper the hierarchy of black box "units". Each black box then is described by a specification which hides the box´s intricacies. The specification is a promise and thus a invites trust. It say "Trust me, trust the black box to do the job as specified. Don´t worry, you need not be in control here, you can focus on more important stuff." Trust thus is at the heart of dealing with complexity. Trying to know all details of a complex system is futile.</p>
+<p><strong>Based on these premises I´m arguing:</strong></p>
+<ol>
+<li>Software becomes more complex; technologies and tools become more complex. To provide highest quality specialization is needed. Specialists should not interfere with the work of other specialists.</li>
+<li>Specialists require clear units of code to apply their knowledge to. Clear units of composition on several levels of abstraction also make a complex system easier to understand. To benefit most from those units they need to follow the low coupling/high cohesion principles. Low coupling requires limiting the knowledge of unit internals.</li>
+</ol>
+<p>Since CCO is favoring generalization instead of specialization, and since CCO is favoring spreading as much knowledge about implementation details as possible, well, I think CCO stands in the way of higher quality software.</p>
+<p>Of course, no every software will employ every new technology or feature. But in general nobody can escape the trend towards more technologies. And to apply those technologies to produce high quality software, a lot of expertise and experience is necessary. To believe, any good programmer just needs to sit down a couple of days or maybe weeks to learn a bunch of technologies to be able to use them like an expert is plain wrong. Sure, a good programmer will learn a lot about those technologies - but it will take much longer to become an expert. Also, simply to choose which technology to use at all for a given problem (e.g. use async delegates, MSMQ, Queued Components, SQL Service Broker, or Virtual Shared Memory for async processing) requires already expert knowledge, since the implications of choosing one technology might me far reaching.</p>
+<p>No other industry has this ideal of omniescient "engineers". Building a computer, car, house, airplane, or producing a movie all requires the interplay of a large number of specialists - who are all perfectly happy to be "limited" to a certain area of the product planning or building process.</p>
+<p>However, there is one area, where generalists are still needed in other industries: maintenance! One a house has been built, once the car has been manufactured generalists are taking over from the specialists. A car repair guy or a janitor are examples of generalists. They know quite a bit about the respective products, they can repair them to a certain extent, they can assess damage. But they also know their limitations. If the damage is too large, they call in a specialist again to fix it (or the product needs to be replaced).</p>
+<p>So I guess, also for software we need to distinguish between the production and the maintenance phase of the lifecycle when talking about developer responsibilities. During initial development I strongly believe we need to move to more specialization and clear responsibilities. Then, after release, the software is handed over to generalists doing further bug fixing and also adding new features within reason. If features require deeper knowledge of certain technologies, then specialists have be called in again.</p>
+<p>You say, this won´t work? Well, I´d like to ask: Has anybody tried? I don´t think so. Nobody has tried to do it like this, because so far only a very limited notion of specialization has established itself in the minds of the developer community. And hence projects are not planned and organized accordingly. There probably is not even a capable enough "ecosystem" for projects and developers to develop software in this manner.</p>
+<p>Although my position is somewhat a priori and just resting on experience in other industries (which probably cannot be carried over 100%), I´d say, any flat rejection also is a priori, because the whole situation our industry is in is so new, nobody can really say "We´ve tried it, and it does not work." So what we need are empirical studies. We need trials which compare several approaches. But already now I´m pretty sure, CCO is not the future. It cannot be, because technological advancements and rising complexity cannot be delt with by keeping up the illusion, omnicience and full control for everyone on a team was possible.</p>
+<p>I think, I understand where XP and its CCO is coming from. I really sympathize with them. I´d love the world to be like CCO sees it - but it is very different (or at least becoming different). I too love to have the impression, I know every detail about a software and be ready to solve problems in every part. I love the feeling to be on top of all sorts of technologies. But more and more I have to admit: I cannot know "it" all anymore. I´m under the impression I used to in the 1980s or even maybe until the mid 1990s. But today... I have to focus more and more. I have to not (!) read a lot of interesting articles and books simply to be able to become (or stay) an expert in at least two or three technological areas.</p>
+<p>I would feel really, really bad, if I´d tell a customer, I was capable of deliveringy a high quality software product all by myself (assuming a moderately sized project). I could not. I could not for not being an expert in so many technologies which potentially could be used in that software product.</p>
+<p>Maybe you feel different. Maybe you think you can handle it all. Maybe you can stay on top of dozens of technologies and also an entire problem domain to be the "jack of all trades". Maybe you´re even working in a team, where all your colleagues are of your caliber and you´re all smoothly sailing along delivering highest quality software.</p>
+<p>Well, then I congratulate you! No, I even envy you and your colleagues. And I´d like to learn how you do it. CCO for you sure is the best way to handle your code base.</p>
+<p>But what with the rest of us mere mortal software developers? I don´t think we ever can aspire to such lucidity. I think we´ve to develop a coping strategy for fighting technological diversity and rising software complexity. And my guess is, CCO does not help. Taking a long term perspective, I´d even say, CCO for us mere mortals stands in the way of higher software quality.</p>
+<p><strong>Literature</strong></p>
+<p>[1] Explanations of CCO, <a rel="noopener" href="https://web.archive.org/web/20140605200733/http://www.xpexchange.net/english/intro/collectiveCodeOwnership.html">http://www.xpexchange.net/english/intro/collectiveCodeOwnership.html</a>, <a rel="noopener" href="https://web.archive.org/web/20140605200733/http://www.extremeprogramming.org/rules/collective.html">http://www.extremeprogramming.org/rules/collective.html</a><br />
+[2] Interview with Ward Cunningham on CCO, <a rel="noopener" href="https://web.archive.org/web/20140605200733/http://www.artima.com/intv/ownership.html">http://www.artima.com/intv/ownership.html</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

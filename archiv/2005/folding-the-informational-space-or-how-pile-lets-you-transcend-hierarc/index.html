@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Folding the informational space - or: How Pile lets you transcend hierarchies of data — ralfw.de Archiv</title>
+<meta name="description" content="After some philosophical digressions now on to &quot;More matter, less art&quot; as Hamlet´s mother says. Lets step up the ladder of abstraction and look at how to put the elementary particl">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/folding-the-informational-space-or-how-pile-lets-you-transcend-hierarc/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Folding the informational space - or: How Pile lets you transcend hierarchies of data — ralfw.de Archiv">
+<meta property="og:description" content="After some philosophical digressions now on to &quot;More matter, less art&quot; as Hamlet´s mother says. Lets step up the ladder of abstraction and look at how to put the elementary particl">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/folding-the-informational-space-or-how-pile-lets-you-transcend-hierarc/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Folding the informational space - or: How Pile lets you transcend hierarchies of data</h1>
+    <div class="doc-meta"><span>26. Dez. 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2005/12/26/434002.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/folding-the-informational-space-or-how-pile-lets-you-transcend-hierarc/</code></span></div>
+    <div class="art"><p>After <a rel="noopener" href="https://web.archive.org/web/20070224201448/http://weblogs.asp.net/ralfw/archive/2005/12/23/433915.aspx">some philosophical digressions</a> now on to "More matter, less art" as Hamlet´s mother says. Lets step up the ladder of abstraction and look at how to put the elementary particle, those associations, to some tangible use. How about implementing a little full text search application? That´s what I did to check my understanding of Pile. Although there exists such an application at pileworks.org, I thought it would help me more to try to build it myself instead of just studying existing code.</p>
+<h3>General software architecture</h3>
+<p>How should a solution based on Pile look like in terms of architecture? There are some guidelines that sound reasonable:</p>
+<p>There should be a <em>Pile engine</em> which manages the relations, but does not know anything about what they are relating with regard to the real world. The Pile engine can fetch handles, create new relations, or retrieve children of relations. It´s like a generic database engine which only knows of tables and rows and constraints, but nothing about invoices or customers.</p>
+<p>Then on top of a Pile engine sits a <em>Pile agent</em> who uses the engine to manage domain specific information. A Pile agent so to speak models the Pile clay. It is the observer who assigns meaning to the relations managed by the engine. A Pile agent defines Terminal values and uses Qualifiers for his purposes.</p>
+<p>And then there is the <em>Pile client</em> who uses a Pile agent to accomplish some task.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/4b8017c58492430c.gif" /></p>
+<p>This layered architecture looks pretty reasonable, I´d say. But you might ask, where the difference is between a Pile agent and a Pile client. The reason for the distinction and for calling the Pile agent not just "Pile access layer" but "agent" is its complexity. A Pile is so fundamental, its building blocks - the associations - so tiny and fine grained, so that it needs more than an "access layer" to collect information from a Pile. The agent at least currently defines not only the schema for a Pile but also algorithms for traversing it. There is no Pile query language to help - yet.</p>
+<p>In the future, though, this probably will change. I envision Pile to move to an architecture like this:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/dc8a9f28b28661c7.gif" /></p>
+<p>A <em>Pile server</em> will provide help for querying a Pile base as well as structuring it. Associations in the end are too fine grained as to always think on that level. Arbitrary levels of abstractions need to be definable (see the below section on Pile structures and wormholes). Constraints need to be set up. In so far Pile of course needs to look like an ordinary database.</p>
+<p>A Pile client then can use the query engine and a schema manager to access associations. Query engine and schema manager are generalized Pile agents. Since traversing the mesh of relations in a Pile requires many small steps through the Pile space, all operations need to run close to the Pile, i.e. in a server process (or embedded in a client process). Only results should be send back to clients.</p>
+<p>In addition sometimes it might be necessary to work with a Pile in very problem domain specific ways and traverse it directly. That´s when custom Pile agents are still needed - but they too should run close to the engine in the same process like stored procs in relational databases.</p>
+<p>Please note, I split the former Pile engine in two: a low level <em>Pile space engine</em> and a high level <em>Pile engine</em>.</p>
+<p>The Pile space engine for me is the entity to manage handles and the 2D space and create child handles from x-/y-parent-handles. The Pile space engine does not really know about relations and manners and normative/associative parents. It´s just the manifestation of the 2D coordinate system I described at the end of <a rel="noopener" href="https://web.archive.org/web/20070224201448/http://weblogs.asp.net/ralfw/archive/2005/12/21/433714.aspx">my earlier posting</a>:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/63bbdf943654bbfb.gif" /></p>
+<p>When switching from in-memory operation to a persistent Pile implementation (hopefully) the Pile space engine is the only part that needs to change. At least that´s how it worked out when I implemented my Pile application and switched the Pile space engine to work with a flat file database API (from VistaDb).</p>
+<p>On top of the Pile space engine sits the Pile engine. It knows about relations and manners and all and adds some convenience operations to the lower level API (see below for details).</p>
+<p>But of course, the above architecture of a Pile server is just a sketch. I´m no expert in implementing such kind of infrastructure software. But I imagine the depicted components to at least present in such a system. And I´m sure Pile needs to be implemented as a true server, if multiple users need to be supported. In case just a single user (single thread) wants to work with a Pile - like in the following prototype -, the whole agent-engine-space stack of layers can run in the client process as embedded components.</p>
+<p>Here´s a picture of the architecture of my Pile prototype:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/c17793aafd849cc7.gif" /></p>
+<p>Pile space engine and Pile engine are pretty simple (both some 130 lines of code only). Most code is in the Pile agent and its methods for searching strings. The client on top again is a thin layer.</p>
+<p>But before delving into the code of the Pile (space) engine, let me say a couple of words on schemas for associatiative bases.</p>
+<h3>Data modeling with elementary particles</h3>
+<p>When you give associations a chance to take center stage, than probably the first question you´ll ask yourself is "What´s the Terminal values for my Pile?" At least, that´s what happens to me all the time ;-) We´re all so data focused that we first ask for the data. But that´s ok, I guess.</p>
+<p>Now, is there a simple answer to that question? I´d say yes and it is: It depends :-) What Tvs to choose depends on how much potential for connectivity you want to have in your Pile.</p>
+<p>The magic of Pile is to be able to connect everything with everything, since there is only one "thing" to connect to and to connect with: relations. It´s not data you connect, it´s relations.</p>
+<p>That means: whatever is within (!) your data, hidden in your Terminal values, cannot be connected. Terminal values are black boxes, blobs, opaque entities. You can relate them to each other, but that´s it.</p>
+<p>If you like, you can choose to make a whole address (with street address, city, zip, country) a Terminal value. That´s perfectly fine for Pile. (In fact, Pile does not distinguish between an address, a 10 MB image file, or a single character as Terminal values.) But mind you: If you choose an address as a Terminal value you loose any chance of "sharing data" between several addresses (e.g. you need to store the same city many times in different address data blobs). And you loose any chance of automatically and implicitly connecting, say, addresses and statistical data on the worlds countries.</p>
+<p>Ok, what do I mean by that? Let´s take a simple relational database schema containing addresses and country info:</p>
+<p>Addresses(street_address, city, zip, country_name)<br />
+Countries(country_name, number_of_inhabitants)</p>
+<p>To relate Addresses and Countries you need to set up an explicit link between the two tables. You´d need to make country_name the primary key of table Countries and Addresses.country_name would become a foreign key. (I assume country names to be unique.) Country names would now be stored in each Address row and each Countries row (and also in any indexes needed).</p>
+<p>How would this scenario look in Pile if you chose to make addresses and countries Terminal values?</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/6108f94e5d1d8c21.gif" /></p>
+<p>In order to relate the address to the country info, you´d need to set up an explicit relation. That´s like working with PK-FK-pairs in relational databases. Also the data (country name) would get stored at least twice: once in the address Tv, once in the country info Tv.</p>
+<p>However, if you choose more fine grained Terminal values, Pile gets a chance to blossom. For example, you could define each attribute of an address or country info to be a Terminal value:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/e376365e25b4621e.gif" /></p>
+<p>Each value for a street address, city, zip code, country name, and number of inhabitants would need to be stored outside the Pile only once! And within the Pile the Top for a country name would automatically connect addresses with the info on their countries, because the country name is part of both.</p>
+<p>This sounds a bit like in relational databases, but please mind the differences: 1. Each value for an attribute would need to be stored only once. 2. No indices are needed to speed up linking of addresses and country infos, since if you have the handle to a country name, you immediately have the handles into all the addresses and country info "entities" (via the associative tree in Pile, see the red lines above). 3. There is no limit as to how fine grained you choose your Terminal values. 4. There is no fixed physical boundary around "groups" of Terminal values or groups of such groups etc. like rows or tables which would limit your ability to connect.</p>
+<p>I´m sure you agree with above claims 1. and 2.</p>
+<p>But what about 3.? Choosing city, zip code, or country name as Terminal values is just one possible choice. It would have been equally well possible to choose singe letters as Terminal values or - as I explained yesterday - just the bits 1 and 0. The more fine grained you choose your Tvs, the smaller their number, and the higher the potential for connections between parts of informational units on a higher level of abstraction.</p>
+<p>As an example choose single characters as Tvs, so there are just 256 Tvs which should be enough for any database you want to set up using a Pile. (Think like in the XML world: any data item can be expressed as plain text.) With those 256 Tvs you can set up relations for the above city, zip, and country name which now exist only within the Pile and not outside anymore. However, whereas before the country names "Japan" and "Jamaika" would have been stored as two distinct external Tvs, now they are represented by two distinct internal relations sharing (!) a parent relation for the letter combination "Ja".</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/c698538cdc34621d.gif" /></p>
+<p>When searching for the letter combination "Ja" you hit the relation they are connected by. You then can check this relation, which entities on a higher level of abstraction (e.g. country name or city) they are part of. Those higher level entities are thus automatically connected without you even explicitly defining this connection. It´s simply there, because you chose very fine grained Terminal values.</p>
+<p>It´s up to you to use such kind of implicit connections of formerly disconnected entities.</p>
+<p>Which brings me to 4. What about larger structures than Terminal values? Well, you choose them too as you see fit for your scenario. There is no limit where you can draw boundaries around a set of relations and define them to be some kind of distinguishable entity. You just need some way to tell, where the boundaries of such entities run. But that´s a matter of an observer (a Pile agent). Or to say it differently: Where a relational database defines just three levels of containers for data (field, row, table), a Pile can container any number of nested and coexisting containers with an arbitrary structure.</p>
+<h3>Using formal languages to shape a Pile</h3>
+<p>A schema definition for Pile thus looks more like the definition of a formal language, I´d say. You first define your Terminal values. Again: you can choose any granularity you want. You can even mix different categories of data, e.g. letters and image files to represent DTP documents. But let me stick with letters for now:</p>
+<p><em>Terminal values:</em>A ::= "A" .<br />
+B ::= "B" .<br />
+C ::= "C" .<br />
+...<br />
+0 ::= "0" .<br />
+1 ::= "1" .<br />
+...<br />
+letter ::= A | B | C | ... .<br />
+string ::= { Letter } .<br />
+digit ::= 0 | 1 | 2 | ... .<br />
+integer ::= Digit { Digit } .</p>
+<p>(The Terminal values can be compared with the lexical level of a formal language.)</p>
+<p>Next you define <em>Value Relations</em> which are made up just from Tvs only, e.g.</p>
+<p><em>Value Relations:</em>streetName ::= string .<br />
+cityName ::= string .<br />
+zipCode ::= integer .<br />
+countryName ::= string .<br />
+numberOfInhabitants ::= integer .  </p>
+<p>No you step up to the next level of abstraction where you compose higher level relations which could be called <em>Composit Relations</em>. For a start they are made up of Value Relations:</p>
+<p>Address ::= streetName cityName zipCode countryName .<br />
+CountryInfo ::= countryName numberOfInhabitants .</p>
+<p>But Composit Relations can also contain other Composit Relations, for example:</p>
+<p>Contact ::= contactName Address .<br />
+Manufacturer ::= Contact .<br />
+Product ::= productName qtyInStock price Manufacturer .<br />
+LineItem ::= Product qtyOrdered .<br />
+Invoice ::= Contact { LineItem } .</p>
+<p>(Value Relations and Composit Relations can be compared to the syntax level of a formal language definition.)</p>
+<p>You see what I mean? You can arbitrarly nest Composit Relations. On each level you just define which other relations the Composit Relation is made up of. To store data for your invoicing software, you´d thus define the schema for a Pile by coming up with your own formal language, with a root production like this:</p>
+<p>InvoicingSystemSchema ::= { Contact } { Product } { Invoice } { CountryInfo }.</p>
+<p>There are no predefined containers, no limits to the number of levels of nested containers or levels of abstraction. And the beauty of it is, each and every container is automatically linked to other containers sharing the same Value Relations or even parts of Value Relations (e.g. letter combinations).</p>
+<p>If this reminds you of XML, you´re right. An XML document can be viewed as a sentence in a language defined by an XML Schema. The above example could be written like:</p>
+<p><InvoicingSystem><br />
+    <Contact><br />
+        <contactName>Acme Inc.</contactName><br />
+        <Address><br />
+            <streetName>...</streetName><br />
+            ...<br />
+        </Address><br />
+    </Contact><br />
+    ...<br />
+    <Product><br />
+        <productName>...</productName><br />
+        ...<br />
+        <Manufacturer><br />
+            <Contact><br />
+                <contactName>Acme Inc.</contactName><br />
+                ...<br />
+            </Contact><br />
+        </Manufacturer><br />
+    </Product><br />
+    ...<br />
+</InvoicingSystem></p>
+<p>This sure would work, but look at the <Contact>-elements under the root and within the <Manufacturer>-element. If you wanted to avoid storing contacts twice, you needed to set up explicit references like this:</p>
+<p><InvoicingSystem><br />
+    <Contact **ID="1234"**><br />
+        <contactName">Acme Inc.</contactName><br />
+        <Address><br />
+            <streetName>...</streetName><br />
+            ...<br />
+        </Address><br />
+    </Contact><br />
+    ...<br />
+    <Product><br />
+        <productName>...</productName><br />
+        ...<br />
+        <Manufacturer><br />
+<strong><ContactRef ID="1234" /></strong>        </Manufacturer><br />
+    </Product><br />
+    ...<br />
+</InvoicingSystem></p>
+<p>You might find this quite natural - but in fact it´s cumbersome, since you need to think about such dependencies explicitly.</p>
+<h3>The folded Space of Pile</h3>
+<p>In Pile, on the other hand, such redundancies <em>do not even exist</em>, so you don´t have to circumvent them. Pile always stores the same information only once. Or to say it more generally: Any relation or relation of relations or relation of relations or relations and so on can only exist once in a Pile.</p>
+<p>To store the string "Wash", e.g. as part of a contactName (e.g. "Washington Redskins") in a Pile you set up the relations Wa=("W", "a"), sh=("s", "h"), Wash=(Wa, sh). And to store an address you set up the following relations:  </p>
+<p>1234=("834 Dupont Circle NW", "<strong>Wash</strong>ington, DC")<br />
+8234=("20099", "USA")<br />
+7729=(1234, 8234)</p>
+<p>The Wash-relation from the contactName will be reused in the city of the address, since it too starts with "Wash" and the whole address relation 7729 will be reused whenever another contact is created for the same location. This might be a tad difficult to visualize, but you should try. It´s worthwhile. Here´s a sketch of how the XML sample could look like in Pile:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/2d31efb020b23946.gif" /></p>
+<p>The same (!) Contact exists on several levels of the hierarchy: once below the top Composit Relation and once within the Manufacturer Composit Relation. And, really, it´s the same Contact. It´s not a copy and there is no special reference, it´s just the same. And you cannot avoid it.</p>
+<p>On any level of the abstraction hierarchy in a Pile be it relations between Terminal values or relations between Value Relations or Composit Relations each combination of two parents can and will only exist once. This is so unlike any other data storage model, I can only describe it using an analogy from physics or chemistry:</p>
+<p>In Pile the informational space is folded like proteine molecules are folded to reach a lower energy state or like the space-time continuum being folded in the presence of black holes. Yeah, maybe that´s something you can more easily picture: think of Pile as a space where every single relation can be a "worm hole" between different parts of a Pile :-) In Pile everything is unique.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/ee567207c8a6bc38.gif" /></p>
+<p>The Contact that´s connected to the Manufacturer in the above picture in fact does not exist separately, since it´s the same as the Contact hanging directly beneath the InvoicingSystem relation. So the above picture is wrong, in reality the Pile looks like this:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/90dc33e6c33ee583.gif" /></p>
+<p>The Manufacturer relation re-uses the existing Contact. And this re-use, the connection between remote parts of a Pile can be thought of as "folding the Pile space" as the following animation tries to depict (I hope you can read my handwriting :-) but it´s the same Pile as above):</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/3ed6407ed91f133d.gif" /></p>
+<p>The Manufacturer so to speak is forced to connect to the existing Contact to "minimize the overall energy level" ;-) of the Pile.</p>
+<h3>Transcending hierarchical systems</h3>
+<p>A formal language defines a "universe" of valid sentences. Each sentences can be described as a tree. Within the sentence there are an arbitrary number of levels of abstraction, e.g. Terminal values, Value Relations, Composit Relations, composits of composits etc. Each "unit" then is at the same time part and whole: a streetName is a whole with regard to the Terminal values and is part of a Address. A Address is a whole with regard to streetName and city, and part of a Contact.</p>
+<p>The proptery of being whole and part at the same time was termed <em>Holon</em> (assembled from <em>holos</em> (greek for "whole") and <em>on</em> as the suffix for "part of" as in prot<em>on</em>) by Arthur Koestler in the 1960s in his book "The Ghost in the Machine" and can be depicted like this:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/0300f75efdcc3284.gif" /></p>
+<p>Each circle stands for a holon. Each holon contains smaller holons and at the same time lives within a container holon. Such a system of holons is called a <em>holarchy</em>, a hierarchy of holons.</p>
+<p>A Pile can container any number of holarchies. Now, the interesting thing is, each holon can be part of many container holons as the first picture in section "The folded Space of Pile" shows. But not only that: each holon can also be part of many different holarchies!</p>
+<p>Since Pile does not define an "physical containers" like XML-elements or relational tables/rows, all holon boundaries are just logical. And since each holon as a relation can only exist once in a Pile, holons in completely different holarchies of a Pile containing the same "looking" holon in fact contain the same holon. The only prerequisite for this is, different holarchies share some notions. This might be the case on the level of Terminal values (e.g. holarchies A and B using single characters as Tvs) or this might be on a higher level of abstraction (e.g. holarchies A and B both using the Value Relation streetName).</p>
+<p>Pile thus allows you to focus on one informational hierarchy like any other data model. You then traverse a holarchy only according to it formal language. But at the same time Pile gives you the chance to transcend a hierarchy and switch focus to any other which it shares relations with.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/df39accdc12dac01.gif" /></p>
+<p>If a logic defines a context or system, that means a boundary between what belongs to the system and what is external, then Pile is truely poly-logical meaning, many systems can be defined by different logics - but as long as those systems share some more or less basic notions, entities are not confined to one system, but can simultaneously exist in many systems or context.</p>
+<p>That brings me back to how humans view the world. There are not fridges and cars and pens in our heads. There are just associations. And those associations can exist in many different contexts as I described in a <a rel="noopener" href="https://web.archive.org/web/20070224201448/http://weblogs.asp.net/ralfw/archive/2005/12/20/433622.aspx">previous posting</a>. Since Pile by its nature can is mutli-contextual, it seems to be a quite natural model to express the real world in a machine.</p>
+<p>You can the smallest possible information elementary particles you like, all associations are unique, you choose the levels of abstractions, all containers are logical and of "same right", connections between different parts of a Pile are automatic, even connections between different "logical systems" are automatic as long as they share some concepts.</p>
+<p>To me that sounds like a beautifully simple model to build information systems on.</p>
+<p>Sorry, I somewhat got carried away. This has become a long posting and I need to pause for a moment. But I promise, next time I´ll show you my Pile engine. Stay tuned!</p>
+<p><strong>Share this post:</strong> <a rel="noopener" href="https://web.archive.org/web/20070224201448/mailto:/?body=Thought%20you%20might%20like%20this:%20http://weblogs.asp.net/ralfw/archive/2005/12/26/434002.aspx&amp;;subject=Folding+the+informational+space+-+or%3a+How+Pile+lets+you+transcend+hierarchies+of+data" title="Post http://weblogs.asp.net/ralfw/archive/2005/12/26/434002.aspx">email it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070224201448/http://del.icio.us/post?url=http://weblogs.asp.net/ralfw/archive/2005/12/26/434002.aspx&amp;;title=Folding+the+informational+space+-+or%3a+How+Pile+lets+you+transcend+hierarchies+of+data" title="Post http://weblogs.asp.net/ralfw/archive/2005/12/26/434002.aspx">bookmark it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070224201448/http://www.digg.com/submit?url=http://weblogs.asp.net/ralfw/archive/2005/12/26/434002.aspx&amp;;phase=2" title="Post http://weblogs.asp.net/ralfw/archive/2005/12/26/434002.aspx">digg it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070224201448/http://reddit.com/submit?url=http://weblogs.asp.net/ralfw/archive/2005/12/26/434002.aspx&amp;title=Folding+the+informational+space+-+or%3a+How+Pile+lets+you+transcend+hierarchies+of+data" title="Post http://weblogs.asp.net/ralfw/archive/2005/12/26/434002.aspx">reddit!</a> | <a rel="noopener" href="https://web.archive.org/web/20070224201448/http://www.dotnetkicks.com/submit/?url=http://weblogs.asp.net/ralfw/archive/2005/12/26/434002.aspx&amp;;title=Folding+the+informational+space+-+or%3a+How+Pile+lets+you+transcend+hierarchies+of+data" title="Post http://weblogs.asp.net/ralfw/archive/2005/12/26/434002.aspx">kick it!</a> | <a rel="noopener" href="https://web.archive.org/web/20070224201448/https://favorites.live.com/quickadd.aspx?marklet=1&amp;;mkt=en-us&amp;;url=http://weblogs.asp.net/ralfw/archive/2005/12/26/434002.aspx&amp;;title=Folding+the+informational+space+-+or%3a+How+Pile+lets+you+transcend+hierarchies+of+data&amp;;top=1" title="Post http://weblogs.asp.net/ralfw/archive/2005/12/26/434002.aspx">live it!</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coordination structures beat RPC - or: How to keep your mental health while working on distributed software — ralfw.de Archiv</title>
+<meta name="description" content="I received a couple of comments on my posting on how bad RPC can be for your mental health. Although the feedback was positive and agreed with my statements, some expressed concern">
+<link rel="canonical" href="https://ralfw.de/archiv/2006/coordination-structures-beat-rpc-or-how-to-keep-your-mental-health-whi/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Coordination structures beat RPC - or: How to keep your mental health while working on distributed software — ralfw.de Archiv">
+<meta property="og:description" content="I received a couple of comments on my posting on how bad RPC can be for your mental health. Although the feedback was positive and agreed with my statements, some expressed concern">
+<meta property="og:url" content="https://ralfw.de/archiv/2006/coordination-structures-beat-rpc-or-how-to-keep-your-mental-health-whi/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Coordination structures beat RPC - or: How to keep your mental health while working on distributed software</h1>
+    <div class="doc-meta"><span>24. Feb. 2006</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net/ralfw/438957" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2006/coordination-structures-beat-rpc-or-how-to-keep-your-mental-health-whi/</code></span></div>
+    <div class="art"><p>I received a couple of comments on my posting on <a rel="noopener" href="https://web.archive.org/web/20160306061554/http://weblogs.asp.net/ralfw/archive/2006/02/23/438879.aspx">how bad RPC can be for your mental health</a>. Although the feedback was positive and agreed with my statements, some expressed concern as to what an alternative to RPC-syntax could be. I thus feel encouraged to elaborate on how I think any software developer can avoid damage to his/her mental health ;-)</p>
+<p>If subroutine call syntax like</p>
+<p>int r = Calc(a, b);</p>
+<p>suggests, a service is guaranteed to be carried out immediately and synchronously by "someone you know intimately", then we should first clarify how situations might look, where this syntax is not appropriate. Let me phrase the following recommendation:</p>
+<p>Don´t use subroutine call syntax, if</p>
+<ul>
+<li>a service will not be carried out immediately, or</li>
+<li>you don´t want to wait for the service to finish its work, or</li>
+<li>you don´t know the service agent intimately (including where it resides), or</li>
+<li>you have doubts the service is available right now at all.</li>
+</ul>
+<p>In addition there is one more premise of subroutine calls: You pretty much know exactly what service you need. So whenever you don´t know (or don´t want to know) what service or services should work on a piece of information, then you should not try to use subroutine calls.</p>
+<p>Ok, so what does that mean? To find out, we need to look at the two sides of a subroutine call, the caller and the callee, or client and service:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/22ca66b4e60b6865.gif" /></p>
+<p>This is the usual case. Client and service know each other well and the usual "quality of service" (QoS) criteria are met; the service can fulfill the promise of direct subroutine call syntax.</p>
+<p>But this picture of harmony and easieness should change in your mind, once the QoS fulfillment is not guaranteed. Once communication between client and service is not stack based anymore, a chasm opens between caller and callee:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/54955681d9626d7e.gif" /></p>
+<p>Trying to bridge this chasm using the same form (notation) for communication, I think, is plain wrong. Whether client and service are separated by a thread boundary, or an AppDomain boundary, or a process boundary does not matter. In any case there needs to be bridge across the chasm and this bridge should be obvious to anybody looking at the code.</p>
+<p>Hiding the bridge and thereby suggesting "You can fully trust this subroutine service call. All´s well, it will fulfill its promise." would be (self-)deception. And being deceived sure is something nobody really likes.</p>
+<p>As a solution I propose to always (!) - sorry, Ingo, for trying to set up a rule again ;-) - use an explicit bridge to cross the chasm or to make the bridge very clear that´s used under the hood of any RPC-style remote service invocation anyway:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/18e9b301b89c18f9.gif" /></p>
+<p>Using the term "bridge" here, does not mean, I´m talking about the <a rel="noopener" href="https://web.archive.org/web/20160306061554/http://www.dofactory.com/Patterns/PatternBridge.aspx">Bridge design pattern</a>. Right to the contrary: I don´t want to hide the chasm behind layers of abstraction. (Although the technical details of how the chasm is bridged are not important to client or service and should be hidden from them.)</p>
+<p>Rather, if you like to think in patterns, I´m talking about some kind of <a rel="noopener" href="https://web.archive.org/web/20160306061554/http://www.dofactory.com/Patterns/PatternMediator.aspx">Mediator</a>, i.e. an entity that "encapsulates how a set of objects interact".</p>
+<p>But I´d like to get more general. I´d like to call the "bridge" just a <em>coordination structure</em>. It´s some kind of code which helps to coordinate the work of client and service. Sometimes this coordination structure (or entity) is small, sometimes it´s a large piece of infrastructure. In any case it means an indirection in the communication between client and service and it represents some kind of data structure.</p>
+<p>Now, how does a client change when a coordination structure is introduced or just made explicit? The client does not call the service directly anymore; instead it interacts with the coordination structure:</p>
+<p>CalcRequest req = new CalcRequest(a, b);<br />
+calcCoordQueue.Enque(req, new CalcResponseHandlerDelegate(CalcResponseHandler));<br />
+...<br />
+void CalcResponseHandler(CalcResponse resp) { ... }</p>
+<p>From this code, you can´t glean, where and when the service will be fulfilling the request. It might run on a different thread or on a different machine - or even in the same thread as the caller. You just don´t know. And that´s a good thing. It´s the prerequisite for a clean distribution of code.</p>
+<p>It might sound so good, when .NET Remoting and Serviced Components and WCF tell you, "Hey, you can distribute your code transparently. A client does not need to see a difference between local and remote processing." But that´s the song of Ulysses´ sirens! Don´t let yourself be lured into thinking, you don´t need to take into account "how far apart" client and service will live in the end.</p>
+<p>The contract between client and service who always will communicate locally needs to look different from a contract between client and service which only possibly might at some time in the future need to communicate remotely.</p>
+<p>To make this distinction clear, I´m saying: Use ordinary subroutine calls to call local services. <strong>But always use indirect communication via a coordination structure whenever a service today or at some time in the future cannot be called directly. Make the boundary between a client and service easy to see in your code.</strong> This helps to build trust in you code. It makes it easier to maintain and evolve - even though it might mean, you need to write a little bit more code today.</p>
+<p>So far I´ve been talking about the client side of a subroutine call. But what about the service side? What´s the promise of the subroutine definition syntax?</p>
+<p>int Calc(int a, int b)<br />
+{<br />
+    int result;<br />
+    ...<br />
+    return result;<br />
+}</p>
+<p>When writing such code you don´t think about whether the client waits for you to return a result or even if it is still alive at all. You just do whatever any service worker does: you fulfill the request as fast as possible. Whether you do that on your own thread or even on a different machine is of no concern to you. The only thing that´s for sure is, parameters come in on the stack and a result is returned via the stack. Who calls the service when, where the parameters come from, where the result goes to... all this the service does not know.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/063c2194c2a51fae.gif" /></p>
+<p>Hence I´d say: A subroutine is always an event handler. It has no control over when it´s called or who calls it, just like any button click event handler or a SQL Service Broker stored procedure.</p>
+<p>What does that mean for receiving service requests? I´d say, it does not necessarily need to have an impact on how a service receives and handles requests. When implementing the service you don´t need to see a coordination structure, if a chasm needs to be bridged between you and your clients. Your service can pretty much look the same whether it´s called directly by a client or indirectly by a coordination structure. For the latter case, though, you need to register your service with the coordination structure. Your service then becomes a true event handler:</p>
+<p>calcCoordQueue.RegisterRequestHandler(typeof(CalcRequest), new RequestHandlerDelegate(Calc));<br />
+...<br />
+CalcResponse Calc(CalcRequest req) { ... }</p>
+<p>Instead of giving up control and waiting for events your service could be written to be "self servicing", i.e. interacting with the coordination structure directly to look for work.</p>
+<p>void Calc()<br />
+{<br />
+    while(true)<br />
+    {<br />
+        CalcRequest req = calcCoordQueue.Dequeue();<br />
+        ...<br />
+        CalcResponse resp = ...  </p>
+<p>calcCoordQueue.Reply(req, resp);<br />
+    }<br />
+}</p>
+<p>For the usual FIFO service request, this might not be the most intuitive way to go. Fulfilling requests coming in on a queue is the canonical example for event-driven programming. But who says, coordination structures need to be FIFO-based? FIFO is still about military like orders: a client <em>orders</em> the fulfillment of a request - and the service better fulfills it as fast as possible.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/1d6c097cfd807da1.gif" /></p>
+<p>But commands and orders are not the only way how results can be achieved. Since SOA values autonomy high, more peer like cooperation should enter how software parts deal with each other.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/cf171033eb7a7344.gif" /></p>
+<p>Clients and Service could be viewed as grouped around a common coordination structure, acting more like peers or servents than true clients and services. A coordination structure then would become a <em>cooperation structure</em> each peer accesses to get data to work on and insert results into.</p>
+<p><strong>So my bottom line is:</strong></p>
+<ul>
+<li><strong>In distributed software model communication between clients and services explicitly by using obvious coordination structures. It doesn´t make a difference whether client and service are running on different threads or on different machines. Also try to foresee future changes, stay flexible. If in doubt go for coordination structures.</strong></li>
+<li><strong>Use event-driven programming, i.e. implement services as event handlers whenever possible, especially in FIFO scenarios. It´s a way of decoupling the service from the coordination structure.</strong></li>
+<li><strong>If communication between clients and services becomes more complicated or at least cannot be modelled using the FIFO pattern switch to self-servicing services and let the access the coordination structure explicitly. If in doubt do so even if the coordination structure still is a FIFO.</strong></li>
+</ul>
+<p>If all this means waiving some convenience tools might be offering, I say: don´t bother. You´ll gain so much in code clarity and flexibility, you won´t miss this convenience much. And I promise you: there will be more <a rel="noopener" href="https://web.archive.org/web/20160306061554/http://weblogs.asp.net/ralfw/archive/2006/02/02/437161.aspx">technologies in the near future</a> which will make it even easier to work with coordination or even cooperation structures on the .NET platform.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

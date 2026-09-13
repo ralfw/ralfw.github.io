@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software Cells #9: Applications as Holons - Becoming a little more systematic — ralfw.de Archiv</title>
+<meta name="description" content="Software Cells started out in the concrete and tried to make small to medium scale software architecture more tangible. Software Cells thus were a bottom-up approach.">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/software-cells-9-applications-as-holons-becoming-a-little-more-systema/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software Cells #9: Applications as Holons - Becoming a little more systematic — ralfw.de Archiv">
+<meta property="og:description" content="Software Cells started out in the concrete and tried to make small to medium scale software architecture more tangible. Software Cells thus were a bottom-up approach.">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/software-cells-9-applications-as-holons-becoming-a-little-more-systema/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Software Cells #9: Applications as Holons - Becoming a little more systematic</h1>
+    <div class="doc-meta"><span>27. Mai 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2005/05/27/409299.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/software-cells-9-applications-as-holons-becoming-a-little-more-systema/</code></span></div>
+    <div class="art"><p>Software Cells <a rel="noopener" href="https://web.archive.org/web/20061230175916/http://weblogs.asp.net/ralfw/category/9899.aspx">started out in the concrete</a> and tried to make small to medium scale software architecture more tangible. Software Cells thus were a bottom-up approach.</p>
+<p>But as it turns out, now I also find them usefull on a more conceptual and general level. The have become a top-down model for describing/building software and have the tendency to become more systematic on several levels. I realized this when I read about Arthur Koestler´s Holons the other day (see here for an introduction: <a rel="noopener" href="https://web.archive.org/web/20061230175916/http://www.worldtrans.org/essay/holarchies.html">http://www.worldtrans.org/essay/holarchies.html</a>). The picture of an Holarchy - a system of several levels of nested Holons - immediately reminded me of my picture of the <a rel="noopener" href="https://web.archive.org/web/20061230175916/http://weblogs.asp.net/ralfw/archive/2005/05/05/405728.aspx">Software Universe</a> (see picture at end of posting).</p>
+<p>In Koestler´s terminology Software Cells, Solutions, but also Assemblies are Holons. Each kind of Holon on a certain level consists of Holons of the next lower level and at the same time is part of a Holon on the next higher level. The Software Cells model thus defines its own Holarchy with 7 levels from the smallest Holons to the largest ones:</p>
+<ol>
+<li>Method</li>
+<li>Type</li>
+<li>Assembly</li>
+<li>Component</li>
+<li>Application</li>
+<li>Solution</li>
+<li>Society</li>
+</ol>
+<p>(As you might have noticed, I neglected the level of statements which was part of the Software Universe. I think that´s ok, since statements themselves are predefined by a programming language. Their "shape" and interface is not under our control. But from Methods on upwards the Holarchy we are in control. Methods are the lowest level Holons we can "compose".)</p>
+<p>To me, rooting Software Cells in the Holarchy concept is valuable since it brings more systematic thinking to them. And more systematic thinking is always good. It´s a step back from the concrete and brings into view the context. It allows you to reason about things you know less about by carrying forward knowledge. It allows you to find patterns and see developments which are broader than a particular "thing" you usually focus on. A systematic approach also let´s you find categories of things which raise the level of abstraction. Reasoning about few categories is easier than reasoning about a million different things falling into those categories.</p>
+<p>Let me try to apply a little bit more systematic thinking to the Software Cells Holarchy. My first point of view is structure of Holons.</p>
+<p>I´d say, each Holon (from Method to Society) can be viewed as a 2-tupel (dupel) consisting of <em>(interface, implementation)</em>. That´s very easy to see if you look at the lowest levels of the Holarchy, methods and types. Methods have a signature as an interface and a body as an implementation. Types have public methods and fields as their interface and the method bodys as their implementation. An Assembly´s interface are the public types, and all types with their implementation make up the implementation.</p>
+<p>With this generalization in place we suddenly see a difference in how concrete interfaces are on the different levels. Implementations are always easy to identify, but the interfaces as the (syntactic) contracts for interacting with the implementation get less tangible the higher you get in the Holarchy. A Method clearly ties the interface to the implementation. Even an Assembly today ties together interface and implemenation. In fact it was an important goal for Microsoft to get rid of the separation of metadata (interface) from implementation. But what about Components, Applications, and Solutions? Component metadata is distributed across several Assemblies. The same is true for Applications, and its worse for Solutions. There is no "one location" to find the metadata for a Component, or Application, or Solution.</p>
+<p>And I think, that´s bad for the same reason it would be bad to separate a Method´s signature from its body. Systematic thinking thus leads us to the proposal to define a means for assembling the interface of a Holon on the levels from Component up to Society. For a Component this seems to be pretty straightforward: just put all public CTS interfaces (which are implemented by the Types distributed across the Component´s Assemblies) into a single Assembly. But what to do for an Application or Solution? I don´t know. Maybe a single large WSDL/XML Schema document would do? (Which could be retrieved from a single URI.)</p>
+<p>This brings me to another view on the Holarchy: Control Flow between Holons. Holons can be split into two categories:</p>
+<ul>
+<li>Holons communicating via the stack.</li>
+<li>Holons communicating via streams.</li>
+</ul>
+<p>This view is tightly coupled with another view: Holons can also be split into two categories regarding their "tangibility". There are physical Holons and virtual Holons. Physical Holons are those, that have clear physical "boundaries", Method, Type, Assembly, Component, Application. I can point at them and say "These lines of code make up the abc Method." or "Ths file is the def Assembly Holon." or "This process is the xyz Application Holon."</p>
+<p>But where are the physical boundaries of a Solution or Society? I find it hard to to point at "something" and say "This is the Solution Holon."</p>
+<p>The lynchpin of physical vs virtual Holons is the process and thus the Application. From Applications upward on Holons are virtual - and communication switches from stack to stream.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/930661f73b873caf.gif" /></p>
+<p>But what does it mean, when I say, "communication is stack/stream based"? It means, a stack/stream is the medium used to communicate between Holons on the same (!) level of the Holarchy:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/e45c374d81fd1547.gif" /></p>
+<p>With this picture we now can understand maybe a little better, why there is so much hype around technologies like Web services or Indigo. They are so to speak "growing pains" or "symptoms" of moving up software development in the Holarchy. Most software developers have lived until now in a world of single Application software. They thus needed to be concerned only with the stack based RPC style communication. And when they wet their feed in multi Application software (or simply Solutions), Microsoft tried to make it easy for them with DCOM and MTS/COM+. But nevertheless they moved from the old stack world to the new stream world where messages needed to be exchanged for communication.</p>
+<p>However, streaming communication (across memory spaces) is very different from stack communication (within a single memory space). And not all the differences could be glossed overy by DCOM et al. Neither can .NET Remoting gloss over all differences or Web services (in their original form back in 1990). So what the Software Cell Holarchy allows us to see is the break or transition in the levels of hierarchy with respect to communication. (Please understand me correctly, I´m not claiming I´ve discovered something new here. I just claim, that the Software Cell Holarchy helps a great deal to make visible what exists and reason about it.)</p>
+<p>Finally, let me assume another viewpoint: The history of software development can be seen as a continuous rise in abstraction. An abstract type is more abstract than a set of methods. A component is more abstract than a set of types. etc. Fundamental for the ever higher levels of abstraction are the interfaces of the Holons on each level. The interfaces hides the details of implementation. Now, since succinctly describing a service using an interfaces is so important for abstraction, and Holons are duples containing an interface and at the same time are "containers" for lower level Holons, the history of software development is also an evolution of aggreation and containers.</p>
+<p>A Type is a container for Methods and OOP brought them about. So OOP is at the beginning of the Software Cells Holarchy. Then came DLLs as containers for Types. Strangely, Components lack a container, but Applications (or Hosts) are containers for Components. (Maybe .msi files could be at least the deployment containers for Components?)</p>
+<p>With each new container, we were able to assemble our software using more coarse grained parts and on a higher level of abstraction. The end of this development, though, so far seem to be Components. 3rd party software like a WinForms data grid or O/R Mapping engine are Components. Since the old Visual Basic VBX components a flourishing market has come into existence, where prefabricated Components are sold. Building true Components within a project, though, is not yet equally popular.</p>
+<p>But what will be the next step in this evolution? Clearly it is to manufacture whole Applications and then Solutions and sell them as prefab parts for new software. However, what makes this more difficult than stepping up from Type to Assembly, is, that Applications are on the stream based communication level of the Holarchy. That means, the whole (or Holon) assembled from different Applications is not contained within one process (memory space) and not even necessarily running within the same network or on the same platform. The assumptions a prefab Application can make about the whole are much less than a type can make about an Assembly. A Host as the ultimate container for Holons from Component down to Method is a very stable and straightforward environment. Heterogeneous networks, though, are a completely different environment. There are simple so many more "moving parts" and parameters to account for.</p>
+<p>And that leads me to the prediction: Where true Component based programming has not taken off in most software shops until today, the next level of software modularization, where whole Applications are the components, will take at least the same time to materialize. For me that means: Despite all the SOA hype we´re another 5 years away from a broad and natural acceptance of Software Solutions. It took from ca. 1992 to 2005 to get developers ready for "ordinary" Components. The technologies are in place, IoC/Microkernel infrastructures allow you to stitch together your Applications from Components/Assemblies very easily. Eclipse is maybe the best example for how successful this approach ultimately can be.</p>
+<p>If you see 2000 and Web services as the starting point for the evolution onto the next level and it will take developers almost the same time to solidly understand and broadly use the new concept of Applications as components, then not before 2010 we´ll see widespread acceptance.</p>
+<p>But sure, this is speculation. We´ll see what happens.</p>
+<p>The trend towards more and larger prefab parts is unbroken in the non-IT world as can be seen here: <a rel="noopener" href="https://web.archive.org/web/20061230175916/http://www.modularesbauen.com/berichte/Das_Haus_vom_%20Band.pdf">http://www.modularesbauen.com/berichte/Das_Haus_vom_%20Band.pdf</a>. This document describes a concept for the family home of the future. An affordable house (ca. 50.000 EUR) composed of prefab modules. Likewise, I guess, we´ll see more coarse grained prefab parts in the IT- and software world. And the Software Cells Holarchy is showing us, on which levels that´s to happen and how they relate to existing concepts. Thus I think moving Software Cells little more in the direction of a systematic approach is valuable.</p>
+<p><strong>Share this post:</strong> <a rel="noopener" href="https://web.archive.org/web/20061230175916/mailto:/?body=Thought%20you%20might%20like%20this:%20http://weblogs.asp.net/ralfw/archive/2005/05/27/409299.aspx&amp;;subject=Software+Cells+%239%3a+Applications+as+Holons+-+Becoming+a+little+more+systematic" title="Post http://weblogs.asp.net/ralfw/archive/2005/05/27/409299.aspx">email it!</a> | <a rel="noopener" href="https://web.archive.org/web/20061230175916/http://del.icio.us/post?url=http://weblogs.asp.net/ralfw/archive/2005/05/27/409299.aspx&amp;;title=Software+Cells+%239%3a+Applications+as+Holons+-+Becoming+a+little+more+systematic" title="Post http://weblogs.asp.net/ralfw/archive/2005/05/27/409299.aspx">bookmark it!</a> | <a rel="noopener" href="https://web.archive.org/web/20061230175916/http://www.digg.com/submit?url=http://weblogs.asp.net/ralfw/archive/2005/05/27/409299.aspx&amp;;phase=2" title="Post http://weblogs.asp.net/ralfw/archive/2005/05/27/409299.aspx">digg it!</a> | <a rel="noopener" href="https://web.archive.org/web/20061230175916/http://reddit.com/submit?url=http://weblogs.asp.net/ralfw/archive/2005/05/27/409299.aspx&amp;title=Software+Cells+%239%3a+Applications+as+Holons+-+Becoming+a+little+more+systematic" title="Post http://weblogs.asp.net/ralfw/archive/2005/05/27/409299.aspx">reddit!</a> | <a rel="noopener" href="https://web.archive.org/web/20061230175916/http://www.dotnetkicks.com/submit/?url=http://weblogs.asp.net/ralfw/archive/2005/05/27/409299.aspx&amp;;title=Software+Cells+%239%3a+Applications+as+Holons+-+Becoming+a+little+more+systematic" title="Post http://weblogs.asp.net/ralfw/archive/2005/05/27/409299.aspx">kick it!</a> | <a rel="noopener" href="https://web.archive.org/web/20061230175916/https://favorites.live.com/quickadd.aspx?marklet=1&amp;;mkt=en-us&amp;;url=http://weblogs.asp.net/ralfw/archive/2005/05/27/409299.aspx&amp;;title=Software+Cells+%239%3a+Applications+as+Holons+-+Becoming+a+little+more+systematic&amp;;top=1" title="Post http://weblogs.asp.net/ralfw/archive/2005/05/27/409299.aspx">live it!</a></p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

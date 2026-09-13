@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Integrate Your Own XML Document Types into VS.NET Projects — ralfw.de Archiv</title>
+<meta name="description" content="Create a XML Schema for the XML files you want to edit within VS.NET. (If you´re not familiar with XML Schema, start out with an example XML file and use xsd.exe (one of the VS.NET">
+<link rel="canonical" href="https://ralfw.de/archiv/2004/how-to-integrate-your-own-xml-document-types-into-vs-net-projects/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="How to Integrate Your Own XML Document Types into VS.NET Projects — ralfw.de Archiv">
+<meta property="og:description" content="Create a XML Schema for the XML files you want to edit within VS.NET. (If you´re not familiar with XML Schema, start out with an example XML file and use xsd.exe (one of the VS.NET">
+<meta property="og:url" content="https://ralfw.de/archiv/2004/how-to-integrate-your-own-xml-document-types-into-vs-net-projects/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>How to Integrate Your Own XML Document Types into VS.NET Projects</h1>
+    <div class="doc-meta"><span>5. Nov. 2004</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="https://weblogs.asp.net/ralfw/252865/" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2004/how-to-integrate-your-own-xml-document-types-into-vs-net-projects/</code></span></div>
+    <div class="art"><p><strong>I. Enable Intellisense Support</strong></p>
+<ol>
+<li>Create XML Schema</li>
+</ol>
+<p>Create a XML Schema for the XML files you want to edit within VS.NET. (If you´re not familiar with XML Schema, start out with an example XML file and use <em>xsd.exe</em> (one of the VS.NET tools) to generate a XML Schema.)</p>
+<p>Let´s assume your XML Schema is called <em>myschema.xsd</em>. It should start out like this:</p>
+<p><xs:schema id="MyXMLFiletype" <br />**targetNamespace="http://schemas.mydomain.com/MySchema"<br />                  xmlns="http://schemas.mydomain.com/MySchema"**                  xmlns:xs="http://www.w3.org/2001/XMLSchema"><br />
+...</p>
+<p>Be sure to include an id and a <strong>targetNamespace</strong>! The targetNamespace will be shown later in VS.NET in a list to select from.</p>
+<ol start="2">
+<li>Register File Type</li>
+</ol>
+<p>Come up with a file type for your XML files, e.g. <strong><em>.xyz</em></strong>. What you now want is, that VS.NET knows, <em>.xyz</em> files are XML files and supports you with the XML editor when working on such files.</p>
+<p>Create a registry <em>.reg</em> file to make the <em>.xyz</em> file type know to VS.NET and be associated with the XML editor. Copy the following to a text file you save as <em>xyz.reg</em>. Replace all <em>xyz</em> occurrences with your file extension:</p>
+<p><em>Windows Registry Editor Version 5.00</em></p>
+<p><em>[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\7.1\Editors{8281C572-2171-45AA-A642-7D8BC1662F1C}\Extensions]<br />
+"</em><em>xyz</em><em>"=dword:00000027</em></p>
+<p><em>[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\7.1\Editors{C76D83F8-A489-11D0-8195-00A0C91BBEE3}\Extensions]<br />
+"</em><em>xyz</em><em>"=dword:00000028</em></p>
+<p><em>[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\7.1\Languages\File Extensions.</em><em>xyz</em><em>]<br />
+@="{58E975A0-F8FE-11D2-A6AE-00104BCC7269}"<br />
+"unused"="HTML"</em></p>
+<p>After you executed the <em>xyz.reg</em> file, whenever you open a <em>.xyz</em> file in VS.NET it´s displayed with colored elements and attributes.</p>
+<ol start="3">
+<li>Register XML Schema with VS.NET</li>
+</ol>
+<p>Copy the XML Schema to the following directory:</p>
+<p><em>C:\Program Files\Microsoft Visual Studio .NET 2003\Common7\Packages\schemas\xml</em></p>
+<p>From then on, when you open an <em>.xyz</em> file, create the appropriate root element and type the attribute name <em>xmlns=</em> on it, a list of schemas pops up and you can select <em>http://schemas.mydomain.com/MySchema</em> to be associated with the file.</p>
+<p>As soon as this schema is referenced in your <em>.xyz</em> file, you have intellisens and VS.NET will point out any validation errors.</p>
+<p><strong>II. Add New File Type</strong></p>
+<p>If you want to be able to create a new file of type <em>.xyz</em> from within VS.NET, you need to register a new file item.</p>
+<ol>
+<li>Create File Item Template</li>
+</ol>
+<p>Create a template file for new <em>.xyz</em> files, e.g. by creating a file which just contains the root element and the <em>xmlns=</em> attribute with the namespace. Call the file <em>myxyz.xyz</em>.</p>
+<ol start="2">
+<li>Register File Item Template</li>
+</ol>
+<p>First copy <em>myxyz.xyz</em> to <em>C:\Program Files\Microsoft Visual Studio .NET 2003\Common7\IDE\NewFileItems</em>.</p>
+<p>Then make it know to VS.NET by adding a line to the file <em><a rel="noopener" href="https://web.archive.org/web/20260510015717/http://msdn.microsoft.com/library/default.asp?url=/library/en-us/vsintro7/html/vxconVSDirFiles.asp">NewFileItems.vsdir</a></em> like the following:</p>
+<p><em>myxyz.xyz|{DA9FB551-C724-11d0-AE1F-00A0C90FFFC3}|XYZ File|110|Create cool XYZ files with a snap|0|#6815|0|myxyz.xyz</em></p>
+<p>From then on you´ll see a new item for you <em>.xyz</em> files in the list of menu item <em>File|New|File</em> of VS.NET.  </p>
+<p>Files you create this way, though, don´t belong to a project. If you want to easily include .xyz file into your VB.NET or C# projects, you need to register a new item type with VS.NET.</p>
+<p><strong>III. Add New Item Type</strong></p>
+<p>If you want to add <em>.xyz</em> files to your projects, you need to set up a new item type. Following are the steps to register a new item type for VB.NET projects. For C# projects it´s equally easy; just replace references to the VB-language with ones for C# in directory names etc.</p>
+<ol>
+<li>Create Item Wizard Launch File</li>
+</ol>
+<p>Create a VS.NET wizard launch file <em>xyz.vsz</em> like this:</p>
+<p><em>VSWIZARD 7.0<br />
+Wizard=VsWizard.VsWizardEngine.7.1<br />
+Param="</em><em>WIZARD_NAME = XYZFile</em><em>"<br />
+Param="WIZARD_UI = FALSE"<br />
+Param="PROJECT_TYPE = VBPROJ"</em></p>
+<p>Place <em>xyz.vsz</em> in <em>C:\Program Files\Microsoft Visual Studio .NET 2003\Vb7\VBProjectItems</em>.</p>
+<ol start="2">
+<li>Register Wizard Launch File</li>
+</ol>
+<p>In <em>C:\Program Files\Microsoft Visual Studio .NET 2003\Vb7\VBProjectItems\Local Project Items</em> open <em>LocalProjectItems.vsdir</em> and add a line like this to register the above wizard launch file:</p>
+<p><em>..\xyz.vsz|{164B10B9-B200-11D0-8C61-00A0C91E29D5}|XYZ File|75|Create cool XYZ files in your projects|{164B10B9-B200-11D0-8C61-00A0C91E29D5}|4539| |myxyz.xyz</em></p>
+<ol start="3">
+<li>Create Item Wizard</li>
+</ol>
+<p>3.1 Copy the directory <em>C:\Program Files\Microsoft Visual Studio .NET 2003\Vb7\VBWizards\XMLFile</em> to</p>
+<p><em>C:\Program Files\Microsoft Visual Studio .NET 2003\Vb7\VBWizards\XYZFile</em></p>
+<p>where <em>XYZFile</em> is the value of <em>WIZARD_NAME</em> in the above launch file.</p>
+<p>3.2 Copy into</p>
+<p><em>C:\Program Files\Microsoft Visual Studio .NET 2003\Vb7\VBWizards\XYZFile\Templates\1033</em></p>
+<p>the template file you already used up in step <em>II.1.</em></p>
+<p>3.3. Open <em>default.js</em> in <em>C:\Program Files\Microsoft Visual Studio .NET 2003\Vb7\VBWizards\SqlObjectsFile\Scripts\1033</em>.</p>
+<p>Replace <em>XMLFile.Xml</em> therein with the name of your template file, <em>myxyz.xyz</em>.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>

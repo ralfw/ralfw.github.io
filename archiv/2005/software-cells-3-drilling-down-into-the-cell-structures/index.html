@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software Cells #3: Drilling down into the cell structures — ralfw.de Archiv</title>
+<meta name="description" content="Now that I have explained the basic structure of Software Cells I need to drill down into the details of its structures. What´s the design of a Core, of Adapters and Portals?">
+<link rel="canonical" href="https://ralfw.de/archiv/2005/software-cells-3-drilling-down-into-the-cell-structures/">
+<link rel="stylesheet" href="/css/style.css?v=b9d5615b">
+<link rel="alternate" type="application/rss+xml" title="Archiv — ralfw.de" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software Cells #3: Drilling down into the cell structures — ralfw.de Archiv">
+<meta property="og:description" content="Now that I have explained the basic structure of Software Cells I need to drill down into the details of its structures. What´s the design of a Core, of Adapters and Portals?">
+<meta property="og:url" content="https://ralfw.de/archiv/2005/software-cells-3-drilling-down-into-the-cell-structures/">
+</head>
+<body data-base="/">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="hd">
+  <a class="hd-mark" href="/">
+    <span class="hd-name">Ralf Westphal</span>
+    <span class="hd-sub">Archiv</span>
+  </a>
+  <nav class="hd-nav">
+      <a href="/" class="is-on">Archiv</a>
+      <a href="/andere-publikationen/">Andere Publikationen</a>
+      <a href="/ueber-mich/">Über mich</a>
+      <a class="ext" href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog<span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="hd-theme" id="themeBtn" type="button">Dunkel</button>
+</header>
+
+<main class="page" id="main">
+  <article class="page-body">
+    <p class="page-kicker"><span class="sw" style="background:var(--s-04)"></span>weblogs.asp.net</p>
+    <h1>Software Cells #3: Drilling down into the cell structures</h1>
+    <div class="doc-meta"><span>27. April 2005</span><span>Erstveröffentlichung: weblogs.asp.net/ralfw</span><span><a href="http://weblogs.asp.net:80/ralfw/archive/2005/04/27/404587.aspx" rel="noopener nofollow">Originaladresse</a></span><span class="perma"><code>ralfw.de/archiv/2005/software-cells-3-drilling-down-into-the-cell-structures/</code></span></div>
+    <div class="art"><p>Now that <a rel="noopener" href="https://web.archive.org/web/20051207052906/http://weblogs.asp.net/ralfw/archive/2005/04/24/404049.aspx">I have explained the basic structure of Software Cells</a> I need to drill down into the details of its structures. What´s the design of a Core, of Adapters and Portals?</p>
+<p>Let´s start with the central piece of every Software Cell, the Core. The Core´s task is to solve a problem, e.g. calculate the digits of Pi, manage invoices, edit bitmaps, or compile computer language source code. Whatever the purpose of your application is, there Core is the one to control everything towards your satisfaction. There is no Application without a core. But there are Applications without Adapters or Portals.</p>
+<p>Since the Core is the workhorse of an Application it sure should not be implemented as one piece. Right to the contrary! You should modularize it as much as possible. So a Core can look like this:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/4e0468869b38f693.gif" /></p>
+<p>It consists of several components. (For now lets leave any "priorization" out of the picture.) They work together to solve the Application´s problem. But they are not concerned with direct data access or user interaction or application interop. That´s all the task of adapters and portals.</p>
+<p>Since user interfaces traditionally are so at the center of application development, let´s look at the User Portal next.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/55014c5b3940d819.gif" /></p>
+<p>As you might have guessed, a User Portal implements the MVC pattern. It can contain many views and controllers and models. Most important to note is, the controller manages the access to the Core. (In simple scenarios, a single WinForms form might implement view and controller at the same time.) The user interacts with the view (e.g. by pressing a button or seeing a chart), which reports any user interaction to the controller thru events.</p>
+<p>The other path from the outside to the Core is thru an Application Portal. It allows other applications to access Core functionality.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/9aaa670d992290b0.gif" /></p>
+<p>To fulfill this task, an Application Portal needs at least a facade, i.e. an entrypoint into the application with a published interface other applications can connect to. Although the facade is called facade it needs not necessarily be a class callabled via SOAP. The facade could be a TcpListener/TcpClient combination implementing some network protocol (e.g. FTP or homegrown). If an Application Portal needs more substructures before a call to the Application reaches the Core depends on the type of Portal, operations and messages.</p>
+<p>The Application Adapter works the other way round: it lets the Core access another application.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/caa5ddbda79cf102.gif" /></p>
+<p>The low level access is done thru a proxy (like a Web service proxy generated from a WSDL document). But a Core should make itself not dependent on an interface description it might not control. (Think of a WSDL document published by some service offering on the Internet. You never know when and if and what way this WSDL will change.) Rather the Application Adapter should contain a layer called "High Level Application Access" shielding the Core from the details of accessing another application.</p>
+<p>Finally the Resource Adapter should follow the same pattern:</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/5b2201df9b61495f.gif" /></p>
+<p>The Core does not know about the details of accessing a resource. It wants to see a high level interface of it. That´s provided by the High Level Resource Access layer (HHRAL) of the Resource Adapter. At the other end is the resource´s API. And in between might sit a Low Level Resource Access layer to unify different APIs for the HHRAL, e.g. a generic ADO.NET managed provider to level out differences between database products.</p>
+<p>You see, a Software Cell is not just a shape with a blob in it, but consists of a rich set of structures and substructures. The Core has the responsibility to solve a problem, and Adapters and Portals connect it to the outside world, since information processing still is about input/output.</p>
+<p>The main purpose of the substructures of Adapters and Portals is to bridge the impedance mismatch between the outside world and the core, as well as isolate it from changes happening out there. At the basis of Adapters lies an API (either a dedicated API like ADO.NET or a automatically generated one like a Web service proxy (which again is based on System.Net)).</p>
+<p>Since Adapters are layered, now you might ask, why I think Software Cells are a valuable concept? Well, my answer is, the well known layer model has two flaws.</p>
+<p><img loading="lazy" alt="" src="/assets/04-weblogs.aspnet/ee0c1db137a322a5.gif" /></p>
+<p><em>Source: <a rel="noopener" href="https://web.archive.org/web/20051207052906/http://www.microsoft.com/">www.microsoft.com</a></em></p>
+<ol>
+<li>
+<p>It is only concerned with logical concepts. There is no connection to the implementation of an application, i.e. to assemblies or hosts. In addition I find the layer model imprecise in its use of the term "application".</p>
+</li>
+<li>
+<p>The layer model seems so easy to understand, because we are used to the 7 layer OSI model for network communication. But there is a fundamental difference between the two: OSI layers raise the abstraction level one by one - but the fundamental task of each layer is the same: transport information from A to B. In the layer model, though, the abstraction level does not (necessarily) rise from layer to layer. Instead the tasks of the layers differ fundamentally (one layer is concerned with accessing a resource, one with complex algorithms, another one with presenting information). To depict such fundamentally different things as layers, I think, is contraproductive. I makes it harder than necessary to understand what layers are, which functionality to put into each layer, how to design their interaction.</p>
+</li>
+</ol>
+<p>Software Cells try to overcome the limitations of the layer model. They integrate logical concepts (e.g. Adapter, Portal) with physical artifacts like a Host. They precisely describe what an application is, and what "distributed application" means. And they still allow you to model the traditional layers - either within an Application or as a system of Applications.</p>
+<p>And finally in Software Cells the different tasks are depicted differently. Also, whether the abstraction level is equal among the structures is not of any concern. Different responsibilities are assigned to different parts without any suggestion of a "priority".</p>
+<p>So where are we now? We know the structures and substructures of a Software Cell. But we don´t know how they interact. And we don´t know how Software Cells interact. That will be the topic of my next posting on Software Cells.</p></div>
+    <a class="backlink" href="/">← Zurück ins Archiv</a>
+  </article>
+</main>
+
+<footer class="ft">
+  <div>
+    <address class="ft-addr">
+      <b>Ralf Westphal</b>
+      ul Bor 4<br>
+      2777 Dobrinishte
+    </address>
+    <p class="ft-note">
+      Dieses Archiv sammelt 796 Beiträge aus fünf Publikationen, geschrieben zwischen 2003 und 2022.
+      Wo Bilder fehlen, ist die ursprüngliche Quelle offline gegangen; die Beiträge sind trotzdem hier.
+    </p>
+  </div>
+  <nav class="ft-links">
+    <a href="/impressum/">Impressum</a>
+    <a href="/datenschutz/">Datenschutz</a>
+    <a href="/feed.xml">RSS-Feed</a>
+    <a href="https://ralfwestphal.substack.com/" target="_blank" rel="noopener">Aktuelles Blog ↗</a>
+  </nav>
+</footer>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('themeBtn');
+  if(!b)return;
+  function lbl(){var d=r.getAttribute('data-theme');
+    if(d==='dark'){b.textContent='Hell';return;}
+    if(d==='light'){b.textContent='Dunkel';return;}
+    b.textContent=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'Hell':'Dunkel';}
+  b.onclick=function(){
+    var d=r.getAttribute('data-theme');
+    var dark = d? d==='dark' : (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark?'light':'dark');
+    lbl();
+    if(window.__redraw) window.__redraw();
+  };
+  lbl();
+})();
+</script>
+</body>
+</html>
