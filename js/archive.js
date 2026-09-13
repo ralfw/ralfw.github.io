@@ -15,6 +15,8 @@ var D0 = Date.UTC(2003,0,1), D1 = Date.UTC(2023,0,1);
 
 var ARTS = [], SRCMAP = {}, view = {a:D0,b:D1}, off = {}, query = "", current = null;
 var SEARCH = null, searchState = "idle";
+var PHRA = null, phrState = "idle";
+var QRY = null, HITS = null, SCORE = null, HLT = [];
 
 var plot = document.getElementById("plot"), cv = document.getElementById("cv");
 var ctx = cv.getContext("2d");
@@ -42,7 +44,7 @@ fetch(BASE + "data/articles.json" + (DV.a ? "?v=" + DV.a : ""))
   .then(function(data){
     SRCMAP = {}; data.sources.forEach(function(s){ SRCMAP[s.key] = s; });
     ARTS = data.articles;
-    ARTS.forEach(function(a){ a.time = Date.parse(a.d); });
+    ARTS.forEach(function(a, i){ a.time = Date.parse(a.d); a.i = i; });
     buildGutter(data.sources);
     plot.style.height = (LANES.length*LANE_H + PAD_T + DENS_H + 26) + "px";
     buildDensity();
@@ -250,36 +252,214 @@ function hover(px, py){
   tip.style.top = (py+14) + "px";
 }
 
+/* ------------------------------------------------------------- Suchwerk */
+/* Der Index kommt aus build.py. search.json trägt die sortierte Wortliste w
+   und zu jedem Wort seine Fundstellen p als Folge "beitragsabstand.häufigkeit"
+   in Hexadezimal. phrases.json trägt zu denselben Wörtern alle Wortpositionen
+   und wird nur geladen, wenn jemand nach einer Wendung in Anführungszeichen
+   sucht — die Datei ist rund dreimal so groß.                              */
+
+var postCache = {}, posCache = {};
+
+function decPost(i){                      /* → [[beitrag, häufigkeit], …] */
+  if(postCache[i]) return postCache[i];
+  var s = SEARCH.p[i], out = [], prev = 0;
+  if(s) s.split(" ").forEach(function(e){
+    var a = e.split(".");
+    prev += parseInt(a[0],16);
+    out.push([prev, parseInt(a[1],16)]);
+  });
+  return (postCache[i] = out);
+}
+function decPos(i){                       /* → {beitrag: [positionen], …} */
+  if(posCache[i]) return posCache[i];
+  var s = PHRA.p[i], out = {}, prevd = 0;
+  if(s) s.split("|").forEach(function(seg){
+    var a = seg.split("."), ps = [], p = 0;
+    prevd += parseInt(a[0],16);
+    for(var j=1;j<a.length;j++){ p += parseInt(a[j],16); ps.push(p); }
+    out[prevd] = ps;
+  });
+  return (posCache[i] = out);
+}
+function hasPos(arr, v){
+  var lo = 0, hi = arr.length-1;
+  while(lo <= hi){ var m = (lo+hi) >> 1;
+    if(arr[m] === v) return true;
+    if(arr[m] <  v) lo = m+1; else hi = m-1; }
+  return false;
+}
+
+/* Die Wortliste ist sortiert, also stehen alle Wörter mit gleichem Anfang
+   beieinander. Ein binärer Sprung an den Anfang genügt.                    */
+function lowerBound(t){
+  var lo = 0, hi = SEARCH.w.length;
+  while(lo < hi){ var m = (lo+hi) >> 1; if(SEARCH.w[m] < t) lo = m+1; else hi = m; }
+  return lo;
+}
+var MAXEXP = 400;
+function expand(t){
+  var i = lowerBound(t), out = [];
+  while(i < SEARCH.w.length && SEARCH.w[i].indexOf(t) === 0 && out.length < MAXEXP){
+    out.push(i); i++;
+  }
+  return out;
+}
+function exactWord(t){
+  var i = lowerBound(t);
+  return (i < SEARCH.w.length && SEARCH.w[i] === t) ? i : -1;
+}
+
+/* "pile engine" → genaue Wendung. pile engine → beide Wörter, UND-verknüpft. */
+function parseQuery(raw){
+  var phrases = [];
+  var rest = raw.replace(/"([^"]+)"|„([^“]+)“|“([^”]+)”/g, function(all, a, b, c){
+    var ws = (a||b||c).toLowerCase().match(/[a-zäöüß0-9]{3,}/g);
+    if(ws && ws.length) phrases.push(ws);
+    return " ";
+  });
+  var terms = rest.toLowerCase().match(/[a-zäöüß0-9]{2,}/g) || [];
+  if(!phrases.length && !terms.length) return null;
+  var hl = terms.slice();
+  phrases.forEach(function(p){ hl = hl.concat(p); });
+  return {phrases: phrases, terms: terms, hl: hl};
+}
+
+/* Der Index kennt nur den Fließtext. Titel werden hier gesondert geprüft. */
+function titleWords(a){
+  if(!a._tw) a._tw = a.t.toLowerCase().match(/[a-zäöüß0-9]+/g) || [];
+  return a._tw;
+}
+function titleHas(a, t){
+  var ws = titleWords(a);
+  for(var i=0;i<ws.length;i++) if(ws[i].indexOf(t) === 0) return true;
+  return false;
+}
+function titleHasPhrase(a, ws){
+  return titleWords(a).join(" ").indexOf(ws.join(" ")) >= 0;
+}
+
+function termSet(t, score){
+  var set = {}, ex = expand(t);
+  ex.forEach(function(wi){
+    var post = decPost(wi);
+    var idf = Math.log(1 + SEARCH.n / (1 + post.length));
+    var w = (SEARCH.w[wi] === t) ? 1.6 : 1;       /* das getippte Wort zählt mehr */
+    for(var k=0;k<post.length;k++){
+      var d = post[k][0];
+      set[d] = 1;
+      score[d] = (score[d]||0) + idf * (1 + Math.log(post[k][1])) * w;
+    }
+  });
+  ARTS.forEach(function(a){
+    if(titleHas(a, t)){ set[a.i] = 1; score[a.i] = (score[a.i]||0) + 4; }
+  });
+  return set;
+}
+
+function phraseSet(ws, score){
+  var maps = [], i;
+  for(i=0;i<ws.length;i++){
+    var wi = exactWord(ws[i]);
+    if(wi < 0){ maps = null; break; }
+    maps.push(decPos(wi));
+  }
+  var set = {};
+  if(maps){
+    for(var d in maps[0]){
+      var starts = maps[0][d], hits = 0;
+      for(var k=0;k<starts.length;k++){
+        var ok = true;
+        for(var m=1;m<maps.length;m++){
+          var pl = maps[m][d];
+          if(!pl || !hasPos(pl, starts[k]+m)){ ok = false; break; }
+        }
+        if(ok) hits++;
+      }
+      if(hits){ set[d] = 1; score[d] = (score[d]||0) + 6 + Math.log(1+hits); }
+    }
+  }
+  ARTS.forEach(function(a){
+    if(titleHasPhrase(a, ws)){ set[a.i] = 1; score[a.i] = (score[a.i]||0) + 8; }
+  });
+  return set;
+}
+
+function runQuery(){
+  HITS = null; SCORE = null; HLT = QRY ? QRY.hl : [];
+  if(!QRY || !SEARCH) return;              /* ohne Index greift die Notsuche */
+  var acc = null, score = {};
+  function merge(set){
+    if(acc === null){ acc = set; return; }
+    var out = {};
+    for(var d in set) if(acc[d] !== undefined) out[d] = 1;
+    acc = out;
+  }
+  QRY.terms.forEach(function(t){ merge(termSet(t, score)); });
+  QRY.phrases.forEach(function(ws){
+    if(PHRA) merge(phraseSet(ws, score));
+    else ws.forEach(function(t){ merge(termSet(t, score)); });  /* solange nur UND */
+  });
+  HITS = acc || {}; SCORE = score;
+}
+
+function hilite(s){
+  s = s || "";
+  if(!HLT.length) return esc(s);
+  var re = /[a-zäöüß0-9]+/gi, out = "", last = 0, m;
+  while((m = re.exec(s))){
+    var t = m[0].toLowerCase(), hit = false;
+    for(var i=0;i<HLT.length;i++) if(t.indexOf(HLT[i]) === 0){ hit = true; break; }
+    if(hit){
+      out += esc(s.slice(last, m.index)) + "<mark>" + esc(m[0]) + "</mark>";
+      last = m.index + m[0].length;
+    }
+  }
+  return out + esc(s.slice(last));
+}
+
 /* ----------------------------------------------------------------- Karten */
 var MAXC = 150;
+function byDate(p, q2){ return q2.time - p.time; }        /* neueste zuerst */
+function inView(a){
+  return !off[a.s] && a.time >= view.a && a.time <= view.b;
+}
 function visible(){
+  if(!QRY) return ARTS.filter(inView).sort(byDate);
+  if(HITS){
+    return ARTS.filter(function(a){ return inView(a) && HITS[a.i] !== undefined; })
+               .sort(function(p, q2){
+                 var d = (SCORE[q2.i]||0) - (SCORE[p.i]||0);
+                 return d || (q2.time - p.time);
+               });
+  }
+  /* Notsuche, bis der Index da ist: Titel und Anriss, alle Wörter müssen vor. */
   return ARTS.filter(function(a){
-    if(off[a.s]) return false;
-    if(a.time < view.a || a.time > view.b) return false;
-    if(query){
-      var hay = (a.t + " " + (a.x||"")).toLowerCase();
-      if(hay.indexOf(query) >= 0) return true;
-      if(SEARCH && SEARCH.idx){
-        var full = SEARCH.idx[a.u];
-        if(full && full.indexOf(query) >= 0) return true;
-      }
-      return false;
-    }
-    return true;
-  }).sort(function(p,q2){ return q2.time - p.time; });   /* neueste zuerst */
+    if(!inView(a)) return false;
+    var hay = (a.t + " " + (a.x||"")).toLowerCase();
+    return QRY.hl.every(function(t){ return hay.indexOf(t) >= 0; });
+  }).sort(byDate);
 }
 function renderCards(){
-  var list = visible();
-  var suffix = "";
-  if(query && searchState === "loading") suffix = " · Volltextindex lädt …";
-  countEl.textContent = (list.length === 0
-      ? "kein Treffer im Zeitraum"
-      : list.length + (list.length === 1 ? " Beitrag" : " Beiträge") + " im gewählten Zeitraum"
-        + (list.length > MAXC ? " · die ersten " + MAXC + " angezeigt" : "")) + suffix;
+  var list = visible(), n = list.length, txt;
+  if(QRY){
+    txt = (n === 0 ? "kein Treffer"
+                   : n + (n === 1 ? " Treffer" : " Treffer")
+                     + (n > MAXC ? " · die " + MAXC + " besten angezeigt" : ""));
+    if(searchState === "loading") txt += " · Volltextindex lädt …";
+    else if(QRY.phrases.length && phrState === "loading") txt += " · Wendungsindex lädt …";
+  } else {
+    txt = (n === 0 ? "kein Treffer im Zeitraum"
+                   : n + (n === 1 ? " Beitrag" : " Beiträge") + " im gewählten Zeitraum"
+                     + (n > MAXC ? " · die ersten " + MAXC + " angezeigt" : ""));
+  }
+  countEl.textContent = txt;
   cardsEl.innerHTML = "";
-  if(!list.length){
+  if(!n){
     var e = document.createElement("div"); e.className = "empty";
-    e.textContent = "In diesem Zeitraum steht nichts — Zeitraum aufziehen oder Filter lösen.";
+    e.textContent = QRY
+      ? "Dazu steht hier nichts — anderes Wort versuchen, Zeitraum aufziehen oder Filter lösen."
+      : "In diesem Zeitraum steht nichts — Zeitraum aufziehen oder Filter lösen.";
     cardsEl.appendChild(e); return;
   }
   var frag = document.createDocumentFragment();
@@ -297,8 +477,8 @@ function renderCards(){
     el.querySelector(".card-src").textContent = SRCMAP[a.s].label;
     el.querySelector(".card-date").textContent = a.d;
     if(a.th) el.querySelector("img").src = BASE + a.th;
-    el.querySelector(".card-t").textContent = a.t;
-    el.querySelector(".card-x").textContent = a.x || "";
+    el.querySelector(".card-t").innerHTML = hilite(a.t);
+    el.querySelector(".card-x").innerHTML = hilite(a.x || "");
     el.querySelector(".card-sig").textContent = "/" + a.u.replace(/^archiv\//,"").replace(/\/$/,"");
     el.addEventListener("click", function(ev){
       if(ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button) return;  /* neuer Tab bleibt möglich */
@@ -392,6 +572,8 @@ function onPop(){
 
 /* ------------------------------------------------------------------ Suche */
 var stateEl = document.getElementById("searchState");
+var HINT = "Mehrere Wörter werden UND-verknüpft. „Wendung“ in Anführungszeichen sucht genau so.";
+
 function loadSearch(){
   if(searchState !== "idle") return;
   searchState = "loading";
@@ -400,20 +582,45 @@ function loadSearch(){
     .then(function(r){ return r.json(); })
     .then(function(j){
       SEARCH = j; searchState = "ready";
-      stateEl.textContent = "Volltext durchsuchbar";
-      renderCards();
+      postCache = {};
+      stateEl.textContent = HINT;
+      runQuery(); renderCards();
     })
     .catch(function(){
       searchState = "failed";
       stateEl.textContent = "Volltextindex nicht verfügbar — es wird in Titel und Anriss gesucht.";
+      renderCards();
+    });
+}
+function loadPhrases(){
+  if(phrState !== "idle") return;
+  phrState = "loading";
+  fetch(BASE + "data/phrases.json" + (DV.p ? "?v=" + DV.p : ""))
+    .then(function(r){ return r.json(); })
+    .then(function(j){
+      PHRA = j; phrState = "ready"; posCache = {};
+      runQuery(); renderCards();
+    })
+    .catch(function(){
+      phrState = "failed";
+      stateEl.textContent = "Wendungen lassen sich gerade nicht prüfen — die Wörter werden UND-verknüpft.";
+      renderCards();
     });
 }
 var qt;
 document.getElementById("q").oninput = function(e){
-  var v = e.target.value.trim().toLowerCase();
-  if(v) loadSearch();
+  var v = e.target.value;
   clearTimeout(qt);
-  qt = setTimeout(function(){ query = v; renderCards(); }, 140);
+  qt = setTimeout(function(){
+    QRY = parseQuery(v);
+    if(QRY){
+      loadSearch();
+      if(QRY.phrases.length) loadPhrases();
+    } else if(searchState === "ready"){
+      stateEl.textContent = HINT;
+    }
+    runQuery(); renderCards();
+  }, 140);
 };
 
 /* ------------------------------------------------------------------ Rest */
